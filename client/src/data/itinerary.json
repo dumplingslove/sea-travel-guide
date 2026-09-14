@@ -1,0 +1,162 @@
+[
+  {
+    "day": 1,
+    "date": "12-12",
+    "weekday": "周六",
+    "city": "Bangkok",
+    "city_zh": "曼谷",
+    "city_id": "bangkok"
+  },
+  {
+    "day": 2,
+    "date": "12-13",
+    "weekday": "周日",
+    "city": "Bangkok",
+    "city_zh": "曼谷",
+    "city_id": "bangkok"
+  },
+  {
+    "day": 3,
+    "date": "12-14",
+    "weekday": "周一",
+    "city": "Bangkok",
+    "city_zh": "曼谷",
+    "city_id": "bangkok"
+  },
+  {
+    "day": 4,
+    "date": "12-15",
+    "weekday": "周二",
+    "city": "Chiang Mai",
+    "city_zh": "清迈",
+    "city_id": "chiangmai"
+  },
+  {
+    "day": 5,
+    "date": "12-16",
+    "weekday": "周三",
+    "city": "Chiang Mai",
+    "city_zh": "清迈",
+    "city_id": "chiangmai"
+  },
+  {
+    "day": 6,
+    "date": "12-17",
+    "weekday": "周四",
+    "city": "Phuket",
+    "city_zh": "普吉",
+    "city_id": "phuket"
+  },
+  {
+    "day": 7,
+    "date": "12-18",
+    "weekday": "周五",
+    "city": "Phuket",
+    "city_zh": "普吉",
+    "city_id": "phuket"
+  },
+  {
+    "day": 8,
+    "date": "12-19",
+    "weekday": "周六",
+    "city": "Phuket",
+    "city_zh": "普吉",
+    "city_id": "phuket"
+  },
+  {
+    "day": 9,
+    "date": "12-20",
+    "weekday": "周日",
+    "city": "Penang",
+    "city_zh": "槟城",
+    "city_id": "penang"
+  },
+  {
+    "day": 10,
+    "date": "12-21",
+    "weekday": "周一",
+    "city": "Penang",
+    "city_zh": "槟城",
+    "city_id": "penang"
+  },
+  {
+    "day": 11,
+    "date": "12-22",
+    "weekday": "周二",
+    "city": "Kuala Lumpur",
+    "city_zh": "吉隆坡",
+    "city_id": "kualalumpur"
+  },
+  {
+    "day": 12,
+    "date": "12-23",
+    "weekday": "周三",
+    "city": "Kuala Lumpur",
+    "city_zh": "吉隆坡",
+    "city_id": "kualalumpur"
+  },
+  {
+    "day": 13,
+    "date": "12-24",
+    "weekday": "周四",
+    "city": "Ho Chi Minh City",
+    "city_zh": "胡志明市",
+    "city_id": "hochiminh"
+  },
+  {
+    "day": 14,
+    "date": "12-25",
+    "weekday": "周五",
+    "city": "Ho Chi Minh City",
+    "city_zh": "胡志明市",
+    "city_id": "hochiminh"
+  },
+  {
+    "day": 15,
+    "date": "12-26",
+    "weekday": "周六",
+    "city": "Phu Quoc",
+    "city_zh": "富国岛",
+    "city_id": "phuquoc"
+  },
+  {
+    "day": 16,
+    "date": "12-27",
+    "weekday": "周日",
+    "city": "Phu Quoc",
+    "city_zh": "富国岛",
+    "city_id": "phuquoc"
+  },
+  {
+    "day": 17,
+    "date": "12-28",
+    "weekday": "周一",
+    "city": "Phu Quoc",
+    "city_zh": "富国岛",
+    "city_id": "phuquoc"
+  },
+  {
+    "day": 18,
+    "date": "12-29",
+    "weekday": "周二",
+    "city": "Singapore",
+    "city_zh": "新加坡",
+    "city_id": "singapore"
+  },
+  {
+    "day": 19,
+    "date": "12-30",
+    "weekday": "周三",
+    "city": "Singapore",
+    "city_zh": "新加坡",
+    "city_id": "singapore"
+  },
+  {
+    "day": 20,
+    "date": "12-31",
+    "weekday": "周四",
+    "city": "Singapore",
+    "city_zh": "新加坡",
+    "city_id": "singapore"
+  }
+]
