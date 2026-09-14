@@ -4,11 +4,13 @@ import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
 import Login from "@/pages/Login";
 import Placeholder from "@/pages/Placeholder";
+import GuidePage from "@/pages/GuidePage";
 import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
 
 const NAV = [
   { to: "/", label: "行程" },
+  { to: "/guide", label: "攻略" },
   { to: "/map", label: "地图" },
   { to: "/planner", label: "行程规划" },
   { to: "/notes", label: "笔记" },
@@ -94,6 +96,7 @@ function AppRouter() {
               element={<Placeholder title="地图" note="P2 填充：20 天行程地图" />}
             />
             <Route path="/planner" element={<Planner />} />
+            <Route path="/guide" element={<GuidePage />} />
             <Route
               path="/notes"
               element={<Placeholder title="笔记" note="P3 填充：云端同步笔记（sea_notes）" />}

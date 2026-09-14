@@ -1,0 +1,91 @@
+import type { EvidenceLink, XhsAssessment } from './research';
+
+const E=(title:string,url:string,note:string):EvidenceLink=>({title,url,note});
+const S=(verdict:XhsAssessment['verdict'],recommend:number,caution:number,avoid:number,why:string,avoidNote:string):XhsAssessment=>({verdict,recommend,caution,avoid,why,avoidNote});
+
+export const extraXhsEvidence:Record<string,EvidenceLink[]>={
+'137 Pillars House':[E('清迈🇹🇭｜137柱子酒店','https://www.xiaohongshu.com/explore/68dbf3a50000000004017db0','2025-09-30 · 正文与评论区可见滚动复核'),E('清迈隐世天花板丨137根柚木撑起的百年传奇','https://www.xiaohongshu.com/explore/6a9a8fe20000000011035b28','正文摘录：由19世纪末柚木官邸修缮而来的“可入住博物馆”')],
+'Four Seasons Resort Chiang Mai':[E('住进清迈的“秘密花园”！被稻田包围的四季','https://www.xiaohongshu.com/explore/6981f86e000000000d00805c','正文摘录：最出名的是“活的水稻梯田”'),E('清迈四季酒店｜住进稻田里的4天3晚','https://www.xiaohongshu.com/explore/6a83f04c0000000025005dc0','正文与评论区可见滚动复核')],
+'Raya Heritage':[E('清迈Raya heritage盛名之下 其实难副','https://www.xiaohongshu.com/explore/6a86d35100000000320339ca','正文摘录：“性价比太低了”；评论涉及迷你吧收费'),E('无踩雷！清迈的拉雅古迹Raya Heritage酒店','https://www.xiaohongshu.com/explore/69e1dee9000000002301e4bf','评论摘录：房价高、蚊虫多、位置偏')],
+'Khao Soi Khun Yai':[E('清迈本地人都在经常排队的米其林咖喱面','https://www.xiaohongshu.com/explore/6881cd32000000002001b2e4','2025-10-04 · 正文与评论区可见滚动复核'),E('考索伊·坤艾 Khao Soi Khun Yai','https://www.xiaohongshu.com/explore/6aa263d90000000014011f41','标签：清迈必吃、咖喱面')],
+'Kiti Panit':[E('Kiti Panit｜清迈最不喜欢的店','https://www.xiaohongshu.com/explore/66c9b0c3000000001d01a174','2024-08-24 · 踩雷样本'),E('清迈最有人文气息的餐厅Kiti Panit','https://www.xiaohongshu.com/explore/673e2c96000000000202a40e','正文摘录：老宅风貌保留；评论提示应提前预约')],
+'Huen Phen':[E('避雷清迈五星好评泰式餐厅！','https://www.xiaohongshu.com/explore/69a91a54000000000e00f8ec','负面体验样本'),E('清迈｜古城里必来的“博物馆餐厅”','https://www.xiaohongshu.com/explore/6a7c54ec00000000220110f8','正文摘录：像小型泰北民俗博物馆')],
+'Khao Kha Moo Chang Phueak':[E('飞机一落地我就直奔猪脚饭','https://www.xiaohongshu.com/explore/69074d9a000000000301ef2e','2025-11-02 · 推荐样本'),E('去清迈千万别去这家吃猪脚饭！！！','https://www.xiaohongshu.com/explore/663da3c8000000001e019092','2024-05-10 · 避雷样本')],
+'Tong Tem Toh':[E('清迈｜比米其林推荐好吃太多的泰北菜','https://www.xiaohongshu.com/explore/6751a99a000000000702b298','2024-12-05 · 推荐样本'),E('避雷清迈风很大的tongtemtoh','https://www.xiaohongshu.com/explore/67a7017c000000002902b90b','正文摘录：“又咸又辣，吃不惯”')],
+'Ginger Farm Kitchen':[E('清迈Ginger Farm Kitchen避大雷','https://www.xiaohongshu.com/explore/68e13dd60000000004022879','正文提到拼桌、上菜慢和烤鱼未去鳞')],
+'Dash! Restaurant':[E('避雷！清迈Dash teak house','https://www.xiaohongshu.com/explore/68e8a264000000000703088a','正文摘录：红咖喱炸鱼用冻鱼、烤鸡用冻鸡腿'),E('清迈｜这家餐厅真的惊艳到我了','https://www.xiaohongshu.com/explore/68b03f3c000000001b031582','2025-09-08 · 推荐样本')],
+'大象自然公园':[E('清迈大象自然公园半日游','https://www.xiaohongshu.com/explore/6a9e6be0000000002803172b','正文与评论区可见滚动复核'),E('无表演 不骑大象 不喂食 我们只观察大象','https://www.xiaohongshu.com/explore/6a7a7550000000002c000b0a','正文摘录：园内泥泞，会更换雨靴')],
+'周日步行街':[E('清迈周日夜市天花板｜塔佩门逛吃全攻略','https://www.xiaohongshu.com/explore/6a663d71000000000f0055b9','正文与评论区可见滚动复核'),E('清迈｜听劝，古城一定要留在周日逛','https://www.xiaohongshu.com/explore/69a68f17000000002202023e','正文摘录：古城历史、寺庙、老建筑与小店集中')],
+'双龙寺':[E('来清迈｜一定不能错过山顶双龙寺','https://www.xiaohongshu.com/explore/6aa0378100000000110339dd','正文与评论区可见滚动复核'),E('清迈双龙寺值不值得去？美是真的，烫脚丫也是','https://www.xiaohongshu.com/explore/6a0dc8580000000035030e36','实用提醒：寺内脱鞋，地面可能烫脚')],
+'因他农国家公园':[E('茵他侬国家公园-个人最喜欢的清迈景点','https://www.xiaohongshu.com/explore/6a8519f60000000033032628','推荐样本'),E('清迈徒步天花板！因他农国家公园全攻略','https://www.xiaohongshu.com/explore/68d8027c000000000e00d73b','正文摘录：K线与P线一天可完成')],
+'契迪龙寺':[E('清迈·与400岁佛塔共处的神性时刻','https://www.xiaohongshu.com/explore/69468865000000001b033938','推荐样本'),E('清迈两座寺庙/殿堂禁止女性入内','https://www.xiaohongshu.com/explore/6a65cff4000000000c003000','重要限制提醒样本')],
+'帕辛寺':[E('清迈·与400岁佛塔共处的神性时刻','https://www.xiaohongshu.com/explore/69468865000000001b033938','古城寺庙组合参考'),E('清迈两座寺庙/殿堂禁止女性入内','https://www.xiaohongshu.com/explore/6a65cff4000000000c003000','重要限制提醒样本')],
+'宁曼路':[E('清迈逛街｜宁曼路1号','https://www.xiaohongshu.com/explore/69cd39fb000000001b001009','推荐样本'),E('宁曼路和我想象的不太一样','https://www.xiaohongshu.com/explore/6a0db3f100000000080313f6','中性样本：商业街需降低预期')],
+'乌蒙寺':[E('乌蒙寺——我遇见清迈真正的宁静','https://www.xiaohongshu.com/explore/6a5e2d81000000000503aba2','推荐样本'),E('清迈是没地方玩了吗？乌蒙寺避坑吧…','https://www.xiaohongshu.com/explore/695657b2000000002202cb44','避雷样本')],
+'Baan Kang Wat':[E('清迈艺术村 好拍好逛！！！','https://www.xiaohongshu.com/explore/6a9db325000000002802f741','正文提醒：周一关门、17点后陆续收摊、周末人多')],
+'瓦洛洛市场':[E('再也没遇到比瓦洛洛更低的物价','https://www.xiaohongshu.com/explore/6a547b7d000000000f017cd5','推荐样本'),E('泰国清迈避雷瓦洛洛市场','https://www.xiaohongshu.com/explore/6a58861c000000001d020cf5','正文批评果干与地摊衣物质量')],
+'Amanpuri':[E('Amanpuri 中规中矩的Aman体验','https://www.xiaohongshu.com/explore/68f2045800000000050391d1','正文提到小动物进房、餐食中规中矩、共享海滩'),E('普吉岛Amanpuri｜在安缦祖师爷被咬成悲伤蛙','https://www.xiaohongshu.com/explore/690712120000000005003f68','正文与评论区：蚊虫叮咬严重')],
+'大佛':[E('普吉岛大佛｜2026最新现场实况','https://www.xiaohongshu.com/explore/6a9586b30000000037031e0c','2026-08-31 · 重开现场样本'),E('普吉大佛 避坑','https://www.xiaohongshu.com/explore/687347b9000000001d00cae2','2025-07-13 · 避雷样本')],
+'查龙寺':[E('普吉查龙寺半日｜一半山海浪漫，一半人间信仰','https://www.xiaohongshu.com/explore/6a8c2eb3000000002a02c4c1','正文摘录：免费，08:00–17:00，建议1–1.5小时'),E('静心之旅当属寻访市井里的百年查龙寺','https://www.xiaohongshu.com/explore/6a2f9e5b0000000021020f2d','推荐样本：普吉最大古寺、1876年始建')],
+'普吉老镇':[E('普吉岛老镇｜好吃不贵还有米其林','https://www.xiaohongshu.com/explore/6a54a743000000000c033c02','推荐样本'),E('老镇好无聊，但来都来了','https://www.xiaohongshu.com/explore/6a03ef490000000007010120','中性偏负样本')],
+'神仙半岛':[E('普吉岛神仙半岛｜我愿意为这场日落再来一次','https://www.xiaohongshu.com/explore/6a1facb00000000006023bce','强推荐样本'),E('Promthep Cape日落｜不完美但值得','https://www.xiaohongshu.com/explore/6a74bc5c0000000029031f1d','中性推荐样本')],
+'Phuket Elephant Sanctuary':[E('普吉岛｜真正大象友好的三个大象营','https://www.xiaohongshu.com/explore/696b27b2000000001a02d77e','推荐样本：无骑乘保护型体验'),E('唯一的后悔选择-大象营-普吉岛篇','https://www.xiaohongshu.com/explore/6a7d40a4000000002c00658c','避雷样本，强调不要选骑象项目')],
+'Siam Niramit':[E('不愧是普吉岛文旅天花板','https://www.xiaohongshu.com/explore/68e64f5d000000000300cc25','正文与评论区可见滚动复核'),E('梦幻暹罗，制作精美，娱乐欠缺','https://www.xiaohongshu.com/explore/69a99d19000000001a030581','中性样本')],
+'芭东 Bangla 路':[E('避雷芭东夜市｜玩阴阳菜单坑中国人','https://www.xiaohongshu.com/explore/699bbfe7000000000a02fd05','避雷样本：问清菜单与价格'),E('普吉岛芭东酒吧街｜女生友好+夜生活全攻略','https://www.xiaohongshu.com/explore/69f70e9f0000000023015697','推荐样本，同时需结伴与防推销')]
+};
+
+export const extraXhsAssessments:Record<string,XhsAssessment>={
+'137 Pillars House':S('推荐',2,0,0,'百年柚木宅邸、可入住博物馆氛围。','价格高，位置不算古城核心。'),
+'Four Seasons Resort Chiang Mai':S('推荐',2,0,0,'稻田景观与完整度假体验。','离古城远、价格高，适合专门宅酒店。'),
+'Raya Heritage':S('谨慎选择',0,1,1,'获奖建筑与侘寂设计适合建筑爱好者。','房间小、偏僻、蚊虫与价格虚高反馈集中。'),
+'Khao Soi Khun Yai':S('推荐',2,0,0,'本地人排队、咖喱面辨识度高。','街边环境简朴且易售罄。'),
+'Kiti Panit':S('谨慎选择',1,0,1,'百年华人老宅与泰北料理有文化感。','口味两极，walk-in可能只能坐户外。'),
+'Huen Phen':S('谨慎选择',1,0,1,'老宅与泰北民俗氛围。','出品与服务稳定性有争议。'),
+'Khao Kha Moo Chang Phueak':S('谨慎选择',1,0,1,'传奇夜市摊与软糯猪脚。','环境与品质下滑反馈并存。'),
+'Tong Tem Toh':S('谨慎选择',1,0,1,'宁曼路方便、泰北菜够味。','又咸又辣、无空调和排队。'),
+'Ginger Farm Kitchen':S('不推荐',0,0,1,'One Nimman内位置便利。','拼桌、上菜慢和鱼未去鳞等强烈负评。'),
+'Dash! Restaurant':S('谨慎选择',1,0,1,'柚木宅环境有辨识度。','冻鱼、冻鸡腿与价格落差投诉。'),
+'大象自然公园':S('推荐',2,0,0,'无表演、无骑乘，以观察救援象为核心。','园内泥泞，需换雨靴。'),
+'周日步行街':S('推荐',2,0,0,'古城、寺庙与市集串成一条线。','人挤人，注意防盗。'),
+'双龙寺':S('推荐',2,0,0,'山顶兰纳圣寺与清迈城景。','脱鞋后地面可能烫脚，山路易晕车。'),
+'因他农国家公园':S('推荐',2,0,0,'泰国最高峰、双塔、瀑布和轻徒步。','凌晨出发、温差大，按开放路线行走。'),
+'契迪龙寺':S('推荐',1,1,0,'古城核心佛塔遗址。','部分殿堂有女性不得入内等现场限制。'),
+'帕辛寺':S('推荐',1,1,0,'兰纳建筑与壁画适合和契迪龙寺连游。','遵守着装和殿堂进入限制。'),
+'宁曼路':S('谨慎选择',1,1,0,'咖啡、文创与商场集中。','本质是商业街，别神化。'),
+'乌蒙寺':S('谨慎选择',1,0,1,'森林隧道寺的安静感独特。','偏远、蚊虫多，也有“不值得专程”反馈。'),
+'Baan Kang Wat':S('推荐',1,0,0,'艺术村适合慢逛和手作。','周一关门，17点后陆续收摊。'),
+'瓦洛洛市场':S('谨慎选择',1,0,1,'本地市场与低价伴手礼。','果干陈放和地摊衣物质量负评。'),
+'Amanpuri':S('谨慎选择',0,1,1,'安缦首店与海滩环境仍有吸引力。','蚊虫、小动物进房、餐食普通与共享海滩。'),
+'大佛':S('谨慎选择',1,0,1,'重开后的高处景观。','开放与安全限制需当天确认，路远且商业化。'),
+'查龙寺':S('推荐',2,0,0,'免费、清净的百年古寺。','着装遮肩盖膝，1–1.5小时足够。'),
+'普吉老镇':S('谨慎选择',1,1,0,'中葡骑楼、米其林小吃与周末夜市。','半天足够，正午暴晒且有人觉得无聊。'),
+'神仙半岛':S('推荐',1,1,0,'普吉最南端日落视野。','上午体验一般，傍晚人多需提前占位。'),
+'Phuket Elephant Sanctuary':S('谨慎选择',1,0,1,'选对项目可获得真正大象友好体验。','选错营会落入骑象与表演项目。'),
+'Siam Niramit':S('推荐',1,1,0,'制作规模与泰国文化展示。','娱乐性评价分化，自助餐也非一致好评。'),
+'芭东 Bangla 路':S('谨慎选择',1,0,1,'浓缩夜生活氛围。','阴阳菜单、推销和女性独行风险提醒。')
+};
+
+export type SecondaryEvidence={group:'Tripadvisor'|'中文旅游网站'|'官方与专业来源';title:string;url:string;note:string};
+export const secondaryEvidence:Record<string,SecondaryEvidence[]>={
+'137 Pillars House':[{group:'Tripadvisor',title:'137 Pillars House reviews',url:'https://www.tripadvisor.ca/Hotel_Review-g293917-d2348781-Reviews-or20-137_Pillars_House-Chiang_Mai.html',note:'近期评论补充蚊虫、噪声、泳池与躺椅反馈'}],
+'Four Seasons Resort Chiang Mai':[{group:'Tripadvisor',title:'Four Seasons Chiang Mai traveler reviews',url:'https://www.tripadvisor.co.za/Hotel_Feature-g1766192-d301886-zft6217-Four_Seasons_Resort_Chiang_Mai.html',note:'服务、SPA、泳池水温与虫咬反馈'}],
+'Raya Heritage':[{group:'中文旅游网站',title:'Trip.com 酒店详情',url:'https://jp.trip.com/hotels/mae-rim-hotel-detail-21865261/raya-heritage/',note:'位置与酒店资料'},{group:'Tripadvisor',title:'Raya Heritage traveler review',url:'https://www.tripadvisor.ca/ShowUserReviews-g293917-d13970703-r1056250028-Raya_Heritage-Chiang_Mai.html',note:'设计、早餐、位置与虫害反馈'}],
+'Khao Soi Khun Yai':[{group:'Tripadvisor',title:'Khao Soi Khun Yai reviews',url:'https://www.tripadvisor.co.nz/Restaurant_Review-g293917-d3722127-Reviews-Khao_Soi_Khun_Yai-Chiang_Mai.html',note:'营业时间、排队与售罄反馈'}],
+'Kiti Panit':[{group:'Tripadvisor',title:'Kiti Panit reviews',url:'https://www.tripadvisor.ca/Restaurant_Review-g293917-d19835714-Reviews-Kiti_Panit_General_Store-Chiang_Mai.html',note:'地址、历史空间与菜品评价'}],
+'Huen Phen':[{group:'Tripadvisor',title:'Huen Phen reviews',url:'https://www.tripadvisor.co.nz/Restaurant_Review-g293917-d1210654-Reviews-Huen_Phen-Chiang_Mai.html',note:'口味、服务和价格评价分化'}],
+'Khao Kha Moo Chang Phueak':[{group:'中文旅游网站',title:'KKday 清迈夜市攻略',url:'https://www.kkday.com/zh-tw/blog/189744/asia-thailand-chiangmai-nightmarket',note:'北门夜市位置与摊位信息'}],
+'SP Chicken':[{group:'Tripadvisor',title:'SP Chicken reviews',url:'https://Www.tripadvisor.in/Restaurant_Review-g293917-d3162260-Reviews-SP_Chicken-Chiang_Mai.html',note:'排队、售罄与菜品口感'},{group:'中文旅游网站',title:'Bigfang 清迈烤鸡食记',url:'https://www.bigfang.tw/blog/post/sp-chicken-chiangmai',note:'中文一手用餐记录'}],
+'Tong Tem Toh':[{group:'中文旅游网站',title:'Bigfang 宁曼路食记',url:'https://www.bigfang.tw/blog/post/tongtemtoh-nimman',note:'位置、价格和口味反馈'},{group:'Tripadvisor',title:'Tong Tem Toh reviews',url:'https://www.tripadvisor.co.za/Restaurant_Review-g293917-d4710227-Reviews-Tong_Tem_Toh-Chiang_Mai.html',note:'排队、无空调与菜品反馈'}],
+'Dash! Restaurant':[{group:'Tripadvisor',title:'Dash Restaurant and Bar reviews',url:'https://www.tripadvisor.ca/Restaurant_Review-g293917-d2437001-Reviews-or15-Dash_Restaurant_and_Bar-Chiang_Mai.html',note:'营业、现金与预约提醒'}],
+'Ginger Farm Kitchen':[{group:'中文旅游网站',title:'Trip.com 餐厅详情',url:'https://www.trip.com/restaurant/thailand/chiang-mai/detail/ginger-farm-kitchen-50735878/?source=uccrank&rankingId=100900013700',note:'位置、菜品与游客化口味反馈'}],
+'大象自然公园':[{group:'Tripadvisor',title:'Elephant Nature Park reviews',url:'https://www.tripadvisor.co.za/Attraction_Review-g293917-d601884-Reviews-or5720-Elephant_Nature_Park-Chiang_Mai.html',note:'无骑乘、不强迫共浴的伦理标准'}],
+'周日步行街':[{group:'中文旅游网站',title:'KKday 清迈夜市攻略',url:'https://www.kkday.com/zh-tw/blog/189744/asia-thailand-chiangmai-nightmarket',note:'开放时段、长度与逛街节奏'}],
+'双龙寺':[{group:'中文旅游网站',title:'KKday 双龙寺信息',url:'https://www.kkday.com/zh-tw/product/136344',note:'门票、开放时间与着装要求'}],
+'因他农国家公园':[{group:'中文旅游网站',title:'KKday 因他农一日游',url:'https://www.kkday.com/zh-tw/product/125950-doi-inthanon-national-park-hiking-tour-in-chiang-mai-thailand',note:'海拔、车程与一日线路'}],
+'契迪龙寺':[{group:'中文旅游网站',title:'Agoda 契迪龙寺指南',url:'https://www.agoda.com/zh-tw/travel-guides/thailand/chiang-mai/discover-wat-chedi-luang-entrance-fee-hidden-gems/',note:'历史、门票与开放时段'}],
+'帕辛寺':[{group:'中文旅游网站',title:'Agoda 清迈景点指南',url:'https://www.agoda.com/zh-hk/travel-guides/thailand/chiang-mai/exploring-the-best-of-chiang-mai-top-attractions-and-hidden-gems/',note:'兰纳建筑与壁画厅'}],
+'宁曼路':[{group:'Tripadvisor',title:'One Nimman reviews',url:'https://www.tripadvisor.co.za/Attraction_Review-g293917-d13496628-Reviews-One_Nimman-Chiang_Mai.html',note:'商圈、White Market与现场音乐'}],
+'Baan Kang Wat':[{group:'中文旅游网站',title:'清迈艺术村攻略',url:'https://curly.com.tw/baan-kang-wat/',note:'营业日、职人小店与避峰建议'}],
+'乌蒙寺':[{group:'中文旅游网站',title:'Klook 乌蒙寺景点页',url:'https://www.klook.com/zh-TW/destination/p50001700-wat-umong-suan-phutthatham-temple/',note:'历史、免费入场与隧道提醒'}],
+'瓦洛洛市场':[{group:'中文旅游网站',title:'Trip.com 瓦洛洛市场',url:'https://th.trip.com/hot/%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%A7%E0%B9%82%E0%B8%A3%E0%B8%A3%E0%B8%AA/',note:'营业时间与伴手礼信息'}]
+};
