@@ -1,0 +1,148 @@
+<main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DEC 2026 · 先比较，再落日历</p>
+        <h1>哪两个国家，<br><em>最值这 7 天？</em></h1>
+        <p class="hero-copy">把夫妻双人段和带两岁幼儿的亲子段分开算：双人默认特种兵节奏约 4 个精华点，亲子日按 1–2 个并预留午休。换国家、改天数或节奏，覆盖率与舍弃清单会一起重算。</p>
+      </div>
+      <aside class="snapshot" aria-label="数据快照说明">
+        <strong>DATA SNAPSHOT · 2026-09-14</strong>
+        <p>56 个方向已完成合并，其中 24 个方向有 12/14–12/20 live 核验；仍有 9 项精确日期时刻与 2 项安全评级待核验。最终排班需在出票前复核。</p>
+      </aside>
+    </section>
+
+    <nav class="tabs" aria-label="页面区域">
+      <button class="tab" data-tab="decide" aria-selected="true">智能推荐</button>
+      <button class="tab" data-tab="calendar" aria-selected="false">日历排期</button>
+      <button class="tab" data-tab="coverage" aria-selected="false">景点覆盖</button>
+      <button class="tab" data-tab="constraints" aria-selected="false">航班酒店</button>
+    </nav>
+
+    <section id="decide" class="panel active">
+      <div class="section-head">
+        <div><p class="eyebrow">STEP 01</p><h2>先锁定双人段</h2><p class="lede">泰国、马来西亚、越南三选二。新加坡固定为 2 大 1 小亲子段；未选中的第三国可设为亲子段或暂不去。</p></div>
+      </div>
+      <div class="choice-layout">
+        <div class="card choice-card">
+          <h3>双人段国家</h3>
+          <p class="micro">必须恰好选择 2 个</p>
+          <div class="country-grid" id="countryButtons"></div>
+          <div class="locked"><div class="mode-mark">👨‍👩‍👧</div><div><b>新加坡 · 亲子模式锁定</b><div class="micro">2 大 1 小（两岁多），每天 1–2 个景点，中午留午休</div></div></div>
+          <div class="stepper" aria-label="双人段总天数">
+            <span>双人段</span><button id="daysMinus" aria-label="减少一天">−</button><output id="coupleDays">7 天</output><button id="daysPlus" aria-label="增加一天">＋</button>
+          </div>
+          <div class="mode-row" style="margin-top:14px;padding:12px 0 0;border-top:1px solid var(--line);box-shadow:none">
+            <div><strong>双人节奏</strong><div class="micro">特种兵默认约 4 个点/天，但转场日仍保留机场与安全缓冲。</div></div>
+            <select id="paceSelect" aria-label="双人旅行节奏"><option value="intense" selected>特种兵 · 约4点/天</option><option value="standard">标准 · 约3点/天</option><option value="relaxed">从容 · 约2点/天</option></select>
+          </div>
+        </div>
+        <aside class="recommend" id="recommendBox">
+          <p class="eyebrow">SMART PICK</p>
+          <h3 id="recommendTitle"></h3>
+          <div class="allocation" id="allocation"></div>
+          <p id="recommendReason"></p>
+          <button class="primary" id="applyRecommendation">采用推荐并排入日历</button>
+        </aside>
+      </div>
+      <div class="section-head"><div><p class="eyebrow">7-DAY HEAD-TO-HEAD</p><h2>三种组合，一眼比完</h2></div></div>
+      <div class="compare-grid" id="compareGrid"></div>
+      <div class="card mode-row">
+        <div><strong id="remainingLabel">未选国家</strong><div class="micro">若加入亲子段，按慢节奏计算；也可以暂不去。</div></div>
+        <select id="remainingMode" aria-label="未选国家的旅行模式"><option value="skip">暂不去</option><option value="family">亲子模式（2大1小）</option></select>
+      </div>
+
+      <article class="card route-explorer" aria-labelledby="classicRouteTitle">
+        <p class="eyebrow">ROUTES · 出处整理中</p>
+        <h2 id="classicRouteTitle">每座城，玩几天才合适？</h2>
+        <p class="lede">先选城市，再从 1 天起自由切换。路线按公开旅行帖的日程结构整理，经 2026-09-14 逐源打开核验；小红书详细帖实证尚未接入，在补齐前不以“已验证经典”呈现。覆盖率按逐日实际命中的精华点去重计算，城外日不计入。</p>
+        <div class="route-toolbar">
+          <div><label for="classicCity">城市</label><select id="classicCity"></select></div>
+          <div><label>停留天数（所有城市均可从 1 天选择）</label><div class="day-pills" id="classicDayPills" role="group" aria-label="经典路线天数"></div></div>
+        </div>
+        <div class="route-verdict"><b id="classicVerdict"></b><span id="classicCoverage"></span></div>
+        <div class="classic-days" id="classicDays"></div>
+        <div class="route-source" id="classicSources"></div>
+        <div id="classicEvidence" aria-live="polite"></div>
+        <p class="route-note">说明：1–5 天方案是把同一组来源中的日程模块按天数展开；若来源只提供 3 天或 5 天版本，短版取其核心日，长版保留其增量日。最终仍会结合你们选定日期、航班与亲子/双人节奏再排。</p>
+      </article>
+    </section>
+
+    <section id="calendar" class="panel">
+      <div class="section-head">
+        <div><p class="eyebrow">STEP 02</p><h2>把建议放进 12 月</h2><p class="lede">点击任意日期，可改城市或模式。所有改动只在本次打开期间有效；复制行程后可粘贴到你们常用的笔记里。</p></div>
+        <button class="ghost" id="copyPlan">复制当前行程</button>
+      </div>
+      <div class="calendar-tools">
+        <div class="field"><label for="startDate">开始日期</label><input id="startDate" type="date" aria-label="开始日期" min="2026-12-01" max="2026-12-31" value="2026-12-12"></div>
+        <button class="ghost" id="resetRecommended">重新按推荐排</button>
+        <div class="legend"><span id="coupleLegend"><i class="dot couple"></i>双人特种兵</span><span><i class="dot family"></i>亲子慢节奏</span><span><i class="dot holiday"></i>节假日</span></div>
+      </div>
+      <section class="card hard-check" aria-labelledby="hardCheckTitle">
+        <div class="hard-check-head">
+          <div><h3 id="hardCheckTitle">硬性条件检查</h3><p>每次改排期都会重算：先列真正撞上的限制，再说明这次会错过什么。</p></div>
+          <span class="hard-count" id="hardCount">检查中</span>
+        </div>
+        <div class="hard-list" id="hardList" aria-live="polite"></div>
+      </section>
+      <div class="transfer-alerts" id="transferAlerts" aria-live="polite"></div>
+      <div class="calendar" aria-label="2026年12月与2027年1月行程日历">
+        <div class="weekdays"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+      <div class="calendar-note" id="calendarNote"></div>
+    </section>
+
+    <section id="coverage" class="panel">
+      <div class="section-head"><div><p class="eyebrow">STEP 03</p><h2>覆盖多少，舍掉什么</h2><p class="lede">“必看 / 可选 / 建议舍去”是为了在现有天数内做取舍的规划优先级，不是景点评分。名单严格来自 8 城 67 个精华景点清单；覆盖数按各城经典路线逐日实际命中去重计算，城外日不计入。</p></div></div>
+      <div class="summary-grid" id="coverageGrid"></div>
+      <div class="details-intro"><p class="eyebrow">DETAIL MODEL · 8 城</p><h2>景点详情字段</h2><p class="lede">曼谷 9 项已按地址、营业时间、最后入场、票价、交通、必看、推荐原因与避坑完整展开（2026-09-14 研究）；存在多源分歧的票价或时段会原样标注并提醒出发前复核。其余 7 城的研究资料尚未整理为详情字段，暂不展示——不拿占位文案冒充完成。</p></div>
+      <div class="spot-detail-list" id="spotDetailList"></div>
+    </section>
+
+    <section id="constraints" class="panel">
+      <div class="section-head"><div><p class="eyebrow">56-DIRECTION MATRIX · 2026-09-14</p><h2>按日期查直飞与铁路</h2><p class="lede">完整覆盖 8 城 56 个有向城市对。先按星期过滤，再按安全结论排序；排班模式、典型时刻与精确可售班次分开标注。</p></div></div>
+      <div class="matrix-summary" aria-label="交通矩阵摘要">
+        <div class="matrix-stat"><b>56</b><span>全部有向城市对</span></div><div class="matrix-stat"><b>48</b><span>有直飞</span></div><div class="matrix-stat"><b>8</b><span>已确认无直飞</span></div><div class="matrix-stat"><b>0</b><span>2026年12月无可用高铁</span></div>
+      </div>
+      <section class="card transport-panel" aria-labelledby="transportTitle">
+        <h3 id="transportTitle">交通选择器</h3>
+        <p class="micro">日期仅用于按星期筛选；价格、精确班次与房态仍需在预订前重新核验。</p>
+        <div class="transport-form">
+          <div><label for="transportDate">日期</label><input id="transportDate" type="date" min="2026-12-01" max="2026-12-31" value="2026-12-20"></div>
+          <div><label for="transportFrom">出发城市</label><select id="transportFrom"></select></div>
+          <div><label for="transportTo">到达城市</label><select id="transportTo"></select></div>
+          <button class="primary" id="swapRoute" type="button">对调方向</button>
+        </div>
+        <div class="route-result" id="routeResult" aria-live="polite"></div>
+      </section>
+      <div class="flight-layout">
+        <div>
+          <h3 style="margin-bottom:12px">矩阵使用原则</h3>
+          <div class="card constraint"><strong>默认安全优先</strong><p>“推荐”排在最前；“谨慎”航司会同时列出同航线更安全的替代；“待核验”明确提示安全评级待核验。</p></div>
+          <div class="card constraint warn"><strong>四条隔日航线</strong><p>普吉↔槟城、清迈↔胡志明市在周二、周四、周六没有直飞。日期命中时会直接警告，不再把“有航线”误当成“当天有班”。</p></div>
+          <div class="card constraint warn"><strong>8 个确认无直飞方向</strong><p>普吉↔富国岛、槟城↔富国岛、清迈↔槟城、清迈↔富国岛。其余组合若数据缺口只能显示“尚未核验”，不能推断成无直飞。</p></div>
+          <div class="card constraint"><strong>2026年12月无可用高铁</strong><p>2026年12月无可用高铁。可行的是普通铁路或联运：曼谷↔清迈夜火车、吉隆坡↔槟城 ETS、隆新经新山 ETS＋Shuttle Tebrau，以及曼谷↔普吉火车＋巴士／小巴。</p></div>
+        </div>
+        <aside>
+          <h3 style="margin-bottom:12px">仍需二次核验</h3>
+          <div class="card constraint warn"><strong>精确日期时刻</strong><p>BKK–CNX、SGN–BKK、SIN–CNX、SIN–HKT、SIN–PEN、PQC–SGN、SGN–KUL、SGN–PQC、SIN–KUL。</p></div>
+          <div class="card constraint warn"><strong>可疑航司显示</strong><p>HKT→SIN 的 SK 极可能是代码共享或系统显示 artifact；KUL→SIN 的 GF 安全评级未核实。两者都会显示“暂不建议据此安排转场”。</p></div>
+          <div class="card constraint warn"><strong>节日与限定日</strong><p>泰国 12/5、12/7、12/10、12/31；马来西亚、新加坡 12/25；周末市集与闭馆日继续由日历逐项检查。</p></div>
+          <div class="card constraint"><strong>酒店开业与节庆条款</strong><p>Park Hyatt Phu Quoc 2027 年 3 月才开放预订，2026 年 12 月不可选；圣诞至跨年需逐家核 minimum stay 与强制 gala dinner。</p></div>
+        </aside>
+      </div>
+      <div class="section-head" style="margin-top:28px"><div><p class="eyebrow">HOTEL CANDIDATES</p><h2>每城候选酒店</h2></div></div>
+      <div class="hotel-grid" id="hotelGrid"></div>
+      <div class="source-box"><strong>来源与口径</strong><br>航班：以 2026-09-14 最终 56 对矩阵及合并裁决为准；24 个方向含 2026-12-14 至 2026-12-20 的 live 核验，部分方向含 Duffel 精确日期交叉。排班模式与典型时刻不等于最终可售班次，预订前须重查。景点覆盖：8 城 67 项。公共假日：<a href="https://tourismthailand.com/blog/thailand-public-holidays.html" target="_blank" rel="noopener noreferrer">泰国国家旅游局 2026 假日表 ↗</a>、<a href="https://www.traveloka.com/en-my/explore/tips/december-public-holiday/1003282" target="_blank" rel="noopener noreferrer">马来西亚 2026 年 12 月假日表 ↗</a>、<a href="https://www.hcamag.com/asia/specialisation/benefits/singapore-releases-public-holidays-for-2026/539279" target="_blank" rel="noopener noreferrer">新加坡人力部公布日历的报道 ↗</a>、<a href="https://www.humanresourcesonline.net/public-holidays-in-vietnam-2026-11-official-days-to-note" target="_blank" rel="noopener noreferrer">越南 2026 公共假日表 ↗</a>。限定日与闭馆：<a href="https://www.tripadvisor.ca/Attraction_Review-g293916-d450971-Reviews-or50-Chatuchak_Weekend_Market-Bangkok.html" target="_blank" rel="noopener noreferrer">恰图恰营业日 ↗</a>、<a href="https://www.tripadvisor.co.nz/ShowUserReviews-g293917-d2233777-r145754718-Saturday_Night_Market_Walking_Street_Wua_Lai_Road-Chiang_Mai.html" target="_blank" rel="noopener noreferrer">清迈周六步行街 ↗</a>、<a href="https://www.tripadvisor.ie/Attraction_Review-g17588730-d19881385-Reviews-Sunday_Night_Market-Si_Phum_Chiang_Mai.html" target="_blank" rel="noopener noreferrer">清迈周日步行街 ↗</a>、<a href="https://www.tripadvisor.co.nz/ShowUserReviews-g1215781-d8776186-r1050639534-Sunday_Walking_Street_Market_Lard_Yai-Phuket_Town_Phuket.html" target="_blank" rel="noopener noreferrer">普吉 Lard Yai ↗</a>、<a href="https://www.tourismthailand.org/Articles/5-amazing-museums-in-bangkok-to-spend-all-day-long" target="_blank" rel="noopener noreferrer">泰国国家旅游局博物馆开放日示例 ↗</a>。酒店：<a href="https://onemileatatime.com/news/park-hyatt-phu-quoc/" target="_blank" rel="noopener noreferrer">Park Hyatt Phu Quoc 预订开放时间 ↗</a>、<a href="https://media.ffycdn.net/eu/mandarin-oriental-hotel-group/d/yKJgufDiG2JzihcU" target="_blank" rel="noopener noreferrer">曼谷文华东方 2026 旺季 minimum stay / gala 条款示例 ↗</a>。酒店条款、价格、班次、房态都可能变化，最终预订前需重新核实。</div>
+    </section>
+  </main>
+
+  <div class="day-modal" id="dayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head"><div><p class="eyebrow">EDIT DAY</p><h3 id="modalTitle">调整这一天</h3></div><button class="icon-btn" id="closeModal" aria-label="关闭">×</button></div>
+      <label for="modalCity">城市</label><select id="modalCity"></select>
+      <label for="modalMode">模式</label><select id="modalMode"><option value="couple">双人快节奏 · 约4个点</option><option value="family">亲子慢节奏 · 1–2个点＋午休</option><option value="free">留白 / 休整</option></select>
+      <div class="modal-actions"><button class="ghost" id="removeDay">清空这天</button><button class="primary" id="saveDay">保存调整</button></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>

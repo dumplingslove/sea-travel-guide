@@ -1,10 +1,19 @@
-/** 行程规划工具（P3 移植自 space-3，含 7 项诚实度修复），全视口 iframe 嵌入独立页面。 */
+/** 行程规划工具（原生集成：Shadow DOM 直挂，不再用 iframe）。 */
+import { useEffect, useRef } from "react";
+import { initPlanner } from "./planner/planner-logic";
+
 export default function Planner() {
+  const hostRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hostRef.current) return;
+    const cleanup = initPlanner(hostRef.current);
+    return cleanup;
+  }, []);
+
   return (
-    <iframe
-      src={`${import.meta.env.BASE_URL}planner/index.html`}
-      title="行程规划工具"
-      style={{ width: "100%", height: "100dvh", border: 0, display: "block" }}
-    />
+    <div style={{ minWidth: 0, overflowX: "clip" }}>
+      <div ref={hostRef} style={{ display: "block", minWidth: 0 }} />
+    </div>
   );
 }

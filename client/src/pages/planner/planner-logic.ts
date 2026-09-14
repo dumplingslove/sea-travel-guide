@@ -1,317 +1,69 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" content="#f5f3ee" />
-  <link rel="icon" href="data:," />
-  <title>行程规划工具</title>
-  <style>
-    :root{
-      --paper:#f5f3ee;--surface:#fff;--ink:#172624;--muted:#5e6b68;--line:#d8ddd8;
-      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-      --mono:ui-monospace,"SFMono-Regular","Cascadia Mono","Roboto Mono",Consolas,monospace;
-      --teal:#0b6b63;--teal-dark:#084a45;--teal-soft:#dcebe7;--coral:#e25c3d;
-      --coral-soft:#f7e1da;--gold:#d7a13a;--gold-soft:#f6ebcf;--blue:#2f6295;--blue-soft:#e1eaf4;
-      --shadow:0 12px 36px rgba(23,38,36,.08);--r:18px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
-    button,input,select{font:inherit;color:inherit}
-    button{cursor:pointer}
-    .shell{width:min(1180px,100%);margin:auto;padding:20px clamp(14px,3vw,34px) 80px}
-    .hero{display:grid;grid-template-columns:1.35fr .65fr;gap:26px;align-items:end;padding:24px 0 18px;border-bottom:1px solid var(--line)}
-    .hero h1{margin:0;max-width:760px;font-size:clamp(34px,5.4vw,66px);line-height:1.04;letter-spacing:-.045em;font-weight:700}
-    .hero h1 em{font-style:normal;color:var(--teal)}
-    .hero-copy{margin:16px 0 0;max-width:720px;color:#43514e;font-size:16px}
-    .snapshot{justify-self:end;width:min(100%,310px);padding:18px;border-top:4px solid var(--coral);background:var(--surface);box-shadow:var(--shadow)}
-    .snapshot strong{display:block;font-family:var(--mono);font-size:13px;color:var(--coral);margin-bottom:6px}
-    .snapshot p{margin:0;color:var(--muted);font-size:13px}
-    .tabs{position:sticky;top:0;z-index:20;margin:18px 0 26px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:rgba(245,243,238,.96);border:1px solid var(--line);backdrop-filter:blur(8px)}
-    .tab{border:0;background:transparent;padding:10px 8px;font-weight:600;color:var(--muted)}
-    .tab[aria-selected="true"]{background:var(--ink);color:#fff}
-    .panel{display:none}.panel.active{display:block}
-    .eyebrow{margin:0 0 8px;font-family:var(--mono);font-size:12px;color:var(--coral)}
-    h2{font-size:clamp(26px,3.6vw,42px);line-height:1.15;letter-spacing:-.035em;margin:0 0 10px}
-    h3{font-size:20px;line-height:1.25;margin:0}
-    .lede{color:var(--muted);max-width:780px;margin:0}
-    .section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin:0 0 18px}
-    .stack{display:grid;gap:18px}
-    .card{background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 24px rgba(23,38,36,.035)}
-    .choice-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:18px;margin:24px 0}
-    .choice-card{padding:22px}
-    .choice-card h3{margin-bottom:4px}
-    .country-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-    .country-btn{min-height:92px;text-align:left;padding:14px;border:1px solid var(--line);background:#fff;transition:.15s ease}
-    .country-btn:hover{border-color:var(--teal)}
-    .country-btn.selected{background:var(--teal-soft);border-color:var(--teal);box-shadow:inset 0 -3px 0 var(--teal)}
-    .country-btn .flag{font-size:20px;display:block;margin-bottom:6px}
-    .country-btn b{display:block;font-size:16px}.country-btn small{color:var(--muted)}
-    .locked{display:flex;gap:12px;align-items:center;padding:14px 0 0;margin-top:14px;border-top:1px solid var(--line)}
-    .mode-mark{width:40px;height:40px;display:grid;place-items:center;background:var(--gold-soft);font-size:20px;flex:0 0 auto}
-    .stepper{display:flex;align-items:center;gap:11px;margin-top:16px}
-    .stepper button{width:40px;height:40px;border:1px solid var(--line);background:#fff;font-size:20px}
-    .stepper output{min-width:74px;text-align:center;font:600 22px var(--mono)}
-    .micro{font-size:12px;color:var(--muted)}
-    .recommend{padding:22px;background:var(--ink);color:#fff;position:relative;overflow:hidden}
-    .recommend:after{content:"";position:absolute;right:-44px;bottom:-56px;width:160px;height:160px;border:28px solid rgba(255,255,255,.06);border-radius:50%}
-    .recommend .eyebrow{color:#f3ad98}.recommend h3{font-size:25px;max-width:370px}
-    .allocation{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 14px}
-    .allocation span{padding:8px 10px;background:rgba(255,255,255,.1);font-family:var(--mono);font-size:12px}
-    .recommend p{color:#dce4e2;margin:0;max-width:440px;font-size:13px}
-    .primary{border:0;background:var(--coral);color:#fff;font-weight:700;padding:12px 16px;margin-top:18px;position:relative;z-index:1}
-    .ghost{border:1px solid var(--line);background:#fff;padding:10px 14px;font-weight:600}
-    .compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .compare{padding:18px;position:relative}
-    .compare.best{border-top:4px solid var(--teal)}
-    .compare .tag{position:absolute;right:12px;top:12px;background:var(--teal-soft);color:var(--teal-dark);padding:3px 7px;font-size:11px;font-weight:700}
-    .pair{font-weight:700;padding-right:58px}.coverage{font:600 28px var(--mono);margin:12px 0 2px}.bar{height:7px;background:#e9ece8;margin:8px 0 10px}.bar i{height:100%;display:block;background:var(--teal)}
-    .compare p{margin:0;color:var(--muted);font-size:12px}
-    .mode-row{margin-top:18px;padding:16px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between}
-    .mode-row select{padding:9px;border:1px solid var(--line);background:#fff}
-    .route-explorer{margin-top:28px;padding:22px}
-    .route-toolbar{display:grid;grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);gap:14px;align-items:end;margin:18px 0}
-    .route-toolbar label{display:block;margin-bottom:6px;font-size:12px;color:var(--muted)}
-    .route-toolbar select{width:100%;padding:11px;border:1px solid var(--line);background:#fff}
-    .day-pills{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-    .day-pill{border:1px solid var(--line);background:#fff;padding:10px 6px;font:600 13px var(--mono)}
-    .day-pill.active{background:var(--teal);border-color:var(--teal);color:#fff}
-    .route-verdict{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-    .route-verdict b{font-size:18px}.route-verdict span{font:600 12px var(--mono);color:var(--coral)}
-    .classic-days{display:grid;gap:0;margin-top:4px}
-    .classic-day{display:grid;grid-template-columns:72px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid #e8ebe7}
-    .classic-day .day-index{font:600 12px var(--mono);color:var(--teal)}
-    .classic-day b{display:block;margin-bottom:3px}.classic-day p{margin:0;color:var(--muted);font-size:13px}
-    .route-source{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-top:16px;padding:12px;background:#f3f5f1;font-size:12px;color:var(--muted)}
-    .route-source strong{color:var(--ink)}.route-source a{color:var(--teal-dark);text-underline-offset:3px}
-    .route-note{margin-top:10px;color:var(--muted);font-size:12px}
-    .calendar-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
-    .field{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);padding:8px 11px}
-    .field label{color:var(--muted);font-size:12px}.field input{border:0;background:transparent;outline:0}
-    .legend{margin-left:auto;display:flex;gap:12px;font-size:12px;color:var(--muted)}
-    .legend span{display:flex;gap:5px;align-items:center}.dot{width:10px;height:10px;display:inline-block}.dot.couple{background:var(--teal)}.dot.family{background:var(--gold)}.dot.holiday{background:var(--coral)}
-    .transfer-alerts{display:grid;gap:8px;margin-top:14px}
-    .transfer-alert{padding:13px 15px;border:1px solid #c9d8d4;background:#edf5f3;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
-    .transfer-alert strong{font:600 12px var(--mono);color:var(--teal-dark)}
-    .transfer-alert p{margin:0;font-size:13px;color:#334542}
-    .transfer-alert.blocked{background:#fff0eb;border-color:#e4a797;box-shadow:inset 4px 0 0 var(--coral)}
-    .transfer-alert.blocked strong,.transfer-alert.blocked p{color:#8a321f}
-    .hard-check{margin-top:16px;padding:20px}
-    .hard-check-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--line)}
-    .hard-check-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.hard-count{flex:0 0 auto;padding:7px 10px;background:var(--coral-soft);color:#8a321f;font:600 12px var(--mono)}
-    .hard-count.clear{background:var(--teal-soft);color:var(--teal-dark)}
-    .hard-list{display:grid;gap:8px;margin-top:12px}
-    .hard-item{padding:12px 13px;background:#f3f5f1;border-left:4px solid #91a19d}
-    .hard-item.warn{background:#fff6df;border-color:var(--gold)}.hard-item.blocked{background:#fff0eb;border-color:var(--coral)}.hard-item.pass{background:#edf5f3;border-color:var(--teal)}
-    .hard-item strong{display:block;font-size:14px}.hard-item p{margin:3px 0 0;color:#495653;font-size:12px}.hard-item a{color:var(--teal-dark);text-underline-offset:3px}.hard-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;font-size:11px;color:var(--muted)}
-    .calendar{margin-top:14px;background:#fff;border:1px solid var(--line);padding:14px}
-    .weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
-    .weekdays div{padding:6px;text-align:center;font:600 11px var(--mono);color:var(--muted)}
-    .day{border:1px solid #e7e9e5;background:#fff;min-height:104px;padding:8px;text-align:left;position:relative;overflow:hidden}
-    .day:hover{border-color:var(--teal)}.day.out{background:#fafaf8;color:#a2aaa7}.day.holiday{box-shadow:inset 0 3px 0 var(--coral)}
-    .date-no{font:600 12px var(--mono)}.holiday-label{font-size:10px;color:var(--coral);float:right}
-    .day-plan{display:block;margin-top:10px;padding:6px 7px;font-size:11px;line-height:1.3;font-weight:600}
-    .day-plan.couple{background:var(--teal-soft);color:var(--teal-dark)}.day-plan.family{background:var(--gold-soft);color:#715008}.day-plan.transfer{box-shadow:inset 3px 0 0 var(--coral)}
-    .day-plan small{display:block;font-weight:400;opacity:.82;margin-top:3px}
-    .calendar-note{padding:10px 14px;margin-top:10px;background:var(--blue-soft);color:#244b72;font-size:12px}
-    .summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
-    .city-summary{padding:18px}.city-top{display:flex;justify-content:space-between;gap:12px}.city-top span{font:600 13px var(--mono);color:var(--teal)}
-    .meter{height:8px;background:#e7ebe7;margin:13px 0 12px}.meter b{display:block;height:100%;background:var(--teal)}
-    .spot-groups{display:grid;gap:8px}.spot-group{font-size:12px;color:var(--muted)}.spot-group strong{color:var(--ink)}
-    .spot-chip{display:inline-block;padding:3px 6px;margin:3px 3px 0 0;background:#f2f3ef}.spot-chip.must{background:var(--teal-soft);color:var(--teal-dark)}.spot-chip.drop{background:var(--coral-soft);color:#8c3726;text-decoration:line-through;text-decoration-thickness:1px}
-    .flight-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
-    .flight-list{display:grid;gap:10px}.flight{padding:16px 18px;display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:14px}
-    .route{font:600 15px var(--mono);color:var(--teal-dark)}.flight p{margin:0;color:var(--muted);font-size:13px}.price{text-align:right;font:600 15px var(--mono)}.price small{font-family:var(--sans);font-weight:400;color:var(--muted);display:block}
-    .warn{border-left:4px solid var(--coral)}.ok{border-left:4px solid var(--teal)}
-    .constraint{padding:18px;margin-bottom:10px}.constraint strong{display:block}.constraint p{margin:4px 0 0;color:var(--muted);font-size:13px}
-    .hotel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.hotel{padding:18px}.hotel header{display:flex;justify-content:space-between;gap:10px}.hotel .city{font:600 12px var(--mono);color:var(--coral)}.hotel p{margin:7px 0 0;color:var(--muted);font-size:13px}.hotel.warning{background:#fff7f4}
-    .matrix-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}.matrix-stat{padding:13px;background:#fff;border-top:3px solid var(--teal)}.matrix-stat b{display:block;font:700 22px var(--mono)}.matrix-stat span{font-size:12px;color:var(--muted)}
-    .transport-panel{padding:20px;margin-bottom:24px}.transport-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;margin-top:16px}.transport-form label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.transport-form input,.transport-form select{width:100%;min-height:44px;border:1px solid var(--line);background:#fff;padding:9px}.transport-form button{min-height:44px;margin:0}
-    .route-result{margin-top:18px}.route-result-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:15px;background:var(--ink);color:#fff}.route-result-head h3{font:700 20px var(--mono)}.route-result-head p{margin:4px 0 0;color:#d8e2df;font-size:12px}.route-status{padding:5px 8px;background:var(--teal-soft);color:var(--teal-dark);font:700 11px var(--mono);white-space:nowrap}.route-status.alert{background:var(--coral-soft);color:#8a321f}.route-status.partial{background:var(--gold-soft);color:#715008}
-    .route-alert{padding:12px 14px;margin-top:8px;background:#fff0eb;border-left:4px solid var(--coral);color:#7d2e1d;font-size:13px}.route-alert.info{background:#edf5f3;border-color:var(--teal);color:#244e49}.route-alert.caution{background:#fff6df;border-color:var(--gold);color:#694c0b}
-    .airline-list{display:grid;gap:8px;margin-top:10px}.airline-card{padding:15px;border:1px solid var(--line);background:#fff}.airline-card.recommended{border-top:3px solid var(--teal)}.airline-card.caution{border-top:3px solid var(--coral)}.airline-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.airline-head h4{margin:0;font-size:16px}.badge-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.badge{padding:3px 7px;background:#eef1ee;font:700 10px var(--mono)}.badge.recommended{background:var(--teal-soft);color:var(--teal-dark)}.badge.caution{background:var(--coral-soft);color:#8a321f}.badge.pending{background:var(--gold-soft);color:#715008}.airline-meta{margin:7px 0 0;color:var(--muted);font-size:12px}.flight-times{display:grid;gap:6px;margin-top:10px}.flight-row{display:grid;grid-template-columns:92px 1fr 120px;gap:10px;padding:8px 10px;background:#f3f5f1;font-size:12px}.flight-row b{font-family:var(--mono)}.safety-note{margin:10px 0 0;padding-top:9px;border-top:1px solid #e8ebe7;font-size:11px;color:var(--muted)}.safety-note a{color:var(--teal-dark)}
-    .rail-box{margin-top:10px;padding:14px;background:var(--blue-soft);color:#244b72}.rail-box h4{margin:0 0 7px}.rail-item{padding:8px 0;border-top:1px solid rgba(47,98,149,.2);font-size:12px}.rail-item:first-of-type{border-top:0}.rail-item p{margin:3px 0}.rail-item a{color:#244b72}
-    .details-intro{margin:24px 0 12px}.spot-detail-list{display:grid;gap:8px}.spot-detail{background:#fff;border:1px solid var(--line)}.spot-detail summary{cursor:pointer;padding:14px 16px;font-weight:700}.spot-detail summary span{float:right;color:var(--teal);font:600 11px var(--mono)}.spot-detail-body{padding:0 16px 16px}.spot-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}.spot-field{padding:9px;background:#f3f5f1}.spot-field b{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}.spot-detail-body p{margin:6px 0;font-size:13px}.pending-text{color:#8a6420}
-    .source-box{margin-top:24px;padding:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.source-box strong{color:var(--ink)}
-    .day-modal{position:fixed;inset:0;background:rgba(9,20,18,.58);z-index:50;display:none;align-items:end;justify-content:center;padding:16px}.day-modal.open{display:flex}.modal-card{width:min(540px,100%);background:#fff;padding:22px;box-shadow:var(--shadow)}
-    .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:#fff}
-    .modal-card label{display:block;margin:14px 0 5px;font-size:12px;color:var(--muted)}.modal-card select{width:100%;padding:11px;border:1px solid var(--line);background:#fff}.modal-actions{display:flex;gap:8px;margin-top:18px}.modal-actions button{flex:1;margin:0}
-    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;z-index:80;display:none;box-shadow:var(--shadow);max-width:min(92vw,620px);text-align:center}.toast.show{display:block}.toast.warning{background:#9f3520}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media(max-width:820px){
-      .hero,.choice-layout,.flight-layout{grid-template-columns:1fr}.snapshot{justify-self:start}.compare-grid{grid-template-columns:1fr}.section-head{display:block}.section-head .ghost{margin-top:12px}.summary-grid,.hotel-grid{grid-template-columns:1fr}.flight{grid-template-columns:88px 1fr}.price{grid-column:2;text-align:left}.country-grid{grid-template-columns:1fr}.country-btn{min-height:0}.route-toolbar{grid-template-columns:1fr}.legend{margin-left:0;width:100%;flex-wrap:wrap}.transfer-alert{grid-template-columns:1fr;gap:3px}.day{min-height:88px;padding:5px}.holiday-label{display:block;float:none}.day-plan{padding:5px;font-size:10px}.calendar{padding:7px}.weekdays,.calendar-grid{gap:3px}.matrix-summary{grid-template-columns:repeat(2,1fr)}.transport-form{grid-template-columns:1fr 1fr}.transport-form .primary{grid-column:1/-1}.spot-fields{grid-template-columns:1fr}.flight-row{grid-template-columns:78px 1fr}.flight-row span:last-child{grid-column:2}.route-result-head{display:block}.route-status{display:inline-block;margin-top:8px}
-    }
-    @media(max-width:520px){
-      .shell{padding:12px 10px 60px}.hero{padding-top:16px}.hero h1{font-size:39px}.tabs{margin:13px 0 22px}.tab{font-size:12px;padding:10px 3px}.choice-card,.recommend,.route-explorer{padding:17px}.day-pills{grid-template-columns:repeat(5,minmax(0,1fr))}.day-pill{padding:9px 2px;font-size:12px}.classic-day{grid-template-columns:54px 1fr}.route-verdict{align-items:flex-start}.hard-check{padding:16px}.hard-check-head{display:block}.hard-count{display:inline-block;margin-top:10px}.day{min-height:78px}.day-plan small{display:none}.calendar-note{font-size:11px}.mode-row{display:block}.mode-row select{margin-top:10px;width:100%}.flight{padding:14px;grid-template-columns:72px 1fr}.hotel-grid{gap:8px}
-    }
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-  </style>
-</head>
-<body>
-  <main class="shell">
-    <section class="hero">
-      <div>
-        <p class="eyebrow">DEC 2026 · 先比较，再落日历</p>
-        <h1>哪两个国家，<br><em>最值这 7 天？</em></h1>
-        <p class="hero-copy">把夫妻双人段和带两岁幼儿的亲子段分开算：双人默认特种兵节奏约 4 个精华点，亲子日按 1–2 个并预留午休。换国家、改天数或节奏，覆盖率与舍弃清单会一起重算。</p>
-      </div>
-      <aside class="snapshot" aria-label="数据快照说明">
-        <strong>DATA SNAPSHOT · 2026-09-14</strong>
-        <p>56 个方向已完成合并，其中 24 个方向有 12/14–12/20 live 核验；仍有 9 项精确日期时刻与 2 项安全评级待核验。最终排班需在出票前复核。</p>
-      </aside>
-    </section>
+/**
+ * 行程规划工具 · 原生集成（/planner 直挂，不再用 iframe）
+ * ------------------------------------------------------------------
+ * 移植自 ~/workspace/sea-migration/planner-port/planner/index.html
+ * （P3 移植版，含 INTEGRATION.md 记录的 7 项诚实度修复，原样保留）。
+ * 运行在 Shadow DOM 内：样式零泄漏、ID 零冲突。
+ * 地点数据直接消费研究数据（client/src/planner-data/research-items.ts，
+ * 由 scripts/gen-planner-data.js 从 research-status.json 程序化生成）。
+ * 航班矩阵：client/src/planner-data/flight-matrix.js（56 方向，字节级拷贝，只读）。
+ *
+ * 与 iframe 版的差异（诚实记录）：
+ * 1. citySpots 改由 PLANNER_CITY_SPOTS（研究 JSON 景点条目）提供——已逐项核对，
+ *    与原 citySpots 逐字一致（曼谷 9 项为城内项，2 城外项剔除，见生成脚本注释）。
+ *    classicSpotHits 61 个命中名全部命中清单，无"估算"降级（移植时已程序化校验）。
+ * 2. 吉隆坡酒店卡：验收要求必须保留「研究报告未给出候选酒店」的缺口提示。
+ *    研究 JSON 中确有 5 条吉隆坡酒店研究记录（PLANNER_KL_HOTELS），仅作研究
+ *    状态参考展示，不得以「研究已给出候选、缺口已满足」替代该文案。
+ * 3. .tabs 取消吸顶（应用内嵌时避免盖住站点导航）；tab 切换滚动改为宿主 scrollIntoView。
+ * 4. 顶部追加一行研究数据来源说明（researchProvenance）。
+ */
+import plannerCss from "./planner.css?raw";
+import plannerBody from "./planner-body.html?raw";
+import "../../planner-data/flight-matrix.js";
+import {
+  PLANNER_CITY_SPOTS,
+  PLANNER_KL_HOTELS,
+  RESEARCH_UPDATED_AT,
+  RESEARCH_META,
+  type ResearchStatus,
+} from "../../planner-data/research-items";
 
-    <nav class="tabs" aria-label="页面区域">
-      <button class="tab" data-tab="decide" aria-selected="true">智能推荐</button>
-      <button class="tab" data-tab="calendar" aria-selected="false">日历排期</button>
-      <button class="tab" data-tab="coverage" aria-selected="false">景点覆盖</button>
-      <button class="tab" data-tab="constraints" aria-selected="false">航班酒店</button>
-    </nav>
+/* ---------------- 类型 ---------------- */
+interface ClassicSource { title: string; url: string; author?: string; date?: string; excerpt?: string; commentExcerpt?: string; verdict?: string; readNote?: string }
+interface ClassicRoute { verdicts: string[]; days: [string, string][]; sources: ClassicSource[]; xhsEvidence?: { status: string; note?: string } }
+interface SpotDetail { name: string; address: string; hours: string; lastEntry: string; price: string; transit: string; must: string; reason: string; avoid: string; sources: [string, string][] }
+interface PublicHoliday { countries: string[]; short: string; name: string; sources: [string, string][] }
+interface SpecialMarker { city: string; short: string; title: string; body: string }
+interface PlannerState { selected: string[]; coupleDays: number; remainingMode: string; pace: string; start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; classicCity: string; classicDays: number }
+interface MatrixFlight { flight_no?: string; dep?: string; arr?: string; duration?: string; airport?: string; arrival_airport?: string; operating_days?: string[]; note?: string }
+interface MatrixAirline { code: string; name: string; operating_days?: string[]; typical_departures?: string[]; schedule_note?: string; merge_note?: string; flights?: MatrixFlight[]; safety?: { verdict?: string; iosa?: boolean; note?: string; source_urls?: string[] } }
+interface MatrixRoute { origin: string; destination: string; direct?: string; verification_status: string; calendar_warnings?: string[]; notes?: string; airlines?: MatrixAirline[]; rail?: { hsr?: { available?: boolean }; conventional?: { service: string; operator: string; route: string; duration: string; frequency: string; price: string; booking: string; source_urls?: string[] }[] } }
+interface RouteAssessment { kind: "unknown" | "no-direct" | "pending" | "no-service" | "direct"; airlines: MatrixAirline[] }
 
-    <section id="decide" class="panel active">
-      <div class="section-head">
-        <div><p class="eyebrow">STEP 01</p><h2>先锁定双人段</h2><p class="lede">泰国、马来西亚、越南三选二。新加坡固定为 2 大 1 小亲子段；未选中的第三国可设为亲子段或暂不去。</p></div>
-      </div>
-      <div class="choice-layout">
-        <div class="card choice-card">
-          <h3>双人段国家</h3>
-          <p class="micro">必须恰好选择 2 个</p>
-          <div class="country-grid" id="countryButtons"></div>
-          <div class="locked"><div class="mode-mark">👨‍👩‍👧</div><div><b>新加坡 · 亲子模式锁定</b><div class="micro">2 大 1 小（两岁多），每天 1–2 个景点，中午留午休</div></div></div>
-          <div class="stepper" aria-label="双人段总天数">
-            <span>双人段</span><button id="daysMinus" aria-label="减少一天">−</button><output id="coupleDays">7 天</output><button id="daysPlus" aria-label="增加一天">＋</button>
-          </div>
-          <div class="mode-row" style="margin-top:14px;padding:12px 0 0;border-top:1px solid var(--line);box-shadow:none">
-            <div><strong>双人节奏</strong><div class="micro">特种兵默认约 4 个点/天，但转场日仍保留机场与安全缓冲。</div></div>
-            <select id="paceSelect" aria-label="双人旅行节奏"><option value="intense" selected>特种兵 · 约4点/天</option><option value="standard">标准 · 约3点/天</option><option value="relaxed">从容 · 约2点/天</option></select>
-          </div>
-        </div>
-        <aside class="recommend" id="recommendBox">
-          <p class="eyebrow">SMART PICK</p>
-          <h3 id="recommendTitle"></h3>
-          <div class="allocation" id="allocation"></div>
-          <p id="recommendReason"></p>
-          <button class="primary" id="applyRecommendation">采用推荐并排入日历</button>
-        </aside>
-      </div>
-      <div class="section-head"><div><p class="eyebrow">7-DAY HEAD-TO-HEAD</p><h2>三种组合，一眼比完</h2></div></div>
-      <div class="compare-grid" id="compareGrid"></div>
-      <div class="card mode-row">
-        <div><strong id="remainingLabel">未选国家</strong><div class="micro">若加入亲子段，按慢节奏计算；也可以暂不去。</div></div>
-        <select id="remainingMode" aria-label="未选国家的旅行模式"><option value="skip">暂不去</option><option value="family">亲子模式（2大1小）</option></select>
-      </div>
+/**
+ * 挂载规划器到宿主元素。返回卸载函数（StrictMode 安全，可重复挂载）。
+ */
+export function initPlanner(hostEl: HTMLElement): () => void {
+  const shadow: ShadowRoot = hostEl.shadowRoot ?? hostEl.attachShadow({ mode: "open" });
+  shadow.innerHTML = `<style>${plannerCss}</style><div class="planner-scope">${plannerBody}</div>`;
+  const S: ShadowRoot = shadow;
 
-      <article class="card route-explorer" aria-labelledby="classicRouteTitle">
-        <p class="eyebrow">ROUTES · 出处整理中</p>
-        <h2 id="classicRouteTitle">每座城，玩几天才合适？</h2>
-        <p class="lede">先选城市，再从 1 天起自由切换。路线按公开旅行帖的日程结构整理，经 2026-09-14 逐源打开核验；小红书详细帖实证尚未接入，在补齐前不以“已验证经典”呈现。覆盖率按逐日实际命中的精华点去重计算，城外日不计入。</p>
-        <div class="route-toolbar">
-          <div><label for="classicCity">城市</label><select id="classicCity"></select></div>
-          <div><label>停留天数（所有城市均可从 1 天选择）</label><div class="day-pills" id="classicDayPills" role="group" aria-label="经典路线天数"></div></div>
-        </div>
-        <div class="route-verdict"><b id="classicVerdict"></b><span id="classicCoverage"></span></div>
-        <div class="classic-days" id="classicDays"></div>
-        <div class="route-source" id="classicSources"></div>
-        <div id="classicEvidence" aria-live="polite"></div>
-        <p class="route-note">说明：1–5 天方案是把同一组来源中的日程模块按天数展开；若来源只提供 3 天或 5 天版本，短版取其核心日，长版保留其增量日。最终仍会结合你们选定日期、航班与亲子/双人节奏再排。</p>
-      </article>
-    </section>
+  const el = (id: string): HTMLElement => {
+    const n = S.getElementById(id);
+    if (!n) throw new Error(`planner: #${id} 不存在`);
+    return n as HTMLElement;
+  };
+  const inputVal = (id: string): string => (el(id) as HTMLInputElement | HTMLSelectElement).value;
 
-    <section id="calendar" class="panel">
-      <div class="section-head">
-        <div><p class="eyebrow">STEP 02</p><h2>把建议放进 12 月</h2><p class="lede">点击任意日期，可改城市或模式。所有改动只在本次打开期间有效；复制行程后可粘贴到你们常用的笔记里。</p></div>
-        <button class="ghost" id="copyPlan">复制当前行程</button>
-      </div>
-      <div class="calendar-tools">
-        <div class="field"><label for="startDate">开始日期</label><input id="startDate" type="date" aria-label="开始日期" min="2026-12-01" max="2026-12-31" value="2026-12-12"></div>
-        <button class="ghost" id="resetRecommended">重新按推荐排</button>
-        <div class="legend"><span id="coupleLegend"><i class="dot couple"></i>双人特种兵</span><span><i class="dot family"></i>亲子慢节奏</span><span><i class="dot holiday"></i>节假日</span></div>
-      </div>
-      <section class="card hard-check" aria-labelledby="hardCheckTitle">
-        <div class="hard-check-head">
-          <div><h3 id="hardCheckTitle">硬性条件检查</h3><p>每次改排期都会重算：先列真正撞上的限制，再说明这次会错过什么。</p></div>
-          <span class="hard-count" id="hardCount">检查中</span>
-        </div>
-        <div class="hard-list" id="hardList" aria-live="polite"></div>
-      </section>
-      <div class="transfer-alerts" id="transferAlerts" aria-live="polite"></div>
-      <div class="calendar" aria-label="2026年12月与2027年1月行程日历">
-        <div class="weekdays"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </div>
-      <div class="calendar-note" id="calendarNote"></div>
-    </section>
+  /* 地点清单：研究数据（程序化生成），替换原 citySpots 字面量 */
+  const citySpots: Record<string, string[]> = PLANNER_CITY_SPOTS;
 
-    <section id="coverage" class="panel">
-      <div class="section-head"><div><p class="eyebrow">STEP 03</p><h2>覆盖多少，舍掉什么</h2><p class="lede">“必看 / 可选 / 建议舍去”是为了在现有天数内做取舍的规划优先级，不是景点评分。名单严格来自 8 城 67 个精华景点清单；覆盖数按各城经典路线逐日实际命中去重计算，城外日不计入。</p></div></div>
-      <div class="summary-grid" id="coverageGrid"></div>
-      <div class="details-intro"><p class="eyebrow">DETAIL MODEL · 8 城</p><h2>景点详情字段</h2><p class="lede">曼谷 9 项已按地址、营业时间、最后入场、票价、交通、必看、推荐原因与避坑完整展开（2026-09-14 研究）；存在多源分歧的票价或时段会原样标注并提醒出发前复核。其余 7 城的研究资料尚未整理为详情字段，暂不展示——不拿占位文案冒充完成。</p></div>
-      <div class="spot-detail-list" id="spotDetailList"></div>
-    </section>
+  const onKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") closeModal(); };
 
-    <section id="constraints" class="panel">
-      <div class="section-head"><div><p class="eyebrow">56-DIRECTION MATRIX · 2026-09-14</p><h2>按日期查直飞与铁路</h2><p class="lede">完整覆盖 8 城 56 个有向城市对。先按星期过滤，再按安全结论排序；排班模式、典型时刻与精确可售班次分开标注。</p></div></div>
-      <div class="matrix-summary" aria-label="交通矩阵摘要">
-        <div class="matrix-stat"><b>56</b><span>全部有向城市对</span></div><div class="matrix-stat"><b>48</b><span>有直飞</span></div><div class="matrix-stat"><b>8</b><span>已确认无直飞</span></div><div class="matrix-stat"><b>0</b><span>2026年12月无可用高铁</span></div>
-      </div>
-      <section class="card transport-panel" aria-labelledby="transportTitle">
-        <h3 id="transportTitle">交通选择器</h3>
-        <p class="micro">日期仅用于按星期筛选；价格、精确班次与房态仍需在预订前重新核验。</p>
-        <div class="transport-form">
-          <div><label for="transportDate">日期</label><input id="transportDate" type="date" min="2026-12-01" max="2026-12-31" value="2026-12-20"></div>
-          <div><label for="transportFrom">出发城市</label><select id="transportFrom"></select></div>
-          <div><label for="transportTo">到达城市</label><select id="transportTo"></select></div>
-          <button class="primary" id="swapRoute" type="button">对调方向</button>
-        </div>
-        <div class="route-result" id="routeResult" aria-live="polite"></div>
-      </section>
-      <div class="flight-layout">
-        <div>
-          <h3 style="margin-bottom:12px">矩阵使用原则</h3>
-          <div class="card constraint"><strong>默认安全优先</strong><p>“推荐”排在最前；“谨慎”航司会同时列出同航线更安全的替代；“待核验”明确提示安全评级待核验。</p></div>
-          <div class="card constraint warn"><strong>四条隔日航线</strong><p>普吉↔槟城、清迈↔胡志明市在周二、周四、周六没有直飞。日期命中时会直接警告，不再把“有航线”误当成“当天有班”。</p></div>
-          <div class="card constraint warn"><strong>8 个确认无直飞方向</strong><p>普吉↔富国岛、槟城↔富国岛、清迈↔槟城、清迈↔富国岛。其余组合若数据缺口只能显示“尚未核验”，不能推断成无直飞。</p></div>
-          <div class="card constraint"><strong>2026年12月无可用高铁</strong><p>2026年12月无可用高铁。可行的是普通铁路或联运：曼谷↔清迈夜火车、吉隆坡↔槟城 ETS、隆新经新山 ETS＋Shuttle Tebrau，以及曼谷↔普吉火车＋巴士／小巴。</p></div>
-        </div>
-        <aside>
-          <h3 style="margin-bottom:12px">仍需二次核验</h3>
-          <div class="card constraint warn"><strong>精确日期时刻</strong><p>BKK–CNX、SGN–BKK、SIN–CNX、SIN–HKT、SIN–PEN、PQC–SGN、SGN–KUL、SGN–PQC、SIN–KUL。</p></div>
-          <div class="card constraint warn"><strong>可疑航司显示</strong><p>HKT→SIN 的 SK 极可能是代码共享或系统显示 artifact；KUL→SIN 的 GF 安全评级未核实。两者都会显示“暂不建议据此安排转场”。</p></div>
-          <div class="card constraint warn"><strong>节日与限定日</strong><p>泰国 12/5、12/7、12/10、12/31；马来西亚、新加坡 12/25；周末市集与闭馆日继续由日历逐项检查。</p></div>
-          <div class="card constraint"><strong>酒店开业与节庆条款</strong><p>Park Hyatt Phu Quoc 2027 年 3 月才开放预订，2026 年 12 月不可选；圣诞至跨年需逐家核 minimum stay 与强制 gala dinner。</p></div>
-        </aside>
-      </div>
-      <div class="section-head" style="margin-top:28px"><div><p class="eyebrow">HOTEL CANDIDATES</p><h2>每城候选酒店</h2></div></div>
-      <div class="hotel-grid" id="hotelGrid"></div>
-      <div class="source-box"><strong>来源与口径</strong><br>航班：以 2026-09-14 最终 56 对矩阵及合并裁决为准；24 个方向含 2026-12-14 至 2026-12-20 的 live 核验，部分方向含 Duffel 精确日期交叉。排班模式与典型时刻不等于最终可售班次，预订前须重查。景点覆盖：8 城 67 项。公共假日：<a href="https://tourismthailand.com/blog/thailand-public-holidays.html" target="_blank" rel="noopener noreferrer">泰国国家旅游局 2026 假日表 ↗</a>、<a href="https://www.traveloka.com/en-my/explore/tips/december-public-holiday/1003282" target="_blank" rel="noopener noreferrer">马来西亚 2026 年 12 月假日表 ↗</a>、<a href="https://www.hcamag.com/asia/specialisation/benefits/singapore-releases-public-holidays-for-2026/539279" target="_blank" rel="noopener noreferrer">新加坡人力部公布日历的报道 ↗</a>、<a href="https://www.humanresourcesonline.net/public-holidays-in-vietnam-2026-11-official-days-to-note" target="_blank" rel="noopener noreferrer">越南 2026 公共假日表 ↗</a>。限定日与闭馆：<a href="https://www.tripadvisor.ca/Attraction_Review-g293916-d450971-Reviews-or50-Chatuchak_Weekend_Market-Bangkok.html" target="_blank" rel="noopener noreferrer">恰图恰营业日 ↗</a>、<a href="https://www.tripadvisor.co.nz/ShowUserReviews-g293917-d2233777-r145754718-Saturday_Night_Market_Walking_Street_Wua_Lai_Road-Chiang_Mai.html" target="_blank" rel="noopener noreferrer">清迈周六步行街 ↗</a>、<a href="https://www.tripadvisor.ie/Attraction_Review-g17588730-d19881385-Reviews-Sunday_Night_Market-Si_Phum_Chiang_Mai.html" target="_blank" rel="noopener noreferrer">清迈周日步行街 ↗</a>、<a href="https://www.tripadvisor.co.nz/ShowUserReviews-g1215781-d8776186-r1050639534-Sunday_Walking_Street_Market_Lard_Yai-Phuket_Town_Phuket.html" target="_blank" rel="noopener noreferrer">普吉 Lard Yai ↗</a>、<a href="https://www.tourismthailand.org/Articles/5-amazing-museums-in-bangkok-to-spend-all-day-long" target="_blank" rel="noopener noreferrer">泰国国家旅游局博物馆开放日示例 ↗</a>。酒店：<a href="https://onemileatatime.com/news/park-hyatt-phu-quoc/" target="_blank" rel="noopener noreferrer">Park Hyatt Phu Quoc 预订开放时间 ↗</a>、<a href="https://media.ffycdn.net/eu/mandarin-oriental-hotel-group/d/yKJgufDiG2JzihcU" target="_blank" rel="noopener noreferrer">曼谷文华东方 2026 旺季 minimum stay / gala 条款示例 ↗</a>。酒店条款、价格、班次、房态都可能变化，最终预订前需重新核实。</div>
-    </section>
-  </main>
+/* citySpots 已删除：改由 research-items.ts（PLANNER_CITY_SPOTS，研究 JSON 程序化生成）提供 */
 
-  <div class="day-modal" id="dayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <div class="modal-head"><div><p class="eyebrow">EDIT DAY</p><h3 id="modalTitle">调整这一天</h3></div><button class="icon-btn" id="closeModal" aria-label="关闭">×</button></div>
-      <label for="modalCity">城市</label><select id="modalCity"></select>
-      <label for="modalMode">模式</label><select id="modalMode"><option value="couple">双人快节奏 · 约4个点</option><option value="family">亲子慢节奏 · 1–2个点＋午休</option><option value="free">留白 / 休整</option></select>
-      <div class="modal-actions"><button class="ghost" id="removeDay">清空这天</button><button class="primary" id="saveDay">保存调整</button></div>
-    </div>
-  </div>
-  <div class="toast" id="toast" role="status"></div>
-
-<script src="assets/flight-matrix.js"></script>
-<script>
-const citySpots={
- "曼谷":["大皇宫/玉佛寺/卧佛寺","郑王庙+湄南河游船 Wat Arun","恰图恰周末市场 Chatuchak","四面佛+暹罗商圈+Jim Thompson House","金山寺 Wat Saket","Mahanakhon","ICONSIAM","唐人街耀华力路 Chinatown","伦披尼公园 Lumphini"],
- "清迈":["Elephant Nature Park 大象自然公园","周日步行街 Sunday Walking Street","双龙寺 Wat Phra That Doi Suthep","因他农国家公园 Doi Inthanon","契迪龙寺+帕辛寺 Wat Chedi Luang·Wat Phra Singh","宁曼路 Nimman","乌蒙寺+Baan Kang Wat","瓦洛洛市场 Warorot Market"],
- "普吉":["攀牙湾/皮皮岛 Phang Nga Bay·Phi Phi","大佛 Big Buddha","查龙寺 Wat Chalong","普吉老镇 Phuket Old Town","神仙半岛+卡塔诺伊 Promthep Cape·Kata Noi","Phuket Elephant Sanctuary","Siam Niramit 暹罗梦幻剧场","芭东Bangla路"],
- "槟城":["乔治市UNESCO核心区","Khoo Kongsi 龙山堂邱公司","姓氏桥 Clan Jetties","极乐寺 Kek Lok Si","升旗山 Penang Hill","康华利斯堡 Fort Cornwallis","娘惹博物馆 Pinang Peranakan Mansion","卧佛寺+缅甸庙 Wat Chaiyamangalaram","小印度+和谐街 Little India·Kapitan Keling"],
- "吉隆坡":["双子塔+KL Tower","黑风洞 Batu Caves","独立广场+中央市场+茨厂街","天后宫 Thean Hou Temple","武吉免登 Bukit Bintang","伊斯兰艺术博物馆","Perdana植物园"],
- "胡志明市":["红教堂+中央邮局","战争遗迹博物馆","统一宫 Independence Palace","古芝地道 Cu Chi Tunnels","玉皇殿 Jade Emperor Pagoda","Bitexco Sky Deck","堤岸唐人街+平西市场 Cholon","滨城市场 Ben Thanh Market","阮惠步行街+同起街"],
- "富国岛":["Sun World跨海缆车","Sao Beach 星星海滩","Khem Beach","An Thoi群岛浮潜","VinWonders+Vinpearl Safari","Dinh Cau Rock","Ho Quoc Pagoda 护国寺","富国岛监狱/鱼露工厂/胡椒园"],
- "新加坡":["Singapore Oceanarium 海洋馆","Gardens by the Bay 滨海湾花园","Universal Studios Singapore 环球影城","万礼三园：动物园/飞禽天堂/夜间动物园","鱼尾狮公园+Spectra+河游船","Jewel Changi 星耀樟宜+乌节路圣诞灯饰","ArtScience Museum 艺术科学博物馆","牛车水/小印度/甘榜格南","Sentosa圣淘沙+Skyline Luge"]
-};
-const classicRoutes={
+const classicRoutes: Record<string, ClassicRoute> = {
  "曼谷":{
   verdicts:["极限打卡：只看老城核心","核心初识：老城＋河岸","经典推荐：城市层次完整","从容版：加入市场与社区","深度版：近郊历史也覆盖"],
   days:[
@@ -436,7 +188,7 @@ const classicRoutes={
 // 经典路线逐日→精华点真实命中映射（planner-port 移植核验）。
 // 命中名必须与 citySpots[city] 逐字一致；命中为空的日=城外日或未命中清单日，不计入覆盖。
 // 覆盖率=去重命中数/该城清单总数；若映射名与清单对不上，classicCoverage 自动降级为"估算"。
-const classicSpotHits={
+const classicSpotHits: Record<string, string[][]> = {
  "曼谷":[
   ["大皇宫/玉佛寺/卧佛寺","郑王庙+湄南河游船 Wat Arun","唐人街耀华力路 Chinatown"],
   ["四面佛+暹罗商圈+Jim Thompson House","伦披尼公园 Lumphini","Mahanakhon"],
@@ -494,7 +246,7 @@ const classicSpotHits={
   ["Jewel Changi 星耀樟宜+乌节路圣诞灯饰"]
  ]
 };
-const classicOutsideDayNote={
+const classicOutsideDayNote: Record<string, Record<number, string>> = {
  "曼谷":{2:"大城府（城外）：不在曼谷 9 精华清单内，不计入覆盖",3:"美功铁道／水上市场／运河社区（城外）：不在曼谷 9 精华清单内，不计入覆盖"},
  "清迈":{},
  "普吉":{3:"度假留白日：未安排清单内景点，不计入覆盖"},
@@ -504,7 +256,7 @@ const classicOutsideDayNote={
  "富国岛":{4:"真正度假日：未安排清单内景点，不计入覆盖"},
  "新加坡":{}
 };
-function classicCoverage(city,days){
+function classicCoverage(city: string, days: number){
   const list=citySpots[city]||[],hits=classicSpotHits[city]||[];
   const seen=new Set();let estimated=false;
   for(let i=0;i<Math.min(days,hits.length);i++){
@@ -513,29 +265,29 @@ function classicCoverage(city,days){
   const n=seen.size,total=list.length;
   return {n,total,pct:total?Math.round(n/total*100):0,estimated};
 }
-const countries={TH:{name:"泰国",flag:"🇹🇭",cities:["曼谷","清迈","普吉"]},MY:{name:"马来西亚",flag:"🇲🇾",cities:["槟城","吉隆坡"]},VN:{name:"越南",flag:"🇻🇳",cities:["胡志明市","富国岛"]},SG:{name:"新加坡",flag:"🇸🇬",cities:["新加坡"]}};
-const cityCountry={};Object.entries(countries).forEach(([k,v])=>v.cities.forEach(c=>cityCountry[c]=k));
-const hotels={"曼谷":"The Ritz-Carlton, Bangkok / Park Hyatt Bangkok","清迈":"Chiang Mai Marriott Hotel","普吉":"JW Marriott Phuket Resort & Spa","槟城":"Penang Marriott Hotel","吉隆坡":"待定","胡志明市":"JW Marriott Hotel & Suites Saigon","富国岛":"Park Hyatt 预计 2027-03 开业；候选 New World / Regent","新加坡":"Grand Hyatt Singapore"};
-const baselineNights={"曼谷":3,"清迈":2,"普吉":3,"槟城":2,"吉隆坡":2,"胡志明市":2,"富国岛":3,"新加坡":3};
-const routeProfiles={
+const countries: Record<string, { name: string; flag: string; cities: string[] }> = {TH:{name:"泰国",flag:"🇹🇭",cities:["曼谷","清迈","普吉"]},MY:{name:"马来西亚",flag:"🇲🇾",cities:["槟城","吉隆坡"]},VN:{name:"越南",flag:"🇻🇳",cities:["胡志明市","富国岛"]},SG:{name:"新加坡",flag:"🇸🇬",cities:["新加坡"]}};
+const cityCountry: Record<string, string> = {};Object.entries(countries).forEach(([k,v])=>v.cities.forEach(c=>cityCountry[c]=k));
+const hotels: Record<string, string> = {"曼谷":"The Ritz-Carlton, Bangkok / Park Hyatt Bangkok","清迈":"Chiang Mai Marriott Hotel","普吉":"JW Marriott Phuket Resort & Spa","槟城":"Penang Marriott Hotel","吉隆坡":"待定","胡志明市":"JW Marriott Hotel & Suites Saigon","富国岛":"Park Hyatt 预计 2027-03 开业；候选 New World / Regent","新加坡":"Grand Hyatt Singapore"};
+const baselineNights: Record<string, number> = {"曼谷":3,"清迈":2,"普吉":3,"槟城":2,"吉隆坡":2,"胡志明市":2,"富国岛":3,"新加坡":3};
+const routeProfiles: Record<string, string[]> = {
  "TH-VN":["曼谷","胡志明市","富国岛"],
  "TH-MY":["曼谷","槟城","吉隆坡"],
  "MY-VN":["槟城","吉隆坡","胡志明市"]
 };
-const publicHolidays={
+const publicHolidays: Record<string, PublicHoliday> = {
  "2026-12-05":{countries:["TH"],short:"泰国国王纪念日",name:"国王普密蓬诞辰／国庆日／父亲节",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
  "2026-12-07":{countries:["TH"],short:"泰国补假",name:"国王诞辰／国庆日／父亲节补假",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
  "2026-12-10":{countries:["TH"],short:"泰国宪法日",name:"宪法日",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
  "2026-12-25":{countries:["MY","SG"],short:"马／新圣诞节",name:"圣诞节",sources:[["马来西亚 2026 年 12 月假日表","https://www.traveloka.com/en-my/explore/tips/december-public-holiday/1003282"],["新加坡人力部公布日历的报道","https://www.hcamag.com/asia/specialisation/benefits/singapore-releases-public-holidays-for-2026/539279"]]},
  "2026-12-31":{countries:["TH"],short:"泰国除夕",name:"除夕（银行假日）",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]}
 };
-const specialDateMarkers={
+const specialDateMarkers: Record<string, SpecialMarker[]> = {
  "2026-12-01":[{city:"新加坡",short:"USS 私人活动",title:"环球影城私人活动日",body:"购票前按实际日期再次确认开放时段。"}],
  "2026-12-09":[{city:"新加坡",short:"Skyway 维护",title:"OCBC Skyway 全天维护关闭",body:"滨海湾花园两座温室照常开放，空中步道当天不要排。"}],
  "2026-12-11":[{city:"吉隆坡",short:"雪兰莪州假",title:"雪兰莪州苏丹诞辰",body:"雪兰莪州属假日；吉隆坡与布城不放假，但进出周边的人流可能增加。"}],
  "2026-12-12":[{city:"新加坡",short:"USS 私人活动",title:"环球影城私人活动日",body:"购票前按实际日期再次确认开放时段。"}]
 };
-const constraintSources={
+const constraintSources: Record<string, [string, string]> = {
  chatuchak:["恰图恰营业日","https://www.tripadvisor.ca/Attraction_Review-g293916-d450971-Reviews-or50-Chatuchak_Weekend_Market-Bangkok.html"],
  chiangMaiSaturday:["清迈周六步行街","https://www.tripadvisor.co.nz/ShowUserReviews-g293917-d2233777-r145754718-Saturday_Night_Market_Walking_Street_Wua_Lai_Road-Chiang_Mai.html"],
  chiangMaiSunday:["清迈周日步行街","https://www.tripadvisor.ie/Attraction_Review-g17588730-d19881385-Reviews-Sunday_Night_Market-Si_Phum_Chiang_Mai.html"],
@@ -544,14 +296,14 @@ const constraintSources={
  parkHyatt:["Park Hyatt Phu Quoc 2027-03 开放预订报道","https://onemileatatime.com/news/park-hyatt-phu-quoc/"],
  festiveHotel:["曼谷文华东方 2026 旺季条款","https://media.ffycdn.net/eu/mandarin-oriental-hotel-group/d/yKJgufDiG2JzihcU"]
 };
-const flightMatrix=window.FLIGHT_MATRIX||{};
-const cityAirportCodes={"曼谷":"BKK","清迈":"CNX","普吉":"HKT","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC","新加坡":"SIN"};
-const airportCity={BKK:"曼谷",CNX:"清迈",HKT:"普吉",PEN:"槟城",KUL:"吉隆坡",SGN:"胡志明市",PQC:"富国岛",SIN:"新加坡"};
-const cityAirportLabels={"曼谷":"BKK / DMK","清迈":"CNX","普吉":"HKT","槟城":"PEN","吉隆坡":"KUL / SZB","胡志明市":"SGN","富国岛":"PQC","新加坡":"SIN"};
+const flightMatrix: Record<string, MatrixRoute> = (window as unknown as { FLIGHT_MATRIX?: Record<string, MatrixRoute> }).FLIGHT_MATRIX || {};
+const cityAirportCodes: Record<string, string> = {"曼谷":"BKK","清迈":"CNX","普吉":"HKT","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC","新加坡":"SIN"};
+const airportCity: Record<string, string> = {BKK:"曼谷",CNX:"清迈",HKT:"普吉",PEN:"槟城",KUL:"吉隆坡",SGN:"胡志明市",PQC:"富国岛",SIN:"新加坡"};
+const cityAirportLabels: Record<string, string> = {"曼谷":"BKK / DMK","清迈":"CNX","普吉":"HKT","槟城":"PEN","吉隆坡":"KUL / SZB","胡志明市":"SGN","富国岛":"PQC","新加坡":"SIN"};
 const weekdayCodes=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const weekdayZh={Sun:"周日",Mon:"周一",Tue:"周二",Wed:"周三",Thu:"周四",Fri:"周五",Sat:"周六"};
-const safetyRank={"推荐":0,"可用":1,"谨慎":2,"待核验":3};
-const bangkokSpotDetails=[
+const weekdayZh: Record<string, string> = {Sun:"周日",Mon:"周一",Tue:"周二",Wed:"周三",Thu:"周四",Fri:"周五",Sat:"周六"};
+const safetyRank: Record<string, number> = {"推荐":0,"可用":1,"谨慎":2,"待核验":3};
+const bangkokSpotDetails: SpotDetail[] = [
  {name:"大皇宫/玉佛寺/卧佛寺",address:"大皇宫：Na Phra Lan Road, Phra Borom Maha Ratchawang, Phra Nakhon, Bangkok 10200；卧佛寺：Sanam Chai Road / Maharaj Road，紧邻大皇宫南侧；常用邮政地址“2 Sanam Chai Rd, Bangkok 10200”待核验",hours:"大皇宫／玉佛寺每日 08:30–15:30（售票处）；卧佛寺每日 08:00–19:30",lastEntry:"大皇宫 15:30 停止售票与入场，园内约 16:30 清场；卧佛寺最后入场时间待核验，建议不晚于 18:30",price:"大皇宫＋玉佛寺外国游客 500 THB，身高 120cm 以下儿童免费；卧佛寺 300 THB，身高 120cm 以下儿童免费；寺内泰式按摩 30/60/120 分钟为 340/520/1,040 THB",transit:"大皇宫：湄南河快船至 Tha Chang 码头步行约 5 分钟，或 MRT Sanam Chai 站步行约 15 分钟；卧佛寺：MRT Sanam Chai 站步行约 5 分钟，或至 Tha Tien 码头",must:"玉佛寺翡翠玉佛、节基王殿、拉玛坚壁画长廊；卧佛寺 46 米贴金卧佛、佛足 108 吉祥纹、108 只铜钵、四世王塔群与泰式按摩学校",reason:"王室建筑、佛教艺术与曼谷老城最具代表性的核心组合，步行衔接效率高。",avoid:"大皇宫可能因王室仪式临时关闭，出发前查官网；着装需遮肩及过膝；建议 08:30 到场避开团队。",sources:[["大皇宫官网","https://royalgrandpalace.th/en/home"],["TripAdvisor 大皇宫页面","https://www.Tripadvisor.Co.nz/Attraction_Review-g293916-d317603-Reviews-The_Grand_Palace-Bangkok.html"],["卧佛寺官网参观信息","https://watpho.com/en/contact/plan"],["Trip.com 大皇宫交通","https://www.trip.com/blog/top-12-reasons-to-visit-grand-palace-bangkok"]]},
  {name:"郑王庙+湄南河游船 Wat Arun",address:"郑王庙：158 Thanon Wang Doem, Wat Arun, Bangkok Yai, Bangkok 10600；旅游船以 Sathorn 中央码头为枢纽，往返 Phra Arthit 并停靠 ICONSIAM、Ratchawongse、Wat Arun、Tha Chang 等码头",hours:"郑王庙每日 08:00–18:00；Blue Flag 旅游船 Sathorn 09:00–19:15、Phra Arthit 08:30–19:00；普通快船工作日约 06:00–21:30、周末及节假日约 06:00–18:40",lastEntry:"郑王庙最后入场时间待核验，建议不晚于 17:00；Blue Flag 旅游船 12 月班次待核验，以码头公示为准",price:"郑王庙外国人 200 THB；Blue Flag 一日票 150 THB、单程 40 THB；橙旗 18 THB、黄旗 23 THB、绿黄旗按距离 16/23/35 THB、红旗 32 THB，票价可能随油价调整",transit:"从 Tha Tien 码头乘约 4.5 THB 摆渡船过河到郑王庙；Blue Flag 旅游船可从 BTS Saphan Taksin 站 2 号出口旁的 Sathorn 码头登船",must:"郑王庙中央大佛塔与瓷片镶嵌、登塔河景、Tha Tien 对岸日落剪影；用一日船票串联大皇宫、卧佛寺、郑王庙、唐人街和 ICONSIAM",reason:"把老城寺庙与湄南河交通合成一条顺路动线，白天看建筑、傍晚看河岸灯光。",avoid:"郑王庙法事或王室活动可能临时调整；旅游船票价与班次会随季节和油价变化，出发前看官方账号及码头公示。",sources:[["郑王庙官方 Facebook","https://web.facebook.com/watarunofficial/"],["Tusk Travel 郑王庙 2026 指南","https://www.tusktravel.com/blog/wat-arun-bangkok-travel-guide/"],["Chao Phraya Express Boat 路线与票价","https://thailandboat.com/bangkok/chao-phraya-express-boat"],["Traveloka 旅游船班次","https://www.traveloka.com/en-au/activities/thailand/product/chao-phraya-hop-on-hop-off-tourist-boat-tour-2000717244350?funnel_id=flight.DES-BKK.internalLink&funnel_source=backlink"]]},
  {name:"恰图恰周末市场 Chatuchak",address:"Kamphaeng Phet Road, Lat Yao, Chatuchak, Bangkok 10900",hours:"主市场周六、周日 09:00–18:00；周三、周四 07:00–18:00 仅植物区；周五 18:00–24:00 为批发场",lastEntry:"开放式市场无统一最后入场；建议 16:00 前到达，主市场按 18:00 收市",price:"免费入场；购物与餐饮自付，可适度议价",transit:"BTS Mo Chit 站 1 号出口；MRT Chatuchak Park 站 1 号出口，或 Kamphaeng Phet 站进入植物区",must:"26 个分区的服装、手工艺、古董、二手与植物；周末集中逛吃、砍价与泰式按摩",reason:"曼谷最具代表性的周末市集，适合用半日至一日集中采购和体验街头饮食。",avoid:"主市场只在周末全开；12 月周末游客多，建议 09:00 到达并先锁定分区，注意防晒、防盗和补水。",sources:[["TripAdvisor 恰图恰页面","https://www.tripadvisor.ca/Attraction_Review-g293916-d450971-Reviews-or50-Chatuchak_Weekend_Market-Bangkok.html"],["Agoda 恰图恰开放时间指南","https://www.agoda.com/travel-guides/thailand/bangkok/chatuchak-weekend-market-timings-your-guide-to-bangkoks-best/"],["Traveloka 恰图恰交通","https://www.traveloka.com/en-ph/explore/tips/things-to-know-before-visiting-chatuchak-weekend-market-in-bangkok-trp/334192"]]},
@@ -562,19 +314,19 @@ const bangkokSpotDetails=[
  {name:"唐人街耀华力路 Chinatown",address:"Yaowarat Road, Samphanthawong, Bangkok 10100",hours:"街区无统一营业时间，日间店铺约 09:00–18:00、夜市小吃摊约 16:00–24:00，具体时段待核验",lastEntry:"开放街区无统一最后入场",price:"免费；餐饮与购物按店消费",transit:"MRT Wat Mangkon 站 1/2 号出口；或湄南河快船至 Ratchawong 码头 N5，再步行约 5–10 分钟",must:"18:00–22:00 的耀华力路街边小吃与霓虹街景、金店街、龙莲寺 Wat Mangkon Kamalawat",reason:"曼谷夜间烟火气最强的街区之一，适合老城行程后的晚餐与夜游。",avoid:"白天部分摊位未开，夜间非常拥挤；热门店先确认营业日与价格，注意保管财物。",sources:[["TripAdvisor 曼谷唐人街","https://www.tripadvisor.ca/Attraction_Review-g293916-d447272-Reviews-or30-Chinatown_Bangkok-Bangkok.html"],["Indochina Voyages 唐人街 2026 指南","https://www.indochinavoyages.com/travel-blog/china-town-in-bangkok-thailand"],["Trip.com 唐人街交通","https://us.trip.com/moments/detail/chinatown-2035757-132044348/"]]},
  {name:"伦披尼公园 Lumphini",address:"Rama IV Road, Wang Mai, Pathum Wan, Bangkok 10330",hours:"每日 04:30–22:00；园内骑行仅 10:00–15:00",lastEntry:"22:00 闭园；免费公园无单独售票截止",price:"免费",transit:"MRT Silom 站 1 号出口或 Lumphini 站 3 号出口；BTS Sala Daeng 站 5 号出口或 Ratchadamri 站 4 号出口",must:"湖上鸭子船与皮划艇、巨蜥、拉玛六世王纪念像、黄昏有氧操及季节性 Music in the Park",reason:"高密度行程中的低强度恢复点，适合清晨运动或傍晚散步。",avoid:"中午暴晒；园内巨蜥较多，应保持距离且不要投喂；禁飞无人机、禁烟酒。",sources:[["曼谷市政府 Greener Bangkok 官方页","https://greener.bangkok.go.th/park/suan-lumpini/"],["Trip.com 伦披尼公园","https://www.trip.com/moments/detail/bangkok-191-136721636/"],["Hotels.com 伦披尼交通","https://www.hotels.com/go/thailand/lumpini-park?intlid=gglist|listitem"]]}
 ];
-let state={selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,classicCity:"曼谷",classicDays:3};
-let modalDate=null;
+let state: PlannerState = {selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,classicCity:"曼谷",classicDays:3};
+let modalDate: string | null = null;
 
-const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-function isoDate(d){return d.toISOString().slice(0,10)}
-function addDays(iso,n){const d=new Date(iso+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);return isoDate(d)}
-function pairKey(sel=state.selected){return [...sel].sort((a,b)=>["TH","MY","VN"].indexOf(a)-["TH","MY","VN"].indexOf(b)).join("-")}
-function comboCities(sel=state.selected){return routeProfiles[pairKey(sel)]||[]}
-function totalSpotsForCountries(sel){return sel.flatMap(k=>countries[k].cities).reduce((a,c)=>a+citySpots[c].length,0)}
+const esc=(s: unknown)=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"} as Record<string,string>)[m]);
+function isoDate(d: Date){return d.toISOString().slice(0,10)}
+function addDays(iso: string, n: number){const d=new Date(iso+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);return isoDate(d)}
+function pairKey(sel: string[] = state.selected){return [...sel].sort((a,b)=>["TH","MY","VN"].indexOf(a)-["TH","MY","VN"].indexOf(b)).join("-")}
+function comboCities(sel: string[] = state.selected){return routeProfiles[pairKey(sel)]||[]}
+function totalSpotsForCountries(sel: string[]){return sel.flatMap(k=>countries[k].cities).reduce((a,c)=>a+citySpots[c].length,0)}
 
-function allocate(days,sel=state.selected){
+function allocate(days: number, sel: string[] = state.selected): Record<string, number>{
   const cities=comboCities(sel); if(!cities.length)return {};
-  const alloc={}; cities.forEach(c=>alloc[c]=0);
+  const alloc: Record<string, number> = {}; cities.forEach(c=>alloc[c]=0);
   const activeCount=Math.min(cities.length,Math.max(2,Math.floor(days/2)));
   const active=cities.slice(0,activeCount);
   active.forEach(c=>alloc[c]=1);
@@ -589,44 +341,44 @@ function allocate(days,sel=state.selected){
   }
   return alloc;
 }
-function capacityForAllocation(alloc,mode="couple"){
-  let total=0; const active=Object.keys(alloc).filter(c=>alloc[c]>0), paceCap={intense:4,standard:3,relaxed:2}[state.pace]||4;
+function capacityForAllocation(alloc: Record<string, number>, mode = "couple"){
+  let total=0; const active=Object.keys(alloc).filter(c=>alloc[c]>0), paceCap=({intense:4,standard:3,relaxed:2} as Record<string, number>)[state.pace]||4;
   active.forEach(c=>{const d=alloc[c];total+= mode==="couple"?d*paceCap:Math.round(d*1.5)});
   if(active.length>1) total-=active.length-1; // 换城日扣一个景点位，保留机场与安全缓冲
   return Math.max(0,total);
 }
-function comboStats(sel,days=7){
+function comboStats(sel: string[], days = 7){
   const alloc=allocate(days,sel), denominator=totalSpotsForCountries(sel);
   let mapped=0;
   Object.entries(alloc).forEach(([city,d])=>{if(d>0)mapped+=classicCoverage(city,d).n});
   return {alloc,cap:mapped,denominator,pct:Math.min(100,Math.round(mapped/denominator*100))};
 }
-function allocationText(alloc){return Object.entries(alloc).filter(([,d])=>d).map(([c,d])=>`${c} ${d}天`).join(" · ")}
-function reasonFor(sel,days,alloc){
+function allocationText(alloc: Record<string, number>){return Object.entries(alloc).filter(([,d])=>d).map(([c,d])=>`${c} ${d}天`).join(" · ")}
+function reasonFor(sel: string[], days: number, alloc: Record<string, number>){
   const active=Object.entries(alloc).filter(([,d])=>d).map(([c])=>c); const skipped=sel.flatMap(k=>countries[k].cities).filter(c=>!active.includes(c));
   const cap=comboStats(sel,days).cap, total=totalSpotsForCountries(sel);
   return `${days} 天按各城经典路线逐日命中去重，约覆盖 ${cap}/${total} 个两国精华；把城市控制在 ${active.length} 个，减少转场损耗。${skipped.length?`本轮先舍去 ${skipped.join("、")}，避免“到过但没玩好”。`:""}`;
 }
 function renderClassicRoute(){
   const city=state.classicCity, days=state.classicDays, route=classicRoutes[city];
-  document.getElementById("classicCity").value=city;
-  document.getElementById("classicDayPills").innerHTML=[1,2,3,4,5].map(n=>`<button class="day-pill ${n===days?"active":""}" data-days="${n}" aria-pressed="${n===days}">${n}天</button>`).join("");
-  document.querySelectorAll("#classicDayPills .day-pill").forEach(btn=>btn.onclick=()=>{state.classicDays=Number(btn.dataset.days);renderClassicRoute()});
-  document.getElementById("classicVerdict").textContent=`${city} · ${route.verdicts[days-1]}`;
+  (el("classicCity") as HTMLSelectElement).value=city;
+  el("classicDayPills").innerHTML=[1,2,3,4,5].map(n=>`<button class="day-pill ${n===days?"active":""}" data-days="${n}" aria-pressed="${n===days}">${n}天</button>`).join("");
+  ([...S.querySelectorAll("#classicDayPills .day-pill")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{state.classicDays=Number(btn.dataset.days);renderClassicRoute()});
+  el("classicVerdict").textContent=`${city} · ${route.verdicts[days-1]}`;
   const cov=classicCoverage(city,days);
-  document.getElementById("classicCoverage").textContent=cov.estimated?`约覆盖 ${cov.n}/${cov.total} 个精华（估算）`:`实际命中 ${cov.n}/${cov.total} 个精华 · ${cov.pct}%`;
+  el("classicCoverage").textContent=cov.estimated?`约覆盖 ${cov.n}/${cov.total} 个精华（估算）`:`实际命中 ${cov.n}/${cov.total} 个精华 · ${cov.pct}%`;
   const list=citySpots[city]||[];
-  document.getElementById("classicDays").innerHTML=route.days.slice(0,days).map((d,i)=>{
+  el("classicDays").innerHTML=route.days.slice(0,days).map((d,i)=>{
     const hits=((classicSpotHits[city]||[])[i]||[]).filter(h=>list.includes(h));
     const outside=(classicOutsideDayNote[city]||{})[i];
     const note=outside?`<div class="route-note" style="margin-top:6px">ⓘ ${esc(outside)}</div>`:(hits.length?"":`<div class="route-note" style="margin-top:6px">ⓘ 该日未命中本城精华清单，不计入覆盖。</div>`);
     return `<div class="classic-day"><div class="day-index">DAY ${i+1}</div><div><b>${esc(d[0])}</b><p>${esc(d[1])}</p>${hits.length?`<div style="margin-top:6px">${hits.map(h=>`<span class="spot-chip must">${esc(h)}</span>`).join("")}</div>`:""}${note}</div></div>`;
   }).join("");
-  document.getElementById("classicSources").innerHTML=`<strong>路线出处</strong>${(route.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a>`).join("<span>·</span>")}`;
+  el("classicSources").innerHTML=`<strong>路线出处</strong>${(route.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a>`).join("<span>·</span>")}`;
   renderClassicEvidence(route,city);
 }
-function renderClassicEvidence(route,city){
-  const wrap=document.getElementById("classicEvidence");if(!wrap)return;
+function renderClassicEvidence(route: ClassicRoute, city: string){
+  const wrap=el("classicEvidence");if(!wrap)return;
   const detail=(route.sources||[]).map((s,i)=>{
     const rows=[`<strong>来源${i+1} · ${esc(s.verdict||"未标注")}</strong>`];
     rows.push(s.author&&s.author!=="未记录"?`作者：${esc(s.author)}`:"作者：未在核验报告中记录");
@@ -636,40 +388,40 @@ function renderClassicEvidence(route,city){
     if(s.readNote)rows.push(`核验备注：${esc(s.readNote)}`);
     return `<div class="route-note">🔎 ${rows.join("<br>")}</div>`;
   }).join("");
-  const xhs=route.xhsEvidence||{};
+  const xhs: { status?: string; note?: string } = route.xhsEvidence || {};
   const badge=xhs.status==="insufficient"
     ?`<div class="route-note" style="margin-top:10px">⚠ <strong>证据不足（小红书详细帖）：</strong>${esc(xhs.note||"小红书路线实证研究进行中，暂未接入。")}在补齐前，本路线按“博客/OTA 出处版”呈现，不作“已验证经典”断言。</div>`:"";
   wrap.innerHTML=detail+badge;
 }
 function renderCountries(){
-  const wrap=document.getElementById("countryButtons");wrap.innerHTML="";
-  ["TH","MY","VN"].forEach(k=>{const v=countries[k],b=document.createElement("button");b.className="country-btn"+(state.selected.includes(k)?" selected":"");b.innerHTML=`<span class="flag">${v.flag}</span><b>${v.name}</b><small>${v.cities.join(" · ")}</small>`;b.setAttribute("aria-pressed",state.selected.includes(k));b.onclick=()=>toggleCountry(k);wrap.appendChild(b)});
+  const wrap=el("countryButtons");wrap.innerHTML="";
+  ["TH","MY","VN"].forEach(k=>{const v=countries[k],b=document.createElement("button");b.className="country-btn"+(state.selected.includes(k)?" selected":"");b.innerHTML=`<span class="flag">${v.flag}</span><b>${v.name}</b><small>${v.cities.join(" · ")}</small>`;b.setAttribute("aria-pressed",String(state.selected.includes(k)));b.onclick=()=>toggleCountry(k);wrap.appendChild(b)});
 }
-function toggleCountry(k){
+function toggleCountry(k: string){
   if(state.selected.includes(k)){if(state.selected.length===2){toast("双人段需要保留 2 个国家");return}state.selected=state.selected.filter(x=>x!==k)}
   else {if(state.selected.length===2)state.selected.shift();state.selected.push(k)}
   state.edited=false;updateAll();
 }
 function renderRecommendation(){
   const stats=comboStats(state.selected,state.coupleDays), names=state.selected.map(k=>countries[k].name).join("＋");
-  document.getElementById("recommendTitle").textContent=`${names}：${allocationText(stats.alloc)}`;
-  document.getElementById("allocation").innerHTML=Object.entries(stats.alloc).filter(([,d])=>d).map(([c,d])=>`<span>${esc(c)} / ${d}D</span>`).join("");
-  document.getElementById("recommendReason").textContent=reasonFor(state.selected,state.coupleDays,stats.alloc);
-  document.getElementById("coupleDays").textContent=state.coupleDays+" 天";
-  const unselected=["TH","MY","VN"].find(k=>!state.selected.includes(k));
-  document.getElementById("remainingLabel").textContent=`${countries[unselected].flag} ${countries[unselected].name}（未选）`;
-  document.getElementById("remainingMode").value=state.remainingMode;
+  el("recommendTitle").textContent=`${names}：${allocationText(stats.alloc)}`;
+  el("allocation").innerHTML=Object.entries(stats.alloc).filter(([,d])=>d).map(([c,d])=>`<span>${esc(c)} / ${d}D</span>`).join("");
+  el("recommendReason").textContent=reasonFor(state.selected,state.coupleDays,stats.alloc);
+  el("coupleDays").textContent=state.coupleDays+" 天";
+  const unselected=(["TH","MY","VN"] as string[]).find(k=>!state.selected.includes(k)) as string;
+  el("remainingLabel").textContent=`${countries[unselected].flag} ${countries[unselected].name}（未选）`;
+  (el("remainingMode") as HTMLSelectElement).value=state.remainingMode;
 }
 function renderCompare(){
   const pairs=[["TH","VN"],["TH","MY"],["MY","VN"]];
   const vals=pairs.map(p=>({...comboStats(p,7),pair:p,key:pairKey(p)}));
   const best=vals.reduce((a,b)=>b.pct>a.pct?b:a,vals[0]);
-  document.getElementById("compareGrid").innerHTML=vals.map(v=>`<article class="card compare ${v.key===best.key?"best":""}">${v.key===best.key?'<span class="tag">覆盖率较高</span>':""}<div class="pair">${v.pair.map(k=>countries[k].name).join("＋")}</div><div class="coverage">${v.cap}/${v.denominator}</div><div class="bar"><i style="width:${v.pct}%"></i></div><p>${allocationText(v.alloc)}<br>按经典路线逐日命中去重：7 天约覆盖 ${v.cap}/${v.denominator}（${v.pct}%）。</p></article>`).join("");
+  el("compareGrid").innerHTML=vals.map(v=>`<article class="card compare ${v.key===best.key?"best":""}">${v.key===best.key?'<span class="tag">覆盖率较高</span>':""}<div class="pair">${v.pair.map(k=>countries[k].name).join("＋")}</div><div class="coverage">${v.cap}/${v.denominator}</div><div class="bar"><i style="width:${v.pct}%"></i></div><p>${allocationText(v.alloc)}<br>按经典路线逐日命中去重：7 天约覆盖 ${v.cap}/${v.denominator}（${v.pct}%）。</p></article>`).join("");
 }
 function buildRecommendedSchedule(){
-  const alloc=allocate(state.coupleDays), schedule={}; let cursor=state.start;
+  const alloc=allocate(state.coupleDays), schedule: Record<string, { city: string; mode: string }> = {}; let cursor=state.start;
   Object.entries(alloc).filter(([,d])=>d).forEach(([city,days])=>{for(let i=0;i<days;i++){schedule[cursor]={city,mode:"couple"};cursor=addDays(cursor,1)}});
-  const unselected=["TH","MY","VN"].find(k=>!state.selected.includes(k));
+  const unselected=(["TH","MY","VN"] as string[]).find(k=>!state.selected.includes(k)) as string;
   if(state.remainingMode==="family") countries[unselected].cities.forEach(city=>{const days=baselineNights[city];for(let i=0;i<days;i++){schedule[cursor]={city,mode:"family"};cursor=addDays(cursor,1)}});
   for(let i=0;i<3;i++){schedule[cursor]={city:"新加坡",mode:"family"};cursor=addDays(cursor,1)}
   state.schedule=schedule;state.edited=false;
@@ -681,15 +433,15 @@ function monthCells(){
   const earliest=first<state.start?first:state.start, latest=last>state.start?last:state.start;
   const gridStart=addDays(earliest,-((new Date(earliest+"T12:00:00Z").getUTCDay()+6)%7));
   const gridEnd=addDays(latest,6-((new Date(latest+"T12:00:00Z").getUTCDay()+6)%7));
-  const n=Math.round((new Date(gridEnd+"T12:00:00Z")-new Date(gridStart+"T12:00:00Z"))/86400000)+1;
+  const n=Math.round((new Date(gridEnd+"T12:00:00Z").getTime()-new Date(gridStart+"T12:00:00Z").getTime())/86400000)+1;
   return {cells:Array.from({length:n},(_,i)=>addDays(gridStart,i)),gridStart,gridEnd,lastScheduled:latest};
 }
-function monthYearLabel(iso){return `${iso.slice(0,4)}年${Number(iso.slice(5,7))}月`}
-function routeForCities(from,to){const a=cityAirportCodes[from],b=cityAirportCodes[to];return flightMatrix[`${a}-${b}`]||null}
-function dayCode(date){return weekdayCodes[new Date(date+"T12:00:00Z").getUTCDay()]}
-function airlineDays(airline){return [...new Set([...(airline.operating_days||[]),...(airline.flights||[]).flatMap(f=>f.operating_days||[])])]}
-function operatingAirlines(route,date){const day=dayCode(date);return (route?.airlines||[]).filter(a=>airlineDays(a).includes(day)).sort((a,b)=>(safetyRank[a.safety?.verdict]??9)-(safetyRank[b.safety?.verdict]??9)||a.name.localeCompare(b.name))}
-function routeAssessment(route,date){
+function monthYearLabel(iso: string){return `${iso.slice(0,4)}年${Number(iso.slice(5,7))}月`}
+function routeForCities(from: string, to: string){const a=cityAirportCodes[from],b=cityAirportCodes[to];return flightMatrix[`${a}-${b}`]||null}
+function dayCode(date: string){return weekdayCodes[new Date(date+"T12:00:00Z").getUTCDay()]}
+function airlineDays(airline: MatrixAirline){return [...new Set([...(airline.operating_days||[]),...(airline.flights||[]).flatMap(f=>f.operating_days||[])])]}
+function operatingAirlines(route: MatrixRoute | null, date: string){const day=dayCode(date);return (route?.airlines||[]).filter(a=>airlineDays(a).includes(day)).sort((a,b)=>(safetyRank[a.safety?.verdict ?? ""]??9)-(safetyRank[b.safety?.verdict ?? ""]??9)||a.name.localeCompare(b.name))}
+function routeAssessment(route: MatrixRoute | null, date: string): RouteAssessment{
   if(!route)return {kind:"unknown",airlines:[]};
   if(route.direct==="no")return {kind:"no-direct",airlines:[]};
   const airlines=operatingAirlines(route,date),hasSchedule=(route.airlines||[]).some(a=>airlineDays(a).length);
@@ -709,7 +461,7 @@ function scheduleTransitions(){
   return rows;
 }
 function renderTransferAlerts(){
-  const rows=scheduleTransitions(),wrap=document.getElementById("transferAlerts");
+  const rows=scheduleTransitions(),wrap=el("transferAlerts");
   if(!rows.length){wrap.innerHTML='<div class="transfer-alert"><strong>暂无转场</strong><p>当前日历没有连续两天切换城市。安排城市后，这里会按当天星期查询完整矩阵。</p></div>';return}
   wrap.innerHTML=rows.map(r=>{
     const routeLabel=`${r.date.slice(5)} · ${esc(r.from)}→${esc(r.to)}`,a=r.assessment;
@@ -719,12 +471,12 @@ function renderTransferAlerts(){
     return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ ${a.kind==="pending"?"排班模式已核验，精确日期时刻待核验":"尚未核验"}；不能据此推断当天无直飞，请先复核再定转场。</p></div>`;
   }).join("");
 }
-function sourceLink(source){return `<a href="${source[1]}" target="_blank" rel="noopener noreferrer">${esc(source[0])} ↗</a>`}
-function dateLabel(date){const names=["周日","周一","周二","周三","周四","周五","周六"],d=new Date(date+"T12:00:00Z");return `${date.slice(5).replace("-","/")}（${names[d.getUTCDay()]}）`}
+function sourceLink(source: [string, string]){return `<a href="${source[1]}" target="_blank" rel="noopener noreferrer">${esc(source[0])} ↗</a>`}
+function dateLabel(date: string){const names=["周日","周一","周二","周三","周四","周五","周六"],d=new Date(date+"T12:00:00Z");return `${date.slice(5).replace("-","/")}（${names[d.getUTCDay()]}）`}
 function renderHardConstraints(){
-  const items=[], entries=Object.entries(state.schedule).sort(([a],[b])=>a.localeCompare(b));
-  const cityDates=city=>entries.filter(([,p])=>p.city===city).map(([d])=>d);
-  const add=(level,title,body,source="")=>items.push({level,title,body,source});
+  const items: { level: string; title: string; body: string; source: string }[] = [], entries=Object.entries(state.schedule).sort(([a],[b])=>a.localeCompare(b));
+  const cityDates=(city: string)=>entries.filter(([,p])=>p.city===city).map(([d])=>d);
+  const add=(level: string,title: string,body: string,source="")=>items.push({level,title,body,source});
 
   let holidayHits=0;
   entries.forEach(([date,plan])=>{
@@ -787,13 +539,13 @@ function renderHardConstraints(){
   const family=entries.filter(([,p])=>p.mode==="family");
   if(family.length)add("pass","带娃节奏已保留",`${family.length} 个亲子日继续按每天 1–2 个景点＋午休计算；转场当天不要追加晚场。`,`亲子日：${family.map(([d,p])=>`${d.slice(5)} ${p.city}`).join("、")}`);
 
-  const actionable=items.filter(x=>x.level==="warn"||x.level==="blocked").length, count=document.getElementById("hardCount");
+  const actionable=items.filter(x=>x.level==="warn"||x.level==="blocked").length, count=el("hardCount");
   count.textContent=actionable?`${actionable} 条需处理`:"全部通过";count.classList.toggle("clear",!actionable);
-  document.getElementById("hardList").innerHTML=items.map(x=>`<article class="hard-item ${x.level}"><strong>${x.level==="blocked"?"⛔ ":x.level==="warn"?"⚠ ":"✓ "}${x.title}</strong><p>${x.body}</p>${x.source?`<div class="hard-meta">${x.source}</div>`:""}</article>`).join("");
+  el("hardList").innerHTML=items.map(x=>`<article class="hard-item ${x.level}"><strong>${x.level==="blocked"?"⛔ ":x.level==="warn"?"⚠ ":"✓ "}${x.title}</strong><p>${x.body}</p>${x.source?`<div class="hard-meta">${x.source}</div>`:""}</article>`).join("");
 }
 function renderCalendar(){
-  const grid=document.getElementById("calendarGrid"),mc=monthCells(),dates=mc.cells;grid.innerHTML="";
-  document.querySelector(".calendar").setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
+  const grid=el("calendarGrid"),mc=monthCells(),dates=mc.cells;grid.innerHTML="";
+  S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
   dates.forEach(date=>{
     const plan=state.schedule[date],d=new Date(date+"T12:00:00Z"),inMonth=date>=state.start&&date<=mc.lastScheduled;
@@ -803,24 +555,24 @@ function renderCalendar(){
     const dayMarker=[holiday,...specials.map(marker=>marker.short)].filter(Boolean).join(" · ");
     const transition=transferByDate[date],transfer=Boolean(transition),assessment=transition?.assessment;
     const transferCopy=transfer?(assessment.kind==="direct"?`✈ 当天 ${assessment.airlines.length} 家直飞`:assessment.kind==="no-service"?"⚠ 当天无直飞":assessment.kind==="no-direct"?"⚠ 已确认无直飞":"⚠ 精确日期待核验"):"";
-    const paceCap={intense:4,standard:3,relaxed:2}[state.pace]||4;
+    const paceCap=({intense:4,standard:3,relaxed:2} as Record<string, number>)[state.pace]||4;
     const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""}`;
     b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
     b.setAttribute("aria-label",`${date}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}`);b.onclick=()=>openDay(date);grid.appendChild(b);
   });
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
-  const paceName={intense:"特种兵",standard:"标准",relaxed:"从容"}[state.pace];
-  document.getElementById("calendarNote").textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。`;
+  const paceName=({intense:"特种兵",standard:"标准",relaxed:"从容"} as Record<string, string>)[state.pace];
+  el("calendarNote").textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。`;
   renderTransferAlerts();
   renderHardConstraints();
 }
-function cityDayCounts(){const counts={};Object.values(state.schedule).forEach(x=>{if(!counts[x.city])counts[x.city]={couple:0,family:0};counts[x.city][x.mode]=(counts[x.city][x.mode]||0)+1});return counts}
+function cityDayCounts(){const counts: Record<string, { couple: number; family: number }> = {};Object.values(state.schedule).forEach(x=>{const mode=x.mode as "couple"|"family";if(!counts[x.city])counts[x.city]={couple:0,family:0};counts[x.city][mode]=(counts[x.city][mode]||0)+1});return counts}
 function renderCoverage(){
   const counts=cityDayCounts();
-  document.getElementById("coverageGrid").innerHTML=Object.keys(citySpots).map(city=>{
+  el("coverageGrid").innerHTML=Object.keys(citySpots).map(city=>{
     const c=counts[city]||{couple:0,family:0},days=c.couple+c.family;
     const cov=classicCoverage(city,days),list=citySpots[city],hitsArr=classicSpotHits[city]||[];
-    const hitSet=new Set(),hitOrdered=[];
+    const hitSet=new Set<string>(),hitOrdered: string[]=[];
     for(let i=0;i<Math.min(days,hitsArr.length);i++)(hitsArr[i]||[]).forEach(h=>{if(list.includes(h)&&!hitSet.has(h)){hitSet.add(h);hitOrdered.push(h)}});
     const rest=list.filter(s=>!hitSet.has(s));
     const must=hitOrdered,optional=rest.slice(0,2),drop=rest.slice(2);
@@ -830,46 +582,46 @@ function renderCoverage(){
 }
 // 景点详情字段：目前仅曼谷 9 项完成 8 字段研究；其余 7 城研究资料尚未整理为详情字段，
 // 结构预留按城接入，数据就绪后直接填入对应数组即可，不拿占位文案冒充完成。
-const spotDetails={"曼谷":bangkokSpotDetails};
+const spotDetails: Record<string, SpotDetail[]> = {"曼谷":bangkokSpotDetails};
 const detailCityOrder=["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
-function spotDetailCard(s,open){
+function spotDetailCard(s: SpotDetail, open: boolean){
   return `<details class="spot-detail" ${open?"open":""}><summary>${esc(s.name)}<span>${open?"完整示例":"详情字段"}</span></summary><div class="spot-detail-body"><div class="spot-fields"><div class="spot-field"><b>地址</b><span class="${s.address.includes("待")?"pending-text":""}">${esc(s.address)}</span></div><div class="spot-field"><b>营业时间</b><span class="${s.hours.includes("待")?"pending-text":""}">${esc(s.hours)}</span></div><div class="spot-field"><b>最后入场</b><span class="${s.lastEntry.includes("待")?"pending-text":""}">${esc(s.lastEntry)}</span></div><div class="spot-field"><b>门票／价格</b><span class="${s.price.includes("待")?"pending-text":""}">${esc(s.price)}</span></div><div class="spot-field"><b>交通</b><span class="${s.transit.includes("待")?"pending-text":""}">${esc(s.transit)}</span></div><div class="spot-field"><b>必看／必做</b>${esc(s.must)}</div></div><p><strong>推荐原因：</strong>${esc(s.reason)}</p><p><strong>避坑：</strong><span class="${s.avoid.includes("待")?"pending-text":""}">${esc(s.avoid)}</span></p>${(s.sources||[]).length?`<p class="safety-note"><strong>资料来源：</strong> ${(s.sources||[]).map(sourceLink).join(" · ")}</p>`:""}</div></details>`;
 }
 function renderSpotDetails(){
-  document.getElementById("spotDetailList").innerHTML=detailCityOrder.map(city=>{
+  el("spotDetailList").innerHTML=detailCityOrder.map(city=>{
     const details=spotDetails[city];
     if(details&&details.length)return `<h3 style="margin:18px 0 10px">📍 ${esc(city)} · ${details.length} 项已展开</h3>`+details.map((s,i)=>spotDetailCard(s,city==="曼谷"&&i===0)).join("");
     return `<article class="card" style="padding:16px 18px;margin-top:14px"><h3>📍 ${esc(city)}</h3><p class="route-note" style="margin-top:6px">⚠ <strong>详情整理中：</strong>${esc(city)}的景点详情字段（地址／营业时间／最后入场／票价／交通／必看／避坑）研究资料尚未整理完成，暂不展示。数据就绪后接入，不拿占位文案冒充完成。</p></article>`;
   }).join("");
 }
-function routeDisplayName(route){return `${airportCity[route.origin]}（${cityAirportLabels[airportCity[route.origin]]}） → ${airportCity[route.destination]}（${cityAirportLabels[airportCity[route.destination]]}）`}
-function actualArrival(route,flight){const raw=flight.arrival_airport;return raw&&raw!==flight.airport?raw:route.destination}
-function safeLinks(airline){return (airline.safety?.source_urls||[]).slice(0,2).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">安全来源${i+1} ↗</a>`).join(" · ")}
-function renderRail(route){
+function routeDisplayName(route: MatrixRoute){return `${airportCity[route.origin]}（${cityAirportLabels[airportCity[route.origin]]}） → ${airportCity[route.destination]}（${cityAirportLabels[airportCity[route.destination]]}）`}
+function actualArrival(route: MatrixRoute, flight: MatrixFlight){const raw=flight.arrival_airport;return raw&&raw!==flight.airport?raw:route.destination}
+function safeLinks(airline: MatrixAirline){return (airline.safety?.source_urls||[]).slice(0,2).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">安全来源${i+1} ↗</a>`).join(" · ")}
+function renderRail(route: MatrixRoute | null){
   const rail=route?.rail||{},items=rail.conventional||[];
   return `<div class="rail-box"><h4>铁路与联运</h4><p class="micro">高铁：${rail.hsr?.available?"有可用方案":"2026年12月无可用高铁"}</p>${items.length?items.map(x=>`<div class="rail-item"><strong>${esc(x.service)} · ${esc(x.operator)}</strong><p>${esc(x.route)} · ${esc(x.duration)} · ${esc(x.frequency)}</p><p>${esc(x.price)}；${esc(x.booking)}</p>${(x.source_urls||[]).slice(0,2).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">铁路来源${i+1} ↗</a>`).join(" · ")}</div>`).join(""):'<div class="rail-item">该城市对暂无矩阵内的普通铁路／联运方案。</div>'}</div>`;
 }
-function flightRows(airline,route,date){
+function flightRows(airline: MatrixAirline, route: MatrixRoute, date: string){
   const day=dayCode(date),flights=(airline.flights||[]).filter(f=>(f.operating_days||[]).includes(day));
   if(flights.length)return `<div class="flight-times">${flights.map(f=>`<div class="flight-row"><b>${esc(f.flight_no||airline.code)}</b><span>${esc(f.dep||"时刻待核验")} → ${esc(f.arr||"待核验")} · ${esc(f.duration||"时长待核验")}</span><span>${esc(f.airport||route.origin)} → ${esc(actualArrival(route,f))}</span>${f.note?`<span style="grid-column:1/-1">${esc(f.note)}</span>`:""}</div>`).join("")}</div>`;
   const typical=airline.typical_departures||[];
   return `<div class="flight-times"><div class="flight-row"><b>${esc(airline.code)}</b><span>${typical.length?`典型起飞 ${typical.map(esc).join(" / ")}`:"精确航班号与时刻待核验"}</span><span>${esc(route.origin)} → ${esc(route.destination)}</span></div></div>`;
 }
-function airlineCard(airline,route,date,allOperating){
+function airlineCard(airline: MatrixAirline, route: MatrixRoute, date: string, allOperating: MatrixAirline[]){
   const verdict=airline.safety?.verdict||"待核验",cls=verdict==="推荐"?"recommended":verdict==="谨慎"||verdict==="待核验"?"caution":"",badge=verdict==="推荐"?"recommended":verdict==="谨慎"?"caution":verdict==="待核验"?"pending":"";
-  const safer=allOperating.filter(a=>["推荐","可用"].includes(a.safety?.verdict)&&a.code!==airline.code).slice(0,4);
+  const safer=allOperating.filter(a=>["推荐","可用"].includes(a.safety?.verdict ?? "")&&a.code!==airline.code).slice(0,4);
   const pendingNote=airline.code==="SK"?"疑似代码共享或系统 artifact，暂不建议据此安排转场。":airline.code==="GF"?"该航司在本航线的安全评级尚未核实，暂不建议作为确定行程依据。":"暂不作为安全优先方案。";
-  return `<article class="airline-card ${cls}"><div class="airline-head"><h4>${esc(airline.code)} · ${esc(airline.name)}</h4><div class="badge-row"><span class="badge ${badge}">${esc(verdict)}</span><span class="badge">${airline.safety?.iosa===true?"IOSA":"IOSA 未确认"}</span></div></div><p class="airline-meta">运营日：${airlineDays(airline).map(x=>weekdayZh[x]).join("、")||"待核验"}${airline.schedule_note?` · ${esc(airline.schedule_note)}`:""}</p>${flightRows(airline,route,date)}${verdict==="谨慎"?`<div class="route-alert caution">谨慎选择。更安全替代：${safer.length?safer.map(a=>`${esc(a.code)} ${esc(a.name)}（${esc(a.safety.verdict)}）`).join(" / "):"该日期暂无同航线更安全替代，建议改期或中转"}</div>`:""}${verdict==="待核验"?`<div class="route-alert"><strong>安全评级待核验。</strong> ${pendingNote}</div>`:""}<p class="safety-note">${esc(airline.safety?.note||"安全资料待核验")}${safeLinks(airline)?`<br>${safeLinks(airline)}`:""}${airline.merge_note?`<br>${esc(airline.merge_note)}`:""}</p></article>`;
+  return `<article class="airline-card ${cls}"><div class="airline-head"><h4>${esc(airline.code)} · ${esc(airline.name)}</h4><div class="badge-row"><span class="badge ${badge}">${esc(verdict)}</span><span class="badge">${airline.safety?.iosa===true?"IOSA":"IOSA 未确认"}</span></div></div><p class="airline-meta">运营日：${airlineDays(airline).map(x=>weekdayZh[x]).join("、")||"待核验"}${airline.schedule_note?` · ${esc(airline.schedule_note)}`:""}</p>${flightRows(airline,route,date)}${verdict==="谨慎"?`<div class="route-alert caution">谨慎选择。更安全替代：${safer.length?safer.map(a=>`${esc(a.code)} ${esc(a.name)}（${esc(a.safety?.verdict ?? "")}）`).join(" / "):"该日期暂无同航线更安全替代，建议改期或中转"}</div>`:""}${verdict==="待核验"?`<div class="route-alert"><strong>安全评级待核验。</strong> ${pendingNote}</div>`:""}<p class="safety-note">${esc(airline.safety?.note||"安全资料待核验")}${safeLinks(airline)?`<br>${safeLinks(airline)}`:""}${airline.merge_note?`<br>${esc(airline.merge_note)}`:""}</p></article>`;
 }
 function renderTransport(){
-  const date=document.getElementById("transportDate").value,from=document.getElementById("transportFrom").value,to=document.getElementById("transportTo").value,route=routeForCities(from,to),result=document.getElementById("routeResult");
+  const date=inputVal("transportDate"),from=inputVal("transportFrom"),to=inputVal("transportTo"),route=routeForCities(from,to),result=el("routeResult");
   if(from===to){result.innerHTML='<div class="route-alert">出发和到达城市不能相同。</div>';return}
   if(!route){result.innerHTML=`<div class="route-result-head"><div><h3>${esc(from)} → ${esc(to)}</h3><p>${dateLabel(date)}</p></div><span class="route-status alert">尚未核验</span></div><div class="route-alert">此组合不在最终矩阵内；“尚未核验”不等于“无直飞”。</div>`;return}
   const a=routeAssessment(route,date),partial=route.verification_status.includes("部分待核验"),status=a.kind==="direct"?"当天有直飞":a.kind==="no-service"?"当天无直飞":a.kind==="no-direct"?"已确认无直飞":a.kind==="pending"?"精确日期待核验":"尚未核验";
   const statusClass=a.kind==="direct"?(partial?"partial":""):(a.kind==="pending"?"partial":"alert");
   let html=`<div class="route-result-head"><div><h3>${routeDisplayName(route)}</h3><p>${dateLabel(date)} · ${esc(route.verification_status)}</p></div><span class="route-status ${statusClass}">${status}</span></div>`;
   if(partial)html+='<div class="route-alert caution"><strong>排班模式已核验，精确日期时刻待核验。</strong> 以下时刻可能是典型时段或特定样本，不可直接当作最终可售班次。</div>';
-  if((route.calendar_warnings||[]).length)html+=`<div class="route-alert">${route.calendar_warnings.map(esc).join(" ")}</div>`;
+  if((route.calendar_warnings||[]).length)html+=`<div class="route-alert">${(route.calendar_warnings||[]).map(esc).join(" ")}</div>`;
   if(a.kind==="no-service")html+=`<div class="route-alert"><strong>${dateLabel(date)}没有运营直飞。</strong> 建议改到周一、周三、周五或周日，或查看中转／铁路替代。</div>`;
   if(a.kind==="no-direct")html+=`<div class="route-alert"><strong>该方向已完成多源无直飞核验。</strong> ${esc(route.notes||"请改走中转。")}</div>`;
   if(a.kind==="pending")html+='<div class="route-alert caution">该方向有直飞记录，但没有足以按星期确认当天运营的排班数据；请按实际日期复核。</div>';
@@ -878,24 +630,38 @@ function renderTransport(){
   html+=renderRail(route);result.innerHTML=html;
 }
 function initTransport(){
-  const cities=Object.keys(cityAirportCodes),from=document.getElementById("transportFrom"),to=document.getElementById("transportTo");
+  const cities=Object.keys(cityAirportCodes),from=el("transportFrom") as HTMLSelectElement,to=el("transportTo") as HTMLSelectElement;
   cities.forEach(c=>{from.add(new Option(`${c} · ${cityAirportLabels[c]}`,c));to.add(new Option(`${c} · ${cityAirportLabels[c]}`,c))});from.value="普吉";to.value="槟城";
-  [from,to,document.getElementById("transportDate")].forEach(el=>el.onchange=renderTransport);
-  document.getElementById("swapRoute").onclick=()=>{const x=from.value;from.value=to.value;to.value=x;renderTransport()};renderTransport();
+  [from,to,el("transportDate")].forEach(x=>{x.onchange=renderTransport});
+  el("swapRoute").onclick=()=>{const x=from.value;from.value=to.value;to.value=x;renderTransport()};renderTransport();
+}
+function klHotelStatusLine(h: { sources: Record<string, string> }){
+  const label=(k: string)=>{const v=h.sources[k];return v==="done"?"已核验":v==="partial"?"部分":v==="missing"?"缺失":"待补"};
+  return `TripAdvisor ${label("tripadvisor")} · Google Maps ${label("google_maps")} · 中文站 ${label("chinese_sites")} · 小红书 ${label("xiaohongshu")} · 照片 ${label("photos")}`;
 }
 function renderHotels(){
-  document.getElementById("hotelGrid").innerHTML=Object.entries(hotels).map(([city,hotel])=>`<article class="card hotel ${city==="富国岛"?"warning":""}"><header><h3>${esc(city)}</h3><span class="city">${countries[cityCountry[city]].flag} ${cityCountry[city]}</span></header><p>${esc(hotel)}</p>${city==="富国岛"?'<p><strong>注意：</strong>原计划 Park Hyatt 尚未开业，不能用于 2026 年 12 月。</p>':city==="吉隆坡"?'<p><strong>开放问题：</strong>研究报告未给出候选酒店。</p>':'<p>房态需预订时确认。</p>'}</article>`).join("");
+  el("hotelGrid").innerHTML=Object.entries(hotels).map(([city,hotel])=>{
+    const flag=`${countries[cityCountry[city]].flag} ${cityCountry[city]}`;
+    if(city==="吉隆坡"){
+      // 研究 JSON 中的 5 条吉隆坡酒店研究记录仅作研究状态参考；
+      // 验收要求第 7 项缺口提示必须原样保留，不得以候选已给出替代。
+      const list=PLANNER_KL_HOTELS.map(h=>`<div class="rail-item"><strong>${esc(h.name)}</strong><p class="micro">${esc(klHotelStatusLine(h))}</p></div>`).join("");
+      return `<article class="card hotel"><header><h3>${esc(city)}</h3><span class="city">${flag}</span></header>${list}<p><strong>开放问题：</strong>研究报告未给出候选酒店。</p></article>`;
+    }
+    return `<article class="card hotel ${city==="富国岛"?"warning":""}"><header><h3>${esc(city)}</h3><span class="city">${flag}</span></header><p>${esc(hotel)}</p>${city==="富国岛"?'<p><strong>注意：</strong>原计划 Park Hyatt 尚未开业，不能用于 2026 年 12 月。</p>':'<p>房态需预订时确认。</p>'}</article>`;
+  }).join("");
 }
-function openDay(date){modalDate=date;const plan=state.schedule[date];document.getElementById("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;document.getElementById("modalCity").value=plan?.city||"曼谷";document.getElementById("modalMode").value=plan?.mode||"couple";document.getElementById("dayModal").classList.add("open")}
-function closeModal(){document.getElementById("dayModal").classList.remove("open")}
+function openDay(date: string){modalDate=date;const plan=state.schedule[date];el("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;(el("modalCity") as HTMLSelectElement).value=plan?.city||"曼谷";(el("modalMode") as HTMLSelectElement).value=plan?.mode||"couple";el("dayModal").classList.add("open")}
+function closeModal(){el("dayModal").classList.remove("open")}
 function saveDay(){
-  const mode=document.getElementById("modalMode").value;
-  if(mode==="free")delete state.schedule[modalDate];else state.schedule[modalDate]={city:document.getElementById("modalCity").value,mode};
+  if(!modalDate)return;
+  const mode=inputVal("modalMode");
+  if(mode==="free")delete state.schedule[modalDate];else state.schedule[modalDate]={city:inputVal("modalCity"),mode};
   state.edited=true;closeModal();renderCalendar();renderCoverage();
   const nextDate=addDays(modalDate,1),blocked=scheduleTransitions().filter(r=>r.assessment.kind!=="direct"&&(r.date===modalDate||r.date===nextDate));
   if(blocked.length){const r=blocked[0],label=r.assessment.kind==="no-direct"?"已确认无直飞":r.assessment.kind==="no-service"?"当天无直飞":"精确日期待核验";toast(`${r.date.slice(5)} ${r.from}→${r.to}：${label}。请查看中转、铁路或改期方案。`,true)}else toast("这一天已调整");
 }
-function removeDay(){delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();renderCoverage();toast("这一天已留白")}
+function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();renderCoverage();toast("这一天已留白")}
 function planText(){
   const paceName={intense:"特种兵（约4个点/天）",standard:"标准（约3个点/天）",relaxed:"从容（约2个点/天）"}[state.pace];
   const lines=["2026年12月东南亚候选行程",`双人国家：${state.selected.map(k=>countries[k].name).join(" + ")}（${state.coupleDays}天）`,`双人节奏：${paceName}；转场日保留机场与安全缓冲`,""];
@@ -904,25 +670,39 @@ function planText(){
   return lines.join("\n")
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
-function toast(msg,warning=false){const t=document.getElementById("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
+function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
 function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage()}
 
 // init controls
-[...document.querySelectorAll(".tab")].forEach(btn=>btn.onclick=()=>{document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b===btn));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));window.scrollTo({top:0,behavior:"smooth"})});
-document.getElementById("daysMinus").onclick=()=>{state.coupleDays=Math.max(5,state.coupleDays-1);state.edited=false;updateAll()};
-document.getElementById("daysPlus").onclick=()=>{state.coupleDays=Math.min(10,state.coupleDays+1);state.edited=false;updateAll()};
-document.getElementById("remainingMode").onchange=e=>{state.remainingMode=e.target.value;state.edited=false;updateAll()};
-document.getElementById("paceSelect").onchange=e=>{state.pace=e.target.value;document.getElementById("coupleLegend").innerHTML=`<i class="dot couple"></i>双人${{intense:"特种兵",standard:"标准",relaxed:"从容"}[state.pace]}`;updateAll()};
-document.getElementById("applyRecommendation").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();document.querySelector('[data-tab="calendar"]').click();toast("已按推荐排入日历")};
-document.getElementById("startDate").onchange=e=>{state.start=e.target.value;state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage()};
-document.getElementById("resetRecommended").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();toast("已恢复智能推荐")};
-document.getElementById("copyPlan").onclick=copyPlan;
-document.getElementById("closeModal").onclick=closeModal;document.getElementById("saveDay").onclick=saveDay;document.getElementById("removeDay").onclick=removeDay;
-document.getElementById("dayModal").onclick=e=>{if(e.target.id==="dayModal")closeModal()};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
-const citySelect=document.getElementById("modalCity");Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
-const classicCitySelect=document.getElementById("classicCity");Object.keys(classicRoutes).forEach(c=>classicCitySelect.add(new Option(c,c)));
-classicCitySelect.onchange=e=>{state.classicCity=e.target.value;state.classicDays=3;renderClassicRoute()};
+([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
+el("daysMinus").onclick=()=>{state.coupleDays=Math.max(5,state.coupleDays-1);state.edited=false;updateAll()};
+el("daysPlus").onclick=()=>{state.coupleDays=Math.min(10,state.coupleDays+1);state.edited=false;updateAll()};
+el("remainingMode").onchange=e=>{state.remainingMode=(e.target as HTMLSelectElement).value;state.edited=false;updateAll()};
+el("paceSelect").onchange=e=>{state.pace=(e.target as HTMLSelectElement).value;el("coupleLegend").innerHTML=`<i class="dot couple"></i>双人${({intense:"特种兵",standard:"标准",relaxed:"从容"} as Record<string, string>)[state.pace]}`;updateAll()};
+el("applyRecommendation").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();(S.querySelector('[data-tab="calendar"]') as HTMLElement).click();toast("已按推荐排入日历")};
+el("startDate").onchange=e=>{state.start=(e.target as HTMLInputElement).value;state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage()};
+el("resetRecommended").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();toast("已恢复智能推荐")};
+el("copyPlan").onclick=copyPlan;
+el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
+el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
+const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
+const classicCitySelect=el("classicCity") as HTMLSelectElement;Object.keys(classicRoutes).forEach(c=>classicCitySelect.add(new Option(c,c)));
+classicCitySelect.onchange=e=>{state.classicCity=(e.target as HTMLSelectElement).value;state.classicDays=3;renderClassicRoute()};
 initTransport();renderHotels();renderClassicRoute();buildRecommendedSchedule();updateAll();
-</script>
-</body>
-</html>
+
+  /* ---- 研究数据来源说明（原生集成追加） ---- */
+  {
+    const hero = S.querySelector(".hero");
+    if (hero) {
+      const p = document.createElement("p");
+      p.className = "micro";
+      p.id = "researchProvenance";
+      p.style.cssText = "margin:12px 0 0;max-width:780px";
+      const totals = (Object.entries(RESEARCH_META.cityTotals) as [string, number][]).map(([c, n]) => `${c}${n}`).join(" · ");
+      p.textContent = `地点数据来源：研究数据 research-status.json（${RESEARCH_UPDATED_AT} 更新，共 ${RESEARCH_META.totalItems} 项：${totals}），由脚本程序化生成；其中 67 个精华景点用于覆盖率计算。`;
+      hero.after(p);
+    }
+  }
+
+  return () => { document.removeEventListener("keydown", onKeyDown); };
+}
