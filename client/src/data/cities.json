@@ -1,0 +1,90 @@
+[
+  {
+    "id": "bangkok",
+    "zh": "曼谷",
+    "en": "Bangkok",
+    "country_zh": "泰国",
+    "days": [
+      1,
+      3
+    ],
+    "dates": "12-12 ~ 12-14"
+  },
+  {
+    "id": "chiangmai",
+    "zh": "清迈",
+    "en": "Chiang Mai",
+    "country_zh": "泰国",
+    "days": [
+      4,
+      5
+    ],
+    "dates": "12-15 ~ 12-16"
+  },
+  {
+    "id": "phuket",
+    "zh": "普吉",
+    "en": "Phuket",
+    "country_zh": "泰国",
+    "days": [
+      6,
+      8
+    ],
+    "dates": "12-17 ~ 12-19"
+  },
+  {
+    "id": "penang",
+    "zh": "槟城",
+    "en": "Penang",
+    "country_zh": "马来西亚",
+    "days": [
+      9,
+      10
+    ],
+    "dates": "12-20 ~ 12-21"
+  },
+  {
+    "id": "kualalumpur",
+    "zh": "吉隆坡",
+    "en": "Kuala Lumpur",
+    "country_zh": "马来西亚",
+    "days": [
+      11,
+      12
+    ],
+    "dates": "12-22 ~ 12-23"
+  },
+  {
+    "id": "hochiminh",
+    "zh": "胡志明市",
+    "en": "Ho Chi Minh City",
+    "country_zh": "越南",
+    "days": [
+      13,
+      14
+    ],
+    "dates": "12-24 ~ 12-25"
+  },
+  {
+    "id": "phuquoc",
+    "zh": "富国岛",
+    "en": "Phu Quoc",
+    "country_zh": "越南",
+    "days": [
+      15,
+      17
+    ],
+    "dates": "12-26 ~ 12-28"
+  },
+  {
+    "id": "singapore",
+    "zh": "新加坡",
+    "en": "Singapore",
+    "country_zh": "新加坡",
+    "days": [
+      18,
+      20
+    ],
+    "dates": "12-29 ~ 12-31"
+  }
+]
