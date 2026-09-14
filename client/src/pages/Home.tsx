@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, CalendarDays, ChevronRight } from "lucide-react";
+import { MapPin, CalendarDays, ChevronRight, UtensilsCrossed } from "lucide-react";
 import itinerary from "@/data/itinerary.json";
 import cities from "@/data/cities.json";
+import food from "@/data/food.json";
 
 type Day = {
   day: number;
@@ -21,10 +23,23 @@ type City = {
   dates: string;
 };
 
+type FoodCity = {
+  id: string;
+  zh: string;
+  en: string;
+  country_zh: string;
+  days: string;
+  items: string[];
+};
+
 const days: Day[] = itinerary as Day[];
 const cityList: City[] = cities as City[];
+const foodList: FoodCity[] = food as FoodCity[];
+
+type HomeTab = "itinerary" | "food";
 
 export default function Home() {
+  const [tab, setTab] = useState<HomeTab>("itinerary");
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Hero */}
@@ -38,6 +53,44 @@ export default function Home() {
         </p>
       </div>
 
+      {/* Tabs */}
+      <div className="flex justify-center mb-8">
+        <div className="inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+          <button
+            onClick={() => setTab("itinerary")}
+            className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
+              tab === "itinerary"
+                ? "bg-teal-700 text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            行程
+          </button>
+          <button
+            onClick={() => setTab("food")}
+            className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
+              tab === "food"
+                ? "bg-teal-700 text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            美食
+          </button>
+        </div>
+      </div>
+
+      {tab === "itinerary" ? (
+        <ItineraryTab />
+      ) : (
+        <FoodTab />
+      )}
+    </div>
+  );
+}
+
+function ItineraryTab() {
+  return (
+    <>
       {/* City cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
         {cityList.map((c, i) => (
@@ -91,6 +144,51 @@ export default function Home() {
           </Link>
         ))}
       </div>
-    </div>
+    </>
+  );
+}
+
+function FoodTab() {
+  return (
+    <>
+      <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+        8 城必吃品类：先讲当地特色美食种类，不点名具体餐厅。
+        <span className="text-teal-800 font-medium">
+          叻沙 / 肉骨茶 / 海南鸡饭在槟城、吉隆坡、新加坡是三个版本，一路对比着吃。
+        </span>
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+        {foodList.map((c, i) => (
+          <div
+            key={c.id}
+            className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
+                {c.days}
+              </span>
+              <span className="text-2xl font-bold text-gray-200">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+              <UtensilsCrossed size={18} className="text-teal-700" />
+              {c.zh}
+            </h2>
+            <p className="text-sm text-gray-500 mb-3">
+              {c.en} · {c.country_zh}
+            </p>
+            <ul className="space-y-2">
+              {c.items.map((item, j) => (
+                <li key={j} className="text-sm text-gray-700 flex gap-2">
+                  <span className="text-teal-600 mt-0.5 shrink-0">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
