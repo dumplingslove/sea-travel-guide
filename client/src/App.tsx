@@ -4,6 +4,7 @@ import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
 import Login from "@/pages/Login";
 import Placeholder from "@/pages/Placeholder";
+import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
 
 const NAV = [
@@ -92,10 +93,7 @@ function AppRouter() {
               path="/map"
               element={<Placeholder title="地图" note="P2 填充：20 天行程地图" />}
             />
-            <Route
-              path="/planner"
-              element={<Placeholder title="行程规划" note="P2 填充：每日行程安排" />}
-            />
+            <Route path="/planner" element={<Planner />} />
             <Route
               path="/notes"
               element={<Placeholder title="笔记" note="P3 填充：云端同步笔记（sea_notes）" />}
