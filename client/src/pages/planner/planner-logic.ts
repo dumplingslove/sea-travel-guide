@@ -585,7 +585,7 @@ function renderDayIntel(date: string){
   const suits = citySuitability(date), fs = dayFlightSummary(date);
   el("dayIntel").innerHTML = `
   <div class="intel-sec"><h4>当日城市适宜度 <span class="intel-sub">🟢宜 · 🟡谨慎 · 🔴不宜</span></h4>
-  ${suits.map(x => `<div class="intel-row ${x.level}"><span>${suitDot(x.level)}</span><b>${x.city}</b><span class="intel-reasons">${x.reasons.length ? esc(x.reasons.join("；")) : "无已知限制"}</span><button class="ghost intel-set" data-city="${x.city}">排为此城</button></div>`).join("")}</div>
+  ${suits.map(x => `<div class="intel-row ${x.level}"><span class="suit-pill ${x.level}">${suitDot(x.level)} ${x.level === "blocked" ? "不宜" : x.level === "warn" ? "谨慎" : "宜"}</span><b>${x.city}</b><span class="intel-reasons">${x.reasons.length ? esc(x.reasons.join("；")) : "无已知限制"}</span><button class="ghost intel-set" data-city="${x.city}">排为此城</button></div>`).join("")}</div>
   <div class="intel-sec"><h4>当日直飞 <span class="intel-sub">${fs.direct}/56 方向有直飞</span></h4>
   <p class="intel-flights">✈ ${fs.direct} 方向有直飞${fs.noService ? ` · ⚠ 当日无直飞：${esc(fs.problems.join("、"))}` : ""}${fs.pending ? ` · ${fs.pending} 方向精确日期待核验` : ""} · ${fs.noDirect} 方向确认无直飞</p>
   <p class="intel-flights micro">时刻与可售班次以预订时重查为准；隔日航线（普吉↔槟城、清迈↔胡志明市）在周二、周四、周六无直飞。</p></div>`;
@@ -617,8 +617,9 @@ function renderCalendar(){
     const decision=state.calMode==="decision";
     const suits=decision?citySuitability(date):null, fs=decision?dayFlightSummary(date):null;
     const intelHtml=decision&&suits&&fs?`
-      <span class="city-strip" aria-hidden="true">${suits.map(x=>`<span class="city-dot ${x.level}" title="${x.city}：${esc(x.reasons.join("；")||"无已知限制")}">${x.city}</span>`).join("")}</span>
-      <span class="flight-line">✈ ${fs.direct}/56 方向直飞${fs.noService?` · <b class="bad">⚠ ${fs.noService} 方向今日无直飞</b>`:""}</span>`:"";
+      <span class="city-strip" aria-hidden="true">${suits.map(x=>`<span class="city-dot ${x.level}" title="${x.city}：${esc(x.reasons.join("；")||"无已知限制")}">${suitDot(x.level)}${x.city}</span>`).join("")}</span>
+      ${suits.some(x=>x.level!=="ok")?`<span class="city-why">${suits.filter(x=>x.level!=="ok").map(x=>`<span class="${x.level}">${x.city}：${esc(x.reasons[0]||"")}</span>`).join("")}</span>`:""}
+      <span class="flight-line">✈ 当日直飞 <b>${fs.direct}/56</b> 方向${fs.noService?` · <b class="bad">⚠ ${fs.noService} 方向今日无直飞</b>`:""}</span>`:"";
     const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""}`;
     b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
     const suitNote=decision&&suits?`；适宜度：${suits.map(x=>`${x.city}${suitDot(x.level)}`).join(" ")}`:"";
