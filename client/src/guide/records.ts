@@ -11,7 +11,13 @@
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { initialResearchStatus } from "./researchStatusInitial";
 
-export type RecordKind = "booking" | "note" | "packing" | "journal";
+export type RecordKind =
+  | "booking"
+  | "note"
+  | "packing"
+  | "journal"
+  | "expense"
+  | "favorite";
 
 export interface GuideRecord {
   id: number;

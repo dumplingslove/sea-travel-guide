@@ -7,6 +7,12 @@ import Placeholder from "@/pages/Placeholder";
 import GuidePage from "@/pages/GuidePage";
 import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
+import { RecordsProvider } from "@/pages/records/shared";
+import NotesPage from "@/pages/records/NotesPage";
+import PackingPage from "@/pages/records/PackingPage";
+import BookingsPage from "@/pages/records/BookingsPage";
+import ExpensesPage from "@/pages/records/ExpensesPage";
+import FavoritesPage from "@/pages/records/FavoritesPage";
 
 const NAV = [
   { to: "/", label: "行程" },
@@ -99,23 +105,43 @@ function AppRouter() {
             <Route path="/guide" element={<GuidePage />} />
             <Route
               path="/notes"
-              element={<Placeholder title="笔记" note="P3 填充：云端同步笔记（sea_notes）" />}
+              element={
+                <RecordsProvider>
+                  <NotesPage />
+                </RecordsProvider>
+              }
             />
             <Route
               path="/packing"
-              element={<Placeholder title="打包清单" note="P3 填充：云端同步打包清单（sea_packing）" />}
+              element={
+                <RecordsProvider>
+                  <PackingPage />
+                </RecordsProvider>
+              }
             />
             <Route
               path="/bookings"
-              element={<Placeholder title="预订记录" note="P3 填充：酒店/机票预订（sea_bookings）" />}
+              element={
+                <RecordsProvider>
+                  <BookingsPage />
+                </RecordsProvider>
+              }
             />
             <Route
               path="/expenses"
-              element={<Placeholder title="记账" note="P4 填充：旅行记账（sea_expenses）" />}
+              element={
+                <RecordsProvider>
+                  <ExpensesPage />
+                </RecordsProvider>
+              }
             />
             <Route
               path="/favorites"
-              element={<Placeholder title="收藏" note="P4 填充：收藏的景点/餐厅/酒店（sea_favorites）" />}
+              element={
+                <RecordsProvider>
+                  <FavoritesPage />
+                </RecordsProvider>
+              }
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
