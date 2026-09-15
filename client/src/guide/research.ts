@@ -129,7 +129,9 @@ const overrides:Record<string,Partial<GuideFacts>>={
  'ICONSIAM':{address:'湄南河西岸 · BTS转接驳船',hours:'10:00–22:00',price:'免费入场',schedule:'建议2–4小时',action:'SookSiam、购物与夜景一站完成；从Saphan Taksin转船'},
  '唐人街耀华力路':{address:'MRT Wat Mangkon 1号口',hours:'夜景较佳时段20:30–22:00',price:'街区免费；餐饮按店家标价',schedule:'建议2–3小时'},
  '伦披尼公园':{address:'Lumphini Park · 市中心',hours:'以公园当日公告为准',price:'免费',schedule:'18:00–19:00更易看到水巨蜥',action:'保持距离，不喂食；日落时段活动更频繁'},
- '888 Hokkien Mee（Three Road）':{address:'67-A, Lebuh Presgrave, George Town, Penang Island 10300 Malaysia',hours:'Trip.com 页面显示 15:00 开门；每周营业日与收摊时间行前再核',price:'TripAdvisor 标注低价位；实际按碗与加料计价，备现金',schedule:'建议开门前后到，避开晚餐长队与最闷热时段',transit:'乔治市核心区可步行或 Grab；地图须导航至 Lebuh Presgrave，不要再前往旧址',action:'点虾汤福建面并按喜好加烧肉或卤排骨；室内闷热、份量偏小且多为自助端盘'}
+ '888 Hokkien Mee（Three Road）':{address:'67-A, Lebuh Presgrave, George Town, Penang Island 10300 Malaysia',hours:'Trip.com 页面显示 15:00 开门；每周营业日与收摊时间行前再核',price:'TripAdvisor 标注低价位；实际按碗与加料计价，备现金',schedule:'建议开门前后到，避开晚餐长队与最闷热时段',transit:'乔治市核心区可步行或 Grab；地图须导航至 Lebuh Presgrave，不要再前往旧址',action:'点虾汤福建面并按喜好加烧肉或卤排骨；室内闷热、份量偏小且多为自助端盘'},
+ '大城府 Ayutthaya 古城遗迹':{address:'大城府（Ayutthaya）· 曼谷以北约80公里；各寺确切门牌暂缺',price:'帖子样本（2025–2026）：玛哈泰寺80泰铢、柴瓦塔那兰寺80泰铢、崖差蒙空寺20–40泰铢、大城府卧佛寺免费；票价有涨价记录，行前核对',schedule:'三大王牌寺庙约3小时走完；建议半天至一天',transit:'曼谷邦苏中央车站（Krung Thep Aphiwat）火车单程15–20泰铢约1–1.5小时；或Mo Chit2 minibus；城内景点间2–3公里，可用Grab或租摩托',action:'遮肩盖膝、不穿无袖；玛哈泰寺看树抱佛头、柴瓦塔那兰寺（部分修缮有脚手架）、崖差蒙空寺（86版西游记取景地、可登塔俯瞰）；巴莱船面/Pa Lek Boat Noodle米其林必比登约20泰铢/碗；警惕车站假工作人员推销2500铢包车'},
+ '丹嫩沙多水上市场+美功铁道':{address:'丹嫩沙多 Damnoen Saduak / 美功 Mae Klong Railway Market · 距曼谷约70公里；确切门牌暂缺',hours:'丹嫩沙多水上市场帖子样本08:00–16:00（下午1点后摊位陆续撤离）；美功火车进站帖子样本08:30/11:10/14:30/17:40，行前再核',price:'帖子样本：丹嫩手摇船合理价约400铢/船（可坐多人），电动船开价1000铢/人可讲价至300–500；黑码头开价4000铢/人，须避开',schedule:'两景点相距约20分钟车程，建议打包一日游（上午美功、下午丹嫩），共约3–4小时',transit:'帖子样本：曼谷包车往返2500–2800泰铢；让司机直接开进市场里面，不在外围买票点下车',action:'坚决避开黑码头；周末大堵船，建议工作日上午去；选手摇船；评论多推荐更本地的空叻玛荣作为替代'}
 };
 
 const S=(verdict:XhsAssessment['verdict'],recommend:number,caution:number,avoid:number,why:string,avoidNote:string):XhsAssessment=>({verdict,recommend,caution,avoid,why,avoidNote});
