@@ -170,6 +170,19 @@
     }
     @media(max-width:520px){
       .shell{padding:12px 10px 60px}.hero{padding-top:16px}.hero h1{font-size:39px}.tabs{margin:13px 0 22px}.tab{font-size:12px;padding:10px 3px}.choice-card,.recommend,.route-explorer{padding:17px}.day-pills{grid-template-columns:repeat(5,minmax(0,1fr))}.day-pill{padding:9px 2px;font-size:12px}.classic-day{grid-template-columns:54px 1fr}.route-verdict{align-items:flex-start}.hard-check{padding:16px}.hard-check-head{display:block}.hard-count{display:inline-block;margin-top:10px}.day{min-height:78px}.day-plan small{display:none}.calendar-note{font-size:11px}.mode-row{display:block}.mode-row select{margin-top:10px;width:100%}.flight{padding:14px;grid-template-columns:72px 1fr}.hotel-grid{gap:8px}
+      /* 手机上日历改为纵向日期列表：每格全宽、信息纵向展开，决策一屏可读 */
+      .weekdays{display:none}
+      .calendar-grid{display:flex;flex-direction:column;gap:10px}
+      .day,.day.decision{min-height:0;width:100%;padding:13px 15px;text-align:left}
+      .day.out{opacity:.55}
+      .day.decision .date-no{font-size:16px}
+      .holiday-label{float:none;display:inline;font-size:11px;margin-left:8px}
+      .day.decision .city-strip{margin-top:9px}
+      .city-dot{font-size:13px;padding:5px 10px}
+      .city-why{display:none}
+      .flight-line{font-size:13px;margin-top:7px}
+      .no-service-line{font-size:13px;line-height:1.7}
+      .day-plan{font-size:12px;margin-top:9px;padding:7px 9px}
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
   
