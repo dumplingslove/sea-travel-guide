@@ -5,6 +5,7 @@ import DayDetail from "@/pages/DayDetail";
 import Login from "@/pages/Login";
 import Placeholder from "@/pages/Placeholder";
 import GuidePage from "@/pages/GuidePage";
+import MapPage from "@/pages/MapPage";
 import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
@@ -99,7 +100,7 @@ function AppRouter() {
             <Route path="/login" element={<Login />} />
             <Route
               path="/map"
-              element={<Placeholder title="地图" note="P2 填充：20 天行程地图" />}
+              element={<MapPage />}
             />
             <Route path="/planner" element={<Planner />} />
             <Route path="/guide" element={<GuidePage />} />
