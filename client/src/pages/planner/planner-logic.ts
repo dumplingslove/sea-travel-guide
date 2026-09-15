@@ -619,11 +619,13 @@ function renderCalendar(){
     const intelHtml=decision&&suits&&fs?`
       <span class="city-strip" aria-hidden="true">${suits.map(x=>`<span class="city-dot ${x.level}" title="${x.city}：${esc(x.reasons.join("；")||"无已知限制")}">${suitDot(x.level)}${x.city}</span>`).join("")}</span>
       ${suits.some(x=>x.level!=="ok")?`<span class="city-why">${suits.filter(x=>x.level!=="ok").map(x=>`<span class="${x.level}">${x.city}：${esc(x.reasons[0]||"")}</span>`).join("")}</span>`:""}
-      <span class="flight-line">✈ 当日直飞 <b>${fs.direct}/56</b> 方向${fs.noService?` · <b class="bad">⚠ ${fs.noService} 方向今日无直飞</b>`:""}</span>`:"";
+      <span class="flight-line">✈ 当日直飞 <b>${fs.direct}/56</b> 方向</span>
+      ${fs.noService?`<span class="no-service-line" role="alert"><b>⚠ 今日无直飞</b>：${esc(fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、"))}</span>`:""}`:"";
     const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""}`;
     b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
     const suitNote=decision&&suits?`；适宜度：${suits.map(x=>`${x.city}${suitDot(x.level)}`).join(" ")}`:"";
-    b.setAttribute("aria-label",`${date} ${wd}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
+    const noSvcNote=decision&&fs&&fs.noService?`；今日无直飞：${fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、")}`:"";
+    b.setAttribute("aria-label",`${date} ${wd}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${noSvcNote}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
   });
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
   const paceName=({intense:"特种兵",standard:"标准",relaxed:"从容"} as Record<string, string>)[state.pace];
