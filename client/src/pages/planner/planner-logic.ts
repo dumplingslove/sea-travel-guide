@@ -35,7 +35,7 @@ interface ClassicRoute { verdicts: string[]; days: [string, string][]; sources: 
 interface SpotDetail { name: string; address: string; hours: string; lastEntry: string; price: string; transit: string; must: string; reason: string; avoid: string; sources: [string, string][] }
 interface PublicHoliday { countries: string[]; short: string; name: string; sources: [string, string][] }
 interface SpecialMarker { city: string; short: string; title: string; body: string }
-interface PlannerState { selected: string[]; coupleDays: number; remainingMode: string; pace: string; start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; classicCity: string; classicDays: number }
+interface PlannerState { selected: string[]; coupleDays: number; remainingMode: string; pace: string; start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; classicCity: string; classicDays: number; calMode: "decision" | "schedule" }
 interface MatrixFlight { flight_no?: string; dep?: string; arr?: string; duration?: string; airport?: string; arrival_airport?: string; operating_days?: string[]; note?: string }
 interface MatrixAirline { code: string; name: string; operating_days?: string[]; typical_departures?: string[]; schedule_note?: string; merge_note?: string; flights?: MatrixFlight[]; safety?: { verdict?: string; iosa?: boolean; note?: string; source_urls?: string[] } }
 interface MatrixRoute { origin: string; destination: string; direct?: string; verification_status: string; calendar_warnings?: string[]; notes?: string; airlines?: MatrixAirline[]; rail?: { hsr?: { available?: boolean }; conventional?: { service: string; operator: string; route: string; duration: string; frequency: string; price: string; booking: string; source_urls?: string[] }[] } }
@@ -314,7 +314,7 @@ const bangkokSpotDetails: SpotDetail[] = [
  {name:"唐人街耀华力路 Chinatown",address:"Yaowarat Road, Samphanthawong, Bangkok 10100",hours:"街区无统一营业时间，日间店铺约 09:00–18:00、夜市小吃摊约 16:00–24:00，具体时段待核验",lastEntry:"开放街区无统一最后入场",price:"免费；餐饮与购物按店消费",transit:"MRT Wat Mangkon 站 1/2 号出口；或湄南河快船至 Ratchawong 码头 N5，再步行约 5–10 分钟",must:"18:00–22:00 的耀华力路街边小吃与霓虹街景、金店街、龙莲寺 Wat Mangkon Kamalawat",reason:"曼谷夜间烟火气最强的街区之一，适合老城行程后的晚餐与夜游。",avoid:"白天部分摊位未开，夜间非常拥挤；热门店先确认营业日与价格，注意保管财物。",sources:[["TripAdvisor 曼谷唐人街","https://www.tripadvisor.ca/Attraction_Review-g293916-d447272-Reviews-or30-Chinatown_Bangkok-Bangkok.html"],["Indochina Voyages 唐人街 2026 指南","https://www.indochinavoyages.com/travel-blog/china-town-in-bangkok-thailand"],["Trip.com 唐人街交通","https://us.trip.com/moments/detail/chinatown-2035757-132044348/"]]},
  {name:"伦披尼公园 Lumphini",address:"Rama IV Road, Wang Mai, Pathum Wan, Bangkok 10330",hours:"每日 04:30–22:00；园内骑行仅 10:00–15:00",lastEntry:"22:00 闭园；免费公园无单独售票截止",price:"免费",transit:"MRT Silom 站 1 号出口或 Lumphini 站 3 号出口；BTS Sala Daeng 站 5 号出口或 Ratchadamri 站 4 号出口",must:"湖上鸭子船与皮划艇、巨蜥、拉玛六世王纪念像、黄昏有氧操及季节性 Music in the Park",reason:"高密度行程中的低强度恢复点，适合清晨运动或傍晚散步。",avoid:"中午暴晒；园内巨蜥较多，应保持距离且不要投喂；禁飞无人机、禁烟酒。",sources:[["曼谷市政府 Greener Bangkok 官方页","https://greener.bangkok.go.th/park/suan-lumpini/"],["Trip.com 伦披尼公园","https://www.trip.com/moments/detail/bangkok-191-136721636/"],["Hotels.com 伦披尼交通","https://www.hotels.com/go/thailand/lumpini-park?intlid=gglist|listitem"]]}
 ];
-let state: PlannerState = {selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,classicCity:"曼谷",classicDays:3};
+let state: PlannerState = {selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,classicCity:"曼谷",classicDays:3,calMode:"decision"};
 let modalDate: string | null = null;
 
 const esc=(s: unknown)=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"} as Record<string,string>)[m]);
@@ -543,12 +543,70 @@ function renderHardConstraints(){
   count.textContent=actionable?`${actionable} 条需处理`:"全部通过";count.classList.toggle("clear",!actionable);
   el("hardList").innerHTML=items.map(x=>`<article class="hard-item ${x.level}"><strong>${x.level==="blocked"?"⛔ ":x.level==="warn"?"⚠ ":"✓ "}${x.title}</strong><p>${x.body}</p>${x.source?`<div class="hard-meta">${x.source}</div>`:""}</article>`).join("");
 }
+/* ---------------- 决策日历：城市适宜度 × 当日直飞 ---------------- */
+const decisionCityList = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
+type SuitLevel = "ok" | "warn" | "blocked";
+interface CitySuit { city: string; level: SuitLevel; reasons: string[] }
+/** 某一天 8 个城市各自是否适宜：闭馆日、限定日缺失、公共假日、特殊开放日、跨年旺季。 */
+function citySuitability(date: string): CitySuit[] {
+  const dow = new Date(date + "T12:00:00Z").getUTCDay(), weekend = dow === 0 || dow === 6;
+  const holiday = publicHolidays[date], markers = specialDateMarkers[date] || [];
+  return decisionCityList.map(city => {
+    const reasons: string[] = []; let level: SuitLevel = "ok";
+    const warn = (r: string) => { if (level === "ok") level = "warn"; reasons.push(r); };
+    const block = (r: string) => { level = "blocked"; reasons.push(r); };
+    if (holiday && holiday.countries.includes(cityCountry[city])) warn(`撞上${holiday.name}，人多、酒店贵`);
+    if (date >= "2026-12-24" && date <= "2026-12-31") warn("圣诞/跨年旺季，人多价高，奢华酒店可能有 minimum stay");
+    markers.filter(m => m.city === city).forEach(m => warn(`${m.title}：${m.body}`));
+    if (city === "曼谷" && !weekend) warn("恰图恰周末市场今日不开");
+    if (city === "清迈") { if (dow !== 6) warn("周六步行街今日不开"); if (dow !== 0) warn("周日步行街今日不开"); }
+    if (city === "普吉") { if (dow !== 0) warn("Lard Yai 周日步行街今日不开"); if (dow === 2) warn("Siam Niramit 每周二休演"); }
+    if (cityCountry[city] === "TH" && dow === 1) warn("泰国周一博物馆闭馆风险，需逐馆核对");
+    if (city === "吉隆坡" && dow === 1) block("双子塔周一闭馆");
+    return { city, level, reasons };
+  });
+}
+interface DayFlightSummary { direct: number; noService: number; noDirect: number; pending: number; problems: string[] }
+/** 某一天 56 个有向城市对的直飞汇总（按星期查矩阵）。 */
+function dayFlightSummary(date: string): DayFlightSummary {
+  const s: DayFlightSummary = { direct: 0, noService: 0, noDirect: 0, pending: 0, problems: [] };
+  for (const from of decisionCityList) for (const to of decisionCityList) {
+    if (from === to) continue;
+    const a = routeAssessment(routeForCities(from, to), date);
+    if (a.kind === "direct") s.direct++;
+    else if (a.kind === "no-service") { s.noService++; s.problems.push(`${from}→${to}今日无直飞`); }
+    else if (a.kind === "no-direct") s.noDirect++;
+    else s.pending++;
+  }
+  return s;
+}
+function suitDot(level: SuitLevel){ return level === "blocked" ? "🔴" : level === "warn" ? "🟡" : "🟢"; }
+function renderDayIntel(date: string){
+  const suits = citySuitability(date), fs = dayFlightSummary(date);
+  el("dayIntel").innerHTML = `
+  <div class="intel-sec"><h4>当日城市适宜度 <span class="intel-sub">🟢宜 · 🟡谨慎 · 🔴不宜</span></h4>
+  ${suits.map(x => `<div class="intel-row ${x.level}"><span>${suitDot(x.level)}</span><b>${x.city}</b><span class="intel-reasons">${x.reasons.length ? esc(x.reasons.join("；")) : "无已知限制"}</span><button class="ghost intel-set" data-city="${x.city}">排为此城</button></div>`).join("")}</div>
+  <div class="intel-sec"><h4>当日直飞 <span class="intel-sub">${fs.direct}/56 方向有直飞</span></h4>
+  <p class="intel-flights">✈ ${fs.direct} 方向有直飞${fs.noService ? ` · ⚠ 当日无直飞：${esc(fs.problems.join("、"))}` : ""}${fs.pending ? ` · ${fs.pending} 方向精确日期待核验` : ""} · ${fs.noDirect} 方向确认无直飞</p>
+  <p class="intel-flights micro">时刻与可售班次以预订时重查为准；隔日航线（普吉↔槟城、清迈↔胡志明市）在周二、周四、周六无直飞。</p></div>`;
+  S.querySelectorAll(".intel-set").forEach(btn => btn.addEventListener("click", () => {
+    (el("modalCity") as HTMLSelectElement).value = (btn as HTMLElement).dataset.city || "";
+  }));
+}
+function syncCalMode(){
+  const d = state.calMode === "decision";
+  el("calModeDecision").classList.toggle("active", d);
+  el("calModeSchedule").classList.toggle("active", !d);
+  el("calModeDecision").setAttribute("aria-pressed", String(d));
+  el("calModeSchedule").setAttribute("aria-pressed", String(!d));
+}
 function renderCalendar(){
   const grid=el("calendarGrid"),mc=monthCells(),dates=mc.cells;grid.innerHTML="";
   S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
   dates.forEach(date=>{
     const plan=state.schedule[date],d=new Date(date+"T12:00:00Z"),inMonth=date>=state.start&&date<=mc.lastScheduled;
+    const wd=["周日","周一","周二","周三","周四","周五","周六"][d.getUTCDay()];
     const holidayData=publicHolidays[date];
     const holiday=holidayData&&(!plan||holidayData.countries.includes(cityCountry[plan.city]))?holidayData.short:"";
     const specials=(specialDateMarkers[date]||[]).filter(marker=>!plan||marker.city===plan.city);
@@ -556,13 +614,19 @@ function renderCalendar(){
     const transition=transferByDate[date],transfer=Boolean(transition),assessment=transition?.assessment;
     const transferCopy=transfer?(assessment.kind==="direct"?`✈ 当天 ${assessment.airlines.length} 家直飞`:assessment.kind==="no-service"?"⚠ 当天无直飞":assessment.kind==="no-direct"?"⚠ 已确认无直飞":"⚠ 精确日期待核验"):"";
     const paceCap=({intense:4,standard:3,relaxed:2} as Record<string, number>)[state.pace]||4;
-    const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""}`;
-    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
-    b.setAttribute("aria-label",`${date}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}`);b.onclick=()=>openDay(date);grid.appendChild(b);
+    const decision=state.calMode==="decision";
+    const suits=decision?citySuitability(date):null, fs=decision?dayFlightSummary(date):null;
+    const intelHtml=decision&&suits&&fs?`
+      <span class="city-strip" aria-hidden="true">${suits.map(x=>`<span class="city-dot ${x.level}" title="${x.city}：${esc(x.reasons.join("；")||"无已知限制")}">${x.city}</span>`).join("")}</span>
+      <span class="flight-line">✈ ${fs.direct}/56 方向直飞${fs.noService?` · <b class="bad">⚠ ${fs.noService} 方向今日无直飞</b>`:""}</span>`:"";
+    const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""}`;
+    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
+    const suitNote=decision&&suits?`；适宜度：${suits.map(x=>`${x.city}${suitDot(x.level)}`).join(" ")}`:"";
+    b.setAttribute("aria-label",`${date} ${wd}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
   });
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
   const paceName=({intense:"特种兵",standard:"标准",relaxed:"从容"} as Record<string, string>)[state.pace];
-  el("calendarNote").textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。`;
+  el("calendarNote").textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
   renderTransferAlerts();
   renderHardConstraints();
 }
@@ -651,7 +715,7 @@ function renderHotels(){
     return `<article class="card hotel ${city==="富国岛"?"warning":""}"><header><h3>${esc(city)}</h3><span class="city">${flag}</span></header><p>${esc(hotel)}</p>${city==="富国岛"?'<p><strong>注意：</strong>原计划 Park Hyatt 尚未开业，不能用于 2026 年 12 月。</p>':'<p>房态需预订时确认。</p>'}</article>`;
   }).join("");
 }
-function openDay(date: string){modalDate=date;const plan=state.schedule[date];el("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;(el("modalCity") as HTMLSelectElement).value=plan?.city||"曼谷";(el("modalMode") as HTMLSelectElement).value=plan?.mode||"couple";el("dayModal").classList.add("open")}
+function openDay(date: string){modalDate=date;const plan=state.schedule[date];el("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;renderDayIntel(date);(el("modalCity") as HTMLSelectElement).value=plan?.city||"曼谷";(el("modalMode") as HTMLSelectElement).value=plan?.mode||"couple";el("dayModal").classList.add("open")}
 function closeModal(){el("dayModal").classList.remove("open")}
 function saveDay(){
   if(!modalDate)return;
@@ -683,6 +747,9 @@ el("applyRecommendation").onclick=()=>{state.edited=false;buildRecommendedSchedu
 el("startDate").onchange=e=>{state.start=(e.target as HTMLInputElement).value;state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage()};
 el("resetRecommended").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();toast("已恢复智能推荐")};
 el("copyPlan").onclick=copyPlan;
+el("calModeDecision").onclick=()=>{state.calMode="decision";syncCalMode();renderCalendar()};
+el("calModeSchedule").onclick=()=>{state.calMode="schedule";syncCalMode();renderCalendar()};
+syncCalMode();
 el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
 el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));

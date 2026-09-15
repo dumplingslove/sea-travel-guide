@@ -83,6 +83,31 @@
     .field label{color:var(--muted);font-size:12px}.field input{border:0;background:transparent;outline:0}
     .legend{margin-left:auto;display:flex;gap:12px;font-size:12px;color:var(--muted)}
     .legend span{display:flex;gap:5px;align-items:center}.dot{width:10px;height:10px;display:inline-block}.dot.couple{background:var(--teal)}.dot.family{background:var(--gold)}.dot.holiday{background:var(--coral)}
+    .dot.suit-ok{background:#1f8a5f;border-radius:50%}.dot.suit-warn{background:#d99a1f;border-radius:50%}.dot.suit-blocked{background:#a33d49;border-radius:50%}
+    .cal-mode-toggle{display:flex;gap:6px}
+    .cal-mode-toggle .ghost.active{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-dark)}
+    .day.decision{min-height:216px}
+    .date-wd{font-size:11px;color:var(--muted);margin-left:7px}
+    .day.decision .date-no{font-size:15px}
+    .city-strip{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+    .city-dot{font-size:11px;line-height:1.35;padding:3px 7px;border-radius:11px;border:1px solid #dfe6e4;background:#f6f8f7;cursor:help}
+    .city-dot.ok{border-color:#bfe3d6;color:#0f5f52;background:#eaf6f1}
+    .city-dot.warn{border-color:#ecd9a8;color:#7a5c14;background:#fdf4dc}
+    .city-dot.blocked{border-color:#e7b3b8;color:#8e3038;background:#f9e2e4;text-decoration:line-through}
+    .flight-line{display:block;margin-top:8px;font-size:11px;line-height:1.45;color:var(--muted)}
+    .flight-line .bad{color:#8e3038;font-weight:700}
+    .modal-card{width:min(680px,100%);max-height:88vh;overflow-y:auto}
+    .intel-sec{margin:16px 0 0;padding:13px 14px;background:#f7f9f8;border:1px solid var(--line);border-radius:8px}
+    .intel-sec h4{margin:0 0 6px;font-size:13px}
+    .intel-sub{font-weight:400;color:var(--muted);font-size:11px}
+    .intel-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #e9eeec;font-size:12px}
+    .intel-row:first-of-type{border-top:0}
+    .intel-row b{min-width:3.2em}
+    .intel-row.blocked b{color:#8e3038}
+    .intel-reasons{flex:1;color:var(--muted)}
+    .intel-set{flex:none;padding:4px 10px;font-size:11px}
+    .intel-flights{margin:6px 0 0;font-size:12px;color:var(--muted)}
+    .intel-flights.micro{font-size:11px}
     .transfer-alerts{display:grid;gap:8px;margin-top:14px}
     .transfer-alert{padding:13px 15px;border:1px solid #d9e7e7;background:#eef5f3;display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
     .transfer-alert strong{font:600 12px var(--mono);color:var(--teal-dark)}
