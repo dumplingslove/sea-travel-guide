@@ -740,6 +740,181 @@ async function copyPlan(){const text=planText();try{await navigator.clipboard.wr
 function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
 function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage()}
 
+/* ================= 🧭 分步规划向导 ================= */
+interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string }
+const WZ_ORDER = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
+const WZ_META: Record<string, WzCityMeta> = {
+ "曼谷":{tagline:"经典推荐：城市层次完整",decNote:"恰图恰只在周末开；周一博物馆闭馆风险；12/5、12/7、12/10、12/31为泰国假日，人多价高",stayArea:"素坤逸商圈（BTS沿线）或暹罗商圈",staySource:"路线帖住宿案例"},
+ "清迈":{tagline:"推荐起点：古城＋素贴山",decNote:"周六/周日步行街只在对应日子开；12月旺季大象项目建议提前6–8周订",stayArea:"古城东南（步行可达塔佩门/清迈门）或宁曼路周边",staySource:"路线帖共识"},
+ "普吉":{tagline:"核心初识：本岛＋出海",decNote:"出海看海况，建议留1天机动；Lard Yai只在周日；Siam Niramit周二休演",stayArea:"卡塔/卡伦海滩（近码头，方便出海）",staySource:"路线帖共识"},
+ "槟城":{tagline:"甜点天数：历史、美食、山景齐",decNote:"12/25圣诞假日人多；升旗山与极乐寺可拼成Air Itam山线一天",stayArea:"乔治市镇中心（交通方便）或巴都丁宜海边",staySource:"路线帖住宿案例"},
+ "吉隆坡":{tagline:"核心推荐：市区＋黑风洞",decNote:"双子塔周一闭馆，提前3–4周在线抢票；12/25圣诞",stayArea:"武吉免登（近地铁/Pavilion/阿罗街）或KLCC附近",staySource:"路线帖评论共识"},
+ "胡志明市":{tagline:"经典推荐：再加古芝地道",decNote:"12月无全国性公共假日；古芝地道与湄公河三角洲不要塞在同一天",stayArea:"第一郡（独立宫旁，步行可达各景点）",staySource:"路线帖共识"},
+ "富国岛":{tagline:"经典推荐：海、陆、夜市齐",decNote:"风浪可能导致出海取消，建议留1天机动；Park Hyatt 2027-03才开业，本次不可选",stayArea:"中央西岸长滩/阳东镇（Dinh Cau日落＋夜市近）",staySource:"路线帖（信息较弱）"},
+ "新加坡":{tagline:"亲子最低推荐：再加圣淘沙",decNote:"12/25圣诞；USS 12/1与12/12有私人活动，按实际日期再确认；环球影城按身高与午睡情况选半日或整日",stayArea:"滨海湾/市中心近地铁，亲子出行方便",staySource:"通用建议"}
+};
+interface DuffelLeg { offers: number; min: number; max: number; carriers: string; fragile?: boolean }
+const DUFFEL_NOTE = "Duffel实测 · 2026-09-14/15 · 2成人直飞当前库存；价格会变，Duffel未返回退改信息，出票前重查";
+const DUFFEL_MEASURED: Record<string, DuffelLeg> = {
+ "BKK-CNX|2026-12-15":{offers:28,min:169.80,max:277.80,carriers:"泰航 / 曼谷航空"},
+ "CNX-HKT|2026-12-17":{offers:1,min:391.80,max:471.80,carriers:"曼谷航空 PG0248 14:35–16:40",fragile:true},
+ "HKT-PEN|2026-12-20":{offers:1,min:205.80,max:205.80,carriers:"马航 MH5455 14:35–16:35",fragile:true},
+ "PEN-KUL|2026-12-22":{offers:28,min:67.00,max:421.20,carriers:"马航 / Malindo"},
+ "KUL-SGN|2026-12-24":{offers:12,min:222.20,max:557.80,carriers:"越捷 / 越航 / 马航等"},
+ "SGN-PQC|2026-12-26":{offers:22,min:130.00,max:249.00,carriers:"越捷 / 越航等"},
+ "PQC-SIN|2026-12-29":{offers:3,min:334.00,max:674.00,carriers:"越捷 / Scoot（Scoot由Hahn Air出票）"}
+};
+interface WzState { step: number; cities: string[]; days: Record<string, number>; order: string[]; start: string; modes: Record<string, string> }
+const wz: WzState = { step:1, cities:[...WZ_ORDER], days:{...baselineNights}, order:[...WZ_ORDER], start:"2026-12-12", modes:{"新加坡":"family"} };
+function wzDirectCount(city: string){ let n=0; for(const to of WZ_ORDER){ if(to===city)continue; const r=routeForCities(city,to); if(r&&r.direct!=="no")n++ } return n }
+function wzRanges(){ const rows: {city:string;from:string;to:string;mode:string}[] = []; let cur=wz.start; for(const city of wz.order){ if(!wz.cities.includes(city))continue; const d=wz.days[city]||1, from=cur, to=addDays(cur,d-1); rows.push({city,from,to,mode:wz.modes[city]||"couple"}); cur=addDays(to,1) } return rows }
+function wzLegs(){ const rows=wzRanges(), legs: {from:string;to:string;date:string}[] = []; for(let i=1;i<rows.length;i++) legs.push({from:rows[i-1].city,to:rows[i].city,date:rows[i].from}); return legs }
+function wzLegCheck(from: string, to: string, date: string){
+  const dm=DUFFEL_MEASURED[`${cityAirportCodes[from]}-${cityAirportCodes[to]}|${date}`], route=routeForCities(from,to), a=routeAssessment(route,date);
+  if(dm) return {level:dm.fragile?"warn":"pass", html:`<b>✓ Duffel实测 ${date.slice(5).replace("-","/")} 有直飞</b>：${dm.offers} 个结果，两人 $${dm.min.toFixed(2)}–$${dm.max.toFixed(2)}（${esc(dm.carriers)}）${dm.fragile?'<br>⚠ <b>当天仅1班，先锁这段</b>':""}<br><span class="micro">${DUFFEL_NOTE}</span>`};
+  if(a.kind==="direct"){ const partial=route&&route.verification_status.includes("部分待核验"); return {level:"pass", html:`<b>✓ 当天有直飞</b>（按星期查矩阵）：${a.airlines.map(x=>esc(`${x.code} ${x.name}`)).join(" / ")}${partial?'<br>⚠ 排班模式已核验，精确日期时刻待核验，出票前重查':""}`} }
+  if(a.kind==="no-service") return {level:"blocked", html:`<b>⛔ ${dateLabel(date)}无直飞</b>：${esc((route?.calendar_warnings||[]).join(" ")||"请改期或看中转/铁路方案。")}`};
+  if(a.kind==="no-direct") return {level:"blocked", html:`<b>⛔ 已确认无直飞</b>：${esc(route?.notes||"请改走中转。")}`};
+  return {level:"warn", html:`<b>⚠ 精确日期待核验</b>：排班模式已核验，精确日期时刻待核验；不能据此推断当天无直飞。`};
+}
+function wzSetStep(n: number){
+  if(n===2&&wz.cities.length<2){ toast("至少选 2 个城市才能继续",true); return }
+  if(n>=3&&!wz.order.filter(c=>wz.cities.includes(c)).length){ toast("先选城市",true); return }
+  wz.step=n; wzRender();
+  (el("wizard") as HTMLElement).scrollIntoView({behavior:"smooth",block:"start"});
+}
+function wzRender(){
+  const steps=[...S.querySelectorAll("#wzSteps li")] as HTMLElement[];
+  steps.forEach(li=>{ const n=Number(li.dataset.wzstep); li.classList.toggle("active",n===wz.step); li.classList.toggle("done",n<wz.step); li.onclick=()=>wzSetStep(n) });
+  const body=el("wzBody");
+  if(wz.step===1) body.innerHTML=wzStep1();
+  else if(wz.step===2) body.innerHTML=wzStep2();
+  else if(wz.step===3) body.innerHTML=wzStep3();
+  else body.innerHTML=wzStep4();
+  wzWire();
+}
+function wzStep1(){
+  const cards=WZ_ORDER.map(city=>{
+    const m=WZ_META[city], sel=wz.cities.includes(city), cc=cityCountry[city];
+    return `<article class="card wz-city ${sel?"selected":""}" data-city="${city}" role="button" tabindex="0" aria-pressed="${sel}">
+      <header><b>${city}</b><span class="micro">${countries[cc].flag} ${countries[cc].name}</span>${sel?'<span class="wz-pick">✓ 已选</span>':""}</header>
+      <p class="wz-rec">建议 ${baselineNights[city]} 天 · ${esc(m.tagline)}</p>
+      <p class="micro">📅 ${esc(m.decNote)}</p>
+      <p class="micro">🏨 ${esc(m.stayArea)}<span class="wz-src">（${esc(m.staySource)}）</span></p>
+      <p class="micro">✈ 直飞通达 ${wzDirectCount(city)}/7 城</p>
+    </article>`;
+  }).join("");
+  return `<div class="section-head"><div><p class="eyebrow">STEP 1/4</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
+    <div class="wz-quick"><button class="ghost" id="wzAll">8城全选</button><button class="ghost" id="wzClear">清空</button></div></div>
+    <div class="wz-city-grid">${cards}</div>
+    <div class="wz-nav"><span class="micro">已选 <b>${wz.cities.length}</b> 城</span><button class="primary" id="wzNext1">下一步：定天数 →</button></div>`;
+}
+function wzStep2(){
+  const rows=wz.order.filter(c=>wz.cities.includes(c)).map(city=>{
+    const d=wz.days[city]||1, route=classicRoutes[city], verdict=d<=5?route.verdicts[d-1]:"深度版＋留白", cov=classicCoverage(city,Math.min(d,5));
+    return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div></div>
+      <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天">＋</button></div></div>`;
+  }).join("");
+  const total=wz.order.filter(c=>wz.cities.includes(c)).reduce((a,c)=>a+(wz.days[c]||1),0);
+  return `<div class="section-head"><div><p class="eyebrow">STEP 2/4</p><h2>定每城天数</h2><p class="lede">1–6 天可调；评语与覆盖数来自各城经典路线（1–5天版本）。</p></div></div>
+    ${rows}
+    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天${total>20?`（超过20天，按起始日顺延）`:""}</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>`;
+}
+function wzStep3(){
+  const rows=wzRanges();
+  const orderRows=rows.map((r,i)=>{
+    const up=i>0?`<button class="icon-btn" data-wzup="${i}" aria-label="${r.city}前移">↑</button>`:"<span class='wz-ph'></span>";
+    const down=i<rows.length-1?`<button class="icon-btn" data-wzdown="${i}" aria-label="${r.city}后移">↓</button>`:"<span class='wz-ph'></span>";
+    return `<div class="card wz-orderrow"><div class="wz-move">${up}${down}</div>
+      <div><b>${i+1}. ${r.city}</b><div class="micro">${r.from.slice(5).replace("-","/")} – ${r.to.slice(5).replace("-","/")} · ${wz.days[r.city]}天</div></div>
+      <select data-wzmode="${r.city}" aria-label="${r.city}旅行模式"><option value="couple" ${r.mode==="couple"?"selected":""}>双人快节奏</option><option value="family" ${r.mode==="family"?"selected":""}>亲子慢节奏</option></select></div>`;
+  }).join("");
+  const legs=wzLegs().map(l=>{ const c=wzLegCheck(l.from,l.to,l.date); return `<div class="wz-leg ${c.level}"><strong>${l.date.slice(5).replace("-","/")} · ${l.from} → ${l.to}</strong><p>${c.html}</p></div>` }).join("");
+  const suitRows=rows.map(r=>{
+    const notes: string[]=[];
+    for(let d=r.from;d<=r.to;d=addDays(d,1)){ const s=citySuitability(d).find(x=>x.city===r.city); if(s&&s.level!=="ok") notes.push(`${d.slice(5).replace("-","/")}: ${s.reasons.join("；")}`) }
+    if(!notes.length) return "";
+    return `<div class="wz-leg warn"><strong>${r.city} · ${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")}</strong><p>${notes.map(n=>`⚠ ${esc(n)}`).join("<br>")}</p></div>`;
+  }).join("");
+  return `<div class="section-head"><div><p class="eyebrow">STEP 3/4</p><h2>定具体日期</h2><p class="lede">调顺序用 ↑ ↓；改起始日后日期自动顺延。每段转场按当天星期查直飞，每城日期段自动检查适宜度。</p></div></div>
+    <div class="field" style="margin-bottom:14px"><label for="wzStart">起始日期</label><input id="wzStart" type="date" min="2026-12-01" max="2026-12-31" value="${wz.start}"></div>
+    ${orderRows}
+    <h3 style="margin:18px 0 10px">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}
+    ${suitRows?`<h3 style="margin:18px 0 10px">📅 日期适宜度提醒</h3>${suitRows}`:""}
+    <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><button class="primary" id="wzNext3">下一步：机票酒店 →</button></div>`;
+}
+function wzStep4(){
+  const legs=wzLegs(), rows=wzRanges();
+  const legCards=legs.map(l=>{
+    const dm=DUFFEL_MEASURED[`${cityAirportCodes[l.from]}-${cityAirportCodes[l.to]}|${l.date}`], route=routeForCities(l.from,l.to), a=routeAssessment(route,l.date);
+    const matrix=(a.kind==="direct"&&route)?a.airlines.map(al=>`<div class="wz-air"><b>${esc(al.code)} · ${esc(al.name)}</b><span class="badge ${al.safety?.verdict==="推荐"?"recommended":al.safety?.verdict==="谨慎"?"caution":"pending"}">${esc(al.safety?.verdict||"待核验")}</span><span class="micro">${esc((al.typical_departures||[]).length?`典型起飞 ${(al.typical_departures||[]).join(" / ")}`:"时刻待核验")}</span></div>`).join(""):`<p class="micro">${a.kind==="no-direct"?"该方向已确认无直飞，请看中转方案。":a.kind==="no-service"?"当天无直飞，建议改期或中转。":"排班模式已核验，精确日期时刻待核验。"}</p>`;
+    return `<article class="card wz-legcard"><h4>${l.date.slice(5).replace("-","/")} · ${l.from} → ${l.to}</h4>
+      ${dm?`<div class="wz-duffel"><b>✓ Duffel实测有直飞</b>：${dm.offers} 个结果，两人 $${dm.min.toFixed(2)}–$${dm.max.toFixed(2)}（${esc(dm.carriers)}）${dm.fragile?'<br>⚠ <b>当天仅1班，先锁这段</b>':""}<br><span class="micro">${DUFFEL_NOTE}</span></div>`:""}
+      <div class="micro" style="margin:6px 0 4px">矩阵航司（按当天星期，安全优先排序）：</div>${matrix||'<p class="micro">暂无矩阵航司信息。</p>'}</article>`;
+  }).join("");
+  const measured=legs.filter(l=>DUFFEL_MEASURED[`${cityAirportCodes[l.from]}-${cityAirportCodes[l.to]}|${l.date}`]);
+  const totalMin=measured.reduce((s,l)=>s+DUFFEL_MEASURED[`${cityAirportCodes[l.from]}-${cityAirportCodes[l.to]}|${l.date}`].min,0);
+  const hotelCards=rows.map(r=>{
+    const m=WZ_META[r.city], festive=r.from<="2026-12-31"&&r.to>="2026-12-24";
+    let body="";
+    if(r.city==="吉隆坡"){
+      const list=PLANNER_KL_HOTELS.slice(0,3).map(h=>`<div class="micro">· ${esc(h.name)}（研究状态参考）</div>`).join("");
+      body=`${list}<p><strong>开放问题：</strong>研究报告未给出候选酒店。</p>`;
+    } else {
+      body=`<p><strong>候选：</strong>${esc(hotels[r.city]||"待定")}</p>${r.city==="富国岛"?'<p>⛔ Park Hyatt Phu Quoc 2027-03才开放预订，本次不可选。</p>':""}<p class="micro">房态需预订时确认。</p>`;
+    }
+    return `<article class="card wz-hotel"><header><h4>${r.city}</h4><span class="micro">${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")} · ${wz.days[r.city]}晚</span></header>${body}
+      <p class="micro">🏨 住宿区：${esc(m.stayArea)}<span class="wz-src">（${esc(m.staySource)}）</span></p>
+      ${festive?'<p class="micro">⚠ 覆盖圣诞/跨年：旺季奢华酒店常见 minimum stay、提前全额付款或强制 gala dinner，订前逐家看清条款。</p>':""}</article>`;
+  }).join("");
+  return `<div class="section-head"><div><p class="eyebrow">STEP 4/4</p><h2>机票与酒店</h2><p class="lede">按你定的城市顺序与日期逐段列出。Duffel实测只覆盖经典8城顺序的7个日期组合；其余按矩阵排班模式呈现，出票前重查。</p></div>
+    <div class="wz-quick"><button class="ghost" id="wzCopy">复制预订清单</button></div></div>
+    ${measured.length===legs.length&&legs.length?`<div class="wz-leg pass"><strong>💰 7段Duffel实测最低合计约 $${totalMin.toFixed(2)} / 2人</strong><p><span class="micro">${DUFFEL_NOTE}</span></p></div>`:""}
+    <h3 style="margin:6px 0 10px">✈ 逐段机票</h3>${legCards||'<p class="micro">只有一城，无需城际机票。</p>'}
+    <h3 style="margin:18px 0 10px">🏨 逐城酒店</h3><div class="wz-hotel-grid">${hotelCards}</div>
+    <div class="wz-nav"><button class="ghost" id="wzBack4">← 上一步</button><button class="primary" id="wzApply">排入日历并查看 →</button></div>`;
+}
+function wzApplyToCalendar(){
+  const rows=wzRanges(), schedule: Record<string,{city:string;mode:string}> = {};
+  rows.forEach(r=>{ for(let d=r.from;d<=r.to;d=addDays(d,1)) schedule[d]={city:r.city,mode:r.mode} });
+  state.schedule=schedule; state.edited=true; state.start=wz.start;
+  (el("startDate") as HTMLInputElement).value=wz.start;
+  renderCalendar(); renderCoverage();
+  (S.querySelector('[data-tab="calendar"]') as HTMLElement).click();
+  toast("已按四步规划排入日历");
+}
+function wzCopyBooking(){
+  const legs=wzLegs(), rows=wzRanges(), lines=["东南亚行程 · 机票酒店预订清单",""];
+  legs.forEach(l=>{ const dm=DUFFEL_MEASURED[`${cityAirportCodes[l.from]}-${cityAirportCodes[l.to]}|${l.date}`];
+    lines.push(`${l.date}｜${l.from} → ${l.to}｜${dm?`Duffel实测${dm.offers}个结果，两人$${dm.min.toFixed(2)}-${dm.max.toFixed(2)}（${dm.carriers}）${dm.fragile?"【当天仅1班先锁】":""}`:"按矩阵查当天直飞，出票前重查"}`) });
+  lines.push("");
+  rows.forEach(r=>{ lines.push(`${r.from}–${r.to}｜${r.city} ${wz.days[r.city]}晚｜${r.city==="吉隆坡"?"研究报告未给出候选酒店":hotels[r.city]}｜住宿区：${WZ_META[r.city].stayArea}`) });
+  lines.push("",DUFFEL_NOTE,"酒店房态、条款、价格预订前重查。");
+  const text=lines.join("\n");
+  (async()=>{ try{ await navigator.clipboard.writeText(text) }catch(e){ const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove() } toast("预订清单已复制") })();
+}
+function wzWire(){
+  S.querySelectorAll(".wz-city").forEach(card=>{
+    const toggle=()=>{ const c=(card as HTMLElement).dataset.city||"";
+      if(wz.cities.includes(c)) wz.cities=wz.cities.filter(x=>x!==c); else { wz.cities.push(c); wz.order=[...WZ_ORDER.filter(x=>wz.cities.includes(x))]; }
+      wzRender() };
+    (card as HTMLElement).onclick=toggle;
+    (card as HTMLElement).onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle() } };
+  });
+  const on=(id:string,fn:()=>void)=>{ const n=S.getElementById(id); if(n) (n as HTMLElement).onclick=fn };
+  on("wzAll",()=>{ wz.cities=[...WZ_ORDER]; wz.order=[...WZ_ORDER]; Object.assign(wz.days,baselineNights); wzRender() });
+  on("wzClear",()=>{ wz.cities=[]; wzRender() });
+  on("wzNext1",()=>wzSetStep(2)); on("wzBack2",()=>wzSetStep(1)); on("wzNext2",()=>wzSetStep(3));
+  on("wzBack3",()=>wzSetStep(2)); on("wzNext3",()=>wzSetStep(4)); on("wzBack4",()=>wzSetStep(3));
+  on("wzApply",wzApplyToCalendar); on("wzCopy",wzCopyBooking);
+  S.querySelectorAll("[data-wzday]").forEach(b=>(b as HTMLElement).onclick=(e)=>{ e.stopPropagation(); const [city,d]=((b as HTMLElement).dataset.wzday||"").split("|"); wz.days[city]=Math.min(6,Math.max(1,(wz.days[city]||1)+Number(d))); wzRender() });
+  S.querySelectorAll("[data-wzup]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const city=arr[i]; arr[i]=arr[i-1]; arr[i-1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
+  S.querySelectorAll("[data-wzdown]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzdown), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const city=arr[i]; arr[i]=arr[i+1]; arr[i+1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
+  S.querySelectorAll("[data-wzmode]").forEach(s=>((s as HTMLSelectElement).onchange=(e)=>{ wz.modes[(s as HTMLElement).dataset.wzmode||""]=(e.target as HTMLSelectElement).value }));
+  const start=S.getElementById("wzStart") as HTMLInputElement|null; if(start) start.onchange=()=>{ wz.start=start.value||wz.start; wzRender() };
+}
+function initWizard(){ wzRender() }
+
 // init controls
 ([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
 el("daysMinus").onclick=()=>{state.coupleDays=Math.max(5,state.coupleDays-1);state.edited=false;updateAll()};
@@ -758,7 +933,7 @@ el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeMod
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
 const classicCitySelect=el("classicCity") as HTMLSelectElement;Object.keys(classicRoutes).forEach(c=>classicCitySelect.add(new Option(c,c)));
 classicCitySelect.onchange=e=>{state.classicCity=(e.target as HTMLSelectElement).value;state.classicDays=3;renderClassicRoute()};
-initTransport();renderHotels();renderClassicRoute();buildRecommendedSchedule();updateAll();
+initTransport();renderHotels();renderClassicRoute();buildRecommendedSchedule();initWizard();updateAll();
 
   /* ---- 研究数据来源说明（原生集成追加） ---- */
   {

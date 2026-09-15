@@ -12,13 +12,27 @@
     </section>
 
     <nav class="tabs" aria-label="页面区域">
-      <button class="tab" data-tab="decide" aria-selected="true">智能推荐</button>
+      <button class="tab active" data-tab="wizard" aria-selected="true">🧭 分步规划</button>
+      <button class="tab" data-tab="decide" aria-selected="false">智能推荐</button>
       <button class="tab" data-tab="calendar" aria-selected="false">日历排期</button>
       <button class="tab" data-tab="coverage" aria-selected="false">景点覆盖</button>
       <button class="tab" data-tab="constraints" aria-selected="false">航班酒店</button>
     </nav>
 
-    <section id="decide" class="panel active">
+    <section id="wizard" class="panel active">
+      <div class="section-head">
+        <div><p class="eyebrow">GUIDED PLANNER</p><h2>四步定下整趟行程</h2><p class="lede">先选城市，再定每城天数，然后排具体日期，最后看每段机票与每城酒店。每一步都给到做决策需要的信息；走完可一键排入日历。</p></div>
+      </div>
+      <ol class="wz-steps" id="wzSteps" aria-label="规划步骤">
+        <li data-wzstep="1"><b>①</b><span>选城市</span></li>
+        <li data-wzstep="2"><b>②</b><span>定天数</span></li>
+        <li data-wzstep="3"><b>③</b><span>定日期</span></li>
+        <li data-wzstep="4"><b>④</b><span>机票酒店</span></li>
+      </ol>
+      <div id="wzBody" aria-live="polite"></div>
+    </section>
+
+    <section id="decide" class="panel">
       <div class="section-head">
         <div><p class="eyebrow">STEP 01</p><h2>先锁定双人段</h2><p class="lede">泰国、马来西亚、越南三选二。新加坡固定为 2 大 1 小亲子段；未选中的第三国可设为亲子段或暂不去。</p></div>
       </div>
