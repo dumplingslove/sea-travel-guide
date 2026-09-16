@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-16T09:25:00Z",
+ "updated_at": "2026-09-16T11:06:00Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -11,7 +11,7 @@ export const initialResearchStatus = {
  "cities": {
   "bangkok": {
    "name": "曼谷",
-   "total": 31,
+   "total": 32,
    "complete": 0,
    "items": [
     {
@@ -188,16 +188,16 @@ export const initialResearchStatus = {
      "note": "【半岛酒店集团】【档次：顶奢】1998年开业，湄南河畔波浪形塔楼城市地标；TA 4.7、曼谷约#194/1400、Travellers' Choice 2026。【2026-09-16替换】原 The Ritz-Carlton Bangkok（火度/特色不足），审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): TA 4.7/5、5,971条、曼谷#197/1405；3条原话(Maitree Y 5★ 2026-09、Shino 2★ 2026-08、Suriya S. 5★ 2026-08)+规范链接"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): Google 4.7/4,983条(5★3,898)；3条原话(Barnini Banerji 4/5、D T 4/5、K TH)+规范链接；摆渡船管理/服务一致性为主要避雷"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): 携程手机版 4.7分（超棒）、1,144条；3条中文原话(Flowerdanmm 2026-08、M508578**** 2026-08、马蜂窝YRV 2018-08-15避雷)+规范链接；马蜂窝补充8.5/182条(旧帖)；大众点评/Trip.com desktop登录墙未做"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -222,16 +222,16 @@ export const initialResearchStatus = {
      "note": "【瑰丽酒店集团】【档次：顶奢】2019年开业，KPF以泰式合十礼(wai)为灵感的双叠式塔楼，曼谷CBD建筑地标；159间客房；HD Awards Luxury Hotel 2020、芝加哥Athenaeum国际建筑奖2021。【2026-09-16替换】原 Park Hyatt Bangkok，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): TA 4.8/5、657条、曼谷#97/1405、Travelers' Choice 2026；3条原话(Paul Jakubek 3★ 2026-09、Birger K 5★ 2026-08、Agustin278 4★ 2026-08)+规范链接"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): Google 4.6/1,231条(5★987)；3条原话(Khai Meng Cheong 5/5、C Victor 5/5、Trip.com Member 2/5)+规范链接；避雷:服务冷热不均/早餐/房间潮味BTS噪音"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/bangkok-newhotels-2026-09-16.md §2): Trip.com 9.2/10(Great)、1,142条verified reviews(公开页实读时捕获)+规范链接；马蜂窝5条真实评论原话(36****30 2024-02-20、41****43 2024-03-16、95****08 2024-02-24、Feifei 2019-07-10)；大众点评未验证/登录墙未做"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -1073,6 +1073,41 @@ export const initialResearchStatus = {
       },
       "details": {
        "status": "pending"
+      }
+     }
+    },
+    {
+     "name": "The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店",
+     "type": "酒店",
+     "note": "【万豪系·Luxury Collection】【档次：奢华】用户钛金福利增补（2026-09-16）：前 Plaza Athénée，王子宫殿旧址，标志性双楼梯大堂，8家餐厅酒吧",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "TA 4.8/5，8,762条（#39/1405），3条英文原话+链接（ota-reviews/bangkok-newhotels-2026-09-16.md）"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "GM 4.6星，6,800条，2条英文原话+低分噪音投诉+链接（ota-reviews/bangkok-newhotels-2026-09-16.md）"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "Trip.com中文版 9.6/10，247条，3条中文原话+链接（ota-reviews/bangkok-newhotels-2026-09-16.md）；携程国内版登录墙pending、马蜂窝无独立listing pending、Klook反爬403 pending"
+      },
+      "xiaohongshu": {
+       "posts": 0,
+       "target": 10,
+       "status": "pending",
+       "note": "2026-09-16新增；本轮任务不碰小红书，由主 agent 安排"
+      },
+      "photos": {
+       "verified": 5,
+       "target": 5,
+       "status": "done",
+       "note": "2026-09-16：5张逐张HTTP验证+目验通过（外观/大堂/客房/餐饮/泳池）；证据：photos/hotel-luxury-audit-2026-09-16.md §六"
+      },
+      "details": {
+       "status": "pending",
+       "note": "2026-09-16新增，详情页未建"
       }
      }
     }
@@ -4236,7 +4271,7 @@ export const initialResearchStatus = {
   },
   "hcmc": {
    "name": "胡志明市",
-   "total": 22,
+   "total": 23,
    "complete": 0,
    "items": [
     {
@@ -5004,6 +5039,41 @@ export const initialResearchStatus = {
       "details": {
        "status": "done",
        "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）（覆盖：阮惠步行街、同起街）"
+      }
+     }
+    },
+    {
+     "name": "Sheraton Saigon Grand Opera Hotel 西贡喜来登歌剧院酒店",
+     "type": "酒店",
+     "note": "【万豪系·Sheraton】【档次：奢华】用户钛金福利增补（2026-09-16）：88 Dong Khoi 歌剧院旁；官网 Sheraton Club 对 Platinum/Titanium/Ambassador 免费（含+1宾客）",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "TA 4.5/5，3,782条（#18/1036），3条英文原话+链接（ota-reviews/hcmc-newhotels-2026-09-16.md）"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "GM 4.6星，9,566条，2条英文原话+链接（ota-reviews/hcmc-newhotels-2026-09-16.md）"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "携程 4.6/5很好，625条（推荐605/差评20），3条中文原话+链接（ota-reviews/hcmc-newhotels-2026-09-16.md）；Trip.com同源9.2/10；cn.trip.com DNS不可达、Trip.com zh-CN登录墙已绕行en-US公开页"
+      },
+      "xiaohongshu": {
+       "posts": 0,
+       "target": 10,
+       "status": "pending",
+       "note": "2026-09-16新增；本轮任务不碰小红书，由主 agent 安排"
+      },
+      "photos": {
+       "verified": 5,
+       "target": 5,
+       "status": "done",
+       "note": "2026-09-16：5张逐张HTTP验证+目验通过（外观/大堂/客房/餐饮/泳池）；证据：photos/hotel-luxury-audit-2026-09-16.md §六"
+      },
+      "details": {
+       "status": "pending",
+       "note": "2026-09-16新增，详情页未建"
       }
      }
     }
@@ -5997,16 +6067,16 @@ export const initialResearchStatus = {
      "note": "【富丽敦酒店集团】【档次：奢华】1928年总邮局大楼改建，新加坡第71个国家古迹；新古典主义多立克柱廊；TA 4.7/约11,365条、新加坡约#4/374、Travellers' Choice Best of the Best 2026；屋顶无边泳池正对Anderson桥与新加坡河。【2026-09-16替换】原 Grand Hyatt Singapore，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/singapore-newhotels-2026-09-16.md): TA 4.7/5、11,374条、新加坡#4/375；3条原话(Kim Y 5/5 2026-09、Scenic31634081050 5/5 2026-08-29、Relax777115 2/5 2026-09)+规范链接"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/singapore-newhotels-2026-09-16.md): Google 4.6/5、9,302条(5★6,783)；3条原话(Anthony Putland 5/5、Sunny Kim 5/5、Relax777115 2/5)+规范链接；地址1 Fullerton Square, Singapore 049178"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 酒店替换OTA研究(ota-reviews/singapore-newhotels-2026-09-16.md): Trip.com香港版 9.5/10、617条(卫生9.6/设施9.4/位置9.6/服务9.4、新加坡当地风情第3)；3条中文原话(Dandan 10.0 2026-09-05、bbbyyyy 2024-11-13、Luckyliuliuqiqi 3.2 2026-02-27)+规范链接；马蜂窝9.1/200评论(旧帖)+规范链接；大众点评登录墙未做、cn.trip.com未试"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -6751,7 +6821,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共 193 项：TripAdvisor185、Google Maps185、中文站162、小红书15、照片188、详情0 完成（done）；六类全部完成 0 项。（2026-09-15 01:56 UTC：程序重算；小红书新增4项严格重验入库：大城府、丹嫩沙多+美功铁道、曼谷船面代表店、吉隆坡/巴生肉骨茶）",
- "total_locations": 193,
+ "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor185、Google Maps185、中文站162、小红书15、照片188、详情0 完成（done）；六类全部完成 0 项。（2026-09-15 01:56 UTC：程序重算；小红书新增4项严格重验入库：大城府、丹嫩沙多+美功铁道、曼谷船面代表店、吉隆坡/巴生肉骨茶）",
+ "total_locations": 195,
  "complete_items": 0
 };
