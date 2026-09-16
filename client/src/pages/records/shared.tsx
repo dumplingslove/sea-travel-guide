@@ -2,9 +2,13 @@
  * 顶级功能页（/notes /packing /bookings /expenses /favorites）共享层。
  *
  * 数据层直接复用 client/src/guide/records.ts：同一张 Supabase 表
- * sea_guide_records（owner-only RLS），kind 复用 note/packing/booking，
+ * sea_guide_records，kind 复用 note/packing/booking，
  * 新增 expense/favorite。攻略站内部工具（打包清单/我的预订/游记）读写
  * 同一张表、同一个 kind，天然互通。
+ *
+ * 家庭共享：darancai@gmail.com 与 nckuang123@gmail.com 登录后
+ * 读写同一批记录（RLS family_shared_*），每条记录用 AuthorTag
+ * 标注是谁添加的。
  *
  * 未登录/未配置时降级为本机内存模式，界面如实标注
  * “所有改动只在本次打开期间有效”（与攻略站/规划器同口径）。
@@ -24,6 +28,8 @@ import {
   recordSyncMode,
   type RecordKind,
 } from "@/guide/records";
+import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { fetchProfileMap } from "@/lib/profiles";
 
 export function RecordsProvider({ children }: { children: ReactNode }) {
   const [client] = useState(() => new QueryClient());
@@ -95,10 +101,40 @@ export function SyncBanner({
         role="status"
         className="mb-4 rounded-lg border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm text-teal-800"
       >
-        ✓ 已登录：记录云端同步（Supabase）。
+        ✓ 已登录：记录云端同步，两个账号共享同一份数据。
       </p>
     );
   return null;
+}
+
+/** 署名标签：显示这条记录是谁添加的（家庭共享时区分）。 */
+let profileMapPromise: Promise<Map<string, string>> | null = null;
+function getProfileMap(): Promise<Map<string, string>> {
+  if (!profileMapPromise) {
+    profileMapPromise =
+      supabaseConfigured && supabase
+        ? fetchProfileMap(supabase)
+        : Promise.resolve(new Map());
+  }
+  return profileMapPromise;
+}
+
+export function AuthorTag({ userId }: { userId: string | null }) {
+  const [name, setName] = useState<string | null>(null);
+  useEffect(() => {
+    if (!userId) return;
+    let alive = true;
+    void getProfileMap().then((m) => {
+      if (alive) setName(m.get(userId) ?? null);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [userId]);
+  if (!userId || !name) return null;
+  return (
+    <span className="text-[11px] text-gray-400 shrink-0">· {name} 添加</span>
+  );
 }
 
 export function Card({ children }: { children: ReactNode }) {

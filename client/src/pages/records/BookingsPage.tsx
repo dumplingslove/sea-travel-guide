@@ -14,6 +14,7 @@ import {
   Card,
   GhostButton,
   EmptyHint,
+  AuthorTag,
 } from "./shared";
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import {
@@ -160,6 +161,7 @@ function BookingsInner() {
                       {BOOKING_KIND_LABEL[d.bkind]}
                     </span>
                     <h3 className="font-medium text-gray-800">{r.title}</h3>
+                    <AuthorTag userId={r.userId} />
                     {r.day != null && (
                       <span className="text-xs text-gray-400">Day {r.day}</span>
                     )}

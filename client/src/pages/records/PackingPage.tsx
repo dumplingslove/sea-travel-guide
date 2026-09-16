@@ -11,6 +11,7 @@ import {
   PrimaryButton,
   GhostButton,
   EmptyHint,
+  AuthorTag,
 } from "./shared";
 import type { GuideRecord } from "@/guide/records";
 
@@ -154,6 +155,7 @@ function PackingInner() {
                   >
                     {r.title}
                   </p>
+                  <AuthorTag userId={r.userId} />
                   {r.body && (
                     <p className="text-xs text-gray-500 mt-0.5">{r.body}</p>
                   )}

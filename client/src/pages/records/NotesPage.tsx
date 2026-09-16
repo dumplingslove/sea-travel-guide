@@ -12,6 +12,7 @@ import {
   PrimaryButton,
   GhostButton,
   EmptyHint,
+  AuthorTag,
 } from "./shared";
 
 type Day = { day: number; date: string; city_zh: string };
@@ -134,6 +135,7 @@ function NotesInner() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="font-medium text-gray-800">{r.title}</h3>
+                    <AuthorTag userId={r.userId} />
                     {d && (
                       <p className="text-xs text-teal-700 mt-0.5">
                         Day {d.day} · {d.city_zh}
