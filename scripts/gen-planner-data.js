@@ -148,7 +148,7 @@ function main() {
  * - PLANNER_CITY_SPOTS_OUTSIDE：被剔除的城外项（曼谷 2）
  * - PLANNER_KL_HOTELS：吉隆坡酒店研究记录（仅研究状态参考；规划器验收仍要求保留「研究报告未给出候选酒店」缺口提示）
  */
-export type ResearchStatus = "done" | "partial" | "pending" | "missing";
+export type ResearchStatus = "done" | "partial" | "pending" | "missing" | "unavailable";
 export interface ResearchSourceState { status: ResearchStatus; note?: string; posts?: number; target?: number }
 export interface ResearchItem {
   city: string; name: string; type: string; note: string;

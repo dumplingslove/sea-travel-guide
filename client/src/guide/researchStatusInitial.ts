@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-16T04:49Z",
+ "updated_at": "2026-09-16T07:30Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -43,7 +43,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -75,7 +76,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -108,7 +110,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -140,7 +143,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -173,7 +177,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -274,7 +279,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -307,7 +313,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -340,7 +347,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 旗舰店 Gaggan Anand（68 Sukhumvit 31）5张，已目验；初版 LV 联名店 5 张已弃用。证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -357,7 +365,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §9"
       },
       "xiaohongshu": {
@@ -373,7 +381,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -406,7 +415,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -439,7 +449,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -456,7 +467,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §10"
       },
       "xiaohongshu": {
@@ -472,7 +483,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -505,7 +517,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -538,7 +551,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -555,7 +569,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（poi-thipsamai-iconsiam-82988900，不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §12"
       },
       "xiaohongshu": {
@@ -571,7 +585,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -621,7 +636,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §13"
       },
       "xiaohongshu": {
@@ -637,7 +652,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -670,8 +686,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "partial",
-       "note": "地址/时间/价格/2条小红书证据已有，待补全评价面板"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -704,7 +720,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -737,7 +754,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -770,7 +788,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -803,7 +822,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -836,7 +856,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -853,7 +874,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §38"
       },
       "xiaohongshu": {
@@ -869,7 +890,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -902,7 +924,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -935,7 +958,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -972,7 +996,8 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1009,7 +1034,8 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1089,7 +1115,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1122,7 +1149,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1268,7 +1296,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1303,7 +1332,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1320,7 +1350,7 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §23"
       },
       "xiaohongshu": {
@@ -1337,7 +1367,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1354,7 +1385,7 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §24"
       },
       "xiaohongshu": {
@@ -1371,7 +1402,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1405,7 +1437,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1440,7 +1473,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1461,11 +1495,11 @@ export const initialResearchStatus = {
        "note": "2026-09-14补齐(chiangmai-redo-2026-09-14.md 一、1)：Trip.com 4.4/5、284条，2条带日期原话"
       },
       "xiaohongshu": {
-       "posts": 2,
+       "posts": 3,
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T03:27Z）：2/10 partial，缺8篇。第1篇皇额娘她推了熹娘娘(2025-10-09)不推荐+第2篇皇额娘她推了熹娘娘(68e8a264…)实读；第一轮恢复验证墙已消失、登录态菜小盒仍在，本轮翻阅4篇详情页新增1篇可计入，特例0/2未用；合集/官方/旧帖已排除（30篇翻看）。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md"
+       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md"
       },
       "photos": {
        "verified": 5,
@@ -1474,7 +1508,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1491,7 +1526,7 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有things-to-do预订产品页（不符合标准listing定义），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §25"
       },
       "xiaohongshu": {
@@ -1576,7 +1611,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1655,7 +1691,7 @@ export const initialResearchStatus = {
      "note": "咖啡文创商场散步区（One Nimman）",
      "sources": {
       "tripadvisor": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无Nimmanhaemin Road街道独立条目（只有One Nimman商场d13496628，不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §2"
       },
       "google_maps": {
@@ -1788,7 +1824,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1820,7 +1857,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1852,7 +1890,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -1983,7 +2022,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2000,7 +2040,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §20"
       },
       "xiaohongshu": {
@@ -2016,7 +2056,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2049,7 +2090,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2082,7 +2124,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2115,7 +2158,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2165,7 +2209,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §21"
       },
       "xiaohongshu": {
@@ -2181,7 +2225,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2214,7 +2259,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2224,7 +2270,7 @@ export const initialResearchStatus = {
      "note": "Chalong码头水上高脚屋海鲜（50余年老店）",
      "sources": {
       "tripadvisor": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无@Pier分店独立listing（唯一条目为Chalong主店d1874082，不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §1"
       },
       "google_maps": {
@@ -2232,7 +2278,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing（仅Moments页和攻略提及）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §22"
       },
       "xiaohongshu": {
@@ -2248,7 +2294,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2281,7 +2328,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：6 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2314,7 +2362,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2395,11 +2444,11 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "google_maps": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-14 browser只读实查：GM上\"Old Phuket Town\"为地理区域（Mueang Phuket District），无星级评分/评论体系；既有\"2026-09-13记录\"无法核实。终判：覆盖不足"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页和攻略文章页（均不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §37"
       },
       "xiaohongshu": {
@@ -2588,7 +2637,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2656,7 +2706,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2690,7 +2741,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2792,7 +2844,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2802,7 +2855,7 @@ export const initialResearchStatus = {
      "note": "亚依淡市场聋哑摊主叻沙（10:00–17:00，周二三休）",
      "sources": {
       "tripadvisor": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "槟城报告已收录：评分/条数/原话/日期/链接（penang-2026-09-13.md）；【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无Bisu摊位独立条目（只有Ayer Itam Market市场条目d8426703和著名路边摊d3296239，均不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §4"
       },
       "google_maps": {
@@ -2826,7 +2879,8 @@ export const initialResearchStatus = {
        "note": "2026-09-15补齐至5张：第4张 oo-foodielicious Bisu专文实拍（带博客水印、文件名即Air-Itam-Bisu-Laksa）；第5张 menuinprogress《George Town - Air Itam Food Court Laksa Bisu》专页实拍（caveat：正文未出现摊主名，归属依据页面标题，已写入记录文件）；证据：research_notes/sea-guide-2026/photos/penang-2026-09-14.md（逐条核对title/page_url/media_url）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2860,8 +2914,8 @@ export const initialResearchStatus = {
        "target": 5
       },
       "details": {
-       "status": "pending",
-       "note": "2026-09-13 替换项，待详情页"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2895,7 +2949,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2929,7 +2984,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -2963,7 +3019,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3007,7 +3064,7 @@ export const initialResearchStatus = {
      "note": "米其林必比登虾面（133A深夜档/223下午档两家店）",
      "sources": {
       "tripadvisor": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "槟城报告已收录：评分/条数/原话/日期/链接（penang-2026-09-13.md）；【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无133A Jalan Burma分店独立listing（只有223号Old Green House d4138261，不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §3"
       },
       "google_maps": {
@@ -3031,7 +3088,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3050,7 +3108,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "partial",
-       "note": "2026-09-14 中文站补齐：jessie fang 2025-06-10原话保留（已独立核验存在）；Trip.com酒店9.2分/1841条；第2条中文原话0条（评论列表需登录）；下午茶为酒店内设无独立评分；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "note": "2026-09-16 中文站补齐：第2条中文原话已找到——潘佳洁（东方日报报导）2024-02-24推荐原话（已如实标注为媒体食记非OTA用户点评）；Palm Court无独立餐厅评分页，评分+评论数要素无法达成；携程酒店4.6分/1843条为酒店本体不冒充。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-16.md"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -3099,7 +3157,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3413,7 +3472,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3447,7 +3507,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3481,7 +3542,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3583,7 +3645,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3617,7 +3680,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3651,7 +3715,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3685,7 +3750,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3719,7 +3785,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3753,7 +3820,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3787,7 +3855,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3821,7 +3890,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3855,7 +3925,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -3889,7 +3960,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4005,7 +4077,7 @@ export const initialResearchStatus = {
        "note": "TA 无独立景点页，以 Pavilion KL 4.4/5，4,244条+3条带日期原话+链接为代表（kualalumpur-2026-09-13.md）"
       },
       "google_maps": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "【2026-09-14 BatchE核实】标不可补齐：Maps实读（kualalumpur-browser-2026-09-14.md）为街区/地名页，无星级评分、无评论数、无Reviews页签，无可评分地点页。索引中4.1星/21,103条无原生实体对应。"
       },
       "chinese_sites": {
@@ -4171,7 +4243,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4205,7 +4278,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4273,7 +4347,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4341,7 +4416,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4359,7 +4435,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.7★（35条，POT AU PHO 2.0新名）"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-13 建模修正：Pot au Pho 实为 Anan Saigon 的 pho tasting menu 概念（非独立餐厅/独立POI），中文站证据并入 Anan Saigon 项下；Anan Saigon 中文站 done（见 hochiminh-2026-09-13.md）。；【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §34"
       },
       "xiaohongshu": {
@@ -4375,7 +4451,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4393,7 +4470,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.3★（4,258条）"
       },
       "chinese_sites": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-14 中文站补齐：Trip.com 0结果；马蜂窝无POI；大众点评登录墙未取；覆盖不足；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
       },
       "xiaohongshu": {
@@ -4409,7 +4486,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4443,7 +4521,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4477,7 +4556,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4511,7 +4591,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4545,7 +4626,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4579,7 +4661,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4797,7 +4880,7 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：TA 堤岸3.6/5（751条）+平西市场3.5/5（525条）"
       },
       "google_maps": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-13 done：GM 平西市场4.4★（6,391条）；【2026-09-14 BatchE核实】标不可补齐：Google Maps无堤岸街区实体评分（区内POI如平西市场、清真寺各自有评分，不属本项）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-gm-2026-09-14.md §7"
       },
       "chinese_sites": {
@@ -4851,7 +4934,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4926,7 +5010,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4960,7 +5045,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -4974,7 +5060,7 @@ export const initialResearchStatus = {
        "note": "2026-09-14 browser只读实查：TA无该酒店listing（酒店尚未开业），检索仅命中其他酒店页文字提及。终判：覆盖不足"
       },
       "google_maps": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-14 browser只读实查：酒店未开业，GM无酒店listing；仅销售展厅页（5.0/1条\"Ok\"，已永久关闭）。终判：覆盖不足"
       },
       "chinese_sites": {
@@ -5028,7 +5114,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5081,7 +5168,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "partial",
-       "note": "2026-09-14 中文站补齐：Klook 4.7/5、353条旧记录；本轮Klook被DataDome拦截无法重取；Trip.com/马蜂窝无listing；维持partial；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "note": "2026-09-16 中文站补齐：Klook中文站4.7/5超赞、353条评价已实测确认（9-14的DataDome拦截已解除，页面公开可读）；评论列表动态加载未渲染单条评论，0条中文原话（未硬造）；Trip.com/马蜂窝无listing；维持partial。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-16.md"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5130,7 +5217,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5164,7 +5252,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5198,7 +5287,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5232,7 +5322,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5266,7 +5357,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5300,7 +5392,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5334,7 +5427,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5368,7 +5462,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5402,7 +5497,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5681,7 +5777,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5714,7 +5811,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5780,7 +5878,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5914,7 +6013,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5947,7 +6047,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -5980,7 +6081,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6013,7 +6115,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6046,7 +6149,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6079,7 +6183,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6112,7 +6217,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6145,7 +6251,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6163,8 +6270,8 @@ export const initialResearchStatus = {
        "note": "2026-09-14 Maps原生页实读(singapore-browser-2026-09-14.md §1)：确认Riverside Point分店（30 Merchant Rd），4.3/10,231；2条带作者/星级原话（Chan Kim Hui Eric 5星、Chelsea Kuo 5星）"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "携程无ION Orchard分店页，马蜂窝无POI，中文站未找到（ota-reviews/singapore-ta-chinese-2026-09-13.md）"
+       "status": "unavailable",
+       "note": "2026-09-16 中文站核实：Trip.com/携程/马蜂窝均无ION店独立中文页（Trip.com新加坡必试餐厅榜只收录河滨坊店）；ION店中文原话0条，判覆盖不足；河滨坊店hk.trip.com有4条中文原话（4.6/5、756则）已明确标注为不同分店不得计入。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-16.md"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -6179,7 +6286,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6212,7 +6320,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6278,7 +6387,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6347,8 +6457,8 @@ export const initialResearchStatus = {
        "target": 5
       },
       "details": {
-       "status": "pending",
-       "note": "待详情页"
+       "status": "done",
+       "note": "2026-09-16 facts已核验（地址/营业/价格/交通/行动建议；证据见 research_notes/sea-guide-2026/details/）"
       }
      }
     },
@@ -6537,7 +6647,7 @@ export const initialResearchStatus = {
        "note": "2026-09-14补齐(singapore-redo-2026-09-14.md §15)：甘榜格南 TA 4.3/5、517条，2条原话+链接；2026-09-14 TA原生页实读验证：评论总数517，分布Excellent 147/Very good 164/Average 30；Martin R 4★、Eve420 4★实读（URL已存档）"
       },
       "google_maps": {
-       "status": "pending",
+       "status": "unavailable",
        "note": "2026-09-14 browser只读实查：三者均为GM地理区域（neighborhood），无星级评分、无评论功能。终判：覆盖不足"
       },
       "chinese_sites": {
