@@ -179,8 +179,8 @@ function BookingsInner() {
           <h2 className="text-lg font-bold text-gray-800">待预订清单</h2>
           <p className="mt-1 text-sm text-gray-500">
             按这次 12/12–12/31 行程整理：2 段国际航班（待定）、7
-            段城际航班（Duffel 实测价）、8 城酒店（万豪系，Titanium）、5
-            个需提前订票的景点、13 家需提前订位的餐厅。点「加入预订」把详情带进弹窗，确认无误后保存；出了确认号再回来标记已确认。
+            段城际航班（Duffel 实测价）、8 城酒店（万豪系，Titanium）、19
+            个景点门票/一日游、26 家餐厅。点「加入预订」把详情带进弹窗，确认无误后保存；出了确认号再回来标记已确认。
           </p>
           <p className="mt-1 text-xs text-gray-400">
             清单更新于 {CHECKLIST_UPDATED_AT} · 机票价格为 2026-09-14/15
