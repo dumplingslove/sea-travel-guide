@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-16T11:06:00Z",
+ "updated_at": "2026-09-16T16:47Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1231,16 +1231,16 @@ export const initialResearchStatus = {
      "note": "【香格里拉集团】【档次：奢华】夜市核心位置；TA 4.6/约3,500条；Horizon Club行政酒廊、Chi Spa、大象滑梯主题泳池、Kad Kafe餐厅。【2026-09-16替换】原 InterContinental Chiang Mai The Mae Ping，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16 OTA研究(ota-reviews/chiangmai-newhotels-2026-09-16.md §1): TA 4.6/5、3,506条(Excellent 2,508)；3条原话(fito p 5★ 2026-04-12、Dant6817 2025-12批判床垫过硬空调制冷不足、Livio B 2026-05-19 Horizon Club)+规范链接(tripadvisor.co.nz原文URL)；排名未显示记pending"
       },
       "google_maps": {
        "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "note": "2026-09-16 OTA研究：三次搜索未返回Google Maps place规范URL，未硬构URL，诚实pending；待浏览器任务直接打开该酒店Google Maps页面实读"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16 OTA研究(ota-reviews/chiangmai-newhotels-2026-09-16.md §2): Trip.com中文版 8.6/10、525条，清迈亲子酒店第2名；3条中文原话(訪客 2026-08-27批判卫生翻车/2026-08-25亲子好评/2026-07-18亲子好评)+规范链接；马蜂窝无独立listing、携程国内版未单独验证、大众点评登录墙均记pending"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -1567,7 +1567,7 @@ export const initialResearchStatus = {
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item13-elephantnaturepark-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T00:50Z）"
+       "note": "xhs-peritem-backfill 用户裁决收尾（2026-09-16）：6/10 partial。\"Elephant Nature Park\"英文关键词候选枯竭，4条线索均卡在无年份要求；不再换关键词开新轮"
       },
       "photos": {
        "verified": 5,
@@ -1598,11 +1598,11 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com旅行指南景点页 4.6/5、114条；3条带作者/日期原话（2022-11-30、@naesansanee 2022-10-23、D24***47 2.0 2020-11-20）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 4,
+       "posts": 5,
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T00:50Z）"
+       "note": "2026-09-16 xhs-peritem-backfill第二轮：5/10 partial（新增帖5 Patience. 2025-12-14《清迈周日夜市打卡✅（美食广场推荐）》正文+实质评论+5图逐张实读；推荐5/避雷倾向已统计；还缺5篇，关键词挖掘继续）证据见 redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md"
       },
       "photos": {
        "verified": 5,
@@ -2799,16 +2799,16 @@ export const initialResearchStatus = {
      "note": "【独立精品酒店】【档次：奢华】乔治市世遗核心区19世纪七连排Anglo-Chinese老屋改建，Peranakan文化主题，Kebaya Dining Room；TA 4.8/约1,488条、乔治市约#12/139、Travellers' Choice 2026；Hotels.com 9.6/10。【2026-09-16替换】原 1926 Heritage Hotel，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16 OTA研究(ota-reviews/penang-newhotels-2026-09-16.md §1): TA 4.8/5、约1,492条，乔治市#12/139、Travelers' Choice 2026；4条带日期原话(含2026年服务差评批判样本)+规范链接(tripadvisor.co.uk)；单条星级快照未显示已如实标注"
       },
       "google_maps": {
        "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "note": "2026-09-16 OTA研究：Google Maps地点页需JS渲染、browser.open直读失败，4组关键词搜索无评分/条数引用，未硬闯，诚实pending；需带浏览器的后续任务实读"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "partial",
+       "note": "2026-09-16 OTA研究(ota-reviews/penang-newhotels-2026-09-16.md §3): Trip.com国际站 9.2/10、44–46条verified reviews+规范链接，但缺中文单条原话→partial；携程国内版未读(预期登录墙)/马蜂窝无独立listing/大众点评预期登录墙均pending"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -4351,15 +4351,15 @@ export const initialResearchStatus = {
      "sources": {
       "tripadvisor": {
        "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "note": "2026-09-16只读研究:TripAdvisor listing为未认领新页面,官方页面\"0条评价/无评分\",无原话可引;规范URL见ota-reviews/hcmc-newhotels-maihouse-2026-09-16.md(另.com版同0条)。⚠️旧口径(hotel-luxury-audit中的TA 4.9/约1,196条)与Google Maps第三方汇总的\"TA 4.9/1,182条\"均与官方页面0条矛盾,存疑未采信,不作为done依据。"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16只读研究 done:GM 4.8/5(3,463条;5星3,049/4星280/3星45/2星27/1星62);3条带日期原话(Llobby Lloyd 5星 2个月前/Marc Ha 5星/Ezworth 1星7个月前押金退款差评);规范URL见ota-reviews/hcmc-newhotels-maihouse-2026-09-16.md;推荐:闹中取静/服务/早餐/泳池/屋顶酒吧;避雷:长住押金退款极慢、地毯异味/窗户不可开(过敏注意)。"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16只读研究 done:携程(西贡迈之家酒店)4.7超棒(卫生4.8/设施4.7/环境4.7/服务4.7),898条点评(含差评15);3条中文原话(kou_sama 2026-08/_yt19487 2026-09-13/首页精选);规范URL见ota-reviews/hcmc-newhotels-maihouse-2026-09-16.md;推荐:房间大/干净/早餐丰富/近独立宫/屋顶酒吧赠券;避雷:价格偏贵,差评筛选触发携程登录墙未展开(pending)。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5160,16 +5160,16 @@ export const initialResearchStatus = {
      "note": "【希尔顿·Curio精选】【档次：奢华】富国岛Sunset Town，Kiss Bridge步行可达；Amalfi海岸灵感建筑；TA 4.7、Travellers' Choice (Top 10%)；2024年开业，hilton.com可订。【2026-09-16替换】原 Park Hyatt Phu Quoc（2027年3月才开业，行程住不上），审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
+       "status": "done",
+       "note": "2026-09-16只读研究 done:TA 4.7/5(217条;An Thoi#5/42,Travelers'Choice 2026);3条带日期原话(Jennifer S 5星2026-09/Chris 5星2026-01含轻批评/Danny C 2星2026-08激进推销+房间维护批判);规范URL见ota-reviews/phuquoc-newhotels-lafesta-2026-09-16.md;推荐:阿马尔菲建筑/正对接吻桥/服务被点名/日落小镇中心/早餐海鲜自助性价比;避雷:前台推销升级房型($50-150/天)、淋浴/Wi-Fi维护问题、请勿打扰仍进房、楼层多易迷路。"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16只读研究 done:GM 4.7星(3,003条;5星2,601/4星202/3星71/2星47/1星82);3条带日期原话(Mia Burrone 5星/Lily 5星二刷/N 1星海景房货不对版批判);规范URL见ota-reviews/phuquoc-newhotels-lafesta-2026-09-16.md;推荐:高复住率/日落小镇C位/烟花海景观;避雷:海景房定义模糊(连通房部分海景按同房型)、室外演出隔音一般、旺季价格约2倍但景观未必匹配。"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
+       "status": "done",
+       "note": "2026-09-16只读研究 done:Trip.com繁体(hk) 9.3/10非常好(卫生9.5/设施9.2/位置9.6/服务9.1),1,344则真实评价,富国岛豪华酒店第10;6条中文原话(Kin_Tsang 10分2026-08-20/DJ2035 2026-09-07/Lenny Zhu 7分2026-08-14批判/匿名2条/windnedved 2026-07-13);规范URL见报告;查看全部评价列表页需登录pending(详情页片段已满足done);推荐:日落小镇C位/接吻桥免费+Kiss of the Sea门票/设计感/WhatsApp管家;避雷:6岁以上儿童加收(VND350k-700k/人不加床)、前台效率低/对中国客人态度、卫生设施个案、早餐两极。"
       },
       "xiaohongshu": {
        "posts": 0,
