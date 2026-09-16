@@ -182,7 +182,11 @@ function BookingsInner() {
                 </div>
                 <div className="flex shrink-0">
                   <GhostButton onClick={() => openEdit(r.id)}>编辑</GhostButton>
-                  <GhostButton danger onClick={() => del.mutate({ id: r.id })}>
+                  <GhostButton danger onClick={() => {
+                    if (window.confirm(`确定删除「${r.title}」这条预订吗？`)) {
+                      del.mutate({ id: r.id });
+                    }
+                  }}>
                     删除
                   </GhostButton>
                 </div>
