@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, MapPin, UtensilsCrossed, Lightbulb } from "lucide-react";
 import itinerary from "@/data/itinerary.json";
+import { days as detailDays } from "@/guide/data";
+import { dayMaps } from "@/guide/maps";
 
 type Day = {
   day: number;
@@ -17,6 +19,8 @@ export default function DayDetail() {
   const { n } = useParams<{ n: string }>();
   const dayNum = Number(n);
   const day = days.find((d) => d.day === dayNum);
+  const detail = detailDays.find((d) => d.day === dayNum);
+  const mapImg = dayMaps[dayNum - 1];
 
   if (!day) {
     return (
@@ -48,7 +52,8 @@ export default function DayDetail() {
         <p className="text-xs font-semibold text-teal-700 mb-1">
           DAY {day.day} / 20
         </p>
-        <h1 className="text-3xl font-bold mb-2">{day.city_zh}</h1>
+        <h1 className="text-3xl font-bold mb-1">{day.city_zh}</h1>
+        {detail && <p className="text-lg text-gray-700 mb-2">{detail.title}</p>}
         <p className="text-gray-500 flex items-center gap-4 text-sm">
           <span className="flex items-center gap-1">
             <CalendarDays size={14} /> 2026-{day.date} {day.weekday}
@@ -59,13 +64,51 @@ export default function DayDetail() {
         </p>
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center mb-6">
-        <p className="font-medium text-amber-800">攻略编写中</p>
-        <p className="text-sm text-amber-700 mt-1">
-          第 {day.day} 天（{day.city_zh}）的详细行程、景点、餐厅与酒店攻略正在整理，
-          完成后会在这里展示。
-        </p>
-      </div>
+      {detail ? (
+        <>
+          {mapImg && (
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+              <img src={mapImg} alt={`Day ${day.day} 路线图`} className="w-full" />
+            </div>
+          )}
+
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+            <h2 className="font-bold text-lg mb-4">当天行程</h2>
+            <ol className="relative border-l-2 border-teal-100 ml-2 space-y-6">
+              {detail.stops.map((s) => (
+                <li key={s.time + s.name} className="ml-4">
+                  <span className="absolute -left-[7px] mt-1 w-3 h-3 rounded-full bg-teal-600" />
+                  <p className="text-sm font-semibold text-teal-700">{s.time}</p>
+                  <h3 className="font-bold">{s.name}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{s.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+            <h2 className="font-bold text-lg mb-2 flex items-center gap-2">
+              <UtensilsCrossed size={18} className="text-teal-700" /> 当天吃什么
+            </h2>
+            <p className="text-sm text-gray-700">{detail.food}</p>
+          </div>
+
+          <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 mb-6">
+            <h2 className="font-bold text-lg mb-2 flex items-center gap-2 text-amber-900">
+              <Lightbulb size={18} /> 安排提醒
+            </h2>
+            <p className="text-sm text-amber-900">{detail.tip}</p>
+          </div>
+        </>
+      ) : (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center mb-6">
+          <p className="font-medium text-amber-800">攻略编写中</p>
+          <p className="text-sm text-amber-700 mt-1">
+            第 {day.day} 天（{day.city_zh}）的详细行程、景点、餐厅与酒店攻略正在整理，
+            完成后会在这里展示。
+          </p>
+        </div>
+      )}
 
       <div className="flex items-center justify-between">
         {prev ? (
