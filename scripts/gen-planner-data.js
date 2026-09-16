@@ -46,8 +46,8 @@ const CITY_ORDER = [
   ["singapore", "新加坡"],
 ];
 const EXPECTED_TOTALS = {
-  bangkok: 31, chiangmai: 20, phuket: 24, penang: 24,
-  kualalumpur: 22, hcmc: 22, phuquoc: 22, singapore: 28,
+  bangkok: 32, chiangmai: 20, phuket: 24, penang: 24,
+  kualalumpur: 22, hcmc: 23, phuquoc: 22, singapore: 28,
 };
 // 曼谷城外项：classicOutsideDayNote 已注记「不在曼谷 9 精华清单内，不计入覆盖」
 const BANGKOK_OUTSIDE_SPOTS = ["大城府 Ayutthaya 古城遗迹", "丹嫩沙多水上市场+美功铁道"];
@@ -123,8 +123,8 @@ function main() {
   }
 
   const totalItems = allItems.length;
-  if (totalItems !== 193) {
-    throw new Error(`总条目数 ${totalItems} 与预期 193 不符，拒绝生成（防静默漂移）`);
+  if (totalItems !== 195) {
+    throw new Error(`总条目数 ${totalItems} 与预期 195 不符，拒绝生成（防静默漂移）`);
   }
   const totalSpots = Object.values(citySpots).reduce((a, l) => a + l.length, 0);
   if (totalSpots !== 67) {

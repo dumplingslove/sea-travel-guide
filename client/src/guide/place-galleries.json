@@ -6462,5 +6462,69 @@
       "media_url": "https://cdn.hstatic.net/themes/1000405477/1001456023/14/img_hotel_1.jpg?v=248",
       "title": "Mai House Saigon 建筑细节：大堂旋转楼梯与水晶吊灯俯拍"
     }
+  ],
+  "酒店|曼谷|The Athenee Hotel, a Luxury Collection Hotel, Bangkok": [
+    {
+      "file": "./assets/galleries/9a67ea246241/1.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:The_Athenee_Hotel,_a_Luxury_Collection_Hotel,_Bangkok.jpg",
+      "media_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/The_Athenee_Hotel%2C_a_Luxury_Collection_Hotel%2C_Bangkok.jpg",
+      "title": "The Athenee Hotel Bangkok 外观（塔楼+铭牌）"
+    },
+    {
+      "file": "./assets/galleries/9a67ea246241/2.jpg",
+      "source_url": "https://www.assetworldcorp-th.com/en/newsroom/news-activities/780/cast-your-vote-and-support-your-favorite-awc-affiliated-hotels-win-in-2024",
+      "media_url": "https://www.assetworldcorp-th.com/storage/newsroom/news-activities/2024/09/20240925-111419-4.webp",
+      "title": "The Athenee Hotel Bangkok 大堂（双楼梯+吊灯）"
+    },
+    {
+      "file": "./assets/galleries/9a67ea246241/3.jpg",
+      "source_url": "https://marriott.com/en-us/hotels/bkkla-the-athenee-hotel-a-luxury-collection-hotel-bangkok/rooms/",
+      "media_url": "https://cache.marriott.com/content/dam/marriott-renditions/BKKLA/bkkla-double-guestroom-1496-hor-wide.jpg",
+      "title": "The Athenee Hotel Bangkok 客房（Double Guestroom）"
+    },
+    {
+      "file": "./assets/galleries/9a67ea246241/4.jpg",
+      "source_url": "https://www.privateupgrades.com/thailand/athenee-hotel-bangkok",
+      "media_url": "https://media.privateupgrades.com/_data/default-hotel_image/11/55835/the-athenee-bangkok-19_1400x1400_auto.webp",
+      "title": "The Athenee Hotel Bangkok 餐厅内饰"
+    },
+    {
+      "file": "./assets/galleries/9a67ea246241/5.jpg",
+      "source_url": "https://plaza-atheneeroyal-meridien.bangkokshotels.com/en/",
+      "media_url": "https://plaza-atheneeroyal-meridien.bangkokshotels.com/data/Photos/700x500w/17098/1709893/1709893419.JPEG",
+      "title": "The Athenee Hotel Bangkok 泳池甲板"
+    }
+  ],
+  "酒店|胡志明市|Sheraton Saigon Grand Opera Hotel": [
+    {
+      "file": "./assets/galleries/b081af919e6f/1.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Sheraton_Saigon_Hotel_from_Coffee_-_1_Jan_2025.jpg",
+      "media_url": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Sheraton_Saigon_Hotel_from_Coffee_-_1_Jan_2025.jpg",
+      "title": "Sheraton Saigon Grand Opera Hotel 外观（双塔）"
+    },
+    {
+      "file": "./assets/galleries/b081af919e6f/2.jpg",
+      "source_url": "https://www.marriott.com/en-gb/hotels/sgnsi-sheraton-saigon-grand-opera-hotel/photos/",
+      "media_url": "https://cache.marriott.com/is/image/marriotts7prod/si-sgnsi-check-in-16386:Classic-Hor?wid=1336&fit=constrain",
+      "title": "Sheraton Saigon Grand Opera Hotel 大堂（Grand Opera Tower 接待区）"
+    },
+    {
+      "file": "./assets/galleries/b081af919e6f/3.jpg",
+      "source_url": "https://www.marriott.com/en-gb/hotels/sgnsi-sheraton-saigon-grand-opera-hotel/photos/",
+      "media_url": "https://cache.marriott.com/is/image/marriotts7prod/si-sgnsi-deluxe-king-30418:Classic-Hor?wid=1336&fit=constrain",
+      "title": "Sheraton Saigon Grand Opera Hotel 客房（Deluxe King）"
+    },
+    {
+      "file": "./assets/galleries/b081af919e6f/4.jpg",
+      "source_url": "https://www.marriott.com/en-gb/hotels/sgnsi-sheraton-saigon-grand-opera-hotel/photos/",
+      "media_url": "https://cache.marriott.com/is/image/marriotts7prod/si-sgnsi-sgnsi-the-lounge-2-14215:Classic-Hor?wid=1336&fit=constrain",
+      "title": "Sheraton Saigon Grand Opera Hotel The Lounge 酒廊区"
+    },
+    {
+      "file": "./assets/galleries/b081af919e6f/5.jpg",
+      "source_url": "https://www.marriott.com/en-gb/hotels/sgnsi-sheraton-saigon-grand-opera-hotel/photos/",
+      "media_url": "https://cache.marriott.com/is/image/marriotts7prod/si-sgnsi-pool-37227:Classic-Hor?wid=1336&fit=constrain",
+      "title": "Sheraton Saigon Grand Opera Hotel 泳池（莲花墙）"
+    }
   ]
 }
