@@ -88,7 +88,7 @@ export default function MapPage() {
           <div style="font-size:12px;color:#4b5563;margin:6px 0">Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>
           <div style="display:flex;gap:10px;font-size:12px">
             <a href="/day/${s.days[0]}" style="color:#0f766e;font-weight:700">第 ${s.days[0]} 天行程</a>
-            <a href="/guide" style="color:#0f766e;font-weight:700">看攻略</a>
+            <a href="/practical" style="color:#0f766e;font-weight:700">看攻略</a>
           </div>
         </div>`,
       );

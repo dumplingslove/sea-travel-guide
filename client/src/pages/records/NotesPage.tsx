@@ -158,7 +158,7 @@ function NotesInner() {
         </div>
       )}
       <p className="mt-8 text-xs text-gray-400">
-        也想在攻略里顺手记？<Link to="/guide" className="text-teal-700 hover:underline">去攻略站</Link>的游记同样保存在这里。
+        游记保存在这里（登录后云端同步）。
       </p>
     </PageShell>
   );

@@ -104,7 +104,7 @@ function FavoritesInner() {
           {save.isPending ? "保存中…" : "加入收藏"}
         </PrimaryButton>
         <p className="mt-3 text-xs text-gray-400">
-          更快的方式：在<Link to="/guide" className="text-teal-700 hover:underline">攻略站</Link>景点卡片上点“＋
+          更快的方式：在<Link to="/practical" className="text-teal-700 hover:underline">实用信息 → 景点指南</Link>的景点卡片上点“＋
           收藏”，会自动存到这里。
         </p>
       </Card>

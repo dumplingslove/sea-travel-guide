@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GuideApp } from "@/guide/GuideApp";
+import { GuideApp, type GuideTab } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 
 /**
- * /guide：旧版攻略站（space-2）整体迁移。
- * 10 个 tab 原样保留；打包清单/我的预订/游记走 Supabase sea_guide_records，
- * 未登录时为本地模式（界面如实标注）。
+ * 攻略分站：旧版 space-2 的 6 个独有 tab 已拆成主站一级路由
+ * （/hotels /restaurants /practical /flights /transport /research），
+ * 不再保留独立的 /guide 入口（/guide 跳转到首页）。
+ * 行程/打包清单/我的预订/游记 4 个 tab 主站导航里已有对应页面，不再重复。
  */
-export default function GuidePage() {
+export default function GuidePage({ tab }: { tab: GuideTab }) {
   const [client] = useState(() => new QueryClient());
   return (
     <div className="guide-scope">
       <QueryClientProvider client={client}>
-        <GuideApp />
+        <GuideApp key={tab} initialTab={tab} hideChrome />
       </QueryClientProvider>
     </div>
   );

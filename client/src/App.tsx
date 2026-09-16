@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, NavLink, Navigate } from "react-router-dom";
 import { useAuth } from "@/_core/hooks/useAuth";
 import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
@@ -17,7 +17,11 @@ import FavoritesPage from "@/pages/records/FavoritesPage";
 
 const NAV = [
   { to: "/", label: "行程" },
-  { to: "/guide", label: "攻略" },
+  { to: "/hotels", label: "酒店" },
+  { to: "/restaurants", label: "餐厅" },
+  { to: "/practical", label: "实用信息" },
+  { to: "/flights", label: "航班" },
+  { to: "/transport", label: "交通" },
   { to: "/map", label: "地图" },
   { to: "/planner", label: "行程规划" },
   { to: "/notes", label: "笔记" },
@@ -25,6 +29,7 @@ const NAV = [
   { to: "/bookings", label: "预订" },
   { to: "/expenses", label: "记账" },
   { to: "/favorites", label: "收藏" },
+  { to: "/research", label: "研究状态" },
 ];
 
 function Header() {
@@ -103,7 +108,13 @@ function AppRouter() {
               element={<MapPage />}
             />
             <Route path="/planner" element={<Planner />} />
-            <Route path="/guide" element={<GuidePage />} />
+            <Route path="/hotels" element={<GuidePage tab="酒店" />} />
+            <Route path="/restaurants" element={<GuidePage tab="餐厅" />} />
+            <Route path="/practical" element={<GuidePage tab="实用信息" />} />
+            <Route path="/flights" element={<GuidePage tab="航班" />} />
+            <Route path="/transport" element={<GuidePage tab="交通" />} />
+            <Route path="/research" element={<GuidePage tab="信息来源搜索状态" />} />
+            <Route path="/guide" element={<Navigate to="/" replace />} />
             <Route
               path="/notes"
               element={

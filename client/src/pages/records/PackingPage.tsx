@@ -167,7 +167,7 @@ function PackingInner() {
         </div>
       )}
       <p className="mt-8 text-xs text-gray-400">
-        攻略站里的<Link to="/guide" className="text-teal-700 hover:underline">打包清单</Link>和这里是同一份数据。
+        打包清单保存在这里（登录后云端同步）。
       </p>
     </PageShell>
   );
