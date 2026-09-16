@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-16T08:00Z",
+ "updated_at": "2026-09-16T09:25:00Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -183,33 +183,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "The Ritz-Carlton, Bangkok 曼谷丽思卡尔顿",
+     "name": "The Peninsula Bangkok 曼谷半岛酒店",
      "type": "酒店",
-     "note": "【万豪旅享家·丽思卡尔顿】【档次：奢华】2025年1月开业，One Bangkok 216米高塔，俯瞰伦披尼公园，260间客房（开业新闻：travelpulse/breakingtravelnews）",
+     "note": "【半岛酒店集团】【档次：顶奢】1998年开业，湄南河畔波浪形塔楼城市地标；TA 4.7、曼谷约#194/1400、Travellers' Choice 2026。【2026-09-16替换】原 The Ritz-Carlton Bangkok（火度/特色不足），审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done",
-       "note": "2026-09-13 OTA研究完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "2026-09-13 Google Maps研究完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done",
-       "note": "2026-09-13 中文站研究完成：评分/条数/带日期原话/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
        "posts": 0,
        "target": 10,
        "status": "pending",
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读"
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
-       "verified": 6,
+       "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "6张达标（到达车道/大堂/客房/套房/泳池/餐厅），逐张curl预检+目检；证据：photos/hotel-chains-2026-09-13.md"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -217,33 +217,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "Park Hyatt Bangkok 曼谷柏悦",
+     "name": "Rosewood Bangkok 曼谷瑰丽酒店",
      "type": "酒店",
-     "note": "【凯悦天地·柏悦】【档次：奢华】Central Embassy商场上方，222间客房，2017年开业（官网：hyatt.com/bkkph）",
+     "note": "【瑰丽酒店集团】【档次：顶奢】2019年开业，KPF以泰式合十礼(wai)为灵感的双叠式塔楼，曼谷CBD建筑地标；159间客房；HD Awards Luxury Hotel 2020、芝加哥Athenaeum国际建筑奖2021。【2026-09-16替换】原 Park Hyatt Bangkok，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done",
-       "note": "2026-09-13 OTA研究完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "2026-09-13 Google Maps研究完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done",
-       "note": "2026-09-13 中文站研究完成：评分/条数/带日期原话/链接/推荐理由/避雷点，报告见 ota-reviews/bangkok-chain-hotels-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
        "posts": 0,
        "target": 10,
        "status": "pending",
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读"
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
        "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "5张达标（外观/大堂/客房/泳池/顶楼酒吧），逐张下载目检+curl预检；证据：photos/hotel-chains-2026-09-13.md"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -1191,35 +1191,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "InterContinental Chiang Mai The Mae Ping 清迈洲际",
+     "name": "Shangri-La Chiang Mai 清迈香格里拉",
      "type": "酒店",
-     "note": "【洲际酒店集团IHG·洲际】【档次：高端】2023年开业的历史城区奢华酒店",
+     "note": "【香格里拉集团】【档次：奢华】夜市核心位置；TA 4.6/约3,500条；Horizon Club行政酒廊、Chi Spa、大象滑梯主题泳池、Kad Kafe餐厅。【2026-09-16替换】原 InterContinental Chiang Mai The Mae Ping，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
-       "posts": 10,
+       "posts": 0,
        "target": 10,
-       "status": "done",
-       "posts_2024_2026": 10,
-       "verdict": "推荐4/中立偏推荐2/中立偏负面2/不推荐1",
-       "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-intercon-maeping-2026-09-15.md",
-       "verified_at": "2026-09-16T00:08:00Z",
-       "note": "2026-09-15 严格重验（菜小盒登录会话，站内搜索进入；≥10篇2024–2026独立专帖；正文实读+评论区真实打开可见滚动实读+图片逐张翻看）"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
        "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -1499,7 +1497,7 @@ export const initialResearchStatus = {
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md"
+       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。"
       },
       "photos": {
        "verified": 5,
@@ -2761,33 +2759,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "1926 Heritage Hotel",
+     "name": "Seven Terraces",
      "type": "酒店",
-     "note": "【独立精品酒店】【档次：精品】2026年4月重新开业的百年英殖民官员宿舍酒店",
+     "note": "【独立精品酒店】【档次：奢华】乔治市世遗核心区19世纪七连排Anglo-Chinese老屋改建，Peranakan文化主题，Kebaya Dining Room；TA 4.8/约1,488条、乔治市约#12/139、Travellers' Choice 2026；Hotels.com 9.6/10。【2026-09-16替换】原 1926 Heritage Hotel，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done",
-       "note": "槟城报告已收录：评分/条数/原话/日期/链接（penang-2026-09-13.md）"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "2026-09-13 Google Maps调研：3.7/904条，2-3条带时间原话+链接+推荐理由+避雷点，报告见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/penang-recovery-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done",
-       "note": "2026-09-13 Trip.com调研：9.1/27条，带日期评价原话+链接，报告见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/penang-recovery-2026-09-13.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
        "posts": 0,
        "target": 10,
        "status": "pending",
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读"
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
        "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -4312,33 +4310,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "JW Marriott Hotel & Suites Saigon 西贡JW万豪",
+     "name": "Mai House Saigon",
      "type": "酒店",
-     "note": "【万豪旅享家·JW万豪】【档次：奢华】第一郡Hai Ba Trung街与Le Duan大道交角，305间客房+260套公寓，前身西贡洲际酒店",
+     "note": "【独立设计酒店】【档次：奢华】第一郡157 Nam Ky Khoi Nghia，2019年开业，223-224间客房；TA 4.9/约1,196条、Travellers' Choice；竹艺+越南美学设计，Mai Sky天台。【2026-09-16替换】原 JW Marriott Hotel & Suites Saigon，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done",
-       "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：4.3/5、160条；2条原话：Sergey M 2026-08 5星、Happiness67026981696 2025-07 5星；d28257553（同楼Apartments页未混用）"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：4.6/5、4740条；2条第三方原话：Diageo 3周前、Trip.com Member 4个月前；地址Hai Ba Trung确认为胡志明店（Apartments页未混用）。GM有限视图：Google原生评论面板未加载，原话为Tripadvisor/Trip.com第三方聚合（有作者/相对日期/正文）"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done",
-       "note": "2026-09-14 中文站补齐：Trip.com 9.3/10、310条verified reviews；2条独立中文原话：Andyxiaohaozi 2026-08-27 10.0、Guest User 2026-07-27 10.0；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-partial-fill-2026-09-14.md（2026-09-14 09:44 UTC 登录态逐条切换Original Text核对中文原文）"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
        "posts": 0,
        "target": 10,
        "status": "pending",
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读"
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
-       "verified": 6,
+       "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "此前已达标（6张）；照片证据见 photos/hcmc-phuquoc-2026-09-14.md（本轮未重做）"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -5087,33 +5085,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "Park Hyatt Phu Quoc 富国岛柏悦",
+     "name": "La Festa Phu Quoc, Curio Collection by Hilton",
      "type": "酒店",
-     "note": "【凯悦天地·柏悦】【档次：奢华】2026年新开业，西南海岸160英亩，1.7公里沙滩，114间客房+54栋泳池别墅（hyatt.com/pqcph已接受预订）",
+     "note": "【希尔顿·Curio精选】【档次：奢华】富国岛Sunset Town，Kiss Bridge步行可达；Amalfi海岸灵感建筑；TA 4.7、Travellers' Choice (Top 10%)；2024年开业，hilton.com可订。【2026-09-16替换】原 Park Hyatt Phu Quoc（2027年3月才开业，行程住不上），审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "missing",
-       "note": "2026-09-14 browser只读实查：TA无该酒店listing（酒店尚未开业），检索仅命中其他酒店页文字提及。终判：覆盖不足"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "unavailable",
-       "note": "2026-09-14 browser只读实查：酒店未开业，GM无酒店listing；仅销售展厅页（5.0/1条\"Ok\"，已永久关闭）。终判：覆盖不足"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：Trip.com listing存在、新开业、无评分无评论；马蜂窝无listing；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
        "posts": 0,
        "target": 10,
        "status": "pending",
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读"
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
-       "verified": 1,
+       "verified": 5,
        "target": 5,
-       "status": "partial",
-       "note": "2026-09-15五轮中英文查询逐张下载目验：全网能找到的全部是官方效果图（parkhyatt-phuquoc.com.vn、xxmaps、assets.hyatt.com PQCPH-R0064-Pier-Aerial等），效果图存档不计入；仅1张凯悦官方实拍计入。酒店预计2026年下半年开业（Hyatt新闻稿称Q1 2026，FlyerTalk帖引用GM称2026年8月下旬），开业前不会有住客实拍，缺口如实保留待开业后再补；照片证据见 research_notes/sea-guide-2026/photos/hcmc-phuquoc-2026-09-14.md"
+       "status": "done",
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
@@ -5994,33 +5992,33 @@ export const initialResearchStatus = {
      }
     },
     {
-     "name": "Grand Hyatt Singapore 新加坡君悦",
+     "name": "The Fullerton Hotel Singapore 新加坡富丽敦酒店",
      "type": "酒店",
-     "note": "【凯悦天地·君悦】【档次：高端】乌节路10 Scotts Road，2024-07-10 Terrace Wing重开、2025年Grand Wing完成，699间客房",
+     "note": "【富丽敦酒店集团】【档次：奢华】1928年总邮局大楼改建，新加坡第71个国家古迹；新古典主义多立克柱廊；TA 4.7/约11,365条、新加坡约#4/374、Travellers' Choice Best of the Best 2026；屋顶无边泳池正对Anderson桥与新加坡河。【2026-09-16替换】原 Grand Hyatt Singapore，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "done",
-       "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：4.4/5、6185条；2条原话：James M 2026-09-08 5星、TinaB 2026-09-04 5星；d306175"
+       "status": "partial",
+       "note": "2026-09-16 酒店替换：火度审计已收录 TripAdvisor 评分/评价数/排名（见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md）；带日期原话/规范链接/推荐理由/避雷点待补。"
       },
       "google_maps": {
-       "status": "done",
-       "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：4.5/5、6748条；2条第三方原话：nicholasg415 1周前、Trip.com Member 2个月前；地址10 Scotts Rd。GM有限视图：Google原生评论面板未加载，原话为Tripadvisor/Trip.com第三方聚合（有作者/相对日期/正文）"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；Google Maps逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "chinese_sites": {
-       "status": "done",
-       "note": "2026-09-14 中文站补齐：Trip.com 9.3分＋马蜂窝8.7分/64评论；2条带日期原话（95****90 2019-06-08/75****05 2019-04-16）；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；中文站逐项研究待补（原条目研究证据归属被替换的旧酒店，不沿用）。"
       },
       "xiaohongshu": {
-       "posts": 10,
+       "posts": 0,
        "target": 10,
-       "status": "partial",
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §7/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。"
+       "status": "pending",
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
       },
       "photos": {
-       "verified": 6,
+       "verified": 5,
        "target": 5,
        "status": "done",
-       "note": "6张达标（外观/大堂/客房/花园/泳池/餐厅），2025年8月翻新后实拍，逐张curl预检；证据：photos/hotel-chains-2026-09-13.md"
+       "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
        "status": "pending"
