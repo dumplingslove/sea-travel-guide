@@ -534,7 +534,7 @@ export const BOOKING_GUIDE_SECTIONS: BookingGuideSection[] = [
     leadTime:"",price:"不适用",officialUrl:"不适用",
     mapsUrl:"https://www.google.com/maps/search/?api=1&query=%E5%91%A8%E6%97%A5%E6%AD%A5%E8%A1%8C%E8%A1%97%20Sunday%20Walking%20Street%20%E6%B8%85%E8%BF%88",cancellation:"不适用",whyEarly:"",
     suitability:"",dressCode:"",children:"",
-    tips:"注意：2026-12-20（周日）行程在槟城，清迈段 12-15/16 为周二/三，对不上周日步行街；如想逛可考虑周六夜市（12-12 在曼谷）或调整行程。",warning:"行程冲突：周日步行街仅周日开放；本次清迈段为 12-15/16（周二/三），12-20（周日）行程在普吉——对不上。想逛可考虑周六夜市或调整行程。",detailStatus:"skeleton",
+    tips:"注意：2026-12-20（周日）行程在槟城，清迈段 12-15/16 为周二/三，对不上周日步行街；如想逛可考虑周六夜市（12-12 在曼谷）或调整行程。",warning:"行程冲突：周日步行街仅周日开放；本次清迈段为 12-15/16（周二/三），12-20（周日）行程在槟城——对不上。想逛可考虑周六夜市或调整行程。",detailStatus:"skeleton",
     evidence:[],
   },{
     key:"chiangmai-17",name:"契迪龙寺+帕辛寺 Wat Chedi Luang·Wat Phra Singh",type:"景点",category:"free_no_booking",
