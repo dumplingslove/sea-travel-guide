@@ -4,6 +4,7 @@ import { MapPin, CalendarDays, ChevronRight, UtensilsCrossed } from "lucide-reac
 import itinerary from "@/data/itinerary.json";
 import cities from "@/data/cities.json";
 import food from "@/data/food.json";
+import TripOverviewMap from "@/components/TripOverviewMap";
 
 type Day = {
   day: number;
@@ -91,6 +92,12 @@ export default function Home() {
 function ItineraryTab() {
   return (
     <>
+      {/* 20天路线总览实时地图 */}
+      <h2 className="text-xl font-bold mb-3">20天路线总览</h2>
+      <div className="mb-8">
+        <TripOverviewMap />
+      </div>
+
       {/* City cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
         {cityList.map((c, i) => (

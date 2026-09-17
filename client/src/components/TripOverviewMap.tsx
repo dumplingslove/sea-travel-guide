@@ -38,6 +38,7 @@ export default function TripOverviewMap() {
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
     const stops = cities as CityStop[];
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     const map = L.map(mapEl.current, {
       zoomControl: true,
       scrollWheelZoom: false,
@@ -69,7 +70,7 @@ export default function TripOverviewMap() {
           `<div style="min-width:150px;font-family:inherit">
             <div style="font-weight:800;font-size:14px;color:#134e4a">${i + 1}. ${s.zh}</div>
             <div style="font-size:12px;color:#4b5563;margin:4px 0">Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>
-            <a href="/day/${s.days[0]}" style="color:#0f766e;font-weight:700;font-size:12px">第 ${s.days[0]} 天行程 →</a>
+            <a href="${base}/day/${s.days[0]}" style="color:#0f766e;font-weight:700;font-size:12px">第 ${s.days[0]} 天行程 →</a>
           </div>`,
         )
         .addTo(map);
