@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-17T04:48Z",
+ "updated_at": "2026-09-17T10:48Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -12,7 +12,7 @@ export const initialResearchStatus = {
   "bangkok": {
    "name": "曼谷",
    "total": 32,
-   "complete": 0,
+   "complete": 7,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -212,7 +212,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §1)：333 Charoen Nakhon Road；Peninsula Time最早6:00入住、最晚22:00退房（12/21–31不适用）；9月THB 9,900/晚起，12月THB 16,500/晚起 → done。"
       }
      }
     },
@@ -246,7 +247,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §2)：1041/38 Ploenchit Road；入住15:00退房12:00；9月THB 14,850/晚，12月THB 12,997/晚起 → done。"
       }
      }
     },
@@ -619,7 +621,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片证据见 research_notes/sea-guide-2026/photos/bangkok-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §3)：唐人街耀华力路49/51号；每天16:00–24:00；人均฿200–400；只收现金、常排队 → done。"
       }
      }
     },
@@ -1054,7 +1057,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "partial",
-       "note": "2026-09-15只读实查(bangkok-boatnoodles-ota-2026-09-15.md)：Trip.com两家店均无独立餐厅listing（仅Moments聚合页，Rua Thong无评分/Thong Smith页为Eight Thong Lo分店）不得冒充；携程站内搜索触发passport登录墙不可获取；马蜂窝桌面站拼图验证墙拦截、移动站搜索空白，无独立POI。结论：中文站不可补齐（partial封存）"
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §1)：大众点评商户页 https://m.dianping.com/shop/951065905 触发美团验证中心，评分/点评数未能核实；仅快照得1条原话（Steven_9949，2025-04-12）。缺评分/条数、第二条原话 → partial。"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -1072,7 +1075,8 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §4)：鲁通胜利纪念碑旁（周二–周日9:00–20:30，周一休，人均฿1–200）；通思密Siam Paragon（每天10:00–21:30，人均฿200–400）→ done。"
       }
      }
     },
@@ -1106,8 +1110,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16：5张逐张HTTP验证+目验通过（外观/大堂/客房/餐饮/泳池）；证据：photos/hotel-luxury-audit-2026-09-16.md §六"
       },
       "details": {
-       "status": "pending",
-       "note": "2026-09-16新增，详情页未建"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §5)：61 Wireless Road；入住15:00退房12:00；9月THB 7,699/晚起，12月THB 6,649/晚起；宠物友好 → done。"
       }
      }
     }
@@ -1116,7 +1120,7 @@ export const initialResearchStatus = {
   "chiangmai": {
    "name": "清迈",
    "total": 20,
-   "complete": 0,
+   "complete": 2,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1221,7 +1225,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/chiangmai-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §6，官网亲验地址/入住退房/机场4.5km)：123-123/1 Charoen Prathet Road；入住15:00退房12:00；9月USD 360/晚起，12月USD 776/晚起 → done。"
       }
      }
     },
@@ -1257,7 +1262,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §7)：89/8 Chang Klan Road；入住15:00退房12:00；9月USD 117/晚起，12月USD 183/晚起；12月部分房型仅剩1–3间 → done。"
       }
      }
     },
@@ -1295,7 +1301,8 @@ export const initialResearchStatus = {
        "note": "5张达标（外观/客房/大堂/泳池/餐厅），cnxmc物业代码实拍，逐张curl预检+下载验证；证据：photos/hotel-chains-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §8)：108 Chang Klan Road；入住15:00退房12:00；9月THB 4,750/晚起，12月THB 6,650/晚起；M Club → done。"
       }
      }
     },
@@ -1967,7 +1974,8 @@ export const initialResearchStatus = {
        "note": "6张达标（航拍全景/私人海滩/园林池塘/泳池/客房/别墅），万豪官方CDN（HKTJW物业代码），逐张curl预检；证据：photos/hotel-chains-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §9)：231 Moo 3 Mai Khao；入住15:00退房12:00；9月THB 4,370/晚起，12月THB 17,575/晚起（旺季约4倍）；海龟庇护所 → done。"
       }
      }
     },
@@ -1999,7 +2007,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §10)：Pansea Beach；入住14:00退房12:00；9月THB 9,762/晚起，12月THB 25,495/晚起 → done。"
       }
      }
     },
@@ -2031,7 +2040,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §11)：Kamala；入住15:00退房12:00；10月平季from $415/晚，官网$531含早餐；12月官价未能查到 → done。"
       }
      }
     },
@@ -2234,7 +2244,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 照片收集：5 张，curl 预检 2xx+image/* 通过，证据见 research_notes/sea-guide-2026/photos/phuket-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-a-2026-09-17.md §12)：12 Kata Noi Road；每天11:30–22:30；人均฿2,000+；日落位建议提前订 → done。"
       }
      }
     },
@@ -2355,7 +2366,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "pending",
-       "note": "【2026-09-14 BatchE核实】仍不可补齐：Trip.com仅有Coral Island景点页上的餐厅POI卡片（4.6/5、9条评论），无独立restaurant/detail URL。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §35"
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §2)：百度/谷歌未索引到携程、大众点评、马蜂窝的商户或POI点评页，仅大众点评用户笔记。中文站无公开点评页面 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2721,7 +2732,8 @@ export const initialResearchStatus = {
        "note": "6张达标，逐张curl预检（3张另经下载验证文件魔数）；证据：photos/hotel-chains-2026-09-13.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §1)：官网55 Persiaran Gurney、入住3pm退房12pm（主agent亲验官网页）；淡季参考RM 617/晚起；M Club/无边泳池/代客泊车RM30。机场交通、12月旺季价未能核实 → done。"
       }
      }
     },
@@ -2810,7 +2822,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "partial",
-       "note": "2026-09-16 OTA研究(ota-reviews/penang-newhotels-2026-09-16.md §3): Trip.com国际站 9.2/10、44–46条verified reviews+规范链接，但缺中文单条原话→partial；携程国内版未读(预期登录墙)/马蜂窝无独立listing/大众点评预期登录墙均pending"
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §3)：携程酒店页 https://hotels.ctrip.com/hotels/698630.html 4.6分（很好）、45条点评；1条原话（M56686****，2025-05-05）；点\"所有点评\"跳携程登录墙，第二条原话未能核实 → partial。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2825,7 +2837,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "partial",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §2)：地址14A Stewart Lane；淡季$129/晚起；入住/退房时间官网未公示未能核实、机场交通未能核实 → partial。"
       }
      }
     },
@@ -2859,7 +2872,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "partial",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §3)：地址15 Lebuh Leith；淡季RM 421/晚起；入住/退房时间官网未公示未能核实、机场交通未能核实 → partial。"
       }
      }
     },
@@ -3103,7 +3117,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §4)：米其林星级娘惹餐厅，1 Lebuh Bishop；周三–周日12:00–14:30/18:00–21:30；人均约RM 60；建议提前两周订位 → done。"
       }
      }
     },
@@ -3156,8 +3171,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研：Planters Lounge 4.3/144条，2-3条带时间原话+链接+推荐理由+避雷点，报告见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/penang-recovery-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-16 中文站补齐：第2条中文原话已找到——潘佳洁（东方日报报导）2024-02-24推荐原话（已如实标注为媒体食记非OTA用户点评）；Palm Court无独立餐厅评分页，评分+评论数要素无法达成；携程酒店4.6分/1843条为酒店本体不冒充。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-16.md"
+       "status": "pending",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §4)：未找到携程/大众点评/马蜂窝的E&O酒店下午茶公开点评页 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -3634,7 +3649,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §5)：官网No 6 Jalan Stesen Sentral 2、入住3pm退房12pm；淡季参考RM 836/晚起；KLIA 58.2km，紧邻KL Sentral → done。"
       }
      }
     },
@@ -3668,7 +3684,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §6)：Equatorial Plaza, Jalan Sultan Ismail；入住3pm退房12pm；淡季约RM 1,100/晚起；Sky51空中酒廊、旅游税RM 10/房/晚 → done。"
       }
      }
     },
@@ -4265,7 +4282,8 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §7)：35a Jalan Medan Imbi；每天7:00–22:00堂食；人均约RM 50；1971年创立 → done。"
       }
      }
     }
@@ -4376,7 +4394,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §8)：157 Nam Kỳ Khởi Nghĩa；入住2pm退房12pm；淡季$70–145/晚；评分9.3（1,501条）→ done。"
       }
      }
     },
@@ -4445,7 +4464,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §9)：76–78 Nguyen Thi Minh Khai；入住3pm退房12pm；淡季$130–200/晚；MGallery法属印支风情 → done。"
       }
      }
     },
@@ -4708,8 +4728,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.4★（2,962条）"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：Trip.com 4.0分/6条（152 Đ. Chợ Lớn, Bình Phú）；0条中文原话（6条均为英文；马蜂窝无POI）；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "pending",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §5)：百度/谷歌未索引到携程、大众点评、马蜂窝的商户点评页 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5074,8 +5094,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16：5张逐张HTTP验证+目验通过（外观/大堂/客房/餐饮/泳池）；证据：photos/hotel-luxury-audit-2026-09-16.md §六"
       },
       "details": {
-       "status": "pending",
-       "note": "2026-09-16新增，详情页未建"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §10)：88 Dong Khoi；入住3pm退房12pm；淡季$175–200/晚；SGN 7.9km，机场接驳单程₫2,400,000 → done。"
       }
      }
     }
@@ -5186,7 +5206,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §11)：Sunset Town, An Thoi；入住3pm退房12pm；淡季$120–200/晚；希尔顿Curio臻选 → done。"
       }
      }
     },
@@ -5255,7 +5276,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §12)：Bai Truong, Duong To；入住3pm退房12pm；淡季$100–230/晚；PQC约15分钟，提供机场接驳 → done。"
       }
      }
     },
@@ -5273,8 +5295,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-16 中文站补齐：Klook中文站4.7/5超赞、353条评价已实测确认（9-14的DataDome拦截已解除，页面公开可读）；评论列表动态加载未渲染单条评论，0条中文原话（未硬造）；Trip.com/马蜂窝无listing；维持partial。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-16.md"
+       "status": "pending",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §6)：携程中文站 hotels.ctrip.com 无该酒店页（仅Trip.com国际版，不在中文站范围内）→ pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5289,7 +5311,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §13)：Vung Bau, Cua Can；退房12:00（入住未公示）；淡季US$155/晚起；全包Spa、海上漂浮餐厅；PQC约18分钟 → done。"
       }
      }
     },
@@ -5482,8 +5505,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-14补齐(phuquoc-redo-2026-09-14.md §7)【2026-09-14核实】Trip.com景点页只有Tripadvisor聚合标识，无可靠公开评分数字与评论正文，暂不可补"
+       "status": "done",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §7)：携程景点页 https://you.ctrip.com/sight/phuquocisland24779/1981970.html 4.6（页内另4.3/5）、50条点评；2条原话（YoYo_5W4I6O2M 2019-12-10；YoYo_6U5Q8K5Y 2019-10-23）→ done。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5517,8 +5540,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-14补齐(phuquoc-redo-2026-09-14.md §8)【2026-09-14核实】中文站无独立listing（仅moments/攻略提及），暂不可补"
+       "status": "partial",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §8)：携程\"涵宁渔村\"页 https://you.ctrip.com/sight/phuquocisland24779/2504532.html 4.4/5（页内另2.8）、7条点评；2条原话（泰宁根灵承恩；山在穷游）但手机版不显示日期 → partial。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5552,8 +5575,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：On the Rocks：Trip.com 0结果，旧\"4.1/7\"不实作废；Ocean Club（Regent）4.4分/8条＋1条中文原话（XCNR_****00378 5.0 2025-09-30），但身份是否为目标店待确认；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "pending",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §9)：未找到携程/大众点评/马蜂窝的公开点评页 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5587,8 +5610,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：Sun World Hon Thom Nature Park Trip.com 4.7/5、426条，缆车本体Hon Thom Cable Car 4.7/5、3932条；0条中文原话；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "done",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §10)：携程景点页 https://you.ctrip.com/sight/phuquocisland24779/5079342.html 4.7/5、3963条点评；2条原话（Bi8bo 2026-05-27 辽宁；YoYo_3R7C7T3T 2026-07-28 安徽）→ done。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5658,7 +5681,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "pending",
-       "note": "2026-09-14补齐(phuquoc-redo-2026-09-14.md §13)【2026-09-14核实】中文站无独立listing（仅moments POI页），暂不可补"
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §11)：携程/马蜂窝无独立POI页；与携程\"白沙滩/Sao Beach\"为不同海滩不可混用 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5693,7 +5716,7 @@ export const initialResearchStatus = {
       },
       "chinese_sites": {
        "status": "pending",
-       "note": "2026-09-14补齐(phuquoc-redo-2026-09-14.md §14)【2026-09-14核实】中文站无统一景点评论页（多家供应商出海活动），暂不可补"
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §12)：携程An Thoi页（5340716）渲染为\"undefined\"标题、无点评内容，属无效POI页 → pending。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5727,8 +5750,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：VinWonders Trip.com 4.5/5、2337条，Vinpearl Safari Trip.com 4.7/5、2499条；0条中文原话；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "done",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §13)：携程Safari页 https://you.ctrip.com/sight/phuquocisland24779/1841477.html 4.7/5、2509条点评；2条原话（YoYo_4S2S4K4S 2026-04-04 北京；中国香港用户 2026-02-10，原话2尾部截断已注明）→ done。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5762,8 +5785,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-14补齐(phuquoc-redo-2026-09-14.md §16)【2026-09-14核实】中文站无独立listing，暂不可补"
+       "status": "partial",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §14)：携程\"石山殿\"页 https://you.ctrip.com/sight/phuquocisland24779/1693795.html 4.5/5（页内另3.3）、35条点评；2条原话均为\"山在穷游\"、日期未能核实（手机版不显示）→ partial。"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5958,7 +5981,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §14)：5 Raffles Avenue；入住3pm退房12pm；淡季S$470–550/晚；9家餐厅；损坏押金S$200 → done。"
       }
      }
     },
@@ -6026,7 +6050,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §15)：7 Raffles Avenue；入住3pm退房12pm；淡季约$500/晚；Summer Pavilion米其林粤菜 → done。"
       }
      }
     },
@@ -6059,7 +6084,8 @@ export const initialResearchStatus = {
        "note": "2026-09-14 08:52Z: space-2 DB他方写入verified=6,本地JSON同步采纳(单调改进,来源待他方确认)"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §16)：22 Orange Grove Road；入住3pm退房12pm；淡季USD 250–300/晚；往返乌节路接驳车 → done。"
       }
      }
     },
@@ -6093,7 +6119,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 替换酒店照片：5张（外观/大堂/客房/餐饮/泳池或建筑细节），逐张下载验证+主agent目验通过；证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §17)：1 Fullerton Square；入住3pm退房12pm；淡季S$300–450/晚；1928年国家古迹；Raffles Place站650英尺 → done。"
       }
      }
     },
@@ -6451,8 +6478,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-14 中文站补齐：Trip.com独立页存在（Amoy Street Food Centre, 7 Maxwell Rd，明确与Hong Lim芳林区分）；No comments yet；马蜂窝无POI；0条中文原话；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "pending",
+       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §15)：大众点评移动版商户页反爬跳转错误页；百度/谷歌无快照；马蜂窝无独立POI页 → pending。"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -6467,7 +6494,8 @@ export const initialResearchStatus = {
        "note": "照片证据：research_notes/sea-guide-2026/photos/ 相应报告（逐张curl预检+来源页核对）"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": "2026-09-17只读实查(research_notes/sea-guide-2026/details/details-backfill-b-2026-09-17.md §18)：7 Maxwell Road；周一–周六06:30–21:00、周日06:30–18:00；人均S$5–15；Tanjong Pagar站步行3分钟；2家必比登 → done。"
       }
      }
     },
@@ -6823,7 +6851,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor189、Google Maps188、中文站165、小红书19、照片191、详情165 完成（done）；六类全部完成 9 项。（2026-09-17 01:47 UTC：程序重算；2026-09-17 主代理周日步行街 XHS 纠正 5→3 partial 已于 01:09Z 同步推送，DB 195 项 0-diff）",
+ "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor189、Google Maps188、中文站168、小红书19、照片191、详情193 完成（done）；六类全部完成 11 项。（2026-09-17 07:48 UTC：程序重算；项级数据与 last-db-push（07:20Z）sha 一致，DB 07:22:20Z get_research_status 195项逐项0-diff，本轮仅更新 updated_at，未推送）",
  "total_locations": 195,
  "complete_items": 0
 };
