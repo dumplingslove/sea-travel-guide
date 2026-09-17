@@ -38,7 +38,7 @@ interface ClassicRoute { verdicts: string[]; days: [string, string][]; sources: 
 interface SpotDetail { name: string; address: string; hours: string; lastEntry: string; price: string; transit: string; must: string; reason: string; avoid: string; sources: [string, string][] }
 interface PublicHoliday { countries: string[]; short: string; name: string; sources: [string, string][] }
 interface SpecialMarker { city: string; short: string; title: string; body: string }
-interface PlannerState { selected: string[]; coupleDays: number; remainingMode: string; pace: string; start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; classicCity: string; classicDays: number; calMode: "decision" | "schedule" }
+interface PlannerState { selected: string[]; coupleDays: number; remainingMode: string; pace: string; start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; calMode: "decision" | "schedule" }
 interface MatrixFlight { flight_no?: string; dep?: string; arr?: string; duration?: string; airport?: string; arrival_airport?: string; operating_days?: string[]; note?: string }
 interface MatrixAirline { code: string; name: string; operating_days?: string[]; typical_departures?: string[]; schedule_note?: string; merge_note?: string; flights?: MatrixFlight[]; safety?: { verdict?: string; iosa?: boolean; note?: string; source_urls?: string[] } }
 interface MatrixRoute { origin: string; destination: string; direct?: string; verification_status: string; calendar_warnings?: string[]; notes?: string; airlines?: MatrixAirline[]; rail?: { hsr?: { available?: boolean }; conventional?: { service: string; operator: string; route: string; duration: string; frequency: string; price: string; booking: string; source_urls?: string[] }[] } }
@@ -317,7 +317,7 @@ const bangkokSpotDetails: SpotDetail[] = [
  {name:"唐人街耀华力路 Chinatown",address:"Yaowarat Road, Samphanthawong, Bangkok 10100",hours:"街区无统一营业时间，日间店铺约 09:00–18:00、夜市小吃摊约 16:00–24:00，具体时段待核验",lastEntry:"开放街区无统一最后入场",price:"免费；餐饮与购物按店消费",transit:"MRT Wat Mangkon 站 1/2 号出口；或湄南河快船至 Ratchawong 码头 N5，再步行约 5–10 分钟",must:"18:00–22:00 的耀华力路街边小吃与霓虹街景、金店街、龙莲寺 Wat Mangkon Kamalawat",reason:"曼谷夜间烟火气最强的街区之一，适合老城行程后的晚餐与夜游。",avoid:"白天部分摊位未开，夜间非常拥挤；热门店先确认营业日与价格，注意保管财物。",sources:[["TripAdvisor 曼谷唐人街","https://www.tripadvisor.ca/Attraction_Review-g293916-d447272-Reviews-or30-Chinatown_Bangkok-Bangkok.html"],["Indochina Voyages 唐人街 2026 指南","https://www.indochinavoyages.com/travel-blog/china-town-in-bangkok-thailand"],["Trip.com 唐人街交通","https://us.trip.com/moments/detail/chinatown-2035757-132044348/"]]},
  {name:"伦披尼公园 Lumphini",address:"Rama IV Road, Wang Mai, Pathum Wan, Bangkok 10330",hours:"每日 04:30–22:00；园内骑行仅 10:00–15:00",lastEntry:"22:00 闭园；免费公园无单独售票截止",price:"免费",transit:"MRT Silom 站 1 号出口或 Lumphini 站 3 号出口；BTS Sala Daeng 站 5 号出口或 Ratchadamri 站 4 号出口",must:"湖上鸭子船与皮划艇、巨蜥、拉玛六世王纪念像、黄昏有氧操及季节性 Music in the Park",reason:"高密度行程中的低强度恢复点，适合清晨运动或傍晚散步。",avoid:"中午暴晒；园内巨蜥较多，应保持距离且不要投喂；禁飞无人机、禁烟酒。",sources:[["曼谷市政府 Greener Bangkok 官方页","https://greener.bangkok.go.th/park/suan-lumpini/"],["Trip.com 伦披尼公园","https://www.trip.com/moments/detail/bangkok-191-136721636/"],["Hotels.com 伦披尼交通","https://www.hotels.com/go/thailand/lumpini-park?intlid=gglist|listitem"]]}
 ];
-let state: PlannerState = {selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,classicCity:"曼谷",classicDays:3,calMode:"decision"};
+let state: PlannerState = {selected:["TH","VN"],coupleDays:7,remainingMode:"skip",pace:"intense",start:"2026-12-12",schedule:{},edited:false,calMode:"decision"};
 let modalDate: string | null = null;
 
 const esc=(s: unknown)=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"} as Record<string,string>)[m]);
@@ -361,40 +361,6 @@ function reasonFor(sel: string[], days: number, alloc: Record<string, number>){
   const active=Object.entries(alloc).filter(([,d])=>d).map(([c])=>c); const skipped=sel.flatMap(k=>countries[k].cities).filter(c=>!active.includes(c));
   const cap=comboStats(sel,days).cap, total=totalSpotsForCountries(sel);
   return `${days} 天按各城经典路线逐日命中去重，约覆盖 ${cap}/${total} 个两国精华；把城市控制在 ${active.length} 个，减少转场损耗。${skipped.length?`本轮先舍去 ${skipped.join("、")}，避免“到过但没玩好”。`:""}`;
-}
-function renderClassicRoute(){
-  const city=state.classicCity, days=state.classicDays, route=classicRoutes[city];
-  (el("classicCity") as HTMLSelectElement).value=city;
-  el("classicDayPills").innerHTML=[1,2,3,4,5].map(n=>`<button class="day-pill ${n===days?"active":""}" data-days="${n}" aria-pressed="${n===days}">${n}天</button>`).join("");
-  ([...S.querySelectorAll("#classicDayPills .day-pill")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{state.classicDays=Number(btn.dataset.days);renderClassicRoute()});
-  el("classicVerdict").textContent=`${city} · ${route.verdicts[days-1]}`;
-  const cov=classicCoverage(city,days);
-  el("classicCoverage").textContent=cov.estimated?`约覆盖 ${cov.n}/${cov.total} 个精华（估算）`:`实际命中 ${cov.n}/${cov.total} 个精华 · ${cov.pct}%`;
-  const list=citySpots[city]||[];
-  el("classicDays").innerHTML=route.days.slice(0,days).map((d,i)=>{
-    const hits=((classicSpotHits[city]||[])[i]||[]).filter(h=>list.includes(h));
-    const outside=(classicOutsideDayNote[city]||{})[i];
-    const note=outside?`<div class="route-note" style="margin-top:6px">ⓘ ${esc(outside)}</div>`:(hits.length?"":`<div class="route-note" style="margin-top:6px">ⓘ 该日未命中本城精华清单，不计入覆盖。</div>`);
-    return `<div class="classic-day"><div class="day-index">DAY ${i+1}</div><div><b>${esc(d[0])}</b><p>${esc(d[1])}</p>${hits.length?`<div style="margin-top:6px">${hits.map(h=>`<span class="spot-chip must">${esc(h)}</span>`).join("")}</div>`:""}${note}</div></div>`;
-  }).join("");
-  el("classicSources").innerHTML=`<strong>路线出处</strong>${(route.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a>`).join("<span>·</span>")}`;
-  renderClassicEvidence(route,city);
-}
-function renderClassicEvidence(route: ClassicRoute, city: string){
-  const wrap=el("classicEvidence");if(!wrap)return;
-  const detail=(route.sources||[]).map((s,i)=>{
-    const rows=[`<strong>来源${i+1} · ${esc(s.verdict||"未标注")}</strong>`];
-    rows.push(s.author&&s.author!=="未记录"?`作者：${esc(s.author)}`:"作者：未在核验报告中记录");
-    rows.push(s.date&&s.date!=="未记录"?`日期：${esc(s.date)}`:"日期：未在核验报告中记录");
-    if(s.excerpt)rows.push(`正文原话：${esc(s.excerpt)}`);
-    rows.push(`实质评论原话：${s.commentExcerpt&&s.commentExcerpt!=="未收录"?esc(s.commentExcerpt):"未收录（核验报告未采集评论区）"}`);
-    if(s.readNote)rows.push(`核验备注：${esc(s.readNote)}`);
-    return `<div class="route-note">🔎 ${rows.join("<br>")}</div>`;
-  }).join("");
-  const xhs: { status?: string; note?: string } = route.xhsEvidence || {};
-  const badge=xhs.status==="insufficient"
-    ?`<div class="route-note" style="margin-top:10px">⚠ <strong>证据不足（小红书详细帖）：</strong>${esc(xhs.note||"小红书路线实证研究进行中，暂未接入。")}在补齐前，本路线按“博客/OTA 出处版”呈现，不作“已验证经典”断言。</div>`:"";
-  wrap.innerHTML=detail+badge;
 }
 function renderCountries(){
   const wrap=el("countryButtons");wrap.innerHTML="";
@@ -952,9 +918,7 @@ syncCalMode();
 el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
 el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
-const classicCitySelect=el("classicCity") as HTMLSelectElement;Object.keys(classicRoutes).forEach(c=>classicCitySelect.add(new Option(c,c)));
-classicCitySelect.onchange=e=>{state.classicCity=(e.target as HTMLSelectElement).value;state.classicDays=3;renderClassicRoute()};
-initTransport();renderHotels();renderClassicRoute();buildRecommendedSchedule();initWizard();updateAll();
+initTransport();renderHotels();buildRecommendedSchedule();initWizard();updateAll();
 
   /* ---- 研究数据来源说明（原生集成追加） ---- */
   {

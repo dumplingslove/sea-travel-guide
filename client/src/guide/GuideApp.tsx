@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createPortal } from 'react-dom';
 // space-sdk 在 GitHub Pages 新站不可用：顶部署名条由新站全局 Header 承担，此处 stub 为空，保持视觉一致。
 function SafeAreaTopScrim(_props: { backgroundColor?: string }) { return null; }
 import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, type HotelGroup, type Item } from './data';
-import { dayMaps, overviewMap } from './maps';
+import DayMap from '../components/DayMap';
+import TripOverviewMap from '../components/TripOverviewMap';
+import { CITY_ID_BY_ZH } from '../data/cityCoords';
 import { getGuideFacts, getXhsAssessment, guideFactsCount, strictResearchLinkCount, secondaryEvidence, xhsEvidence } from './research';
 import { getPlaceGallery, placeGalleryPhotoCount, placeGalleryPlaceCount, type PlacePhoto } from './placeGalleries';
 import { bangkokOta } from './bangkokOta';
@@ -52,6 +53,8 @@ const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','
 /** 预订入口回调：各 tab 的卡片/详情弹窗点“预订”时打开 BookingDialog */
 type OnBook=(p:BookingPreset)=>void;
 /** 按城市推算建议入住/退房日期（2026-12），预填进酒店预订表单 */
+function dayCityId(dayNum:number):string|null{const d=days.find(x=>x.day===dayNum);return d?(CITY_ID_BY_ZH[d.city]||null):null}
+function dayCityZh(dayNum:number):string|null{const d=days.find(x=>x.day===dayNum);return d?d.city:null}
 function cityStayRange(city:string):{date?:string;dateEnd?:string}{
  const r=route.find(x=>x[0]===city)?.[2];
  const m=r?.match(/(\d+)\/(\d+)[–-](\d+)/);
@@ -79,112 +82,6 @@ const navPaths:Record<Tab,React.ReactNode>={
 };
 function NavIcon({tab}:{tab:Tab}){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{navPaths[tab]}</svg>}
 
-function MapViewer({src,title,onClose}:{src:string;title:string;onClose:()=>void}){
- const [scale,setScale]=useState(1); const [pos,setPos]=useState({x:0,y:0}); const drag=useRef<{x:number;y:number;px:number;py:number}|null>(null); const pointers=useRef(new Map<number,{x:number;y:number}>()); const pinch=useRef(0);
- useEffect(()=>{const previous=document.body.style.overflow;document.body.style.overflow='hidden';const f=(e:KeyboardEvent)=>{if(e.key==='Escape')onClose();if(e.key==='+'||e.key==='=')setScale(v=>Math.min(5,v*1.25));if(e.key==='-')setScale(v=>Math.max(1,v/1.25));};window.addEventListener('keydown',f);return()=>{window.removeEventListener('keydown',f);document.body.style.overflow=previous}},[onClose]);
- const down=(e:React.PointerEvent)=>{e.currentTarget.setPointerCapture(e.pointerId);pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.current.size===1)drag.current={x:e.clientX,y:e.clientY,px:pos.x,py:pos.y};if(pointers.current.size===2){const p=[...pointers.current.values()];pinch.current=Math.hypot(p[0]!.x-p[1]!.x,p[0]!.y-p[1]!.y)}};
- const move=(e:React.PointerEvent)=>{if(!pointers.current.has(e.pointerId))return;pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});const p=[...pointers.current.values()];if(p.length===2){const d=Math.hypot(p[0]!.x-p[1]!.x,p[0]!.y-p[1]!.y);if(pinch.current){setScale(v=>Math.min(5,Math.max(1,v*d/pinch.current)));pinch.current=d}}else if(drag.current&&scale>1)setPos({x:drag.current.px+e.clientX-drag.current.x,y:drag.current.py+e.clientY-drag.current.y})};
- const up=(e:React.PointerEvent)=>{pointers.current.delete(e.pointerId);drag.current=null;pinch.current=0};
- const zoom=(n:number)=>{setScale(v=>{const x=Math.min(5,Math.max(1,v*n));if(x===1)setPos({x:0,y:0});return x})};
- return <div className="viewer" role="dialog" aria-modal="true" aria-label={`${title} 全屏地图查看器`}><div className="viewerbar"><strong>{title}</strong><div><button aria-label="缩小地图" onClick={()=>zoom(.8)}>−</button><span>{Math.round(scale*100)}%</span><button aria-label="放大地图" onClick={()=>zoom(1.25)}>+</button><button aria-label="关闭全屏地图" onClick={onClose}>×</button></div></div><div className="viewport" onWheel={e=>{e.preventDefault();zoom(e.deltaY<0?1.12:.89)}} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onDoubleClick={()=>scale===1?setScale(2.5):(setScale(1),setPos({x:0,y:0}))}><img src={src} alt={title} draggable={false} style={{transform:`translate(${pos.x}px,${pos.y}px) scale(${scale})`}}/><p>双指、滚轮或按钮缩放 · 放大后拖动平移</p></div></div>;
-}
-type MapLoadState='queued'|'loading'|'retrying'|'ready'|'error';
-type MapLoadJob={url:string;signal:AbortSignal;resolve:(blob:Blob)=>void;reject:(error:Error)=>void;started:boolean};
-type MapRenderWait={url:string;timer:number;resolve:()=>void;reject:(error:Error)=>void};
-const MAP_LOAD_TIMEOUT_MS=9000;
-const MAP_LOAD_MAX_CONCURRENCY=2;
-const MAP_LOAD_AUTO_RETRIES=2;
-let mapLoadsActive=0;
-const mapLoadQueue:MapLoadJob[]=[];
-
-function mapAbortError(){return new DOMException('Map load cancelled','AbortError')}
-async function fetchMapBlob(url:string,signal:AbortSignal){
- const request=new AbortController();let timedOut=false;
- const abort=()=>request.abort();
- const timer=window.setTimeout(()=>{timedOut=true;request.abort()},MAP_LOAD_TIMEOUT_MS);
- signal.addEventListener('abort',abort,{once:true});
- try{
-  const response=await fetch(url,{cache:'no-store',signal:request.signal});
-  if(!response.ok)throw new Error(`Map request failed (${response.status})`);
-  const blob=await response.blob();
-  if(blob.size<1)throw new Error('Map image is empty');
-  return blob;
- }catch(error){
-  if(signal.aborted)throw mapAbortError();
-  if(timedOut)throw new Error('Map load timed out');
-  throw error instanceof Error?error:new Error('Map request failed');
- }finally{
-  clearTimeout(timer);signal.removeEventListener('abort',abort);
- }
-}
-function pumpMapLoadQueue(){
- while(mapLoadsActive<MAP_LOAD_MAX_CONCURRENCY&&mapLoadQueue.length){
-  const job=mapLoadQueue.shift()!;
-  if(job.signal.aborted){job.reject(mapAbortError());continue}
-  job.started=true;mapLoadsActive+=1;
-  fetchMapBlob(job.url,job.signal).then(job.resolve,job.reject).finally(()=>{mapLoadsActive-=1;pumpMapLoadQueue()});
- }
-}
-function enqueueMapLoad(url:string,signal:AbortSignal){
- return new Promise<Blob>((resolve,reject)=>{
-  const job:MapLoadJob={url,signal,resolve,reject,started:false};
-  const abortQueued=()=>{if(job.started)return;const index=mapLoadQueue.indexOf(job);if(index>=0)mapLoadQueue.splice(index,1);reject(mapAbortError())};
-  signal.addEventListener('abort',abortQueued,{once:true});
-  mapLoadQueue.push(job);pumpMapLoadQueue();
- });
-}
-function wait(ms:number,signal:AbortSignal){
- return new Promise<void>((resolve,reject)=>{
-  const finish=(error?:Error)=>{clearTimeout(timer);signal.removeEventListener('abort',abort);error?reject(error):resolve()};
-  const abort=()=>finish(mapAbortError());
-  const timer=window.setTimeout(()=>finish(),ms);
-  signal.addEventListener('abort',abort,{once:true});
- });
-}
-
-function MapCard({src,title,overview=false}:{src:string;title:string;overview?:boolean}){
- const [open,setOpen]=useState(false);const [state,setState]=useState<MapLoadState>('queued');const [cycle,setCycle]=useState(0);const [displayUrl,setDisplayUrl]=useState('');const objectUrl=useRef('');const renderWait=useRef<MapRenderWait|null>(null);
- useEffect(()=>{
-  const controller=new AbortController();let live=true;
-  const releaseObjectUrl=()=>{if(objectUrl.current){URL.revokeObjectURL(objectUrl.current);objectUrl.current=''}};
-  const cancelRenderWait=(error:Error)=>{const pending=renderWait.current;if(!pending)return;renderWait.current=null;clearTimeout(pending.timer);pending.reject(error)};
-  const waitForVisibleImage=(url:string)=>new Promise<void>((resolve,reject)=>{
-   const finish=(error?:Error)=>{const pending=renderWait.current;if(!pending||pending.url!==url)return;renderWait.current=null;clearTimeout(pending.timer);error?reject(error):resolve()};
-   const timer=window.setTimeout(()=>finish(new Error('Map render timed out')),MAP_LOAD_TIMEOUT_MS);
-   renderWait.current={url,timer,resolve:()=>finish(),reject:error=>finish(error)};
-   setDisplayUrl(url);
-  });
-  const run=async()=>{
-   setDisplayUrl('');releaseObjectUrl();
-   for(let attempt=0;attempt<=MAP_LOAD_AUTO_RETRIES;attempt+=1){
-    if(!live)return;
-    setState(attempt===0?'queued':'retrying');
-    try{
-     const blob=await enqueueMapLoad(src,controller.signal);
-     if(!live)return;
-     releaseObjectUrl();
-     const url=URL.createObjectURL(blob);objectUrl.current=url;
-     setState(attempt===0?'loading':'retrying');
-     await waitForVisibleImage(url);
-     if(!live)return;
-     setState('ready');return;
-    }catch{
-     if(!live||controller.signal.aborted)return;
-     releaseObjectUrl();setDisplayUrl('');
-     if(attempt<MAP_LOAD_AUTO_RETRIES)await wait(500*(attempt+1),controller.signal);
-    }
-   }
-   if(live)setState('error');
-  };
-  void run();
-  return()=>{live=false;controller.abort();cancelRenderWait(mapAbortError());releaseObjectUrl()};
- },[cycle,src]);
- const finishVisibleImage=(error?:Error)=>{const pending=renderWait.current;if(!pending||pending.url!==displayUrl)return;error?pending.reject(error):pending.resolve()};
- const retry=()=>{setOpen(false);setCycle(value=>value+1)};
- const status=state==='ready'?'已载入':state==='error'?'载入失败':state==='retrying'?'正在重试':'载入中';
- const message=state==='error'?'地图未能载入':state==='retrying'?'正在自动重试本地地图…':'正在载入本地地图…';
- return <><section className={`mapcard ${overview?'overviewmap':''}`} data-map-title={title} data-map-state={state}><div className="maphead"><span className="mapicon" aria-hidden="true">⌖</span><div><h3>{title}</h3><p>{overview?'曼谷 → 清迈 → 普吉 → 槟城 → 吉隆坡 → 胡志明市 → 富国岛 → 新加坡':'按当天动线编号标注'}</p></div><strong className={`mapstatus ${state}`} role="status">{status}</strong></div><button className={`mapimage ${state}`} aria-label={state==='ready'?`全屏查看并缩放${title}`:`${title}${state==='error'?'载入失败':'正在载入'}`} onClick={()=>state==='ready'&&setOpen(true)} disabled={state!=='ready'}>{displayUrl&&<img key={displayUrl} src={displayUrl} alt={`${title}，标有行程顺序与中文图例`} decoding="async" onLoad={event=>{const image=event.currentTarget;finishVisibleImage(image.naturalWidth>0&&image.naturalHeight>0?undefined:new Error('Map image is empty'))}} onError={()=>finishVisibleImage(new Error('Map render failed'))}/>} {state!=='ready'&&<span className={`mapmessage ${state==='error'?'error':''}`}>{message}</span>}{state==='ready'&&<span>全屏查看</span>}</button>{state==='error'&&<div className="mapretry"><p>9 秒内未完成载入；已自动重试 2 次。</p><button onClick={retry}>重新载入</button></div>}<div className="mapfoot"><b>静态标注图</b><span>图片已打包在站内 · 支持缩放与拖动</span><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a></div></section>{open&&state==='ready'&&createPortal(<MapViewer src={displayUrl} title={title} onClose={()=>setOpen(false)}/>,document.body)}</>
-}
 function Source({children}:{children:React.ReactNode}){return <p className="source">资料来源：{children}</p>}
 function useHotelEntries(){const query=useQuery({queryKey:['research-status'],queryFn:()=>getResearchStatus(),staleTime:0,retry:1});return useMemo(()=>extractHotelEntries(query.data?.status),[query.data?.status])}
 function HotelChainBadge({chain}:{chain?:string}){const label=chain?.trim();if(!label)return null;return <span className={`hotel-chain-badge ${hotelChainTone(label)}`}>{label}</span>}
@@ -274,7 +171,7 @@ function Itinerary({onBook}:{onBook?:OnBook}){
  const [open,setOpen]=useState(1);const [chosen,setChosen]=useState<CatalogMatch|null>(null);
  const goDay=(day:number)=>{setOpen(day);setTimeout(()=>document.getElementById(`day-${day}`)?.scrollIntoView({behavior:'smooth',block:'start'}),0)};
  const currentDay=days.find(d=>d.day===open)||days[0]!;
- return <div className="itinerary"><div className="daystrip" aria-label="20天日期导航">{days.map(d=><button key={d.day} className={open===d.day?'active':''} onClick={()=>goDay(d.day)}><b>D{d.day}</b><span>{d.date.match(/12月(\d+)日/)?.[1]}</span></button>)}</div><div className="dayjump" aria-label="日期跳转"><button aria-label="上一天" disabled={open<=1} onClick={()=>goDay(Math.max(1,open-1))}>‹</button><label><span>日期跳转</span><select aria-label="选择行程日期" value={open} onChange={e=>goDay(Number(e.target.value))}>{days.map(d=><option value={d.day} key={d.day}>Day {d.day} · {d.date.replace('2026年','')} · {d.city}</option>)}</select><small>{currentDay.title}</small></label><button aria-label="下一天" disabled={open>=days.length} onClick={()=>goDay(Math.min(days.length,open+1))}>›</button></div><section className="hero"><img src={bangkokImg} alt="曼谷湄南河与城市天际线"/><div/><section><span className="heroeyebrow">4 COUNTRIES · 8 CITIES · 20 DAYS</span><h1>泰国 · 马来西亚<br/>越南 · 新加坡</h1><p>曼谷 · 清迈 · 普吉 · 槟城 · 吉隆坡 · 胡志明市 · 富国岛 · 新加坡</p><p className="herodate">2026年12月12日 — 12月31日</p><button onClick={()=>document.getElementById('route-overview')?.scrollIntoView({behavior:'smooth'})}>开始查看行程</button></section></section><section className="maincontent"><div id="route-overview"><MapCard src={overviewMap} title="20天路线总览" overview/></div><section className="routeband" aria-label="八城路线">{route.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><b>{x[0]}</b><small>{x[1]} · {x[2]}</small></article>)}</section><section className="intro"><span>TRIP COMMAND CENTER</span><h2>四国八城，先把每天走顺</h2><p>每一天都按真实日期、城市动线、餐饮取舍和行前提醒组织。离线地图可点开放大；酒店、餐厅、打包、预订与游记各有独立工作区。串法已按 2026-09-15 小红书八城经典路线（每城 10 篇逐帖实读）的共识更新：住宿区、避坑点与高频必去项都写进了当天提醒。</p><div className="quickfacts"><article><b>20</b><span>天详细行程</span></article><article><b>8</b><span>座城市</span></article><article><b>{hotels.length}</b><span>家酒店</span></article><article><b>{restaurants.length}</b><span>个餐饮选择</span></article></div></section><section className="sectionblock"><div className="sectiontitle centered"><span>DAY BY DAY</span><h2>详细行程安排</h2><p>展开一天，查看城市图、时间线、用餐与关键提醒</p></div>{days.map(d=><article id={`day-${d.day}`} className={`day ${open===d.day?'open':''}`} key={d.day}><button className="daytitle" onClick={()=>setOpen(open===d.day?0:d.day)} aria-expanded={open===d.day}><div><span>Day {d.day}</span><b>{d.date}</b></div><h2>{d.city}</h2><p>{d.title}</p><strong>{open===d.day?'收起':'展开'}</strong></button>{open===d.day&&<div className="daybody"><div className="dayphoto"><img src={cityImages[d.city]} alt={`${d.city}城市氛围`}/><div><b>{d.city}</b><span>{d.date}</span></div></div><MapCard src={dayMaps[d.day-1]} title={`Day ${d.day} · ${d.city}路线图`}/><ItineraryHotelList city={d.city} entries={chainEntries} onOpen={setChosen}/><div className="timeline">{d.stops.map((s,i)=>{const next=d.stops[i+1];const hour=Number(s.time.split(':')[0]);const rhythm=hour<10?'早出避热 · 给交通留缓冲':hour<16?'正午补水 · 室内外穿插':hour<19?'黄金时段 · 提前确认入场': '晚间收尾 · 返程不再加点';const match=findCatalogMatch(s.name,d.city);const thumb=match?getPlaceGallery(match.kind,match.item)[0]?.src:undefined;return <div key={s.time+s.name}><time>{s.time}</time><i>{i+1}</i><section><h3>{s.name}</h3><p>{s.detail}</p><div className="stopmeta"><span>{rhythm}</span><span>{next?`下一站 ${next.time} · ${next.name}`:'当日最后一站 · 留出返程时间'}</span></div>{match&&<button className="stopdetail" onClick={()=>setChosen(match)} aria-label={`查看${match.item.name}完整攻略`}>{thumb?<img src={thumb} alt={`${match.item.name}候选图片缩略图`}/>:<span className="stopthumbfallback" aria-hidden="true">{match.item.name.slice(0,1)}</span>}<span>{match.kind==='酒店'&&<HotelBadges chain={findHotelChain(chainEntries,match.item.name,match.item.city)} tier={findHotelTier(chainEntries,match.item.name,match.item.city)}/>}<b>{match.item.name}</b><small>{match.kind}详情 · 地址、开放时间、价格、照片与口碑</small></span><strong>查看完整攻略</strong></button>}<a href={mapLink(s.name,d.city)} target="_blank" rel="noreferrer">在地图 App 中查看</a></section></div>})}</div><aside><section><span>DINING</span><h3>当天吃什么</h3><p>{d.food}</p></section><section><span>FIELD NOTE</span><h3>安排提醒</h3><p>{d.tip}</p></section></aside><Source>公开资料与旅行者反馈研究快照 · 2026-09-12</Source></div>}</article>)}</section><ResearchStatus/></section>{chosen&&<Detail item={chosen.item} kind={chosen.kind} onClose={()=>setChosen(null)} onBook={onBook}/>}</div>;
+ return <div className="itinerary"><div className="daystrip" aria-label="20天日期导航">{days.map(d=><button key={d.day} className={open===d.day?'active':''} onClick={()=>goDay(d.day)}><b>D{d.day}</b><span>{d.date.match(/12月(\d+)日/)?.[1]}</span></button>)}</div><div className="dayjump" aria-label="日期跳转"><button aria-label="上一天" disabled={open<=1} onClick={()=>goDay(Math.max(1,open-1))}>‹</button><label><span>日期跳转</span><select aria-label="选择行程日期" value={open} onChange={e=>goDay(Number(e.target.value))}>{days.map(d=><option value={d.day} key={d.day}>Day {d.day} · {d.date.replace('2026年','')} · {d.city}</option>)}</select><small>{currentDay.title}</small></label><button aria-label="下一天" disabled={open>=days.length} onClick={()=>goDay(Math.min(days.length,open+1))}>›</button></div><section className="hero"><img src={bangkokImg} alt="曼谷湄南河与城市天际线"/><div/><section><span className="heroeyebrow">4 COUNTRIES · 8 CITIES · 20 DAYS</span><h1>泰国 · 马来西亚<br/>越南 · 新加坡</h1><p>曼谷 · 清迈 · 普吉 · 槟城 · 吉隆坡 · 胡志明市 · 富国岛 · 新加坡</p><p className="herodate">2026年12月12日 — 12月31日</p><button onClick={()=>document.getElementById('route-overview')?.scrollIntoView({behavior:'smooth'})}>开始查看行程</button></section></section><section className="maincontent"><div id="route-overview"><TripOverviewMap/></div><section className="routeband" aria-label="八城路线">{route.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><b>{x[0]}</b><small>{x[1]} · {x[2]}</small></article>)}</section><section className="intro"><span>TRIP COMMAND CENTER</span><h2>四国八城，先把每天走顺</h2><p>每一天都按真实日期、城市动线、餐饮取舍和行前提醒组织。离线地图可点开放大；酒店、餐厅、打包、预订与游记各有独立工作区。串法已按 2026-09-15 小红书八城经典路线（每城 10 篇逐帖实读）的共识更新：住宿区、避坑点与高频必去项都写进了当天提醒。</p><div className="quickfacts"><article><b>20</b><span>天详细行程</span></article><article><b>8</b><span>座城市</span></article><article><b>{hotels.length}</b><span>家酒店</span></article><article><b>{restaurants.length}</b><span>个餐饮选择</span></article></div></section><section className="sectionblock"><div className="sectiontitle centered"><span>DAY BY DAY</span><h2>详细行程安排</h2><p>展开一天，查看城市图、时间线、用餐与关键提醒</p></div>{days.map(d=><article id={`day-${d.day}`} className={`day ${open===d.day?'open':''}`} key={d.day}><button className="daytitle" onClick={()=>setOpen(open===d.day?0:d.day)} aria-expanded={open===d.day}><div><span>Day {d.day}</span><b>{d.date}</b></div><h2>{d.city}</h2><p>{d.title}</p><strong>{open===d.day?'收起':'展开'}</strong></button>{open===d.day&&<div className="daybody"><div className="dayphoto"><img src={cityImages[d.city]} alt={`${d.city}城市氛围`}/><div><b>{d.city}</b><span>{d.date}</span></div></div><DayMap key={d.day} dayNum={d.day} cityId={dayCityId(d.day)||''} cityZh={d.city} prevCityId={dayCityId(d.day-1)} prevCityZh={dayCityZh(d.day-1)} transferLabel={d.stops.find(s=>s.name.includes('飞'))?.name}/><ItineraryHotelList city={d.city} entries={chainEntries} onOpen={setChosen}/><div className="timeline">{d.stops.map((s,i)=>{const next=d.stops[i+1];const hour=Number(s.time.split(':')[0]);const rhythm=hour<10?'早出避热 · 给交通留缓冲':hour<16?'正午补水 · 室内外穿插':hour<19?'黄金时段 · 提前确认入场': '晚间收尾 · 返程不再加点';const match=findCatalogMatch(s.name,d.city);const thumb=match?getPlaceGallery(match.kind,match.item)[0]?.src:undefined;return <div key={s.time+s.name}><time>{s.time}</time><i>{i+1}</i><section><h3>{s.name}</h3><p>{s.detail}</p><div className="stopmeta"><span>{rhythm}</span><span>{next?`下一站 ${next.time} · ${next.name}`:'当日最后一站 · 留出返程时间'}</span></div>{match&&<button className="stopdetail" onClick={()=>setChosen(match)} aria-label={`查看${match.item.name}完整攻略`}>{thumb?<img src={thumb} alt={`${match.item.name}候选图片缩略图`}/>:<span className="stopthumbfallback" aria-hidden="true">{match.item.name.slice(0,1)}</span>}<span>{match.kind==='酒店'&&<HotelBadges chain={findHotelChain(chainEntries,match.item.name,match.item.city)} tier={findHotelTier(chainEntries,match.item.name,match.item.city)}/>}<b>{match.item.name}</b><small>{match.kind}详情 · 地址、开放时间、价格、照片与口碑</small></span><strong>查看完整攻略</strong></button>}<a href={mapLink(s.name,d.city)} target="_blank" rel="noreferrer">在地图 App 中查看</a></section></div>})}</div><aside><section><span>DINING</span><h3>当天吃什么</h3><p>{d.food}</p></section><section><span>FIELD NOTE</span><h3>安排提醒</h3><p>{d.tip}</p></section></aside><Source>公开资料与旅行者反馈研究快照 · 2026-09-12</Source></div>}</article>)}</section><ResearchStatus/></section>{chosen&&<Detail item={chosen.item} kind={chosen.kind} onClose={()=>setChosen(null)} onBook={onBook}/>}</div>;
 }
 
 const legs=[['抵达曼谷','国际航班','抵达日仅排下午项目'],['曼谷 → 清迈','约1小时','建议上午直飞'],['清迈 → 普吉','约2小时','直飞，落地后只排海滩'],['普吉 → 槟城','经吉隆坡','避免过短中转'],['槟城 → 吉隆坡','约1小时','短途航班'],['吉隆坡 → 胡志明市','约2小时','越南需电子签'],['胡志明市 → 富国岛','约1小时','国内短途'],['富国岛 → 新加坡','经胡志明市','预留中转'],['新加坡 → 美国','长途航班','以实际航班为准']];

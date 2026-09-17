@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin, UtensilsCrossed, Lightbulb } from "lucide-react";
 import itinerary from "@/data/itinerary.json";
 import { days as detailDays } from "@/guide/data";
-import { dayMaps } from "@/guide/maps";
+import DayMap from "@/components/DayMap";
 
 type Day = {
   day: number;
@@ -20,7 +20,9 @@ export default function DayDetail() {
   const dayNum = Number(n);
   const day = days.find((d) => d.day === dayNum);
   const detail = detailDays.find((d) => d.day === dayNum);
-  const mapImg = dayMaps[dayNum - 1];
+  const prevDay = days.find((d) => d.day === dayNum - 1) || null;
+  // 转场航段名称：取当天行程里带“飞”字的站点（如“普吉飞槟城”）
+  const transferLabel = detail?.stops.find((s) => s.name.includes("飞"))?.name;
 
   if (!day) {
     return (
@@ -66,11 +68,15 @@ export default function DayDetail() {
 
       {detail ? (
         <>
-          {mapImg && (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
-              <img src={mapImg} alt={`Day ${day.day} 路线图`} className="w-full" />
-            </div>
-          )}
+          <DayMap
+            key={day.day}
+            dayNum={day.day}
+            cityId={day.city_id}
+            cityZh={day.city_zh}
+            prevCityId={prevDay ? prevDay.city_id : null}
+            prevCityZh={prevDay ? prevDay.city_zh : null}
+            transferLabel={transferLabel}
+          />
 
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
             <h2 className="font-bold text-lg mb-4">当天行程</h2>

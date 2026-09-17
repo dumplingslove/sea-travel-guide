@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import cities from "@/data/cities.json";
+import { CITY_COORDS } from "@/data/cityCoords";
 
 interface CityStop {
   id: string;
@@ -15,17 +16,8 @@ interface CityStop {
   lng: number;
 }
 
-/** 8 城坐标（WGS84），与 cities.json 的顺序一致即行程顺序 */
-const COORDS: Record<string, [number, number]> = {
-  bangkok: [13.7563, 100.5018],
-  chiangmai: [18.7883, 98.9853],
-  phuket: [7.8804, 98.3923],
-  penang: [5.4141, 100.3288],
-  kualalumpur: [3.139, 101.6869],
-  hochiminh: [10.8231, 106.6297],
-  phuquoc: [10.227, 103.9639],
-  singapore: [1.3521, 103.8198],
-};
+/** 8 城坐标（WGS84），与 cities.json 的顺序一致即行程顺序；数据见 @/data/cityCoords */
+const COORDS: Record<string, [number, number]> = CITY_COORDS;
 
 const STOPS: CityStop[] = (cities as Array<Omit<CityStop, "lat" | "lng">>).map(
   (c) => {
