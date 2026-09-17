@@ -19,4 +19,8 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+  // 每次构建重新生成：预订页顶部显示的「页面构建于」时间戳
+  define: {
+    __BOOKING_PAGE_BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
 });

@@ -17,9 +17,8 @@ import {
   AuthorTag,
 } from "./shared";
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
+import BookingGuideSection from "@/bookings/BookingGuideSection";
 import {
-  BOOKING_CHECKLIST,
-  CHECKLIST_UPDATED_AT,
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingChecklist";
@@ -41,66 +40,6 @@ const kindBadge: Record<BookingKind, string> = {
 };
 
 type Filter = BookingKind | "all" | "pending" | "confirmed";
-
-function ChecklistCard({
-  item,
-  added,
-  onAdd,
-}: {
-  item: ChecklistItem;
-  added: boolean;
-  onAdd: (item: ChecklistItem) => void;
-}) {
-  const summary = bookingSummary({
-    bkind: item.bkind,
-    city: item.city,
-    date: item.date,
-    dateEnd: item.dateEnd,
-    time: item.time,
-    timeEnd: item.timeEnd,
-    guests: item.guests,
-    extra: item.extra,
-  });
-  return (
-    <Card>
-      <div className="flex items-start gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${kindBadge[item.bkind]}`}
-            >
-              {BOOKING_KIND_LABEL[item.bkind]}
-            </span>
-            <h4 className="font-medium text-gray-800">
-              {item.urgent && <span className="text-amber-600 mr-1">⚠</span>}
-              {item.name}
-            </h4>
-            {item.day != null && (
-              <span className="text-xs text-gray-400">Day {item.day}</span>
-            )}
-          </div>
-          {summary && <p className="mt-1 text-sm text-gray-600">{summary}</p>}
-          {item.note && (
-            <p className="mt-1 text-sm text-gray-500 whitespace-pre-wrap break-words">
-              {item.note}
-            </p>
-          )}
-        </div>
-        <button
-          onClick={() => onAdd(item)}
-          disabled={added}
-          className={`shrink-0 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors ${
-            added
-              ? "bg-gray-100 text-gray-400 cursor-default"
-              : "bg-teal-700 text-white hover:bg-teal-800"
-          }`}
-        >
-          {added ? "已加入 ✓" : "＋ 加入预订"}
-        </button>
-      </div>
-    </Card>
-  );
-}
 
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
@@ -171,42 +110,7 @@ function BookingsInner() {
       <SyncBanner mode={syncMode} />
 
       {/* 待预订清单：按行程逐城列出可预订项，点“加入预订”逐条加进记录 */}
-      <section className="mb-8">
-        <div className="mb-1">
-          <p className="text-xs font-semibold tracking-widest text-teal-700">
-            BOOKING CHECKLIST
-          </p>
-          <h2 className="text-lg font-bold text-gray-800">待预订清单</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            按这次 12/12–12/31 行程整理：2 段国际航班（待定）、7
-            段城际航班（Duffel 实测价）、8 城酒店（万豪系，Titanium）、19
-            个景点门票/一日游、26 家餐厅。点「加入预订」把详情带进弹窗，确认无误后保存；出了确认号再回来标记已确认。
-          </p>
-          <p className="mt-1 text-xs text-gray-400">
-            清单更新于 {CHECKLIST_UPDATED_AT} · 机票价格为 2026-09-14/15
-            实测，会变，出票前重查
-          </p>
-        </div>
-
-        {BOOKING_CHECKLIST.map((section) => (
-          <div key={section.key} className="mt-5">
-            <div className="flex items-baseline gap-2 mb-2">
-              <h3 className="font-semibold text-gray-800">{section.title}</h3>
-              <p className="text-xs text-gray-400">{section.hint}</p>
-            </div>
-            <div className="space-y-2.5">
-              {section.items.map((item) => (
-                <ChecklistCard
-                  key={item.id}
-                  item={item}
-                  added={addedNames.has(item.name.trim().toLowerCase())}
-                  onAdd={addFromChecklist}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </section>
+      <BookingGuideSection addedNames={addedNames} onAdd={addFromChecklist} />
 
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
