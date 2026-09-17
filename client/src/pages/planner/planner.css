@@ -203,6 +203,18 @@
     .wz-rec{font-weight:700;font-size:13px;margin:0 0 6px;color:var(--ink)}
     .wz-city .micro{margin:4px 0}
     .wz-src{color:var(--muted)}
+    .wz-spots{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+    .wz-spots summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--teal-dark);list-style:none;padding:2px 0}
+    .wz-spots summary::-webkit-details-marker{display:none}
+    .wz-spots summary::before{content:"▸ ";font-size:11px}
+    .wz-spots[open] summary::before{content:"▾ "}
+    .wz-spots ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+    .wz-spots li{font-size:12.5px;line-height:1.6;border-left:2px solid var(--teal-soft);padding-left:8px}
+    .wz-spots li b{display:block;font-size:13px;color:var(--ink)}
+    .wz-spot-meta{display:block;color:var(--muted);font-size:12px;margin:1px 0}
+    .wz-spot-detail{display:block}
+    .wz-spot-best{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+    .wz-spots>a{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:600}
     .wz-quick{display:flex;gap:8px}
     .wz-quick .ghost{margin:0}
     .wz-dayrow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 16px;margin-bottom:10px}

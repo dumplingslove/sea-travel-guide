@@ -3,7 +3,7 @@
  *
  * 程序生成（node scripts/build-booking-guide-data.mjs），不要手改。
  * 事实源：goals/southeast-asia-20-day-travel-website/hidden_files/booking-classification.json
- * 数据更新于：2026-09-17T03:25:00Z
+ * 数据更新于：2026-09-17T03:50:00Z
  */
 
 export interface BookingGuideEvidence { page: string; url: string; note: string }
@@ -41,7 +41,7 @@ export interface BookingGuideSection {
 }
 
 /** 数据源更新时间（来自 booking-classification.json） */
-export const BOOKING_GUIDE_UPDATED_AT = "2026-09-17T03:25:00Z";
+export const BOOKING_GUIDE_UPDATED_AT = "2026-09-17T03:50:00Z";
 
 /** 数据源说明 */
 export const BOOKING_GUIDE_SOURCE_NOTE = "预订需求分类数据基础：195 项研究全覆盖 + 行程补充服务（全程交通/酒店/接送等）。must_book / peak_recommended 的 price / official_url / cancellation 经 2026-09-17 联网核实后回填；未核实的一律显示为「未核实」，不编造。";
@@ -534,7 +534,7 @@ export const BOOKING_GUIDE_SECTIONS: BookingGuideSection[] = [
     leadTime:"",price:"不适用",officialUrl:"不适用",
     mapsUrl:"https://www.google.com/maps/search/?api=1&query=%E5%91%A8%E6%97%A5%E6%AD%A5%E8%A1%8C%E8%A1%97%20Sunday%20Walking%20Street%20%E6%B8%85%E8%BF%88",cancellation:"不适用",whyEarly:"",
     suitability:"",dressCode:"",children:"",
-    tips:"注意：2026-12-20（周日）行程在普吉，清迈段12-15/16为周二/三，对不上周日步行街；如想逛可考虑周六夜市（12-12在曼谷）或调整行程",warning:"行程冲突：周日步行街仅周日开放；本次清迈段为 12-15/16（周二/三），12-20（周日）行程在普吉——对不上。想逛可考虑周六夜市或调整行程。",detailStatus:"skeleton",
+    tips:"注意：2026-12-20（周日）行程在槟城，清迈段 12-15/16 为周二/三，对不上周日步行街；如想逛可考虑周六夜市（12-12 在曼谷）或调整行程。",warning:"行程冲突：周日步行街仅周日开放；本次清迈段为 12-15/16（周二/三），12-20（周日）行程在普吉——对不上。想逛可考虑周六夜市或调整行程。",detailStatus:"skeleton",
     evidence:[],
   },{
     key:"chiangmai-17",name:"契迪龙寺+帕辛寺 Wat Chedi Luang·Wat Phra Singh",type:"景点",category:"free_no_booking",
@@ -738,12 +738,12 @@ export const BOOKING_GUIDE_SECTIONS: BookingGuideSection[] = [
     tips:"价格实在，游客渐多",warning:undefined,detailStatus:"skeleton",
     evidence:[],
   },{
-    key:"phuket-16",name:"Roti Taew Nam + Lard Yai周日老街夜市",type:"餐厅",category:"walkup_or_queue",
-    categoryReason:"周日老街夜市小吃，现场购买",itinerary:"2026-12-17 ~ 2026-12-19（普吉段3天）",party:"2人",
+    key:"phuket-16",name:"Roti Taew Nam（普吉老街）",type:"餐厅",category:"walkup_or_queue",
+    categoryReason:"普吉老街小吃，现场购买",itinerary:"2026-12-17 ~ 2026-12-19（普吉段3天）",party:"2人",
     leadTime:"",price:"不适用",officialUrl:"不适用",
-    mapsUrl:"https://www.google.com/maps/search/?api=1&query=Roti%20Taew%20Nam%20%2B%20Lard%20Yai%E5%91%A8%E6%97%A5%E8%80%81%E8%A1%97%E5%A4%9C%E5%B8%82%20%E6%99%AE%E5%90%89",cancellation:"不适用",whyEarly:"",
+    mapsUrl:"https://www.google.com/maps/search/?api=1&query=Roti%20Taew%20Nam%20%E6%99%AE%E5%90%89",cancellation:"不适用",whyEarly:"",
     suitability:"",dressCode:"",children:"",
-    tips:"2026-12-20（周日）正好在普吉段，可安排；人多，看好随身物品",warning:undefined,detailStatus:"skeleton",
+    tips:"普吉段为 2026-12-17（周四）～12-19（周六），没有周日；Lard Yai 周日老街夜市对不上本次行程，已从本项移除。Roti Taew Nam 本店可单独安排，人多时排队，看好随身物品。",warning:undefined,detailStatus:"skeleton",
     evidence:[],
   }]},{category:"free_no_booking",entries:[{
     key:"phuket-18",name:"大佛 Big Buddha",type:"景点",category:"free_no_booking",

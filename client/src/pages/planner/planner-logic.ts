@@ -28,6 +28,9 @@ import {
   RESEARCH_META,
   type ResearchStatus,
 } from "../../planner-data/research-items";
+/* 景点详细信息：攻略站 8 城 69 个景点的完整条目（名称/关键信息/游览重点/怎么安排），
+   供分步规划 Step1 选城时直接结合决策，不再只看城市名。 */
+import { attractions } from "../../guide/data";
 
 /* ---------------- 类型 ---------------- */
 interface ClassicSource { title: string; url: string; author?: string; date?: string; excerpt?: string; commentExcerpt?: string; verdict?: string; readNote?: string }
@@ -802,12 +805,25 @@ function wzStep1(){
       <p class="micro">📅 ${esc(m.decNote)}</p>
       <p class="micro">🏨 ${esc(m.stayArea)}<span class="wz-src">（${esc(m.staySource)}）</span></p>
       <p class="micro">✈ 直飞通达 ${wzDirectCount(city)}/7 城</p>
+      ${wzSpotsHtml(city)}
     </article>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 1/4</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 1/4</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
     <div class="wz-quick"><button class="ghost" id="wzAll">8城全选</button><button class="ghost" id="wzClear">清空</button></div></div>
     <div class="wz-city-grid">${cards}</div>
     <div class="wz-nav"><span class="micro">已选 <b>${wz.cities.length}</b> 城</span><button class="primary" id="wzNext1">下一步：定天数 →</button></div>`;
+}
+/* 选城步骤的景点详细信息：取自攻略站景点指南的完整条目（与 /attractions 同源），
+   按城过滤；曼谷剔除 2 个城外项（大城府、丹嫩沙多＋美功），与覆盖率口径一致。 */
+const WZ_OUTSIDE_SPOTS=new Set(["大城府 Ayutthaya 古城遗迹","丹嫩沙多水上市场+美功铁道"]);
+function wzCityAttractions(city: string){
+  return attractions.filter(a=>a.city===city&&!WZ_OUTSIDE_SPOTS.has(a.name));
+}
+function wzSpotsHtml(city: string){
+  const list=wzCityAttractions(city);
+  if(!list.length) return "";
+  const items=list.map(a=>`<li><b>${esc(a.name)}</b><span class="wz-spot-meta">${esc(a.meta)}</span><span class="wz-spot-detail">${esc(a.detail)}</span>${a.best?`<span class="wz-spot-best">📋 ${esc(a.best)}</span>`:""}</li>`).join("");
+  return `<details class="wz-spots"><summary>🏛 精华景点 ${list.length} 个 · 展开看详情</summary><ul>${items}</ul><a href="/attractions" target="_blank" rel="noopener">在景点指南查看完整攻略 ↗</a></details>`;
 }
 function wzStep2(){
   const rows=wz.order.filter(c=>wz.cities.includes(c)).map(city=>{
@@ -900,6 +916,11 @@ function wzWire(){
       wzRender() };
     (card as HTMLElement).onclick=toggle;
     (card as HTMLElement).onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle() } };
+  });
+  /* 景点详情展开区：内部点击／按键不冒泡，避免展开详情时误触卡片选中 */
+  S.querySelectorAll(".wz-spots").forEach(d=>{
+    (d as HTMLElement).onclick=e=>e.stopPropagation();
+    (d as HTMLElement).onkeydown=e=>e.stopPropagation();
   });
   const on=(id:string,fn:()=>void)=>{ const n=S.getElementById(id); if(n) (n as HTMLElement).onclick=fn };
   on("wzAll",()=>{ wz.cities=[...WZ_ORDER]; wz.order=[...WZ_ORDER]; Object.assign(wz.days,baselineNights); wzRender() });
