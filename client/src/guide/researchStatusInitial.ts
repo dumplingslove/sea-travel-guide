@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-16T22:50Z",
+ "updated_at": "2026-09-17T04:48Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1243,10 +1243,12 @@ export const initialResearchStatus = {
        "note": "2026-09-16 OTA研究(ota-reviews/chiangmai-newhotels-2026-09-16.md §2): Trip.com中文版 8.6/10、525条，清迈亲子酒店第2名；3条中文原话(訪客 2026-08-27批判卫生翻车/2026-08-25亲子好评/2026-07-18亲子好评)+规范链接；马蜂窝无独立listing、携程国内版未单独验证、大众点评登录墙均记pending"
       },
       "xiaohongshu": {
-       "posts": 0,
+       "posts": 9,
        "target": 10,
-       "status": "pending",
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）"
+       "status": "partial",
+       "note": "9/10 partial（补充轮）：7篇基础上，依用户19:44 PDT裁决放宽评论门槛（评论少但内容扎实的帖也算），新增2篇——JulianGe《每天都被清迈香格里拉酒店的大落地窗美到》2025-10-04（68e12ab100000000070365bd，推荐，零评论但正文扎实）/《清迈香格里拉行政酒廊的早餐》2025-12-08（6936d80c000000001e003cd1，推荐，1条实质提问评论）；推荐7/中立2/不推荐0。缺1篇：剩余候选（元元13张LIVE、四舍五入一米七18张LIVE）因逐图审核技术不可行、纯餐饮帖因非住宿体验无法合规计入；是否进一步放宽（LIVE图抽查/餐饮帖计入）待用户裁决。证据见 redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
+       "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
+       "verified_at": "2026-09-17T02:50:00Z"
       },
       "photos": {
        "verified": 5,
@@ -1598,11 +1600,11 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com旅行指南景点页 4.6/5、114条；3条带作者/日期原话（2022-11-30、@naesansanee 2022-10-23、D24***47 2.0 2020-11-20）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 5,
+       "posts": 3,
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md",
-       "note": "2026-09-16 xhs-peritem-backfill第二轮：5/10 partial（新增帖5 Patience. 2025-12-14《清迈周日夜市打卡✅（美食广场推荐）》正文+实质评论+5图逐张实读；推荐5/避雷倾向已统计；还缺5篇，关键词挖掘继续）证据见 redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md"
+       "note": "2026-09-17 主代理纠正：去重后真实独立帖为3/10（帖5 Patience. 2025-12-14 为帖2的重复条目，已合并；吃吃包包《周日夜市真的蛮好逛还便宜》2025-10-02 经重新打开验证评论区8条均为提问/回答、无实质体验评论，按严格标准剔除不计入）。用户已决定按 partial 收尾，不再深挖。计入：Patience. 2025-12-14《清迈周日夜市打卡✅（美食广场推荐）》、一树妈妈 2026-03-02《清迈｜听劝🤫古城一定要留在周日逛》、summer 2026-06-28《清迈周日夜市》。缺7篇。证据见 redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md（已更新3/10终版）"
       },
       "photos": {
        "verified": 5,
@@ -6821,7 +6823,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor185、Google Maps185、中文站162、小红书15、照片188、详情0 完成（done）；六类全部完成 0 项。（2026-09-15 01:56 UTC：程序重算；小红书新增4项严格重验入库：大城府、丹嫩沙多+美功铁道、曼谷船面代表店、吉隆坡/巴生肉骨茶）",
+ "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor189、Google Maps188、中文站165、小红书19、照片191、详情165 完成（done）；六类全部完成 9 项。（2026-09-17 01:47 UTC：程序重算；2026-09-17 主代理周日步行街 XHS 纠正 5→3 partial 已于 01:09Z 同步推送，DB 195 项 0-diff）",
  "total_locations": 195,
  "complete_items": 0
 };
