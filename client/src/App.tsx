@@ -19,6 +19,7 @@ const NAV = [
   { to: "/", label: "行程" },
   { to: "/hotels", label: "酒店" },
   { to: "/restaurants", label: "餐厅" },
+  { to: "/attractions", label: "景点" },
   { to: "/practical", label: "实用信息" },
   { to: "/flights", label: "航班" },
   { to: "/transport", label: "交通" },
@@ -110,6 +111,7 @@ function AppRouter() {
             <Route path="/planner" element={<Planner />} />
             <Route path="/hotels" element={<GuidePage tab="酒店" />} />
             <Route path="/restaurants" element={<GuidePage tab="餐厅" />} />
+            <Route path="/attractions" element={<GuidePage tab="景点" />} />
             <Route path="/practical" element={<GuidePage tab="实用信息" />} />
             <Route path="/flights" element={<GuidePage tab="航班" />} />
             <Route path="/transport" element={<GuidePage tab="交通" />} />
