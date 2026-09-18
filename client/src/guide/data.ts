@@ -85,7 +85,8 @@ H('Regent Phu Quoc','富国岛','Long Beach · 潟湖泳池别墅','现代奢华
 H('New World Phu Quoc','富国岛','Khem Beach · 泳池别墅','Rosewood集团旗下新世界品牌；白沙滩与性价比突出，但2026评价显示服务和维护稳定性有波动。','对服务稳定性敏感者优先JW或Regent。'),
 H('Capella Singapore','新加坡','Sentosa · 私密度高','雨林与别墅式度假氛围，离市中心较远，进城依赖车辆或接驳。','适合圣淘沙段宅酒店；城市观光日需留交通时间。'),
 H('Raffles Singapore','新加坡','City Hall · 1887年开业','2026年为开业139周年；庭院、Long Bar和管家服务受赞，白天游客打卡多。适合看重历史氛围与服务者。','重历史体验可选；想安静可避开Long Bar一侧。'),
-H('Marina Bay Sands','新加坡','Marina Bay · 57层泳池','适合地标体验与城市天际线，不是强亲子酒店：无儿童俱乐部，旺季也有延迟入住反馈。','房型需区分滨海湾城市天际线景与花园景。')
+H('Marina Bay Sands','新加坡','Marina Bay · 57层泳池','适合地标体验与城市天际线，不是强亲子酒店：无儿童俱乐部，旺季也有延迟入住反馈。','房型需区分滨海湾城市天际线景与花园景。'),
+H('The Ritz-Carlton, Millenia Singapore','新加坡','7 Raffles Avenue · 丽思卡尔顿 · 万豪系','官方资料 2026-09-17 已核验：7 Raffles Avenue, Singapore 039799（滨海湾核心地段）；入住 15:00、退房 12:00（官网FAQ）；淡季参考约 $500/晚（KAYAK $494–$606，12 月旺季房价尚未核实）。TripAdvisor 4.6/5（约 7,099 条，Travellers Choice）。231 间客房及套房；博物馆级艺术收藏与风水设计；米其林星级粤菜 Summer Pavilion、Colony 自助餐、Republic 酒吧；标志性八角窗浴缸房看摩天轮与滨海湾夜景。避雷：高峰时段电梯等候长。注意：多份研究证据（2026-09-14 OTA 实读）显示本店不参加万豪 Bonvoy 积分/精英计划——Titanium 会员的房型升级、酒廊、早餐等权益是否适用尚未逐项核实，订房前务必以官网与酒店前台确认为准，勿以本页为准。','先向酒店确认 Bonvoy 参与与 Titanium 权益条款；再按房型、景观与含税总价比较。','Other','The Ritz-Carlton',undefined,'https://www.ritzcarlton.com/en/hotels/sinrz-the-ritz-carlton-millenia-singapore/overview/','2026-09-17')
 ];
 
 const R=(name:string,city:string,meta:string,detail:string,best:string):Item=>({name,city,meta,detail,best,source:checked});
