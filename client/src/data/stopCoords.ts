@@ -134,6 +134,42 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       note: "图示独立广场，茨厂街同市区动线",
     },
   ],
+  // Day 13 胡志明市为转场日（吉隆坡→胡志明市）：同 Day4，转场分支只画城际航线，
+  // 本来就不渲染站点标记，故不列；同样不编造“飞胡志明市”一类的坐标。
+  // Day 14 胡志明市《城市历史 · 古芝地道》（2026-12-25 周五）
+  14: [
+    {
+      name: "统一宫",
+      time: "08:00",
+      lat: 10.7770348,
+      lng: 106.695488,
+    },
+    {
+      name: "战争遗迹博物馆",
+      time: "09:45",
+      lat: 10.7793647,
+      lng: 106.6922806,
+    },
+    {
+      name: "粉红教堂与中央邮政局",
+      time: "11:30",
+      lat: 10.7883598,
+      lng: 106.6906418,
+      note: "图示粉红教堂（Nhà thờ Tân Định）本体，中央邮政局邻近同市区动线",
+    },
+    {
+      name: "古芝地道",
+      time: "13:30",
+      lat: 11.1432528,
+      lng: 106.4632107,
+      note: "图示游客较少的 Ben Duoc 入口（非 Ben Dinh 大团口）",
+    },
+    // OSM Nominatim 2026-09-18 实查、display_name 逐条核对：
+    // Dinh Độc Lập（135 Nam Kỳ Khởi Nghĩa）/ Bảo tàng Chứng tích Chiến tranh
+    // （28 Võ Văn Tần）/ Nhà thờ Tân Định（289 Hai Bà Trưng）/
+    // Địa Đạo Bến Dược（Xã An Nhơn Tây）。name/time 与 guide/data.ts Day14
+    // 时间线逐字一致校验通过；编号 1–4 对应当天时间线四项。
+  ],
 };
 
 /** 返回某天的站点坐标；没有则返回 undefined（调用方回退到城市级标记） */
