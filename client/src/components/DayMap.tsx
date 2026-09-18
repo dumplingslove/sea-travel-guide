@@ -65,9 +65,11 @@ export default function DayMap({
       },
     ).addTo(map);
 
+    let from: L.LatLng | null = null;
+    let to: L.LatLng | null = null;
     if (isTransfer && prevCoord) {
-      const from = L.latLng(prevCoord[0], prevCoord[1]);
-      const to = L.latLng(coord[0], coord[1]);
+      from = L.latLng(prevCoord[0], prevCoord[1]);
+      to = L.latLng(coord[0], coord[1]);
       L.polyline([from, to], {
         color: "#0f766e",
         weight: 3,
@@ -99,6 +101,7 @@ export default function DayMap({
       map.fitBounds(L.latLngBounds([from, to]).pad(0.35));
     } else {
       const at = L.latLng(coord[0], coord[1]);
+      to = at;
       L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
         .bindPopup(`<b>${cityZh}</b>`)
         .addTo(map);
@@ -106,7 +109,26 @@ export default function DayMap({
     }
 
     mapRef.current = map;
+    // 首次加载偶发空白修复（backlog P1）：与总览地图同因——容器尺寸在 commit
+    // 时未稳定，paint 完成后强制刷新尺寸并重算视野，再加一次延迟兜底。
+    const refit = () => {
+      map.invalidateSize();
+      if (isTransfer && from && to) {
+        map.fitBounds(L.latLngBounds([from, to]).pad(0.35), {
+          animate: false,
+        });
+      } else if (to) {
+        map.setView(to, 11, { animate: false });
+      }
+    };
+    let raf = 0;
+    raf = requestAnimationFrame(() => {
+      raf = requestAnimationFrame(refit);
+    });
+    const timer = window.setTimeout(refit, 400);
     return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
       map.remove();
       mapRef.current = null;
     };

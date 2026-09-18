@@ -86,8 +86,23 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
         .addTo(map);
     });
 
-    map.fitBounds(L.latLngBounds(latlngs).pad(0.18));
+    const bounds = L.latLngBounds(latlngs).pad(0.18);
+    map.fitBounds(bounds);
+    // 首次加载偶发空白修复（backlog P1）：L.map 在 React commit 时创建，
+    // 此时容器尺寸尚未稳定（字体/布局仍在结算），Leaflet 会记住错误的 0×N 尺寸。
+    // 在 paint 完成后强制刷新尺寸并重算视野，再加一次延迟兜底。
+    let raf = 0;
+    const fixSize = () => {
+      map.invalidateSize();
+      map.fitBounds(bounds, { animate: false });
+    };
+    raf = requestAnimationFrame(() => {
+      raf = requestAnimationFrame(fixSize);
+    });
+    const timer = window.setTimeout(fixSize, 400);
     return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
       map.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
