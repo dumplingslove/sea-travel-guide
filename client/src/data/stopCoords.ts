@@ -206,6 +206,43 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
   ],
   // Day 17 富国岛《度假日 · 岛味收官》全部为泛指停留（酒店慢早餐/泳池与SPA/
   // 海岛机动时段/海边告别晚餐），无精确可核验坐标，故意不列，保持城市级地图。
+
+  // Day 18 新加坡为转场日（富国岛→新加坡）：DayMap 转场分支本来就不渲染
+  // 站点标记，故不列；同样不编造“飞新加坡”一类的坐标。
+  // Day 19 新加坡《圣淘沙亲子日》（2026-12-30 周三）
+  19: [
+    {
+      name: "Singapore Oceanarium",
+      time: "09:30",
+      lat: 1.2583525,
+      lng: 103.820484,
+    },
+    // OSM Nominatim 2026-09-18 实查、display_name 逐条核对：
+    // Singapore Oceanarium（aquarium，24 Sentosa Gateway，2025年7月扩建更名后的本体）。
+    // 12:30“午餐＋回酒店午睡”/15:30“圣淘沙海滩轻走”/18:00“酒店附近晚餐”
+    // 均为泛指安排、无固定可核验点位，故意不列、不编造。
+  ],
+  // Day 20 新加坡《多元街区 · 星耀樟宜 · 返程》（2026-12-31 周四）
+  20: [
+    {
+      name: "牛车水晨逛（精简版）",
+      time: "08:30",
+      lat: 1.2815093,
+      lng: 103.8441892,
+      note: "图示佛牙寺（288 South Bridge Road）；牛车水晨逛泛指寺庙周边骑楼街区",
+    },
+    {
+      name: "Jewel 星耀樟宜",
+      time: "13:30",
+      lat: 1.3602243,
+      lng: 103.9896749,
+    },
+    // OSM Nominatim 2026-09-18 实查、display_name 逐条核对：
+    // Buddha Tooth Relic Temple（place_of_worship，Chinatown，288 South Bridge Road）/
+    // Jewel Changi Airport（mall，78 T1 Boulevard，Changi）。
+    // 10:30“回酒店收行李”/16:30“办理离境”为泛指安排、无固定可核验点位，
+    // 故意不列；编号 1–2 对应时间线第 1、3 项。
+  ],
 };
 
 /** 返回某天的站点坐标；没有则返回 undefined（调用方回退到城市级标记） */
