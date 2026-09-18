@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CalendarDays, MapPin, UtensilsCrossed, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-react";
 import { days as detailDays } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import {
@@ -98,13 +98,6 @@ export default function DayDetail() {
                 </li>
               ))}
             </ol>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
-            <h2 className="font-bold text-lg mb-2 flex items-center gap-2">
-              <UtensilsCrossed size={18} className="text-teal-700" /> 当天吃什么
-            </h2>
-            <p className="text-sm text-gray-700">{detail.food}</p>
           </div>
 
           <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 mb-6">
