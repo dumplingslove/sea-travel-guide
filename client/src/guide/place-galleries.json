@@ -6526,5 +6526,37 @@
    "media_url": "https://cache.marriott.com/is/image/marriotts7prod/si-sgnsi-pool-37227:Classic-Hor?wid=1336&fit=constrain",
    "title": "Sheraton Saigon Grand Opera Hotel 泳池（莲花墙）"
   }
+ ],
+ "酒店|曼谷|The Ritz-Carlton, Bangkok": [
+  {
+   "file": "./assets/galleries/9f4f7f0bc3b5/1.jpg",
+   "source_url": "https://travelweekly.com.au/the-ritz-carlton-bangkok-unveils-the-ritz-carlton-suite/",
+   "media_url": "https://travelweekly.com.au/wp-content/uploads/2025/07/RC_BKKRB_Arrival_Hall_Driveway.jpg",
+   "title": "The Ritz-Carlton, Bangkok 到达大堂外车道：墙面酒店铭牌，官方 RC_BKKRB 图片"
+  },
+  {
+   "file": "./assets/galleries/9f4f7f0bc3b5/2.jpg",
+   "source_url": "https://www.ritzcarlton.com/th/hotels/bkkrb-the-ritz-carlton-bangkok/overview/",
+   "media_url": "https://cache.marriott.com/is/image/marriotts7prod/rz-bkkrb-lobby-1-14473:Wide-Hor?wid=1336&fit=constrain",
+   "title": "The Ritz-Carlton, Bangkok 大堂内景：拱形落地窗与莲花池艺术装置，官方万豪图片"
+  },
+  {
+   "file": "./assets/galleries/9f4f7f0bc3b5/3.jpg",
+   "source_url": "https://the-ritz-carlton.bangkokshotels.com/en/",
+   "media_url": "https://the-ritz-carlton.bangkokshotels.com/data/Pics/700x500w/16433/1643369/1643369290/pic-the-ritz-carlton-bangkok-bangkok-95.JPEG",
+   "title": "The Ritz-Carlton, Bangkok 客房实拍：大床房白天城景观（经审计确认为本酒店客房）"
+  },
+  {
+   "file": "./assets/galleries/9f4f7f0bc3b5/4.jpg",
+   "source_url": "https://travelweekly.com.au/the-ritz-carlton-bangkok-unveils-the-ritz-carlton-suite/",
+   "media_url": "https://travelweekly.com.au/wp-content/uploads/2025/07/RC_BKKRB_The_Ritz_Carlton_Suite_2nd_Bedroom-e1751325308519.jpg",
+   "title": "The Ritz-Carlton, Bangkok 丽思卡尔顿套房第二卧室：落地窗城景观，官方 RC_BKKRB 图片"
+  },
+  {
+   "file": "./assets/galleries/9f4f7f0bc3b5/5.jpg",
+   "source_url": "https://www.countryandtownhouse.com/travel/the-ritz-carlton-bangkok/",
+   "media_url": "https://www.countryandtownhouse.com/wp-content/uploads/2025/04/RC_BKKRB_Pool_Overlooking_Cabana.jpg",
+   "title": "The Ritz-Carlton, Bangkok 室外泳池区与木格栅休闲亭，远眺曼谷天际线，官方 RC_BKKRB 图片"
+  }
  ]
 }
