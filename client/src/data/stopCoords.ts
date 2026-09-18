@@ -170,6 +170,40 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     // Địa Đạo Bến Dược（Xã An Nhơn Tây）。name/time 与 guide/data.ts Day14
     // 时间线逐字一致校验通过；编号 1–4 对应当天时间线四项。
   ],
+  // Day 15 富国岛为转场日（胡志明市→富国岛）：同 Day4，转场分支只画城际航线，
+  // 本来就不渲染站点标记，故不列；同样不编造“飞富国岛”一类的坐标。
+  // Day 16 富国岛《浮潜 · 跨海缆车》（2026-12-27 周日）
+  16: [
+    {
+      name: "安泰群岛",
+      time: "08:00",
+      lat: 10.3001998,
+      lng: 103.8621955,
+      note: "船游日浮潜行程，图示手指岛（Hòn Móng Tay）岛屿位置",
+    },
+    {
+      name: "跨海缆车",
+      time: "14:00",
+      lat: 10.0270439,
+      lng: 104.0072362,
+      note: "图示 An Thới 乘车站（Nhà ga An Thới，主岛侧出发站）",
+    },
+    {
+      name: "日落小镇与烟花",
+      time: "17:30",
+      lat: 10.0283296,
+      lng: 104.0041565,
+      note: "图示 Kiss Bridge（Cầu Hôn），日落小镇核心区",
+    },
+    // OSM Nominatim 2026-09-18 实查、display_name 逐条核对：
+    // Hòn Móng Tay（place=islet，Đặc khu Phú Quốc）/ Nhà ga An Thới
+    // （aerialway/station，Trần Hưng Đạo，Sun Premier Village Primavera）/
+    // Cầu Hôn（man_made/bridge，2 An Thới）。
+    // 12:30“午餐与休整”为码头附近简餐、无固定点位，故意不列；
+    // 编号 1–3 对应时间线第 1、3、4 项。
+  ],
+  // Day 17 富国岛《度假日 · 岛味收官》全部为泛指停留（酒店慢早餐/泳池与SPA/
+  // 海岛机动时段/海边告别晚餐），无精确可核验坐标，故意不列，保持城市级地图。
 };
 
 /** 返回某天的站点坐标；没有则返回 undefined（调用方回退到城市级标记） */
