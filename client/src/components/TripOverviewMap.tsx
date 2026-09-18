@@ -4,11 +4,11 @@ import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import cities from "@/data/cities.json";
 
-interface CityStop {
+export interface TripStop {
   id: string;
   zh: string;
   en: string;
-  days: number[];
+  days: [number, number] | number[];
   dates: string;
 }
 
@@ -28,16 +28,26 @@ function markerIcon(order: number) {
 }
 
 /**
- * 行程首页“20天路线总览”：与顶级地图页共用 CITY_COORDS 的实时 Leaflet 地图，
+ * 行程首页“路线总览”：与顶级地图页共用 CITY_COORDS 的实时 Leaflet 地图，
  * 取代原来内容过时的静态总览图。点标记可看天数并跳转。
+ *
+ * stops 可选：传入云端规划解析出的城市站点（城市顺序/天数随规划变化）；
+ * 不传则回退静态 cities.json。
  */
-export default function TripOverviewMap() {
+export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
   const mapEl = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapStops: TripStop[] =
+    stops && stops.length ? stops : (cities as TripStop[]);
+  const stopsKey = mapStops
+    .map((s) => `${s.id}:${s.days[0]}-${s.days[1]}`)
+    .join("|");
+  const totalDays = mapStops.length
+    ? mapStops[mapStops.length - 1].days[1]
+    : 20;
 
   useEffect(() => {
-    if (!mapEl.current || mapRef.current) return;
-    const stops = cities as CityStop[];
+    if (!mapEl.current) return;
+    const cur = mapStops;
     const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     const map = L.map(mapEl.current, {
       zoomControl: true,
@@ -52,7 +62,7 @@ export default function TripOverviewMap() {
       },
     ).addTo(map);
 
-    const latlngs = stops.map((s) => {
+    const latlngs = cur.map((s) => {
       const c = CITY_COORDS[s.id];
       return L.latLng(c[0], c[1]);
     });
@@ -63,7 +73,7 @@ export default function TripOverviewMap() {
       dashArray: "8 6",
     }).addTo(map);
 
-    stops.forEach((s, i) => {
+    cur.forEach((s, i) => {
       const c = CITY_COORDS[s.id];
       L.marker([c[0], c[1]], { icon: markerIcon(i + 1) })
         .bindPopup(
@@ -77,18 +87,18 @@ export default function TripOverviewMap() {
     });
 
     map.fitBounds(L.latLngBounds(latlngs).pad(0.18));
-    mapRef.current = map;
     return () => {
       map.remove();
-      mapRef.current = null;
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stopsKey]);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
       <div ref={mapEl} className="w-full z-0" style={{ height: 300 }} />
       <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-        20天路线总览 · 曼谷 → 清迈 → 普吉 → 槟城 → 吉隆坡 → 胡志明市 → 富国岛 → 新加坡 · 点标记查看天数
+        {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
+        点标记查看天数
       </p>
     </div>
   );

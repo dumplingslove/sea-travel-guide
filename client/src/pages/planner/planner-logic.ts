@@ -31,6 +31,13 @@ import {
 /* 景点详细信息：攻略站 8 城 69 个景点的完整条目（名称/关键信息/游览重点/怎么安排），
    供分步规划 Step1 选城时直接结合决策，不再只看城市名。 */
 import { attractions } from "../../guide/data";
+import {
+  savePlannerPlan,
+  loadPlannerPlan,
+  cachePlannerPlanLocally,
+  type PlannerPlan,
+  type LoadedPlan,
+} from "../../guide/plannerSchedule";
 
 /* ---------------- 类型 ---------------- */
 interface ClassicSource { title: string; url: string; author?: string; date?: string; excerpt?: string; commentExcerpt?: string; verdict?: string; readNote?: string }
@@ -707,7 +714,7 @@ function planText(){
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
 function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
-function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage()}
+function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage();cachePlannerLocal()}
 
 /* ================= 🧭 分步规划向导 ================= */
 interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string }
@@ -902,6 +909,50 @@ function wzWire(){
 }
 function initWizard(){ wzRender() }
 
+/* ---- 云端规划持久化（Supabase sea_planner_schedules + 本地缓存回退） ---- */
+function serializePlan(): PlannerPlan{
+  return {
+    version:1,
+    selected:[...state.selected],
+    coupleDays:state.coupleDays,
+    remainingMode:state.remainingMode,
+    pace:state.pace,
+    start:state.start,
+    schedule:Object.fromEntries(Object.entries(state.schedule).map(([k,v])=>[k,{city:v.city,mode:v.mode}])),
+    wz:{cities:[...wz.cities],days:{...wz.days},order:[...wz.order],start:wz.start,modes:{...wz.modes}},
+    hotelSelections:{},
+    flightSelections:{},
+  };
+}
+function applyLoadedPlan(p: PlannerPlan){
+  if(Array.isArray(p.selected)&&p.selected.length) state.selected=[...p.selected];
+  if(typeof p.coupleDays==="number") state.coupleDays=p.coupleDays;
+  if(p.remainingMode) state.remainingMode=p.remainingMode;
+  if(p.pace) state.pace=p.pace;
+  if(p.start) state.start=p.start;
+  if(p.schedule&&typeof p.schedule==="object") state.schedule=JSON.parse(JSON.stringify(p.schedule));
+  if(p.wz){
+    if(Array.isArray(p.wz.cities)&&p.wz.cities.length) wz.cities=[...p.wz.cities];
+    if(p.wz.days&&typeof p.wz.days==="object") wz.days={...p.wz.days};
+    if(Array.isArray(p.wz.order)&&p.wz.order.length) wz.order=[...p.wz.order];
+    if(p.wz.start) wz.start=p.wz.start;
+    if(p.wz.modes&&typeof p.wz.modes==="object") wz.modes={...p.wz.modes};
+  }
+  state.edited=true; /* 已加载的规划不再被 buildRecommendedSchedule 覆盖 */
+  const sd=S.getElementById("startDate") as HTMLInputElement|null; if(sd&&state.start) sd.value=state.start;
+}
+function setSyncNote(t: string){ const n=S.getElementById("plannerSyncNote"); if(n) n.textContent=t; }
+function fmtSyncTime(iso: string){ try{ const d=new Date(iso); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }catch{ return ""; } }
+let lastCacheJson="";
+function cachePlannerLocal(){
+  try{
+    const plan=serializePlan(), json=JSON.stringify(plan);
+    if(json===lastCacheJson) return;
+    lastCacheJson=json;
+    cachePlannerPlanLocally(plan,"本机自动缓存");
+  }catch{/* 缓存失败不影响主流程 */}
+}
+
 // init controls
 ([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
 el("daysMinus").onclick=()=>{state.coupleDays=Math.max(5,state.coupleDays-1);state.edited=false;updateAll()};
@@ -912,13 +963,54 @@ el("applyRecommendation").onclick=()=>{state.edited=false;buildRecommendedSchedu
 el("startDate").onchange=e=>{state.start=(e.target as HTMLInputElement).value;state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage()};
 el("resetRecommended").onclick=()=>{state.edited=false;buildRecommendedSchedule();renderCalendar();renderCoverage();toast("已恢复智能推荐")};
 el("copyPlan").onclick=copyPlan;
+el("savePlanCloud").onclick=async ()=>{
+  const btn=el("savePlanCloud") as HTMLButtonElement; btn.disabled=true;
+  try{
+    setSyncNote("正在保存到云端…");
+    const loaded=await savePlannerPlan(serializePlan());
+    lastCacheJson=JSON.stringify(loaded.plan);
+    setSyncNote(`✓ 已保存到云端 · ${loaded.updatedByName} · ${fmtSyncTime(loaded.updatedAt)}；首页、每日详情与地图已同步更新。`);
+    toast("规划已保存到云端，全站已同步更新");
+  }catch(err){
+    const plan=serializePlan(); lastCacheJson=JSON.stringify(plan);
+    if((err as Error)?.message==="not-logged-in"){
+      const cached=cachePlannerPlanLocally(plan,"本机（未登录）");
+      setSyncNote(`⚠️ 未登录：已保存到本机缓存（${fmtSyncTime(cached.updatedAt)}），刷新不丢；登录后点「保存到云端」同步全站。`);
+      toast("未登录，已暂存到本机",true);
+    }else{
+      cachePlannerPlanLocally(plan,"本机");
+      setSyncNote("⚠️ 云端保存失败，已保留本机缓存；网络恢复后重试。");
+      toast("云端保存失败，已保留本机缓存",true);
+    }
+  }finally{ btn.disabled=false; }
+};
 el("calModeDecision").onclick=()=>{state.calMode="decision";syncCalMode();renderCalendar()};
 el("calModeSchedule").onclick=()=>{state.calMode="schedule";syncCalMode();renderCalendar()};
 syncCalMode();
 el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
 el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
-initTransport();renderHotels();buildRecommendedSchedule();initWizard();updateAll();
+initTransport();renderHotels();initWizard();
+
+/* 异步加载云端最新规划（卸载安全：中途卸载则丢弃结果） */
+let alive=true;
+(async()=>{
+  let loaded: LoadedPlan|null=null;
+  try{ loaded=await loadPlannerPlan(); }catch{ loaded=null; }
+  if(!alive) return;
+  if(loaded&&loaded.plan&&Object.keys(loaded.plan.schedule||{}).length){
+    applyLoadedPlan(loaded.plan);
+    lastCacheJson=JSON.stringify(loaded.plan);
+    setSyncNote(loaded.source==="cloud"
+      ? `☁️ 已加载云端最新规划 · ${loaded.updatedByName} 保存于 ${fmtSyncTime(loaded.updatedAt)}`
+      : `📴 云端不可用，已加载本机缓存 · ${loaded.updatedByName} ${fmtSyncTime(loaded.updatedAt)}`);
+    wzRender();
+  }else{
+    buildRecommendedSchedule();
+    setSyncNote("☁️ 未找到云端规划，已按推荐排期；调整后点「保存到云端」同步到全站。");
+  }
+  updateAll();
+})();
 
   /* ---- 研究数据来源说明（原生集成追加） ---- */
   {
@@ -934,5 +1026,5 @@ initTransport();renderHotels();buildRecommendedSchedule();initWizard();updateAll
     }
   }
 
-  return () => { document.removeEventListener("keydown", onKeyDown); };
+  return () => { alive=false; document.removeEventListener("keydown", onKeyDown); };
 }

@@ -1,25 +1,28 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin, UtensilsCrossed, Lightbulb } from "lucide-react";
-import itinerary from "@/data/itinerary.json";
 import { days as detailDays } from "@/guide/data";
 import DayMap from "@/components/DayMap";
+import {
+  usePlanItinerary,
+  detailDayForPlanDay,
+  type PlanDay,
+} from "@/guide/plannerSchedule";
 
-type Day = {
-  day: number;
-  date: string;
-  weekday: string;
-  city: string;
-  city_zh: string;
-  city_id: string;
-};
-
-const days: Day[] = itinerary as Day[];
+type Day = PlanDay;
 
 export default function DayDetail() {
   const { n } = useParams<{ n: string }>();
   const dayNum = Number(n);
+  const plan = usePlanItinerary();
+  const days: Day[] = plan.days;
   const day = days.find((d) => d.day === dayNum);
-  const detail = detailDays.find((d) => d.day === dayNum);
+  const year = plan.dateRangeLong.slice(0, 4);
+  // 攻略正文：云端规划改了城市顺序时，按“该城市在规划中的第 N 天”映射原版攻略
+  const { detail, shifted, ordinalInCity } = detailDayForPlanDay(
+    plan.source === "cloud" ? plan.days : null,
+    dayNum,
+    detailDays
+  );
   const prevDay = days.find((d) => d.day === dayNum - 1) || null;
   // 转场航段名称：取当天行程里带“飞”字的站点（如“普吉飞槟城”）
   const transferLabel = detail?.stops.find((s) => s.name.includes("飞"))?.name;
@@ -52,18 +55,23 @@ export default function DayDetail() {
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
         <p className="text-xs font-semibold text-teal-700 mb-1">
-          DAY {day.day} / 20
+          DAY {day.day} / {plan.totalDays}
         </p>
         <h1 className="text-3xl font-bold mb-1">{day.city_zh}</h1>
         {detail && <p className="text-lg text-gray-700 mb-2">{detail.title}</p>}
         <p className="text-gray-500 flex items-center gap-4 text-sm">
           <span className="flex items-center gap-1">
-            <CalendarDays size={14} /> 2026-{day.date} {day.weekday}
+            <CalendarDays size={14} /> {year}-{day.date} {day.weekday}
           </span>
           <span className="flex items-center gap-1">
             <MapPin size={14} /> {day.city}
           </span>
         </p>
+        {shifted && detail && (
+          <p className="text-xs text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 mt-3">
+            ☁️ 本日城市已按你的云端规划调整为{day.city_zh}；以下攻略取自{day.city_zh}第 {ordinalInCity} 天的原版安排。
+          </p>
+        )}
       </div>
 
       {detail ? (

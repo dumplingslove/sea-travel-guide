@@ -1,28 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, CalendarDays, ChevronRight, UtensilsCrossed } from "lucide-react";
-import itinerary from "@/data/itinerary.json";
-import cities from "@/data/cities.json";
 import food from "@/data/food.json";
 import TripOverviewMap from "@/components/TripOverviewMap";
+import {
+  usePlanItinerary,
+  type PlanDay,
+  type PlanCityStop,
+} from "@/guide/plannerSchedule";
 
-type Day = {
-  day: number;
-  date: string;
-  weekday: string;
-  city: string;
-  city_zh: string;
-  city_id: string;
-};
-
-type City = {
-  id: string;
-  zh: string;
-  en: string;
-  country_zh: string;
-  days: [number, number];
-  dates: string;
-};
+type Day = PlanDay;
+type City = PlanCityStop;
 
 type FoodCity = {
   id: string;
@@ -33,24 +21,26 @@ type FoodCity = {
   items: string[];
 };
 
-const days: Day[] = itinerary as Day[];
-const cityList: City[] = cities as City[];
 const foodList: FoodCity[] = food as FoodCity[];
 
 type HomeTab = "itinerary" | "food";
 
 export default function Home() {
   const [tab, setTab] = useState<HomeTab>("itinerary");
+  const plan = usePlanItinerary();
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Hero */}
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-teal-900 mb-3">
-          东南亚 20 天旅行指南
+          东南亚 {plan.totalDays} 天旅行指南
         </h1>
         <p className="text-gray-600 flex items-center justify-center gap-2">
           <CalendarDays size={16} />
-          2026-12-12 ～ 2026-12-31 · 8 城 · 4 国
+          {plan.dateRangeLong} · {plan.cityCount} 城 · 4 国
+          {plan.source === "cloud" && (
+            <span className="text-teal-700 font-medium">· 云端规划</span>
+          )}
         </p>
       </div>
 
@@ -90,12 +80,25 @@ export default function Home() {
 }
 
 function ItineraryTab() {
+  const plan = usePlanItinerary();
+  const days: Day[] = plan.days;
+  const cityList: City[] = plan.cityStops;
+  const stopsKey = cityList
+    .map((c) => `${c.id}:${c.days[0]}-${c.days[1]}`)
+    .join("|");
   return (
     <>
-      {/* 20天路线总览实时地图 */}
-      <h2 className="text-xl font-bold mb-3">20天路线总览</h2>
+      {/* 20天路线总览实时地图（云端规划优先） */}
+      <h2 className="text-xl font-bold mb-3">{plan.totalDays}天路线总览</h2>
+      {plan.source === "cloud" && plan.updatedByName && (
+        <p className="text-xs text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 mb-3">
+          ☁️ 已按云端规划更新（{plan.updatedByName}
+          {plan.updatedAt ? ` · ${plan.updatedAt.slice(0, 16).replace("T", " ")}` : ""}
+          ）· <Link to="/planner" className="underline font-medium">去行程规划调整</Link>
+        </p>
+      )}
       <div className="mb-8">
-        <TripOverviewMap />
+        <TripOverviewMap key={stopsKey} stops={plan.cityStops} />
       </div>
 
       {/* City cards */}
@@ -125,7 +128,7 @@ function ItineraryTab() {
       </div>
 
       {/* Day list */}
-      <h2 className="text-xl font-bold mb-4">20 天行程</h2>
+      <h2 className="text-xl font-bold mb-4">{plan.totalDays} 天行程</h2>
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-100">
         {days.map((d) => (
           <Link

@@ -69,9 +69,13 @@
 
     <section id="calendar" class="panel">
       <div class="section-head">
-        <div><p class="eyebrow">STEP 02</p><h2>把建议放进 12 月</h2><p class="lede">点击任意日期，可改城市或模式。所有改动只在本次打开期间有效；复制行程后可粘贴到你们常用的笔记里。</p></div>
-        <button class="ghost" id="copyPlan">复制当前行程</button>
+        <div><p class="eyebrow">STEP 02</p><h2>把建议放进 12 月</h2><p class="lede">点击任意日期，可改城市或模式。点「保存到云端」后，首页行程、每日详情与地图都会同步更新；两个账号共享同一份规划，刷新不丢。</p></div>
+        <div class="section-head-actions" style="display:flex;gap:8px;flex-shrink:0">
+          <button class="primary" id="savePlanCloud">保存到云端</button>
+          <button class="ghost" id="copyPlan">复制当前行程</button>
+        </div>
       </div>
+      <p class="planner-sync-note micro" id="plannerSyncNote" role="status" style="margin:0 0 12px">正在加载云端规划…</p>
       <div class="calendar-tools">
         <div class="field"><label for="startDate">开始日期</label><input id="startDate" type="date" aria-label="开始日期" min="2026-12-01" max="2026-12-31" value="2026-12-12"></div>
         <button class="ghost" id="resetRecommended">重新按推荐排</button>

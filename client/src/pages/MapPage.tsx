@@ -1,17 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import cities from "@/data/cities.json";
 import { CITY_COORDS } from "@/data/cityCoords";
+import {
+  usePlanItinerary,
+  type PlanCityStop,
+} from "@/guide/plannerSchedule";
 
-interface CityStop {
-  id: string;
-  zh: string;
-  en: string;
-  country_zh: string;
-  days: [number, number];
-  dates: string;
+interface CityStop extends PlanCityStop {
   lat: number;
   lng: number;
 }
@@ -19,13 +16,13 @@ interface CityStop {
 /** 8 城坐标（WGS84），与 cities.json 的顺序一致即行程顺序；数据见 @/data/cityCoords */
 const COORDS: Record<string, [number, number]> = CITY_COORDS;
 
-const STOPS: CityStop[] = (cities as Array<Omit<CityStop, "lat" | "lng">>).map(
-  (c) => {
+function withCoords(stops: PlanCityStop[]): CityStop[] {
+  return stops.map((c) => {
     const coord = COORDS[c.id];
     if (!coord) throw new Error(`missing coords for city ${c.id}`);
     return { ...c, lat: coord[0], lng: coord[1] };
-  },
-);
+  });
+}
 
 function markerIcon(order: number, active: boolean) {
   return L.divIcon({
@@ -43,11 +40,39 @@ function markerIcon(order: number, active: boolean) {
   });
 }
 
+/**
+ * 地图页：城市站点来自全站共享的行程事实源（云端规划优先，静态回退）。
+ * 站点变化时整个画布按 key 重建，保证地图与列表一致。
+ */
 export default function MapPage() {
+  const plan = usePlanItinerary();
+  const stops = useMemo(() => withCoords(plan.cityStops), [plan]);
+  const stopsKey = stops
+    .map((s) => `${s.id}:${s.days[0]}-${s.days[1]}`)
+    .join("|");
+  return (
+    <MapCanvas
+      key={stopsKey}
+      stops={stops}
+      source={plan.source}
+      updatedByName={plan.updatedByName}
+    />
+  );
+}
+
+function MapCanvas({
+  stops,
+  source,
+  updatedByName,
+}: {
+  stops: CityStop[];
+  source: "cloud" | "static";
+  updatedByName?: string;
+}) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
-  const [activeId, setActiveId] = useState<string>(STOPS[0].id);
+  const [activeId, setActiveId] = useState<string>(stops[0].id);
 
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
@@ -64,7 +89,7 @@ export default function MapPage() {
       },
     ).addTo(map);
 
-    const latlngs = STOPS.map((s) => L.latLng(s.lat, s.lng));
+    const latlngs = stops.map((s) => L.latLng(s.lat, s.lng));
     L.polyline(latlngs, {
       color: "#0f766e",
       weight: 3,
@@ -72,7 +97,7 @@ export default function MapPage() {
       dashArray: "8 6",
     }).addTo(map);
 
-    markersRef.current = STOPS.map((s, i) => {
+    markersRef.current = stops.map((s, i) => {
       const m = L.marker([s.lat, s.lng], { icon: markerIcon(i + 1, false) });
       m.bindPopup(
         `<div style="min-width:180px;font-family:inherit">
@@ -95,12 +120,12 @@ export default function MapPage() {
       mapRef.current = null;
       markersRef.current = [];
     };
-  }, []);
+  }, [stops]);
 
   const focusCity = (id: string) => {
     setActiveId(id);
-    const idx = STOPS.findIndex((s) => s.id === id);
-    const s = STOPS[idx];
+    const idx = stops.findIndex((s) => s.id === id);
+    const s = stops[idx];
     const map = mapRef.current;
     if (!map || !s) return;
     markersRef.current.forEach((m, i) =>
@@ -111,12 +136,24 @@ export default function MapPage() {
     window.setTimeout(() => marker.openPopup(), 850);
   };
 
+  const firstDate = stops[0]?.dates.split(" ~ ")[0] ?? "";
+  const lastDate = stops[stops.length - 1]?.dates.split(" ~ ")[1] ?? "";
+  const totalDays = stops[stops.length - 1]?.days[1] ?? 0;
+
   return (
     <div className="bg-[#f7f4ee] min-h-[calc(100vh-64px)]">
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-teal-900">20 天行程地图</h1>
+        <h1 className="text-2xl font-bold text-teal-900">
+          {totalDays} 天行程地图
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
-          12-12 ~ 12-31 · 8 城 · 按数字顺序走完全程，点击城市可定位
+          {firstDate} ~ {lastDate} · {stops.length} 城 · 按数字顺序走完全程，点击城市可定位
+          {source === "cloud" && updatedByName && (
+            <span className="text-teal-700">
+              {" "}
+              · 云端规划（{updatedByName}）
+            </span>
+          )}
         </p>
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
           <div
@@ -125,7 +162,7 @@ export default function MapPage() {
             style={{ height: "62vh", minHeight: 380 }}
           />
           <ol className="bg-white rounded-2xl border border-teal-900/10 shadow-sm divide-y divide-gray-100 overflow-hidden">
-            {STOPS.map((s, i) => (
+            {stops.map((s, i) => (
               <li key={s.id}>
                 <button
                   onClick={() => focusCity(s.id)}
