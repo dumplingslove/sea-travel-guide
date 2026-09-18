@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { stopCoordsForDay } from "@/data/stopCoords";
 
 interface DayMapProps {
   dayNum: number;
@@ -27,6 +28,22 @@ function dotIcon(label: string, highlight: boolean) {
     iconSize: [30, 30],
     iconAnchor: [15, 15],
     popupAnchor: [0, -14],
+  });
+}
+
+/** 站点级编号标记：圆底白字序号，与当天时间线顺序对应 */
+function numIcon(n: number) {
+  return L.divIcon({
+    className: "sea-daymap-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:28px;height:28px;border-radius:999px;
+      background:#0f766e;color:#ffffff;border:2px solid #ffffff;
+      font-weight:800;font-size:13px;line-height:1;
+      box-shadow:0 2px 8px rgba(15,118,110,.4);
+    ">${n}</span>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -12],
   });
 }
 
@@ -67,6 +84,7 @@ export default function DayMap({
 
     let from: L.LatLng | null = null;
     let to: L.LatLng | null = null;
+    let stopBounds: L.LatLngBounds | null = null;
     if (isTransfer && prevCoord) {
       from = L.latLng(prevCoord[0], prevCoord[1]);
       to = L.latLng(coord[0], coord[1]);
@@ -100,12 +118,34 @@ export default function DayMap({
         .addTo(map);
       map.fitBounds(L.latLngBounds([from, to]).pad(0.35));
     } else {
-      const at = L.latLng(coord[0], coord[1]);
-      to = at;
-      L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
-        .bindPopup(`<b>${cityZh}</b>`)
-        .addTo(map);
-      map.setView(at, 11);
+      // backlog P1 每日地图景点级：有核实坐标的日期画编号站点 + 顺序连线
+      const stops = stopCoordsForDay(dayNum);
+      if (stops) {
+        const pts = stops.map((s) => L.latLng(s.lat, s.lng));
+        stops.forEach((s, i) => {
+          L.marker(pts[i], { icon: numIcon(i + 1) })
+            .bindPopup(
+              `<b>${i + 1} · ${s.name}</b><br><span style="font-size:12px;color:#6b7280">${s.time}${s.note ? ` · ${s.note}` : ""}</span>`,
+            )
+            .addTo(map);
+        });
+        if (pts.length > 1) {
+          L.polyline(pts, {
+            color: "#0f766e",
+            weight: 3,
+            opacity: 0.85,
+          }).addTo(map);
+        }
+        stopBounds = L.latLngBounds(pts).pad(0.18);
+        map.fitBounds(stopBounds);
+      } else {
+        const at = L.latLng(coord[0], coord[1]);
+        to = at;
+        L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
+          .bindPopup(`<b>${cityZh}</b>`)
+          .addTo(map);
+        map.setView(at, 11);
+      }
     }
 
     mapRef.current = map;
@@ -117,6 +157,8 @@ export default function DayMap({
         map.fitBounds(L.latLngBounds([from, to]).pad(0.35), {
           animate: false,
         });
+      } else if (stopBounds) {
+        map.fitBounds(stopBounds, { animate: false });
       } else if (to) {
         map.setView(to, 11, { animate: false });
       }
@@ -144,7 +186,9 @@ export default function DayMap({
       <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
         {isTransfer
           ? `Day ${dayNum} 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""}`
-          : `Day ${dayNum} · ${cityZh}市内游`}
+          : stopCoordsForDay(dayNum)
+            ? `Day ${dayNum} · 站点顺序动线（编号对应当天时间线）`
+            : `Day ${dayNum} · ${cityZh}市内游`}
       </p>
     </div>
   );
