@@ -177,9 +177,9 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     {
       name: "安泰群岛",
       time: "08:00",
-      lat: 10.3001998,
-      lng: 103.8621955,
-      note: "船游日浮潜行程，图示手指岛（Hòn Móng Tay）岛屿位置",
+      lat: 10.0259,
+      lng: 104.0059,
+      note: "船游日浮潜行程，图示安泰群岛内的南边手指岛（Hòn Móng Tay）。注意勿与北边同名岛（Northern Fingernail Island，Vung Bau 外海）混淆，此处为运营商实际带客的浮潜区。",
     },
     {
       name: "跨海缆车",
@@ -196,7 +196,9 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       note: "图示 Kiss Bridge（Cầu Hôn），日落小镇核心区",
     },
     // OSM Nominatim 2026-09-18 实查、display_name 逐条核对：
-    // Hòn Móng Tay（place=islet，Đặc khu Phú Quốc）/ Nhà ga An Thới
+    // Hòn Móng Tay 安泰群岛内南边手指岛（多家运营商明确提醒勿与北边同名岛
+    // Northern Fingernail Island 混淆；mytour.vn 坐标 10°01'33.3"N,104°00'21.2"E
+    // 即 10.0259,104.0059，2026-09-18 修正）/ Nhà ga An Thới
     // （aerialway/station，Trần Hưng Đạo，Sun Premier Village Primavera）/
     // Cầu Hôn（man_made/bridge，2 An Thới）。
     // 12:30“午餐与休整”为码头附近简餐、无固定点位，故意不列；
