@@ -85,6 +85,8 @@ export default function DayMap({
     let from: L.LatLng | null = null;
     let to: L.LatLng | null = null;
     let stopBounds: L.LatLngBounds | null = null;
+    /** 单点位日期：fitBounds 零面积会缩到最大 zoom，改用固定缩放的 setView */
+    let singleStop: L.LatLng | null = null;
     if (isTransfer && prevCoord) {
       from = L.latLng(prevCoord[0], prevCoord[1]);
       to = L.latLng(coord[0], coord[1]);
@@ -136,8 +138,13 @@ export default function DayMap({
             opacity: 0.85,
           }).addTo(map);
         }
-        stopBounds = L.latLngBounds(pts).pad(0.18);
-        map.fitBounds(stopBounds);
+        if (pts.length === 1) {
+          singleStop = pts[0];
+          map.setView(singleStop, 13, { animate: false });
+        } else {
+          stopBounds = L.latLngBounds(pts).pad(0.18);
+          map.fitBounds(stopBounds);
+        }
       } else {
         const at = L.latLng(coord[0], coord[1]);
         to = at;
@@ -159,6 +166,8 @@ export default function DayMap({
         });
       } else if (stopBounds) {
         map.fitBounds(stopBounds, { animate: false });
+      } else if (singleStop) {
+        map.setView(singleStop, 13, { animate: false });
       } else if (to) {
         map.setView(to, 11, { animate: false });
       }
