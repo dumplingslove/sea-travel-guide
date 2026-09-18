@@ -779,6 +779,7 @@ function wzStep1(){
       <p class="micro">🏨 ${esc(m.stayArea)}<span class="wz-src">（${esc(m.staySource)}）</span></p>
       <p class="micro">✈ 直飞通达 ${wzDirectCount(city)}/7 城</p>
       ${wzSpotsHtml(city)}
+      ${wzCovPreview(city)}
     </article>`;
   }).join("");
   return `<div class="section-head"><div><p class="eyebrow">STEP 1/4</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
@@ -798,10 +799,32 @@ function wzSpotsHtml(city: string){
   const items=list.map(a=>`<li><b>${esc(a.name)}</b><span class="wz-spot-meta">${esc(a.meta)}</span><span class="wz-spot-detail">${esc(a.detail)}</span>${a.best?`<span class="wz-spot-best">📋 ${esc(a.best)}</span>`:""}</li>`).join("");
   return `<details class="wz-spots"><summary>🏛 精华景点 ${list.length} 个 · 展开看详情</summary><ul>${items}</ul><a href="/attractions" target="_blank" rel="noopener">在景点指南查看完整攻略 ↗</a></details>`;
 }
+/* 各天数覆盖预览：1–5 天分别覆盖哪几天经典路线、舍弃哪几天（评语+逐日主题+精华命中数） */
+function wzCovRow(city: string, n: number){
+  const route=classicRoutes[city], k=Math.min(n,5), days=route.days.slice(0,5);
+  const verdict=n<=5?route.verdicts[n-1]:"深度版＋留白";
+  const cov=classicCoverage(city,k);
+  const chip=(t:string,cls:string)=>`<span class="spot-chip ${cls}">${esc(t)}</span>`;
+  const dayNum=(t:string)=>days.findIndex(x=>x[0]===t)+1;
+  const covChips=days.slice(0,k).map(([t])=>chip(`Day${dayNum(t)} ${t}`,"must")).join("");
+  const skipChips=days.slice(k).map(([t])=>chip(t,"drop")).join("");
+  const skipLine=skipChips
+    ? `<div class="micro wz-covline"><span class="wz-covlabel">🚫 舍弃</span>${skipChips}</div>`
+    : `<div class="micro wz-covline"><span class="wz-covlabel">🚫 舍弃</span>${n>=5?"5 天经典路线全走完"+(n>5?"，第 6 天为留白机动日":""):"无"}</div>`;
+  return `<div class="wz-covrow"><b>${n} 天</b><span class="micro">${esc(verdict)}</span>
+    <div class="micro wz-covline"><span class="wz-covlabel">✅ 覆盖 ${cov.n}/${cov.total} 精华</span>${covChips}</div>
+    ${skipLine}
+  </div>`;
+}
+function wzCovPreview(city: string){
+  const rows=[1,2,3,4,5].map(n=>wzCovRow(city,n)).join("");
+  return `<details class="wz-cov"><summary>📅 各天数覆盖预览：选 1/2/3/4/5 天分别覆盖／舍弃哪些</summary><div>${rows}</div></details>`;
+}
 function wzStep2(){
   const rows=wz.order.filter(c=>wz.cities.includes(c)).map(city=>{
     const d=wz.days[city]||1, route=classicRoutes[city], verdict=d<=5?route.verdicts[d-1]:"深度版＋留白", cov=classicCoverage(city,Math.min(d,5));
-    return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div></div>
+    return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
+      <details class="wz-cov wz-cov-inline"><summary>看 ${d} 天覆盖／舍弃哪些</summary><div>${wzCovRow(city,d)}</div></details></div>
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天">＋</button></div></div>`;
   }).join("");
   const total=wz.order.filter(c=>wz.cities.includes(c)).reduce((a,c)=>a+(wz.days[c]||1),0);
@@ -891,7 +914,7 @@ function wzWire(){
     (card as HTMLElement).onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle() } };
   });
   /* 景点详情展开区：内部点击／按键不冒泡，避免展开详情时误触卡片选中 */
-  S.querySelectorAll(".wz-spots").forEach(d=>{
+  S.querySelectorAll(".wz-spots,.wz-cov").forEach(d=>{
     (d as HTMLElement).onclick=e=>e.stopPropagation();
     (d as HTMLElement).onkeydown=e=>e.stopPropagation();
   });
