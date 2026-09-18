@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-18T10:48Z",
+ "updated_at": "2026-09-18T16:48Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -2817,8 +2817,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 OTA研究(ota-reviews/penang-newhotels-2026-09-16.md §1): TA 4.8/5、约1,492条，乔治市#12/139、Travelers' Choice 2026；4条带日期原话(含2026年服务差评批判样本)+规范链接(tripadvisor.co.uk)；单条星级快照未显示已如实标注"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 OTA研究：Google Maps地点页需JS渲染、browser.open直读失败，4组关键词搜索无评分/条数引用，未硬闯，诚实pending；需带浏览器的后续任务实读"
+       "status": "done",
+       "note": "2026-09-18只读实查(redo-strict/ota-reviews/penang-2026-09-18.md)：Google Maps 4.6/455条（5★342/4★78/3★16/2★9/1★10）；2条原话（Kate Stevens 5/5 a month ago、Andrew Billmyer 5/5 3 months ago）+规范链接 https://www.google.com/maps/place/Seven+Terraces/@5.4192774,100.3382964,17z；避雷：前台服务态度被多条低星点名、庭院音乐深夜吵、偶发超售（酒店官方已致歉回复）"
       },
       "chinese_sites": {
        "status": "partial",
@@ -3171,8 +3171,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研：Planters Lounge 4.3/144条，2-3条带时间原话+链接+推荐理由+避雷点，报告见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/penang-recovery-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §4)：未找到携程/大众点评/马蜂窝的E&O酒店下午茶公开点评页 → pending。"
+       "status": "unavailable",
+       "note": "【2026-09-18核实】判不可补齐：携程/Trip.com/马蜂窝/大众点评均无E&O下午茶独立餐厅listing。8组搜索证据（Trip.com仅Moments用户帖jessie fang 2025-06-10、其附带9.2/1851条为酒店listing；马蜂窝无POI；大众点评无餐厅页+反爬；携程酒店listing 9.2/约1840条，'下午茶很棒(35)'为住客标签非独立评价）。报告：redo-strict/ota-reviews/penang-2026-09-18.md §E&O下午茶"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5295,8 +5295,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §6)：携程中文站 hotels.ctrip.com 无该酒店页（仅Trip.com国际版，不在中文站范围内）→ pending。"
+       "status": "unavailable",
+       "note": "【2026-09-18核实】判不可补齐：携程/Trip.com/马蜂窝均无标准酒店listing（携程站内搜仅当作地标参考、Google'富国岛融合度假酒店 携程'无酒店页、Google 'Fusion Resort Phu Quoc' trip.com/mafengwo 仅Trip Moments用户动态页）。报告：redo-strict/ota-reviews/phuquoc-2026-09-18.md §1"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5575,8 +5575,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §9)：未找到携程/大众点评/马蜂窝的公开点评页 → pending。"
+       "status": "done",
+       "note": "2026-09-18只读实查(redo-strict/ota-reviews/phuquoc-2026-09-18.md §2)：Trip.com餐厅页on-the-rock-restaurant-beach-bar-145024844，4.1/5、7条；2条原话（免尾5.0 2025-04-28、_TI***aj 3.0 2026-04-03）+规范链接；备选同地点组Ocean Club-Regent Phu Quoc 4.4/5、8条，2条原话（XCNR_****00378 5.0 2025-09-30、_TI***9p 2025-08-22）；避雷：评价基数小、部分页面截断"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5680,8 +5680,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §11)：携程/马蜂窝无独立POI页；与携程\"白沙滩/Sao Beach\"为不同海滩不可混用 → pending。"
+       "status": "done",
+       "note": "2026-09-18只读实查(redo-strict/ota-reviews/phuquoc-2026-09-18.md §3)：Trip.com景点页khem-beach-36232051，4.8/5、10条；2条原话（DEAR张小球4/5 2021-02-27、泰宁根吴承恩4/5 2021-02-11）+规范链接；避雷：多为度假村私家沙滩、遮阴少需防晒"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5715,8 +5715,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §12)：携程An Thoi页（5340716）渲染为\"undefined\"标题、无点评内容，属无效POI页 → pending。"
+       "status": "done",
+       "note": "2026-09-18只读实查(redo-strict/ota-reviews/phuquoc-2026-09-18.md §4)：Trip.com玩乐产品South Phu Quoc Pro Snorkeling Tour（行程含Quan Dao An Thoi）43454611，4.9/5、90条（390人预订）；2条原话（Anonymous 5/5 2026-08-31、Itsjennnnny 3/5 2026-03-09）+规范链接；避雷：接送时间被反复更改、安时群岛门票另付"
       },
       "xiaohongshu": {
        "posts": 0,
