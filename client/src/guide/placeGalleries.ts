@@ -979,6 +979,11 @@ import g976 from "./assets/galleries/9f4f7f0bc3b5/2.jpg";
 import g977 from "./assets/galleries/9f4f7f0bc3b5/3.jpg";
 import g978 from "./assets/galleries/9f4f7f0bc3b5/4.jpg";
 import g979 from "./assets/galleries/9f4f7f0bc3b5/5.jpg";
+import g980 from "./assets/galleries/83716a8f41f3/1.jpg";
+import g981 from "./assets/galleries/83716a8f41f3/2.jpg";
+import g982 from "./assets/galleries/83716a8f41f3/3.jpg";
+import g983 from "./assets/galleries/83716a8f41f3/4.jpg";
+import g984 from "./assets/galleries/83716a8f41f3/5.jpg";
 
 export type PlacePhoto={src:string;sourceUrl:string;title:string};
 
@@ -1179,6 +1184,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|胡志明市|Bitexco 观景台":[{src:g965,sourceUrl:"https://avopix.com/premium-videos/vietnamese-culture",title:"Bitexco 观景台"},{src:g966,sourceUrl:"https://vietnam.travel/things-to-do/vietnam-360-degrees",title:"Bitexco 观景台"},{src:g967,sourceUrl:"https://easyasiatour.com/vietnam-tours",title:"Bitexco 观景台"},{src:g968,sourceUrl:"https://darsanindia.com/",title:"Darsan India"},{src:g969,sourceUrl:"https://www.pexels.com/photo/bitexco-financial-tower-in-ho-chi-minh-city-skyline-31930689/",title:"Bitexco Financial Tower in Ho Chi Minh City Skyline · Free Stock Photo"}],
   "景点|胡志明市|统一宫":[{src:g970,sourceUrl:"https://www.travelvietnam.com/promotion/discover-mekong.html",title:"统一宫"},{src:g971,sourceUrl:"https://www.culturanomada.com/diario-de-ruta/diario-de-ruta-vietnam/de-paseo-por-la-ciudad-de-ho-chi-minh-dia-19/",title:"统一宫"},{src:g972,sourceUrl:"https://misstourist.com/where-to-stay-in-ho-chi-minh-city-vietnam-best-hotels/",title:"Where to Stay in Ho Chi Minh – 4 Best Districts for Tourists"},{src:g973,sourceUrl:"https://www7.bobaedream.co.kr/view?code=freeb&No=1792454",title:"统一宫"},{src:g974,sourceUrl:"https://tragodi.com/ho-chi-minh-city-the-heart-of-vietnamese-tourism/",title:"Ho Chi Minh City – The Heart of Vietnamese Tourism - Tragodi"}],
   "酒店|曼谷|The Ritz-Carlton, Bangkok":[{src:g975,sourceUrl:"https://travelweekly.com.au/the-ritz-carlton-bangkok-unveils-the-ritz-carlton-suite/",title:"The Ritz-Carlton, Bangkok 到达大堂外车道：墙面酒店铭牌，官方 RC_BKKRB 图片"},{src:g976,sourceUrl:"https://www.ritzcarlton.com/th/hotels/bkkrb-the-ritz-carlton-bangkok/overview/",title:"The Ritz-Carlton, Bangkok 大堂内景：拱形落地窗与莲花池艺术装置，官方万豪图片"},{src:g977,sourceUrl:"https://the-ritz-carlton.bangkokshotels.com/en/",title:"The Ritz-Carlton, Bangkok 客房实拍：大床房白天城景观（经审计确认为本酒店客房）"},{src:g978,sourceUrl:"https://travelweekly.com.au/the-ritz-carlton-bangkok-unveils-the-ritz-carlton-suite/",title:"The Ritz-Carlton, Bangkok 丽思卡尔顿套房第二卧室：落地窗城景观，官方 RC_BKKRB 图片"},{src:g979,sourceUrl:"https://www.countryandtownhouse.com/travel/the-ritz-carlton-bangkok/",title:"The Ritz-Carlton, Bangkok 室外泳池区与木格栅休闲亭，远眺曼谷天际线，官方 RC_BKKRB 图片"}],
+  "酒店|吉隆坡|The St. Regis Kuala Lumpur":[{src:g980,sourceUrl:"https://www.marriott.com/en-gb/hotels/kulxr-the-st-regis-kuala-lumpur/photos/",title:"The St. Regis Kuala Lumpur 塔楼外观：ST REGIS 铭牌，官方 KULXR 图片"},{src:g981,sourceUrl:"https://www.marriott.com/en-gb/hotels/kulxr-the-st-regis-kuala-lumpur/photos/",title:"The St. Regis Kuala Lumpur 皇家套房露台：吉隆坡塔景观，官方 KULXR 图片"},{src:g982,sourceUrl:"https://www.marriott.com/en-gb/hotels/kulxr-the-st-regis-kuala-lumpur/photos/",title:"The St. Regis Kuala Lumpur 泳池畔露台酒吧区黄昏景，官方 KULXR 图片"},{src:g983,sourceUrl:"https://www.marriott.com/en-gb/hotels/kulxr-the-st-regis-kuala-lumpur/photos/",title:"The St. Regis Kuala Lumpur 豪华客房：招牌迷你吧行李箱柜与城景落地窗，官方 KULXR 图片"},{src:g984,sourceUrl:"https://www.marriott.com/en-gb/hotels/kulxr-the-st-regis-kuala-lumpur/photos/",title:"The St. Regis Kuala Lumpur 泳池：LED 屏 ST REGIS KUALA LUMPUR 标识与吉隆坡塔远景，官方 KULXR 图片"}],
  };
 export function getPlaceGallery(kind:'酒店'|'餐厅'|'景点',item:Item){return galleries[`${kind}|${item.city}|${item.name}`]||[]}
 export const placeGalleryPlaceCount=Object.values(galleries).filter(x=>x.length>=5).length;

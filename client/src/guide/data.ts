@@ -29,7 +29,7 @@ export const days:Day[]=[
 
 
 const checked='公开资料与旅行者反馈研究快照 · 2026-09-12；小红书城市经典路线帖（每城10篇，2026-09-15 实读）已用于本行程编排；逐项（每项≥10篇）严格核验仍在进行';
-const H=(name:string,city:string,meta:string,detail:string,best:string,hotelGroup:HotelGroup='Other',brand?:string,loyaltyProgram?:Item['loyaltyProgram'],officialUrl?:string):Item=>({name,city,meta,detail,best,source:checked,hotelGroup,brand,loyaltyProgram:loyaltyProgram||(hotelGroup==='Marriott'?'Marriott Bonvoy':hotelGroup==='Hyatt'?'World of Hyatt':'不适用'),officialUrl,officialCheck:officialUrl?'官方酒店页核验 · 2026-09-13':undefined});
+const H=(name:string,city:string,meta:string,detail:string,best:string,hotelGroup:HotelGroup='Other',brand?:string,loyaltyProgram?:Item['loyaltyProgram'],officialUrl?:string,officialCheckDate?:string):Item=>({name,city,meta,detail,best,source:checked,hotelGroup,brand,loyaltyProgram:loyaltyProgram||(hotelGroup==='Marriott'?'Marriott Bonvoy':hotelGroup==='Hyatt'?'World of Hyatt':'不适用'),officialUrl,officialCheck:officialUrl?('官方酒店页核验 · '+(officialCheckDate||'2026-09-13')):undefined});
 export const hotelCityChecks:HotelCityCheck[]=[
  {city:'曼谷',dates:'12/12–14',checked:'2026-09-13',choices:[
   {group:'Marriott',hotel:'The Ritz-Carlton, Bangkok',brand:'The Ritz-Carlton',loyaltyProgram:'Marriott Bonvoy',officialUrl:'https://www.marriott.com/offers/extended-moments-OFF-160475/BKKRB-the-ritz-carlton-bangkok',status:'verified',note:'官方页面确认酒店位于 189 Wireless Road；按万豪奢华品牌层级列为本城顶级选择。'},
@@ -75,6 +75,7 @@ H('The Prestige Hotel Penang','槟城','8 Gat Lebuh Gereja · 世遗核心区','
 H('Mandarin Oriental Kuala Lumpur','吉隆坡','KLCC · 位置型经典酒店','紧邻双子塔与公园，服务仍是强项；但2026评价多次提到硬件偏旧、维护与早餐反馈分化。','按具体房型确认塔景；重视新硬件可比较Park Hyatt或EQ。'),
 H('Park Hyatt Kuala Lumpur','吉隆坡','Merdeka 118 75–114层 · 2025年8月开业','位于Merdeka 118的75–114层，已于2025年8月开业；252间客房及30米泳池。','适合新酒店与高空景观偏好，避免使用未经证实的高度排名。','Hyatt','Park Hyatt','World of Hyatt','https://www.hyatt.com/park-hyatt/en-US/kulph-park-hyatt-kuala-lumpur'),
 H('Four Seasons Kuala Lumpur','吉隆坡','双子塔旁 · 位置优先','靠近KLCC且有家庭房型，但2026年卫生、设施和服务评价分化；并非所有房型都有塔景。','按房型图确认景观，不以未证实的无遮挡角度作为订房依据。'),
+H('The St. Regis Kuala Lumpur','吉隆坡','KL Sentral 旁 · 瑞吉 · 万豪系','官方资料 2026-09-17 已核验：No 6 Jalan Stesen Sentral 2，紧邻 KL Sentral 交通枢纽；入住 15:00、退房 12:00；淡季参考约 RM 836/晚起（12 月旺季房价尚未核实）。Google 4.6/5（约 4,135 条）、Trip.com 8.9/10；2025 年获 Tatler 马来西亚年度酒店与最佳城市酒店。208 间客房及套房、7 家餐厅、Iridium 水疗、户外泳池与管家服务。Marriott Titanium 可按会员计划享房型升级、酒廊与早餐等权益——本店的具体品牌例外条款（早餐/酒廊/套房升级是否适用）尚未逐项核实，订房前以官网与前台确认为准。','Titanium 先按房型、景观与含税总价比较，确认升级与早餐条款后再下单。','Marriott','St. Regis','Marriott Bonvoy','https://www.marriott.com/en-us/hotels/kulxr-the-st-regis-kuala-lumpur/overview/','2026-09-17'),
 H('Park Hyatt Saigon','胡志明市','2 Lam Son Square · 245间客房','老牌奢华酒店，园景泳池与服务稳定；“服务第一”和“圣诞装饰出名”均无充分依据。','想要稳妥位置与经典风格可优先。','Hyatt','Park Hyatt','World of Hyatt','https://www.hyatt.com/park-hyatt/en-US/saiph-park-hyatt-saigon'),
 H('The Reverie Saigon','胡志明市','Times Square · LHW成员','意式巴洛克极致奢华风，审美明显两极；高层景观和服务是强项，也有临街夜间噪音反馈。','先看官网或OTA实拍；怕吵者要求高楼层、远离夜店一侧。'),
 H('Caravelle Saigon','胡志明市','19–23 Lam Son Square · 1959年开业','1959年圣诞前夜开业，曾是国际战地记者据点；位置与历史突出，但设施有年头。','重历史与位置可选，追求新奢硬件则比较Park Hyatt或Reverie。'),
