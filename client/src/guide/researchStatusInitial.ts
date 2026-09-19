@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-19T16:48Z",
+ "updated_at": "2026-09-19T22:48:00Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1713,13 +1713,13 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：契迪龙寺Trip.com 4.8/5、2,187条，3条原话（_TI***xy 2026-08-02、Kenneth0101 2025-02-13、Taryn 2019-10-05）；帕辛寺 4.8/5、1,085条，3条原话（SO_RelaX 2026-05-31、_TS***ql 2019-09-28、TALALOM 2019-07-03）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 6,
+       "posts": 10,
        "target": 10,
-       "status": "partial",
-       "note": "2026-09-19 16:00 UTC 主会话严格重验新增帖6（杨威利喝红茶《契迪龙寺大塔》2025-08-25 中立：正文+评论5条实读，图片11张逐张核验图文相符，个人号非商业，全程只读）→ 现 6/10 partial（推荐4/中立1/不推荐1）；证据文件：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md §帖6。限流记录：同轮另1帖图片区\"请刷新试试\"触发立即停止，未计入、未刷新重试，会话保持原状。还差4篇，队列跑完后回头补（不降标准）。",
+       "status": "done",
+       "note": "【2026-09-19 20:25 UTC主会话串行收尾轮完成10/10】推荐5/中立2/不推荐3。#1陪伴小七长大(契迪龙寺,推荐) #2Aloka灯(帕辛寺,推荐) #3半格光纪(帕辛寺,推荐) #4桃黛子(契迪龙寺,推荐) #5别看我只是一只羊(契迪龙寺,不推荐) #6杨威利喝红茶(契迪龙寺,中立) #7又想旅游了(契迪龙寺,中立) #8momo(契迪龙寺,不推荐) #9星野(帕辛寺,推荐) #10闭着眼睛走(帕辛寺,不推荐)。评论区真实打开滚动实读（#1以父代理档案为准、#3半格光纪0条待后补）；图片逐张核验；剔除合集/商业/AI嫌疑；只读不互动。证据：redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md（文件名保留PARTIAL，正文状态已更新为done）",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md",
-       "verified_at": "2026-09-19T13:50Z",
-       "posts_2024_2026": 6
+       "verified_at": "2026-09-19T20:24Z",
+       "posts_2024_2026": 10
       },
       "photos": {
        "verified": 6,
@@ -6853,7 +6853,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor190、Google Maps191、中文站185、小红书21、照片191、详情193 完成（done）；六类全部完成 16 项（曼谷10/清迈6）。（2026-09-19 10:53 UTC：程序重算；项级数据与 last-db-push（10:53Z）sha 一致，DB 10:50:48Z get_research_status 195项逐项0-diff；因他农XHS partial→done flip已推，DB摘要TA190/GM191/CS185/XHS21/PH191/DE193）",
+ "summary": "共195项：TripAdvisor190、Google Maps191、中文站185、小红书22、照片191、详情193；六类全部完成17项(DB)",
  "total_locations": 195,
- "complete_items": 0
+ "complete_items": 17
 };
