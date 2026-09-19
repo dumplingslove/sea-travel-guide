@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-19T05:05Z",
+ "updated_at": "2026-09-19T10:53Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -12,7 +12,7 @@ export const initialResearchStatus = {
   "bangkok": {
    "name": "曼谷",
    "total": 32,
-   "complete": 9,
+   "complete": 10,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -1120,7 +1120,7 @@ export const initialResearchStatus = {
   "chiangmai": {
    "name": "清迈",
    "total": 20,
-   "complete": 2,
+   "complete": 6,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1642,11 +1642,11 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com中文 4.7/5、3,636条；3条带作者/日期原话（Aikapat 5/5 2025-05-30、ConnyW89 4/5 2024-01-02、Truder 5/5 2023-12-03）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 3,
+       "posts": 10,
        "target": 10,
-       "status": "partial",
+       "status": "done",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item15-doisuthep-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中：3/10（帖3 shuishuiceline 2026-09-19T02:04Z 落盘）；证据文件同 evidence_file"
+       "note": "xhs-peritem-backfill 严格重验完成：10/10 done（帖9 Jin 2026-08-13 推荐；帖10 陪伴小七长大 约2026-09-13 推荐；2026-09-19T09:17Z）；本体评价 推荐5/中立偏负面1/不推荐1，另中立游览体验3（摄影指南/避雷旁摊位/避雷野狗）；证据文件同 evidence_file"
       },
       "photos": {
        "verified": 5,
@@ -1677,10 +1677,10 @@ export const initialResearchStatus = {
        "note": "2026-09-14 中文站补齐：Trip.com 4.7/5、181条评论＋马蜂窝91条；2条带日期原话（Doro 2019-01-03/HenryQian 2019-05-17）；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
       },
       "xiaohongshu": {
-       "posts": 1,
+       "posts": 10,
        "target": 10,
-       "status": "partial",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（银河系冲浪手《清迈出发1.5h｜茵他侬山雨季全攻略》）；缺9篇，候选充足（泰国糖糖/飞天小白龙/Felix/闭眼冲浪/暂停一下研究所/迪迪in泰国等）待核实；商业号已剔除。证据：redo-strict/chiangmai-item16-doiinthanon-PARTIAL-2026-09-15.md",
+       "status": "done",
+       "note": "xhs-peritem-backfill 严格重验完成：10/10 done（帖8 不爱吃肉🥩 2026-09-03 推荐 18图；帖9 七 2026-09-08 推荐 19图；帖10 Ginger 2026-09-16 推荐 16图18评论；2026-09-19T10:13Z；09:33Z限流后40分钟温和复测恢复，全程无验证码/限流）；推荐9（银河系冲浪手/Felix/壹/飞天小白龙/暂停一下研究所/闭眼冲浪/不爱吃肉🥩/七/Ginger）/中立1（迪迪in泰国\"去一次就好\"）/不推荐0；评论全部实读，待补0；证据文件同 evidence_file",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item16-doiinthanon-PARTIAL-2026-09-15.md"
       },
       "photos": {
@@ -6851,7 +6851,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor189、Google Maps188、中文站168、小红书19、照片191、详情193 完成（done）；六类全部完成 11 项。（2026-09-17 07:48 UTC：程序重算；项级数据与 last-db-push（07:20Z）sha 一致，DB 07:22:20Z get_research_status 195项逐项0-diff，本轮仅更新 updated_at，未推送）",
+ "summary": "共 195 项（2026-09-16 +2 万豪钛金增补酒店：曼谷雅典娜、胡志明市喜来登）：TripAdvisor190、Google Maps191、中文站185、小红书21、照片191、详情193 完成（done）；六类全部完成 16 项（曼谷10/清迈6）。（2026-09-19 10:53 UTC：程序重算；项级数据与 last-db-push（10:53Z）sha 一致，DB 10:50:48Z get_research_status 195项逐项0-diff；因他农XHS partial→done flip已推，DB摘要TA190/GM191/CS185/XHS21/PH191/DE193）",
  "total_locations": 195,
  "complete_items": 0
 };
