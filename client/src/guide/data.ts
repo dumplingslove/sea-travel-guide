@@ -58,6 +58,8 @@ export const hotelCityChecks:HotelCityCheck[]=[
 ];
 export const hotels:Item[]=[
 H('The Ritz-Carlton, Bangkok','曼谷','Wireless Road · 丽思卡尔顿 · 万豪系','官方页面 2026-09-13 已核验：在营、位于 189 Wireless Road，参与 Marriott Bonvoy。Marriott Titanium 可按会员计划享房型升级、酒廊与早餐等权益——本店的具体品牌例外条款（早餐/酒廊/套房升级是否适用）尚未逐项核实，订房前以官网与前台确认为准。','Titanium 先按房型、景观与含税总价比较，确认升级与早餐条款后再下单。','Marriott','The Ritz-Carlton','Marriott Bonvoy','https://www.marriott.com/offers/extended-moments-OFF-160475/BKKRB-the-ritz-carlton-bangkok'),
+H('The Peninsula Bangkok','曼谷','湄南河畔 · 1998年开业 · 波浪形塔楼地标','半岛品牌是全球传奇奢华的代名词；1998 年开业的湄南河波浪形塔楼是曼谷城市地标，位于 333 Charoen Nakhon Road。TripAdvisor 4.7（曼谷约第194/1400家）、旅行者之选 2026。特色 Peninsula Time：最早 6:00 入住、最晚 22:00 退房（12/21–31 不适用）。12 月 THB 16,500/晚起（9 月约 THB 9,900/晚起）。非万豪系酒店，Titanium 会员权益不适用。','重视入住/退房时间弹性者可优先考虑；12 月旺季尽早锁定可取消价。'),
+H('Rosewood Bangkok','曼谷','Ploenchit · 2019年开业 · 合十礼双塔地标','KPF 以泰式"合十礼（wai）"为灵感设计的双叠式塔楼，是曼谷 CBD 建筑地标；2019 年开业，仅 159 间客房。位于 1041/38 Ploenchit Road，入住 15:00、退房 12:00。获 HD Awards Luxury Hotel（2020）、芝加哥 Athenaeum 国际建筑奖（2021）、Prix Versailles 室内特别奖（2020）。12 月 THB 12,997/晚起（9 月约 THB 14,850/晚起）。非万豪系酒店，Titanium 会员权益不适用。','建筑与设计爱好者优先；旺季尽早锁定可取消价。'),
 H('曼谷文华东方','曼谷','湄南河畔 · 1876年开业','河畔历史酒店；2026年馆内 Anne-Sophie Pic at Le Normandie 为米其林二星。服务评价并非一致，亦有设施老化、浴室偏小与服务落差反馈。','介意硬件年代感或服务评价分化者先比较新酒店房型。'),
 H('Capella Bangkok','曼谷','湄南河畔 · 河景客房与别墅','河景、Living Room 与接驳船受赞。部分评价提到空调噪音、低楼层景观受泡池遮挡及早餐选择偏少。','优先高楼层河景房，并在订房时确认噪音与景观遮挡。'),
 H('Aman Nai Lert Bangkok','曼谷','Chidlom · 2025年开业','位于 Nai Lert Park 七英亩绿地，共52间套房及约1,500㎡康养中心；属于新开业、早期评价优秀，不能等同长期口碑。','适合重视私密与康养者；旺季尽早锁定可取消价。'),
