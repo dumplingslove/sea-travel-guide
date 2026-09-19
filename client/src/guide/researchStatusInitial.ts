@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-19T10:53Z",
+ "updated_at": "2026-09-19T16:48Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1713,11 +1713,13 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：契迪龙寺Trip.com 4.8/5、2,187条，3条原话（_TI***xy 2026-08-02、Kenneth0101 2025-02-13、Taryn 2019-10-05）；帕辛寺 4.8/5、1,085条，3条原话（SO_RelaX 2026-05-31、_TS***ql 2019-09-28、TALALOM 2019-07-03）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 1,
+       "posts": 6,
        "target": 10,
        "status": "partial",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效均为契迪龙寺（陪伴小七长大《清迈契迪龙寺，10岁儿子帮我到禁区拍照》），帕辛寺尚未开始搜索；缺9篇，候选（momo/嘛嘛嘛马老湿/桃黛子/又想旅游了/行走的街道/Vivian等）待核实。证据：redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md",
-       "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md"
+       "note": "2026-09-19 16:00 UTC 主会话严格重验新增帖6（杨威利喝红茶《契迪龙寺大塔》2025-08-25 中立：正文+评论5条实读，图片11张逐张核验图文相符，个人号非商业，全程只读）→ 现 6/10 partial（推荐4/中立1/不推荐1）；证据文件：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md §帖6。限流记录：同轮另1帖图片区\"请刷新试试\"触发立即停止，未计入、未刷新重试，会话保持原状。还差4篇，队列跑完后回头补（不降标准）。",
+       "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item17-chediluang-phrasingh-PARTIAL-2026-09-15.md",
+       "verified_at": "2026-09-19T13:50Z",
+       "posts_2024_2026": 6
       },
       "photos": {
        "verified": 6,
