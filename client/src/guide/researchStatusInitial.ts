@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-18T22:48Z",
+ "updated_at": "2026-09-19T05:05Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -12,7 +12,7 @@ export const initialResearchStatus = {
   "bangkok": {
    "name": "曼谷",
    "total": 32,
-   "complete": 7,
+   "complete": 9,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -367,8 +367,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §9"
+       "status": "done",
+       "note": "2026-09-18补齐中文站证据(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill-2026-09-18.md §1)：Trip.com 5.0/5条+携程攻略4.8/5条，4条带作者/日期/星级中文原话+规范链接；大众点评/马蜂窝无公开收录"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -469,8 +469,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §10"
+       "status": "done",
+       "note": "2026-09-18补齐中文站证据(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill-2026-09-18.md §2)：携程/Trip.com 4.7/6条，3条带作者/日期/星级中文原话+规范链接，人均约¥1590；大众点评/马蜂窝无公开收录"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -571,8 +571,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（poi-thipsamai-iconsiam-82988900，不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §12"
+       "status": "done",
+       "note": "2026-09-18补齐中文站证据(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill-2026-09-18.md §3)：Trip.com 4.5/87条，5条带作者/日期/星级中文原话+规范链接，营业时间9:00-23:59；避雷：排队久、老虎虾版评价称不新鲜；大众点评/马蜂窝无公开收录"
       },
       "xiaohongshu": {
        "posts": 2,
@@ -639,8 +639,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-bangkok-phuquoc-2026-09-14.md §13"
+       "status": "partial",
+       "note": "2026-09-19再查(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill2-2026-09-19.md §4)：Trip.com POI 5.0/19则，仅1条带日期原话（110***28 2016-06-29）；第2条因Trip.com评价分页组件损坏无法获取→维持partial；马蜂窝无POI，大众点评反爬（诚实pending）"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -877,8 +877,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/bangkok-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §38"
+       "status": "done",
+       "note": "2026-09-19补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill2-2026-09-19.md §5)：Trip.com Moments POI 4.9/256则，2条带作者/日期/星级原话（STeo张涵2024-10-05、_TI***oi 2023-08-18，均为5.0）+规范链接"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -1056,8 +1056,8 @@ export const initialResearchStatus = {
        "note": "2026-09-15只读实查(bangkok-boatnoodles-ota-2026-09-15.md)：Ruathong 4.4/3,243条，3条带作者/星级原话（页面相对时间）+规范链接；Thong Smith(CentralWorld Fl 3) 4.5/1,739条，3条带作者/星级原话+规范链接；避雷：Ruathong无QR付款/默认带辣偏咸，Thong Smith人均200–800铢/辣度后劲足/高峰排长队"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §1)：大众点评商户页 https://m.dianping.com/shop/951065905 触发美团验证中心，评分/点评数未能核实；仅快照得1条原话（Steven_9949，2025-04-12）。缺评分/条数、第二条原话 → partial。"
+       "status": "done",
+       "note": "2026-09-19补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-cs-fill2-2026-09-19.md §6)：Thong Smith 4.9/7条+2条带日期原话（Wandering Worker 2025-06-15、Glowlogue 2025-06-09）；Rua Thong POI无评分，2条带日期Moments引语（生猛海鮮2024-11-02、TRAVELMEME 2022-11-10）"
       },
       "xiaohongshu": {
        "posts": 10,
@@ -1240,8 +1240,8 @@ export const initialResearchStatus = {
        "note": "2026-09-16 OTA研究(ota-reviews/chiangmai-newhotels-2026-09-16.md §1): TA 4.6/5、3,506条(Excellent 2,508)；3条原话(fito p 5★ 2026-04-12、Dant6817 2025-12批判床垫过硬空调制冷不足、Livio B 2026-05-19 Horizon Club)+规范链接(tripadvisor.co.nz原文URL)；排名未显示记pending"
       },
       "google_maps": {
-       "status": "pending",
-       "note": "2026-09-16 OTA研究：三次搜索未返回Google Maps place规范URL，未硬构URL，诚实pending；待浏览器任务直接打开该酒店Google Maps页面实读"
+       "status": "done",
+       "note": "2026-09-19 浏览器只读实读(ota-reviews/chiangmai-gm-fill2-2026-09-19.md)：Google Maps官方地点页 4.6/5、4,309条；3条原话(Vasana Derbyshire 5星 3个月前、Buzz Queen 5星 3个月前、Senthiram Senthilingam 3星 2个月前)+规范链接；推荐理由：位置/服务/早餐/家庭友好；避雷：前台响应慢、无行李员"
       },
       "chinese_sites": {
        "status": "done",
@@ -1642,11 +1642,11 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com中文 4.7/5、3,636条；3条带作者/日期原话（Aikapat 5/5 2025-05-30、ConnyW89 4/5 2024-01-02、Truder 5/5 2023-12-03）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 2,
+       "posts": 3,
        "target": 10,
        "status": "partial",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item15-doisuthep-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T00:50Z）"
+       "note": "xhs-peritem-backfill 严格重验进行中：3/10（帖3 shuishuiceline 2026-09-19T02:04Z 落盘）；证据文件同 evidence_file"
       },
       "photos": {
        "verified": 5,
@@ -1887,8 +1887,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "google_maps": {
-       "status": "partial",
-       "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：4.8/5、637条齐；原话3条：pkgraziej 2周前、Trip.com Member 11个月前（第三方聚合，无个人星级）+既有Philipp 1条；GM原生评论面板未加载。缺：Google原生评论/个人星级"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §1)：Google Maps 4.8/636条，3条带作者/相对日期/星级原话+规范链接；避雷：有住客称设施陈旧与照片落差大、位置偏僻"
       },
       "chinese_sites": {
        "status": "done"
@@ -2092,8 +2092,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §20"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §3)：TA中文版 4.6/37条，4条带作者/日期/星级原话+规范链接；大众点评/马蜂窝无独立商户页、携程仅攻略提及；避雷：位置偏僻、价格高"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2262,8 +2262,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页（不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §21"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §4)：TA中文版 Suay Cherngtalay分店 4.6/236条，3条带作者/日期/星级原话+规范链接；大众点评商户页存在但登录墙未尝试登录；避雷：品尝菜单上菜节奏乱"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2323,16 +2323,16 @@ export const initialResearchStatus = {
      "note": "Chalong码头水上高脚屋海鲜（50余年老店）",
      "sources": {
       "tripadvisor": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无@Pier分店独立listing（唯一条目为Chalong主店d1874082，不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §1"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §2)：TA 4.5/1,658条，3条带作者/日期/星级原话+规范链接；避雷：户外蚊虫多、性价比口碑两极"
       },
       "google_maps": {
        "status": "done",
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing（仅Moments页和攻略提及）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §22"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §2)：携程美食 4.6/45条，2条带作者/日期/星级中文原话+规范链接；大众点评/马蜂窝无商户页"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2365,8 +2365,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 Google Maps调研完成：评分/条数/原话+日期/链接/推荐理由/避雷点，报告见 research_notes/sea-guide-2026/google-maps/phuket-2026-09-13.md"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §2)：百度/谷歌未索引到携程、大众点评、马蜂窝的商户或POI点评页，仅大众点评用户笔记。中文站无公开点评页面 → pending。"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §5)：Roti Trip.com 4.6/9条+Lard Yai Trip.com POI 4.3/28条+TA中文版周日集市4.4/550条，5条带作者/日期原话+规范链接；大众点评/马蜂窝无独立商户页"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -2499,12 +2499,12 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "google_maps": {
-       "status": "unavailable",
-       "note": "2026-09-14 browser只读实查：GM上\"Old Phuket Town\"为地理区域（Mueang Phuket District），无星级评分/评论体系；既有\"2026-09-13记录\"无法核实。终判：覆盖不足"
+       "status": "pending",
+       "note": "结构性无数据：Google Maps上'Old Phuket Town'为区域实体，不参与评分/无评价条数（2026-09-18实测，见research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §6）；无需再补"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有Moments页和攻略文章页（均不算标准listing），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-penang-phuket-misc-2026-09-14.md §37"
+       "status": "done",
+       "note": "2026-09-18补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-cnfill-2026-09-18.md §6)：TA中文版 4.1/2,160条，5条带作者/日期/星级原话+规范链接；大众点评/马蜂窝无独立商户页"
       },
       "xiaohongshu": {
        "posts": 2,
@@ -4553,8 +4553,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.3★（4,258条）"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "2026-09-14 中文站补齐：Trip.com 0结果；马蜂窝无POI；大众点评登录墙未取；覆盖不足；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md"
+       "status": "done",
+       "note": "2026-09-19 浏览器只读实读(ota-reviews/hcmc-cs-fill2-2026-09-19.md)：Trip.com 4.3/36条，3条带作者/日期/星级中文原话(木风笛 4星 2019-09-20、_We***50 5星 2024-07-21、月溢海 5星 2021-12-24)+规范链接；马蜂窝POI 5433261 3.2分、2条带日期中文原话；携程/大众点评无标准listing(证据链齐)；推荐理由：老宅氛围+性价比；避雷：深巷难找、晚市6点半坐满需预约、英文无图菜单"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -4728,8 +4728,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.4★（2,962条）"
       },
       "chinese_sites": {
-       "status": "pending",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §5)：百度/谷歌未索引到携程、大众点评、马蜂窝的商户点评页 → pending。"
+       "status": "done",
+       "note": "2026-09-19 浏览器只读实读(ota-reviews/hcmc-cs-fill2-2026-09-19.md)：Trip.com Sương Nguyệt Anh分店 4.4/11条、3条带日期中文原话(大姐小露開心果 5星 2020-08-23、翱翔的大鲨鱼 4星 2019-08-14、vjjgddvvvm 2021-03-19)+规范链接；携程 Lý Tự Trọng分店 4.4/7条、2条带日期中文原话(_TI***gb 4星 2026-03-24、_TI***36 4星 2026-01-19)+规范链接；未找到Nguyễn Huệ步行街分店listing(引用须标注分店)；马蜂窝/大众点评无胡志明分店收录(证据链齐)"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5540,8 +5540,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §8)：携程\"涵宁渔村\"页 https://you.ctrip.com/sight/phuquocisland24779/2504532.html 4.4/5（页内另2.8）、7条点评；2条原话（泰宁根灵承恩；山在穷游）但手机版不显示日期 → partial。"
+       "status": "done",
+       "note": "2026-09-19补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuquoc-cs-fill2-2026-09-19.md §1)：携程攻略 4.5/8条，5条带作者/日期/星级中文原话+规范链接；马蜂窝无POI，大众点评不可检索（诚实pending）"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -5785,8 +5785,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13报告：Google Maps实时评分/条数/原话齐全"
       },
       "chinese_sites": {
-       "status": "partial",
-       "note": "2026-09-17只读实查(redo-strict/ota-reviews/chinese-sites-backfill-2026-09-17.md §14)：携程\"石山殿\"页 https://you.ctrip.com/sight/phuquocisland24779/1693795.html 4.5/5（页内另3.3）、35条点评；2条原话均为\"山在穷游\"、日期未能核实（手机版不显示）→ partial。"
+       "status": "done",
+       "note": "2026-09-19补齐(research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuquoc-cs-fill2-2026-09-19.md §2)：携程攻略 4.5/35条，8条带作者/日期/星级中文原话+规范链接；避雷：建筑小/日晒/与对面妈祖庙易混淆"
       },
       "xiaohongshu": {
        "posts": 0,
