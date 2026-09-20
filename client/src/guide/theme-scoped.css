@@ -293,3 +293,20 @@
 .guide-scope .pc-thumbs button.active{border-color:var(--accent)}
 .guide-scope .pc-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
 @media(max-width:560px){.guide-scope .detail-inline .detailcontent{padding:18px}.guide-scope .detail-inline .detailactions{padding:0 18px 18px}}
+/* 最佳机位板块 */
+.guide-scope .photospots-intro{font-size:13px;color:#5a6b66;margin:0 0 12px;line-height:1.6}
+.guide-scope .photospotlist{display:grid;gap:12px}
+.guide-scope .photospot{border:1px solid #dfe7e3;border-radius:10px;padding:12px;background:#fbfdfc;overflow:hidden}
+.guide-scope .photospot>header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.guide-scope .photospot>header b{flex:0 0 auto;min-width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%;background:var(--accent);color:#fff;font-size:13px}
+.guide-scope .photospot>header h4{margin:0;font-size:15px}
+.guide-scope .photospot p{margin:0 0 8px;font-size:13.5px;line-height:1.65}
+.guide-scope .photospot .spotwhere strong,.guide-scope .photospot .spothow strong{display:block;font-size:12.5px;color:#3d4f4a;margin-bottom:2px}
+.guide-scope .photospot figure{margin:0 0 8px;border-radius:8px;overflow:hidden;background:#e8eeeb}
+.guide-scope .photospot figure img{width:100%;max-height:320px;object-fit:cover;display:block}
+.guide-scope .photospot figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;font-size:12px;color:#5a6b66}
+.guide-scope .photospot figcaption a{flex:0 0 auto;color:var(--accent);text-decoration:none}
+.guide-scope .spotnosample{font-size:12.5px;color:#8a978f;background:#f0f4f1;border-radius:6px;padding:8px 10px}
+.guide-scope .spotmap{display:inline-block;margin-top:2px;font-size:13px;color:#fff;background:var(--accent);border-radius:8px;padding:9px 14px;text-decoration:none}
+.guide-scope .photospots-pending{font-size:13px;color:#8a978f}
+@media(max-width:560px){.guide-scope .photospot{padding:10px}.guide-scope .photospot figure img{max-height:240px}.guide-scope .spotmap{display:block;text-align:center}}
