@@ -1,16 +1,16 @@
 export const spots: Record<string, Array<{name:string;where:string;how:string;sampleIndex?:number;sampleCaption?:string}>> = {
   "滨海湾花园": [
-    { name:"灯光秀草坪躺拍", where:"擎天树林（Supertree Grove）中央的大草坪。直接躺在草地上，面向擎天树往上看。", how:"Garden Rhapsody 灯光秀每晚 19:45 和 20:45 各一场；攻略作者称，最享受的方式就是躺在擎天树下的草坪上看完整场（据 Traveloka 攻略）。" },
-    { name:"OCBC 空中步道", where:"擎天树林中央，买票登上 OCBC Skyway 空中步道，站在步道上俯瞰。", how:"128 米长的悬空步道，可俯瞰整片花园和远处的滨海湾金沙；白天蓝天时最出片（据 Traveloka 攻略）。" },
+    { name:"灯光秀草坪躺拍", where:"擎天树林（Supertree Grove）中央的大草坪。直接躺在草地上，面向擎天树往上看。", how:"Garden Rhapsody 灯光秀每晚 19:45 和 20:45 各一场；攻略作者称，最享受的方式就是躺在擎天树下的草坪上看完整场（据 Traveloka 攻略）。", sampleIndex:6, sampleCaption:"夜晚仰拍灯光秀中的擎天树" },
+    { name:"OCBC 空中步道", where:"擎天树林中央，买票登上 OCBC Skyway 空中步道，站在步道上俯瞰。", how:"128 米长的悬空步道，可俯瞰整片花园和远处的滨海湾金沙；白天蓝天时最出片（据 Traveloka 攻略）。", sampleIndex:5, sampleCaption:"站在空中步道上，擎天树林与步道伸向远方" },
     { name:"云雾林室内瀑布", where:"云雾林（Cloud Forest）温室内，走到瀑布正前方。", how:"35 米高的人造山上挂着全世界最高的室内瀑布之一；站在瀑布正前方仰拍最震撼（据 Traveloka 攻略）。", sampleIndex:3, sampleCaption:"云雾林 35 米室内瀑布正前方仰拍" }
   ],
   "环球影城": [
     { name:"旋转地球仪广场", where:"一进园就是好莱坞区的地球仪广场，站在地球仪正前方。", how:"入园入口的地球环形牌是公认的经典标志，进园必拍（据 Trip.com 攻略）。", sampleIndex:2, sampleCaption:"标志性地球仪与入口广场" },
-    { name:"Far Far Away 梦幻城堡", where:"Far Far Away 园区，城堡正前方的广场一带。", how:"红白色城堡童话感十足，两家攻略都把它列为必拍点（据 Trip.com、Follow Us To Travel 攻略）。" },
-    { name:"小小兵乐园", where:"小小兵乐园（Minion Land），格鲁家街区一带。", how:"2025 年 2 月新开的园区，七彩街头风建筑被攻略作者评为全园最好拍的区域（据 Follow Us To Travel 攻略）。" }
+    { name:"Far Far Away 梦幻城堡", where:"Far Far Away 园区，城堡正前方的广场一带。", how:"红白色城堡童话感十足，两家攻略都把它列为必拍点（据 Trip.com、Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"城堡正前方仰拍红白童话城堡" },
+    { name:"小小兵乐园", where:"小小兵乐园（Minion Land），格鲁家街区一带。", how:"2025 年 2 月新开的园区，七彩街头风建筑被攻略作者评为全园最好拍的区域（据 Follow Us To Travel 攻略）。", sampleIndex:6, sampleCaption:"Silly Swirly 七彩游乐设施与小小兵雕塑" }
   ],
   "Singapore Oceanarium": [
-    { name:"Ocean Wonders 月亮水母缸", where:"Ocean Wonders 展区中央的大型水母缸前。", how:"缸里有数千只月亮水母，随灯光变幻漂浮；多数展区可拍照，按现场规定开关闪光灯（据 Tickyourlist 攻略）。" },
+    { name:"Ocean Wonders 月亮水母缸", where:"Ocean Wonders 展区中央的大型水母缸前。", how:"缸里有数千只月亮水母，随灯光变幻漂浮；多数展区可拍照，按现场规定开关闪光灯（据 Tickyourlist 攻略）。", sampleIndex:5, sampleCaption:"两座大型水母缸中漂浮的月亮水母" },
     { name:"Open Ocean 巨型观景窗", where:"Open Ocean 展区，馆内最大的观景窗前。", how:"隔窗看魔鬼鱼、鹰鳐和斑马鲨从眼前游过；在窗前多等一会儿，等大鱼群游过再按快门（据 Tickyourlist 攻略）。", sampleIndex:1, sampleCaption:"巨型观景窗前，鳐鱼群与鱼群游过" }
   ],
   "夜间动物园": [
@@ -20,13 +20,13 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "新加坡动物园与Bird Paradise": [
     { name:"Bird Paradise 企鹅湾水下窗", where:"飞禽公园企鹅湾（Penguin Cove），走到水下观景窗前。", how:"水族箱从一楼延伸到二楼，是看企鹅游泳的最佳视角；等企鹅游过玻璃的瞬间连拍（据 BringYou 攻略）。", sampleIndex:4, sampleCaption:"企鹅在企鹅湾水下观景窗前游过" },
-    { name:"动物园红毛猩猩自由活动区", where:"动物园红毛猩猩自由活动区（Free Ranging Orangutan Island），站在观景步道上。", how:"半开放式展区，猩猩会在上方的空中走道行走，近距离看它们觅食嬉戏；抬头就能拍到（据 Girlstyle 指南）。" },
-    { name:"猩红湿地火烈鸟", where:"飞禽公园绯红湿地（Crimson Wetlands），地标大瀑布前。", how:"火烈鸟、粉红琵鹭、金刚鹦鹉群聚在瀑布前，没有围栏阻隔；自由飞翔的鸟群是拍生态大片的绝佳题材（据 BringYou 攻略）。" }
+    { name:"动物园红毛猩猩自由活动区", where:"动物园红毛猩猩自由活动区（Free Ranging Orangutan Island），站在观景步道上。", how:"半开放式展区，猩猩会在上方的空中走道行走，近距离看它们觅食嬉戏；抬头就能拍到（据 Girlstyle 指南）。", sampleIndex:5, sampleCaption:"红毛猩猩群在树干上攀爬，背景有新加坡动物园标牌" },
+    { name:"猩红湿地火烈鸟", where:"飞禽公园绯红湿地（Crimson Wetlands），地标大瀑布前。", how:"火烈鸟、粉红琵鹭、金刚鹦鹉群聚在瀑布前，没有围栏阻隔；自由飞翔的鸟群是拍生态大片的绝佳题材（据 BringYou 攻略）。", sampleIndex:6, sampleCaption:"火烈鸟群聚瀑布前，金刚鹦鹉在空中飞翔" }
   ],
   "鱼尾狮公园": [
     { name:"鱼尾狮与金沙同框", where:"站在鱼尾狮公园的观景平台上，面向高 8.8 米、重 70 吨的鱼尾狮，把鱼尾狮和隔湾相望的滨海湾金沙收进同一个画面。", how:"鱼尾狮面向东部滨海湾，上午脸部受光好；用超广角横拍，两边都收得下（据滨海湾金沙官网指南）。", sampleIndex:2, sampleCaption:"鱼尾狮喷水，隔湾同框滨海湾金沙" },
-    { name:"经典“接水”创意照", where:"走到鱼尾狮侧面喷水弧线落点附近，站在水柱旁，张开嘴或伸手，假装接住喷出的水。", how:"这是游客间最经典的借位玩法，找同伴从低角度拍，人离镜头近、鱼尾狮在后方，错位感最强（据游客短视频记录）。" },
-    { name:"夜晚：金沙 Spectra 水舞灯光秀", where:"晚上到金沙购物中心外的宝龙坊活动广场（水幕广场），面向水幕找位置站好。", how:"灯光秀每晚 20:00、21:00 上演（周五、周六加开 22:00），全长约 15 分钟、免费看；场次以官网为准，建议提前到场占位置（据狗狗探路Trip 攻略）。" }
+    { name:"经典“接水”创意照", where:"走到鱼尾狮侧面喷水弧线落点附近，站在水柱旁，张开嘴或伸手，假装接住喷出的水。", how:"这是游客间最经典的借位玩法，找同伴从低角度拍，人离镜头近、鱼尾狮在后方，错位感最强（据游客短视频记录）。", sampleIndex:5, sampleCaption:"游客在鱼尾狮前摆拍接住喷水的借位照" },
+    { name:"夜晚：金沙 Spectra 水舞灯光秀", where:"晚上到金沙购物中心外的宝龙坊活动广场（水幕广场），面向水幕找位置站好。", how:"灯光秀每晚 20:00、21:00 上演（周五、周六加开 22:00），全长约 15 分钟、免费看；场次以官网为准，建议提前到场占位置（据狗狗探路Trip 攻略）。", sampleIndex:6, sampleCaption:"水幕广场前，Spectra 水舞灯光秀与围观人群" }
   ],
   "Jewel 星耀樟宜": [
     { name:"雨旋涡高层俯拍", where:"上到 4 楼左右的环形走廊/观景台，找正对 40 米高雨旋涡中央的栏杆位置，面向瀑布往下俯拍。", how:"俯拍能同时收进瀑布、周围绿植和底层人流；每层楼的观景台都能拍到瀑布，攻略作者认为 4 楼角度最好（据 BringYou 攻略）。", sampleIndex:0, sampleCaption:"高层俯瞰雨旋涡瀑布与室内森林" },
@@ -35,30 +35,30 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "ArtScience Museum": [
     { name:"莲花馆外观", where:"在博物馆外的莲花池一带，面向这朵“莲花”，退到能把它和池水一起收进来的距离。", how:"博物馆外观像一朵盛开的巨大莲花，莲花池围绕着它；必拍莲花造型外观，可以同时拍下池水和博物馆的特殊造型，很多人喜欢在这里拍照（据 Follow Us To Travel 攻略）。", sampleIndex:0, sampleCaption:"仰拍莲花造型的博物馆外观" },
-    { name:"馆内 teamLab“未来世界”", where:"馆内的 teamLab“未来世界”常设展区（需另购票，可现场或线上买）。", how:"“水晶宇宙”（Crystal Universe）是全馆最多人拍照打卡的装置，光条闪烁变色，拍剪影效果最好。展览内可以拍照，但禁用闪光灯，也不能带自拍棒和脚架入场（据 Follow Us To Travel 攻略）。" }
+    { name:"馆内 teamLab“未来世界”", where:"馆内的 teamLab“未来世界”常设展区（需另购票，可现场或线上买）。", how:"“水晶宇宙”（Crystal Universe）是全馆最多人拍照打卡的装置，光条闪烁变色，拍剪影效果最好。展览内可以拍照，但禁用闪光灯，也不能带自拍棒和脚架入场（据 Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"teamLab 未来世界展区内的数字花卉投影与参观者" }
   ],
   "牛车水": [
     { name:"宝塔街一带市集街景", where:"逛宝塔街、史密斯街、丁加奴街一带的露天市集街道，面向店铺、摊位和店屋拍。", how:"几百个摊位卖丝绸长袍、招财猫等货品，还有街头美食车（点心、脆皮烤鸭）；市集每日约 09:30–20:00 营业，黄昏后街灯亮起更热闹（据 Go Guides 攻略）。", sampleIndex:0, sampleCaption:"店屋立面、街边摊位与灯笼" },
     { name:"佛牙寺唐式建筑", where:"桥南路上的佛牙寺龙华院正门对面的人行道上，面向寺庙的唐式屋顶；也可以走进大门看挑高华丽的主厅。", how:"寺庙共四层，建筑融合唐代佛教元素与曼陀罗格局；四楼高 2 米的纯金佛塔是焦点，屋顶还有一座大型转经轮宝塔。开放时间每日 09:00–18:30（以官网为准）（据 Go Guides 攻略）。", sampleIndex:1, sampleCaption:"佛牙寺唐式多层宝塔建筑外观" },
-    { name:"牛车水大厦熟食中心", where:"到史密斯街 335 号的牛车水大厦，里面有市场和熟食中心。", how:"里面街头小食款式多、价格便宜，边吃边拍最有烟火气；大厦每日 08:00–00:00（据 Go Guides 攻略）。" }
+    { name:"牛车水大厦熟食中心", where:"到史密斯街 335 号的牛车水大厦，里面有市场和熟食中心。", how:"里面街头小食款式多、价格便宜，边吃边拍最有烟火气；大厦每日 08:00–00:00（据 Go Guides 攻略）。", sampleIndex:5, sampleCaption:"熟食中心内一排摊位与用餐的食客" }
   ],
   "小印度": [
     { name:"陈东龄故居", where:"小印度地铁站附近的水牛巷（Kerbau Road），找到漆成五彩缤纷颜色的陈东龄故居（竹脚中心旁）。", how:"这里是小印度最出名的 IG 打卡点，网红最爱来拍；白天去、站在对街把整栋彩色立面收进画面。内部不开放参观，只能拍外观；晚上没有亮灯（据 Follow Us To Travel 攻略）。", sampleIndex:1, sampleCaption:"漆成五彩缤纷的陈东龄故居外观" },
-    { name:"实龙岗路彩色店屋", where:"沿实龙岗路主街慢慢走，站在马路对面，面向刷成粉、黄、绿等鲜艳色彩的店屋立面。", how:"以彩色店屋立面为背景拍人像，随便一站就很出片；附近小印度艺术区的壁画也值得顺路拍（据 Follow Us To Travel 攻略）。" },
+    { name:"实龙岗路彩色店屋", where:"沿实龙岗路主街慢慢走，站在马路对面，面向刷成粉、黄、绿等鲜艳色彩的店屋立面。", how:"以彩色店屋立面为背景拍人像，随便一站就很出片；附近小印度艺术区的壁画也值得顺路拍（据 Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"马路对面看色彩鲜艳的店屋立面" },
     { name:"维拉玛卡里雅曼兴都庙塔门", where:"实龙岗路上的 Sri Veeramakaliamman Temple 正门外，站在对面人行道上，面向色彩斑斓的塔门。", how:"塔门上布满色彩鲜艳的神像浮雕；寺庙可免费入内参观，进庙要脱鞋。开放时间为每日 08:30–12:30 及 16:00–20:30（以现场为准）（据 Go Guides 攻略）。", sampleIndex:4, sampleCaption:"色彩斑斓的神像浮雕塔门" }
   ],
   "Kampong Glam": [
     { name:"苏丹回教堂金色穹顶", where:"站在苏丹回教堂（Sultan Mosque）前的布索拉步行街（Bussorah Street）一带，面向清真寺的金色洋葱圆顶。", how:"金色洋葱圆顶是甘榜格南天际线的标志，圆顶上嵌有玻璃瓶底装饰。站在布索拉步行街上取景，可把街道与圆顶一起收进画面（据 Klook 攻略）。", sampleIndex:0, sampleCaption:"布索拉步行街尽头，苏丹回教堂金色穹顶" },
-    { name:"哈芝巷壁画", where:"钻进哈芝巷（Haji Lane），站在巷子中段，面向两边店屋外墙上的大幅壁画与街头涂鸦。", how:"哈芝巷墙面布满生动的街头艺术和涂鸦，是甘榜格南最出片的街拍背景；巷子本身也是精品店和咖啡馆聚集的时髦街区，适合边逛边拍（据 Klook 攻略）。" }
+    { name:"哈芝巷壁画", where:"钻进哈芝巷（Haji Lane），站在巷子中段，面向两边店屋外墙上的大幅壁画与街头涂鸦。", how:"哈芝巷墙面布满生动的街头艺术和涂鸦，是甘榜格南最出片的街拍背景；巷子本身也是精品店和咖啡馆聚集的时髦街区，适合边逛边拍（据 Klook 攻略）。", sampleIndex:5, sampleCaption:"哈芝巷 26 号外墙上的巨幅人物壁画" }
   ],
   "乌节路": [
     { name:"Orchard Gateway 纯白天桥", where:"乌节路上连接 Somerset 与 Orchard Gateway 的过街人行天桥，走到桥上。", how:"纯白柱体配两侧整面玻璃窗：白天日系小清新，夜晚灯光倒影如科幻片场景；傍晚夕阳直穿玻璃时最出片，是拍人像的好地方（据新加坡省钱皇后情报局）。" },
-    { name:"ION Sky 55 楼观景台", where:"ION Orchard（乌节路 2 号）55 楼的 ION Sky 观景台。", how:"乌节路上最高的观景台，218 米高空 360 度俯瞰市区，可远眺滨海湾金沙和艺术科学博物馆；每日 15:00–18:00 开放（最后入场 17:30），凭 ION Orchard 当日消费收据免费进场（Klook 称至少消费 S$20）（据 Klook 攻略）。" },
+    { name:"ION Sky 55 楼观景台", where:"ION Orchard（乌节路 2 号）55 楼的 ION Sky 观景台。", how:"乌节路上最高的观景台，218 米高空 360 度俯瞰市区，可远眺滨海湾金沙和艺术科学博物馆；每日 15:00–18:00 开放（最后入场 17:30），凭 ION Orchard 当日消费收据免费进场（Klook 称至少消费 S$20）（据 Klook 攻略）。", sampleIndex:5, sampleCaption:"ION Sky 观景台上，游客隔窗眺望市区" },
     { name:"圣诞灯饰夜景（12月限定）", where:"12 月的乌节路主街，站在灯饰最密的一段人行道上。", how:"乌节圣诞大街欢（Christmas on A Great Street）期间整条路化身节日奇境：灯饰长廊、两个圣诞村、万事达卡圣诞树下的夜间飘雪秀，圣诞前夜还有街头派对。往年约 11 月初至 1 月 1 日，以当季官网公布为准（据乌节路商联会官网）。", sampleIndex:2, sampleCaption:"乌节路“圣诞大街”主题灯饰拱门" }
   ],
   "圣淘沙海滩": [
     { name:"巴拉望海滩“亚洲大陆最南端”", where:"走到巴拉望海滩（Palawan Beach）南端，过吊桥登上对面的小岛，爬上岛上的观景塔。", how:"吊桥＋观景塔＋“亚洲大陆最南端”地标，是圣淘沙最有仪式感的打卡点，适合拍照留念。注意：严格来说圣淘沙 Cove 住宅区还有更靠南的位置，这里是名义上的最南端点（据 Little Day Out）。", sampleIndex:4, sampleCaption:"从观景塔俯瞰巴拉望吊桥与海滩" },
-    { name:"西乐索海滩日落", where:"圣淘沙西乐索海滩（Siloso Beach），面向大海。", how:"西乐索以壮观日落著称，是拍照爱好者的绝佳背景；黄金时段约 17:30–19:00，早点到占好位置，晴天最佳（据 Lemon8 攻略）。" }
+    { name:"西乐索海滩日落", where:"圣淘沙西乐索海滩（Siloso Beach），面向大海。", how:"西乐索以壮观日落著称，是拍照爱好者的绝佳背景；黄金时段约 17:30–19:00，早点到占好位置，晴天最佳（据 Lemon8 攻略）。", sampleIndex:5, sampleCaption:"西乐索海滩日落，棕榈剪影与金色海面" }
   ],
   "新加坡河游船": [
     { name:"克拉码头上船点黄昏", where:"克拉码头（Clarke Quay）的 bumboat 码头（Clarke Quay Jetty）边，站在河岸一带，面向河面和停靠的木船。", how:"游船从克拉码头 Jetty 出发并返回，日落时分河面倒映着两岸灯光，适合在上船前先在岸上拍摄。记得提前 15 分钟到售票处换票（据 Traveloka 攻略）。", sampleIndex:4, sampleCaption:"黄昏时分的 bumboat 与克拉码头" },
