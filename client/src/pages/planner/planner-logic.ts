@@ -797,7 +797,7 @@ function wzSpotsHtml(city: string){
   const list=wzCityAttractions(city);
   if(!list.length) return "";
   const items=list.map(a=>`<li><b>${esc(a.name)}</b><span class="wz-spot-meta">${esc(a.meta)}</span><span class="wz-spot-detail">${esc(a.detail)}</span>${a.best?`<span class="wz-spot-best">📋 ${esc(a.best)}</span>`:""}</li>`).join("");
-  return `<details class="wz-spots"><summary>🏛 精华景点 ${list.length} 个 · 展开看详情</summary><ul>${items}</ul><a href="/attractions" target="_blank" rel="noopener">在景点指南查看完整攻略 ↗</a></details>`;
+  return `<details class="wz-spots"><summary>🏛 精华景点 ${list.length} 个 · 展开看详情</summary><ul>${items}</ul><a href="/sea-travel-guide/attractions" target="_blank" rel="noopener">在景点指南查看完整攻略 ↗</a></details>`;
 }
 /* 各天数覆盖预览：1–5 天分别覆盖哪几天经典路线、舍弃哪几天（评语+逐日主题+精华命中数） */
 function wzCovRow(city: string, n: number){
