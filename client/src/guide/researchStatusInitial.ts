@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-20T10:49Z",
+ "updated_at": "2026-09-20T16:48Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
