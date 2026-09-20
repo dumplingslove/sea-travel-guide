@@ -5,7 +5,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"姓周桥老人肖像壁画", where:"壁画在 Chew Jetty（姓周桥）一带，画的是一位老人的肖像，文艺感很强。站在壁画前拍，简单构图就很有味道。", how:"这幅不靠互动姿势取胜，和肖像同框拍一张干净的照片就好。" },
   ],
   "Khoo Kongsi": [
-    { name:"庭院正对大殿", where:"进邱公司后站在豁亮的庭院里，面向大殿。庭院和寺庙建筑相映成趣，是邱公司最经典的取景背景。", how:"傍晚时分这里有时会有文化艺术表演，可以把看表演和拍照安排在一起。" },
+    { name:"庭院正对大殿", where:"进邱公司后站在豁亮的庭院里，面向大殿。庭院和寺庙建筑相映成趣，是邱公司最经典的取景背景。", how:"傍晚时分这里有时会有文化艺术表演，可以把看表演和拍照安排在一起。", sampleIndex:0, sampleCaption:"站在庭院石狮之间，正对大殿：剪瓷雕屋顶、石狮与石铺庭院同框" },
   ],
   "姓氏桥": [
     { name:"姓周桥栈道走到海尽头", where:"从姓周桥（Chew Jetty）入口沿木栈道向海里走，面向大海拍。这里是早期华人移民留下的传统高脚屋居住所。", how:"每天 9:00–21:00 开放。想拍漂亮的大海，涨潮时来；尊重居民隐私，不要拍屋内摆设和居民家人。" },
@@ -21,7 +21,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "Fort Cornwallis": [
     { name:"棱堡大炮", where:"西北棱堡上的 Seri Rambai 大炮（1871 年装上棱堡），炮身朝海，背后是红砖城墙与白色灯塔。", how:"站在城墙下，把大炮、红砖城墙和白色灯塔同框拍下。", sampleIndex:0, sampleCaption:"棱堡转角大炮：炮口、红砖墙与白色灯塔同框" },
-    { name:"正门与铜像", where:"城堡正门上方立着 Captain Francis Light 的铜像。", how:"正面拍大门，把门上方的铜像也带进画面。" },
+    { name:"正门与铜像", where:"城堡正门上方立着 Captain Francis Light 的铜像。", how:"正面拍大门，把门上方的铜像也带进画面。", sampleIndex:1, sampleCaption:"城堡白色拱门正门：Fort Cornwallis 牌匾、红砖城墙与旗帜" },
     { name:"黄昏城墙大炮", where:"城墙上的大炮一字排开、炮口朝海；城堡开放到夜晚，日落后城墙与旗杆会亮灯。", how:"日落后去散步，拍亮灯的城墙、旗杆与一字排开的大炮。", sampleIndex:2, sampleCaption:"黄昏城墙：灯光亮起，一排大炮变剪影" },
     { name:"城墙大炮近景", where:"沿城墙一字排开、炮口朝海的大炮。", how:"贴近拍炮身，远处能带进一点海景。", sampleIndex:4, sampleCaption:"贴近大炮侧拍：炮身质感与远处海景" },
   ],
@@ -41,7 +41,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"香料店色彩", where:"小印度的香料店、珠宝店与布料店，摊位色彩浓烈。", how:"贴近拍香料摊的色彩堆叠。" },
   ],
   "和谐街": [
-    { name:"观音亭正面", where:"街上的观音亭，站在庙前的大前院看大殿，屋顶有精美雕塑。", how:"殿内常年香火烟雾缭绕，拍大殿适合站在前院取景；前院偶尔会有戏曲或木偶戏演出。" },
+    { name:"观音亭正面", where:"街上的观音亭，站在庙前的大前院看大殿，屋顶有精美雕塑。", how:"殿内常年香火烟雾缭绕，拍大殿适合站在前院取景；前院偶尔会有戏曲或木偶戏演出。", sampleIndex:3, sampleCaption:"前院看观音亭大殿：屋顶剪瓷雕、香火烟雾与粉红大香前景" },
     { name:"圣乔治教堂", where:"和谐街（Jalan Masjid Kapitan Keling）与 Lebuh Farquhar 交口的圣乔治教堂，1818 年落成，是槟城最古老的圣公会教堂；教堂前方有希腊式 Francis Light 纪念碑。", how:"在教堂前拍教堂全景，把纪念碑也带进画面；周日 8:30 有英文礼拜。" },
     { name:"甲必丹吉灵清真寺", where:"Jalan Masjid Kapitan Keling 与 Buckingham Street 街角的清真寺；从 Chulia Street 方向走过来就能看到。", how:"免费参观、免费导览；进门会提供长袍；非穆斯林不能进祈祷大厅。" },
     { name:"斯里玛哈马里安曼庙", where:"Queen Street 上的兴都庙，入口上方有雕刻精美的彩色塔门（gopuram）。", how:"进庙要脱鞋；开放时间为 8:00–12:00 和 16:30–21:00；部分神圣区域拍照前先问。" },
