@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-20T04:48Z",
+ "updated_at": "2026-09-20T10:49Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1120,7 +1120,7 @@ export const initialResearchStatus = {
   "chiangmai": {
    "name": "清迈",
    "total": 20,
-   "complete": 6,
+   "complete": 7,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1751,10 +1751,10 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com旅行指南独立景点页 4.9/5、1,120条；3条带作者/日期原话（2026-06-04、Amy.H 2025-05-02、Edith_T 2025-03-05）+规范链接【翻案：此前BatchE标不可补齐（称仅moments页），本轮实读确认有独立travel-guide/attraction页】"
       },
       "xiaohongshu": {
-       "posts": 4,
+       "posts": 2,
        "target": 10,
        "status": "partial",
-       "note": "第18项宁曼路4/10：#1 momo（推荐·有保留）#2 马可乐和可乐马（中立偏负面）#3 大象小腿《为什么我觉得宁曼路一点意思都没有》（2026-06-30，不推荐，79条评论抽样实读）#4 绿豆高高《清迈·宁曼路可买一切》（2026-06-28，推荐，11条评论全读）。17:28 PDT轮冷启动后复用菜小盒会话，站内搜索逐篇进入，2篇上限即停，全程无异常。排除：村夫拓哉AI生成内容声明。证据：redo-strict/chiangmai-item18-nimman-PARTIAL-2026-09-15.md",
+       "note": "第18项宁曼路2/10：#1 momo《清迈citywalk宁曼路清迈大学篇》（推荐·有保留，6图已逐张核验）#2 马可乐和可乐马《宁曼路和我想象的不太一样》（中立偏负面，17图仅核验2张、已透明标注）。#3 大象小腿（不推荐）、#4 绿豆高高（推荐）正文+评论已落盘但图片未逐张核验（原始记录1/2、1/18），暂不计入，待补核。2026-09-20 00:28误写4/10已于07:10 UTC撤销纠正。排除：村夫拓哉AI生成内容声明。证据：redo-strict/chiangmai-item18-nimman-PARTIAL-2026-09-15.md",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item18-nimman-PARTIAL-2026-09-15.md"
       },
       "photos": {
