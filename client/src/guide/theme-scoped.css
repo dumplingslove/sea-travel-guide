@@ -272,3 +272,24 @@
 .guide-scope .migration-notice{background:#102f3e;color:#e8f1f3;padding:10px 18px;font-size:12px;text-align:center;line-height:1.6}
 .guide-scope .syncnote{margin:0 18px 4px;padding:12px 16px;background:#fff8e6;border:1px solid #e0c88c;font-size:13px;color:#735719;border-radius:6px}
 .guide-scope .syncnote.ok{background:#eef7f2;border-color:#bcd9c9;color:#17634d}
+
+
+/* Attraction inline expandable detail + swipeable photo carousel */
+.guide-scope .catalog>.detail-inline{grid-column:1/-1}
+.guide-scope .detail-inline{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 10px 28px rgba(24,55,67,.10);scroll-margin-top:12px}
+.guide-scope .detail-inline .detailcontent{padding:22px}
+.guide-scope .detail-inline .detailactions{padding:0 22px 22px;flex-wrap:wrap}
+.guide-scope .photocarousel{margin-bottom:22px;border-bottom:1px solid var(--border);padding-bottom:20px}
+.guide-scope .pc-stage{position:relative;background:#0e1d24;border-radius:8px;overflow:hidden;aspect-ratio:4/3;touch-action:pan-y}
+.guide-scope .pc-stage>img{width:100%;height:100%;object-fit:cover;display:block}
+.guide-scope .pc-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:60px;border:0;border-radius:6px;background:rgba(7,29,39,.55);color:#fff;font-size:32px;line-height:1}
+.guide-scope .pc-arrow.left{left:10px}.guide-scope .pc-arrow.right{right:10px}
+.guide-scope .pc-count{position:absolute;right:10px;bottom:10px;background:rgba(7,29,39,.78);color:#fff;font-size:11px;font-weight:800;padding:5px 9px;border-radius:4px}
+.guide-scope .pc-caption{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+.guide-scope .pc-caption a{font-size:11px;color:var(--accent);white-space:nowrap}
+.guide-scope .pc-caption .pc-note{font-size:10px;color:var(--dim);text-align:right}
+.guide-scope .pc-thumbs{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px}
+.guide-scope .pc-thumbs button{flex:0 0 64px;height:46px;border:2px solid transparent;border-radius:5px;overflow:hidden;padding:0;background:#dce5e3}
+.guide-scope .pc-thumbs button.active{border-color:var(--accent)}
+.guide-scope .pc-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:560px){.guide-scope .detail-inline .detailcontent{padding:18px}.guide-scope .detail-inline .detailactions{padding:0 18px 18px}}
