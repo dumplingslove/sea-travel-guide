@@ -8,7 +8,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"庭院正对大殿", where:"进邱公司后站在豁亮的庭院里，面向大殿。庭院和寺庙建筑相映成趣，是邱公司最经典的取景背景。", how:"傍晚时分这里有时会有文化艺术表演，可以把看表演和拍照安排在一起。", sampleIndex:0, sampleCaption:"站在庭院石狮之间，正对大殿：剪瓷雕屋顶、石狮与石铺庭院同框" },
   ],
   "姓氏桥": [
-    { name:"姓周桥栈道走到海尽头", where:"从姓周桥（Chew Jetty）入口沿木栈道向海里走，面向大海拍。这里是早期华人移民留下的传统高脚屋居住所。", how:"每天 9:00–21:00 开放。想拍漂亮的大海，涨潮时来；尊重居民隐私，不要拍屋内摆设和居民家人。" },
+    { name:"姓周桥栈道走到海尽头", where:"从姓周桥（Chew Jetty）入口沿木栈道向海里走，面向大海拍。这里是早期华人移民留下的传统高脚屋居住所。", how:"每天 9:00–21:00 开放。想拍漂亮的大海，涨潮时来；尊重居民隐私，不要拍屋内摆设和居民家人。", sampleIndex:0, sampleCaption:"姓周桥木栈道：壁画墙与高脚屋店铺沿栈道展开" },
   ],
   "极乐寺": [
     { name:"万佛宝塔外观广场", where:"站在万佛宝塔前的广场上，面向宝塔。七层宝塔融合了中国、泰国、缅甸三种建筑风格，是极乐寺最具代表性的画面。", how:"早上去，避开人潮和炎热。农历新年期间寺院灯饰全亮、最热闹，但人也最多，亚依淡会水泄不通。", sampleIndex:3, sampleCaption:"广场上看万佛宝塔：红灯笼前景同框" },
@@ -16,8 +16,8 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "升旗山": [
     { name:"山顶观景台俯瞰", where:"缆车到站后走到山顶观景台，居高临下：乔治市市区、槟威海峡铺在脚下，天气晴朗时甚至能看到浮罗交怡岛。", how:"在这里看夜景是很不错的体验。假期和周末人多、排长龙，可以考虑买速通票。", sampleIndex:4, sampleCaption:"缆车轨道与山顶俯瞰：乔治市市区与海峡" },
-    { name:"缆车上山途中", where:"乘坐缆车（Funicular）从山下上山，在车厢里向窗外拍，市区和海景在窗外展开。", how:"假期和周末乘缆车的人多，赶时间可以买速通票，免排长龙。" },
-    { name:"The Habitat 树顶步道", where:"缆车上山后跟着 The Habitat 的告示牌步行前往，登上 Curtis Crest 树顶步道——13 米高的观景台（海拔 820 米），360 度看乔治市、北海和浮罗交怡，是岛上最高的观景点之一。", how:"园区每天 9:30–18:00 开放。观景台有免费望远镜，可以看远处的景色。" },
+    { name:"缆车上山途中", where:"乘坐缆车（Funicular）从山下上山，在车厢里向窗外拍，市区和海景在窗外展开。", how:"假期和周末乘缆车的人多，赶时间可以买速通票，免排长龙。", sampleIndex:0, sampleCaption:"缆车轨道旁俯瞰：乔治市市区与槟威海峡在下方展开" },
+    { name:"The Habitat 树顶步道", where:"缆车上山后跟着 The Habitat 的告示牌步行前往，登上 Curtis Crest 树顶步道——13 米高的观景台（海拔 820 米），360 度看乔治市、北海和浮罗交怡，是岛上最高的观景点之一。", how:"园区每天 9:30–18:00 开放。观景台有免费望远镜，可以看远处的景色。", sampleIndex:1, sampleCaption:"The Habitat 树顶步道航拍：环形 Curtis Crest 悬于雨林之上" },
   ],
   "Fort Cornwallis": [
     { name:"棱堡大炮", where:"西北棱堡上的 Seri Rambai 大炮（1871 年装上棱堡），炮身朝海，背后是红砖城墙与白色灯塔。", how:"站在城墙下，把大炮、红砖城墙和白色灯塔同框拍下。", sampleIndex:0, sampleCaption:"棱堡转角大炮：炮口、红砖墙与白色灯塔同框" },
@@ -28,7 +28,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   "娘惹博物馆": [
     { name:"薄荷绿外墙正面", where:"Church Street 上的娘惹博物馆，整栋是薄荷绿外墙配主木门。", how:"站在街对面，把整栋楼拍进画面。", sampleIndex:0, sampleCaption:"娘惹博物馆薄荷绿外墙：牌匾、灯笼与人力车" },
     { name:"内部中庭大厅", where:"进门就是中央露天中庭：木雕屏风、鎏金面板、铸铁柱栏，中庭有金红两色的陈设。", how:"站在中庭中央拍对称构图，把二层也带进来。", sampleIndex:1, sampleCaption:"馆内中庭大厅：黑木雕家具与金色屏风" },
-    { name:"楼梯雕花仰拍", where:"中庭旁的雕花木楼梯通向二层。", how:"站在楼梯下方仰拍，拍木雕细节。" },
+    { name:"楼梯雕花仰拍", where:"中庭旁的雕花木楼梯通向二层。", how:"站在楼梯下方仰拍，拍木雕细节。", sampleIndex:3, sampleCaption:"中庭看雕花木楼梯：楼梯通向二层，金饰栏杆与余仁生牌匾同框" },
   ],
   "卧佛寺与缅寺": [
     { name:"卧佛殿内全身", where:"大殿内 33 米长的卧佛，是整座寺最值得拍的主体。", how:"殿内允许拍照但别用闪光灯；一早去避开人群，早晚光线也更柔和。" },
@@ -42,8 +42,8 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "和谐街": [
     { name:"观音亭正面", where:"街上的观音亭，站在庙前的大前院看大殿，屋顶有精美雕塑。", how:"殿内常年香火烟雾缭绕，拍大殿适合站在前院取景；前院偶尔会有戏曲或木偶戏演出。", sampleIndex:3, sampleCaption:"前院看观音亭大殿：屋顶剪瓷雕、香火烟雾与粉红大香前景" },
-    { name:"圣乔治教堂", where:"和谐街（Jalan Masjid Kapitan Keling）与 Lebuh Farquhar 交口的圣乔治教堂，1818 年落成，是槟城最古老的圣公会教堂；教堂前方有希腊式 Francis Light 纪念碑。", how:"在教堂前拍教堂全景，把纪念碑也带进画面；周日 8:30 有英文礼拜。" },
-    { name:"甲必丹吉灵清真寺", where:"Jalan Masjid Kapitan Keling 与 Buckingham Street 街角的清真寺；从 Chulia Street 方向走过来就能看到。", how:"免费参观、免费导览；进门会提供长袍；非穆斯林不能进祈祷大厅。" },
-    { name:"斯里玛哈马里安曼庙", where:"Queen Street 上的兴都庙，入口上方有雕刻精美的彩色塔门（gopuram）。", how:"进庙要脱鞋；开放时间为 8:00–12:00 和 16:30–21:00；部分神圣区域拍照前先问。" },
+    { name:"圣乔治教堂", where:"和谐街（Jalan Masjid Kapitan Keling）与 Lebuh Farquhar 交口的圣乔治教堂，1818 年落成，是槟城最古老的圣公会教堂；教堂前方有希腊式 Francis Light 纪念碑。", how:"在教堂前拍教堂全景，把纪念碑也带进画面；周日 8:30 有英文礼拜。", sampleIndex:2, sampleCaption:"圣乔治教堂全景：白色柱廊尖塔与前方的 Francis Light 纪念碑同框" },
+    { name:"甲必丹吉灵清真寺", where:"Jalan Masjid Kapitan Keling 与 Buckingham Street 街角的清真寺；从 Chulia Street 方向走过来就能看到。", how:"免费参观、免费导览；进门会提供长袍；非穆斯林不能进祈祷大厅。", sampleIndex:0, sampleCaption:"街角看甲必丹吉灵清真寺：白色宣礼塔与黑色圆顶" },
+    { name:"斯里玛哈马里安曼庙", where:"Queen Street 上的兴都庙，入口上方有雕刻精美的彩色塔门（gopuram）。", how:"进庙要脱鞋；开放时间为 8:00–12:00 和 16:30–21:00；部分神圣区域拍照前先问。", sampleIndex:1, sampleCaption:"兴都庙彩色塔门仰拍：神像密雕布满塔身" },
   ],
 };
