@@ -714,7 +714,57 @@ function planText(){
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
 function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
-function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage();cachePlannerLocal()}
+function updateAll(){renderCountries();renderRecommendation();renderCompare();if(!state.edited)buildRecommendedSchedule();renderCalendar();renderCoverage();renderTrip();cachePlannerLocal()}
+
+/* ================= 🗺️ 大行程总览（35 天：11/28 去程＋中间 34 天＋1/2 回程） ================= */
+interface TripSegDef { id: string; label: string; sub: string; mode: string; note: string; cta?: boolean }
+const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
+const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
+const TRIP_SEGS: TripSegDef[] = [
+  { id:"beijing1", label:"北京", sub:"陪父亲", mode:"🏠 家庭", note:"倒时差＋陪父亲" },
+  { id:"xian", label:"西安", sub:"与岳父母会合", mode:"🏠 家庭", note:"会合岳父母，准备同飞新加坡" },
+  { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
+  { id:"couple", label:"夫妻东南亚", sub:"泰国＋越南（两人）", mode:"⚡ 特种兵", note:"首日岳父母带娃回国，你俩直飞东南亚", cta:true },
+  { id:"beijing2", label:"北京 / 西安", sub:"分头跨年", mode:"🏠 家庭", note:"你回北京陪父亲跨年，老婆回西安" },
+];
+let tripDays: Record<string, number> = { beijing1:13, xian:4, singapore:5, couple:9, beijing2:3 };
+
+function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
+function tripRanges(){
+  const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
+  for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
+  return out;
+}
+function renderTrip(){
+  const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
+  const segHtml=TRIP_SEGS.map(s=>{
+    const r=ranges[s.id], d=tripDays[s.id]||0;
+    return `<div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><strong>${s.label} · ${s.sub}</strong><div class="micro">${s.mode} · ${s.note}</div>
+        <div class="micro" style="margin-top:4px">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div></div>
+        <div class="stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
+      </div>
+      ${s.cta?`<div style="margin-top:10px"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
+    </div>`;
+  }).join("");
+  body.innerHTML=`
+    <div class="card" style="margin-bottom:12px;border-style:dashed"><div class="micro">✈️ <strong>11/28（周六）西雅图 → 北京</strong> · 去程（时间已定）</div></div>
+    ${segHtml}
+    <div class="card" style="margin-bottom:12px;border-style:dashed"><div class="micro">✈️ <strong>1/2（周六）北京 → 西雅图</strong> · 回程（时间已定）</div></div>
+    <p class="micro" role="status" style="margin:12px 0">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天${ok?" ✓":` <b style="color:#b3261e">⚠️ 合计须为 ${TRIP_MIDDLE_DAYS} 天（11/29–1/1），请调整</b>`}</p>
+    <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
+    <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
+  body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const [id,dd]=((b as HTMLElement).dataset.tripday||"").split("|");
+    tripDays[id]=Math.min(20,Math.max(1,(tripDays[id]||1)+Number(dd)));
+    renderTrip(); cachePlannerLocal();
+  });
+  const tw=body.querySelector("#tripToWizard") as HTMLElement|null;
+  if(tw) tw.onclick=()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); };
+  const sv=body.querySelector("#tripSave") as HTMLButtonElement|null;
+  if(sv) sv.onclick=async ()=>{ sv.disabled=true; try{ await persistPlanToCloud(t=>{ el("tripSaveNote").textContent=t; }); }finally{ sv.disabled=!ok; } };
+}
 
 /* ================= 🧭 分步规划向导 ================= */
 interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string }
@@ -980,6 +1030,7 @@ function serializePlan(): PlannerPlan{
     wz:{cities:[...wz.cities],days:{...wz.days},order:[...wz.order],start:wz.start,modes:{...wz.modes}},
     hotelSelections:{},
     flightSelections:{},
+    trip:{...tripDays},
   };
 }
 function applyLoadedPlan(p: PlannerPlan){
@@ -995,6 +1046,9 @@ function applyLoadedPlan(p: PlannerPlan){
     if(Array.isArray(p.wz.order)&&p.wz.order.length) wz.order=[...p.wz.order];
     if(p.wz.start) wz.start=p.wz.start;
     if(p.wz.modes&&typeof p.wz.modes==="object") wz.modes={...p.wz.modes};
+  }
+  if(p.trip&&typeof p.trip==="object"){
+    for(const s of TRIP_SEGS){ const v=(p.trip as Record<string,unknown>)[s.id]; if(typeof v==="number"&&v>=1&&v<=20) tripDays[s.id]=v; }
   }
   state.edited=true; /* 已加载的规划不再被 buildRecommendedSchedule 覆盖 */
   const sd=S.getElementById("startDate") as HTMLInputElement|null; if(sd&&state.start) sd.value=state.start;
@@ -1032,7 +1086,7 @@ syncCalMode();
 el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
 el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
-initTransport();renderHotels();initWizard();
+initTransport();renderHotels();initWizard();renderTrip();
 
 /* 异步加载云端最新规划（卸载安全：中途卸载则丢弃结果） */
 let alive=true;

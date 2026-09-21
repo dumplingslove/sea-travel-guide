@@ -1,9 +1,9 @@
 <main class="shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">DEC 2026 · 先比较，再落日历</p>
-        <h1>哪两个国家，<br><em>最值这 7 天？</em></h1>
-        <p class="hero-copy">把夫妻双人段和带两岁幼儿的亲子段分开算：双人默认特种兵节奏约 4 个精华点，亲子日按 1–2 个并预留午休。换国家、改天数或节奏，覆盖率与舍弃清单会一起重算。</p>
+        <p class="eyebrow">2026-11-28 → 2027-01-02 · 35 天大行程</p>
+        <h1>先定大行程，<br><em>再细排每一段</em></h1>
+        <p class="hero-copy">来回时间已定（11/28 西雅图→北京，1/2 北京→西雅图），中间每段几天你来定：北京陪父亲、西安会合岳父母、新加坡亲子、夫妻泰国越南特种兵，最后分头回国跨年。定好天数点保存，云端同步。</p>
       </div>
       <aside class="snapshot" aria-label="数据快照说明">
         <strong>DATA SNAPSHOT · 2026-09-14</strong>
@@ -12,14 +12,22 @@
     </section>
 
     <nav class="tabs" aria-label="页面区域">
-      <button class="tab active" data-tab="wizard" aria-selected="true">🧭 分步规划</button>
+      <button class="tab active" data-tab="trip" aria-selected="true">🗺️ 大行程</button>
+      <button class="tab" data-tab="wizard" aria-selected="false">🧭 分步规划</button>
       <button class="tab" data-tab="decide" aria-selected="false">智能推荐</button>
       <button class="tab" data-tab="calendar" aria-selected="false">日历排期</button>
       <button class="tab" data-tab="coverage" aria-selected="false">景点覆盖</button>
       <button class="tab" data-tab="constraints" aria-selected="false">航班酒店</button>
     </nav>
 
-    <section id="wizard" class="panel active">
+    <section id="trip" class="panel active">
+      <div class="section-head">
+        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>35 天大行程，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延，合计须为 34 天（11/29–1/1，首尾为已定的去回程航班日）。定好点「保存大行程」，云端同步、刷新不丢；夫妻段的城市细排去「🧭 分步规划」继续。</p></div>
+      </div>
+      <div id="tripBody" aria-live="polite"></div>
+    </section>
+
+    <section id="wizard" class="panel">
       <div class="section-head">
         <div><p class="eyebrow">GUIDED PLANNER</p><h2>四步定下整趟行程</h2><p class="lede">先选城市，再定每城天数，然后排具体日期，最后看每段机票与每城酒店。每一步都给到做决策需要的信息；走完点「保存规划」，自动排入日历并同步到首页、每日详情与地图。</p></div>
       </div>

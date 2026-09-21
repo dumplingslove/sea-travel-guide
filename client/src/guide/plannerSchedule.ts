@@ -45,6 +45,8 @@ export interface PlannerPlan {
   /** 预留：规划器目前只做航班/酒店展示，尚无用户选择 */
   hotelSelections: Record<string, unknown>;
   flightSelections: Record<string, unknown>;
+  /** 大行程总览：各段天数（段 id -> 天数），可选以兼容旧保存 */
+  trip?: Record<string, number>;
 }
 
 export interface LoadedPlan {
