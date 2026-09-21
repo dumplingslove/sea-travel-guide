@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-21T04:52Z",
+ "updated_at": "2026-09-21T10:47Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1826,7 +1826,7 @@ export const initialResearchStatus = {
        "posts": 1,
        "target": 10,
        "status": "partial",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（《再也没遇到比瓦洛洛更低的物价》）；缺9篇，候选充足（派妈遛娃记/幺幺陆/毛儿妈i辣椒/北冥有鱼HHH/泡泡/土豆墩墩/丸子太太/香菜奈儿/剑霞/bibi/原原满满/夏天向日葵等）待核实；清迈20项队列至此全部跑完（done 5/partial 15）。证据：redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md",
+       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（《再也没遇到比瓦洛洛更低的物价》）；缺9篇，候选充足（派妈遛娃记/幺幺陆/毛儿妈i辣椒/北冥有鱼HHH/泡泡/土豆墩墩/丸子太太/香菜奈儿/剑霞/bibi/原原满满/夏天向日葵等）待核实；清迈20项队列至此全部跑完（done 5/partial 15）。证据：redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md；2026-09-21 06:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除（bibi多市场合集非瓦洛洛专帖、派妈遛娃记《清迈瓦洛洛怎么逛》详情页无2024-2026年份显示），新增0篇，仍1/10，缺9篇，候选清单已在文件尾更新。；2026-09-21 08:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——毛儿妈i辣椒《好逛清迈|瓦洛洛✘去了，ta后身才是重点！》详情页无年份且正文自述非瓦洛洛专帖、北冥有鱼HHH《清迈瓦洛洛市场果干价格分享》详情页无年份显示，新增0篇，仍1/10，缺9篇；新增线索：北冥有鱼HHH 08-05《瓦洛洛市场必逛的店 附价格！！！》（399赞，本轮配额用尽未打开）",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md"
       },
       "photos": {
@@ -6854,7 +6854,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "summary": "共195项：TripAdvisor190、Google Maps191、中文站185、小红书22、照片191、详情193；六类全部完成17项(DB)",
+ "summary": "共195项：TripAdvisor190、Google Maps191、中文站185、小红书23、照片191、详情193；六类全部完成17项(DB)",
  "total_locations": 195,
  "complete_items": 17
 };
