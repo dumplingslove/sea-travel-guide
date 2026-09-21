@@ -884,16 +884,51 @@ function wzStep4(){
     ${measured.length===legs.length&&legs.length?`<div class="wz-leg pass"><strong>💰 7段Duffel实测最低合计约 $${totalMin.toFixed(2)} / 2人</strong><p><span class="micro">${DUFFEL_NOTE}</span></p></div>`:""}
     <h3 style="margin:6px 0 10px">✈ 逐段机票</h3>${legCards||'<p class="micro">只有一城，无需城际机票。</p>'}
     <h3 style="margin:18px 0 10px">🏨 逐城酒店</h3><div class="wz-hotel-grid">${hotelCards}</div>
-    <div class="wz-nav"><button class="ghost" id="wzBack4">← 上一步</button><button class="primary" id="wzApply">排入日历并查看 →</button></div>`;
+    <p class="micro" id="wzSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
+    <div class="wz-nav"><button class="ghost" id="wzBack4">← 上一步</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" id="wzSave">💾 保存规划</button><button class="ghost" id="wzApply">排入日历并查看 →</button></span></div>`;
 }
-function wzApplyToCalendar(){
+function wzApplySchedule(){
   const rows=wzRanges(), schedule: Record<string,{city:string;mode:string}> = {};
   rows.forEach(r=>{ for(let d=r.from;d<=r.to;d=addDays(d,1)) schedule[d]={city:r.city,mode:r.mode} });
   state.schedule=schedule; state.edited=true; state.start=wz.start;
   (el("startDate") as HTMLInputElement).value=wz.start;
   renderCalendar(); renderCoverage();
+}
+function wzApplyToCalendar(){
+  wzApplySchedule();
   (S.querySelector('[data-tab="calendar"]') as HTMLElement).click();
   toast("已按四步规划排入日历");
+}
+/* 向导第 4 步的保存：先把向导排期写入日历，再走云端保存（未登录则本机缓存） */
+function wzSaveNote(t: string){ const n=S.getElementById("wzSaveNote"); if(n) n.textContent=t; }
+async function wzSavePlan(){
+  const btn=S.getElementById("wzSave") as HTMLButtonElement|null;
+  if(btn) btn.disabled=true;
+  try{
+    wzApplySchedule();
+    await persistPlanToCloud(wzSaveNote);
+  }finally{ if(btn) btn.disabled=false; }
+}
+/* 云端保存（日历 tab 的「保存到云端」与向导第 4 步的「保存规划」共用） */
+async function persistPlanToCloud(note: (t: string)=>void){
+  note("正在保存到云端…");
+  try{
+    const loaded=await savePlannerPlan(serializePlan());
+    lastCacheJson=JSON.stringify(loaded.plan);
+    note(`✓ 已保存到云端 · ${loaded.updatedByName} · ${fmtSyncTime(loaded.updatedAt)}；首页、每日详情与地图已同步更新。`);
+    toast("规划已保存到云端，全站已同步更新");
+  }catch(err){
+    const plan=serializePlan(); lastCacheJson=JSON.stringify(plan);
+    if((err as Error)?.message==="not-logged-in"){
+      const cached=cachePlannerPlanLocally(plan,"本机（未登录）");
+      note(`⚠️ 未登录：已保存到本机缓存（${fmtSyncTime(cached.updatedAt)}），刷新不丢；登录后再点保存，同步到云端全站。`);
+      toast("未登录，已暂存到本机",true);
+    }else{
+      cachePlannerPlanLocally(plan,"本机");
+      note("⚠️ 云端保存失败，已保留本机缓存；网络恢复后重试。");
+      toast("云端保存失败，已保留本机缓存",true);
+    }
+  }
 }
 function wzCopyBooking(){
   const legs=wzLegs(), rows=wzRanges(), lines=["东南亚行程 · 机票酒店预订清单",""];
@@ -923,7 +958,7 @@ function wzWire(){
   on("wzClear",()=>{ wz.cities=[]; wzRender() });
   on("wzNext1",()=>wzSetStep(2)); on("wzBack2",()=>wzSetStep(1)); on("wzNext2",()=>wzSetStep(3));
   on("wzBack3",()=>wzSetStep(2)); on("wzNext3",()=>wzSetStep(4)); on("wzBack4",()=>wzSetStep(3));
-  on("wzApply",wzApplyToCalendar); on("wzCopy",wzCopyBooking);
+  on("wzApply",wzApplyToCalendar); on("wzSave",wzSavePlan); on("wzCopy",wzCopyBooking);
   S.querySelectorAll("[data-wzday]").forEach(b=>(b as HTMLElement).onclick=(e)=>{ e.stopPropagation(); const [city,d]=((b as HTMLElement).dataset.wzday||"").split("|"); wz.days[city]=Math.min(6,Math.max(1,(wz.days[city]||1)+Number(d))); wzRender() });
   S.querySelectorAll("[data-wzup]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const city=arr[i]; arr[i]=arr[i-1]; arr[i-1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
   S.querySelectorAll("[data-wzdown]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzdown), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const city=arr[i]; arr[i]=arr[i+1]; arr[i+1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
@@ -988,24 +1023,8 @@ el("resetRecommended").onclick=()=>{state.edited=false;buildRecommendedSchedule(
 el("copyPlan").onclick=copyPlan;
 el("savePlanCloud").onclick=async ()=>{
   const btn=el("savePlanCloud") as HTMLButtonElement; btn.disabled=true;
-  try{
-    setSyncNote("正在保存到云端…");
-    const loaded=await savePlannerPlan(serializePlan());
-    lastCacheJson=JSON.stringify(loaded.plan);
-    setSyncNote(`✓ 已保存到云端 · ${loaded.updatedByName} · ${fmtSyncTime(loaded.updatedAt)}；首页、每日详情与地图已同步更新。`);
-    toast("规划已保存到云端，全站已同步更新");
-  }catch(err){
-    const plan=serializePlan(); lastCacheJson=JSON.stringify(plan);
-    if((err as Error)?.message==="not-logged-in"){
-      const cached=cachePlannerPlanLocally(plan,"本机（未登录）");
-      setSyncNote(`⚠️ 未登录：已保存到本机缓存（${fmtSyncTime(cached.updatedAt)}），刷新不丢；登录后点「保存到云端」同步全站。`);
-      toast("未登录，已暂存到本机",true);
-    }else{
-      cachePlannerPlanLocally(plan,"本机");
-      setSyncNote("⚠️ 云端保存失败，已保留本机缓存；网络恢复后重试。");
-      toast("云端保存失败，已保留本机缓存",true);
-    }
-  }finally{ btn.disabled=false; }
+  try{ await persistPlanToCloud(setSyncNote); }
+  finally{ btn.disabled=false; }
 };
 el("calModeDecision").onclick=()=>{state.calMode="decision";syncCalMode();renderCalendar()};
 el("calModeSchedule").onclick=()=>{state.calMode="schedule";syncCalMode();renderCalendar()};
