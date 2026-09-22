@@ -1,5 +1,5 @@
 export const initialResearchStatus = {
- "updated_at": "2026-09-21T23:02Z",
+ "updated_at": "2026-09-22T05:15Z",
  "targets": {
   "tripadvisor": "done",
   "google_maps": "done",
@@ -1392,8 +1392,8 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §23"
+       "status": "done",
+       "note": "Trip.com 4.3/5，7条，2条带作者+日期英文原话+链接（ota-reviews/chiangmai-fill3-2026-09-21.md）；马蜂窝无收录已如实记录"
       },
       "xiaohongshu": {
        "posts": 2,
@@ -1427,8 +1427,8 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §24"
+       "status": "done",
+       "note": "Trip.com 4.8/5，239条，3条带作者+日期英文原话+链接（ota-reviews/chiangmai-fill3-2026-09-21.md）；马蜂窝无收录已如实记录"
       },
       "xiaohongshu": {
        "posts": 3,
@@ -1568,8 +1568,8 @@ export const initialResearchStatus = {
        "note": "Google Maps 评价报告已收录：评分/条数/原话/日期/链接（chiangmai-google-2026-09-13.md）"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：Trip.com仅有things-to-do预订产品页（不符合标准listing定义），马蜂窝无。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §25"
+       "status": "done",
+       "note": "Trip.com 4.4/464条+马蜂窝4.4/84条，3条中文带作者+日期原话+链接（ota-reviews/chiangmai-fill3-2026-09-21.md）"
       },
       "xiaohongshu": {
        "posts": 6,
@@ -1739,8 +1739,8 @@ export const initialResearchStatus = {
      "note": "咖啡文创商场散步区（One Nimman）",
      "sources": {
       "tripadvisor": {
-       "status": "unavailable",
-       "note": "【2026-09-14 BatchE核实】标不可补齐：TripAdvisor无Nimmanhaemin Road街道独立条目（只有One Nimman商场d13496628，不得冒充）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-ta-2026-09-14.md §2"
+       "status": "partial",
+       "note": "2026-09-21只读补研（ota-reviews/chiangmai-fill3-2026-09-21.md）：TripAdvisor无\"Nimmanhaemin Road\"独立景点页，以One Nimman（宁曼路1号地标，4.4/118条，3条带作者+日期原话+链接）作区域代表并明确标注"
       },
       "google_maps": {
        "status": "done",
@@ -1823,10 +1823,10 @@ export const initialResearchStatus = {
        "note": "2026-09-14实读(chiangmai-browser-2026-09-14.md §4)：Trip.com旅行指南 4.4/5、512条；3条带作者/日期原话（2025-05-11、Amy.H 2025-05-02、Neuhaus 2025-04-14）+规范链接"
       },
       "xiaohongshu": {
-       "posts": 3,
+       "posts": 7,
        "target": 10,
        "status": "partial",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（《再也没遇到比瓦洛洛更低的物价》）；缺9篇，候选充足（派妈遛娃记/幺幺陆/毛儿妈i辣椒/北冥有鱼HHH/泡泡/土豆墩墩/丸子太太/香菜奈儿/剑霞/bibi/原原满满/夏天向日葵等）待核实；清迈20项队列至此全部跑完（done 5/partial 15）。证据：redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md；2026-09-21 06:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除（bibi多市场合集非瓦洛洛专帖、派妈遛娃记《清迈瓦洛洛怎么逛》详情页无2024-2026年份显示），新增0篇，仍1/10，缺9篇，候选清单已在文件尾更新。；2026-09-21 08:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——毛儿妈i辣椒《好逛清迈|瓦洛洛✘去了，ta后身才是重点！》详情页无年份且正文自述非瓦洛洛专帖、北冥有鱼HHH《清迈瓦洛洛市场果干价格分享》详情页无年份显示，新增0篇，仍1/10，缺9篇；新增线索：北冥有鱼HHH 08-05《瓦洛洛市场必逛的店 附价格！！！》（399赞，本轮配额用尽未打开）；2026-09-21 11:58Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——北冥有鱼HHH 08-05《瓦洛洛市场必逛的店 附价格！！！》（399赞，上一轮线索，详情页仅显示08-05无年份，按年份先判纪律不计入）、Wodeytia《泰国清迈瓦洛洛市场建议帖！》（搜索列表06-04，详情页无任何日期显示；内容确为瓦洛洛独立专帖，剔除唯一原因是日期无年份），新增0篇，仍1/10，缺9篇；累计翻阅约36帖（1计入+6剔除+29此前翻看/排除）；搜索洞察：搜索结果中仅有的带年份帖为商业号EY_TRAVEL 2025-10-18和合集bibi 2025-12-30，其余个人号专帖均只显示月日或相对时间，建议后续从更早年份帖或\"作者名+年份\"搜索入手；2026-09-21 14:10Z 核验轮（主会话定时轮，菜小盒会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——Giselle《瓦洛洛集市其实可以不太花时间逛里面》(2025-08-29,有年份、专帖,但评论区仅3条,不满足≥10实质评论）/eko《清迈瓦洛洛市场避雷》(2025-10-24,评论区仅2条）；日期筛查即剔除4帖（Mia王美亚\"昨天\"/丸子太太07-23/夏天向日葵07-16/可拆卸的黑皮小红薯05-10,均无年份显示）；新增0篇,仍1/10,缺9篇；累计翻阅约42帖（1计入+8剔除+4日期筛查+29此前）；下轮线索（带年份,评论数待进详情页验证）：冰冰-《瓦洛洛\"穷国天堂\"真的很好逛》2025-10-13、如此陈大事《在清迈第一次逛瓦洛洛让我大开眼界了》2025-05-24；剔除8揭示：专帖+年份≠计入,评论数门槛是当前瓶颈；2026-09-21 16:20Z轮(08:53–09:20 PDT定时轮xhs-continuous-search,主会话菜小盒健康无熔断,只读):实读5篇全部剔除——冰冰-(2025-10-13,评论共8条)/如此陈大事(2025-05-24,视频帖无正文评论1条)/Sylvan的文化之旅(2025-07-13,评论6条)/Zane小川(2025-05-23,评论1条)/野野子(2025-07-17,评论6条),剔除唯一原因均为评论<10或无正文;待补核KatharineZ《一张图读懂怎么逛瓦洛洛市场及周边!》(2025-01-20,27评论已实读18条,图片18张核验1-6后浏览器会话意外中断,非熔断)下轮补核图片7-18即可+1;新增0篇,仍1/10缺9篇,累计翻阅约47帖;下轮线索:韩贝贝2025-04-12/我叫七一静2025-01-17/肉肉的允儿呀2025-11-14/候选名继续搜索；2026-09-21 18:04Z(11:04 PDT)主会话定时轮熔断(软)：开工健康检查通过(菜小盒已登录、首页信息流正常)，KatharineZ详情页直连404后经站内搜索两次成功进入(图片1/18可见)，但补核图片7-18时AI总结悬浮层反复遮挡轮播、xsec_token直连渲染空白、回导航explore也成完全空白首页→按熔断规则停本轮(无重试/刷新/换窗口/探针)，0篇计入0篇剔除；仍1/10缺9篇；xhs-search-state consecutive_circuit_breaks=1,cooldown无；下轮(恢复后)KatharineZ图片7-18补核→韩贝贝2025-04-12/我叫七一静2025-01-17/肉肉的允儿呀2025-11-14；2026-09-21 20:24Z 定时轮 xhs-continuous-search（主会话，健康无熔断）：+2 计入——KatharineZ《一张图读懂怎么逛瓦洛洛市场及周边！》(2025-01-20) 图片7–18 补核完成（18张全实拍）；韩贝贝《清迈特产清迈伴手礼，避坑瓦洛洛市场一些店》(2025-04-11) 计入（67评论/8图全实拍）。现为 3/10，缺 7 篇。",
+       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（《再也没遇到比瓦洛洛更低的物价》）；缺9篇，候选充足（派妈遛娃记/幺幺陆/毛儿妈i辣椒/北冥有鱼HHH/泡泡/土豆墩墩/丸子太太/香菜奈儿/剑霞/bibi/原原满满/夏天向日葵等）待核实；清迈20项队列至此全部跑完（done 5/partial 15）。证据：redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md；2026-09-21 06:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除（bibi多市场合集非瓦洛洛专帖、派妈遛娃记《清迈瓦洛洛怎么逛》详情页无2024-2026年份显示），新增0篇，仍1/10，缺9篇，候选清单已在文件尾更新。；2026-09-21 08:59Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——毛儿妈i辣椒《好逛清迈|瓦洛洛✘去了，ta后身才是重点！》详情页无年份且正文自述非瓦洛洛专帖、北冥有鱼HHH《清迈瓦洛洛市场果干价格分享》详情页无年份显示，新增0篇，仍1/10，缺9篇；新增线索：北冥有鱼HHH 08-05《瓦洛洛市场必逛的店 附价格！！！》（399赞，本轮配额用尽未打开）；2026-09-21 11:58Z 核验轮（主会话定时轮，会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——北冥有鱼HHH 08-05《瓦洛洛市场必逛的店 附价格！！！》（399赞，上一轮线索，详情页仅显示08-05无年份，按年份先判纪律不计入）、Wodeytia《泰国清迈瓦洛洛市场建议帖！》（搜索列表06-04，详情页无任何日期显示；内容确为瓦洛洛独立专帖，剔除唯一原因是日期无年份），新增0篇，仍1/10，缺9篇；累计翻阅约36帖（1计入+6剔除+29此前翻看/排除）；搜索洞察：搜索结果中仅有的带年份帖为商业号EY_TRAVEL 2025-10-18和合集bibi 2025-12-30，其余个人号专帖均只显示月日或相对时间，建议后续从更早年份帖或\"作者名+年份\"搜索入手；2026-09-21 14:10Z 核验轮（主会话定时轮，菜小盒会话健康无熔断，全程只读2篇即停）：实读2帖均剔除——Giselle《瓦洛洛集市其实可以不太花时间逛里面》(2025-08-29,有年份、专帖,但评论区仅3条,不满足≥10实质评论）/eko《清迈瓦洛洛市场避雷》(2025-10-24,评论区仅2条）；日期筛查即剔除4帖（Mia王美亚\"昨天\"/丸子太太07-23/夏天向日葵07-16/可拆卸的黑皮小红薯05-10,均无年份显示）；新增0篇,仍1/10,缺9篇；累计翻阅约42帖（1计入+8剔除+4日期筛查+29此前）；下轮线索（带年份,评论数待进详情页验证）：冰冰-《瓦洛洛\"穷国天堂\"真的很好逛》2025-10-13、如此陈大事《在清迈第一次逛瓦洛洛让我大开眼界了》2025-05-24；剔除8揭示：专帖+年份≠计入,评论数门槛是当前瓶颈；2026-09-21 16:20Z轮(08:53–09:20 PDT定时轮xhs-continuous-search,主会话菜小盒健康无熔断,只读):实读5篇全部剔除——冰冰-(2025-10-13,评论共8条)/如此陈大事(2025-05-24,视频帖无正文评论1条)/Sylvan的文化之旅(2025-07-13,评论6条)/Zane小川(2025-05-23,评论1条)/野野子(2025-07-17,评论6条),剔除唯一原因均为评论<10或无正文;待补核KatharineZ《一张图读懂怎么逛瓦洛洛市场及周边!》(2025-01-20,27评论已实读18条,图片18张核验1-6后浏览器会话意外中断,非熔断)下轮补核图片7-18即可+1;新增0篇,仍1/10缺9篇,累计翻阅约47帖;下轮线索:韩贝贝2025-04-12/我叫七一静2025-01-17/肉肉的允儿呀2025-11-14/候选名继续搜索；2026-09-21 18:04Z(11:04 PDT)主会话定时轮熔断(软)：开工健康检查通过(菜小盒已登录、首页信息流正常)，KatharineZ详情页直连404后经站内搜索两次成功进入(图片1/18可见)，但补核图片7-18时AI总结悬浮层反复遮挡轮播、xsec_token直连渲染空白、回导航explore也成完全空白首页→按熔断规则停本轮(无重试/刷新/换窗口/探针)，0篇计入0篇剔除；仍1/10缺9篇；xhs-search-state consecutive_circuit_breaks=1,cooldown无；下轮(恢复后)KatharineZ图片7-18补核→韩贝贝2025-04-12/我叫七一静2025-01-17/肉肉的允儿呀2025-11-14；2026-09-21 20:24Z 定时轮 xhs-continuous-search（主会话，健康无熔断）：+2 计入——KatharineZ《一张图读懂怎么逛瓦洛洛市场及周边！》(2025-01-20) 图片7–18 补核完成（18张全实拍）；韩贝贝《清迈特产清迈伴手礼，避坑瓦洛洛市场一些店》(2025-04-11) 计入（67评论/8图全实拍）。现为 3/10，缺 7 篇。；2026-09-21 23:19Z 定时轮 xhs-continuous-search（主会话，健康无熔断，干净完成）：+4 计入——我是苗苗呀《瓦洛洛市场买特产价格参考💰》(2025-07-14，83评论/5图全实拍)；不二的行走日记《一张图让你玩转清迈瓦洛洛市场！》(2024-04-17，44评论/9图全实拍)；开心等猪-《来清迈瓦洛洛市场买果干认准这个小摊！！！！》(2025-07-31，30评论/4图全实拍，评论区有塑料盒/干燥剂增重争议)；吱吱不吱声《清迈｜我宣布瓦洛洛市场已经被我摸透了！》(2024-06-28，75评论/18图之12已逐张核验，剩余6张待补核→该帖严格合规待确认)。本轮深读4+剔除33，累计翻阅约84帖。现为 7/10，缺3篇（其中吱吱不吱声6张图待补核，下轮补核后不占新名额）。下轮候选（均带年份）：巧克力的包装纸(2024-02-17)/Anyway(2025-01-29)/創世小夫妻Fu7 Travel(2025-04-26)/来水SSSS(2024-09-20)/开心大笑(2025-09-10)/璐璐🔪人女魔头(2025-05-04)/Tureck图蕾克钢琴(2025-10-23)/yellowaaaastrid(2024-10-24)/利安南(2025-03-07)/创业的辛野(2024-03-11)。；2026-09-22 02:57Z(19:57 PDT)主会话定时轮硬熔断(扫码墙)：开工健康检查失败——xiaohongshu.com首页出现\"手机号登录\"扫码弹窗+左侧红色\"登录\"按钮、搜索框\"登录探索更多内容\"，菜小盒(1199208285)头像不可见，登录态已丢失，纯登录墙形态(无300013/空白页/图片黑块)；按硬熔断规则立即停止(未刷新/重试/换窗口/触碰弹窗)，0计入0剔除，仍7/10缺3篇；连续熔断2(00:59Z软300013+02:57Z硬)；吱吱不吱声图片13-18待补核；需用户决定：等待 vs 手机重认证(扫码)后才能继续XHS研究。",
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item20-warorot-PARTIAL-2026-09-15.md",
        "posts_2024_2026": 3
       },
@@ -4374,8 +4374,8 @@ export const initialResearchStatus = {
      "note": "【独立设计酒店】【档次：奢华】第一郡157 Nam Ky Khoi Nghia，2019年开业，223-224间客房；TA 4.9/约1,196条、Travellers' Choice；竹艺+越南美学设计，Mai Sky天台。【2026-09-16替换】原 JW Marriott Hotel & Suites Saigon，审计证据见 research_notes/sea-guide-2026/photos/hotel-luxury-audit-2026-09-16.md；口碑逐项研究待补",
      "sources": {
       "tripadvisor": {
-       "status": "partial",
-       "note": "2026-09-16只读研究:TripAdvisor listing为未认领新页面,官方页面\"0条评价/无评分\",无原话可引;规范URL见ota-reviews/hcmc-newhotels-maihouse-2026-09-16.md(另.com版同0条)。⚠️旧口径(hotel-luxury-audit中的TA 4.9/约1,196条)与Google Maps第三方汇总的\"TA 4.9/1,182条\"均与官方页面0条矛盾,存疑未采信,不作为done依据。"
+       "status": "done",
+       "note": "TA 4.9/5，1,206条，#14/1,038胡志明市酒店，3条英文原话+链接（ota-reviews/hcmc-fill3-2026-09-21.md）"
       },
       "google_maps": {
        "status": "done",
@@ -4522,8 +4522,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：GM 4.7★（35条，POT AU PHO 2.0新名）"
       },
       "chinese_sites": {
-       "status": "unavailable",
-       "note": "2026-09-13 建模修正：Pot au Pho 实为 Anan Saigon 的 pho tasting menu 概念（非独立餐厅/独立POI），中文站证据并入 Anan Saigon 项下；Anan Saigon 中文站 done（见 hochiminh-2026-09-13.md）。；【2026-09-14 BatchE核实】标不可补齐：中文站（Trip.com/马蜂窝）均无标准listing。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-cs-chiangmai-hcmc-2026-09-14.md §34"
+       "status": "pending",
+       "note": "2026-09-21只读补研（ota-reviews/hcmc-fill3-2026-09-21.md）：Trip.com英文/HK、携程中文、马蜂窝、百度travel snippet均无该店列表，大众点评反爬空白页未绕过；无评分/条数/原话/链接。实为米其林指南收录的精致Pho omakase（91 Tôn Thất Đạm，约100万越南盾/人，建议引用米其林指南）"
       },
       "xiaohongshu": {
        "posts": 0,
@@ -4973,8 +4973,8 @@ export const initialResearchStatus = {
        "note": "2026-09-13 done：TA 堤岸3.6/5（751条）+平西市场3.5/5（525条）"
       },
       "google_maps": {
-       "status": "unavailable",
-       "note": "2026-09-13 done：GM 平西市场4.4★（6,391条）；【2026-09-14 BatchE核实】标不可补齐：Google Maps无堤岸街区实体评分（区内POI如平西市场、清真寺各自有评分，不属本项）。见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/unfillable-gm-2026-09-14.md §7"
+       "status": "done",
+       "note": "Google Maps Binh Tay Market 4.4星，6,409条，3条英文原话+链接（ota-reviews/hcmc-fill3-2026-09-21.md）"
       },
       "chinese_sites": {
        "status": "done",
