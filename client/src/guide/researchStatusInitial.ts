@@ -1109,7 +1109,7 @@ export const initialResearchStatus = {
    "total": 32
   },
   "chiangmai": {
-   "complete": 8,
+   "complete": 9,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1174,9 +1174,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "note": "2026-09-22 09:12 PDT轮（新3帖高流量标准）：新增2篇实读达标帖——penghunana《在漂亮地方穿漂亮裙子》(2026-05-31，2464赞/673收藏/117评论)；羊老板🐑《清迈慢旅☀️活着应该是旅程而不是流程》(2026-08-11，1518赞/176收藏/79评论)。旧9篇站内点赞核对最高826(燕西Yancy)均未达1000，未达标；约20组关键词全覆盖搜索，高赞干扰项已排除（吴冠乐1053赞POI不符Siri Villa等）。高流量达标2/3，按新标准暂不可转done，后续轮次继续留意第三篇。历史：旧标准严格实读9篇（7有效+2特例，2026-09-15/16）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-22 11:15 PDT xhs-continuous-search轮（新3帖高流量标准）：第3篇达标帖找到——💜金爷《ช้าๆ | Slow days at 137 Pillars🇹🇭》(2026-04-10，974赞/416收藏/40评论，推荐偏温和；https://www.xiaohongshu.com/explore/69d4b7290000000023007146)；第4篇补充候选：小章鱼Iris《在清迈的家🏨》(2026-05-13，945赞/29评论，18张逐张核验实拍相符；https://www.xiaohongshu.com/explore/6a03319a0000000007011a7a)。排除：Crystal Chen 1452赞帖实为The Amata Lanna错酒店。高流量达标3/3（penghunana 2464赞/羊老板🐑 1518赞/💜金爷 974赞），按新3帖标准转done。历史：09:12 PDT轮新增2篇实读达标；旧标准严格实读9篇（7有效+2特例）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
+       "posts": 3,
+       "status": "done",
        "target": 3
       }
      },
@@ -1247,10 +1247,10 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
-       "note": "9/10 partial（补充轮）：7篇基础上，依用户19:44 PDT裁决放宽评论门槛（评论少但内容扎实的帖也算），新增2篇——JulianGe《每天都被清迈香格里拉酒店的大落地窗美到》2025-10-04（68e12ab100000000070365bd，推荐，零评论但正文扎实）/《清迈香格里拉行政酒廊的早餐》2025-12-08（6936d80c000000001e003cd1，推荐，1条实质提问评论）；推荐7/中立2/不推荐0。缺1篇：剩余候选（元元13张LIVE、四舍五入一米七18张LIVE）因逐图审核技术不可行、纯餐饮帖因非住宿体验无法合规计入；是否进一步放宽（LIVE图抽查/餐饮帖计入）待用户裁决。证据见 redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
-       "posts": 9,
+       "note": "2026-09-22 15:07 PDT / 22:07 UTC xhs-continuous-search轮（新3帖高流量标准）：硬熔断（滑块安全验证）——点击搜索结果页'最热'排序标签后弹出安全验证浮层，按硬约束立即停止（未重试/刷新/换窗口/探针/尝试拖动滑块）；教训：勿再点'最热'排序切换，下轮控制搜索节奏。0篇计入，仍 partial（高流量0/3）；深读2篇剔除2（佳佳蹦咔咔3.3万赞宁曼路他家视频帖；Turbo_xin香格里拉一生拉黑仅6赞低流量未达标）；已计入9篇中6篇搜索卡片点赞核验均<20赞，无一篇达高流量。缺口3篇高流量住宿专帖。 2026-09-22 13:18 PDT轮（新3帖标准）：0/3——8组关键词轮换/14次打开逐项核验，千赞以上新候选均为错地/错店/主题不符，主题相关新帖均为低流量；旧口径9篇严格实读（推荐7/中立2，逐张图片核验）保留在证据文件；建议后续轮次换长尾关键词或等新帖产生后再搜。",
+       "posts": 0,
        "status": "partial",
-       "target": 10,
+       "target": 3,
        "verified_at": "2026-09-17T02:50:00Z"
       }
      },
@@ -6846,16 +6846,16 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 18,
- "summary": "共195项：TripAdvisor191、Google Maps192、中文站189、小红书24、照片191、详情194；六类全部完成18项(本地+DB 0-diff通过)",
+ "complete_items": 19,
+ "summary": "共195项：TripAdvisor191、Google Maps192、中文站189、小红书25、照片191、详情194；六类全部完成19项",
  "targets": {
   "chinese_sites": "done",
   "details": "done",
   "google_maps": "done",
   "photos_min": 5,
   "tripadvisor": "done",
-  "xhs_posts_min": 10
+  "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-22T16:54Z"
+ "updated_at": "2026-09-22T22:50Z UTC"
 };
