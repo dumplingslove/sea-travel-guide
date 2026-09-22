@@ -1174,10 +1174,10 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验回补轮（截至2026-09-16T01:55Z）：7篇有效（2024–2026独立专帖、有实质评论）+2篇特例（正文详实、无实质评论，特例额度已满），1篇未能找到符合标准（回补轮8篇新候选全部剔除，累计翻看50+篇；该酒店相关帖普遍0评论）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "posts": 9,
+       "note": "2026-09-22 09:12 PDT轮（新3帖高流量标准）：新增2篇实读达标帖——penghunana《在漂亮地方穿漂亮裙子》(2026-05-31，2464赞/673收藏/117评论)；羊老板🐑《清迈慢旅☀️活着应该是旅程而不是流程》(2026-08-11，1518赞/176收藏/79评论)。旧9篇站内点赞核对最高826(燕西Yancy)均未达1000，未达标；约20组关键词全覆盖搜索，高赞干扰项已排除（吴冠乐1053赞POI不符Siri Villa等）。高流量达标2/3，按新标准暂不可转done，后续轮次继续留意第三篇。历史：旧标准严格实读9篇（7有效+2特例，2026-09-15/16）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
+       "posts": 2,
        "status": "partial",
-       "target": 10
+       "target": 3
       }
      },
      "type": "酒店"
@@ -6857,5 +6857,5 @@ export const initialResearchStatus = {
   "xhs_posts_min": 10
  },
  "total_locations": 195,
- "updated_at": "2026-09-22T10:49Z"
+ "updated_at": "2026-09-22T16:54Z"
 };
