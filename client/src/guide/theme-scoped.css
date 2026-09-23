@@ -126,6 +126,8 @@
 
 
 .guide-scope .detailmust{background:#eaf4f2;border:1px solid #c7ddda;padding:17px 18px!important}.guide-scope .detailmust h3{color:var(--accent)!important}.guide-scope .detailmust p{font-size:14px!important;font-weight:650;color:var(--text)!important}
+.guide-scope .detailsection.acclaimblock{background:#faf7ef;border:1px solid #e2d5b6;padding:17px 18px!important}.guide-scope .detailsection.acclaimblock>span{font-size:9px;letter-spacing:.16em;font-weight:800;color:var(--gold)}.guide-scope .detailsection.acclaimblock h3{color:#7a5c14!important}
+.guide-scope .detailsection.michelinblock{background:#fdf9f4;border:1px solid #e6cfae;padding:17px 18px!important}.guide-scope .detailsection.michelinblock>span{font-size:9px;letter-spacing:.16em;font-weight:800;color:#a35a1b}.guide-scope .detailsection.michelinblock h3{color:#8a4d12!important}
 .guide-scope .guideverdict{font-size:16px;line-height:1.85;color:var(--text)}
 .guide-scope .guideblock>span{font-size:9px;letter-spacing:.16em;font-weight:800;color:var(--gold)}
 .guide-scope .guideblock h3{margin:6px 0 12px}
