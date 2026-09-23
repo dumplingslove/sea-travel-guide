@@ -21,7 +21,8 @@ const stateLabels:Record<RawState,string>={done:'已完成',partial:'进行中',
 function isObject(value:unknown):value is Record<string,unknown>{return typeof value==='object'&&value!==null&&!Array.isArray(value)}
 function safeNumber(value:unknown,defaultValue:number){return typeof value==='number'&&Number.isFinite(value)&&value>=0?value:defaultValue}
 function safeState(value:unknown,defaultValue:RawState='pending'):RawState{return value==='done'||value==='partial'||value==='pending'||value==='unavailable'?value:defaultValue}
-function safeDate(value:unknown,defaultValue:string){if(typeof value!=='string'||Number.isNaN(Date.parse(value)))return defaultValue;return value}
+function cleanDateText(value:unknown){return typeof value==='string'?value.replace(/\s*UTC$/i,'').trim():''}
+function safeDate(value:unknown,defaultValue:string){for(const candidate of [value,defaultValue]){const text=cleanDateText(candidate);if(text&&!Number.isNaN(Date.parse(text)))return text}return ''}
 function safeSource(value:unknown,base:SourceValue,key:SourceKey):SourceValue{
  const row=isObject(value)?value:{};
  const next:SourceValue={...base,status:safeState(row.status,base.status)};
@@ -113,9 +114,20 @@ export function ResearchProgressPage(){
  const xhsStrict=allItems.filter(item=>item.sources.xiaohongshu.storedStatus==='done').length;
  const xhsCovered=allItems.filter(item=>(item.sources.xiaohongshu.posts||0)>0).length;
  const shownCities=useMemo(()=>cities.filter(([slug])=>cityFilter==='all'||slug===cityFilter).map(([slug,city])=>({slug,city,items:city.items.filter(item=>{if(statusFilter==='all')return true;const state=sourceFilter==='all'?overallState(item):itemSourceState(item,sourceFilter);return state===statusFilter})})).filter(group=>group.items.length>0),[cities,cityFilter,sourceFilter,statusFilter]);
- const updated=safeDate(response?.updated_at,data.updated_at);const updateText=new Date(updated).toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+ const updated=safeDate(response?.updated_at,data.updated_at);const updateText=updated?new Date(updated).toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+ const [refreshNote,setRefreshNote]=useState<string|null>(null);
+ const doRefresh=async()=>{
+  if(refreshNote==='同步中…')return;
+  setRefreshNote('同步中…');
+  const started=Date.now();
+  let failed=false;
+  try{const result=await query.refetch();failed=result.isError}catch{failed=true}
+  await new Promise(resolve=>setTimeout(resolve,Math.max(0,700-(Date.now()-started))));
+  setRefreshNote(failed?'读取失败，显示快照':'✓ 已是最新快照');
+  setTimeout(()=>setRefreshNote(current=>current==='同步中…'?current:null),2600);
+ };
  return <div className="page research-page">
-  <section className="rp-hero"><div><span>RESEARCH OPERATIONS</span><h1>信息来源搜索状态</h1><p>逐地点记录六类资料的核验进度。页面会先显示稳定快照，再合并数据库中的最新进展；部分同步也不会让整页消失。</p></div><aside><span>最近同步</span><strong>{updateText}</strong><small>{response?.source==='database'?'数据库最新状态':'构建时初始快照'}</small><button onClick={()=>query.refetch()} disabled={query.isFetching}>{query.isFetching?'同步中…':'重新读取'}</button></aside></section>
+  <section className="rp-hero"><div><span>RESEARCH OPERATIONS</span><h1>信息来源搜索状态</h1><p>逐地点记录六类资料的核验进度。页面会先显示稳定快照，再合并数据库中的最新进展；部分同步也不会让整页消失。</p></div><aside><span>最近同步</span><strong>{updateText}</strong><small>{response?.source==='database'?'数据库最新状态':'构建时初始快照'}</small><button onClick={doRefresh} disabled={refreshNote==='同步中…'}>{refreshNote||'重新读取'}</button></aside></section>
   {query.isError&&<p className="rp-error" role="status">数据库状态暂时无法读取，当前显示构建时初始快照。你可以稍后重新读取。</p>}
   <section className="rp-overview" aria-label="研究进度总览"><article className="rp-total"><span>六来源研究工作集</span><strong>{total}</strong><p>{cities.map(([,city])=>`${city.name}${city.total}`).join(' · ')}</p></article><article className="rp-complete"><span>全部来源已完成</span><strong>{complete}</strong><ProgressBar value={complete} total={total} label="全部来源完成进度"/></article></section>
   <p className="rp-scope-note"><strong>口径说明：</strong>本页按数据库中 {total} 个地点的实际条目实时汇总六类来源进度；图片精确地点匹配与全部小红书逐帖核验尚未完成。</p>
