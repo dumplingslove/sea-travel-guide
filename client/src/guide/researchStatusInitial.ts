@@ -1247,11 +1247,11 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
-       "note": "2026-09-22 15:07 PDT / 22:07 UTC xhs-continuous-search轮（新3帖高流量标准）：硬熔断（滑块安全验证）——点击搜索结果页'最热'排序标签后弹出安全验证浮层，按硬约束立即停止（未重试/刷新/换窗口/探针/尝试拖动滑块）；教训：勿再点'最热'排序切换，下轮控制搜索节奏。0篇计入，仍 partial（高流量0/3）；深读2篇剔除2（佳佳蹦咔咔3.3万赞宁曼路他家视频帖；Turbo_xin香格里拉一生拉黑仅6赞低流量未达标）；已计入9篇中6篇搜索卡片点赞核验均<20赞，无一篇达高流量。缺口3篇高流量住宿专帖。 2026-09-22 13:18 PDT轮（新3帖标准）：0/3——8组关键词轮换/14次打开逐项核验，千赞以上新候选均为错地/错店/主题不符，主题相关新帖均为低流量；旧口径9篇严格实读（推荐7/中立2，逐张图片核验）保留在证据文件；建议后续轮次换长尾关键词或等新帖产生后再搜。",
+       "note": "2026-09-22 17:52 PDT / 2026-09-23 00:52 UTC xhs-continuous-search轮（新3帖高流量标准）：干净轮次无熔断（22:07Z硬熔断已恢复；健康检查：已登录\"🎈菜小盒\"，首页信息流正常，无扫码墙/滑块/操作频繁/空白页/图片黑块；全程只读，未点\"最热\"排序，全程默认排序）。8组关键词轮换搜索（清迈香格里拉/住宿体验/Shangri-La Chiang Mai/豪华阁/亲子/度假/泳池/真实入住）+各结果页滚动加载更多，人类节奏；规律确认：独立住宿专帖点赞普遍<100（偶见100–300），从未出现万赞/数千赞量级，1000+赞结果均为综合攻略/云南香格里拉（错地）/排行帖/合集帖；剔除14篇高赞/易混帖（合集红黑榜、求助选酒店帖、错店错地、餐饮向、营销号等，不再重复打开）；主题相关低流量候选（79赞两次入住等）未深读、留待后续参考。新增高流量计入0；结论：本轮覆盖范围内新增高流量帖基本枯竭，建议后续轮次等待新帖产生再搜，或用户裁决用现有9篇收尾。仍 partial（高流量0/3，旧口径9/10）。 2026-09-22 15:07 PDT / 22:07 UTC xhs-continuous-search轮（新3帖高流量标准）：硬熔断（滑块安全验证）——点击搜索结果页'最热'排序标签后弹出安全验证浮层，按硬约束立即停止（未重试/刷新/换窗口/探针/尝试拖动滑块）；教训：勿再点'最热'排序切换，下轮控制搜索节奏。0篇计入，仍 partial（高流量0/3）；深读2篇剔除2（佳佳蹦咔咔3.3万赞宁曼路他家视频帖；Turbo_xin香格里拉一生拉黑仅6赞低流量未达标）；已计入9篇中6篇搜索卡片点赞核验均<20赞，无一篇达高流量。缺口3篇高流量住宿专帖。 2026-09-22 13:18 PDT轮（新3帖标准）：0/3——8组关键词轮换/14次打开逐项核验，千赞以上新候选均为错地/错店/主题不符，主题相关新帖均为低流量；旧口径9篇严格实读（推荐7/中立2，逐张图片核验）保留在证据文件；建议后续轮次换长尾关键词或等新帖产生后再搜。",
        "posts": 0,
        "status": "partial",
        "target": 3,
-       "verified_at": "2026-09-17T02:50:00Z"
+       "verified_at": "2026-09-23T00:52:00Z"
       }
      },
      "type": "酒店"
@@ -1787,7 +1787,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（一帖同时覆盖悟孟寺+艺术村两部分，旅行记录|清迈悟孟寺+艺术村+街边咖啡店）；缺9篇，Wat Umong候选（立习习/莉生/漫游者疗愈室/Lewis PHOTO/东东瞎蹦跶/约树亚书/小猫爱吃鱼/Nicky Chang/lia等）+Baan Kang Wat候选（天真善良的李尼玛）待核实；⚠️帖1图片18张仅核验第1张（透明标注）。证据：redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md",
+       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（一帖同时覆盖悟孟寺+艺术村两部分，旅行记录|清迈悟孟寺+艺术村+街边咖啡店）；缺9篇，Wat Umong候选（立习习/莉生/漫游者疗愈室/Lewis PHOTO/东东瞎蹦跶/约树亚书/小猫爱吃鱼/Nicky Chang/lia等）+Baan Kang Wat候选（天真善良的李尼玛）待核实；⚠️帖1图片18张仅核验第1张（透明标注）。证据：redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md；2026-09-23T03:17Z主会话定时轮xhs-continuous-search软熔断（健康检查通过：菜小盒已登录/首页信息流正常；全部站内搜索被路由到AI搜索页、toast\"当前网络不可用\"、笔记tab不加载；用户搜索核验Lewis PHOTO与天真善良的李尼玛两候选作者均无高流量专帖；实读0/计入0/剔除0；连续熔断1，circuit_breaker=false，下一小时照常触发），仍partial",
        "posts": 1,
        "status": "partial",
        "target": 10
@@ -6857,5 +6857,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-22T22:50Z UTC"
+ "updated_at": "2026-09-23T04:47Z UTC"
 };
