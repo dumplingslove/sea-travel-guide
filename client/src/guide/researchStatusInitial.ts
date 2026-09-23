@@ -1787,10 +1787,10 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（一帖同时覆盖悟孟寺+艺术村两部分，旅行记录|清迈悟孟寺+艺术村+街边咖啡店）；缺9篇，Wat Umong候选（立习习/莉生/漫游者疗愈室/Lewis PHOTO/东东瞎蹦跶/约树亚书/小猫爱吃鱼/Nicky Chang/lia等）+Baan Kang Wat候选（天真善良的李尼玛）待核实；⚠️帖1图片18张仅核验第1张（透明标注）。证据：redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md；2026-09-23T03:17Z主会话定时轮xhs-continuous-search软熔断（健康检查通过：菜小盒已登录/首页信息流正常；全部站内搜索被路由到AI搜索页、toast\"当前网络不可用\"、笔记tab不加载；用户搜索核验Lewis PHOTO与天真善良的李尼玛两候选作者均无高流量专帖；实读0/计入0/剔除0；连续熔断1，circuit_breaker=false，下一小时照常触发），仍partial",
-       "posts": 1,
+       "note": "xhs-peritem-backfill 严格重验进行中（截至2026-09-16T01:55Z）：1篇有效（一帖同时覆盖悟孟寺+艺术村两部分，旅行记录|清迈悟孟寺+艺术村+街边咖啡店）；缺9篇，Wat Umong候选（立习习/莉生/漫游者疗愈室/Lewis PHOTO/东东瞎蹦跶/约树亚书/小猫爱吃鱼/Nicky Chang/lia等）+Baan Kang Wat候选（天真善良的李尼玛）待核实；⚠️帖1图片18张仅核验第1张（透明标注）。证据：redo-strict/chiangmai-item19-watumong-baankangwat-PARTIAL-2026-09-15.md；2026-09-23T03:17Z主会话定时轮xhs-continuous-search软熔断（健康检查通过：菜小盒已登录/首页信息流正常；全部站内搜索被路由到AI搜索页、toast\"当前网络不可用\"、笔记tab不加载；用户搜索核验Lewis PHOTO与天真善良的李尼玛两候选作者均无高流量专帖；实读0/计入0/剔除0；连续熔断1，circuit_breaker=false，下一小时照常触发），仍partial；2026-09-23T05:12Z主会话定时轮xhs-continuous-search干净完成（健康检查通过：菜小盒已登录/首页信息流正常；站内搜索路由/search_result_ai但结果正常加载、无toast；人类节奏全程只读，无熔断）：新3帖标准+2计入（①韋小包包包《清迈艺术村位置这么偏僻，值得去吗？》2025-11-26，1072赞/1334藏/50评，独立专帖，10位实质评论者，视频帖实拍相符；②系叻叻《清迈｜离开清迈前请你一定要逛逛艺术村》2025-11-11，992赞/1191藏/17评，18张LIVE图抽查实拍相符，10位评论者多为实质问答，≈千赞量级明显高于同类20–350赞，按实质达标计入），剔除3篇（东东瞎蹦跶21赞/4评论流量不足；小鱼审美1853赞无年份+明星偶遇非攻略专帖；苦瓜绝缘体本尊482赞/8实质评论未达千赞），未点开排除3篇（napa.cnx商业号嫌疑；章鱼小昕子无年份；是Phoebe呀3135赞年份待确认）；实读4/计入2/剔除3；新标准累计2/3，缺1篇，仍partial；下轮候选：是Phoebe呀（年份待确认）、章鱼小昕子、脆脆果仁、Timi和泡芙、雪花花花儿、狗筒媳等。consecutive=0，circuit_breaker=false；2026-09-23T07:04Z主会话定时轮xhs-continuous-search干净完成（健康检查通过：菜小盒已登录/首页信息流正常；人类节奏站内搜索进详情页，全程只读，无熔断）：本轮目标再找1篇高流量达标帖未达成，5优先候选+2千赞额外候选全部验证完毕，0计入仍2/3缺1篇：剔除7篇（是Phoebe呀《无梦寺｜清迈最美妙的废墟梦境》3136赞详情页仅04-18无年份不深读；脆脆果仁《清迈宝藏社区Baan Kang Wat》2025-11-23评论仅8条+306赞；Timi和泡芙《清迈艺术村&你去了么》448赞无年份；雪花花花儿《你们清迈本地人的嘴真严啊》224赞；狗筒媳《清迈｜在青苔与残佛间》199赞/评论不足；七七1802赞ENP大象营地主题无关+无年份；lucky Vicki1030赞清迈综合攻略非独立专帖），搜索卡片排除11篇（多地点合集/避雷/商业号/主题无关）；下轮候选：蒋蒋超ok3670赞（详情页年份待确认可回访）、napa.cnx1235赞（商业号嫌疑）、苦瓜绝缘体本尊482赞流量备选。consecutive=0，circuit_breaker=false；2026-09-23T09:11Z主会话定时轮xhs-continuous-search干净完成（健康检查通过：菜小盒已登录/首页信息流正常/图片渲染正常；人类节奏全程只读，无熔断）：6篇深读全部剔除（蒋蒋超ok《我的人生就应该浪费在这种地方》3670赞：38天旅居vlog合集非独立专帖+无年份；napa.cnx《最近很多中国朋友来这里玩》：清迈本地商业号（艺术村店铺）不计入；章鱼小昕子《清迈艺术村Baan kang Wat｜我能待一整天》1104赞：详情页无年份+实质评论不足10；c.《去清迈留半天给艺术村吧》1489赞：独立专帖但无年份，最为可惜；称大宝《清迈必逛|强烈建议逛完艺术村再离开》2025-03-06：仅31赞流量不足；1ao1ao《清迈艺术村值得逛吃的店》450赞+无年份），另披露1次误点已排除URL（是Phoebe呀69e4135a）立即返回未读；0计入仍新标准2/3缺1篇，仍partial；跨轮关键规律：第3篇瓶颈为“年份明确＋独立专帖＋≥10实质评论＋千赞流量”四条件同时满足——千赞+帖几乎全为2026年（详情页不显示年份）被剔除，有明确2024/2025年份的帖流量普遍偏低。consecutive=0，circuit_breaker=false",
+       "posts": 2,
        "status": "partial",
-       "target": 10
+       "target": 3
       }
      },
      "type": "景点"
@@ -6857,5 +6857,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-23T04:47Z UTC"
+ "updated_at": "2026-09-23T10:50Z UTC"
 };
