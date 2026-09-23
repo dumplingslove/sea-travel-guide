@@ -1360,7 +1360,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录",
+       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -6857,5 +6857,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-23T16:52Z"
+ "updated_at": "2026-09-23T22:49Z"
 };
