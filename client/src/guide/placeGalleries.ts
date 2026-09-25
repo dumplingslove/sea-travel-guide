@@ -1034,6 +1034,27 @@ import g1123 from "./assets/galleries/sunfong-bkt/2.jpg";
 import g1124 from "./assets/galleries/sunfong-bkt/3.jpg";
 import g1125 from "./assets/galleries/sunfong-bkt/4.jpg";
 import g1126 from "./assets/galleries/sunfong-bkt/5.jpg";
+import g1127 from "./assets/galleries/athenee-bangkok/1.jpg";
+import g1128 from "./assets/galleries/anantara-chiangmai/1.jpg";
+import g1129 from "./assets/galleries/shangrila-chiangmai/1.jpg";
+import g1130 from "./assets/galleries/marriott-chiangmai/1.jpg";
+import g1131 from "./assets/galleries/jwmarriott-phuket/1.jpg";
+import g1132 from "./assets/galleries/surin-phuket/1.jpg";
+import g1133 from "./assets/galleries/keemala/1.jpg";
+import g1134 from "./assets/galleries/marriott-penang/1.jpg";
+import g1135 from "./assets/galleries/seven-terraces/1.jpg";
+import g1136 from "./assets/galleries/edison-georgetown/1.jpg";
+import g1137 from "./assets/galleries/fourseasons-kl/1.jpg";
+import g1138 from "./assets/galleries/eq-kl/1.jpg";
+import g1139 from "./assets/galleries/maihouse-saigon/1.jpg";
+import g1140 from "./assets/galleries/hotel-des-arts-saigon/1.jpg";
+import g1141 from "./assets/galleries/lafesta-phuquoc/1.jpg";
+import g1142 from "./assets/galleries/intercontinental-phuquoc/1.jpg";
+import g1143 from "./assets/galleries/fusion-phuquoc/1.jpg";
+import g1144 from "./assets/galleries/mo-singapore/1.jpg";
+import g1145 from "./assets/galleries/ritzcarlton-singapore/1.jpg";
+import g1146 from "./assets/galleries/shangrila-singapore/1.jpg";
+import g1147 from "./assets/galleries/fullerton-singapore/1.jpg";
 
 export type PlacePhoto={src:string;sourceUrl:string;title:string};
 
@@ -1243,6 +1264,27 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|曼谷|丹嫩沙多水上市场+美功铁道":[{src:g1102,sourceUrl:"https://trek.zone/en/thailand/places/342027/damnoen-saduak-floating-market",title:"丹嫩沙多：手摇船装满编织斗笠（2026-09-19 目验确认；trek.zone 水上市场场所页实拍）"},{src:g1103,sourceUrl:"https://bangkokvisits.com/famous-markets-tour-maeklong-railway-damnoen-saduak-floating/",title:"丹嫩沙多：船贩与游客穿梭的运河市集（2026-09-19 目验确认；bangkokvisits.com 市场之旅页面实拍）"},{src:g1104,sourceUrl:"https://seniworld.com/tour/the-essential-thailand-cultural-bangkok-tropical-phuket/",title:"美功铁道：火车从两侧摊位间贴身驶过（2026-09-19 目验确认；seniworld 泰国文化行程页实拍）"},{src:g1105,sourceUrl:"https://onestep4ward.com/maeklong-railway-market/",title:"美功铁道：黄色列车贴身过市场、两侧摊贩（2026-09-19 目验确认；onestep4ward 美功铁道攻略实拍）"},{src:g1106,sourceUrl:"https://theabroadguide.com/boat-tour-of-damnoen-saduak-floating-market/",title:"丹嫩沙多：戴斗笠船娘摇船售卖瓜果（2026-09-19 目验确认；theabroadguide 水上市场游船页实拍）"}],
   "餐厅|曼谷|Ruathong Noodle 鲁通船面 + Thong Smith 通思密（曼谷船面代表店）":[{src:g1117,sourceUrl:"https://www.siambangkokmap.com/en/place/rua-thong-noodle-boat-noodles-at-victory-monument",title:"鲁通船面：胜利纪念碑船面一条街门店（Siam Bangkok Map Rua Thong Noodle 专页实拍）"},{src:g1118,sourceUrl:"https://thai-awesome.com/en/news/Bts-victory-manument-bangkok-Baan-Kuay-Tiew-Ruathong-boat-noodle-the-street-ratchada-branch",title:"鲁通船面：店内船面碗与小吃（thai-awesome.com 鲁通船面 Ratchada 分店报道实拍）"},{src:g1119,sourceUrl:"https://blake.com.tw/blog/post/rua-thong-boat-noodle",title:"鲁通船面：Rua Thong Boat Noodle 店内船面实拍（blake.com.tw 鲁通船面帖）"},{src:g1120,sourceUrl:"https://elizbeartravel.com/2023/09/01/thong-smith/",title:"通思密：Thong Smith 船面与店内环境（elizbeartravel.com Thong Smith 专帖实拍）"},{src:g1121,sourceUrl:"https://www.jeban.com/topic/336786",title:"通思密：ทองสมิทธ์ Thong Smith 船面（jeban.com 泰国美食专题实拍）"}],
   "餐厅|吉隆坡|新峰肉骨茶 Sun Fong Bak Kut Teh（吉隆坡肉骨茶代表店）":[{src:g1122,sourceUrl:"https://reviewbah.com/kuala-lumpur/restaurant/sun-fong-bak-kut-teh-2",title:"新峰肉骨茶：Sun Fong Bak Kut Teh 店内招牌与用餐区（reviewbah.com 新峰肉骨茶专页实拍）"},{src:g1123,sourceUrl:"https://preparetravelplans.com/kuala-lumpur-itinerary/",title:"新峰肉骨茶：Sun Fong Bak Kut Teh 肉骨茶上桌（preparetravelplans.com 吉隆坡行程攻略实拍）"},{src:g1124,sourceUrl:"https://myweekendplan.asia/top-8-best-bak-kut-teh-restaurants-in-klang-valley-2022/",title:"新峰肉骨茶：Sun Fong Bak Kut Teh 肉骨茶套餐（myweekendplan.asia 吉隆坡肉骨茶榜单实拍）"},{src:g1125,sourceUrl:"https://wudani.com/sun-fong/",title:"新峰肉骨茶：店内人潮与肉骨茶（wudani.com 吴大妮新峰肉骨茶专帖实拍）"},{src:g1126,sourceUrl:"https://uk.trip.com/moments/poi-sun-fong-bak-kut-teh-10561969/",title:"新峰肉骨茶：Sun Fong Bak Kut Teh 旅行者实拍（Trip.com Moments 新峰肉骨茶 POI）"}],
+  "酒店|曼谷|The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店":[{src:g1127,sourceUrl:"https://www.marriott.com/en-us/hotels/bkkla-the-athenee-hotel-a-luxury-collection-hotel-bangkok/experiences/",title:"曼谷雅典娜豪华精选酒店 外观：夜景塔楼俯瞰，楼顶 THE ATHENEE HOTEL 发光字"}],
+  "酒店|清迈|Anantara Chiang Mai":[{src:g1128,sourceUrl:"https://www.thailandholidaygroup.com/hotels/chiang-mai-hotels/",title:"清迈安纳塔拉 外观：河畔度假村鸟瞰，长形木构楼+泳池"}],
+  "酒店|清迈|Shangri-La Chiang Mai 清迈香格里拉":[{src:g1129,sourceUrl:"https://www.shangri-la.com/shangrila/city/chiangmai/",title:"清迈香格里拉 外观：兰纳风格塔楼+泳池"}],
+  "酒店|清迈|Chiang Mai Marriott Hotel 清迈万豪":[{src:g1130,sourceUrl:"https://www.tripening.com/hotels/th-50-chiang-mai/4662206-chiang-mai-marriott-hotel",title:"清迈万豪 外观：塔楼带 MARRIOTT 红色标识"}],
+  "酒店|普吉|JW Marriott Phuket Resort & Spa 普吉JW万豪":[{src:g1131,sourceUrl:"https://www.marriott.com/en-us/hotels/hktjw-jw-marriott-phuket-resort-and-spa/rooms/",title:"普吉JW万豪 外观：度假村鸟瞰，蓝池+红伞+棕榈林"}],
+  "酒店|普吉|The Surin Phuket":[{src:g1132,sourceUrl:"https://www.thesurinphuket.com/",title:"The Surin Phuket 外观：海滩亭+无边泳池+沙滩"}],
+  "酒店|普吉|Keemala":[{src:g1133,sourceUrl:"https://www.keemala.com/ja/",title:"Keemala 外观：雨林瀑布泳池与树屋别墅"}],
+  "酒店|槟城|Penang Marriott Hotel 槟城万豪":[{src:g1134,sourceUrl:"https://www.marriott.com/en-gb/hotels/penmc-penang-marriott-hotel/photos/",title:"槟城万豪 外观：海滨高楼日落全景，楼顶 MARRIOTT 红色标识"}],
+  "酒店|槟城|Seven Terraces":[{src:g1135,sourceUrl:"https://www.klook.com/en-SG/hotels/detail/101406-seven-terraces-hotel/",title:"Seven Terraces 外观：乔治市修复骑楼老屋街景，白墙木百叶"}],
+  "酒店|槟城|The Edison George Town":[{src:g1136,sourceUrl:"https://www.klook.com/en-MY/hotels/detail/283510-small-luxury-hotels-of-the-world--the-edison-george-town/",title:"The Edison 外观：白色殖民风格洋楼配绿百叶窗，门前喷泉"}],
+  "酒店|吉隆坡|Four Seasons Hotel Kuala Lumpur":[{src:g1137,sourceUrl:"https://www.dotproperty.id/en/blog/tallest-buildings-in-malaysia/amp",title:"吉隆坡四季酒店 外观：玻璃幕墙高楼仰拍，裙楼 FOUR SEASONS 标识"}],
+  "酒店|吉隆坡|EQ":[{src:g1138,sourceUrl:"https://halalbooking.com/de/eq-kuala-lumpur/p/510544",title:"吉隆坡 EQ 外观：日落下 EQ 大楼全景，远处双子塔"}],
+  "酒店|胡志明市|Mai House Saigon":[{src:g1139,sourceUrl:"https://vietadvisor.travel/es/revision-de-ubicaciones/alojamiento-en-ho-chi-minh",title:"Mai House Saigon 入口：酒店招牌与白色楼体、棕榈"}],
+  "酒店|胡志明市|Hôtel des Arts Saigon":[{src:g1140,sourceUrl:"https://mia.vn/cam-nang-du-lich/khach-san-hotel-des-arts-saigon-16368",title:"Hôtel des Arts Saigon 外观：暮色中的白色高楼全景"}],
+  "酒店|富国岛|La Festa Phu Quoc, Curio Collection by Hilton":[{src:g1141,sourceUrl:"https://golfandlife.com.vn/la-festa-phu-quoc-curio-collection-by-hilton-ra-mat-phan-khu-moi-day-cam-hung-nghe-thuat-tai-thi-tran-hoang-hon/",title:"富国岛 La Festa 外观：黄昏下的地中海风白色酒店楼"}],
+  "酒店|富国岛|InterContinental Phu Quoc 洲际":[{src:g1142,sourceUrl:"https://www.ForbesTravelGuide.com/hotels/vietnam-vietnam/intercontinental-phu-quoc-long-beach-resort",title:"富国岛洲际 外观：中央塔楼+棕榈+泻湖的度假村全景"}],
+  "酒店|富国岛|Fusion Resort Phu Quoc":[{src:g1143,sourceUrl:"https://cafebiz.vn/trai-nghiem-mua-he-tai-fusion-resort-phu-quoc-20190515172059348.chn",title:"富国岛 Fusion 海滩别墅：私人泳池+茅草屋顶+椰林海滩"}],
+  "酒店|新加坡|Mandarin Oriental Singapore 文华东方":[{src:g1144,sourceUrl:"https://www.5wzayefi.com/",title:"新加坡文华东方 外观：滨海湾楼体全景+楼顶 MANDARIN ORIENTAL 大字夜景"}],
+  "酒店|新加坡|The Ritz-Carlton Millenia 丽思卡尔顿":[{src:g1145,sourceUrl:"https://www.myboutiquehotel.com/en/boutique-hotels-singapore/?page=2",title:"新加坡丽思卡尔顿 Millenia 外观：摩天轮与金沙之间的白色网格塔楼"}],
+  "酒店|新加坡|Shangri-La Singapore 香格里拉":[{src:g1146,sourceUrl:"https://housity.net/hotel/shangri-la-singapore/",title:"新加坡香格里拉 外观：乌节路标志性白色塔楼+棕榈园林"}],
+  "酒店|新加坡|The Fullerton Hotel Singapore 新加坡富丽敦酒店":[{src:g1147,sourceUrl:"https://www.ForbesTravelGuide.com",title:"新加坡富丽敦酒店 外观：夜景下带 THE FULLERTON HOTEL 大字的新古典楼体"}],
  };
 export function getPlaceGallery(kind:'酒店'|'餐厅'|'景点',item:Item){return galleries[`${kind}|${item.city}|${item.name}`]||[]}
 export const placeGalleryPlaceCount=Object.values(galleries).filter(x=>x.length>=5).length;
