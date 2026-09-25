@@ -328,3 +328,14 @@
 .guide-scope .photoviewer.igviewer .photo-stage figure{overflow-y:auto;display:block;text-align:center}
 .guide-scope .photoviewer.igviewer .photo-stage img{max-height:none;width:100%}
 .guide-scope .photoviewer.igviewer .photo-stage figcaption{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;padding:6px 0}
+.guide-scope .detailsection.livepriceblock{background:#f2f8f7;border:1px solid #cfe3df;padding:17px 18px!important}
+.guide-scope .detailsection.livepriceblock>span{font-size:9px;letter-spacing:.16em;font-weight:800;color:#1c7a6b}
+.guide-scope .detailsection.livepriceblock h3{color:#145a50!important}
+.guide-scope .livepricedates{font-size:12px!important;color:#2c5a54!important;font-weight:700;margin-bottom:10px!important}
+.guide-scope .livepricerow{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:10px 0;border-top:1px dashed #c4dcd8}
+.guide-scope .livepricerow>b{font-size:12px;color:#145a50}
+.guide-scope .livepriceroom{display:block;font-size:13px;font-weight:700;color:var(--text)}
+.guide-scope .livepricevals{display:block;font-size:15px;font-weight:800;color:#0f4c44;margin:2px 0}
+.guide-scope .livepricerow small{display:block;font-size:11px;color:#5b7a75;line-height:1.6}
+.guide-scope .livepricenone{font-size:12.5px;color:#8a978f}
+.guide-scope .livepricefoot{display:block;margin-top:10px;font-size:10.5px!important;color:#7d968f!important}
