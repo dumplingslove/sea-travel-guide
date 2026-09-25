@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 10,
+   "complete": 13,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -972,9 +972,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 5,
+       "note": "2026-09-24照片补齐(bangkok-photos-2026-09-24.md)：站点图库5张/项（client/src/guide/assets/galleries/ayutthaya-fix/，2026-09-19目验确认，placeGalleries g1068–g1072；磁盘文件真实有效）→ photos=done"
       },
       "tripadvisor": {
        "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：Historic City of Ayutthaya 4.5/5、5371条；2条原话：Yuryeuski Guide 2026-09 5星、m-valentina 2026-08 5星；d549787",
@@ -1010,9 +1011,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 5,
+       "note": "2026-09-24照片补齐(bangkok-photos-2026-09-24.md)：站点图库5张/项（client/src/guide/assets/galleries/damnoen-maeklong-fix/，2026-09-19目验确认，placeGalleries g1102–g1106）→ photos=done"
       },
       "tripadvisor": {
        "note": "2026-09-14 browser只读实查(ta-gm-fill-2026-09-14.md)：丹嫩沙多 Damnoen Saduak 3.1/5、5847条，2条原话Clint H 2026-09 1星、gaelle 2026-08 1星(d317729)；美功铁道 Mae Klong Railway Market 4.3/5、1925条，2条原话50cab50 2026-07 4星、D D 2026-02 5星(d2049176)",
@@ -1048,9 +1050,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 5,
+       "note": "2026-09-24照片补齐(bangkok-photos-2026-09-24.md §1)：5张5独立来源入库（bangkok-boatnoodles/，g1117–g1121；内容级审计+HEAD 200+image/*预检，placeGalleries已配；build+gh-push f080580）→ photos=done"
       },
       "tripadvisor": {
        "note": "2026-09-15只读实查(bangkok-boatnoodles-ota-2026-09-15.md)：Ruathong 4.3/5、55条，4条带作者/日期/星级原话+规范链接；Thong Smith 4.1/5、39条（listing地址为Sukhumvit店，评论混杂多分店）3条带日期原话+规范链接；避雷：Ruathong只收现金/环境一般，Thong Smith性价比争议（Value 3.3）/排队久",
@@ -2648,7 +2651,7 @@ export const initialResearchStatus = {
    "total": 23
   },
   "kualalumpur": {
-   "complete": 0,
+   "complete": 1,
    "items": [
     {
      "name": "Park Hyatt Kuala Lumpur",
@@ -3402,9 +3405,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 5,
+       "note": "2026-09-24照片补齐(bangkok-photos-2026-09-24.md §2)：5张5独立来源入库（sunfong-bkt/，g1122–g1126；内容级审计+HEAD 200+image/*预检，placeGalleries已配；build+gh-push f080580）→ photos=done"
       },
       "tripadvisor": {
        "note": "2026-09-15只读实查(kualalumpur-bakkutteh-ota-2026-09-15.md)：3.6/5、164条；3条带作者/日期/星级原话（Da N 1★2026-07-31、bikerguysg 3★2025-08-25、lowbk 4★2025-07-19）+规范链接；41 Off Jalan Imbi；避雷：服务态度差/汤底淡/肥肉多（与小红书指控相互印证）",
@@ -6857,9 +6861,9 @@ export const initialResearchStatus = {
    "gm": 32,
    "cs": 31,
    "xhs_done": 14,
-   "ph": 29,
+   "ph": 32,
    "de": 32,
-   "all_done": 10
+   "all_done": 13
   },
   "chiangmai": {
    "total": 20,
@@ -6887,9 +6891,9 @@ export const initialResearchStatus = {
    "gm": 21,
    "cs": 22,
    "xhs_done": 1,
-   "ph": 21,
+   "ph": 22,
    "de": 22,
-   "all_done": 0
+   "all_done": 1
   },
   "penang": {
    "total": 24,
@@ -6941,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-24T22:50:27Z"
+ "updated_at": "2026-09-25T03:50Z"
 };
