@@ -54,6 +54,12 @@ function findHotelEntry(entries:ResearchHotelEntry[],name:string,city?:string){
   const candidates=inCity.length?inCity:entries;
   const exact=candidates.find(entry=>normalizeName(entry.name)===wanted);
   if(exact)return exact;
+  // research-entry 名与 data.ts 酒店名对不上的两处，做显式别名（改名会牵连证据/图库键，故不动名）
+  const alias=HOTEL_NAME_ALIASES.find(([,item])=>normalizeName(item)===wanted)?.[0];
+  if(alias){
+    const hit=candidates.find(entry=>normalizeName(entry.name)===normalizeName(alias));
+    if(hit)return hit;
+  }
   return candidates.find(entry=>{
     const candidate=normalizeName(entry.name);
     return candidate.includes(wanted)||wanted.includes(candidate);
@@ -68,14 +74,22 @@ export function findHotelTier(entries:ResearchHotelEntry[],name:string,city?:str
   return findHotelEntry(entries,name,city)?.tier||'';
 }
 
+const HOTEL_NAME_ALIASES:[research:string,item:string][]=[
+  // [research-entry 名, data.ts 酒店名]：双向别名，两边互相查找都用
+  ['The Ritz-Carlton Millenia 丽思卡尔顿','The Ritz-Carlton, Millenia Singapore'],
+  ['Four Seasons Hotel Kuala Lumpur','Four Seasons Kuala Lumpur'],
+];
 export function orderHotelsByResearch(items:Item[],entries:ResearchHotelEntry[],city:string){
   const cityEntries=entries.filter(entry=>entry.city===city).sort((a,b)=>a.order-b.order);
   if(!cityEntries.length)return items;
   const matched=new Set<Item>();
   const ordered=cityEntries.map(entry=>{
-    const known=items.find(item=>normalizeName(item.name)===normalizeName(entry.name))
+    const entryName=normalizeName(entry.name);
+    const aliasItem=HOTEL_NAME_ALIASES.find(([research])=>normalizeName(research)===entryName)?.[1];
+    const known=items.find(item=>normalizeName(item.name)===entryName)
+      ||(aliasItem?items.find(item=>normalizeName(item.name)===normalizeName(aliasItem)):undefined)
       ||items.find(item=>{
-        const itemName=normalizeName(item.name);const entryName=normalizeName(entry.name);
+        const itemName=normalizeName(item.name);
         return itemName.includes(entryName)||entryName.includes(itemName);
       });
     if(known){matched.add(known);return known}
