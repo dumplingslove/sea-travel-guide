@@ -1123,6 +1123,10 @@ import g1217 from "./assets/galleries/mo-singapore/2.jpg";
 import g1218 from "./assets/galleries/mo-singapore/3.jpg";
 import g1219 from "./assets/galleries/mo-singapore/4.jpg";
 import g1220 from "./assets/galleries/mo-singapore/5.jpg";
+import g1221 from "./assets/galleries/shangrila-singapore/2.jpg";
+import g1222 from "./assets/galleries/shangrila-singapore/3.jpg";
+import g1223 from "./assets/galleries/shangrila-singapore/4.jpg";
+import g1224 from "./assets/galleries/shangrila-singapore/5.jpg";
 import g1144 from "./assets/galleries/mo-singapore/1.jpg";
 import g1145 from "./assets/galleries/ritzcarlton-singapore/1.jpg";
 import g1146 from "./assets/galleries/shangrila-singapore/1.jpg";
@@ -1355,7 +1359,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "酒店|富国岛|Fusion Resort Phu Quoc":[{src:g1143,sourceUrl:"https://cafebiz.vn/trai-nghiem-mua-he-tai-fusion-resort-phu-quoc-20190515172059348.chn",title:"富国岛 Fusion 海滩别墅：私人泳池+茅草屋顶+椰林海滩"},{src:g1213,sourceUrl:"https://fusionhotelgroup.com/our-brands2/",title:"Fusion 集团官方页：度假村鸟瞰，茅草别墅群+各户私人泳池+临河近海"},{src:g1214,sourceUrl:"https://vietnamresorts.com/resort/fusion-resort-phu-quoc-all-spa-inclusive",title:"沙滩别墅：私人泳池+茅草屋顶+吊床庭院"},{src:g1215,sourceUrl:"https://saigoneer.com/sponsored-listings/243-resorts/17568-fusion-resort-phu-quoc-fosters-",title:"度假村鸟瞰：中央泳池+茅草别墅群+椰林+背后海滩"},{src:g1216,sourceUrl:"https://www.vietnambooking.com/combo/combo-3n2d-fusion-resort-phu-quoc-5-sao-voucher-",title:"餐厅内景：茅草高顶自助餐厅+摆台"}],
   "酒店|新加坡|Mandarin Oriental Singapore 文华东方":[{src:g1144,sourceUrl:"https://www.5wzayefi.com/",title:"新加坡文华东方 外观：滨海湾楼体全景+楼顶 MANDARIN ORIENTAL 大字夜景"},{src:g1217,sourceUrl:"https://heartpatrick.com/mandarin_oriental_hotel_singapore.html",title:"新加坡文华东方 大堂：翻新后大堂休息区，金属艺术吊灯+亚洲佛像雕塑+环形沙发"},{src:g1218,sourceUrl:"https://travelandleisure-es.com/destinos/asia/mandarin-oriental-singapore-el-renacer-de-un-icono-frente-a-marina-bay/",title:"新加坡文华东方 泳池：棕榈泳池甲板+白伞躺椅，远眺新加坡中央商务区天际线"},{src:g1219,sourceUrl:"https://luxuryescapes.com/inspiration/mandarin-oriental-singapore-review/",title:"新加坡文华东方 客房：Marina Bay View 大床房，蓝色床头板+落地窗城市景观"},{src:g1220,sourceUrl:"https://www.centurion-magazine.com/travel/travel/sponsored-mandarin-oriental-hidden-city-beyond-the-extraordinary-experiences",title:"新加坡文华东方 餐饮：樱桃园餐厅中式圆桌摆台+竹林庭院（2026 米其林一星）"}],
   "酒店|新加坡|The Ritz-Carlton Millenia 丽思卡尔顿":[{src:g1145,sourceUrl:"https://www.myboutiquehotel.com/en/boutique-hotels-singapore/?page=2",title:"新加坡丽思卡尔顿 Millenia 外观：摩天轮与金沙之间的白色网格塔楼"}],
-  "酒店|新加坡|Shangri-La Singapore 香格里拉":[{src:g1146,sourceUrl:"https://housity.net/hotel/shangri-la-singapore/",title:"新加坡香格里拉 外观：乌节路标志性白色塔楼+棕榈园林"}],
+  "酒店|新加坡|Shangri-La Singapore 香格里拉":[{src:g1146,sourceUrl:"https://housity.net/hotel/shangri-la-singapore/",title:"新加坡香格里拉 外观：乌节路标志性白色塔楼+棕榈园林"},{src:g1221,sourceUrl:"https://thehoneycombers.com/singapore/luxury-hotel-singapore-staycation-review-of-shangri-la-hotel-at-orchard-road/",title:"新加坡香格里拉 大堂：高立柱+水面倒影+绿植墙标志性大堂（2026-09-25 目验确认；thehoneycombers.com 实拍测评）"},{src:g1222,sourceUrl:"https://www.qantas.com/travelinsider/en/explore/asia/singapore/singapore/shangri-la-singapore-hotel-review-orchard-road.html",title:"新加坡香格里拉 泳池：Garden Wing 圆拱阳台楼群前的喷泉大泳池（2026-09-25 目验确认；qantas.com 酒店测评）"},{src:g1223,sourceUrl:"https://www.shangri-la.com/singapore/shangrila/dining/?restaurantAlias=blu-bar",title:"新加坡香格里拉 餐饮：官网大堂吧酒廊区，绿植墙+高立柱吧台+白色休闲椅（2026-09-25 目验确认；shangri-la.com 官网餐饮页）"},{src:g1224,sourceUrl:"https://milelion.com/2021/02/13/review-shangri-la-garden-wing-staycation/",title:"新加坡香格里拉 泳池：Garden Wing 蓝色大泳池，圆拱阳台园翼楼+白色 Tower Wing（2026-09-25 目验确认；milelion.com Garden Wing 测评实拍）"}],
   "酒店|新加坡|The Fullerton Hotel Singapore 新加坡富丽敦酒店":[{src:g1147,sourceUrl:"https://www.ForbesTravelGuide.com",title:"新加坡富丽敦酒店 外观：夜景下带 THE FULLERTON HOTEL 大字的新古典楼体"}],
  };
 export function getPlaceGallery(kind:'酒店'|'餐厅'|'景点',item:Item){return galleries[`${kind}|${item.city}|${item.name}`]||[]}
