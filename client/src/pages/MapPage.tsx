@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
+import citiesJson from "@/data/cities.json";
 import {
   usePlanItinerary,
   type PlanCityStop,
@@ -12,6 +13,17 @@ import {
 interface CityStop extends PlanCityStop {
   lat: number;
   lng: number;
+}
+
+/** 行程之外的研究城市：只有坐标与酒店/餐厅数据，无天数、无路线 */
+interface ExtraCity {
+  id: string;
+  zh: string;
+  en: string;
+  lat: number;
+  lng: number;
+  hotelCount: number;
+  restCount: number;
 }
 
 /** 8 城坐标（WGS84），与 cities.json 的顺序一致即行程顺序；数据见 @/data/cityCoords */
@@ -80,10 +92,30 @@ export default function MapPage() {
   const stopsKey = stops
     .map((s) => `${s.id}:${s.days[0]}-${s.days[1]}`)
     .join("|");
+  /** 行程之外的研究城市：8 城全量可切，补足酒店/餐厅位置查看 */
+  const extraCities: ExtraCity[] = useMemo(() => {
+    const stopIds = new Set(plan.cityStops.map((s) => s.id));
+    return (citiesJson as { id: string; zh: string; en: string }[])
+      .filter((c) => !stopIds.has(c.id))
+      .map((c) => {
+        const coord = COORDS[c.id];
+        const { hotels, restaurants } = placesForCity(c.id);
+        return {
+          id: c.id,
+          zh: c.zh,
+          en: c.en,
+          lat: coord[0],
+          lng: coord[1],
+          hotelCount: hotels.length,
+          restCount: restaurants.length,
+        };
+      });
+  }, [plan]);
   return (
     <MapCanvas
       key={stopsKey}
       stops={stops}
+      extraCities={extraCities}
       source={plan.source}
       updatedByName={plan.updatedByName}
     />
@@ -92,10 +124,12 @@ export default function MapPage() {
 
 function MapCanvas({
   stops,
+  extraCities,
   source,
   updatedByName,
 }: {
   stops: CityStop[];
+  extraCities: ExtraCity[];
   source: "cloud" | "static";
   updatedByName?: string;
 }) {
@@ -186,15 +220,24 @@ function MapCanvas({
   const focusCity = (id: string) => {
     setActiveId(id);
     const idx = stops.findIndex((s) => s.id === id);
-    const s = stops[idx];
     const map = mapRef.current;
-    if (!map || !s) return;
-    markersRef.current.forEach((m, i) =>
-      m.setIcon(markerIcon(i + 1, i === idx)),
-    );
-    map.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 7), { duration: 0.8 });
-    const marker = markersRef.current[idx];
-    window.setTimeout(() => marker.openPopup(), 850);
+    if (!map) return;
+    if (idx >= 0) {
+      // 行程内城市：高亮编号 marker，飞过去
+      const s = stops[idx];
+      markersRef.current.forEach((m, i) =>
+        m.setIcon(markerIcon(i + 1, i === idx)),
+      );
+      map.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 7), { duration: 0.8 });
+      const marker = markersRef.current[idx];
+      window.setTimeout(() => marker.openPopup(), 850);
+    } else {
+      // 行程外研究城市：无编号 marker，直接飞到城市坐标
+      const c = extraCities.find((e) => e.id === id);
+      if (!c) return;
+      markersRef.current.forEach((m, i) => m.setIcon(markerIcon(i + 1, false)));
+      map.flyTo([c.lat, c.lng], Math.max(map.getZoom(), 8), { duration: 0.8 });
+    }
     // 点选城市后叠加该城酒店/餐厅
     window.setTimeout(() => showCityPlaces(id), 850);
   };
@@ -227,8 +270,9 @@ function MapCanvas({
             className="rounded-2xl overflow-hidden border border-teal-900/10 shadow-sm z-0"
             style={{ height: "62vh", minHeight: 380 }}
           />
-          <ol className="bg-white rounded-2xl border border-teal-900/10 shadow-sm divide-y divide-gray-100 overflow-hidden">
-            {stops.map((s, i) => (
+          <div>
+            <ol className="bg-white rounded-2xl border border-teal-900/10 shadow-sm divide-y divide-gray-100 overflow-hidden">
+              {stops.map((s, i) => (
               <li key={s.id}>
                 <button
                   onClick={() => focusCity(s.id)}
@@ -266,7 +310,44 @@ function MapCanvas({
                 </button>
               </li>
             ))}
-          </ol>
+            </ol>
+            {extraCities.length > 0 && (
+              <div className="mt-4 bg-white rounded-2xl border border-teal-900/10 shadow-sm overflow-hidden">
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <span className="font-bold text-teal-900 text-sm">
+                    更多研究城市
+                  </span>
+                  <span className="block text-xs text-gray-400 mt-0.5">
+                    不在当前行程内，点选查看 🏨 候选酒店 / 🍽️ 推荐餐厅位置
+                  </span>
+                </div>
+                <ul className="divide-y divide-gray-100">
+                  {extraCities.map((c) => (
+                    <li key={c.id}>
+                      <button
+                        onClick={() => focusCity(c.id)}
+                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
+                          activeId === c.id ? "bg-teal-50" : "hover:bg-gray-50"
+                        }`}
+                      >
+                        <span className="min-w-0">
+                          <span className="block font-bold text-teal-900 text-sm">
+                            {c.zh}
+                            <span className="ml-1.5 font-normal text-xs text-gray-400">
+                              {c.en}
+                            </span>
+                          </span>
+                          <span className="block text-xs text-gray-500 mt-0.5">
+                            🏨 {c.hotelCount} 家候选 · 🍽️ {c.restCount} 家推荐
+                          </span>
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
