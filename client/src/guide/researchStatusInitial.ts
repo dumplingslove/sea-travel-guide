@@ -505,8 +505,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增2/8（周半半/祛魅避雷、themaxxtl/踩雷），2基线+2新增=4篇；2026-09-14 00:57Z轮3篇实读均因无实质评论/水评按严格标准排除（详情见redo-strict/bangkok-2026-09-13.md Nahm节）；仍差6篇；2026-09-26 16:12 PDT轮新增达标1篇（戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》2026-06-17，114赞/65收藏/12评论，8条实质评论，13图翻验4张；证据见xhs-coverage-bangkok.md），累计5/10仍差5篇；另1篇低互动（好运桦桦来12赞，仅2条非实质评论）未计入达标，仅作补充证据",
-       "posts": 5,
+       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增2/8（周半半/祛魅避雷、themaxxtl/踩雷），2基线+2新增=4篇；2026-09-14 00:57Z轮3篇实读均因无实质评论/水评按严格标准排除；2026-09-26 23:12Z轮2篇深读均未达严格标准（戴踏踏帖页面日期无年份仅06-17、评论多为泛互动、13图仅翻验4张；好运桦桦来帖仅08-12、12赞、2条非实质评论），新增达标0篇，23:12Z轮曾误记为5/10，2026-09-26已纠正回4/10 partial。证据见xhs-coverage-bangkok.md",
+       "posts": 4,
        "status": "partial",
        "target": 10
       }
@@ -1609,9 +1609,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md",
-       "note": "2026-09-17 主代理纠正：去重后真实独立帖为3/10（帖5 Patience. 2025-12-14 为帖2的重复条目，已合并；吃吃包包《周日夜市真的蛮好逛还便宜》2025-10-02 经重新打开验证评论区8条均为提问/回答、无实质体验评论，按严格标准剔除不计入）。用户已决定按 partial 收尾，不再深挖。计入：Patience. 2025-12-14《清迈周日夜市打卡✅（美食广场推荐）》、一树妈妈 2026-03-02《清迈｜听劝🤫古城一定要留在周日逛》、summer 2026-06-28《清迈周日夜市》。缺7篇。证据见 redo-strict/chiangmai-item14-sundaywalkingstreet-PARTIAL-2026-09-15.md（已更新3/10终版）",
+       "note": "2026-09-26 新标准核销：3篇严格达标帖（Patience. 2025-12-14《清迈周日夜市打卡✅（美食广场推荐）》、一树妈妈 2026-03-02《清迈｜听劝🤫古城一定要留在周日逛》、summer 2026-06-28《清迈周日夜市》；吃吃包包帖已按严格标准剔除），按用户2026-09-21三篇高流量标准转done；用户此前已决定收尾不再深挖。",
        "posts": 3,
-       "status": "partial",
+       "status": "done",
        "target": 10
       }
      },
@@ -6945,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-26T23:16Z"
+ "updated_at": "2026-09-26T23:58Z"
 };
