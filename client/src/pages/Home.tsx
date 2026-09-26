@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MapPin, CalendarDays, ChevronRight, UtensilsCrossed } from "lucide-react";
 import food from "@/data/food.json";
 import TripOverviewMap from "@/components/TripOverviewMap";
+import { CityPlaceSummary } from "@/components/DayPlaceDetails";
 import {
   usePlanItinerary,
   type PlanDay,
@@ -123,6 +124,7 @@ function ItineraryTab() {
               <MapPin size={12} />
               {c.country_zh} · {c.dates}
             </p>
+            <CityPlaceSummary cityZh={c.zh} />
           </Link>
         ))}
       </div>

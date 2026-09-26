@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-react";
 import { days as detailDays } from "@/guide/data";
 import DayMap from "@/components/DayMap";
+import { DayPlaceDetails } from "@/components/DayPlaceDetails";
 import {
   usePlanItinerary,
   detailDayForPlanDay,
@@ -116,6 +117,8 @@ export default function DayDetail() {
           </p>
         </div>
       )}
+
+      <DayPlaceDetails cityZh={day.city_zh} />
 
       <div className="flex items-center justify-between">
         {prev ? (
