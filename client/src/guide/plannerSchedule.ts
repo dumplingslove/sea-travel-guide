@@ -374,15 +374,53 @@ export async function resolvePlanItinerary(): Promise<PlanItinerary> {
   return STATIC_ITINERARY;
 }
 
+/** 会话级内存缓存：最近一次解析成功的行程 */
+let memoryPlan: PlanItinerary | null = null;
+
+/** 两份行程是否实质相同（天数 + 每天城市一致即视为相同） */
+function sameItinerary(a: PlanItinerary, b: PlanItinerary): boolean {
+  if (a.totalDays !== b.totalDays || a.days.length !== b.days.length)
+    return false;
+  return a.days.every(
+    (d, i) => d.city_zh === b.days[i].city_zh && d.date === b.days[i].date
+  );
+}
+
 export function usePlanItinerary(): PlanItinerary & { loading: boolean } {
-  const [state, setState] = useState<PlanItinerary & { loading: boolean }>({
-    ...STATIC_ITINERARY,
-    loading: true,
-  });
+  // 会话级内存缓存：同一次浏览里从详情页返回行程时，组件会重新挂载。
+  // 没有这层缓存，每次挂载都先渲染 20 天静态行程、等异步解析完再跳成
+  // 13 天云端行程——用户看到的就是“一闪先 20 天再变 13 天”。
+  const [state, setState] = useState<PlanItinerary & { loading: boolean }>(
+    () => {
+      if (memoryPlan) return { ...memoryPlan, loading: false };
+      // 同步读本地缓存：localStorage 里是上次云端解析完写回的 13 天规划，
+      // 首屏直接按它渲染，不再经过 20 天静态中间态。
+      const cached = readPlannerCache();
+      const conv = cached ? planToItinerary(cached.plan) : null;
+      if (conv && cached) {
+        return {
+          ...conv,
+          updatedByName: cached.updatedByName,
+          updatedAt: cached.updatedAt,
+          loading: true,
+        };
+      }
+      return { ...STATIC_ITINERARY, loading: true };
+    }
+  );
   useEffect(() => {
     let alive = true;
     resolvePlanItinerary().then((it) => {
-      if (alive) setState({ ...it, loading: false });
+      if (!alive) return;
+      memoryPlan = it;
+      setState((prev) => {
+        // 解析结果和当前渲染的一致（天数、城市序列相同）时只关 loading，
+        // 不替换对象，避免无意义重渲染和布局抖动。
+        if (!prev.loading && sameItinerary(prev, it)) return prev;
+        if (prev.loading && sameItinerary(prev, it))
+          return { ...prev, loading: false };
+        return { ...it, loading: false };
+      });
     });
     return () => {
       alive = false;

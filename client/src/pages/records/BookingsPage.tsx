@@ -18,6 +18,7 @@ import {
 } from "./shared";
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingGuideSection from "@/bookings/BookingGuideSection";
+import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import {
   presetFromChecklist,
   type ChecklistItem,
@@ -108,6 +109,9 @@ function BookingsInner() {
       summary="酒店、餐厅、景点门票、航班逐条记录：确认号、出票状态一目了然。从酒店/餐厅/航班页点“预订”会自动带过来。"
     >
       <SyncBanner mode={syncMode} />
+
+      {/* 预订决策汇总：酒店实时价 / 餐厅空位与预订政策 / 景点余票（按城市） */}
+      <BookingStatusSummary />
 
       {/* 待预订清单：按行程逐城列出可预订项，点“加入预订”逐条加进记录 */}
       <BookingGuideSection addedNames={addedNames} onAdd={addFromChecklist} />

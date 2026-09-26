@@ -3,7 +3,7 @@
  * 三个路由共用：/attraction/:slug /restaurant/:slug /hotel/:slug
  */
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import { attractionGuides } from "@/guide/attractionGuides";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
@@ -14,6 +14,18 @@ import {
 } from "@/guide/placeDetail";
 import { placesForCity } from "@/data/placeCoords";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
+import {
+  FactsPanel,
+  AvoidPanel,
+  XhsReviewPanel,
+  OtaReviewPanel,
+  SecondarySourcesPanel,
+  EvidenceLedgerPanel,
+  PreTripChecklistPanel,
+  PhotoSpotsPanel,
+  AvailabilityInfoPanel,
+  type DetailKind,
+} from "@/components/PlaceDetailPanels";
 
 function NotFound({ kind }: { kind: PlaceKind }) {
   return (
@@ -51,7 +63,9 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
   const item = slug ? findPlace(kind, slug) : undefined;
   const kindZh = KIND_ZH[kind];
 
-  useEffect(() => {
+  // 切到详情页时在绘制前就回到顶部：之前用 useEffect，页面会先按行程页
+  // 留下的滚动位置画一帧再跳顶，用户看到的就是“闪一下”。
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
 
@@ -67,9 +81,10 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
   const { hotels, restaurants } = placesForCity(cityId);
   const coordList = kind === "hotel" ? hotels : kind === "restaurant" ? restaurants : [];
   const coord = coordList.find((p) => p.name === item.name || item.name.includes(p.name) || p.name.includes(item.name));
+  const detailKind: DetailKind = kindZh;
 
   return (
-    <div className="bg-[#f7f4ee] min-h-screen">
+    <div className="bg-[#f7f4ee] min-h-screen page-fade-in">
       {/* Hero */}
       <div className="relative h-[42vh] min-h-[300px] overflow-hidden bg-teal-900">
         {hero ? (
@@ -101,7 +116,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
               </span>
               {item.michelin && (
                 <span className="text-xs font-bold text-white bg-red-600/80 backdrop-blur-sm rounded-full px-2.5 py-1">
-                  {item.michelin}
+                  ⭐ {item.michelin.split("（")[0]}
                 </span>
               )}
             </div>
@@ -127,6 +142,23 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
             <p className="text-xs text-gray-400 mt-3">{item.source}</p>
           )}
         </Section>
+
+        {/* 实用信息 */}
+        <FactsPanel item={item} kind={detailKind} />
+
+        {/* 小红书口碑 */}
+        <XhsReviewPanel item={item} />
+
+        {/* 多平台评分（目前仅曼谷有 OTA 研究数据） */}
+        <OtaReviewPanel item={item} />
+
+        {/* 空位余票（餐厅/景点；有研究数据时才显示） */}
+        {(kind === "restaurant" || kind === "attraction") && (
+          <AvailabilityInfoPanel
+            name={item.name}
+            kind={kind === "restaurant" ? "餐厅" : "景点"}
+          />
+        )}
 
         {/* 景点：亮点 */}
         {guide && guide.highlights.length > 0 && (
@@ -178,6 +210,18 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Section>
         )}
 
+        {/* 景点：最佳机位 */}
+        {kind === "attraction" && <PhotoSpotsPanel item={item} />}
+
+        {/* 餐厅：米其林完整说明 */}
+        {kind === "restaurant" && item.michelin && (
+          <Section title="⭐ 米其林指南">
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {item.michelin}
+            </p>
+          </Section>
+        )}
+
         {/* 酒店：实时房价 */}
         {kind === "hotel" && livePrice && !livePrice.unavailable && (
           <Section title="💰 按行程日期实时房价（USD）">
@@ -222,6 +266,12 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Section>
         )}
 
+        {/* 避雷与取舍 */}
+        <AvoidPanel item={item} kind={detailKind} />
+
+        {/* 出发前确认清单 */}
+        <PreTripChecklistPanel kind={detailKind} />
+
         {/* 位置 */}
         {coord && (
           <Section title="📍 位置">
@@ -260,6 +310,12 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
             </div>
           </Section>
         )}
+
+        {/* 其他交叉核验入口 */}
+        <SecondarySourcesPanel item={item} />
+
+        {/* 小红书原帖与核验记录 */}
+        <EvidenceLedgerPanel item={item} />
 
         {/* 官方链接 */}
         {item.officialUrl && (

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLayoutEffect } from "react";
 import { MapPin, CalendarDays } from "lucide-react";
 import { CityPlaceSummary, useAvailability } from "@/components/DayPlaceDetails";
 import {
@@ -17,7 +18,30 @@ import {
 type Day = PlanDay;
 type City = PlanCityStop;
 
+/** 行程页滚动位置的 session 级存取键 */
+const HOME_SCROLL_KEY = "sea-home-scroll-y-v1";
+
 export default function Home() {
+  // 从详情页返回时恢复离开时的滚动位置，不再跳回页面顶部。
+  // 位置在卸载时写入 sessionStorage，恢复后立即清除，避免刷新页面时误恢复。
+  useLayoutEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem(HOME_SCROLL_KEY);
+      sessionStorage.removeItem(HOME_SCROLL_KEY);
+    } catch {
+      /* 忽略存储异常 */
+    }
+    const y = saved ? parseInt(saved, 10) : 0;
+    if (y > 0) window.scrollTo(0, y);
+    return () => {
+      try {
+        sessionStorage.setItem(HOME_SCROLL_KEY, String(window.scrollY));
+      } catch {
+        /* 忽略存储异常 */
+      }
+    };
+  }, []);
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Hero */}

@@ -24,6 +24,7 @@ import {
   fmtChecked,
   type AvRow,
 } from "@/components/DayPlaceDetails";
+import { bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
@@ -640,9 +641,17 @@ export function ItineraryDayCard({
                         {row ? (
                           <AvBadge status={row.status} kind="r" />
                         ) : (
-                          <span className="text-xs text-gray-400">
-                            未核空位
-                          </span>
+                          (() => {
+                            const b = bookingPolicyBadge(r.name);
+                            return (
+                              <span
+                                title={b.title}
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
+                              >
+                                {b.text}
+                              </span>
+                            );
+                          })()
                         )}
                         <Link
                           to={placeDetailPath("restaurant", r.city, r.name)}

@@ -13,3 +13,12 @@ body {
   background: #f7f4ee;
   color: #1f2937;
 }
+
+/* 路由切换时的轻微淡入，盖住首帧占位/图片加载的生硬闪烁 */
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page-fade-in {
+  animation: page-fade-in 160ms ease-out;
+}

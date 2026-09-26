@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { hotels, restaurants, attractions, type Item } from "@/guide/data";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 
 export type AvStatus =
   | "available"
@@ -188,11 +189,25 @@ function PlaceCard({
   av: AvRow | undefined;
   kind: "r" | "a";
 }) {
+  // 餐厅没有空位数据时，用研究结论明确标注：没查过 / 查过需要预定 / 查过不需要预定
+  const policyBadge =
+    kind === "r" && !av ? bookingPolicyBadge(item.name) : null;
   return (
     <Expandable
       id={placeAnchorId(kind === "r" ? "餐厅" : "景点", item.city, item.name)}
       title={item.name}
-      right={av ? <AvBadge status={av.status} kind={kind} /> : undefined}
+      right={
+        av ? (
+          <AvBadge status={av.status} kind={kind} />
+        ) : policyBadge ? (
+          <span
+            title={policyBadge.title}
+            className={`text-xs font-bold rounded-full px-2.5 py-0.5 border ${policyBadge.cls}`}
+          >
+            {policyBadge.text}
+          </span>
+        ) : undefined
+      }
     >
       <p className="text-xs text-gray-500 mb-2">
         {item.meta}
@@ -262,27 +277,17 @@ export function DayPlaceDetails({ cityZh }: { cityZh: string }) {
   );
 }
 
-/** 行程总览城市卡片下的一行 compact 摘要 */
+/** 行程总览城市卡片下的一行 compact 摘要：只保留纯计数。
+ * 预订/空位/价格类总结已按要求移入预订 Tab（BookingStatusSummary），
+ * 行程页开头不再出现。 */
 export function CityPlaceSummary({ cityZh }: { cityZh: string }) {
-  const av = useAvailability();
   const nHotel = hotels.filter((h) => h.city === cityZh).length;
-  const hotelPriced = hotels.filter(
-    (h) => h.city === cityZh && getLiveHotelPrice(h.name)
-  ).length;
-  const rList = restaurants.filter((r) => r.city === cityZh);
-  const rOk = rList.filter((r) => {
-    const s = av.get(r.name)?.status;
-    return s === "available" || s === "mixed";
-  }).length;
-  const aList = attractions.filter((a) => a.city === cityZh);
-  const aOk = aList.filter((a) => {
-    const s = av.get(a.name)?.status;
-    return s === "available" || s === "mixed";
-  }).length;
+  const nRest = restaurants.filter((r) => r.city === cityZh).length;
+  const nAttr = attractions.filter((a) => a.city === cityZh).length;
   const parts: string[] = [];
-  if (nHotel) parts.push(`🏨 ${nHotel}家${hotelPriced ? `（${hotelPriced}家有实时价）` : ""}`);
-  if (rList.length) parts.push(`🍽 ${rList.length}家${rOk ? `（${rOk}家有位）` : ""}`);
-  if (aList.length) parts.push(`🎡 ${aList.length}个${aOk ? `（${aOk}个有票）` : ""}`);
+  if (nHotel) parts.push(`🏨 ${nHotel}家`);
+  if (nRest) parts.push(`🍽 ${nRest}家`);
+  if (nAttr) parts.push(`🎡 ${nAttr}个`);
   if (!parts.length) return null;
   return <p className="text-xs text-gray-500 mt-2">{parts.join(" · ")}</p>;
 }
