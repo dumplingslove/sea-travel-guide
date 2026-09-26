@@ -20,11 +20,9 @@ import { getPlaceGallery } from "@/guide/placeGalleries";
 import DayMap from "@/components/DayMap";
 import { cloudStopsForTimeline, type StopCoord } from "@/data/stopCoords";
 import {
-  AvBadge,
-  fmtChecked,
-  type AvRow,
-} from "@/components/DayPlaceDetails";
-import { bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
+  bookingPolicyBadge,
+  getRestaurantBookingPolicy,
+} from "@/bookings/restaurantBookingStatus";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
@@ -201,17 +199,6 @@ export function matchItem(
   return best;
 }
 
-function findAv(av: Map<string, AvRow>, name: string): AvRow | undefined {
-  const exact = av.get(name);
-  if (exact) return exact;
-  const nn = norm(name);
-  for (const [k, v] of av) {
-    const nk = norm(k);
-    if (nk.length >= 2 && (nn.includes(nk) || nk.includes(nn))) return v;
-  }
-  return undefined;
-}
-
 function periodOf(time: string): "上午" | "下午" | "晚上" {
   const h = parseInt(time.slice(0, 2), 10);
   if (h < 12) return "上午";
@@ -247,17 +234,14 @@ function Collapsible({
 function StopBlock({
   stop,
   city,
-  av,
 }: {
   stop: Stop;
   city: string;
-  av: Map<string, AvRow>;
 }) {
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
   const item = mA || mR;
   const kindZh = mA ? "景点" : mR ? "餐厅" : null;
-  const row = item ? findAv(av, item.name) : undefined;
   const photo =
     item && kindZh === "景点" ? getPlaceGallery("景点", item)[0] : undefined;
   return (
@@ -277,9 +261,17 @@ function StopBlock({
           {stop.time}
         </span>
         <h5 className="font-semibold text-base">{stop.name}</h5>
-        {row && (
-          <AvBadge status={row.status} kind={kindZh === "餐厅" ? "r" : "a"} />
-        )}
+        {item && kindZh === "餐厅" && (() => {
+          const b = bookingPolicyBadge(item.name);
+          return (
+            <span
+              title={b.title}
+              className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
+            >
+              {b.text}
+            </span>
+          );
+        })()}
         {item && kindZh && (
           <Link
             to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
@@ -290,19 +282,6 @@ function StopBlock({
         )}
       </div>
       <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
-      {row && (
-        <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3">
-          <p className="text-sm text-gray-800 leading-relaxed">{row.detail}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {row.dates}
-            {row.party ? ` · ${row.party}` : ""} · 渠道：{row.channel}
-            {row.checked_at
-              ? ` · 查询于 ${fmtChecked(row.checked_at)}（北京时间）`
-              : ""}
-          </p>
-          {row.note && <p className="text-xs text-gray-500 mt-1">{row.note}</p>}
-        </div>
-      )}
     </div>
   );
 }
@@ -320,7 +299,6 @@ export function ItineraryDayCard({
   prevDay,
   detail,
   bookings,
-  av,
   isCloud,
   isLastInCity,
   cityScheduledNames,
@@ -329,7 +307,6 @@ export function ItineraryDayCard({
   prevDay: PlanDay | undefined;
   detail: Day | undefined;
   bookings: DayBooking[];
-  av: Map<string, AvRow>;
   /** 云端行程：编号与静态对不上，转场/地图一律按当天实际城市计算 */
   isCloud?: boolean;
   /** 是否该城市段最后一天（“本城备选”只放最后一天） */
@@ -397,9 +374,11 @@ export function ItineraryDayCard({
   ).slice(0, 8);
   const restPicks = [...cityRests]
     .sort((a, b) => {
-      const ha = findAv(av, a.name) ? 0 : 1;
-      const hb = findAv(av, b.name) ? 0 : 1;
-      return ha - hb;
+      const prio = (n: string) => {
+        const p = getRestaurantBookingPolicy(n)?.policy;
+        return p === "must_book" ? 0 : p === "peak_recommended" ? 1 : 2;
+      };
+      return prio(a.name) - prio(b.name);
     })
     .slice(0, 4);
 
@@ -524,7 +503,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">☀️ 上午</h4>
             <div className="space-y-2">
               {morning.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} />
               ))}
             </div>
           </section>
@@ -534,7 +513,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌤 下午</h4>
             <div className="space-y-2">
               {afternoon.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} />
               ))}
             </div>
           </section>
@@ -544,7 +523,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌙 晚上</h4>
             <div className="space-y-2">
               {evening.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} />
               ))}
             </div>
           </section>
@@ -566,7 +545,6 @@ export function ItineraryDayCard({
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {altAttrs.map((a) => {
-                const row = findAv(av, a.name);
                 const photo = getPlaceGallery("景点", a)[0];
                 return (
                   <div
@@ -584,7 +562,6 @@ export function ItineraryDayCard({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-sm font-semibold">{a.name}</span>
-                        {row && <AvBadge status={row.status} kind="a" />}
                       </div>
                       {a.meta && (
                         <p className="text-xs text-gray-500 truncate">
@@ -619,7 +596,6 @@ export function ItineraryDayCard({
             {restPicks.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {restPicks.map((r) => {
-                  const row = findAv(av, r.name);
                   const photo = getPlaceGallery("餐厅", r)[0];
                   return (
                     <div
@@ -638,21 +614,17 @@ export function ItineraryDayCard({
                         <span className="text-sm font-semibold flex-1">
                           {r.name}
                         </span>
-                        {row ? (
-                          <AvBadge status={row.status} kind="r" />
-                        ) : (
-                          (() => {
-                            const b = bookingPolicyBadge(r.name);
-                            return (
-                              <span
-                                title={b.title}
-                                className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
-                              >
-                                {b.text}
-                              </span>
-                            );
-                          })()
-                        )}
+                        {(() => {
+                          const b = bookingPolicyBadge(r.name);
+                          return (
+                            <span
+                              title={b.title}
+                              className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
+                            >
+                              {b.text}
+                            </span>
+                          );
+                        })()}
                         <Link
                           to={placeDetailPath("restaurant", r.city, r.name)}
                           className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
@@ -660,29 +632,6 @@ export function ItineraryDayCard({
                           查看详情
                         </Link>
                       </div>
-                      {row && (
-                        <div className="mt-1 bg-white/70 border border-orange-200 rounded p-2">
-                          <p className="text-xs font-semibold text-green-700 mb-1">
-                            预订详情：
-                          </p>
-                          <p className="text-xs text-gray-700 leading-relaxed">
-                            {row.detail}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {row.dates}
-                            {row.party ? ` · ${row.party}` : ""} · 渠道：
-                            {row.channel}
-                            {row.checked_at
-                              ? ` · 查询于 ${fmtChecked(row.checked_at)}（北京时间）`
-                              : ""}
-                          </p>
-                          {row.note && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              {row.note}
-                            </p>
-                          )}
-                        </div>
-                      )}
                     </div>
                   );
                 })}

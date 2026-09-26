@@ -278,9 +278,9 @@ export function SecondarySourcesPanel({ item }: { item: Item }) {
 }
 
 /** 小红书原帖与核验记录 */
-export function EvidenceLedgerPanel({ item }: { item: Item }) {
+export function EvidenceLedgerPanel({ item, kind }: { item: Item; kind: GuideKind }) {
   const evidence = xhsEvidence[item.name] || [];
-  const facts = getGuideFacts(item, "景点");
+  const facts = getGuideFacts(item, kind);
   const pager = usePaged(evidence, 6, "条链接");
   return (
     <Section title="🧾 小红书原帖与核验记录">

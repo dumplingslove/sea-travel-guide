@@ -21,16 +21,7 @@ import {
 import { bookingPolicyBadge } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
 
-const CITIES = [
-  "曼谷",
-  "清迈",
-  "普吉",
-  "槟城",
-  "吉隆坡",
-  "胡志明市",
-  "富国岛",
-  "新加坡",
-];
+const CITIES = ["新加坡", "普吉", "曼谷", "清迈"];
 
 function CityBlock({ cityZh }: { cityZh: string }) {
   const [open, setOpen] = useState(false);
@@ -209,7 +200,7 @@ export default function BookingStatusSummary() {
         className="w-full flex items-center justify-between gap-3 mb-3 text-left"
       >
         <h2 className="text-lg font-bold text-gray-900">
-          📊 预订决策汇总
+          🏙️ 城市参考明细
           <span className="ml-2 text-xs font-normal text-gray-500">
             🏨 {pricedTotal}家有实时价 · 🍽 {restAvTotal}家有空位数据 · 🎡{" "}
             {attrAvTotal}个有余票数据

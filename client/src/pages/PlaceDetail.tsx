@@ -6,7 +6,6 @@ import { useParams, Link } from "react-router-dom";
 import { useLayoutEffect } from "react";
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import { attractionGuides } from "@/guide/attractionGuides";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 import {
   findPlace,
   KIND_ZH,
@@ -74,7 +73,6 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
   const photos = getPlaceGallery(kindZh, item);
   const hero = photos[0];
   const guide = kind === "attraction" ? attractionGuides[item.city]?.[item.name] : undefined;
-  const livePrice = kind === "hotel" ? getLiveHotelPrice(item.name) : undefined;
 
   // 坐标（4 个云端城市有核验坐标）
   const cityId = CITY_ID_BY_ZH[item.city] || "";
@@ -222,31 +220,15 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Section>
         )}
 
-        {/* 酒店：实时房价 */}
-        {kind === "hotel" && livePrice && !livePrice.unavailable && (
-          <Section title="💰 按行程日期实时房价（USD）">
-            <p className="text-xs text-gray-500 mb-2">
-              {livePrice.checkIn} → {livePrice.checkOut}（{livePrice.nights} 晚）
-            </p>
-            {livePrice.base && (
-              <p className="text-sm mb-1">
-                <span className="font-bold">基础房</span> ${livePrice.base.perNightUSD}
-                /晚 · 整段 ${livePrice.base.totalUSD}
-                {livePrice.base.totalInclTax ? "（含税）" : "（税前）"} ·{" "}
-                {livePrice.base.cancel} · {livePrice.base.breakfast}
-              </p>
-            )}
-            {livePrice.suite && (
-              <p className="text-sm">
-                <span className="font-bold">套房</span> ${livePrice.suite.perNightUSD}
-                /晚 · 整段 ${livePrice.suite.totalUSD}
-                {livePrice.suite.totalInclTax ? "（含税）" : "（税前）"} ·{" "}
-                {livePrice.suite.cancel} · {livePrice.suite.breakfast}
-              </p>
-            )}
-            <p className="text-xs text-gray-400 mt-2">
-              来源 {livePrice.source} · 查询于 {livePrice.checkedAt} · 房价实时波动，以下单时为准
-            </p>
+        {/* 酒店：实时房价统一在预订 Tab，详情页只留入口 */}
+        {kind === "hotel" && (
+          <Section title="📋 实时房价与预订">
+            <Link
+              to="/bookings"
+              className="inline-block text-sm font-medium text-teal-700 border border-teal-600 rounded-full px-4 py-2 hover:bg-teal-700 hover:text-white transition-colors"
+            >
+              去预订页看按行程日期的实时房价 →
+            </Link>
           </Section>
         )}
 
@@ -315,7 +297,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
         <SecondarySourcesPanel item={item} />
 
         {/* 小红书原帖与核验记录 */}
-        <EvidenceLedgerPanel item={item} />
+        <EvidenceLedgerPanel item={item} kind={kindZh} />
 
         {/* 官方链接 */}
         {item.officialUrl && (

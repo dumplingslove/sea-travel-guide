@@ -17,12 +17,14 @@ import {
   AuthorTag,
 } from "./shared";
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
-import BookingGuideSection from "@/bookings/BookingGuideSection";
+import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
+import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
+import { restaurants } from "@/guide/data";
 import {
   presetFromChecklist,
   type ChecklistItem,
-} from "@/bookings/bookingChecklist";
+} from "@/bookings/bookingTypes";
 import {
   BOOKING_KIND_LABEL,
   BOOKING_KINDS,
@@ -41,6 +43,37 @@ const kindBadge: Record<BookingKind, string> = {
 };
 
 type Filter = BookingKind | "all" | "pending" | "confirmed";
+
+/** 顶部行动总览：现在要干什么，一眼看清 */
+function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
+  const four = ["新加坡", "普吉", "曼谷", "清迈"];
+  const rests = restaurants.filter((r) => four.includes(r.city));
+  const mustN = rests.filter(
+    (r) => getRestaurantBookingPolicy(r.name)?.policy === "must_book",
+  ).length;
+  const peakN = rests.filter(
+    (r) => getRestaurantBookingPolicy(r.name)?.policy === "peak_recommended",
+  ).length;
+  const stats = [
+    { label: "现在锁", n: 5, cls: "bg-rose-50 text-rose-700 border-rose-200" },
+    { label: "酒店待选", n: 4, cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    { label: "必订餐厅", n: mustN, cls: "bg-orange-50 text-orange-700 border-orange-200" },
+    { label: "建议订位", n: peakN, cls: "bg-sky-50 text-sky-700 border-sky-200" },
+    { label: "已确认", n: confirmedCount, cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  ];
+  return (
+    <div className="flex flex-wrap gap-2 mb-6">
+      {stats.map((s) => (
+        <span
+          key={s.label}
+          className={`text-sm font-medium px-3 py-1.5 rounded-full border ${s.cls}`}
+        >
+          {s.label} <b>{s.n}</b>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
@@ -106,15 +139,21 @@ function BookingsInner() {
     <PageShell
       eyebrow="MY BOOKINGS"
       title="预订记录"
-      summary="酒店、餐厅、景点门票、航班逐条记录：确认号、出票状态一目了然。从酒店/餐厅/航班页点“预订”会自动带过来。"
+      summary="📋 预订行动时间线：机票先锁、酒店每城选 1 家、必订餐厅按放位窗口排，一条线走完；城市参考明细与你的预订记录都在这一页。"
     >
       <SyncBanner mode={syncMode} />
 
-      {/* 预订决策汇总：酒店实时价 / 餐厅空位与预订政策 / 景点余票（按城市） */}
-      <BookingStatusSummary />
+      {/* 行动总览：现在要干什么，一眼看清 */}
+      <ActionStrip confirmedCount={confirmedCount} />
 
-      {/* 待预订清单：按行程逐城列出可预订项，点“加入预订”逐条加进记录 */}
-      <BookingGuideSection addedNames={addedNames} onAdd={addFromChecklist} />
+      {/* 预订行动时间线：按最晚行动时间排，机票/酒店/餐厅/景点一体 */}
+      <h2 className="text-lg font-bold text-gray-900 mb-3">📋 预订行动时间线</h2>
+      <BookingTimeline onAdd={addFromChecklist} addedNames={addedNames} />
+
+      {/* 城市参考：四城每家明细（酒店实时价 / 餐厅政策 / 景点余票） */}
+      <div id="city-ref" className="scroll-mt-24">
+        <BookingStatusSummary />
+      </div>
 
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">

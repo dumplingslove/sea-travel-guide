@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { hotels, restaurants, attractions, type Item } from "@/guide/data";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 import { bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 
 export type AvStatus =
@@ -120,86 +120,40 @@ function Expandable({
 }
 
 function HotelCard({ item }: { item: Item }) {
-  const p = getLiveHotelPrice(item.name);
-  const priceSummary = p
-    ? p.unavailable
-      ? "暂无可订房价"
-      : p.base
-        ? `$${p.base.perNightUSD}/晚起`
-        : "有价"
-    : null;
   return (
     <Expandable
       id={placeAnchorId("酒店", item.city, item.name)}
       title={item.name}
-      right={
-        priceSummary && (
-          <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2.5 py-0.5">
-            {priceSummary}
-          </span>
-        )
-      }
     >
       <p className="text-xs text-gray-500 mb-2">{item.meta}</p>
-      {p ? (
-        <div className="text-sm mb-2">
-          <p className="text-xs text-gray-500 mb-1">
-            {p.checkIn} → {p.checkOut}（{p.nights} 晚）· 实时房价 USD
-          </p>
-          {p.unavailable ? (
-            <p className="text-sm text-gray-500">{p.unavailable}</p>
-          ) : (
-            <>
-              {p.base && (
-                <p className="text-sm">
-                  <span className="font-semibold">基础房</span> ${p.base.perNightUSD}/晚 · 整段
-                  ${p.base.totalUSD}
-                  {p.base.totalInclTax ? "（含税）" : "（税前）"} · {p.base.cancel} · {p.base.breakfast}
-                </p>
-              )}
-              {p.suite && (
-                <p className="text-sm mt-1">
-                  <span className="font-semibold">套房</span> ${p.suite.perNightUSD}/晚 · 整段
-                  ${p.suite.totalUSD}
-                  {p.suite.totalInclTax ? "（含税）" : "（税前）"} · {p.suite.cancel} ·{" "}
-                  {p.suite.breakfast}
-                </p>
-              )}
-              <p className="text-xs text-gray-400 mt-1">
-                来源 {p.source} · 查询于 {p.checkedAt} · 房价实时波动，以下单时为准
-              </p>
-            </>
-          )}
-        </div>
-      ) : (
-        <p className="text-xs text-gray-400 mb-2">该酒店暂无按行程日期的实时报价。</p>
-      )}
       <p className="text-sm text-gray-700 leading-relaxed">{item.detail}</p>
       {item.best && <p className="text-sm text-teal-800 mt-2">💡 {item.best}</p>}
+      <Link
+        to="/bookings"
+        className="inline-block mt-3 text-xs font-medium text-teal-700 border border-teal-600 rounded-full px-3 py-1.5 hover:bg-teal-700 hover:text-white transition-colors"
+      >
+        📋 实时房价与预订 →
+      </Link>
     </Expandable>
   );
 }
 
 function PlaceCard({
   item,
-  av,
   kind,
 }: {
   item: Item;
-  av: AvRow | undefined;
   kind: "r" | "a";
 }) {
-  // 餐厅没有空位数据时，用研究结论明确标注：没查过 / 查过需要预定 / 查过不需要预定
-  const policyBadge =
-    kind === "r" && !av ? bookingPolicyBadge(item.name) : null;
+  // 餐厅保留研究结论的政策标签（必须预订/建议预订/无需预订/未查）供行程安排参考；
+  // 具体空位、余票、查询时间只在预订 Tab 展示。
+  const policyBadge = kind === "r" ? bookingPolicyBadge(item.name) : null;
   return (
     <Expandable
       id={placeAnchorId(kind === "r" ? "餐厅" : "景点", item.city, item.name)}
       title={item.name}
       right={
-        av ? (
-          <AvBadge status={av.status} kind={kind} />
-        ) : policyBadge ? (
+        policyBadge ? (
           <span
             title={policyBadge.title}
             className={`text-xs font-bold rounded-full px-2.5 py-0.5 border ${policyBadge.cls}`}
@@ -213,25 +167,15 @@ function PlaceCard({
         {item.meta}
         {item.michelin ? ` · ${item.michelin.split("（")[0]}` : ""}
       </p>
-      {av && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-2">
-          <p className="text-sm text-gray-800 leading-relaxed">{av.detail}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {av.dates}
-            {av.party ? ` · ${av.party}` : ""} · 渠道：{av.channel}
-            {av.checked_at ? ` · 查询于 ${fmtChecked(av.checked_at)}（北京时间）` : ""}
-          </p>
-        </div>
-      )}
       <p className="text-sm text-gray-700 leading-relaxed">{item.detail}</p>
       {item.best && <p className="text-sm text-teal-800 mt-2">💡 {item.best}</p>}
     </Expandable>
   );
 }
 
-/** 某天的行程页底部：本城酒店 + 餐厅 + 景点详细信息（含实时价格/空位） */
+/** 某天的行程页底部：本城酒店 + 餐厅 + 景点详细信息。
+ * 实时价格/空位余票/查询时间只在预订 Tab 展示，这里只留内容本身。 */
 export function DayPlaceDetails({ cityZh }: { cityZh: string }) {
-  const av = useAvailability();
   const cityHotels = hotels.filter((h) => h.city === cityZh);
   const cityRestaurants = restaurants.filter((r) => r.city === cityZh);
   const cityAttractions = attractions.filter((a) => a.city === cityZh);
@@ -241,7 +185,7 @@ export function DayPlaceDetails({ cityZh }: { cityZh: string }) {
     <div className="mb-6">
       <h2 className="font-bold text-lg mb-3">本城{cityZh} · 酒店 / 餐厅 / 景点详情</h2>
       <p className="text-xs text-gray-500 mb-4">
-        以下信息与酒店、餐厅、景点页同源（含实时房价与空位余票），点开卡片看完整详情，不用再切页面。
+        实时房价、空位余票与预订操作统一在预订 Tab，这里只看内容本身。
       </p>
       {cityHotels.length > 0 && (
         <section className="mb-5">
@@ -258,7 +202,7 @@ export function DayPlaceDetails({ cityZh }: { cityZh: string }) {
           <h3 className="font-bold text-base mb-2">🍽️ 餐厅（{cityRestaurants.length}家）</h3>
           <div className="space-y-2">
             {cityRestaurants.map((r) => (
-              <PlaceCard key={r.name} item={r} av={av.get(r.name)} kind="r" />
+              <PlaceCard key={r.name} item={r} kind="r" />
             ))}
           </div>
         </section>
@@ -268,7 +212,7 @@ export function DayPlaceDetails({ cityZh }: { cityZh: string }) {
           <h3 className="font-bold text-base mb-2">🎡 景点（{cityAttractions.length}个）</h3>
           <div className="space-y-2">
             {cityAttractions.map((a) => (
-              <PlaceCard key={a.name} item={a} av={av.get(a.name)} kind="a" />
+              <PlaceCard key={a.name} item={a} kind="a" />
             ))}
           </div>
         </section>

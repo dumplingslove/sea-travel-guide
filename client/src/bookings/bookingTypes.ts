@@ -112,3 +112,45 @@ export interface BookingPreset {
   /** 编辑已有记录时：完整解析后的数据，用于回填表单 */
   data?: BookingData;
 }
+
+/**
+ * 时间线 / 清单条目 → 预订弹窗预填。
+ * （原 bookingChecklist.ts 的旧 20 天清单数据已淘汰，只保留类型与转换函数。）
+ */
+export interface ChecklistItem {
+  id: string;
+  bkind: BookingKind;
+  name: string;
+  city: string;
+  date?: string;
+  dateEnd?: string;
+  time?: string;
+  timeEnd?: string;
+  day?: number | null;
+  guests?: string;
+  extra?: string;
+  note?: string;
+}
+
+export function presetFromChecklist(item: ChecklistItem): BookingPreset {
+  const data: BookingData = {
+    bkind: item.bkind,
+    city: item.city,
+    date: item.date,
+    dateEnd: item.dateEnd,
+    time: item.time,
+    timeEnd: item.timeEnd,
+    guests: item.guests,
+    extra: item.extra,
+    note: item.note,
+  };
+  return {
+    bkind: item.bkind,
+    name: item.name,
+    city: item.city,
+    date: item.date,
+    dateEnd: item.dateEnd,
+    day: item.day ?? null,
+    data,
+  };
+}

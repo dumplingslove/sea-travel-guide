@@ -1,5 +1,4 @@
 import { useLayoutEffect } from "react";
-import { useAvailability } from "@/components/DayPlaceDetails";
 import {
   ItineraryDayCard,
   detailForPlanDay,
@@ -53,7 +52,6 @@ function shortDate(d: string): string {
 function ItineraryTab() {
   const plan = usePlanItinerary();
   const days: Day[] = plan.days;
-  const av = useAvailability();
   const { rows } = useRecordsData(["booking"]);
   // 每城第几天（用于匹配静态内容：首日=抵达内容，末日=离境内容）
   const idxInCity = new Map<number, number>();
@@ -125,7 +123,6 @@ function ItineraryTab() {
             prevDay={i > 0 ? days[i - 1] : undefined}
             detail={details[i]}
             bookings={bookingsByDay.get(d.day) || []}
-            av={av}
             isCloud={isCloudPlan}
             isLastInCity={
               (idxInCity.get(d.day) || 0) === (cityCounts.get(d.city_zh) || 1) - 1
