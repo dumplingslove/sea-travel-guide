@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { MapPin, CalendarDays, ChevronRight, UtensilsCrossed } from "lucide-react";
 import food from "@/data/food.json";
 import TripOverviewMap from "@/components/TripOverviewMap";
-import { CityPlaceSummary } from "@/components/DayPlaceDetails";
+import { CityPlaceSummary, useAvailability } from "@/components/DayPlaceDetails";
+import {
+  ItineraryDayCard,
+  detailForPlanDay,
+  type DayBooking,
+} from "@/components/ItineraryDayCard";
+import { useRecordsData } from "@/pages/records/shared";
 import {
   usePlanItinerary,
   type PlanDay,
@@ -80,13 +86,39 @@ export default function Home() {
   );
 }
 
+function shortDate(d: string): string {
+  let m = d.match(/(\d+)月(\d+)日/);
+  if (m) return `${m[1]}/${m[2]}`;
+  m = d.match(/\d{4}-(\d+)-(\d+)/);
+  if (m) return `${Number(m[1])}/${Number(m[2])}`;
+  return d;
+}
+
 function ItineraryTab() {
   const plan = usePlanItinerary();
   const days: Day[] = plan.days;
   const cityList: City[] = plan.cityStops;
+  const av = useAvailability();
+  const { rows } = useRecordsData(["booking"]);
   const stopsKey = cityList
     .map((c) => `${c.id}:${c.days[0]}-${c.days[1]}`)
     .join("|");
+  // 每城第几天（用于匹配静态内容：首日=抵达内容，末日=离境内容）
+  const idxInCity = new Map<number, number>();
+  const cityCounts = new Map<string, number>();
+  days.forEach((d) => cityCounts.set(d.city_zh, (cityCounts.get(d.city_zh) || 0) + 1));
+  const seen = new Map<string, number>();
+  days.forEach((d) => {
+    idxInCity.set(d.day, seen.get(d.city_zh) || 0);
+    seen.set(d.city_zh, (seen.get(d.city_zh) || 0) + 1);
+  });
+  const bookingsByDay = new Map<number, DayBooking[]>();
+  rows.forEach((r) => {
+    if (r.day == null) return;
+    const list = bookingsByDay.get(r.day) || [];
+    list.push({ day: r.day, title: r.title, body: r.body || "", done: !!r.done });
+    bookingsByDay.set(r.day, list);
+  });
   return (
     <>
       {/* 20天路线总览实时地图（云端规划优先） */}
@@ -129,31 +161,37 @@ function ItineraryTab() {
         ))}
       </div>
 
-      {/* Day list */}
-      <h2 className="text-xl font-bold mb-4">{plan.totalDays} 天行程</h2>
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-100">
-        {days.map((d) => (
-          <Link
+      {/* 悬浮日期导航（意大利站逻辑） */}
+      <div className="sticky top-[92px] z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200">
+        <div className="flex gap-1.5 overflow-x-auto pb-0.5">
+          {days.map((d) => (
+            <button
+              key={d.day}
+              onClick={() =>
+                document
+                  .getElementById(`day-${d.day}`)
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+              className="whitespace-nowrap flex-shrink-0 text-xs px-2.5 py-1.5 rounded-lg text-teal-800 hover:bg-teal-700 hover:text-white transition-colors"
+            >
+              D{d.day} {shortDate(d.date)} {d.city_zh}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 每日完整行程卡（意大利站逻辑：一天一卡，信息全在卡里） */}
+      <h2 className="text-xl font-bold mb-4">{plan.totalDays} 天详细行程</h2>
+      <div className="space-y-8 mb-12">
+        {days.map((d, i) => (
+          <ItineraryDayCard
             key={d.day}
-            to={`/day/${d.day}`}
-            className="flex items-center gap-4 px-4 py-3 hover:bg-teal-50/50 transition-colors"
-          >
-            <span className="w-10 h-10 shrink-0 rounded-full bg-teal-700 text-white text-sm font-bold flex items-center justify-center">
-              {d.day}
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium">
-                {d.city_zh}
-                <span className="text-gray-400 font-normal text-sm ml-2">
-                  {d.city}
-                </span>
-              </p>
-              <p className="text-xs text-gray-500">
-                {d.date} {d.weekday}
-              </p>
-            </div>
-            <ChevronRight size={18} className="text-gray-300" />
-          </Link>
+            day={d}
+            prevDay={i > 0 ? days[i - 1] : undefined}
+            detail={detailForPlanDay(d, idxInCity.get(d.day) || 0, cityCounts.get(d.city_zh) || 1)}
+            bookings={bookingsByDay.get(d.day) || []}
+            av={av}
+          />
         ))}
       </div>
     </>

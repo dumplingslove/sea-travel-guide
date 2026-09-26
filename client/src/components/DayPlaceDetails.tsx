@@ -58,7 +58,11 @@ const AV_STYLE: Record<AvStatus, { r: string; a: string; cls: string }> = {
   unverifiable: { r: "在线查不到", a: "在线查不到", cls: "bg-gray-400" },
 };
 
-function AvBadge({ status, kind }: { status: AvStatus; kind: "r" | "a" }) {
+export function placeAnchorId(kind: "酒店" | "餐厅" | "景点", city: string, name: string) {
+  return `place-${kind}-${city}-${name}`;
+}
+
+export function AvBadge({ status, kind }: { status: AvStatus; kind: "r" | "a" }) {
   const s = AV_STYLE[status];
   if (!s) return null;
   return (
@@ -70,7 +74,7 @@ function AvBadge({ status, kind }: { status: AvStatus; kind: "r" | "a" }) {
   );
 }
 
-function fmtChecked(iso: string): string {
+export function fmtChecked(iso: string): string {
   if (!iso) return "";
   try {
     return new Date(iso).toLocaleString("zh-CN", {
@@ -89,14 +93,16 @@ function Expandable({
   title,
   right,
   children,
+  id,
 }: {
   title: string;
   right?: React.ReactNode;
   children: React.ReactNode;
+  id?: string;
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+    <div id={id} className="bg-white rounded-xl border border-gray-200 shadow-sm scroll-mt-32">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left"
@@ -123,6 +129,7 @@ function HotelCard({ item }: { item: Item }) {
     : null;
   return (
     <Expandable
+      id={placeAnchorId("酒店", item.city, item.name)}
       title={item.name}
       right={
         priceSummary && (
@@ -183,6 +190,7 @@ function PlaceCard({
 }) {
   return (
     <Expandable
+      id={placeAnchorId(kind === "r" ? "餐厅" : "景点", item.city, item.name)}
       title={item.name}
       right={av ? <AvBadge status={av.status} kind={kind} /> : undefined}
     >

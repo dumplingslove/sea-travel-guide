@@ -101,8 +101,8 @@ function AppRouter() {
         <Header />
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/day/:n" element={<DayDetail />} />
+            <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
+            <Route path="/day/:n" element={<RecordsProvider><DayDetail /></RecordsProvider>} />
             <Route path="/login" element={<Login />} />
             <Route
               path="/map"
