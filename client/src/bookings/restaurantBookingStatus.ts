@@ -26,6 +26,7 @@ const POLICY: Record<string, { policy: BookingPolicy; reason: string }> = {
   'Bun Quay Kien Xay': { policy: 'walkup_or_queue', reason: '富国岛特色粉，现场排队' },
   'Burnt Ends': { policy: 'must_book', reason: '米其林一星烧烤' },
   'Candlenut': { policy: 'peak_recommended', reason: '米其林一星娘惹菜，建议订位' },
+  'CEKI Nyonya': { policy: 'peak_recommended', reason: '米其林入选娘惹菜；商家建议午/晚餐订位（Google Maps），电话 +60 11-1051 7976 可订；非高峰可 walk-in 小等' },
   'Chim by Chef Noom': { policy: 'must_book', reason: '热门泰式 fine dining，需提前订位' },
   'Com Tam Ba Ghien': { policy: 'walkup_or_queue', reason: '粉/碎饭名店，现场排队' },
   'Cong Caphe': { policy: 'walkup_or_queue', reason: '连锁越共风咖啡，现场点单' },
