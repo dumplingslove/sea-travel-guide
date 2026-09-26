@@ -745,15 +745,6 @@ export function ItineraryDayCard({
             cloudStops={cloudStops}
           />
         </section>
-
-        <div className="pt-2">
-          <Link
-            to={`/day/${day.day}`}
-            className="text-sm font-medium text-teal-700 underline"
-          >
-            在单独页面打开 Day {day.day} →
-          </Link>
-        </div>
       </div>
     </article>
   );
