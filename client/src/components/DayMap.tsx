@@ -106,6 +106,26 @@ export default function DayMap({
   const isTransfer = Boolean(prevCoord && prevCityId !== cityId);
   /** 云端天：编号与静态对不上，用调用方按站点名查好的坐标；静态天沿用旧逻辑 */
   const routeStops: StopCoord[] | undefined = isCloud ? cloudStops : stopCoordsForDay(dayNum);
+  /**
+   * 地图内容签名：决定地图实例何时重建。
+   * 背景（2026-09-26 线上实测）：/day/12 首屏先用静态 20 天行程渲染（D12=吉隆坡），
+   * 云端 13 天规划异步到达后文字重渲染为清迈，但 effect 依赖 [] 永不重跑，
+   * 地图永远卡在首屏的吉隆坡标记。签名覆盖所有影响地图内容的输入，
+   * 内容变化即销毁重建；用序列化签名而不用数组 identity，避免每次渲染抖动。
+   */
+  const stopsSig = (routeStops ?? [])
+    .map((s) => `${s.name}|${s.time}|${s.lat}|${s.lng}`)
+    .join(";");
+  const mapSig = [
+    dayNum,
+    cityId,
+    cityZh,
+    prevCityId ?? "",
+    prevCityZh ?? "",
+    transferLabel ?? "",
+    isCloud ? "cloud" : "static",
+    stopsSig,
+  ].join("~");
   const hasStops = !!routeStops && routeStops.length > 0;
   /**
    * 纯转场日（当天无核实坐标站点）才画城际航线；
@@ -299,9 +319,9 @@ export default function DayMap({
       map.remove();
       mapRef.current = null;
     };
-    // 地图实例按“天”重建：路由切换 dayNum 时组件 key 变化，这里只初始化一次
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // 地图实例随内容签名重建：静态→云端数据到达、切天、换城市时都会重跑；
+    // cleanup 负责销毁旧实例。禁止改回 []（2026-09-26 D12 线上事故教训）。
+  }, [mapSig]);
 
   if (!coord) return null;
 
