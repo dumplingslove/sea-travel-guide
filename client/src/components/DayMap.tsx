@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { stopCoordsForDay, type StopCoord } from "@/data/stopCoords";
+import { placesForCity } from "@/data/placeCoords";
 
 interface DayMapProps {
   dayNum: number;
@@ -28,6 +29,38 @@ function dotIcon(label: string, highlight: boolean) {
       border:2px solid #0f766e;font-weight:800;font-size:12px;white-space:nowrap;
       box-shadow:0 2px 8px rgba(15,118,110,.35);
     ">${label}</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
+/** 候选酒店标记：🏨 蓝色徽章，只标位置、不连线（未预订） */
+function hotelIcon(booked: boolean) {
+  return L.divIcon({
+    className: "sea-daymap-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:${booked ? "#1d4ed8" : "#ffffff"};color:${booked ? "#ffffff" : "#1d4ed8"};
+      border:2px solid #1d4ed8;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(29,78,216,.35);
+    ">🏨</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
+/** 推荐餐厅标记：🍽️ 橙色徽章，只标位置、不连线 */
+function restaurantIcon() {
+  return L.divIcon({
+    className: "sea-daymap-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:#ffffff;color:#c2410c;
+      border:2px solid #ea580c;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(234,88,12,.35);
+    ">🍽️</span>`,
     iconSize: [30, 30],
     iconAnchor: [15, 15],
     popupAnchor: [0, -14],
@@ -173,6 +206,71 @@ export default function DayMap({
       }
     }
 
+    // 酒店 / 餐厅标记：只标位置、不并入当天动线（用户要求：预订前只看位置、方便选酒店）。
+    // 已确认预订的酒店（booked=true）才接入动线：酒店→首站、末站→酒店。
+    const { hotels, restaurants } = placesForCity(cityId);
+    const placeBoundsPts: L.LatLng[] = [];
+    const bookedHotel = hotels.find((h) => h.booked);
+    for (const h of hotels) {
+      const pt = L.latLng(h.lat, h.lng);
+      placeBoundsPts.push(pt);
+      L.marker(pt, { icon: hotelIcon(!!h.booked) })
+        .bindPopup(
+          `<b>🏨 ${h.name}</b><br><span style="font-size:12px;color:#6b7280">${
+            h.booked ? "已确认预订" : "候选酒店（未预订，仅标位置）"
+          }${h.note ? ` · ${h.note}` : ""}</span>`,
+        )
+        .addTo(map);
+    }
+    for (const r of restaurants) {
+      const pt = L.latLng(r.lat, r.lng);
+      placeBoundsPts.push(pt);
+      L.marker(pt, { icon: restaurantIcon() })
+        .bindPopup(
+          `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
+        )
+        .addTo(map);
+    }
+    // 已订酒店接入动线
+    if (bookedHotel && hasStops && routeStops && routeStops.length > 0) {
+      const hpt = L.latLng(bookedHotel.lat, bookedHotel.lng);
+      const first = L.latLng(routeStops[0].lat, routeStops[0].lng);
+      const last = L.latLng(
+        routeStops[routeStops.length - 1].lat,
+        routeStops[routeStops.length - 1].lng,
+      );
+      L.polyline([hpt, first], {
+        color: "#1d4ed8",
+        weight: 2,
+        opacity: 0.7,
+        dashArray: "5 5",
+      }).addTo(map);
+      if (routeStops.length > 1) {
+        L.polyline([last, hpt], {
+          color: "#1d4ed8",
+          weight: 2,
+          opacity: 0.7,
+          dashArray: "5 5",
+        }).addTo(map);
+      }
+      placeBoundsPts.push(hpt);
+    }
+    // 视野：把酒店/餐厅也纳入，避免标记落在可视区外
+    if (placeBoundsPts.length > 0) {
+      const all = L.latLngBounds(placeBoundsPts);
+      if (stopBounds) {
+        stopBounds.extend(all);
+      } else if (singleStop) {
+        stopBounds = L.latLngBounds([singleStop]).extend(all).pad(0.18);
+        singleStop = null;
+      } else if (to) {
+        stopBounds = L.latLngBounds([to]).extend(all).pad(0.3);
+        to = null;
+      } else {
+        stopBounds = all.pad(0.3);
+      }
+    }
+
     mapRef.current = map;
     // 首次加载偶发空白修复（backlog P1）：与总览地图同因——容器尺寸在 commit
     // 时未稳定，paint 完成后强制刷新尺寸并重算视野，再加一次延迟兜底。
@@ -216,6 +314,9 @@ export default function DayMap({
           : hasStops
             ? `Day ${dayNum}${isTransfer ? ` 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""} ·` : " ·"} 站点顺序动线（编号对应当天时间线）`
             : `Day ${dayNum} · ${cityZh}市内游`}
+        <span className="ml-2 text-gray-400">
+          ①-⑳ 景点动线 · 🏨 候选酒店（仅位置） · 🍽️ 推荐餐厅
+        </span>
       </p>
     </div>
   );

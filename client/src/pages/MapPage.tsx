@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { placesForCity } from "@/data/placeCoords";
 import {
   usePlanItinerary,
   type PlanCityStop,
@@ -40,9 +41,38 @@ function markerIcon(order: number, active: boolean) {
   });
 }
 
+function hotelIcon() {
+  return L.divIcon({
+    className: "sea-route-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:#ffffff;color:#1d4ed8;border:2px solid #1d4ed8;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(29,78,216,.35);
+    ">🏨</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
+function restaurantIcon() {
+  return L.divIcon({
+    className: "sea-route-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:#ffffff;color:#c2410c;border:2px solid #ea580c;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(234,88,12,.35);
+    ">🍽️</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
 /**
  * 地图页：城市站点来自全站共享的行程事实源（云端规划优先，静态回退）。
  * 站点变化时整个画布按 key 重建，保证地图与列表一致。
+ * 点选城市时叠加该城候选酒店（🏨）与推荐餐厅（🍽️），只标位置不连线。
  */
 export default function MapPage() {
   const plan = usePlanItinerary();
@@ -72,7 +102,37 @@ function MapCanvas({
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const placesLayerRef = useRef<L.LayerGroup | null>(null);
   const [activeId, setActiveId] = useState<string>(stops[0].id);
+
+  /** 在地图上叠加某城市的酒店/餐厅（只标位置，不连线） */
+  const showCityPlaces = (cityId: string) => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (placesLayerRef.current) {
+      placesLayerRef.current.remove();
+      placesLayerRef.current = null;
+    }
+    const { hotels, restaurants } = placesForCity(cityId);
+    if (hotels.length === 0 && restaurants.length === 0) return;
+    const layer = L.layerGroup();
+    for (const h of hotels) {
+      L.marker([h.lat, h.lng], { icon: hotelIcon() })
+        .bindPopup(
+          `<b>🏨 ${h.name}</b><br><span style="font-size:12px;color:#6b7280">候选酒店（未预订，仅标位置）${h.note ? ` · ${h.note}` : ""}</span>`,
+        )
+        .addTo(layer);
+    }
+    for (const r of restaurants) {
+      L.marker([r.lat, r.lng], { icon: restaurantIcon() })
+        .bindPopup(
+          `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
+        )
+        .addTo(layer);
+    }
+    layer.addTo(map);
+    placesLayerRef.current = layer;
+  };
 
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
@@ -119,6 +179,7 @@ function MapCanvas({
       map.remove();
       mapRef.current = null;
       markersRef.current = [];
+      placesLayerRef.current = null;
     };
   }, [stops]);
 
@@ -134,6 +195,8 @@ function MapCanvas({
     map.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 7), { duration: 0.8 });
     const marker = markersRef.current[idx];
     window.setTimeout(() => marker.openPopup(), 850);
+    // 点选城市后叠加该城酒店/餐厅
+    window.setTimeout(() => showCityPlaces(id), 850);
   };
 
   const firstDate = stops[0]?.dates.split(" ~ ")[0] ?? "";
@@ -154,6 +217,9 @@ function MapCanvas({
               · 云端规划（{updatedByName}）
             </span>
           )}
+          <span className="ml-2 text-gray-400">
+            · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅（仅位置）
+          </span>
         </p>
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
           <div

@@ -22,9 +22,9 @@ import { cloudStopsForTimeline, type StopCoord } from "@/data/stopCoords";
 import {
   AvBadge,
   fmtChecked,
-  placeAnchorId,
   type AvRow,
 } from "@/components/DayPlaceDetails";
+import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
 
@@ -247,12 +247,10 @@ function StopBlock({
   stop,
   city,
   av,
-  dayNum,
 }: {
   stop: Stop;
   city: string;
   av: Map<string, AvRow>;
-  dayNum: number;
 }) {
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
@@ -283,7 +281,7 @@ function StopBlock({
         )}
         {item && kindZh && (
           <Link
-            to={`/day/${dayNum}#${placeAnchorId(kindZh, city, item.name)}`}
+            to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
             className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
           >
             查看详情
@@ -525,7 +523,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">☀️ 上午</h4>
             <div className="space-y-2">
               {morning.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
               ))}
             </div>
           </section>
@@ -535,7 +533,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌤 下午</h4>
             <div className="space-y-2">
               {afternoon.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
               ))}
             </div>
           </section>
@@ -545,7 +543,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌙 晚上</h4>
             <div className="space-y-2">
               {evening.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
               ))}
             </div>
           </section>
@@ -593,7 +591,7 @@ export function ItineraryDayCard({
                         </p>
                       )}
                       <Link
-                        to={`/day/${day.day}#${placeAnchorId("景点", a.city, a.name)}`}
+                        to={placeDetailPath("attraction", a.city, a.name)}
                         className="text-xs font-medium text-teal-700 underline"
                       >
                         查看详情 →
@@ -647,7 +645,7 @@ export function ItineraryDayCard({
                           </span>
                         )}
                         <Link
-                          to={`/day/${day.day}#${placeAnchorId("餐厅", r.city, r.name)}`}
+                          to={placeDetailPath("restaurant", r.city, r.name)}
                           className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
                         >
                           查看详情

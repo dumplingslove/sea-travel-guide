@@ -15,6 +15,11 @@ import PackingPage from "@/pages/records/PackingPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
 import FavoritesPage from "@/pages/records/FavoritesPage";
+import {
+  AttractionDetailPage,
+  RestaurantDetailPage,
+  HotelDetailPage,
+} from "@/pages/PlaceDetail";
 
 const NAV = [
   { to: "/", label: "行程" },
@@ -104,6 +109,9 @@ function AppRouter() {
           <Routes>
             <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
             <Route path="/day/:n" element={<RecordsProvider><DayDetail /></RecordsProvider>} />
+            <Route path="/attraction/:slug" element={<AttractionDetailPage />} />
+            <Route path="/restaurant/:slug" element={<RestaurantDetailPage />} />
+            <Route path="/hotel/:slug" element={<HotelDetailPage />} />
             <Route path="/login" element={<Login />} />
             <Route
               path="/map"
