@@ -463,10 +463,10 @@ export function ItineraryDayCard({
                 ))}
               </div>
               <Link
-                to="/flights"
+                to="/bookings?menu=flights"
                 className="inline-block mt-3 text-sm font-medium text-sky-700 underline"
               >
-                去航班页看全部航段 →
+                去预订页看全部航段 →
               </Link>
             </div>
           </Collapsible>
@@ -488,10 +488,10 @@ export function ItineraryDayCard({
                 💡 {mobility[2]}
               </p>
               <Link
-                to="/transport"
+                to="/bookings?menu=transport"
                 className="inline-block mt-3 text-sm font-medium text-sky-700 underline"
               >
-                去交通指南 →
+                去预订页看交通指南 →
               </Link>
             </div>
           </Collapsible>

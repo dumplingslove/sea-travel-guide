@@ -20,7 +20,7 @@ import {
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
-import { HotelCatalog, RestaurantCatalog } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, Transport } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -86,11 +86,13 @@ function BookingsInner() {
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  /** 二级菜单：预订行动 / 酒店与餐厅详情（支持 ?menu=details&view=hotels|restaurants 深链） */
+  /** 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（支持 ?menu=details|flights|transport 深链） */
   const [searchParams] = useSearchParams();
-  const [menu, setMenu] = useState<"action" | "details">(() =>
-    searchParams.get("menu") === "details" ? "details" : "action",
-  );
+  type MenuKey = "action" | "details" | "flights" | "transport";
+  const [menu, setMenu] = useState<MenuKey>(() => {
+    const m = searchParams.get("menu");
+    return m === "details" || m === "flights" || m === "transport" ? m : "action";
+  });
   const [detailView, setDetailView] = useState<"hotels" | "restaurants">(() =>
     searchParams.get("view") === "restaurants" ? "restaurants" : "hotels",
   );
@@ -169,20 +171,22 @@ function BookingsInner() {
     })),
   ];
 
-  const menus: { key: "action" | "details"; label: string }[] = [
+  const menus: { key: MenuKey; label: string }[] = [
     { key: "action", label: "📋 预订行动" },
     { key: "details", label: "🏨🍽️ 酒店与餐厅" },
+    { key: "flights", label: "✈️ 航班" },
+    { key: "transport", label: "🚋 交通" },
   ];
 
   return (
     <PageShell
       eyebrow="MY BOOKINGS"
       title="预订"
-      summary="📋 住宿、餐饮、预订行动收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店与餐厅」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
+      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店与餐厅」「航班」「交通」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
       <SyncBanner mode={syncMode} />
 
-      {/* 二级菜单：预订行动 / 酒店与餐厅详情 */}
+      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通 */}
       <div className="flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
         {menus.map((m) => (
           <button
@@ -335,7 +339,7 @@ function BookingsInner() {
         </div>
       )}
         </>
-      ) : (
+      ) : menu === "details" ? (
         <div>
           {/* 酒店 / 餐厅切换：同一菜单内列出两类详细信息 */}
           <div className="flex gap-2 mb-5" role="tablist" aria-label="酒店餐厅切换">
@@ -367,6 +371,14 @@ function BookingsInner() {
               <RestaurantCatalog onBook={onBookPreset} />
             )}
           </div>
+        </div>
+      ) : menu === "flights" ? (
+        <div className="guide-scope">
+          <Flights onBook={onBookPreset} />
+        </div>
+      ) : (
+        <div className="guide-scope">
+          <Transport />
         </div>
       )}
 

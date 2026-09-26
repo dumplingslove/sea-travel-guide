@@ -6,7 +6,6 @@ import DayDetail from "@/pages/DayDetail";
 import Login from "@/pages/Login";
 import Placeholder from "@/pages/Placeholder";
 import GuidePage from "@/pages/GuidePage";
-import MapPage from "@/pages/MapPage";
 import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
@@ -24,17 +23,14 @@ import {
 
 const NAV = [
   { to: "/", label: "行程" },
-  { to: "/attractions", label: "景点" },
-  { to: "/practical", label: "实用信息" },
-  { to: "/flights", label: "航班" },
-  { to: "/transport", label: "交通" },
-  { to: "/map", label: "地图" },
+  { to: "/bookings", label: "预订" },
   { to: "/planner", label: "行程规划" },
+  { to: "/attractions", label: "景点" },
   { to: "/notes", label: "笔记" },
   { to: "/packing", label: "打包" },
-  { to: "/bookings", label: "预订" },
   { to: "/expenses", label: "记账" },
   { to: "/favorites", label: "收藏" },
+  { to: "/practical", label: "实用信息" },
   { to: "/research", label: "研究状态" },
 ];
 
@@ -136,18 +132,15 @@ function AppRouter() {
             <Route path="/restaurant/:slug" element={<RestaurantDetailPage />} />
             <Route path="/hotel/:slug" element={<HotelDetailPage />} />
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/map"
-              element={<MapPage />}
-            />
             <Route path="/planner" element={<Planner />} />
-            {/* 酒店/餐厅已并入 /bookings 二级菜单「酒店与餐厅」；旧链接 301 到对应子菜单 */}
+            {/* 酒店/餐厅/航班/交通已并入 /bookings 二级菜单；地图已并入 /planner 子视图；旧链接跳转到对应位置 */}
             <Route path="/hotels" element={<Navigate to="/bookings?menu=details&view=hotels" replace />} />
             <Route path="/restaurants" element={<Navigate to="/bookings?menu=details&view=restaurants" replace />} />
             <Route path="/attractions" element={<GuidePage tab="景点" />} />
             <Route path="/practical" element={<GuidePage tab="实用信息" />} />
-            <Route path="/flights" element={<GuidePage tab="航班" />} />
-            <Route path="/transport" element={<GuidePage tab="交通" />} />
+            <Route path="/flights" element={<Navigate to="/bookings?menu=flights" replace />} />
+            <Route path="/transport" element={<Navigate to="/bookings?menu=transport" replace />} />
+            <Route path="/map" element={<Navigate to="/planner?view=map" replace />} />
             <Route path="/research" element={<GuidePage tab="信息来源搜索状态" />} />
             <Route path="/guide" element={<Navigate to="/" replace />} />
             <Route
