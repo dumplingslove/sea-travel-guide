@@ -505,8 +505,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增2/8（周半半/祛魅避雷、themaxxtl/踩雷），2基线+2新增=4篇；2026-09-14 00:57Z轮3篇实读均因无实质评论/水评按严格标准排除（详情见redo-strict/bangkok-2026-09-13.md Nahm节）；仍差6篇",
-       "posts": 4,
+       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增2/8（周半半/祛魅避雷、themaxxtl/踩雷），2基线+2新增=4篇；2026-09-14 00:57Z轮3篇实读均因无实质评论/水评按严格标准排除（详情见redo-strict/bangkok-2026-09-13.md Nahm节）；仍差6篇；2026-09-26 16:12 PDT轮新增达标1篇（戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》2026-06-17，114赞/65收藏/12评论，8条实质评论，13图翻验4张；证据见xhs-coverage-bangkok.md），累计5/10仍差5篇；另1篇低互动（好运桦桦来12赞，仅2条非实质评论）未计入达标，仅作补充证据",
+       "posts": 5,
        "status": "partial",
        "target": 10
       }
@@ -1433,7 +1433,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item09-huenphen-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:09Z）：partial 3/10，缺7篇；新关键词组合未发现新候选，本轮浏览约30+搜索卡片、详情页实读5帖，新增可计入0篇",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:09Z）：partial 3/10，缺7篇；新关键词组合未发现新候选，本轮浏览约30+搜索卡片、详情页实读5帖，新增可计入0篇；2026-09-26 16:12 PDT轮：关键词\"清迈 Huen Phen餐厅\"翻3页，0篇达标——头部216赞专帖（iibexc）正文核验为另一家餐厅HEUANNAOW已排除，其余专属帖≤106赞且相关性不足；候选池枯竭，维持3/10（证据见xhs-coverage-chiangmai.md）",
        "posts": 3,
        "status": "partial",
        "target": 10
@@ -1504,7 +1504,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md）",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -6840,8 +6840,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §28/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。",
-       "posts": 10,
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §28/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-26 21:26–21:40Z补3篇】站内搜'圣淘沙 luge'深读3篇高流量强相关专帖：①航仔想去玩《新加坡 天际斜坡滑车 刺激 太好玩了》(2025-11-01,1046赞,https://www.xiaohongshu.com/explore/6905e20c0000000004007a96,推荐,正文'价格200左右/时间40分钟左右/不需要预约',8条实质评论实读)；②的欢-gladys《沉浸式新加坡日落飞车Skyline Luge这样拍》(2025-09-27,955赞,https://www.xiaohongshu.com/explore/68d76a4e000000001301a206,推荐,正文'18:30-19:00可看落日/环球影城+Luge安排一天',8条实质评论实读)；③爱玩的三傻子《第一次玩新加坡斜坡滑车，这份攻略收好》(2026-07-12,636赞,https://www.xiaohongshu.com/explore/6a5396c70000000008025c42,推荐,正文'官网提前预定/银行卡支付/二维码E-ticket通道/搜圣淘沙登岛码免费登岛',8条实质评论实读)。证据见 xhs-coverage-singapore.md 2026-09-26 14:26–14:40 PDT 轮次记录。状态保持partial：本轮2篇视频帖未逐帧核验、第3篇仅核验封面，未达图片零容忍逐张审查标准，待逐项重验阶段补翻图片后才可记done。",
+       "posts": 13,
        "status": "partial",
        "target": 10
       }
@@ -6945,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-26T16:50Z"
+ "updated_at": "2026-09-26T23:16Z"
 };
