@@ -13,6 +13,8 @@ export type BookingKind = "hotel" | "restaurant" | "attraction" | "transport" | 
 export interface BookingData {
   bkind: BookingKind;
   city?: string;
+  /** 时间线/清单条目 id：用于"原地转已确认"匹配，改名后依然能对上 */
+  sourceId?: string;
   /** YYYY-MM-DD：入住 / 用餐 / 参观 / 出发日期 */
   date?: string;
   /** YYYY-MM-DD：退房日期（仅酒店） */
@@ -80,7 +82,7 @@ export function parseBookingBody(body: string): BookingData {
 
 export function formatBookingBody(d: BookingData): string {
   const clean: BookingData = { bkind: d.bkind };
-  (["city", "date", "dateEnd", "time", "timeEnd", "guests", "extra", "code", "note"] as const).forEach((k) => {
+  (["city", "sourceId", "date", "dateEnd", "time", "timeEnd", "guests", "extra", "code", "note"] as const).forEach((k) => {
     const v = d[k]?.trim();
     if (v) clean[k] = v;
   });
@@ -136,6 +138,7 @@ export function presetFromChecklist(item: ChecklistItem): BookingPreset {
   const data: BookingData = {
     bkind: item.bkind,
     city: item.city,
+    sourceId: item.id,
     date: item.date,
     dateEnd: item.dateEnd,
     time: item.time,

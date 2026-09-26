@@ -44,6 +44,13 @@ function AddButton({ onClick }: { onClick: () => void }) {
   );
 }
 
+/** 时间线条目已加入记录后的原地状态 */
+export interface TimelineMatch {
+  confirmed: boolean;
+  summary?: string;
+  onView: () => void;
+}
+
 function Row({
   kind,
   name,
@@ -52,6 +59,7 @@ function Row({
   sub,
   to,
   onAdd,
+  added,
 }: {
   kind: string;
   name: string;
@@ -60,6 +68,7 @@ function Row({
   sub?: string;
   to?: string;
   onAdd?: () => void;
+  added?: TimelineMatch;
 }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
@@ -83,9 +92,35 @@ function Row({
           <span className="text-xs text-gray-400 shrink-0">{meta}</span>
         </div>
         <div className="mt-0.5 text-sm text-gray-600">{headline}</div>
+        {added?.summary && (
+          <div className="mt-0.5 text-xs text-teal-700 font-medium truncate">
+            {added.confirmed ? "✓ " : "· "}
+            {added.summary}
+          </div>
+        )}
         {sub && <div className="text-xs text-gray-400 mt-0.5">{sub}</div>}
       </div>
-      {onAdd && <AddButton onClick={onAdd} />}
+      {added ? (
+        <div className="shrink-0 flex flex-col items-end gap-1">
+          <span
+            className={`text-xs font-medium px-2.5 py-1 rounded-full border ${
+              added.confirmed
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : "bg-amber-50 text-amber-700 border-amber-200"
+            }`}
+          >
+            {added.confirmed ? "✓ 已确认" : "待确认"}
+          </span>
+          <button
+            onClick={added.onView}
+            className="text-xs text-teal-700 underline underline-offset-2"
+          >
+            查看 / 修改
+          </button>
+        </div>
+      ) : (
+        onAdd && <AddButton onClick={onAdd} />
+      )}
     </div>
   );
 }
@@ -131,10 +166,11 @@ function fmtChecked(iso: string): string {
 
 export default function BookingTimeline({
   onAdd,
-  addedNames,
+  matchRecord,
 }: {
   onAdd: (item: ChecklistItem) => void;
-  addedNames: Set<string>;
+  /** 时间线条目 → 已加入的记录（原地转已确认用）；没有返回 undefined */
+  matchRecord: (item: ChecklistItem) => TimelineMatch | undefined;
 }) {
   const mk = (
     id: string,
@@ -144,9 +180,11 @@ export default function BookingTimeline({
     extra: Partial<ChecklistItem> = {},
   ): ChecklistItem => ({ id, bkind, name, city, ...extra });
 
-  const addIfNew = (item: ChecklistItem) => () => {
-    if (addedNames.has(item.name.trim().toLowerCase())) return;
-    onAdd(item);
+  /** 条目动作：已加入 → 原地状态；未加入 → ＋ 加入预订 */
+  const actionFor = (item: ChecklistItem): { onAdd?: () => void; added?: TimelineMatch } => {
+    const added = matchRecord(item);
+    if (added) return { added };
+    return { onAdd: () => onAdd(item) };
   };
 
   // ---- 酒店：每城最低参考价 ----
@@ -208,7 +246,7 @@ export default function BookingTimeline({
               meta={`${f.dateLabel} · D${f.day}转场`}
               headline={headline}
               sub={f.note}
-              onAdd={addIfNew(
+              {...actionFor(
                 mk(`tl-${f.id}`, "transport", `机票 ${f.route}`, "", {
                   date: f.date || undefined,
                   day: f.day,
@@ -245,7 +283,7 @@ export default function BookingTimeline({
               }
               sub="下方城市参考区有每家明细；价格按旧行程日期查询，仅供参考，明早自动按新日期重查"
               to="#city-ref"
-              onAdd={addIfNew(
+              {...actionFor(
                 mk(`tl-hotel-${s.city}`, "hotel", `${s.city}酒店（待选定）`, s.city, {
                   date: `2026-${s.checkInLabel.replace("-", "-")}`,
                   note: `${s.nights}晚 · ${cands.length}家候选`,
@@ -276,7 +314,7 @@ export default function BookingTimeline({
               }
               sub={getRestaurantBookingPolicy(r.name)?.reason}
               to={placeDetailPath("restaurant", r.city, r.name)}
-              onAdd={addIfNew(
+              {...actionFor(
                 mk(`tl-rest-${r.name}`, "restaurant", r.name, r.city, {
                   note: `预订政策：${badge.text}`,
                 }),
@@ -306,7 +344,7 @@ export default function BookingTimeline({
               }
               sub={getRestaurantBookingPolicy(r.name)?.reason}
               to={placeDetailPath("restaurant", r.city, r.name)}
-              onAdd={addIfNew(
+              {...actionFor(
                 mk(`tl-rest-${r.name}`, "restaurant", r.name, r.city, {
                   note: `预订政策：${badge.text}`,
                 }),
@@ -323,7 +361,7 @@ export default function BookingTimeline({
             headline={<span className="text-sky-700 font-medium">建议提前购票</span>}
             sub={a.reason}
             to={placeDetailPath("attraction", a.city, a.name)}
-            onAdd={addIfNew(
+            {...actionFor(
               mk(`tl-attr-${a.name}`, "attraction", a.name, a.city, {
                 day: a.day ?? null,
                 note: a.reason,

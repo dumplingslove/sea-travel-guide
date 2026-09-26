@@ -104,11 +104,27 @@ function BookingsInner() {
     setPreset({ bkind, name: "" });
     setDialogOpen(true);
   };
-  /** 清单项是否已加入记录（按名称匹配） */
-  const addedNames = useMemo(
-    () => new Set(rows.map((r) => r.title.trim().toLowerCase())),
-    [rows]
-  );
+  /** 清单项 → 已加入的记录：先按 sourceId（改名后依然对得上），再按名称回退 */
+  const matchRecord = useMemo(() => {
+    const bySource = new Map<string, number>();
+    const byName = new Map<string, number>();
+    parsed.forEach((p, i) => {
+      if (p.data.sourceId) bySource.set(p.data.sourceId, i);
+      byName.set(p.row.title.trim().toLowerCase(), i);
+    });
+    return (item: ChecklistItem) => {
+      const key = item.name.trim().toLowerCase();
+      const idx =
+        bySource.get(item.id) ?? (byName.has(key) ? byName.get(key) : undefined);
+      if (idx == null) return undefined;
+      const p = parsed[idx]!;
+      return {
+        confirmed: p.confirmed,
+        summary: bookingSummary(p.data) || undefined,
+        onView: () => openEdit(p.row.id),
+      };
+    };
+  }, [parsed]);
   const addFromChecklist = (item: ChecklistItem) => {
     setPreset(presetFromChecklist(item));
     setDialogOpen(true);
@@ -148,7 +164,7 @@ function BookingsInner() {
 
       {/* 预订行动时间线：按最晚行动时间排，机票/酒店/餐厅/景点一体 */}
       <h2 className="text-lg font-bold text-gray-900 mb-3">📋 预订行动时间线</h2>
-      <BookingTimeline onAdd={addFromChecklist} addedNames={addedNames} />
+      <BookingTimeline onAdd={addFromChecklist} matchRecord={matchRecord} />
 
       {/* 城市参考：四城每家明细（酒店实时价 / 餐厅政策 / 景点余票） */}
       <div id="city-ref" className="scroll-mt-24">
