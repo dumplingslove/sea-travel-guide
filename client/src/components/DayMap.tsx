@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
-import { stopCoordsForDay } from "@/data/stopCoords";
+import { stopCoordsForDay, type StopCoord } from "@/data/stopCoords";
 
 interface DayMapProps {
   dayNum: number;
@@ -13,6 +13,9 @@ interface DayMapProps {
   prevCityZh: string | null;
   /** 转场航段名称，如“普吉飞槟城”（转场日才传） */
   transferLabel?: string;
+  /** 云端行程：编号与静态对不上，调用方按站点名查好坐标直接传进来 */
+  isCloud?: boolean;
+  cloudStops?: StopCoord[];
 }
 
 function dotIcon(label: string, highlight: boolean) {
@@ -59,6 +62,8 @@ export default function DayMap({
   prevCityId,
   prevCityZh,
   transferLabel,
+  isCloud,
+  cloudStops,
 }: DayMapProps) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -66,6 +71,8 @@ export default function DayMap({
   const coord = CITY_COORDS[cityId];
   const prevCoord = prevCityId ? CITY_COORDS[prevCityId] : null;
   const isTransfer = Boolean(prevCoord && prevCityId !== cityId);
+  /** 云端天：编号与静态对不上，用调用方按站点名查好的坐标；静态天沿用旧逻辑 */
+  const routeStops: StopCoord[] | undefined = isCloud ? cloudStops : stopCoordsForDay(dayNum);
 
   useEffect(() => {
     if (!mapEl.current || mapRef.current || !coord) return;
@@ -121,7 +128,7 @@ export default function DayMap({
       map.fitBounds(L.latLngBounds([from, to]).pad(0.35));
     } else {
       // backlog P1 每日地图景点级：有核实坐标的日期画编号站点 + 顺序连线
-      const stops = stopCoordsForDay(dayNum);
+      const stops = routeStops;
       if (stops) {
         const pts = stops.map((s) => L.latLng(s.lat, s.lng));
         stops.forEach((s, i) => {
@@ -195,7 +202,7 @@ export default function DayMap({
       <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
         {isTransfer
           ? `Day ${dayNum} 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""}`
-          : stopCoordsForDay(dayNum)
+          : routeStops
             ? `Day ${dayNum} · 站点顺序动线（编号对应当天时间线）`
             : `Day ${dayNum} · ${cityZh}市内游`}
       </p>

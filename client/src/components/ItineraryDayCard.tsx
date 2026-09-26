@@ -18,8 +18,8 @@ import {
 type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import DayMap from "@/components/DayMap";
+import { findStopCoord, type StopCoord } from "@/data/stopCoords";
 import {
-  DayPlaceDetails,
   AvBadge,
   fmtChecked,
   placeAnchorId,
@@ -243,10 +243,12 @@ function StopBlock({
   stop,
   city,
   av,
+  dayNum,
 }: {
   stop: Stop;
   city: string;
   av: Map<string, AvRow>;
+  dayNum: number;
 }) {
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
@@ -276,12 +278,12 @@ function StopBlock({
           <AvBadge status={row.status} kind={kindZh === "餐厅" ? "r" : "a"} />
         )}
         {item && kindZh && (
-          <a
-            href={`#${placeAnchorId(kindZh, city, item.name)}`}
+          <Link
+            to={`/day/${dayNum}#${placeAnchorId(kindZh, city, item.name)}`}
             className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
           >
             查看详情
-          </a>
+          </Link>
         )}
       </div>
       <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
@@ -316,12 +318,21 @@ export function ItineraryDayCard({
   detail,
   bookings,
   av,
+  isCloud,
+  isLastInCity,
+  cityScheduledNames,
 }: {
   day: PlanDay;
   prevDay: PlanDay | undefined;
   detail: Day | undefined;
   bookings: DayBooking[];
   av: Map<string, AvRow>;
+  /** 云端行程：编号与静态对不上，转场/地图一律按当天实际城市计算 */
+  isCloud?: boolean;
+  /** 是否该城市段最后一天（“本城备选”只放最后一天） */
+  isLastInCity?: boolean;
+  /** 该城市段所有天已排的站点名（算本城备选用） */
+  cityScheduledNames?: Set<string>;
 }) {
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
   const prevCityId =
@@ -329,8 +340,33 @@ export function ItineraryDayCard({
       ? CITY_ID_BY_ZH[prevDay.city_zh] || prevDay.city_id
       : null;
   const stops = detail?.stops || [];
-  const transferStop = stops.find((s) => /飞|退房|离境/.test(s.name));
+  // 转场站点：静态天沿用静态 stop（含航班号等细节）；云端天按前后城市直接算，
+  // 不用静态天的“清迈飞普吉”这类旧城市对。
+  const staticTransferStop = stops.find((s) => /飞|退房|离境/.test(s.name));
+  const cloudTransferName =
+    isCloud && prevDay && prevDay.city_zh !== day.city_zh
+      ? `${prevDay.city_zh}飞${day.city_zh}`
+      : undefined;
+  const transferStop = isCloud
+    ? cloudTransferName
+      ? { name: cloudTransferName }
+      : undefined
+    : staticTransferStop;
   const isTransfer = !!transferStop || !!prevCityId;
+
+  // 云端天地图站点：按当天时间线站点名全局查核实坐标（编号对应当天时间线）；
+  // 查不到坐标的站点跳过，全部查不到时 DayMap 回退到城市级标记。
+  const cloudStops: StopCoord[] | undefined = isCloud
+    ? (() => {
+        const list = stops
+          .map((s) => {
+            const c = findStopCoord(s.name);
+            return c ? { ...c, time: s.time } : undefined;
+          })
+          .filter((x): x is StopCoord => !!x);
+        return list.length > 0 ? list : undefined;
+      })()
+    : undefined;
 
   // 跨城航段匹配（静态 legs；云端路线匹配不上时走通用清单）
   const matchedLeg = (() => {
@@ -350,14 +386,19 @@ export function ItineraryDayCard({
 
   // 本城餐厅：有空位数据的优先
   const cityRests = restaurants.filter((r) => r.city === day.city_zh);
-  // 备选景点（原版 AlternativeAttractions 逻辑）：本城未排进今日时间线的景点
-  const altAttrs = attractions
-    .filter(
-      (a) =>
-        a.city === day.city_zh &&
-        !stops.some((st) => matchItem(st.name, day.city_zh, [a]))
-    )
-    .slice(0, 8);
+  // 备选景点（原版 AlternativeAttractions 逻辑）：本城整个行程都没排进去的景点，
+  // 只放在该城市段的最后一天，避免同城多天重复。
+  const altAttrs = (
+    isLastInCity
+      ? attractions.filter(
+          (a) =>
+            a.city === day.city_zh &&
+            ![...(cityScheduledNames || [])].some((stName) =>
+              matchItem(stName, day.city_zh, [a])
+            )
+        )
+      : []
+  ).slice(0, 8);
   const restPicks = [...cityRests]
     .sort((a, b) => {
       const ha = findAv(av, a.name) ? 0 : 1;
@@ -487,7 +528,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">☀️ 上午</h4>
             <div className="space-y-2">
               {morning.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
               ))}
             </div>
           </section>
@@ -497,7 +538,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌤 下午</h4>
             <div className="space-y-2">
               {afternoon.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
               ))}
             </div>
           </section>
@@ -507,7 +548,7 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌙 晚上</h4>
             <div className="space-y-2">
               {evening.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} av={av} />
+                <StopBlock key={i} stop={s} city={day.city_zh} av={av} dayNum={day.day} />
               ))}
             </div>
           </section>
@@ -525,7 +566,7 @@ export function ItineraryDayCard({
               🔀 备选景点
             </h4>
             <p className="text-xs text-gray-500 mb-3">
-              时间有富余或想换口味时可替换 / 加塞，点击查看详情跳到本城详情。
+              本城行程里没排进去的景点，时间有富余或想换口味时可替换 / 加塞。
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {altAttrs.map((a) => {
@@ -554,12 +595,12 @@ export function ItineraryDayCard({
                           {a.meta}
                         </p>
                       )}
-                      <a
-                        href={`#${placeAnchorId("景点", a.city, a.name)}`}
+                      <Link
+                        to={`/day/${day.day}#${placeAnchorId("景点", a.city, a.name)}`}
                         className="text-xs font-medium text-teal-700 underline"
                       >
                         查看详情 →
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 );
@@ -608,12 +649,12 @@ export function ItineraryDayCard({
                             未核空位
                           </span>
                         )}
-                        <a
-                          href={`#${placeAnchorId("餐厅", r.city, r.name)}`}
+                        <Link
+                          to={`/day/${day.day}#${placeAnchorId("餐厅", r.city, r.name)}`}
                           className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
                         >
                           查看详情
-                        </a>
+                        </Link>
                       </div>
                       {row && (
                         <div className="mt-1 bg-white/70 border border-orange-200 rounded p-2">
@@ -746,11 +787,10 @@ export function ItineraryDayCard({
             prevCityId={prevCityId}
             prevCityZh={prevDay?.city_zh ?? null}
             transferLabel={transferStop?.name}
+            isCloud={isCloud}
+            cloudStops={cloudStops}
           />
         </section>
-
-        {/* 本城酒店 / 餐厅 / 景点详情 */}
-        <DayPlaceDetails cityZh={day.city_zh} />
 
         <div className="pt-2">
           <Link

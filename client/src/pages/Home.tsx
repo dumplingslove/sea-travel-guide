@@ -119,6 +119,23 @@ function ItineraryTab() {
     list.push({ day: r.day, title: r.title, body: r.body || "", done: !!r.done });
     bookingsByDay.set(r.day, list);
   });
+  // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池）
+  const details = days.map((d) =>
+    detailForPlanDay(d, idxInCity.get(d.day) || 0, cityCounts.get(d.city_zh) || 1)
+  );
+  // 每城全部已排站点名（用于算“本城备选”：整个城市段都没排进去的景点）
+  const cityScheduled = new Map<string, Set<string>>();
+  days.forEach((d, i) => {
+    const det = details[i];
+    if (!det) return;
+    let s = cityScheduled.get(d.city_zh);
+    if (!s) {
+      s = new Set<string>();
+      cityScheduled.set(d.city_zh, s);
+    }
+    det.stops.forEach((st) => s.add(st.name));
+  });
+  const isCloudPlan = plan.source === "cloud";
   return (
     <>
       {/* 20天路线总览实时地图（云端规划优先） */}
@@ -188,9 +205,14 @@ function ItineraryTab() {
             key={d.day}
             day={d}
             prevDay={i > 0 ? days[i - 1] : undefined}
-            detail={detailForPlanDay(d, idxInCity.get(d.day) || 0, cityCounts.get(d.city_zh) || 1)}
+            detail={details[i]}
             bookings={bookingsByDay.get(d.day) || []}
             av={av}
+            isCloud={isCloudPlan}
+            isLastInCity={
+              (idxInCity.get(d.day) || 0) === (cityCounts.get(d.city_zh) || 1) - 1
+            }
+            cityScheduledNames={cityScheduled.get(d.city_zh)}
           />
         ))}
       </div>

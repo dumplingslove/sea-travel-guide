@@ -9,6 +9,7 @@ import MapPage from "@/pages/MapPage";
 import Planner from "@/pages/Planner";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
+import { usePlanItinerary } from "@/guide/plannerSchedule";
 import NotesPage from "@/pages/records/NotesPage";
 import PackingPage from "@/pages/records/PackingPage";
 import BookingsPage from "@/pages/records/BookingsPage";
@@ -160,11 +161,18 @@ function AppRouter() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-        <footer className="border-t border-gray-200 py-6 text-center text-xs text-gray-400">
-          东南亚 20 天旅行指南 · 2026-12-12 ～ 2026-12-31
-        </footer>
+        <SiteFooter />
       </div>
     </BrowserRouter>
+  );
+}
+
+function SiteFooter() {
+  const plan = usePlanItinerary();
+  return (
+    <footer className="border-t border-gray-200 py-6 text-center text-xs text-gray-400">
+      东南亚 {plan.totalDays} 天旅行指南 · {plan.dateRangeLong}
+    </footer>
   );
 }
 

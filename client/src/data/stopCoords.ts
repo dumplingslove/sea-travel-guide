@@ -250,3 +250,17 @@ export function stopCoordsForDay(dayNum: number): StopCoord[] | undefined {
   const s = STOP_COORDS[dayNum];
   return s && s.length > 0 ? s : undefined;
 }
+
+/**
+ * 按站点名全局查找坐标（云端行程用：云端天的编号与静态编号对不上，
+ * 不能用 stopCoordsForDay）。站点名与 guide/data.ts 的 stops.name 一致时命中；
+ * 同名多天时取第一条。找不到返回 undefined。
+ */
+export function findStopCoord(name: string): StopCoord | undefined {
+  const key = name.trim();
+  for (const dayNum of Object.keys(STOP_COORDS)) {
+    const hit = STOP_COORDS[Number(dayNum)].find((s) => s.name === key);
+    if (hit) return hit;
+  }
+  return undefined;
+}
