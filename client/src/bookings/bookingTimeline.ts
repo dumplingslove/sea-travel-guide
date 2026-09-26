@@ -25,7 +25,7 @@ export interface FlightLegInfo {
   fragile?: boolean | null;
 }
 
-/** 3 段城际 + 去/回程国际段占位。价格由机票核验任务实查后回填。 */
+/** 3 段城际 + 去/回程国际段占位。城际价格已由 Duffel 实查回填（2026-09-26）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out",
@@ -43,7 +43,12 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-17",
     day: 6,
     kind: "intercity",
-    note: "D6 转场：新加坡段结束、普吉段开始",
+    note: "D6 转场：新加坡段结束、普吉段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 13 班可选；不可退、可改有手续费，含托运行李 1 件）",
+    carrier: "Scoot TR0652",
+    schedule: "18:15→19:20",
+    priceNote: "2人 $741.40 起",
+    direct: true,
+    fragile: false,
   },
   {
     id: "hkt-bkk",
@@ -52,7 +57,12 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-20",
     day: 9,
     kind: "intercity",
-    note: "D9 转场：普吉段结束、曼谷段开始",
+    note: "D9 转场：普吉段结束、曼谷段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 15 班可选；不可退、可改。泰航当天 9 班同价 $231.80，可退可改）",
+    carrier: "Bangkok Airways PG0270",
+    schedule: "07:45→09:20",
+    priceNote: "2人 $207.80 起",
+    direct: true,
+    fragile: false,
   },
   {
     id: "bkk-cnx",
@@ -61,7 +71,12 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-23",
     day: 12,
     kind: "intercity",
-    note: "D12 转场：曼谷段结束、清迈段开始",
+    note: "D12 转场：曼谷段结束、清迈段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 13 班可选；可退可改）",
+    carrier: "Thai Airways TG0100",
+    schedule: "06:00→07:20",
+    priceNote: "2人 $167.80 起",
+    direct: true,
+    fragile: false,
   },
   {
     id: "intl-back",

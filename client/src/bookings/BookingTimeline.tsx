@@ -257,7 +257,7 @@ export default function BookingTimeline({
           );
         })}
         <p className="text-xs text-gray-400 mt-2">
-          城际 3 段价格为 2 成人实查价（动态，会变）；出票前重查退改政策。
+          城际 3 段价格为 2 成人实查价（Duffel 2026-09-26，动态，会变；三段合计最低 $1117.00/2人）；出票前重查退改政策。
         </p>
       </Group>
 
