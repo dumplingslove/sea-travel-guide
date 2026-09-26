@@ -9,6 +9,7 @@ import {
   detailForPlanDay,
   type DayBooking,
 } from "@/components/ItineraryDayCard";
+import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
 import {
   usePlanItinerary,
@@ -119,10 +120,16 @@ function ItineraryTab() {
     list.push({ day: r.day, title: r.title, body: r.body || "", done: !!r.done });
     bookingsByDay.set(r.day, list);
   });
-  // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池）
-  const details = days.map((d) =>
-    detailForPlanDay(d, idxInCity.get(d.day) || 0, cityCounts.get(d.city_zh) || 1)
-  );
+  // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池；云端13天再叠加逐日修正）
+  const isCloud = plan.source === "cloud";
+  const details = days.map((d) => {
+    const base = detailForPlanDay(
+      d,
+      idxInCity.get(d.day) || 0,
+      cityCounts.get(d.city_zh) || 1,
+    );
+    return isCloud ? applyCloudDayOverride(d.day, base) : base;
+  });
   // 每城全部已排站点名（用于算“本城备选”：整个城市段都没排进去的景点）
   const cityScheduled = new Map<string, Set<string>>();
   days.forEach((d, i) => {

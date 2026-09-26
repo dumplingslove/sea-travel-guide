@@ -172,6 +172,10 @@ function matchItem(
   city: string,
   list: Item[],
 ): Item | undefined {
+  // 转场/后勤类站点不参与景点·餐厅匹配：
+  // 否则"抵达樟宜机场"会被"新加坡"三字前缀误链到动物园等条目，点出错误的"查看详情"
+  if (/机场|航班|飞往|抵达|离境|入住|退房|午睡|收行李|码头集合/.test(stopName))
+    return undefined;
   const ns = norm(stopName);
   let best: Item | undefined;
   let bestScore = 0;

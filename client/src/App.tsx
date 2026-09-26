@@ -46,7 +46,7 @@ function Header() {
               alt="Logo"
               className="w-7 h-7"
             />
-            <span className="font-bold text-teal-900">东南亚20天</span>
+            <span className="font-bold text-teal-900">东南亚旅行指南</span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
             {isAuthenticated ? (

@@ -45,7 +45,7 @@ export default function Login() {
               className="w-10 h-10"
             />
             <span className="font-bold text-teal-800 text-xl">
-              东南亚20天旅行指南
+              东南亚旅行指南
             </span>
           </div>
           <p className="text-sm text-gray-500">
