@@ -6,9 +6,15 @@ import {
   cityMobility,
   attractions,
   restaurants,
+  shopping,
   type Day,
   type Item,
 } from "@/guide/data";
+import {
+  BOOKING_KIND_LABEL,
+  parseBookingBody,
+  bookingSummary,
+} from "@/bookings/bookingTypes";
 type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import DayMap from "@/components/DayMap";
@@ -48,6 +54,17 @@ const CLIMATE: Record<string, string> = {
   新加坡: "29/25°C · 月降雨300mm+ · 全年最多雨月份之一，阵雨频繁",
 };
 
+/* ---------------- 12月穿搭建议（按城市气候） ---------------- */
+const PACKING: Record<string, string> = {
+  曼谷: "31°C：短袖短裤为主，防晒做足；进大皇宫等寺庙需遮肩盖膝，备一条长裙/长裤。",
+  清迈: "白天 28°C 短袖，早晚 16°C 左右：备薄外套或长袖；素贴山上更冷。",
+  普吉: "31°C 海岛装；出海日备防水袋、换洗衣物和晕船药。",
+  槟城: "31°C 阵雨多：短袖 + 折叠伞 + 防滑凉鞋。",
+  吉隆坡: "29°C 多雨：短袖 + 雨伞；商场空调冷，备薄外套。",
+  胡志明市: "30°C 短袖；摩托车多，穿好走的鞋，注意包不离身。",
+  富国岛: "29°C 海岛装 + 防晒；夜市备驱蚊水。",
+  新加坡: "29°C 高湿多雨：速干衣 + 折叠伞；室内空调冷，备薄外套；带娃多备一套换洗衣物。",
+};
 /* 云端 13 天行程里新加坡有 5 天、静态只有 3 天内容：
  * 首日取抵达日内容、末日取离境日内容，中间多出的天数用下面两篇弹性日补上。
  * 内容取自本站已有的景点研究结论（含"建议舍"的诚实标注）。 */
@@ -333,6 +350,14 @@ export function ItineraryDayCard({
 
   // 本城餐厅：有空位数据的优先
   const cityRests = restaurants.filter((r) => r.city === day.city_zh);
+  // 备选景点（原版 AlternativeAttractions 逻辑）：本城未排进今日时间线的景点
+  const altAttrs = attractions
+    .filter(
+      (a) =>
+        a.city === day.city_zh &&
+        !stops.some((st) => matchItem(st.name, day.city_zh, [a]))
+    )
+    .slice(0, 8);
   const restPicks = [...cityRests]
     .sort((a, b) => {
       const ha = findAv(av, a.name) ? 0 : 1;
@@ -493,6 +518,56 @@ export function ItineraryDayCard({
           </p>
         )}
 
+        {/* 备选景点（原版 AlternativeAttractions 逻辑） */}
+        {altAttrs.length > 0 && (
+          <section className="mb-6">
+            <h4 className="text-lg font-bold mb-1 text-teal-800">
+              🔀 备选景点
+            </h4>
+            <p className="text-xs text-gray-500 mb-3">
+              时间有富余或想换口味时可替换 / 加塞，点击查看详情跳到本城详情。
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {altAttrs.map((a) => {
+                const row = findAv(av, a.name);
+                const photo = getPlaceGallery("景点", a)[0];
+                return (
+                  <div
+                    key={a.name}
+                    className="flex gap-3 bg-teal-50/60 border border-teal-100 rounded-lg p-2"
+                  >
+                    {photo && (
+                      <img
+                        src={photo.src}
+                        alt={a.name}
+                        className="w-16 h-16 rounded-lg object-cover shrink-0"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-sm font-semibold">{a.name}</span>
+                        {row && <AvBadge status={row.status} kind="a" />}
+                      </div>
+                      {a.meta && (
+                        <p className="text-xs text-gray-500 truncate">
+                          {a.meta}
+                        </p>
+                      )}
+                      <a
+                        href={`#${placeAnchorId("景点", a.city, a.name)}`}
+                        className="text-xs font-medium text-teal-700 underline"
+                      >
+                        查看详情 →
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         {/* 餐饮安排 */}
         {(detail?.food || restPicks.length > 0) && (
           <section className="mb-6 pt-6 border-t border-gray-100">
@@ -508,25 +583,78 @@ export function ItineraryDayCard({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {restPicks.map((r) => {
                   const row = findAv(av, r.name);
+                  const photo = getPlaceGallery("餐厅", r)[0];
                   return (
-                    <a
+                    <div
                       key={r.name}
-                      href={`#${placeAnchorId("餐厅", r.city, r.name)}`}
-                      className="flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 hover:shadow-sm"
+                      className="bg-orange-50 border border-orange-200 rounded-lg p-3"
                     >
-                      <span className="text-sm font-semibold flex-1">
-                        {r.name}
-                      </span>
-                      {row ? (
-                        <AvBadge status={row.status} kind="r" />
-                      ) : (
-                        <span className="text-xs text-gray-400">未核空位</span>
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        {photo && (
+                          <img
+                            src={photo.src}
+                            alt={r.name}
+                            className="w-10 h-10 rounded-lg object-cover shrink-0"
+                            loading="lazy"
+                          />
+                        )}
+                        <span className="text-sm font-semibold flex-1">
+                          {r.name}
+                        </span>
+                        {row ? (
+                          <AvBadge status={row.status} kind="r" />
+                        ) : (
+                          <span className="text-xs text-gray-400">
+                            未核空位
+                          </span>
+                        )}
+                        <a
+                          href={`#${placeAnchorId("餐厅", r.city, r.name)}`}
+                          className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
+                        >
+                          查看详情
+                        </a>
+                      </div>
+                      {row && (
+                        <div className="mt-1 bg-white/70 border border-orange-200 rounded p-2">
+                          <p className="text-xs font-semibold text-green-700 mb-1">
+                            预订详情：
+                          </p>
+                          <p className="text-xs text-gray-700 leading-relaxed">
+                            {row.detail}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {row.dates}
+                            {row.party ? ` · ${row.party}` : ""} · 渠道：
+                            {row.channel}
+                            {row.checked_at
+                              ? ` · 查询于 ${fmtChecked(row.checked_at)}（北京时间）`
+                              : ""}
+                          </p>
+                          {row.note && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              {row.note}
+                            </p>
+                          )}
+                        </div>
                       )}
-                    </a>
+                    </div>
                   );
                 })}
               </div>
             )}
+          </section>
+        )}
+
+        {/* 购物建议（原版 ShoppingRecommendation 逻辑） */}
+        {(shopping as Record<string, string>)[day.city_zh] && (
+          <section className="mb-6">
+            <h4 className="text-lg font-bold mb-2 text-amber-700">
+              🛍️ 购物建议
+            </h4>
+            <p className="text-sm text-gray-700 leading-relaxed bg-amber-50 border border-amber-200 rounded-lg p-3">
+              {(shopping as Record<string, string>)[day.city_zh]}
+            </p>
           </section>
         )}
 
@@ -540,6 +668,29 @@ export function ItineraryDayCard({
           </section>
         )}
 
+        {/* 今日穿搭建议（原版逻辑，默认折叠） */}
+        {PACKING[day.city_zh] && (
+          <Collapsible
+            title={
+              <>
+                👗 今日穿搭建议
+                <span className="text-xs font-normal text-gray-400 ml-1">
+                  点击展开
+                </span>
+              </>
+            }
+          >
+            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
+              <p className="text-sm text-pink-900 leading-relaxed">
+                {PACKING[day.city_zh]}
+              </p>
+              <p className="text-xs text-pink-700 mt-2">
+                12月气候参考见卡片顶部；临行前请查实时天气预报再定最终穿搭。
+              </p>
+            </div>
+          </Collapsible>
+        )}
+
         {/* 本日预订 */}
         {bookings.length > 0 && (
           <section className="mb-6 pt-6 border-t border-gray-100">
@@ -547,26 +698,34 @@ export function ItineraryDayCard({
               ✅ 本日预订
             </h4>
             <div className="space-y-2">
-              {bookings.map((b, i) => (
-                <div
-                  key={i}
-                  className="bg-green-50 border border-green-200 rounded-lg p-3"
-                >
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <p className="font-semibold text-sm">{b.title}</p>
-                    {b.done && (
-                      <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
-                        已确认
+              {bookings.map((b, i) => {
+                const bd = parseBookingBody(b.body);
+                const summary = bookingSummary(bd);
+                return (
+                  <div
+                    key={i}
+                    className="bg-green-50 border border-green-200 rounded-lg p-3"
+                  >
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
+                        {BOOKING_KIND_LABEL[bd.bkind] || "预订"}
                       </span>
+                      <p className="font-semibold text-sm">{b.title}</p>
+                      {b.done && (
+                        <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+                          已确认
+                        </span>
+                      )}
+                    </div>
+                    {summary && (
+                      <p className="text-xs text-gray-700">{summary}</p>
+                    )}
+                    {bd.note && (
+                      <p className="text-xs text-gray-500 mt-1">{bd.note}</p>
                     )}
                   </div>
-                  {b.body && (
-                    <p className="text-xs text-gray-600 whitespace-pre-wrap">
-                      {b.body}
-                    </p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
             <Link
               to="/bookings"
