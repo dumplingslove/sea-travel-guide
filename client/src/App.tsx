@@ -24,8 +24,6 @@ import {
 
 const NAV = [
   { to: "/", label: "行程" },
-  { to: "/hotels", label: "酒店" },
-  { to: "/restaurants", label: "餐厅" },
   { to: "/attractions", label: "景点" },
   { to: "/practical", label: "实用信息" },
   { to: "/flights", label: "航班" },
@@ -143,8 +141,9 @@ function AppRouter() {
               element={<MapPage />}
             />
             <Route path="/planner" element={<Planner />} />
-            <Route path="/hotels" element={<GuidePage tab="酒店" />} />
-            <Route path="/restaurants" element={<GuidePage tab="餐厅" />} />
+            {/* 酒店/餐厅已并入 /bookings 二级菜单「酒店与餐厅」；旧链接 301 到对应子菜单 */}
+            <Route path="/hotels" element={<Navigate to="/bookings?menu=details&view=hotels" replace />} />
+            <Route path="/restaurants" element={<Navigate to="/bookings?menu=details&view=restaurants" replace />} />
             <Route path="/attractions" element={<GuidePage tab="景点" />} />
             <Route path="/practical" element={<GuidePage tab="实用信息" />} />
             <Route path="/flights" element={<GuidePage tab="航班" />} />

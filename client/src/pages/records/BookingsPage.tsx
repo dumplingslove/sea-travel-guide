@@ -7,6 +7,7 @@
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
   PageShell,
@@ -19,6 +20,8 @@ import {
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
+import { HotelCatalog, RestaurantCatalog } from "@/guide/GuideApp";
+import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
 import {
@@ -83,6 +86,19 @@ function BookingsInner() {
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  /** 二级菜单：预订行动 / 酒店与餐厅详情（支持 ?menu=details&view=hotels|restaurants 深链） */
+  const [searchParams] = useSearchParams();
+  const [menu, setMenu] = useState<"action" | "details">(() =>
+    searchParams.get("menu") === "details" ? "details" : "action",
+  );
+  const [detailView, setDetailView] = useState<"hotels" | "restaurants">(() =>
+    searchParams.get("view") === "restaurants" ? "restaurants" : "hotels",
+  );
+  /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
+  const onBookPreset = (p: BookingPreset) => {
+    setPreset(p);
+    setDialogOpen(true);
+  };
 
   const parsed = useMemo(
     () =>
@@ -153,14 +169,40 @@ function BookingsInner() {
     })),
   ];
 
+  const menus: { key: "action" | "details"; label: string }[] = [
+    { key: "action", label: "📋 预订行动" },
+    { key: "details", label: "🏨🍽️ 酒店与餐厅" },
+  ];
+
   return (
     <PageShell
       eyebrow="MY BOOKINGS"
-      title="预订记录"
-      summary="📋 预订行动时间线：机票先锁、酒店每城选 1 家、必订餐厅按放位窗口排，一条线走完；城市参考明细与你的预订记录都在这一页。"
+      title="预订"
+      summary="📋 住宿、餐饮、预订行动收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店与餐厅」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
       <SyncBanner mode={syncMode} />
 
+      {/* 二级菜单：预订行动 / 酒店与餐厅详情 */}
+      <div className="flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
+        {menus.map((m) => (
+          <button
+            key={m.key}
+            role="tab"
+            aria-selected={menu === m.key}
+            onClick={() => setMenu(m.key)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+              menu === m.key
+                ? "bg-teal-700 text-white border-teal-700"
+                : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+            }`}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      {menu === "action" ? (
+        <>
       {/* 行动总览：现在要干什么，一眼看清 */}
       <ActionStrip confirmedCount={confirmedCount} />
 
@@ -210,7 +252,7 @@ function BookingsInner() {
         <EmptyHint
           text={
             rows.length === 0
-              ? "还没有预订记录。去酒店页挑一家，点“预订”就会出现在这里。"
+              ? "还没有预订记录。去「酒店与餐厅」里挑一家，点“预订”就会出现在这里。"
               : "这个筛选下没有记录。"
           }
         />
@@ -290,6 +332,41 @@ function BookingsInner() {
               </div>
             </Card>
           ))}
+        </div>
+      )}
+        </>
+      ) : (
+        <div>
+          {/* 酒店 / 餐厅切换：同一菜单内列出两类详细信息 */}
+          <div className="flex gap-2 mb-5" role="tablist" aria-label="酒店餐厅切换">
+            {(
+              [
+                { key: "hotels", label: "🏨 酒店详情" },
+                { key: "restaurants", label: "🍽️ 餐厅详情" },
+              ] as const
+            ).map((v) => (
+              <button
+                key={v.key}
+                role="tab"
+                aria-selected={detailView === v.key}
+                onClick={() => setDetailView(v.key)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                  detailView === v.key
+                    ? "bg-teal-700 text-white border-teal-700"
+                    : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+          <div className="guide-scope">
+            {detailView === "hotels" ? (
+              <HotelCatalog onBook={onBookPreset} />
+            ) : (
+              <RestaurantCatalog onBook={onBookPreset} />
+            )}
+          </div>
         </div>
       )}
 
