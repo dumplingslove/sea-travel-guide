@@ -18,7 +18,7 @@ import {
 type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import DayMap from "@/components/DayMap";
-import { findStopCoord, type StopCoord } from "@/data/stopCoords";
+import { cloudStopsForTimeline, type StopCoord } from "@/data/stopCoords";
 import {
   AvBadge,
   fmtChecked,
@@ -360,16 +360,9 @@ export function ItineraryDayCard({
 
   // 云端天地图站点：按当天时间线站点名全局查核实坐标（编号对应当天时间线）；
   // 查不到坐标的站点跳过，全部查不到时 DayMap 回退到城市级标记。
+  // 与 DayDetail 共用 cloudStopsForTimeline，保证两处地图一致。
   const cloudStops: StopCoord[] | undefined = isCloud
-    ? (() => {
-        const list = stops
-          .map((s) => {
-            const c = findStopCoord(s.name);
-            return c ? { ...c, time: s.time } : undefined;
-          })
-          .filter((x): x is StopCoord => !!x);
-        return list.length > 0 ? list : undefined;
-      })()
+    ? cloudStopsForTimeline(stops)
     : undefined;
 
   // 跨城航段匹配（静态 legs；云端路线匹配不上时走通用清单）

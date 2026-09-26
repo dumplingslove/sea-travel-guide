@@ -73,6 +73,13 @@ export default function DayMap({
   const isTransfer = Boolean(prevCoord && prevCityId !== cityId);
   /** 云端天：编号与静态对不上，用调用方按站点名查好的坐标；静态天沿用旧逻辑 */
   const routeStops: StopCoord[] | undefined = isCloud ? cloudStops : stopCoordsForDay(dayNum);
+  const hasStops = !!routeStops && routeStops.length > 0;
+  /**
+   * 纯转场日（当天无核实坐标站点）才画城际航线；
+   * 有站点的日子（含转场日）一律画编号站点动线——转场信息进 caption，
+   * 不让跨城大航线把当天实际景点的视野吞掉。
+   */
+  const showLeg = isTransfer && !!prevCoord && !hasStops;
 
   useEffect(() => {
     if (!mapEl.current || mapRef.current || !coord) return;
@@ -94,7 +101,7 @@ export default function DayMap({
     let stopBounds: L.LatLngBounds | null = null;
     /** 单点位日期：fitBounds 零面积会缩到最大 zoom，改用固定缩放的 setView */
     let singleStop: L.LatLng | null = null;
-    if (isTransfer && prevCoord) {
+    if (showLeg && prevCoord) {
       from = L.latLng(prevCoord[0], prevCoord[1]);
       to = L.latLng(coord[0], coord[1]);
       L.polyline([from, to], {
@@ -126,10 +133,11 @@ export default function DayMap({
         )
         .addTo(map);
       map.fitBounds(L.latLngBounds([from, to]).pad(0.35));
-    } else {
-      // backlog P1 每日地图景点级：有核实坐标的日期画编号站点 + 顺序连线
-      const stops = routeStops;
-      if (stops) {
+    } else if (hasStops) {
+      // 每日地图景点级：有核实坐标的日期画编号站点 + 顺序连线
+      // （含转场日：当天实际景点优先，航线不再单独成图）
+      const stops = routeStops!;
+      {
         const pts = stops.map((s) => L.latLng(s.lat, s.lng));
         stops.forEach((s, i) => {
           L.marker(pts[i], { icon: numIcon(i + 1) })
@@ -152,7 +160,10 @@ export default function DayMap({
           stopBounds = L.latLngBounds(pts).pad(0.18);
           map.fitBounds(stopBounds);
         }
-      } else {
+      }
+    } else {
+      // 无站点坐标的非纯转场日：回退到城市级标记
+      {
         const at = L.latLng(coord[0], coord[1]);
         to = at;
         L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
@@ -167,7 +178,7 @@ export default function DayMap({
     // 时未稳定，paint 完成后强制刷新尺寸并重算视野，再加一次延迟兜底。
     const refit = () => {
       map.invalidateSize();
-      if (isTransfer && from && to) {
+      if (showLeg && from && to) {
         map.fitBounds(L.latLngBounds([from, to]).pad(0.35), {
           animate: false,
         });
@@ -200,10 +211,10 @@ export default function DayMap({
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
       <div ref={mapEl} className="w-full z-0" style={{ height: 280 }} />
       <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-        {isTransfer
+        {showLeg
           ? `Day ${dayNum} 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""}`
-          : routeStops
-            ? `Day ${dayNum} · 站点顺序动线（编号对应当天时间线）`
+          : hasStops
+            ? `Day ${dayNum}${isTransfer ? ` 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""} ·` : " ·"} 站点顺序动线（编号对应当天时间线）`
             : `Day ${dayNum} · ${cityZh}市内游`}
       </p>
     </div>

@@ -376,3 +376,20 @@ export function findStopCoord(name: string): StopCoord | undefined {
   }
   return undefined;
 }
+
+/**
+ * 按当天时间线站点名逐个查核实坐标（编号对应当天时间线顺序）。
+ * 查不到坐标的站点跳过；全部查不到时返回 undefined（调用方回退到城市级标记）。
+ * ItineraryDayCard 与 DayDetail 共用，保证主页和 /day/N 地图一致。
+ */
+export function cloudStopsForTimeline(
+  stops: Array<{ name: string; time: string }>,
+): StopCoord[] | undefined {
+  const list = stops
+    .map((s) => {
+      const c = findStopCoord(s.name);
+      return c ? { ...c, time: s.time } : undefined;
+    })
+    .filter((x): x is StopCoord => !!x);
+  return list.length > 0 ? list : undefined;
+}

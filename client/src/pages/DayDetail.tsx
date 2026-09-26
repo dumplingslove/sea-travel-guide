@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-r
 import { days as detailDays } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
+import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
+import { cloudStopsForTimeline } from "@/data/stopCoords";
 import {
   usePlanItinerary,
   detailDayForPlanDay,
@@ -25,8 +27,15 @@ export default function DayDetail() {
     detailDays
   );
   const prevDay = days.find((d) => d.day === dayNum - 1) || null;
+  // 主页（Home.tsx）对云端天叠加了 cloudDayOverrides 修正；/day/N 必须用同一套，
+  // 否则单独页面与主页内容对不上（2026-09-26 验收：/day/10 还在显示恰图恰）。
+  const isCloud = plan.source === "cloud";
+  const guided = isCloud ? applyCloudDayOverride(dayNum, detail) : detail;
   // 转场航段名称：取当天行程里带“飞”字的站点（如“普吉飞槟城”）
-  const transferLabel = detail?.stops.find((s) => s.name.includes("飞"))?.name;
+  const transferLabel = guided?.stops.find((s) => s.name.includes("飞"))?.name;
+  // 云端天地图站点：与 ItineraryDayCard 同一算法，保证两处地图一致
+  const cloudStops =
+    isCloud && guided ? cloudStopsForTimeline(guided.stops) : undefined;
 
   if (!day) {
     return (
@@ -59,7 +68,7 @@ export default function DayDetail() {
           DAY {day.day} / {plan.totalDays}
         </p>
         <h1 className="text-3xl font-bold mb-1">{day.city_zh}</h1>
-        {detail && <p className="text-lg text-gray-700 mb-2">{detail.title}</p>}
+        {guided && <p className="text-lg text-gray-700 mb-2">{guided.title}</p>}
         <p className="text-gray-500 flex items-center gap-4 text-sm">
           <span className="flex items-center gap-1">
             <CalendarDays size={14} /> {year}-{day.date} {day.weekday}
@@ -68,14 +77,14 @@ export default function DayDetail() {
             <MapPin size={14} /> {day.city}
           </span>
         </p>
-        {shifted && detail && (
+        {shifted && guided && (
           <p className="text-xs text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 mt-3">
             ☁️ 本日城市已按你的云端规划调整为{day.city_zh}；以下攻略取自{day.city_zh}第 {ordinalInCity} 天的原版安排。
           </p>
         )}
       </div>
 
-      {detail ? (
+      {guided ? (
         <>
           <DayMap
             key={day.day}
@@ -85,12 +94,14 @@ export default function DayDetail() {
             prevCityId={prevDay ? prevDay.city_id : null}
             prevCityZh={prevDay ? prevDay.city_zh : null}
             transferLabel={transferLabel}
+            isCloud={isCloud}
+            cloudStops={cloudStops}
           />
 
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
             <h2 className="font-bold text-lg mb-4">当天行程</h2>
             <ol className="relative border-l-2 border-teal-100 ml-2 space-y-6">
-              {detail.stops.map((s) => (
+              {guided.stops.map((s) => (
                 <li key={s.time + s.name} className="ml-4">
                   <span className="absolute -left-[7px] mt-1 w-3 h-3 rounded-full bg-teal-600" />
                   <p className="text-sm font-semibold text-teal-700">{s.time}</p>
@@ -105,7 +116,7 @@ export default function DayDetail() {
             <h2 className="font-bold text-lg mb-2 flex items-center gap-2 text-amber-900">
               <Lightbulb size={18} /> 安排提醒
             </h2>
-            <p className="text-sm text-amber-900">{detail.tip}</p>
+            <p className="text-sm text-amber-900">{guided.tip}</p>
           </div>
         </>
       ) : (
