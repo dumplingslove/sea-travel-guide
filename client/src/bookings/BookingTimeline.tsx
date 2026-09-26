@@ -358,7 +358,15 @@ export default function BookingTimeline({
             kind="attraction"
             name={a.name}
             meta={a.city}
-            headline={<span className="text-sky-700 font-medium">建议提前购票</span>}
+            headline={
+              a.level === "must" ? (
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-rose-50 text-rose-700 border-rose-200">
+                  必须提前订票
+                </span>
+              ) : (
+                <span className="text-sky-700 font-medium">建议提前购票</span>
+              )
+            }
             sub={a.reason}
             to={placeDetailPath("attraction", a.city, a.name)}
             {...actionFor(
