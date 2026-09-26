@@ -1,8 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-react";
-import { days as detailDays } from "@/guide/data";
+import { days as detailDays, attractions, restaurants } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
+import { matchItem } from "@/components/ItineraryDayCard";
+import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { cloudStopsForTimeline } from "@/data/stopCoords";
 import {
@@ -101,14 +103,30 @@ export default function DayDetail() {
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
             <h2 className="font-bold text-lg mb-4">当天行程</h2>
             <ol className="relative border-l-2 border-teal-100 ml-2 space-y-6">
-              {guided.stops.map((s) => (
-                <li key={s.time + s.name} className="ml-4">
-                  <span className="absolute -left-[7px] mt-1 w-3 h-3 rounded-full bg-teal-600" />
-                  <p className="text-sm font-semibold text-teal-700">{s.time}</p>
-                  <h3 className="font-bold">{s.name}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{s.detail}</p>
-                </li>
-              ))}
+              {guided.stops.map((s) => {
+                const mA = matchItem(s.name, day.city_zh, attractions);
+                const mR = !mA ? matchItem(s.name, day.city_zh, restaurants) : undefined;
+                const item = mA || mR;
+                const kindZh = mA ? "景点" : mR ? "餐厅" : null;
+                return (
+                  <li key={s.time + s.name} className="ml-4">
+                    <span className="absolute -left-[7px] mt-1 w-3 h-3 rounded-full bg-teal-600" />
+                    <p className="text-sm font-semibold text-teal-700">{s.time}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold">{s.name}</h3>
+                      {item && kindZh && (
+                        <Link
+                          to={placeDetailPath(kindFromZh(kindZh), day.city_zh, item.name)}
+                          className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
+                        >
+                          查看详情
+                        </Link>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{s.detail}</p>
+                  </li>
+                );
+              })}
             </ol>
           </div>
 

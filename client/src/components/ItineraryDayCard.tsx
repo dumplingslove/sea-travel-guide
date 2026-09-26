@@ -167,7 +167,7 @@ const norm = (s: string) =>
     );
 const cjk = (s: string) => (s.match(/[\u4e00-\u9fa5]+/g) || []).join("");
 
-function matchItem(
+export function matchItem(
   stopName: string,
   city: string,
   list: Item[],
