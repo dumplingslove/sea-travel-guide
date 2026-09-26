@@ -56,10 +56,6 @@ export function useAuth(options?: UseAuthOptions) {
 
   const logout = useCallback(async () => {
     if (!supabaseConfigured || !supabase) return;
-    const confirmed = window.confirm(
-      "确定要退出登录吗？\n退出后需要重新通过邮箱收取登录链接才能登录。"
-    );
-    if (!confirmed) return;
     await supabase.auth.signOut();
     setUser(null);
   }, []);

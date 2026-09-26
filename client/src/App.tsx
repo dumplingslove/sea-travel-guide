@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link, NavLink, Navigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
@@ -41,6 +42,7 @@ const NAV = [
 
 function Header() {
   const { isAuthenticated, user, logout } = useAuth();
+  const [confirmLogout, setConfirmLogout] = useState(false);
   return (
     <header className="sticky top-0 z-10 bg-[#f7f4ee]/90 backdrop-blur border-b border-gray-200">
       <div className="max-w-5xl mx-auto px-4">
@@ -59,12 +61,35 @@ function Header() {
                 <span className="text-gray-500 truncate max-w-32">
                   {user?.email}
                 </span>
-                <button
-                  onClick={() => void logout()}
-                  className="text-gray-500 hover:text-teal-800"
-                >
-                  退出
-                </button>
+                {confirmLogout ? (
+                  <>
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                      确定退出？
+                    </span>
+                    <button
+                      onClick={() => {
+                        setConfirmLogout(false);
+                        void logout();
+                      }}
+                      className="text-red-600 hover:text-red-800 font-medium"
+                    >
+                      确认退出
+                    </button>
+                    <button
+                      onClick={() => setConfirmLogout(false)}
+                      className="text-gray-500 hover:text-teal-800"
+                    >
+                      取消
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setConfirmLogout(true)}
+                    className="text-gray-500 hover:text-teal-800"
+                  >
+                    退出
+                  </button>
+                )}
               </>
             ) : (
               <Link
