@@ -1131,6 +1131,10 @@ import g1144 from "./assets/galleries/mo-singapore/1.jpg";
 import g1145 from "./assets/galleries/ritzcarlton-singapore/1.jpg";
 import g1146 from "./assets/galleries/shangrila-singapore/1.jpg";
 import g1147 from "./assets/galleries/fullerton-singapore/1.jpg";
+import g1225 from "./assets/galleries/fullerton-singapore/2.jpg";
+import g1226 from "./assets/galleries/fullerton-singapore/3.jpg";
+import g1227 from "./assets/galleries/fullerton-singapore/4.jpg";
+import g1228 from "./assets/galleries/fullerton-singapore/5.jpg";
 
 export type PlacePhoto={src:string;sourceUrl:string;title:string};
 
@@ -1360,7 +1364,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "酒店|新加坡|Mandarin Oriental Singapore 文华东方":[{src:g1144,sourceUrl:"https://www.5wzayefi.com/",title:"新加坡文华东方 外观：滨海湾楼体全景+楼顶 MANDARIN ORIENTAL 大字夜景"},{src:g1217,sourceUrl:"https://heartpatrick.com/mandarin_oriental_hotel_singapore.html",title:"新加坡文华东方 大堂：翻新后大堂休息区，金属艺术吊灯+亚洲佛像雕塑+环形沙发"},{src:g1218,sourceUrl:"https://travelandleisure-es.com/destinos/asia/mandarin-oriental-singapore-el-renacer-de-un-icono-frente-a-marina-bay/",title:"新加坡文华东方 泳池：棕榈泳池甲板+白伞躺椅，远眺新加坡中央商务区天际线"},{src:g1219,sourceUrl:"https://luxuryescapes.com/inspiration/mandarin-oriental-singapore-review/",title:"新加坡文华东方 客房：Marina Bay View 大床房，蓝色床头板+落地窗城市景观"},{src:g1220,sourceUrl:"https://www.centurion-magazine.com/travel/travel/sponsored-mandarin-oriental-hidden-city-beyond-the-extraordinary-experiences",title:"新加坡文华东方 餐饮：樱桃园餐厅中式圆桌摆台+竹林庭院（2026 米其林一星）"}],
   "酒店|新加坡|The Ritz-Carlton Millenia 丽思卡尔顿":[{src:g1145,sourceUrl:"https://www.myboutiquehotel.com/en/boutique-hotels-singapore/?page=2",title:"新加坡丽思卡尔顿 Millenia 外观：摩天轮与金沙之间的白色网格塔楼"}],
   "酒店|新加坡|Shangri-La Singapore 香格里拉":[{src:g1146,sourceUrl:"https://housity.net/hotel/shangri-la-singapore/",title:"新加坡香格里拉 外观：乌节路标志性白色塔楼+棕榈园林"},{src:g1221,sourceUrl:"https://thehoneycombers.com/singapore/luxury-hotel-singapore-staycation-review-of-shangri-la-hotel-at-orchard-road/",title:"新加坡香格里拉 大堂：高立柱+水面倒影+绿植墙标志性大堂（2026-09-25 目验确认；thehoneycombers.com 实拍测评）"},{src:g1222,sourceUrl:"https://www.qantas.com/travelinsider/en/explore/asia/singapore/singapore/shangri-la-singapore-hotel-review-orchard-road.html",title:"新加坡香格里拉 泳池：Garden Wing 圆拱阳台楼群前的喷泉大泳池（2026-09-25 目验确认；qantas.com 酒店测评）"},{src:g1223,sourceUrl:"https://www.shangri-la.com/singapore/shangrila/dining/?restaurantAlias=blu-bar",title:"新加坡香格里拉 餐饮：官网大堂吧酒廊区，绿植墙+高立柱吧台+白色休闲椅（2026-09-25 目验确认；shangri-la.com 官网餐饮页）"},{src:g1224,sourceUrl:"https://milelion.com/2021/02/13/review-shangri-la-garden-wing-staycation/",title:"新加坡香格里拉 泳池：Garden Wing 蓝色大泳池，圆拱阳台园翼楼+白色 Tower Wing（2026-09-25 目验确认；milelion.com Garden Wing 测评实拍）"}],
-  "酒店|新加坡|The Fullerton Hotel Singapore 新加坡富丽敦酒店":[{src:g1147,sourceUrl:"https://www.ForbesTravelGuide.com",title:"新加坡富丽敦酒店 外观：夜景下带 THE FULLERTON HOTEL 大字的新古典楼体"}],
+  "酒店|新加坡|The Fullerton Hotel Singapore 新加坡富丽敦酒店":[{src:g1147,sourceUrl:"https://www.ForbesTravelGuide.com",title:"新加坡富丽敦酒店 外观：夜景下带 THE FULLERTON HOTEL 大字的新古典楼体"},{src:g1225,sourceUrl:"https://www.asiadreams.com/the-fullerton-hotel-singapore-4/",title:"新加坡富丽敦酒店 泳池：无边泳池甲板+新古典石柱廊+远眺安德逊桥与滨海湾天际线（2026-09-25 目验确认；asiadreams.com 酒店专题）"},{src:g1226,sourceUrl:"https://mysummit.de/wp-content/uploads/2020-02-singapur-16-1024x716.jpg",title:"新加坡富丽敦酒店 外观：滨海白昼新古典楼体，屋顶 THE FULLERTON HOTEL 金字铭牌（2026-09-25 目验确认；mysummit.de 博客配图）"},{src:g1227,sourceUrl:"https://www.thomascook.com/holidays/singapore/singapore/the-fullerton-hotel-singapore-117474/",title:"新加坡富丽敦酒店 客房：双床+雕花天花线+落地窗城市景观（2026-09-25 目验确认；thomascook.com 酒店页）"},{src:g1228,sourceUrl:"https://www.hashcorner.com/travel/singapore/the-fullerton-hotel-singapore/",title:"新加坡富丽敦酒店 餐饮：Town Restaurant 环形木质自助餐岛+藤编吊顶（2026-09-25 目验确认；hashcorner.com 实拍）"}],
  };
 export function getPlaceGallery(kind:'酒店'|'餐厅'|'景点',item:Item){return galleries[`${kind}|${item.city}|${item.name}`]||[]}
 export const placeGalleryPlaceCount=Object.values(galleries).filter(x=>x.length>=5).length;
