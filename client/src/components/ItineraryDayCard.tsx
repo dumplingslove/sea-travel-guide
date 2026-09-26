@@ -781,6 +781,7 @@ export function ItineraryDayCard({
         <section className="mb-6">
           <h4 className="text-lg font-bold mb-3">🗺️ 当日路线</h4>
           <DayMap
+            key={`daymap-${isCloud ? "cloud" : "static"}-${day.day}-${cityId}-${prevCityId ?? "none"}-${transferStop?.name ?? "notransfer"}-${(cloudStops ?? []).map((s) => s.name).join("~")}`}
             dayNum={day.day}
             cityId={cityId}
             cityZh={day.city_zh}
