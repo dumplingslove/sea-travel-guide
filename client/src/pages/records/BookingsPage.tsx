@@ -81,6 +81,8 @@ function BookingsInner() {
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [preset, setPreset] = useState<BookingPreset | null>(null);
+  /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const parsed = useMemo(
     () =>
@@ -258,16 +260,33 @@ function BookingsInner() {
                     </p>
                   )}
                 </div>
-                <div className="flex shrink-0">
+                <div className="flex shrink-0 items-center gap-1">
                   <GhostButton onClick={() => openEdit(r.id)}>编辑</GhostButton>
-                  <GhostButton danger onClick={() => {
-                    if (window.confirm(`确定删除「${r.title}」这条预订吗？`)) {
-                      del.mutate({ id: r.id });
-                    }
-                  }}>
-                    删除
-                  </GhostButton>
+                  {confirmDeleteId === r.id ? (
+                    <>
+                      <span className="text-xs text-red-600 whitespace-nowrap">确定删？</span>
+                      <GhostButton
+                        danger
+                        onClick={() => {
+                          setConfirmDeleteId(null);
+                          del.mutate({ id: r.id });
+                        }}
+                      >
+                        确认删除
+                      </GhostButton>
+                      <GhostButton onClick={() => setConfirmDeleteId(null)}>
+                        取消
+                      </GhostButton>
+                    </>
+                  ) : (
+                    <GhostButton danger onClick={() => setConfirmDeleteId(r.id)}>
+                      删除
+                    </GhostButton>
+                  )}
                 </div>
+                {del.isError && (
+                  <p className="text-xs text-red-600 mt-1">删除失败，请稍后重试。</p>
+                )}
               </div>
             </Card>
           ))}
