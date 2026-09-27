@@ -163,9 +163,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 PDT上午轮：3篇高流量帖深读（正文全文+评论区实读，只读会话，登录态完好无墙），3/3转done；此前2篇为旧口径留存、无逐篇证据，不计入posts。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/bangkok-thesiam-jayfai-thipsamai-2026-09-27.md。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -539,9 +539,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 PDT上午轮：3篇高流量帖深读（正文全文+评论区实读，只读会话，登录态完好无墙），3/3转done；此前2篇为旧口径留存、无逐篇证据，不计入posts。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/bangkok-thesiam-jayfai-thipsamai-2026-09-27.md。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -573,9 +573,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 PDT上午轮：3篇高流量帖深读（正文全文+评论区实读，只读会话，登录态完好无墙），3/3转done；此前2篇为旧口径留存、无逐篇证据，不计入posts。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/bangkok-thesiam-jayfai-thipsamai-2026-09-27.md。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -6853,17 +6853,17 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 57,
+ "complete_items": 60,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 20,
+   "xhs_done": 23,
    "ph": 32,
    "de": 32,
-   "all_done": 19
+   "all_done": 22
   },
   "chiangmai": {
    "total": 20,
@@ -6935,8 +6935,8 @@ export const initialResearchStatus = {
    "de": 28,
    "all_done": 19
   },
-  "xhs_done": 61,
-  "all_done": 57
+  "xhs_done": 64,
+  "all_done": 60
  },
  "targets": {
   "chinese_sites": "done",
@@ -6947,5 +6947,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T1047Z"
+ "updated_at": "2026-09-27T1649Z"
 };
