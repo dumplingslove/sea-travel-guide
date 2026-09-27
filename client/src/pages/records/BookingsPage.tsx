@@ -164,16 +164,15 @@ function BookingsInner() {
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  /** 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（支持 ?menu=details|flights|transport 深链） */
+  /** 二级菜单：预订行动 / 酒店 / 餐厅 / 航班 / 交通（支持 ?menu=action|hotels|restaurants|flights|transport 深链；旧 ?menu=details&view=hotels|restaurants 自动兼容） */
   const [searchParams] = useSearchParams();
-  type MenuKey = "action" | "details" | "flights" | "transport";
+  type MenuKey = "action" | "hotels" | "restaurants" | "flights" | "transport";
   const [menu, setMenu] = useState<MenuKey>(() => {
     const m = searchParams.get("menu");
-    return m === "details" || m === "flights" || m === "transport" ? m : "action";
+    if (m === "hotels" || m === "restaurants" || m === "flights" || m === "transport") return m;
+    if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
+    return "action";
   });
-  const [detailView, setDetailView] = useState<"hotels" | "restaurants">(() =>
-    searchParams.get("view") === "restaurants" ? "restaurants" : "hotels",
-  );
   /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
   const onBookPreset = (p: BookingPreset) => {
     setPreset(p);
@@ -256,7 +255,8 @@ function BookingsInner() {
 
   const menus: { key: MenuKey; label: string }[] = [
     { key: "action", label: "📋 预订行动" },
-    { key: "details", label: "🏨🍽️ 酒店与餐厅" },
+    { key: "hotels", label: "🏨 酒店" },
+    { key: "restaurants", label: "🍽️ 餐厅" },
     { key: "flights", label: "✈️ 航班" },
     { key: "transport", label: "🚋 交通" },
   ];
@@ -265,7 +265,7 @@ function BookingsInner() {
     <PageShell
       eyebrow="MY BOOKINGS"
       title="预订"
-      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店与餐厅」「航班」「交通」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
+      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
       <SyncBanner mode={syncMode} />
 
@@ -425,38 +425,13 @@ function BookingsInner() {
         </div>
       )}
         </>
-      ) : menu === "details" ? (
-        <div>
-          {/* 酒店 / 餐厅切换：同一菜单内列出两类详细信息 */}
-          <div className="flex gap-2 mb-5" role="tablist" aria-label="酒店餐厅切换">
-            {(
-              [
-                { key: "hotels", label: "🏨 酒店详情" },
-                { key: "restaurants", label: "🍽️ 餐厅详情" },
-              ] as const
-            ).map((v) => (
-              <button
-                key={v.key}
-                role="tab"
-                aria-selected={detailView === v.key}
-                onClick={() => setDetailView(v.key)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                  detailView === v.key
-                    ? "bg-teal-700 text-white border-teal-700"
-                    : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
-                }`}
-              >
-                {v.label}
-              </button>
-            ))}
-          </div>
-          <div className="guide-scope">
-            {detailView === "hotels" ? (
-              <HotelCatalog onBook={onBookPreset} />
-            ) : (
-              <RestaurantCatalog onBook={onBookPreset} />
-            )}
-          </div>
+      ) : menu === "hotels" ? (
+        <div className="guide-scope">
+          <HotelCatalog onBook={onBookPreset} />
+        </div>
+      ) : menu === "restaurants" ? (
+        <div className="guide-scope">
+          <RestaurantCatalog onBook={onBookPreset} />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">

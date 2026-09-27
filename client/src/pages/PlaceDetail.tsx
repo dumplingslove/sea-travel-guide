@@ -325,7 +325,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Link>
           {kind === "hotel" && (
             <Link
-              to="/bookings?menu=details&view=hotels"
+              to="/bookings?menu=hotels"
               className="text-sm font-medium text-teal-700 underline"
             >
               看全部酒店 →
@@ -333,7 +333,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           )}
           {kind === "restaurant" && (
             <Link
-              to="/bookings?menu=details&view=restaurants"
+              to="/bookings?menu=restaurants"
               className="text-sm font-medium text-teal-700 underline"
             >
               看全部餐厅 →
