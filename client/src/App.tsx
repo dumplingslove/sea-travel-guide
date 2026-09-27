@@ -11,7 +11,6 @@ import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
 import { usePlanItinerary } from "@/guide/plannerSchedule";
 import NotesPage from "@/pages/records/NotesPage";
-import PackingPage from "@/pages/records/PackingPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
 import FavoritesPage from "@/pages/records/FavoritesPage";
@@ -27,7 +26,6 @@ const NAV = [
   { to: "/planner", label: "行程规划" },
   { to: "/attractions", label: "景点" },
   { to: "/notes", label: "笔记" },
-  { to: "/packing", label: "打包" },
   { to: "/expenses", label: "记账" },
   { to: "/favorites", label: "收藏" },
   { to: "/practical", label: "实用信息" },
@@ -153,11 +151,7 @@ function AppRouter() {
             />
             <Route
               path="/packing"
-              element={
-                <RecordsProvider>
-                  <PackingPage />
-                </RecordsProvider>
-              }
+              element={<Navigate to="/practical" replace />}
             />
             <Route
               path="/bookings"
