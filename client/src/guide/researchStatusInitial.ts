@@ -29,7 +29,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 00:08Z轮（主代理只读）：关键词'曼谷安缦纳莱特'翻3页，深读2篇。新增严格达标1篇：小李有点饿《泰国最贵酒店测评》2025-08-19（编辑于2025-08-18），4318赞/646收藏/242评论，中性偏负（停电事故），5条实质评论（房价/赔偿讨论）；视频帖无图片画廊。另1篇KFC在逃蛋挞07-09（无年份）1335赞，14图逐张翻验完毕，但19条评论全为泛互动、无一条实质体验评论，不计入达标，仅记正文详实特例。原记2篇为旧口径留存、无证据明细，不与新帖混算；按严格标准已验明1/3，仍差2篇，继续partial。证据见xhs-coverage-bangkok.md（2026-09-27 00:08Z节）。",
        "posts": 2,
        "status": "partial",
        "target": 10
@@ -1539,7 +1539,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。",
+       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。；2026-09-27 00:08Z轮（主代理只读）：关键词'Dash! 清迈'未换，翻3页无2026-09-16后新帖、未发现漏掉的高流量专属帖，本轮无新增，继续partial。",
        "posts": 3,
        "status": "partial",
        "target": 10
@@ -6945,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-26T23:58Z"
+ "updated_at": "2026-09-27T00:08Z"
 };
