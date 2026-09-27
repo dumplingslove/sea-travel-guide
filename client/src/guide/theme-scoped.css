@@ -405,3 +405,5 @@
 .guide-scope .packcathead{width:100%;display:flex;justify-content:space-between;align-items:center;background:#f7f5ef;border:0;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;color:#22333b}
 .guide-scope .packcathead span{font-size:12px;color:#888}
 .guide-scope .packcat .packchips{padding:0 14px 12px;margin:10px 0 0}
+.flightprice{border-top:1px solid #e5eae8;padding-top:10px;margin-top:11px;font-size:12px;color:#425963;line-height:1.6}
+.flightprice b{display:block;font-size:11px;color:var(--accent);margin-bottom:4px}
