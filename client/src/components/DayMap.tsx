@@ -166,8 +166,15 @@ export default function DayMap({
       zoomControl: true,
       scrollWheelZoom: false,
     });
-    // 高德中文底图（2026-09-27 用户要求）；坐标统一走 LL() 做 GCJ-02 校正
+    // Esri 底图（2026-09-27 高德反爬回退）；LL() 当前为 WGS-84 透传
     addAmapTiles(map);
+
+    // 全屏/窗口尺寸变化时自动重算（2026-09-27 全屏空白修复）：
+    // ResizeObserver 监听容器尺寸，变化时强制 invalidateSize，避免全屏后瓦片不加载
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    if (mapEl.current) ro.observe(mapEl.current);
 
     let from: L.LatLng | null = null;
     let to: L.LatLng | null = null;
@@ -358,6 +365,7 @@ export default function DayMap({
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
+      ro.disconnect();
       refitRef.current = null;
       map.remove();
       mapRef.current = null;
