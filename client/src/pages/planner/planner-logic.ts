@@ -619,7 +619,7 @@ function renderCoverage(){
     for(let i=0;i<Math.min(days,hitsArr.length);i++)(hitsArr[i]||[]).forEach(h=>{if(list.includes(h)&&!hitSet.has(h)){hitSet.add(h);hitOrdered.push(h)}});
     const rest=list.filter(s=>!hitSet.has(s));
     const must=hitOrdered,optional=rest.slice(0,2),drop=rest.slice(2);
-    return `<article class="card city-summary"><div class="city-top"><div><h3>${esc(city)}</h3><div class="micro">${c.couple?`双人 ${c.couple}天`:""}${c.couple&&c.family?" · ":""}${c.family?`亲子 ${c.family}天`:""}${!days?"未排入":""}</div></div><span>${days}D · 实际命中 ${cov.n}/${cov.total}${cov.estimated?"（估算）":""}</span></div><div class="meter"><b style="width:${cov.pct}%"></b></div><div class="micro" style="margin-bottom:8px">按经典路线逐日命中去重；城外日不计入。</div><div class="spot-groups"><div class="spot-group"><strong>优先排</strong> ${must.length?must.map(s=>`<span class="spot-chip must">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>有余力再去</strong> ${optional.length?optional.map(s=>`<span class="spot-chip">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>本轮建议舍去</strong> ${drop.length?drop.map(s=>`<span class="spot-chip drop">${esc(s)}</span>`).join(""):"—"}</div></div></article>`
+    return `<article class="card city-summary"><div class="city-top"><div><h3>${esc(city)}</h3><div class="micro">${c.couple?`双人 ${c.couple}天`:""}${c.couple&&c.family?" · ":""}${c.family?`亲子 ${c.family}天`:""}${!days?"未排入":""}</div></div><span>${days}D · 实际命中 ${cov.n}/${cov.total}${cov.estimated?"（估算）":""}</span></div><div class="meter"><b style="width:${cov.pct}%"></b></div><div class="micro meter-note">按经典路线逐日命中去重；城外日不计入。</div><div class="spot-groups"><div class="spot-group"><strong>优先排</strong> ${must.length?must.map(s=>`<span class="spot-chip must">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>有余力再去</strong> ${optional.length?optional.map(s=>`<span class="spot-chip">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>本轮建议舍去</strong> ${drop.length?drop.map(s=>`<span class="spot-chip drop">${esc(s)}</span>`).join(""):"—"}</div></div></article>`
   }).join("");
   renderSpotDetails();
 }
@@ -633,8 +633,8 @@ function spotDetailCard(s: SpotDetail, open: boolean){
 function renderSpotDetails(){
   el("spotDetailList").innerHTML=detailCityOrder.map(city=>{
     const details=spotDetails[city];
-    if(details&&details.length)return `<h3 style="margin:18px 0 10px">📍 ${esc(city)} · ${details.length} 项已展开</h3>`+details.map((s,i)=>spotDetailCard(s,city==="曼谷"&&i===0)).join("");
-    return `<article class="card" style="padding:16px 18px;margin-top:14px"><h3>📍 ${esc(city)}</h3><p class="route-note" style="margin-top:6px">⚠ <strong>详情整理中：</strong>${esc(city)}的景点详情字段（地址／营业时间／最后入场／票价／交通／必看／避坑）研究资料尚未整理完成，暂不展示。数据就绪后接入，不拿占位文案冒充完成。</p></article>`;
+    if(details&&details.length)return `<h3 class="sec-title">📍 ${esc(city)} · ${details.length} 项已展开</h3>`+details.map((s,i)=>spotDetailCard(s,city==="曼谷"&&i===0)).join("");
+    return `<article class="card card-slim"><h3>📍 ${esc(city)}</h3><p class="route-note">⚠ <strong>详情整理中：</strong>${esc(city)}的景点详情字段（地址／营业时间／最后入场／票价／交通／必看／避坑）研究资料尚未整理完成，暂不展示。数据就绪后接入，不拿占位文案冒充完成。</p></article>`;
   }).join("");
 }
 function routeDisplayName(route: MatrixRoute){return `${airportCity[route.origin]}（${cityAirportLabels[airportCity[route.origin]]}） → ${airportCity[route.destination]}（${cityAirportLabels[airportCity[route.destination]]}）`}
@@ -739,20 +739,21 @@ function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
   const segHtml=TRIP_SEGS.map(s=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
-    return `<div class="card" style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-        <div><strong>${s.label} · ${s.sub}</strong><div class="micro">${s.mode} · ${s.note}</div>
-        <div class="micro" style="margin-top:4px">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div></div>
-        <div class="stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
+    return `<div class="card trip-seg">
+      <div class="trip-seg-head">
+        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${s.sub}</span></div>
+        <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
+        <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
+        ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
       </div>
-      ${s.cta?`<div style="margin-top:10px"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
+      <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
   }).join("");
   body.innerHTML=`
-    <div class="card" style="margin-bottom:12px;border-style:dashed"><div class="micro">✈️ <strong>11/28（周六）西雅图 → 北京</strong> · 去程（时间已定）</div></div>
+    <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${segHtml}
-    <div class="card" style="margin-bottom:12px;border-style:dashed"><div class="micro">✈️ <strong>1/2（周六）北京 → 西雅图</strong> · 回程（时间已定）</div></div>
-    <p class="micro" role="status" style="margin:12px 0">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天${ok?" ✓":` <b style="color:#b3261e">⚠️ 合计须为 ${TRIP_MIDDLE_DAYS} 天（11/29–1/1），请调整</b>`}</p>
+    <div class="trip-flight"><span>✈️</span><strong>1/2（周六）北京 → 西雅图</strong><span>回程（时间已定）</span></div>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天${ok?" ✓":` <span class="mismatch">⚠️ 合计须为 ${TRIP_MIDDLE_DAYS} 天（11/29–1/1），请调整</span>`}</p>
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
@@ -899,10 +900,10 @@ function wzStep3(){
     return `<div class="wz-leg warn"><strong>${r.city} · ${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")}</strong><p>${notes.map(n=>`⚠ ${esc(n)}`).join("<br>")}</p></div>`;
   }).join("");
   return `<div class="section-head"><div><p class="eyebrow">STEP 3/4</p><h2>定具体日期</h2><p class="lede">调顺序用 ↑ ↓；改起始日后日期自动顺延。每段转场按当天星期查直飞，每城日期段自动检查适宜度。</p></div></div>
-    <div class="field" style="margin-bottom:14px"><label for="wzStart">起始日期</label><input id="wzStart" type="date" min="2026-12-01" max="2026-12-31" value="${wz.start}"></div>
+    <div class="field field-block"><label for="wzStart">起始日期</label><input id="wzStart" type="date" min="2026-12-01" max="2026-12-31" value="${wz.start}"></div>
     ${orderRows}
-    <h3 style="margin:18px 0 10px">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}
-    ${suitRows?`<h3 style="margin:18px 0 10px">📅 日期适宜度提醒</h3>${suitRows}`:""}
+    <h3 class="sec-title">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}
+    ${suitRows?`<h3 class="sec-title">📅 日期适宜度提醒</h3>${suitRows}`:""}
     <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><button class="primary" id="wzNext3">下一步：机票酒店 →</button></div>`;
 }
 function wzStep4(){
@@ -933,9 +934,9 @@ function wzStep4(){
     <div class="wz-quick"><button class="ghost" id="wzCopy">复制预订清单</button></div></div>
     ${measured.length===legs.length&&legs.length?`<div class="wz-leg pass"><strong>💰 7段Duffel实测最低合计约 $${totalMin.toFixed(2)} / 2人</strong><p><span class="micro">${DUFFEL_NOTE}</span></p></div>`:""}
     <h3 style="margin:6px 0 10px">✈ 逐段机票</h3>${legCards||'<p class="micro">只有一城，无需城际机票。</p>'}
-    <h3 style="margin:18px 0 10px">🏨 逐城酒店</h3><div class="wz-hotel-grid">${hotelCards}</div>
+    <h3 class="sec-title">🏨 逐城酒店</h3><div class="wz-hotel-grid">${hotelCards}</div>
     <p class="micro" id="wzSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
-    <div class="wz-nav"><button class="ghost" id="wzBack4">← 上一步</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" id="wzSave">💾 保存规划</button><button class="ghost" id="wzApply">排入日历并查看 →</button></span></div>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack4">← 上一步</button><span class="btn-row"><button class="primary" id="wzSave">💾 保存规划</button><button class="ghost" id="wzApply">排入日历并查看 →</button></span></div>`;
 }
 function wzApplySchedule(){
   const rows=wzRanges(), schedule: Record<string,{city:string;mode:string}> = {};
