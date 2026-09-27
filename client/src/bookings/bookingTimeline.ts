@@ -21,17 +21,21 @@ export interface FlightLegInfo {
   carrier?: string | null;
   schedule?: string | null;
   priceNote?: string | null;
+  /** 商务舱价格说明，如 "2人 $3153 起"；无商务舱则写 "无商务舱（廉航）" */
+  businessPriceNote?: string | null;
   direct?: boolean | null;
   fragile?: boolean | null;
-  /** Duffel 实查的当天全部直飞选项（价格为查询时总价，USD；城际段=2成人，国际段见 priceBasis）；空 = 未查询 */
+  /** Google Flights 实查的当天直飞经济舱选项（价格为查询时总价，USD；城际段=2成人，国际段见 priceBasis）；空 = 未查询 */
   options?: FlightOption[] | null;
+  /** Google Flights 实查的商务舱选项；null = 未查询；空数组 = 该段无商务舱直飞 */
+  businessOptions?: FlightOption[] | null;
   /** 实查时间戳，如 "2026-09-27 02:17 PDT" */
   queriedAt?: string | null;
   /** 价格口径说明，如 "1成人单价"；缺省为 2 成人总价 */
   priceBasis?: string | null;
 }
 
-/** Duffel 同一天的一个可选行程（价格为查询时总价，USD；城际段=2成人，国际段=1成人）。 */
+/** Google Flights 同一天的一个可选行程（价格为查询时总价，USD；城际段=2成人，国际段见 priceBasis）。 */
 export interface FlightOption {
   carrier: string;
   flight: string;
@@ -52,7 +56,7 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 3 段城际 + 5 段国际（北京→新加坡、西安→新加坡、新加坡→西安、清迈→北京、清迈→西安）。用户要求只看直飞：options 仅保留 stops=0，无直飞的段 options 为空。本轮 2026-09-27 09:25 PDT 实查刷新：PEK→SIN（2大1小）、XIY→SIN（2成人）、SIN→XIY（2大1小）（Duffel 搜索 3/3，全部成功）。 */
+/** 3 段城际 + 5 段国际（北京→新加坡、西安→新加坡、新加坡→西安、曼谷→西安、西安→北京）。用户要求只看直飞：options 仅保留 stops=0，无直飞的段 options 为空。本轮 2026-09-27 16:27 PDT 全量刷新：8 段全部改用 Google Flights 实查（含经济舱/商务舱价格），泰国顺序改为普吉→清迈→曼谷→西安。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out-bj",
@@ -61,18 +65,20 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-06",
     day: 1,
     kind: "intl",
-    note: "去程国际段（用户一家三口）；航班为 12/12 实查（2大1小），候选日期 12/06 待重查",
-    carrier: "Air China CA0889",
+    note: "去程国际段（用户一家三口）；Google Flights 实查 2026-09-27 16:27 PDT（2大1小，当天 6 班直飞：国航×3、新航×3）",
+    carrier: "Air China CA889",
     schedule: "09:45→16:15",
-    priceNote: "3人 $643.00 起",
+    priceNote: "3人 $514 起",
+    businessPriceNote: "3人 $3,153 起",
     direct: true,
     fragile: false,
-    queriedAt: "2026-09-27（候选日期，待确认后重查）",
+    queriedAt: "2026-09-27 16:27 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Air China", flight: "CA0889", depart: "09:45", arrive: "16:15", stops: 0, bags: "1件", price: 643.00, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天最低价；09:45出发、16:15抵达，白天航班带2岁娃不折腾" },
-      { carrier: "Air China", flight: "CA0975", depart: "00:15", arrive: "06:50", stops: 0, bags: "1件", price: 674.00, refundable: "no", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0805", depart: "08:45", arrive: "15:20", stops: 0, bags: "1件", price: 756.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Air China", flight: "CA889", depart: "09:45", arrive: "16:15", stops: 0, price: 514.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；09:45出发、16:15抵达，白天航班带2岁娃不折腾" },
+    ],
+    businessOptions: [
+      { carrier: "Air China", flight: "CA889", depart: "09:45", arrive: "16:15", stops: 0, price: 3153.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "同班商务舱" },
     ],
   },
   {
@@ -82,16 +88,20 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-06",
     day: 1,
     kind: "intl",
-    note: "去程国际段（岳父母）；Duffel 实查 2026-09-27 09:25 PDT（2 成人，当天唯一真直飞）",
-    carrier: "Scoot（Hahn Air 出票）TR0135",
+    note: "去程国际段（岳父母）；Google Flights 实查 2026-09-27 16:27 PDT（2 成人，当天 2 班直飞：酷航、东航）",
+    carrier: "Scoot TR135",
     schedule: "01:55→07:50",
-    priceNote: "2人 $578.80 起",
+    priceNote: "2人 $383 起",
+    businessPriceNote: "2人 $2,126 起（仅东航 07:20→12:55 有商务舱，酷航为廉航无商务舱）",
     direct: true,
     fragile: true,
-    queriedAt: "2026-09-27（候选日期，待确认后重查）",
+    queriedAt: "2026-09-27 16:27 PDT（候选日期，待确认后重查）",
     priceBasis: "2成人总价",
     options: [
-      { carrier: "Scoot（Hahn Air 出票）", flight: "TR0135", depart: "01:55", arrive: "07:50", stops: 0, bags: "1件", price: 578.80, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天唯一真直飞，5小时55分；01:55红眼出发、07:50当天抵达；老人半夜赶飞机较辛苦，介意可考虑提前一天到新加坡" },
+      { carrier: "Scoot", flight: "TR135", depart: "01:55", arrive: "07:50", stops: 0, price: 383.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价，5小时55分；01:55红眼出发、07:50当天抵达；老人半夜赶飞机较辛苦" },
+    ],
+    businessOptions: [
+      { carrier: "China Eastern", flight: "MU", depart: "07:20", arrive: "12:55", stops: 0, price: 2126.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一有商务舱的直飞" },
     ],
   },
   {
@@ -101,27 +111,19 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-11",
     day: 6,
     kind: "intercity",
-    note: "D6 转场：新加坡段结束、普吉段开始；Duffel 实查 2026-09-27 06:14 PDT（2 成人直飞，当天 13 班可选）",
-    carrier: "Scoot TR0652",
-    schedule: "18:15→19:20",
-    priceNote: "2人 $741.40 起",
+    note: "D6 转场：新加坡段结束、普吉段开始；Google Flights 实查 2026-09-27 16:27 PDT（2 成人直飞，当天 9 班：酷航×3、新航×6）",
+    carrier: "Scoot TR678",
+    schedule: "08:40→09:40",
+    priceNote: "2人 $345 起",
+    businessPriceNote: "2人 $1,809 起（仅新航有商务舱，酷航为廉航无商务舱）",
     direct: true,
     fragile: false,
-    queriedAt: "2026-09-27 06:14 PDT",
+    queriedAt: "2026-09-27 16:27 PDT",
     options: [
-      { carrier: "Scoot", flight: "TR0652", depart: "18:15", arrive: "19:20", stops: 0, bags: "1件", price: 741.40, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天最低价；酷航是新航旗下廉航，新加坡进出首选" },
-      { carrier: "Scandinavian Airlines Ireland Limited", flight: "SL0103", depart: "15:30", arrive: "16:20", stops: 0, bags: "待定", price: 745.40, refundable: "no", changeable: "yes" },
-      { carrier: "Scoot", flight: "TR0678", depart: "08:40", arrive: "09:40", stops: 0, bags: "1件", price: 865.40, refundable: "no", changeable: "yes" },
-      { carrier: "Scoot", flight: "TR0644", depart: "11:15", arrive: "12:20", stops: 0, bags: "1件", price: 865.40, refundable: "no", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0724", depart: "06:55", arrive: "07:50", stops: 0, bags: "1件", price: 933.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0740", depart: "18:35", arrive: "19:35", stops: 0, bags: "1件", price: 989.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG4716", depart: "08:15", arrive: "09:15", stops: 0, bags: "1件", price: 1045.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG4722", depart: "16:10", arrive: "17:10", stops: 0, bags: "1件", price: 1045.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG4724", depart: "18:35", arrive: "19:35", stops: 0, bags: "1件", price: 1045.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0732", depart: "12:50", arrive: "13:55", stops: 0, bags: "1件", price: 1227.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0728", depart: "09:00", arrive: "10:05", stops: 0, bags: "1件", price: 1227.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0736", depart: "16:10", arrive: "17:10", stops: 0, bags: "1件", price: 1227.40, refundable: "yes", changeable: "yes" },
-      { carrier: "Singapore Airlines", flight: "SQ0726", depart: "08:15", arrive: "09:15", stops: 0, bags: "1件", price: 1227.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Scoot", flight: "TR678", depart: "08:40", arrive: "09:40", stops: 0, price: 345.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；早上到普吉，下午能直接玩" },
+    ],
+    businessOptions: [
+      { carrier: "Singapore Airlines", flight: "SQ", depart: "", arrive: "", stops: 0, price: 1809.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一有商务舱的直飞（新航）" },
     ],
   },
   {
@@ -131,97 +133,84 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-11",
     day: 6,
     kind: "intl",
-    note: "新加坡段结束：岳父母带娃回西安；Duffel 实查 2026-09-27 09:25 PDT（2大1小，当天唯一真直飞）",
-    carrier: "Scoot（Hahn Air 出票）TR0134",
+    note: "新加坡段结束：岳父母带娃回西安；Google Flights 实查 2026-09-27 16:27 PDT（2大1小，当天 2 班直飞：酷航、东航）",
+    carrier: "Scoot TR134",
     schedule: "19:15→00:45+1",
-    priceNote: "3人 $1575.00 起",
+    priceNote: "3人 $1,261 起",
+    businessPriceNote: "3人 $3,512 起（仅东航 13:55→19:20 有商务舱，酷航为廉航无商务舱）",
     direct: true,
     fragile: true,
-    queriedAt: "2026-09-27（候选日期，待确认后重查）",
+    queriedAt: "2026-09-27 16:27 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Scoot（Hahn Air 出票）", flight: "TR0134", depart: "19:15", arrive: "00:45", arrivePlusDay: true, stops: 0, bags: "1件", price: 1575.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一真直飞，5小时30分；注意 00:45+1 半夜抵达西安，带2岁娃需提前安排接机" },
+      { carrier: "Scoot", flight: "TR134", depart: "19:15", arrive: "00:45", arrivePlusDay: true, stops: 0, price: 1261.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价，5小时30分；注意 00:45+1 半夜抵达西安，带2岁娃需提前安排接机" },
+    ],
+    businessOptions: [
+      { carrier: "China Eastern", flight: "MU", depart: "13:55", arrive: "19:20", stops: 0, price: 3512.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一有商务舱的直飞" },
     ],
   },
   {
-    id: "hkt-bkk",
-    route: "普吉 → 曼谷",
+    id: "hkt-cnx",
+    route: "普吉 → 清迈",
     date: "2026-12-14",
     dateLabel: "12-14",
     day: 9,
     kind: "intercity",
-    note: "D9 转场：普吉段结束、曼谷段开始；Duffel 实查 2026-09-27 06:14 PDT（2 成人直飞，当天 15 班可选；泰航当天 9 班同价 $231.80，可退可改）",
-    carrier: "Bangkok Airways PG0270",
-    schedule: "07:45→09:20",
-    priceNote: "2人 $207.80 起",
+    note: "D9 转场：普吉段结束、清迈段开始；Google Flights 实查 2026-09-27 16:27 PDT（2 成人直飞，当天 5 班：亚航×3、越捷×2）",
+    carrier: "VietJet Air VZ415",
+    schedule: "08:15→10:20",
+    priceNote: "2人 $194 起",
+    businessPriceNote: "无商务舱直飞（亚航、越捷均为廉航，无商务舱）",
     direct: true,
     fragile: false,
-    queriedAt: "2026-09-27 06:14 PDT",
+    queriedAt: "2026-09-27 16:27 PDT",
     options: [
-      { carrier: "Bangkok Airways", flight: "PG0270", depart: "07:45", arrive: "09:20", stops: 0, bags: "1件", price: 207.80, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天最低价+早班机；曼谷航空是精品航司，票价含20kg行李+餐食+贵宾室" },
-      { carrier: "Bangkok Airways", flight: "PG0280", depart: "22:00", arrive: "23:35", stops: 0, bags: "1件", price: 207.80, refundable: "no", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0228", depart: "09:05", arrive: "10:35", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0202", depart: "09:50", arrive: "11:20", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0204", depart: "10:25", arrive: "11:55", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0206", depart: "11:50", arrive: "13:20", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0208", depart: "13:40", arrive: "15:10", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0212", depart: "16:05", arrive: "17:35", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0216", depart: "17:10", arrive: "18:40", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0218", depart: "19:25", arrive: "21:00", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0222", depart: "20:40", arrive: "22:15", stops: 0, bags: "1件", price: 231.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0274", depart: "15:00", arrive: "16:35", stops: 0, bags: "1件", price: 231.80, refundable: "no", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0278", depart: "19:50", arrive: "21:25", stops: 0, bags: "1件", price: 231.80, refundable: "no", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0272", depart: "10:20", arrive: "11:55", stops: 0, bags: "1件", price: 261.80, refundable: "no", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0276", depart: "12:45", arrive: "14:20", stops: 0, bags: "1件", price: 261.80, refundable: "no", changeable: "yes" },
+      { carrier: "VietJet Air", flight: "VZ415", depart: "08:15", arrive: "10:20", stops: 0, price: 194.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；早上到清迈，下午能直接玩" },
     ],
+    businessOptions: [],
   },
   {
-    id: "bkk-cnx",
-    route: "曼谷 → 清迈",
+    id: "cnx-bkk",
+    route: "清迈 → 曼谷",
     date: "2026-12-17",
     dateLabel: "12-17",
     day: 12,
     kind: "intercity",
-    note: "D12 转场：曼谷段结束、清迈段开始；Duffel 实查 2026-09-27 02:46 PDT（2 成人直飞，当天 13 班可选；可退可改）",
-    carrier: "Thai Airways TG0100",
-    schedule: "06:00→07:20",
-    priceNote: "2人 $167.80 起",
+    note: "D12 转场：清迈段结束、曼谷段开始；Google Flights 实查 2026-09-27 16:27 PDT（2 成人直飞，当天 27 班：越捷×9、亚航×5、曼谷航空×2、泰航×11）",
+    carrier: "VietJet Air VZ119",
+    schedule: "22:35→23:55",
+    priceNote: "2人 $85 起",
+    businessPriceNote: "2人 $407 起（仅泰航有商务舱，如 14:05→15:25）",
     direct: true,
     fragile: false,
-    queriedAt: "2026-09-27 02:46 PDT",
+    queriedAt: "2026-09-27 16:27 PDT",
     options: [
-      { carrier: "Thai Airways", flight: "TG0100", depart: "06:00", arrive: "07:20", bags: "1件", price: 167.80, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "当天最低价+早班机+可退可改；上午到清迈，下午能直接玩" },
-      { carrier: "Thai Airways", flight: "TG0122", depart: "09:00", arrive: "10:20", bags: "1件", price: 227.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0114", depart: "17:30", arrive: "18:50", bags: "1件", price: 227.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0102", depart: "07:25", arrive: "08:45", bags: "1件", price: 243.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0120", depart: "19:05", arrive: "20:25", bags: "1件", price: 243.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0215", depart: "08:05", arrive: "09:25", bags: "1件", price: 257.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0104", depart: "10:15", arrive: "11:30", bags: "1件", price: 273.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0112", depart: "15:05", arrive: "16:25", bags: "1件", price: 273.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0223", depart: "10:00", arrive: "11:20", bags: "1件", price: 299.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0219", depart: "17:40", arrive: "19:00", bags: "1件", price: 299.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0106", depart: "12:00", arrive: "13:20", bags: "1件", price: 315.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Bangkok Airways", flight: "PG0225", depart: "12:25", arrive: "13:45", bags: "1件", price: 381.80, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0110", depart: "13:25", arrive: "14:40", bags: "1件", price: 395.80, refundable: "yes", changeable: "yes" },
+      { carrier: "VietJet Air", flight: "VZ119", depart: "22:35", arrive: "23:55", stops: 0, price: 85.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；另有早班 VZ 06:35→07:55 约 $86，早上到曼谷更从容" },
+    ],
+    businessOptions: [
+      { carrier: "Thai Airways", flight: "TG", depart: "14:05", arrive: "15:25", stops: 0, price: 407.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天有商务舱的直飞（泰航）" },
     ],
   },
   {
-    id: "intl-back-xiy",
-    route: "清迈 → 西安",
+    id: "bkk-xiy",
+    route: "曼谷 → 西安",
     date: "2026-12-19",
     dateLabel: "12-19",
     day: 14,
     kind: "intl",
-    note: "回程：用户夫妻一起回西安（2成人）；清迈 12/19 退房当天离开；在西安待3-4天；Duffel 2026-09-27 按 12/19 实查当天无直飞（按用户要求只保留直飞）",
-    carrier: null,
-    schedule: null,
-    priceNote: "暂无直飞（12/19 查得，2成人）",
-    direct: false,
-    fragile: false,
-    queriedAt: "2026-09-27 12:14 PDT",
+    note: "回程：用户夫妻一起回西安（2成人）；曼谷 12/19 离开；在西安待3-4天；Google Flights 实查 2026-09-27 16:27 PDT（2成人，当天唯一真直飞：春秋航空）",
+    carrier: "Spring Airlines 9C6294",
+    schedule: "14:35→19:30",
+    priceNote: "2人 $256 起",
+    businessPriceNote: "无商务舱直飞（春秋航空为廉航，无商务舱）",
+    direct: true,
+    fragile: true,
+    queriedAt: "2026-09-27 16:27 PDT",
     priceBasis: "2成人总价",
     options: [
+      { carrier: "Spring Airlines", flight: "9C6294", depart: "14:35", arrive: "19:30", stops: 0, price: 256.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一真直飞，3小时55分；下午出发、晚上到西安，时间友好" },
     ],
+    businessOptions: [],
   },
   {
     id: "xiy-pek",
@@ -230,15 +219,21 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-22",
     day: 17,
     kind: "intl",
-    note: "用户一人回北京；在西安待3-4天后离开（候选日期，待用户在/planner确认）；Duffel 待查（1成人）",
-    carrier: null,
-    schedule: null,
-    priceNote: "待查（1成人）",
-    direct: null,
+    note: "用户一人回北京；在西安待3-4天后离开（候选日期，待用户在/planner确认）；Google Flights 实查 2026-09-27 16:27 PDT（1成人，当天 15 班直飞：国航×11、海航×4）",
+    carrier: "Hainan Airlines HU7538",
+    schedule: "21:50→00:20+1",
+    priceNote: "1人 $94 起",
+    businessPriceNote: "1人 $231 起（海航 21:50→00:20+1；国航商务 $411–435）",
+    direct: true,
     fragile: false,
-    queriedAt: null,
+    queriedAt: "2026-09-27 16:27 PDT（候选日期，待确认后重查）",
     priceBasis: "1成人单价",
-    options: null,
+    options: [
+      { carrier: "Hainan Airlines", flight: "HU7538", depart: "21:50", arrive: "00:20", arrivePlusDay: true, stops: 0, price: 94.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；晚上飞、半夜到，1个人无所谓" },
+    ],
+    businessOptions: [
+      { carrier: "Hainan Airlines", flight: "HU7538", depart: "21:50", arrive: "00:20", arrivePlusDay: true, stops: 0, price: 231.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "同班商务舱，1人 $231 性价比最高" },
+    ],
   },
 ];
 

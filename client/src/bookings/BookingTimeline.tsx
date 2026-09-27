@@ -368,6 +368,9 @@ export default function BookingTimeline({
           ) : f.priceNote ? (
             <span>
               <b className="text-teal-700">{f.priceNote}</b>
+              {f.businessPriceNote && (
+                <span className="text-gray-500"> · 商务舱 {f.businessPriceNote}</span>
+              )}
               {f.carrier && <span className="text-gray-500"> · {f.carrier}</span>}
               {f.schedule && <span className="text-gray-500"> · {f.schedule}</span>}
               {f.fragile && (
@@ -453,9 +456,40 @@ export default function BookingTimeline({
                       );
                     })}
                     <div className="text-[11px] text-gray-400 pt-0.5">
-                      Duffel 实查{f.queriedAt ? ` ${f.queriedAt}` : ""}
+                      Google Flights 实查{f.queriedAt ? ` ${f.queriedAt}` : ""}
                       ；价格动态，出票前重查退改
                     </div>
+                    {f.businessOptions && f.businessOptions.length > 0 && (
+                      <div className="pt-2">
+                        <div className="text-xs font-medium text-gray-700 mb-1.5">商务舱直飞</div>
+                        {f.businessOptions.map((o) => (
+                          <div
+                            key={`biz-${o.flight}-${o.depart}`}
+                            className="rounded-lg border px-2.5 py-2 flex items-center gap-2 border-purple-200 bg-purple-50/40 mb-1.5"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-gray-900">
+                                <span className="mr-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-purple-600 text-white align-middle">
+                                  商务
+                                </span>
+                                {o.carrier} {o.flight}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-0.5">
+                                {o.depart} → {o.arrive}
+                                {o.arrivePlusDay ? "+1" : ""} ·{" "}
+                                <b className="text-purple-700">${o.price}</b>
+                                {f.priceBasis ? `（${f.priceBasis}）` : ""}
+                              </div>
+                              {o.recommendReason && (
+                                <div className="text-xs text-purple-700 mt-0.5">
+                                  {o.recommendReason}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ) : undefined
               }
@@ -470,7 +504,7 @@ export default function BookingTimeline({
           );
         })}
         <p className="text-xs text-gray-400 mt-2">
-          城际 3 段价格为 2 成人实查价（Duffel 2026-09-26，动态，会变；三段合计最低 $1117.00/2人）；出票前重查退改政策。
+          8 段价格为 Google Flights 2026-09-27 实查价（动态，会变）；泰国顺序为普吉→清迈→曼谷→西安；出票前重查退改政策。
         </p>
       </Group>
 
