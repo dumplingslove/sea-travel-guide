@@ -267,9 +267,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 06:31Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4306,9 +4306,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-phuket.md 2026-09-27 06:31Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -5088,9 +5088,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-phuket.md 2026-09-27 06:31Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -6945,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T04:48Z UTC"
+ "updated_at": "2026-09-27T06:35Z"
 };
