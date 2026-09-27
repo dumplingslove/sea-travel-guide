@@ -213,6 +213,15 @@
 /* 交通：一次只看一城 */
 .guide-scope section.mobility>div.mobilitysingle{display:block;max-width:none}
 
+/* 交通：六节改小卡片+条列，扫读友好 */
+.guide-scope .mobility-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px}
+.guide-scope .mobility-sec{background:var(--surface,#fff);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.guide-scope .mobility-sec h4{font-size:14px;margin:0 0 8px}
+.guide-scope .mobility-sec ul{margin:0;padding-left:18px;font-size:13px;line-height:1.7}
+.guide-scope .mobility-sec li{margin-bottom:6px}
+.guide-scope .mobility-sec li:last-child{margin-bottom:0}
+@media(max-width:719px){.guide-scope .mobility-grid{grid-template-columns:1fr;padding:12px}}
+
 /* 详情弹窗：目录更好用 —— 锚点留出吸顶目录高度 + 回到目录 */
 .guide-scope #decision, .guide-scope #facts, .guide-scope #xhs, .guide-scope #sources{scroll-margin-top:70px}
 .guide-scope .detailjump{border-radius:0 0 var(--radius-sm) var(--radius-sm)}
