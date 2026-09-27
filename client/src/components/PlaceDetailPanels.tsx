@@ -369,15 +369,15 @@ export function PreTripChecklistPanel({ kind }: { kind: DetailKind }) {
   );
 }
 
-/** 最佳机位（仅景点） */
+/** 人像机位（仅景点） */
 export function PhotoSpotsPanel({ item }: { item: Item }) {
   const spots = getPhotoSpots(item.city, item.name);
   if (!spots?.length) return null;
   const gallery = getPlaceGallery("景点", item);
   return (
-    <Section title="📸 最佳机位">
+    <Section title="📸 人像机位">
       <p className="text-xs text-gray-400 mb-3">
-        每个机位都写了站在哪、面向哪；样片只用本站图库里视角对得上的照片。
+        给同行人拍照用的机位：每个点位都写了人站在哪、面向哪。通用出片要点：上午顺光人脸干净、傍晚黄金时刻适合逆光剪影、背景尽量干净避开杂物；样片只用本站图库里视角对得上的照片。
       </p>
       <div className="space-y-4">
         {spots.map((s, i) => {

@@ -129,6 +129,23 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* 照片（置顶：先看图，再看文字） */}
+        {photos.length > 1 && (
+          <Section title={`📸 照片（${photos.length}）`}>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {photos.slice(1, 7).map((p, i) => (
+                <img
+                  key={i}
+                  src={p.src}
+                  alt={`${item.name} ${i + 2}`}
+                  className="w-full h-36 object-cover rounded-lg"
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          </Section>
+        )}
+
         {/* 总评 / 详情 */}
         <Section title={guide ? "💡 一句话点评" : "📝 介绍"}>
           {guide ? (
@@ -208,7 +225,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Section>
         )}
 
-        {/* 景点：最佳机位 */}
+        {/* 景点：人像机位 */}
         {kind === "attraction" && <PhotoSpotsPanel item={item} />}
 
         {/* 餐厅：米其林完整说明 */}
@@ -273,23 +290,6 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
             >
               在 Google 地图打开 →
             </a>
-          </Section>
-        )}
-
-        {/* 照片 */}
-        {photos.length > 1 && (
-          <Section title={`📸 照片（${photos.length}）`}>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {photos.slice(1, 7).map((p, i) => (
-                <img
-                  key={i}
-                  src={p.src}
-                  alt={`${item.name} ${i + 2}`}
-                  className="w-full h-36 object-cover rounded-lg"
-                  loading="lazy"
-                />
-              ))}
-            </div>
           </Section>
         )}
 
