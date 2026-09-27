@@ -143,9 +143,6 @@ function ItineraryTab() {
             detail={details[i]}
             bookings={bookingsByDay.get(d.day) || []}
             isCloud={isCloudPlan}
-            isLastInCity={
-              (idxInCity.get(d.day) || 0) === (cityCounts.get(d.city_zh) || 1) - 1
-            }
             cityScheduledNames={cityScheduled.get(d.city_zh)}
           />
         ))}

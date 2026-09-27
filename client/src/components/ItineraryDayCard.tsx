@@ -300,7 +300,6 @@ export function ItineraryDayCard({
   detail,
   bookings,
   isCloud,
-  isLastInCity,
   cityScheduledNames,
 }: {
   day: PlanDay;
@@ -309,8 +308,6 @@ export function ItineraryDayCard({
   bookings: DayBooking[];
   /** 云端行程：编号与静态对不上，转场/地图一律按当天实际城市计算 */
   isCloud?: boolean;
-  /** 是否该城市段最后一天（“本城备选”只放最后一天） */
-  isLastInCity?: boolean;
   /** 该城市段所有天已排的站点名（算本城备选用） */
   cityScheduledNames?: Set<string>;
 }) {
@@ -359,19 +356,16 @@ export function ItineraryDayCard({
 
   // 本城餐厅：有空位数据的优先
   const cityRests = restaurants.filter((r) => r.city === day.city_zh);
-  // 备选景点（原版 AlternativeAttractions 逻辑）：本城整个行程都没排进去的景点，
-  // 只放在该城市段的最后一天，避免同城多天重复。
-  const altAttrs = (
-    isLastInCity
-      ? attractions.filter(
-          (a) =>
-            a.city === day.city_zh &&
-            ![...(cityScheduledNames || [])].some((stName) =>
-              matchItem(stName, day.city_zh, [a])
-            )
+  // 备选景点：每天2-3个本城没排进去的景点，默认折叠，有时间可展开挑选。
+  const altAttrs = attractions
+    .filter(
+      (a) =>
+        a.city === day.city_zh &&
+        ![...(cityScheduledNames || [])].some((stName) =>
+          matchItem(stName, day.city_zh, [a])
         )
-      : []
-  ).slice(0, 8);
+    )
+    .slice(0, 3);
   const restPicks = [...cityRests]
     .sort((a, b) => {
       const prio = (n: string) => {
@@ -536,14 +530,19 @@ export function ItineraryDayCard({
 
         {/* 备选景点（原版 AlternativeAttractions 逻辑） */}
         {altAttrs.length > 0 && (
-          <section className="mb-6">
-            <h4 className="text-lg font-bold mb-1 text-teal-800">
-              🔀 备选景点
-            </h4>
-            <p className="text-xs text-gray-500 mb-3">
-              本城行程里没排进去的景点，时间有富余或想换口味时可替换 / 加塞。
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <details className="mb-6 bg-teal-50/40 border border-teal-100 rounded-xl">
+            <summary className="cursor-pointer list-none p-3 flex items-center justify-between">
+              <div>
+                <h4 className="text-base font-bold text-teal-800">
+                  🔀 备选景点（{altAttrs.length}个）
+                </h4>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  本城行程里没排进去的景点，时间有富余时可展开挑选替换 / 加塞。
+                </p>
+              </div>
+              <span className="text-teal-700 text-sm font-medium shrink-0 ml-2">展开 ▾</span>
+            </summary>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-3 pb-3">
               {altAttrs.map((a) => {
                 const photo = getPlaceGallery("景点", a)[0];
                 return (
@@ -579,7 +578,7 @@ export function ItineraryDayCard({
                 );
               })}
             </div>
-          </section>
+          </details>
         )}
 
         {/* 餐饮安排 */}
