@@ -609,8 +609,8 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
   { after:"singapore", before:"couple", title:"新加坡→普吉（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
-  { after:"couple", before:"beijing2", title:"清迈→北京（1人）＋ 清迈→西安（1人）",
-    legs:[{code:"CNX-PEK",label:"清迈→北京"},{code:"CNX-XIY",label:"清迈→西安"}] },
+  { after:"couple", before:"beijing2", title:"清迈→西安（2人）＋ 西安→北京（1人）",
+    legs:[{code:"CNX-XIY",label:"清迈→西安"},{code:"XIY-PEK",label:"西安→北京"}] },
 ];
 function tripDuffelNote(key: string, label: string){
   const d=TRIP_DUFFEL[key];
