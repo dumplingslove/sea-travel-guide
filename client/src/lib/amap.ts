@@ -110,7 +110,17 @@ class RetryTileLayer extends L.TileLayer {
         // 瓦片仍在 DOM 里才重发；img 上的 load/error 监听还在，
         // 成功会走正常 _tileReady 淡入流程
         if (tile.isConnected) {
+          // 根因修复（2026-09-27 全屏缩放无细节 bug）：getTileUrl() 拼 z 时用的是
+          // 当前 this._tileZoom 而不是失败瓦片自己的 e.coords.z。用户在退避窗口
+          // （0.9s/1.8s/2.7s）内继续缩放是常态，此时重试会用旧 x/y 配新 z，
+          // 请求到完全错位的瓦片：既浪费了重试，又把错位图钉进格子标记为 loaded，
+          // 该格子就再也拿不到正确的细节瓦片——放大后只剩拉伸的低层级父瓦片。
+          // 这里把 _tileZoom 临时钉在失败瓦片自己的层级上再拼 URL（同步执行，
+          // 无重入问题），用完立即恢复。
+          const cur = this._tileZoom;
+          this._tileZoom = e.coords.z;
           tile.src = this.getTileUrl(e.coords);
+          this._tileZoom = cur;
         }
       },
       900 * (used + 1),
