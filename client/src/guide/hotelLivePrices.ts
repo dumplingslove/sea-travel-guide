@@ -1,6 +1,6 @@
 /** 按行程实际住宿日期实查的酒店价格（USD）。
  * 数据来源：Trip.com 房型级实时价格，2 成人 1 间。
- * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）；2026-09-27 08:54 PDT（清迈 6 家按新行程日期 12/23–12/25 重查）；2026-09-27 08:57 PDT（新加坡 Raffles/Ritz-Carlton/文华东方按 12/12–12/17 重查＋富丽敦套房补齐）。
+ * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）；2026-09-27 08:54 PDT（清迈 6 家按新行程日期 12/23–12/25 重查）；2026-09-27 08:57 PDT（新加坡 Raffles/Ritz-Carlton/文华东方按 12/12–12/17 重查＋富丽敦套房补齐）；2026-09-27 09:04 PDT（曼谷 9 家按新行程日期 12/20–12/23 重查）。
  * 价格为动态数据：行程日期变化或定期刷新时由 hotel-price-watch 任务重查并更新本文件。
  * 键必须与 data.ts 酒店名逐字一致（含中文后缀）。
  */
@@ -43,10 +43,10 @@ export interface LiveHotelPrice {
 
 export const hotelLivePrices: Record<string, LiveHotelPrice> = {
  'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Athenee King Room（禁烟）', perNightUSD: 248, totalUSD: 876, totalInclTax: true, cancel: '免费取消', breakfast: '不含早' },
-  suite: null, suiteNote: '该日期未找到可订套房',
-  source: 'Trip.com', checkedAt: '2026-09-25 03:22 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Athenee King Room（禁烟）', perNightUSD: 234, totalUSD: 747, totalInclTax: true, cancel: '12-19 23:59前免费取消', breakfast: '不含早（+$29.94/人可选）', note: 'Best price with free cancellation；Last booked 9 hrs ago' },
+  suite: { room: 'Athenee Suite（禁烟）', perNightUSD: 494, totalUSD: 1577, totalInclTax: true, cancel: '12-19 23:59前免费取消（预付）', breakfast: '含1份早餐' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'Anantara Chiang Mai': {
   checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
@@ -169,52 +169,52 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-27 15:57 UTC',
  },
  'The Ritz-Carlton, Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Deluxe King', perNightUSD: 368, totalUSD: 1301, totalInclTax: true, cancel: '12-11 23:59前免费取消', breakfast: '不含早（+$33.47/人可选）' },
-  suite: null, suiteNote: '该日期无套房',
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Deluxe King', perNightUSD: 497, totalUSD: 1586, totalInclTax: true, cancel: '12-19 23:59前免费取消', breakfast: '不含早（+$33.47/人可选）', note: 'Last booked 10 hrs ago' },
+  suite: null, suiteNote: '该日期无名称含Suite的可订房型（仅Deluxe及Club系列）',
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'The Peninsula Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Deluxe King Room', perNightUSD: 401, totalUSD: 1278, totalInclTax: true, cancel: '最低价不可退；免费取消价$418/晚', breakfast: '含双早', note: '会员9折后价，原价$448；该价仅剩4间' },
-  suite: { room: 'Deluxe King Suite', perNightUSD: 591, totalUSD: 1885, totalInclTax: true, cancel: '最低价不可退；免费取消价$642/晚', breakfast: '含双早', note: '会员9折后价，原价$661；该价仅剩4间' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Deluxe King Room', perNightUSD: 473, totalUSD: 1510, totalInclTax: true, cancel: '不可退（预付）；免费取消替代价$497/晚（11-19 23:59前）', breakfast: '含双早', note: 'Our last 4!；免费取消价早餐+$43.11/人可选；Last booked 1 hr ago' },
+  suite: { room: 'Deluxe King Suite', perNightUSD: 657, totalUSD: 2095, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: 'Our last 4!' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'Rosewood Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Deluxe Twin Room', perNightUSD: 299, totalUSD: 954, totalInclTax: true, cancel: '12-05 18:00前免费取消', breakfast: '不含早（+$45.11/人可选）', note: '会员85折后价，原价$355' },
-  suite: { room: 'Premier Suite', perNightUSD: 530, totalUSD: 1690, totalInclTax: true, cancel: '12-05 18:00前免费取消', breakfast: '不含早（+$45.11/人可选）', note: '会员85折后价，原价$629；含免费迷你吧、私人管家' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Deluxe King Room', perNightUSD: 391, totalUSD: 1247, totalInclTax: true, cancel: '11-28 23:59前免费取消', breakfast: '不含早（+$45.11/人可选）', note: '会员85折后价，原价$464；Last booked 3 hrs ago' },
+  suite: { room: 'Premier Suite', perNightUSD: 634, totalUSD: 2021, totalInclTax: true, cancel: '12-06 18:00前免费取消（预付）', breakfast: '含1份早餐', note: '会员85折后价，原价$753' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  '曼谷文华东方': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Deluxe Premier King Room', perNightUSD: 818, totalUSD: 2609, totalInclTax: true, cancel: '12-11 18:00前免费取消', breakfast: '含双早', note: '每住送$150酒店消费额' },
-  suite: { room: 'Junior King Suite With Terrace', perNightUSD: 1841, totalUSD: 5873, totalInclTax: true, cancel: '12-11 18:00前免费取消', breakfast: '不含早（+$63.42/人可选）', note: '会员价，原价$1,892；该价仅剩4间' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: null, suite: null,
+  unavailable: '该日期无可订房：页面明确显示No rooms available for your selected dates（2026-12-20至12-23）；仅提供替代日期：12/13-14（$763起）、12/14-15（$796起）、12/15-16（$789起）',
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'Capella Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Riverfront Twin Room', perNightUSD: 990, totalUSD: 3159, totalInclTax: true, cancel: '12-07 15:00前免费取消', breakfast: '含双早', note: '该价仅剩1间' },
-  suite: { room: 'Courtyard Suite', perNightUSD: 1477, totalUSD: 4710, totalInclTax: true, cancel: '12-07 15:00前免费取消', breakfast: '含双早', note: '该价仅剩1间' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Riverfront Twin Room', perNightUSD: 1474, totalUSD: 4703, totalInclTax: true, cancel: '不可退（预付）', breakfast: '不含早（+$49.33/人可选）', note: "Today's best price!；Our last 2!；Last booked 5 hrs ago" },
+  suite: { room: 'Courtyard Suite', perNightUSD: 2425, totalUSD: 7735, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: 'Our last 1!；River Suite Our last 5!' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'Aman Nai Lert Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Premier Suite', perNightUSD: 1476, totalUSD: 4708, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '全套房酒店，最低即套房' },
-  suite: { room: 'Premier Suite（全套房酒店，最低即套房）', perNightUSD: 1476, totalUSD: 4708, totalInclTax: true, cancel: '不可退', breakfast: '含双早' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Deluxe King Suite', perNightUSD: 1986, totalUSD: 6335, totalInclTax: true, cancel: '不可退（预付）；免费取消替代价$2,207/晚（11-20 23:59前）', breakfast: '含双早', note: '全套房酒店，最低即套房；Our last 4!；Terrace Suite Our last 1!；Last booked 1 hr ago' },
+  suite: { room: 'Deluxe King Suite（全套房酒店，最低即套房）', perNightUSD: 1986, totalUSD: 6335, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'Four Seasons Bangkok': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Deluxe Room - King', perNightUSD: 696, totalUSD: 2221, totalInclTax: true, cancel: '12-11 15:00前免费取消', breakfast: '不含早（+$47.57/人可选）', note: '湄南河畔本店；该价仅剩1间' },
-  suite: null, suiteNote: '该日期无套房',
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Deluxe Room - King（湄南河畔本店）', perNightUSD: 945, totalUSD: 3014, totalInclTax: true, cancel: '12-19 15:00前免费取消（预付）', breakfast: '不含早（+$47.57/人可选）', note: 'Best price with free cancellation；全部8种房型均为Our last 1!；Last booked 7 hrs ago' },
+  suite: null, suiteNote: '该日期无名称含Suite的可订房型（全部8种房型为Deluxe/Premier系列）',
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  'The Siam': {
-  checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
-  base: { room: 'Siam Suite', perNightUSD: 638, totalUSD: 2036, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '9折后价，原价$705；全套房酒店；含免费迷你吧、每日2班接驳船' },
-  suite: { room: 'Siam Suite（全套房酒店，最低即套房）', perNightUSD: 638, totalUSD: 2036, totalInclTax: true, cancel: '不可退', breakfast: '含双早' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
+  checkIn: '2026-12-20', checkOut: '2026-12-23', nights: 3,
+  base: { room: 'Premier Garden View Suite', perNightUSD: 1378, totalUSD: 4395, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: '9% off，原价$1,521/晚；全套房/别墅酒店，最低即套房；早鸟价$1,606/晚 Our last 2!' },
+  suite: { room: 'Premier Garden View Suite（全套房/别墅酒店，最低即套房）', perNightUSD: 1378, totalUSD: 4395, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: 'River View Suite、Courtyard Pool Villa Our last 1!；Riverside Pool Villa Our last 3!' },
+  source: 'Trip.com', checkedAt: '2026-09-27 16:04 UTC',
  },
  '137 Pillars House': {
   checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
