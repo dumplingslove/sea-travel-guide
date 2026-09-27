@@ -5879,7 +5879,7 @@ export const initialResearchStatus = {
    "total": 22
   },
   "singapore": {
-   "complete": 19,
+   "complete": 20,
    "items": [
     {
      "name": "Raffles Singapore 莱佛士",
@@ -6116,10 +6116,11 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-27 主agent老窗口重试（search_outage解除后）：3篇高流量帖深读入库（S1X老派奢华/无尾熊小姐$68鲜花下午茶/Yuzi的日常Fullerton Bay早餐备注姐妹店）。用户3篇标准达标。",
+       "posts": 3,
+       "status": "done",
+       "target": 10,
+       "evidence": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/singapore-fullerton-hotel-2026-09-27.md"
       }
      },
      "type": "酒店"
@@ -6853,7 +6854,7 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 60,
+ "complete_items": 61,
  "summary": {
   "bangkok": {
    "total": 32,
@@ -6930,10 +6931,10 @@ export const initialResearchStatus = {
    "ta": 28,
    "gm": 27,
    "cs": 26,
-   "xhs_done": 20,
+   "xhs_done": 21,
    "ph": 28,
    "de": 28,
-   "all_done": 19
+   "all_done": 20
   },
   "xhs_done": 64,
   "all_done": 60
@@ -6947,5 +6948,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T1649Z"
+ "updated_at": "2026-09-27T2247Z"
 };
