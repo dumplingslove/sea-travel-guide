@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+
 // space-sdk 在 GitHub Pages 新站不可用：顶部署名条由新站全局 Header 承担，此处 stub 为空，保持视觉一致。
 function SafeAreaTopScrim(_props: { backgroundColor?: string }) { return null; }
 import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
@@ -222,9 +222,9 @@ function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean
 }
 
 function Practical({onBook}:{onBook?:OnBook}){
- const [mode,setMode]=useState<'实用信息'|'景点指南'|'购物推荐'|'研究来源'>('实用信息');
+ const [mode,setMode]=useState<'实用信息'|'购物推荐'>('实用信息');
  const info=[['签证','研究快照记录：中国护照赴泰国、马来西亚、新加坡免签；越南需提前办理电子签。政策可能变化，出发前向官方移民部门复核。'],['12月天气','泰国全境、马来西亚西海岸、越南南部多处于较干爽季节；新加坡12月多阵雨，准备轻薄雨衣与室内备选。'],['货币','THB / MYR / VND / SGD。信用卡为主、少量现金；参考汇率不等于实际成交价。'],['网络','落地前准备覆盖四国的eSIM，海岛出海日下载离线资料。'],['插头与电压','四国插座形态不完全相同，带一只带保险丝的全球转换插头与多口充电器。'],['健康','热带防晒、防蚊、补水；出海与长途飞行带常用药，处方药保留原包装。']];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口；景点指南与研究状态已收拢到顶级导航，不再重复展示。" image={hcmImg}/><div className="subtabs">{(['实用信息','景点指南','购物推荐','研究来源'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div></>}{mode==='景点指南'&&<section className="notice"><h2>已收拢到顶级「景点」</h2><p>完整景点指南（按城市筛选、展开完整攻略、小红书实读口碑、门票预订）与顶级导航「景点」是同一套内容，已合并收拢，不再两处重复展示。</p><p><Link to="/attractions">去「景点」查看完整指南 →</Link></p></section>}{mode==='购物推荐'&&<div className="shopfolds">{cities.map((c,i)=><Fold key={c} eyebrow={`第 ${i+1} 站`} title={c} image={cityImages[c]} defaultOpen={i===0}><p className="shoptext">{shopping[c as keyof typeof shopping]}</p></Fold>)}</div>}{mode==='研究来源'&&<><section className="notice"><h2>实时研究状态见顶级「研究状态」</h2><p>六来源条目总数、逐项证据与缺口状态以顶级导航「研究状态」页的实时汇总为准，这里不再重复展示；下面保留本站的资料标注说明。</p><p><Link to="/research">去「研究状态」查看 →</Link></p></section><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}</div>
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<div className="shopfolds">{cities.map((c,i)=><Fold key={c} eyebrow={`第 ${i+1} 站`} title={c} image={cityImages[c]} defaultOpen={i===0}><p className="shoptext">{shopping[c as keyof typeof shopping]}</p></Fold>)}</div>}</div>
 }
 
 /** 景点卡片一键收藏：写入 sea_guide_records（kind="favorite"），与顶级 /favorites 页同表互通。 */
