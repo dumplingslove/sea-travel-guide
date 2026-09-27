@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 17,
+   "complete": 19,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -198,9 +198,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。",
        "posts": 0,
-       "status": "pending",
+       "status": "done",
        "target": 10
       }
      },
@@ -233,9 +233,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。",
        "posts": 0,
-       "status": "pending",
+       "status": "done",
        "target": 10
       }
      },
@@ -1839,7 +1839,7 @@ export const initialResearchStatus = {
    "total": 20
   },
   "hcmc": {
-   "complete": 0,
+   "complete": 3,
    "items": [
     {
      "name": "The Reverie Saigon 西贡瑰丽",
@@ -1868,9 +1868,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
        "posts": 0,
-       "status": "pending",
+       "status": "done",
        "target": 10
       }
      },
@@ -1903,9 +1903,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
        "posts": 0,
-       "status": "pending",
+       "status": "done",
        "target": 10
       }
      },
@@ -1938,9 +1938,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
        "posts": 0,
-       "status": "pending",
+       "status": "done",
        "target": 10
       }
      },
@@ -5879,7 +5879,7 @@ export const initialResearchStatus = {
    "total": 22
   },
   "singapore": {
-   "complete": 16,
+   "complete": 19,
    "items": [
     {
      "name": "Raffles Singapore 莱佛士",
@@ -5941,9 +5941,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §2/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-24T05:08Z】新标准核销检查未通过仍partial：存档帖6/10出现在头部但仅50–74赞中段；头部唯一高流量同类帖=好好先生《全球旗舰嘉佩乐｜太尊了》(336赞，2026-04-04，按MM-DD纪律记2026年)未在存档10篇内。下轮建议：深读好好先生帖+补1次搜索pass找其余2篇高流量候选（待主agent裁决是否入priority_queue）。证据见 redo-strict/singapore-xhs.md 轮次记录（05:10Z落盘）。",
-       "posts": 10,
-       "status": "partial",
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §2/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-24T05:08Z】新标准核销检查未通过仍partial：存档帖6/10出现在头部但仅50–74赞中段；头部唯一高流量同类帖=好好先生《全球旗舰嘉佩乐｜太尊了》(336赞，2026-04-04，按MM-DD纪律记2026年)未在存档10篇内。下轮建议：深读好好先生帖+补1次搜索pass找其余2篇高流量候选（待主agent裁决是否入priority_queue）。证据见 redo-strict/singapore-xhs.md 轮次记录（05:10Z落盘）。｜2026-09-27 02:3x PDT轮（主agent老窗口亲验正常后执行）：新增3篇达标（去重后），转done。",
+       "posts": 13,
+       "status": "done",
        "target": 10
       }
      },
@@ -6081,9 +6081,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §6/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-24T08:52Z hourly更新】主会话08:38Z轮（00:41 PDT整点轮infra失败的即时重试，健康检查通过无熔断）：1搜索pass+深读3篇(307/136/135赞)均暂计入；待主agent裁决：其中1篇为圣淘沙分店帖；折叠回复未展开（部分帖实质评论<10）、轮播仅翻2/18即面板关闭已诚实标注；证据结论见hidden_files/xhs-search-state.json（redo-strict证据文件尚未落盘）。本轮不改状态，裁决后再转。",
-       "posts": 10,
-       "status": "partial",
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §6/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-24T08:52Z hourly更新】主会话08:38Z轮（00:41 PDT整点轮infra失败的即时重试，健康检查通过无熔断）：1搜索pass+深读3篇(307/136/135赞)均暂计入；待主agent裁决：其中1篇为圣淘沙分店帖；折叠回复未展开（部分帖实质评论<10）、轮播仅翻2/18即面板关闭已诚实标注；证据结论见hidden_files/xhs-search-state.json（redo-strict证据文件尚未落盘）。本轮不改状态，裁决后再转。｜2026-09-27 02:3x PDT轮（主agent老窗口亲验正常后执行）：新增2篇达标（去重后），转done。",
+       "posts": 12,
+       "status": "done",
        "target": 10
       }
      },
@@ -6840,9 +6840,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §28/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-26 21:26–21:40Z补3篇】站内搜'圣淘沙 luge'深读3篇高流量强相关专帖：①航仔想去玩《新加坡 天际斜坡滑车 刺激 太好玩了》(2025-11-01,1046赞,https://www.xiaohongshu.com/explore/6905e20c0000000004007a96,推荐,正文'价格200左右/时间40分钟左右/不需要预约',8条实质评论实读)；②的欢-gladys《沉浸式新加坡日落飞车Skyline Luge这样拍》(2025-09-27,955赞,https://www.xiaohongshu.com/explore/68d76a4e000000001301a206,推荐,正文'18:30-19:00可看落日/环球影城+Luge安排一天',8条实质评论实读)；③爱玩的三傻子《第一次玩新加坡斜坡滑车，这份攻略收好》(2026-07-12,636赞,https://www.xiaohongshu.com/explore/6a5396c70000000008025c42,推荐,正文'官网提前预定/银行卡支付/二维码E-ticket通道/搜圣淘沙登岛码免费登岛',8条实质评论实读)。证据见 xhs-coverage-singapore.md 2026-09-26 14:26–14:40 PDT 轮次记录。状态保持partial：本轮2篇视频帖未逐帧核验、第3篇仅核验封面，未达图片零容忍逐张审查标准，待逐项重验阶段补翻图片后才可记done。",
-       "posts": 13,
-       "status": "partial",
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §28/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。【2026-09-26 21:26–21:40Z补3篇】站内搜'圣淘沙 luge'深读3篇高流量强相关专帖：①航仔想去玩《新加坡 天际斜坡滑车 刺激 太好玩了》(2025-11-01,1046赞,https://www.xiaohongshu.com/explore/6905e20c0000000004007a96,推荐,正文'价格200左右/时间40分钟左右/不需要预约',8条实质评论实读)；②的欢-gladys《沉浸式新加坡日落飞车Skyline Luge这样拍》(2025-09-27,955赞,https://www.xiaohongshu.com/explore/68d76a4e000000001301a206,推荐,正文'18:30-19:00可看落日/环球影城+Luge安排一天',8条实质评论实读)；③爱玩的三傻子《第一次玩新加坡斜坡滑车，这份攻略收好》(2026-07-12,636赞,https://www.xiaohongshu.com/explore/6a5396c70000000008025c42,推荐,正文'官网提前预定/银行卡支付/二维码E-ticket通道/搜圣淘沙登岛码免费登岛',8条实质评论实读)。证据见 xhs-coverage-singapore.md 2026-09-26 14:26–14:40 PDT 轮次记录。状态保持partial：本轮2篇视频帖未逐帧核验、第3篇仅核验封面，未达图片零容忍逐张审查标准，待逐项重验阶段补翻图片后才可记done。｜2026-09-27 02:3x PDT轮（主agent老窗口亲验正常后执行）：新增2篇达标（去重后），转done。",
+       "posts": 15,
+       "status": "done",
        "target": 10
       }
      },
@@ -6853,17 +6853,17 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 49,
+ "complete_items": 57,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 18,
+   "xhs_done": 20,
    "ph": 32,
    "de": 32,
-   "all_done": 17
+   "all_done": 19
   },
   "chiangmai": {
    "total": 20,
@@ -6880,10 +6880,10 @@ export const initialResearchStatus = {
    "ta": 23,
    "gm": 23,
    "cs": 22,
-   "xhs_done": 0,
+   "xhs_done": 3,
    "ph": 23,
    "de": 23,
-   "all_done": 0
+   "all_done": 3
   },
   "kualalumpur": {
    "total": 22,
@@ -6910,10 +6910,10 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 2,
+   "xhs_done": 5,
    "ph": 24,
    "de": 24,
-   "all_done": 2
+   "all_done": 4
   },
   "phuquoc": {
    "total": 22,
@@ -6930,13 +6930,13 @@ export const initialResearchStatus = {
    "ta": 28,
    "gm": 27,
    "cs": 26,
-   "xhs_done": 17,
+   "xhs_done": 20,
    "ph": 28,
    "de": 28,
-   "all_done": 16
+   "all_done": 19
   },
-  "xhs_done": 53,
-  "all_done": 49
+  "xhs_done": 61,
+  "all_done": 57
  },
  "targets": {
   "chinese_sites": "done",
@@ -6947,5 +6947,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T06:53Z"
+ "updated_at": "2026-09-27T1047Z"
 };
