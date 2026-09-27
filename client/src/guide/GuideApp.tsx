@@ -6,7 +6,7 @@ function SafeAreaTopScrim(_props: { backgroundColor?: string }) { return null; }
 import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
-import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, legs, cityMobility, type HotelGroup, type Item } from './data';
+import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, legs, cityMobility, type HotelGroup, type Item } from './data';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -223,10 +223,22 @@ function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean
 
 function Practical({onBook}:{onBook?:OnBook}){
  const [mode,setMode]=useState<'实用信息'|'购物推荐'>('实用信息');
- const info=[['签证','研究快照记录：中国护照赴泰国、马来西亚、新加坡免签；越南需提前办理电子签。政策可能变化，出发前向官方移民部门复核。'],['12月天气','泰国全境、马来西亚西海岸、越南南部多处于较干爽季节；新加坡12月多阵雨，准备轻薄雨衣与室内备选。'],['货币','THB / MYR / VND / SGD。信用卡为主、少量现金；参考汇率不等于实际成交价。'],['网络','落地前准备覆盖四国的eSIM，海岛出海日下载离线资料。'],['插头与电压','四国插座形态不完全相同，带一只带保险丝的全球转换插头与多口充电器。'],['健康','热带防晒、防蚊、补水；出海与长途飞行带常用药，处方药保留原包装。']];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<div className="shopfolds">{cities.map((c,i)=><Fold key={c} eyebrow={`第 ${i+1} 站`} title={c} image={cityImages[c]} defaultOpen={i===0}><p className="shoptext">{shopping[c as keyof typeof shopping]}</p></Fold>)}</div>}</div>
+ const info=[['签证','中国护照：泰国、新加坡免签；越南需提前办理电子签。免签入境通常要求护照有效期6个月以上+返程机票，政策可能变化，出发前向官方移民部门复核。'],['12月天气','12月是泰国（曼谷/普吉/清迈）的干季：曼谷28°C上下、清迈早晚凉爽、普吉晴多；新加坡12月多阵雨，备轻薄雨衣，行程里留室内备选。'],['货币','泰国用泰铢（THB）、新加坡用新币（SGD）。商场/超市刷卡方便，夜市和路边摊多收现金，落地先取少量现金；参考汇率不等于实际成交价。'],['网络','提前买一张覆盖泰国+新加坡的eSIM（或落地机场买本地SIM卡）；海岛出海日提前下载离线地图。'],['插头与电压','泰国多用两孔扁/圆插（A/B/C型），新加坡用英标三方插（G型）；带一只全球转换插头+多口充电器全程通用。'],['健康','热带防晒、防蚊、补水是三件套；Soffell驱蚊液到泰国Big C买最方便。出海和长途飞行带常用药，处方药保留原包装。']];
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div>}</div>
 }
 
+/** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
+const shopRouteOrder=['新加坡','普吉','曼谷','清迈'];
+const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-12～12-16','普吉':'D6–D8 · 12-17～12-19','曼谷':'D9–D11 · 12-20～12-22','清迈':'D12–D13 · 12-23～12-24'};
+const shopCities=[...shopRouteOrder,...cities.filter(c=>!shopRouteOrder.includes(c))];
+function ShopGuide({city}:{city:string}){
+ const g=shoppingGuides[city];
+ if(!g) return <p className="shoptext">{shopping[city as keyof typeof shopping]}</p>;
+ return <div className="shopguide"><p className="shoptext">{g.lead}</p>
+ <h4>值得逛</h4><ul>{g.malls.map(m=><li key={m.name}><b>{m.name}</b>——{m.note}</li>)}</ul>
+ <h4>最值得买的伴手礼</h4><ul>{g.souvenirs.map(s=><li key={s.name}>{s.star?'★ ':''}<b>{s.name}</b>——{s.note}</li>)}</ul>
+ {g.tips.length>0 && <div className="shoptips"><h4>购物贴士</h4><ul>{g.tips.map(t=><li key={t}>{t}</li>)}</ul></div>}</div>;
+}
 /** 景点卡片一键收藏：写入 sea_guide_records（kind="favorite"），与顶级 /favorites 页同表互通。 */
 function FavButton({name,city}:{name:string;city:string}){
   const [st,setSt]=useState<'idle'|'saving'|'done'>('idle');

@@ -209,6 +209,144 @@ A('滨海湾花园','新加坡','新加坡必看第一：101公顷填海造出�
 ];
 export const shopping={"曼谷":"ICONSIAM、暹罗商圈、恰图恰；买泰丝、香氛、设计杂货。","清迈":"瓦洛洛市场、宁曼路、Baan Kang Wat；买泰北香肠、木雕与棉织品。","普吉":"老镇周日步行街、Central Phuket；买锡器、腰果与海岛度假品。","槟城":"乔治市骑楼店、Gurney Plaza；买豆蔻制品、白咖啡与娘惹工艺。","吉隆坡":"Pavilion、Suria KLCC、中央市场；买锡器、巴迪布与本地设计。","胡志明市":"同起街、Tan Dinh 或 Binh Tay；滨城市场只看建筑，不建议购物。","富国岛":"阳东镇正规商店；夜市先问价，鱼露与易碎品托运前二次密封。","新加坡":"乌节路、Marina Bay Sands、Jewel；集中采购国际品牌与娘惹手信。"};
 
+/* 购物推荐：按城市的结构化深指南（2026-09-27 研究整理）
+   malls=值得逛的商场/市场+特色；souvenirs=伴手礼/纪念品（star=最值得买）；
+   tips=退税/砍价/托运等实操贴士。旧 shopping 一句话版保留给行程日卡用。 */
+export interface ShoppingEntry{ name:string; note:string; star?:boolean }
+export interface ShoppingGuide{ lead:string; malls:ShoppingEntry[]; souvenirs:ShoppingEntry[]; tips:string[] }
+export const shoppingGuides:Record<string,ShoppingGuide>={
+"新加坡":{
+lead:"5天行程的起点和终点：国际品牌集中采购放新加坡，价格透明、退税方便；食品类伴手礼建议最后一天在机场一次补齐。",
+malls:[
+{name:"乌节路 ION Orchard",note:"奢侈品牌最集中（LV/Prada/Dior），顶层有免费观景台看城市景观"},
+{name:"义安城（高岛屋）",note:"日式百货，时装到家居一站式，餐厅选择多"},
+{name:"百利宫 Paragon",note:"高端品牌+高档童装（Armani Kids等），带娃家庭可顺带逛"},
+{name:"滨海湾金沙 The Shoppes",note:"Chanel/爱马仕/卡地亚旗舰店，建筑本身值得一看"},
+{name:"武吉士街 Bugis Street",note:"平价潮流服饰、配饰、纪念品，可砍价，年轻人多"},
+{name:"牛车水",note:"传统店铺、中国古董、传统服装小饰品，逛完顺带吃小贩中心"},
+{name:"慕斯达法中心 Mustafa（小印度）",note:"24小时6层楼，零食/3C/名产一站式，近花拉公园地铁NE8"},
+{name:"星耀樟宜 Jewel",note:"离境前最后一站，40米雨漩涡免费看"}],
+souvenirs:[
+{name:"Bengawan Solo 斑斓戚风蛋糕",note:"国民蛋糕；机场离境店免7%消费税更便宜，保质期短、登机前买",star:true},
+{name:"松发肉骨茶包",note:"iShopChangi 线上免税店最便宜（约S$23.85），比门市/超市价低",star:true},
+{name:"咖椰酱 kaya",note:"南洋早餐灵魂，涂面包百搭"},
+{name:"IRVINS 咸蛋黄鱼皮",note:"新加坡现象级零食，送人不出错"},
+{name:"TWG 茶",note:"包装精美，送礼体面"},
+{name:"叻沙泡面 / 海南鸡饭酱料",note:"把新加坡的味道带回家"},
+{name:"林志源 / 美珍香肉干",note:"老字号；注意目的地海关对肉制品的规定"},
+{name:"虎标万金油",note:"经典药油，家家必备"},
+{name:"Charles & Keith（小CK）",note:"新加坡本土品牌，价格比国内便宜"}],
+tips:[
+"FairPrice（樟宜T3/T2的B2有店）是补货伴手礼最划算的超市，比景区店便宜",
+"机场离境区买伴手礼免7%消费税；市区单店单日购满100新币可办退税（政策以官方为准）"]},
+"曼谷":{
+lead:"购物火力最强的一站：商场+市场+Big C 超市三线作战，伴手礼建议最后1–2天集中扫货。",
+malls:[
+{name:"ICONSIAM 暹罗天地",note:"湄南河畔，泰国工艺+高端品牌，建筑本身必看"},
+{name:"Siam Paragon 暹罗百丽宫",note:"奢华购物，国际大牌+大型美食市场+水族馆"},
+{name:"CentralWorld",note:"东南亚最大之一，潮流品牌+科技区+溜冰场，对面就是Big C"},
+{name:"MBK Center",note:"8层平价商场，服装到电子产品，记得砍价"},
+{name:"Terminal 21",note:"每层一个城市主题（东京/巴黎），餐厅多"},
+{name:"恰图恰周末市场 Chatuchak",note:"15000+摊位，周末限定，穿舒适鞋、带足水"},
+{name:"Asiatique 河滨夜市",note:"夜市+购物中心结合，看湄南河日落"},
+{name:"Big C Supercenter（Ratchadamri店）",note:"CentralWorld对面，BTS Chit Lom站，伴手礼一站式扫货，开到晚上12点"}],
+souvenirs:[
+{name:"手标泰奶茶叶 ChaTraMue",note:"金色包装茶味更浓；Big C大罐约150–200泰铢",star:true},
+{name:"皇家计划 Doi Kham 芒果干 / 蜂蜜",note:"条状蜂蜜方便携带送礼，芒果干不踩雷",star:true},
+{name:"冬阴功腰果 / 大哥大花生",note:"Big C零食区必拿"},
+{name:"MAMA 泡面（船面/粉红面）",note:"路边摊系列口味，国内买不到"},
+{name:"Pocky 泰国限定口味",note:"香蕉、泰奶味等，只在泰国卖"},
+{name:"Soffell 驱蚊液",note:"热带出行刚需，泰国买最便宜"},
+{name:"蛇牌爽身粉",note:"洗完澡用凉凉的，经典老牌"},
+{name:"Counterpain 酸痛膏",note:"逛累了的救星"},
+{name:"Hong Thai 鼻通",note:"提神神器，BLACKPINK Lisa同款"},
+{name:"Jim Thompson 泰丝",note:"品质保证的泰丝品牌"},
+{name:"THANN 香氛",note:"泰式SPA香氛，送人体面"}],
+tips:[
+"Big C 建议行程最后1–2天去，先看行李还剩多少空间",
+"泰国单店购满2000泰铢可办VAT退税（政策以官方为准）",
+"夜市/市场可砍价，商场明码标价",
+"含肉制品（如肉松米饼）注意中国海关规定，谨慎携带"]},
+"普吉":{
+lead:"海岛节奏：大商场补给+老镇步行街淘手工艺，腰果和锡器是普吉限定的两样。",
+malls:[
+{name:"Central Phuket（+连廊对接 Central Floresta）",note:"岛上最大购物中心，400+店铺，Central百货、B2S书店，Aquaria水族馆（泰国最大之一）"},
+{name:"普吉老镇周日步行街 Lard Yai（Thalang路）",note:"每周日16:00–22:00，中葡骑楼，手工艺品+街头小吃，带现金"},
+{name:"OTOP 市场",note:"One Tambon One Product，各府特色手工艺品"},
+{name:"Chillva Market",note:"年轻人创意市集（周四–周六），氛围轻松"},
+{name:"Naka 周末市场",note:"周六日，当地美食+手工艺，价格实在"}],
+souvenirs:[
+{name:"普吉腰果",note:"当地特产，多种口味（冬阴功味最受欢迎）",star:true},
+{name:"锡器",note:"普吉19世纪锡矿开采历史，锡制工艺品是特色纪念品",star:true},
+{name:"蠟染（batik）织物",note:"娘惹风情印花，桌布/围巾都好看"},
+{name:"手工珠宝",note:"老镇小店多，可慢慢挑"},
+{name:"椰子油 / 手工皂",note:"天然原料，送人实用"},
+{name:"泰式咖喱酱 / 鱼露 / 干香料",note:"会做饭的值得带回家复刻泰餐"}],
+tips:[
+"夜市多收现金，备小额泰铢",
+"砍价可从50–70%开价，保持友好微笑",
+"锡器/陶瓷易碎，托运前二次密封"]},
+"清迈":{
+lead:"手工艺之城：银器、木雕、纺织品是三大件，瓦洛洛市场看本地人怎么买东西。",
+malls:[
+{name:"瓦洛洛市场 Warorot",note:"当地人市场，清晨到晚上，农产品+香料+小吃+手工艺品，价格实在"},
+{name:"周日步行街（塔佩门–帕辛寺）",note:"周日16:00–午夜，规模最大；21:30后人少好逛，记得砍价"},
+{name:"周六步行街",note:"同一条路，更本地的氛围"},
+{name:"宁曼路 / One Nimman",note:"年轻文艺，现代设计师品牌、画廊、咖啡馆"},
+{name:"Baan Kang Wat",note:"手工艺村，匠人工作室集中"},
+{name:"Maya / Central Festival",note:"大型现代商场，补货国际品牌"}],
+souvenirs:[
+{name:"银器",note:"清迈银饰出名，部分店铺可看工匠现场制作",star:true},
+{name:"木雕",note:"兰纳传统工艺，寺庙同款风格",star:true},
+{name:"手工编织纺织品 / 丝巾",note:"泰北织纹有辨识度"},
+{name:"陶瓷",note:"手工陶器，餐具花瓶都值得看"},
+{name:"泰北香肠 sai ua",note:"现吃为主；带走注意保质期"},
+{name:"香薰 / 精油 / 手工皂",note:"SPA氛围带回家"},
+{name:"乳胶枕",note:"认准正规店"}],
+tips:[
+"手工艺品可小幅砍价，摊贩多只收现金",
+"周日步行街人最多，想慢慢逛21:30后再去"]},
+"槟城":{
+lead:"乔治市骑楼店慢慢淘，Gurney Plaza 一站式补货。",
+malls:[
+{name:"乔治市骑楼店",note:"老街骑楼小店，娘惹工艺与老字号集中"},
+{name:"Gurney Plaza",note:"大型现代商场，品牌齐全"}],
+souvenirs:[
+{name:"豆蔻制品",note:"槟城特色，豆蔻膏/豆蔻水",star:true},
+{name:"白咖啡",note:"旧街场等老字号，送人方便",star:true},
+{name:"娘惹工艺",note:"串珠鞋、娘惹瓷器等"}],
+tips:[]},
+"吉隆坡":{
+lead:"Pavilion、双子塔、中央市场一条线：现代商场+手工艺市场都cover。",
+malls:[
+{name:"Pavilion（武吉免登）",note:"高端商场，品牌全"},
+{name:"Suria KLCC（双子塔下）",note:"地标商场，顺带看双子塔"},
+{name:"中央市场",note:"有空调、能议价，买本地手工艺最体面的地方"}],
+souvenirs:[
+{name:"锡器",note:"皇家雪兰莪等品牌，马来西亚国礼级",star:true},
+{name:"巴迪布",note:"蜡染花布，服饰家品都有",star:true},
+{name:"本地设计",note:"独立设计师小店值得淘"}],
+tips:[]},
+"胡志明市":{
+lead:"同起街看橱窗，本地市场看生活；滨城市场只看建筑。",
+malls:[
+{name:"同起街",note:"奢侈品商业街，顺路看一眼即可"},
+{name:"Tan Dinh / Binh Tay（平西）",note:"本地人市场，比滨城实在"}],
+souvenirs:[
+{name:"咖啡",note:"越南咖啡（G7/中原），送人高频",star:true},
+{name:"腰果 / 椰子糖",note:"越南风味零食",star:true}],
+tips:["滨城市场只看钟楼建筑，别当购物点：游客价、品质参差"]},
+"富国岛":{
+lead:"阳东镇正规商店为主，夜市吃小吃别押宝海鲜大餐。",
+malls:[
+{name:"阳东镇正规商店",note:"明码标价，比夜市省心"}],
+souvenirs:[
+{name:"鱼露",note:"富国岛鱼露出名，注意托运密封",star:true},
+{name:"胡椒",note:"富国岛胡椒品质好",star:true}],
+tips:["夜市先问价再下单","鱼露与易碎品托运前二次密封"]}
+};
+
+
 /* 跨城航段与八城市内交通（行程页与交通页共用） */
 export const legs=[['抵达曼谷','国际航班','抵达日仅排下午项目'],['曼谷 → 清迈','约1小时','建议上午直飞'],['清迈 → 普吉','约2小时','直飞，落地后只排海滩'],['普吉 → 槟城','经吉隆坡','避免过短中转'],['槟城 → 吉隆坡','约1小时','短途航班'],['吉隆坡 → 胡志明市','约2小时','越南需电子签'],['胡志明市 → 富国岛','约1小时','国内短途'],['富国岛 → 新加坡','经胡志明市','预留中转'],['新加坡 → 美国','长途航班','以实际航班为准']];
 export const cityMobility:Record<string,[string,string,string]>= {'曼谷':['BTS / MRT / 船','老城寺庙段用河船与步行衔接','高峰时段避开跨城打车'], '清迈':['步行 / Grab','古城寺庙步行，远郊项目单独包车','双龙寺山路预留往返'], '普吉':['接送车 / Grab','出海日以码头接送为主','跨海滩耗时比地图观感长'], '槟城':['步行 / Grab','乔治市核心区步行','升旗山与极乐寺打车串联'], '吉隆坡':['轨道 / Grab','KLCC与武吉免登轨道覆盖','雨天用商场连廊'], '胡志明市':['Grab / 步行','第一郡核心步行','过马路保持稳定速度'], '富国岛':['Grab / 酒店车','南北岛距离长，不频繁折返','出海日只排一条主线'], '新加坡':['MRT / 步行','主景点轨道覆盖','带娃时减少换乘']};
