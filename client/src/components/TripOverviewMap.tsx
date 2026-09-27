@@ -58,7 +58,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       zoomControl: true,
       scrollWheelZoom: false,
     });
-    // Esri 底图（2026-09-27 高德反爬回退）；LL() 当前为 WGS-84 透传
+    // Google 中文底图（2026-09-27 用户要求中文标注，高德反爬废弃）；WGS-84 无需转换
     addAmapTiles(map);
 
     // 全屏/窗口尺寸变化时自动重算（2026-09-27 全屏空白修复）

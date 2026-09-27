@@ -55,13 +55,13 @@ export function LL(lat: number, lng: number): L.LatLng {
   return L.latLng(lat, lng);
 }
 
-/** 地图底图：Esri World Street Map（高德 appmaptile 自 2026-09-27 起返回空白图，已废弃） */
+/** 地图底图：Google Maps 中文标注（hl=zh-CN）。2026-09-27 用户要求中文地图；高德 appmaptile 反爬返回空白图已废弃，Esri 为英文标注。Google 用 WGS-84，无需坐标转换。 */
 export function addAmapTiles(map: L.Map): L.TileLayer {
   return L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    "https://mt{s}.google.com/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}",
     {
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
+      subdomains: "0123",
+      attribution: "&copy; Google Maps",
       maxZoom: 19,
     },
   ).addTo(map);
