@@ -225,7 +225,7 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
           </Section>
         )}
 
-        {/* 景点：人像机位 */}
+        {/* 景点：最佳机位 */}
         {kind === "attraction" && <PhotoSpotsPanel item={item} />}
 
         {/* 餐厅：米其林完整说明 */}

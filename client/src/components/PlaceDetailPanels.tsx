@@ -15,7 +15,7 @@ import {
   type GuideKind,
 } from "@/guide/research";
 import { bangkokOta } from "@/guide/bangkokOta";
-import { getPhotoSpots } from "@/guide/attractionPhotoSpots";
+import { getPhotoSpots, getPortraitSpots, type PhotoSpot } from "@/guide/attractionPhotoSpots";
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import { usePaged } from "@/guide/density";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
@@ -369,67 +369,110 @@ export function PreTripChecklistPanel({ kind }: { kind: DetailKind }) {
   );
 }
 
-/** 人像机位（仅景点） */
+/** 机位条目（最佳机位与人像小节复用；研究数据原样展示不改写） */
+function SpotArticle({
+  item,
+  s,
+  i,
+  gallery,
+  portrait,
+}: {
+  item: Item;
+  s: PhotoSpot;
+  i: number;
+  gallery: ReturnType<typeof getPlaceGallery>;
+  portrait?: boolean;
+}) {
+  const photo = s.sampleIndex != null ? gallery[s.sampleIndex] : undefined;
+  return (
+    <article className="border border-gray-200 rounded-lg p-4">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xs font-bold text-white bg-teal-700 rounded-full w-6 h-6 grid place-items-center shrink-0">
+          {i + 1}
+        </span>
+        <h4 className="font-bold text-gray-900">{s.name}</h4>
+        {portrait && (
+          <span className="text-xs font-bold text-pink-700 bg-pink-100 rounded-full px-2 py-0.5 shrink-0">
+            👩 人像
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-gray-700 mb-1">
+        <span className="font-bold">📍 详细位置：</span>
+        {s.where}
+      </p>
+      <p className="text-sm text-gray-700 mb-2">
+        <span className="font-bold">📷 拍摄建议：</span>
+        {s.how}
+      </p>
+      {photo ? (
+        <figure>
+          <img
+            src={photo.src}
+            alt={s.sampleCaption || `${item.name} · ${s.name}样片`}
+            loading="lazy"
+            className="w-full h-44 object-cover rounded-lg"
+          />
+          <figcaption className="text-xs text-gray-400 mt-1">
+            {s.sampleCaption || "样片"} ·{" "}
+            <a
+              href={photo.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-teal-700 underline"
+            >
+              来源：{photo.title} ↗
+            </a>
+          </figcaption>
+        </figure>
+      ) : (
+        <p className="text-xs text-gray-400">
+          该机位暂无视角对得上的样片，图库复核后补上。
+        </p>
+      )}
+    </article>
+  );
+}
+
+/** 最佳机位（仅景点） */
 export function PhotoSpotsPanel({ item }: { item: Item }) {
   const spots = getPhotoSpots(item.city, item.name);
   if (!spots?.length) return null;
   const gallery = getPlaceGallery("景点", item);
+  const portraitSpots = getPortraitSpots(item.city, item.name);
   return (
-    <Section title="📸 人像机位">
+    <Section title="📸 最佳机位">
       <p className="text-xs text-gray-400 mb-3">
-        给同行人拍照用的机位：每个点位都写了人站在哪、面向哪。通用出片要点：上午顺光人脸干净、傍晚黄金时刻适合逆光剪影、背景尽量干净避开杂物；样片只用本站图库里视角对得上的照片。
+        每个机位都写了站在哪、面向哪。给同行人拍人像：优先上午顺光、傍晚黄金时刻，背景尽量干净；小红书实拍验证过的人像机位正在逐条整理，整理好即补入。样片只用本站图库里视角对得上的照片。
       </p>
       <div className="space-y-4">
-        {spots.map((s, i) => {
-          const photo =
-            s.sampleIndex != null ? gallery[s.sampleIndex] : undefined;
-          return (
-            <article
-              key={i}
-              className="border border-gray-200 rounded-lg p-4"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-white bg-teal-700 rounded-full w-6 h-6 grid place-items-center shrink-0">
-                  {i + 1}
-                </span>
-                <h4 className="font-bold text-gray-900">{s.name}</h4>
-              </div>
-              <p className="text-sm text-gray-700 mb-1">
-                <span className="font-bold">📍 详细位置：</span>
-                {s.where}
-              </p>
-              <p className="text-sm text-gray-700 mb-2">
-                <span className="font-bold">📷 拍摄建议：</span>
-                {s.how}
-              </p>
-              {photo ? (
-                <figure>
-                  <img
-                    src={photo.src}
-                    alt={s.sampleCaption || `${item.name} · ${s.name}样片`}
-                    loading="lazy"
-                    className="w-full h-44 object-cover rounded-lg"
-                  />
-                  <figcaption className="text-xs text-gray-400 mt-1">
-                    {s.sampleCaption || "样片"} ·{" "}
-                    <a
-                      href={photo.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-teal-700 underline"
-                    >
-                      来源：{photo.title} ↗
-                    </a>
-                  </figcaption>
-                </figure>
-              ) : (
-                <p className="text-xs text-gray-400">
-                  该机位暂无视角对得上的样片，图库复核后补上。
-                </p>
-              )}
-            </article>
-          );
-        })}
+        {spots.map((s, i) => (
+          <SpotArticle key={i} item={item} s={s} i={i} gallery={gallery} />
+        ))}
+      </div>
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <h3 className="font-bold text-gray-900 mb-2">👩 人像机位</h3>
+        <p className="text-xs text-gray-500 mb-3">
+          给老婆/同行人拍照用的点位：人站在哪、面向哪。以下点位均出自上方机位的实地研究文案（文案里明确写了人像/合影拍法），原样复用、没有新编。
+        </p>
+        {portraitSpots ? (
+          <div className="space-y-4">
+            {portraitSpots.map((s, i) => (
+              <SpotArticle
+                key={i}
+                item={item}
+                s={s}
+                i={i}
+                gallery={gallery}
+                portrait
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-400">
+            该景点的人像机位待补充（需结合小红书人像实拍帖再研究）。
+          </p>
+        )}
       </div>
     </Section>
   );

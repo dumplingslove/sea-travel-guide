@@ -653,7 +653,7 @@ function wzStep1(){
       ${wzCovPreview(city)}
     </article>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 1/4</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 1/3</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。8 城全选即经典 20 天大环线（曼谷3·清迈2·普吉3·槟城2·吉隆坡2·胡志明市2·富国岛3·新加坡3）。</p></div>
     <div class="wz-quick"><button class="ghost" id="wzAll">8城全选</button><button class="ghost" id="wzClear">清空</button></div></div>
     <div class="wz-city-grid">${cards}</div>
     <div class="wz-nav"><span class="micro">已选 <b>${wz.cities.length}</b> 城</span><button class="primary" id="wzNext1">下一步：定天数 →</button></div>`;
@@ -699,7 +699,7 @@ function wzStep2(){
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天">＋</button></div></div>`;
   }).join("");
   const total=wz.order.filter(c=>wz.cities.includes(c)).reduce((a,c)=>a+(wz.days[c]||1),0);
-  return `<div class="section-head"><div><p class="eyebrow">STEP 2/4</p><h2>定每城天数</h2><p class="lede">1–6 天可调；评语与覆盖数来自各城经典路线（1–5天版本）。</p></div></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；评语与覆盖数来自各城经典路线（1–5天版本）。</p></div></div>
     ${rows}
     <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天${total>20?`（超过20天，按起始日顺延）`:""}</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>`;
 }
@@ -719,7 +719,7 @@ function wzStep3(){
     if(!notes.length) return "";
     return `<div class="wz-leg warn"><strong>${r.city} · ${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")}</strong><p>${notes.map(n=>`⚠ ${esc(n)}`).join("<br>")}</p></div>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 3/4</p><h2>定具体日期</h2><p class="lede">调顺序用 ↑ ↓；改起始日后日期自动顺延。每段转场按当天星期查直飞，每城日期段自动检查适宜度。</p></div></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>定具体日期</h2><p class="lede">调顺序用 ↑ ↓；改起始日后日期自动顺延。每段转场按当天星期查直飞，每城日期段自动检查适宜度。</p></div></div>
     <div class="field field-block"><label for="wzStart">起始日期</label><input id="wzStart" type="date" min="2026-12-01" max="2026-12-31" value="${wz.start}"></div>
     ${orderRows}
     <h3 class="sec-title">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}

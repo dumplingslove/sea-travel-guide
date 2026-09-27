@@ -36,5 +36,18 @@ export function getPhotoSpots(city:string,name:string):PhotoSpot[]|undefined{
   return citySpots[city]?.[name];
 }
 
+/** 人像关键词：只认机位自身研究文案里明确写了的人像/合影类拍法 */
+const PORTRAIT_RE=/人像|合影|摆拍|借位|写真/;
+/**
+ * 人像机位：从已有研究机位中筛出文案自带人像拍法的条目，原样复用（不改写、不编造）。
+ * 没有命中时返回 undefined，UI 显示"待补充"。
+ */
+export function getPortraitSpots(city:string,name:string):PhotoSpot[]|undefined{
+  const spots=getPhotoSpots(city,name);
+  if(!spots?.length)return undefined;
+  const matched=spots.filter((s)=>PORTRAIT_RE.test(`${s.name} ${s.where} ${s.how}`));
+  return matched.length?matched:undefined;
+}
+
 export const photoSpotAttractionCount=Object.values(citySpots).reduce((n,c)=>n+Object.keys(c).length,0);
 export const photoSpotCount=Object.values(citySpots).reduce((n,c)=>n+Object.values(c).reduce((m,s)=>m+s.length,0),0);

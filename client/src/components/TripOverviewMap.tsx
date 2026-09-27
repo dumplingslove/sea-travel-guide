@@ -167,10 +167,17 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
           </button>
         </div>
       )}
+      {/*
+        地图容器 className 必须保持静态：Leaflet 初始化时会往容器上加
+        leaflet-touch-drag / leaflet-touch-zoom 等 class（决定 touch-action，
+        手机双指缩放靠它）。之前这里用 expanded 拼 className，点全屏那一下
+        React 重写 class 会把 Leaflet 的标记清掉，全屏后双指就被浏览器劫持、
+        地图收不到手势（加减按钮不受影响）。高矮差异走 style，不碰 className。
+      */}
       <div
         ref={mapEl}
-        className={`leaflet-container w-full z-0 ${expanded ? "flex-1 min-h-0" : ""}`}
-        style={expanded ? undefined : { height: 300 }}
+        className="leaflet-container w-full z-0"
+        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: 300 }}
       />
       {!expanded && (
         <>
