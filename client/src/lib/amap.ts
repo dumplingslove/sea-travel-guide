@@ -57,7 +57,7 @@ export function LL(lat: number, lng: number): L.LatLng {
 
 /** 地图底图：Google Maps 中文标注（hl=zh-CN）。2026-09-27 用户要求中文地图；高德 appmaptile 反爬返回空白图已废弃，Esri 为英文标注。Google 用 WGS-84，无需坐标转换。 */
 export function addAmapTiles(map: L.Map): L.TileLayer {
-  return L.tileLayer(
+  return new RetryTileLayer(
     "https://mt{s}.google.com/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}",
     {
       subdomains: "0123",
@@ -65,4 +65,56 @@ export function addAmapTiles(map: L.Map): L.TileLayer {
       maxZoom: 19,
     },
   ).addTo(map);
+}
+
+/**
+ * 带失败重试的瓦片层（2026-09-27 全屏空白根因修复）。
+ *
+ * 根因（curl 实测，非推测）：Google mt*.google.com/vt 在突发高并发下会大面积杀连接
+ * ——120 并发请求 86 个连接直接失败（curl 000），40 并发则 40/40 成功。
+ * 全屏切换时 refit() 的 fitBounds 在更大的容器里算出更高 zoom，一次性请求上百张
+ * 新瓦片 → 大量连接被杀。而 Leaflet 1.9 的 GridLayer 对失败瓦片永不重试
+ * （_update 只看 _tiles 里有没有 key，有就直接复用），失败的瓦片永久留白；
+ * 退出全屏时 zoom 跳变再次突发 + 坏瓦片被 _retainChildren 留住盖住好瓦片，
+ * 所以退出后也不恢复。标记/路线不走网络故不受影响——与两次真机实测现象完全吻合。
+ * 之前 a00853f 的 invalidateSize 之所以无效，是因为问题根本不在尺寸刷新，
+ * 而在瓦片请求被服务端杀掉且永不重试。
+ *
+ * 修法：tileerror 后退避重试（最多 3 次，约 0.9s/1.8s/2.7s），错开突发窗口；
+ * 成功后走原 _tileOnLoad → _tileReady 流程淡入，无需动 _tiles bookkeeping。
+ */
+class RetryTileLayer extends L.TileLayer {
+  private retryTimers: number[] = [];
+
+  onAdd(map: L.Map): this {
+    super.onAdd(map);
+    this.on("tileerror", this.retryTile, this);
+    return this;
+  }
+
+  onRemove(map: L.Map): this {
+    this.off("tileerror", this.retryTile, this);
+    for (const t of this.retryTimers) window.clearTimeout(t);
+    this.retryTimers = [];
+    super.onRemove(map);
+    return this;
+  }
+
+  private retryTile(e: L.TileErrorEvent): void {
+    const tile = e.tile as HTMLImageElement & { _retryCount?: number };
+    const used = tile._retryCount ?? 0;
+    if (used >= 3) return;
+    tile._retryCount = used + 1;
+    const timer = window.setTimeout(
+      () => {
+        // 瓦片仍在 DOM 里才重发；img 上的 load/error 监听还在，
+        // 成功会走正常 _tileReady 淡入流程
+        if (tile.isConnected) {
+          tile.src = this.getTileUrl(e.coords);
+        }
+      },
+      900 * (used + 1),
+    );
+    this.retryTimers.push(timer);
+  }
 }
