@@ -1,6 +1,6 @@
 /** 按行程实际住宿日期实查的酒店价格（USD）。
  * 数据来源：Trip.com 房型级实时价格，2 成人 1 间。
- * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）。
+ * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）。
  * 价格为动态数据：行程日期变化或定期刷新时由 hotel-price-watch 任务重查并更新本文件。
  * 键必须与 data.ts 酒店名逐字一致（含中文后缀）。
  */
@@ -151,16 +151,16 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-25 03:22 UTC',
  },
  'Shangri-La Singapore 香格里拉': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Tower Wing Deluxe King', perNightUSD: 360, totalUSD: 1295, totalInclTax: true, cancel: '早鸟不可退；免费取消价 $450/晚（12-28 18:00 前）', breakfast: '不含早（+ $40.35/人可选）' },
-  suite: null, suiteNote: '该日期未找到可订套房',
-  source: 'Trip.com', checkedAt: '2026-09-25 03:25 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Tower Wing Deluxe King Room（409平方英尺，城市景观）', perNightUSD: 271, totalUSD: 1355, totalInclTax: false, cancel: '不可退（早鸟预付价）', breakfast: '不含早（+$40.40/人可选）', note: '总价页面未显示（按每晚价×5估算，税费另计）；免费取消替代价$338/晚（12-11 18:00前，到店付款）；First booking offer促销' },
+  suite: null, suiteNote: '该日期 Trip.com 上无可订套房（已展开全部房型）',
+  source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
  },
  'The Fullerton Hotel Singapore 新加坡富丽敦酒店': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Premier Courtyard Room', perNightUSD: 758, totalUSD: 2728, totalInclTax: true, cancel: '预付不可退（多晚连住价）', breakfast: '不含早' },
-  suite: { room: 'Premier Collyer Suite（65㎡）', perNightUSD: 2835, totalUSD: 8505, totalInclTax: false, cancel: '预付不可退', breakfast: '含双早', note: '总价为税前小计；仅剩 4 间' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:35 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Premier Courtyard Room（452平方英尺，1张大床）', perNightUSD: 329, totalUSD: 1793, totalInclTax: true, cancel: '不可退（预付）', breakfast: '不含早', note: '多晚连住专享价·今日最优价；Marina Bay View Room $480仅剩5间；Esplanade Room King $499仅剩2间' },
+  suite: null, suiteNote: '本轮未及核查（浏览器会话在展开剩余房型时中断）',
+  source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
  },
  'The Ritz-Carlton, Millenia Singapore': {
   checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
@@ -331,10 +331,10 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-26 15:14 UTC',
  },
  'Capella Singapore': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Premier King Room With Garden View', perNightUSD: 1522, totalUSD: 4978, totalInclTax: true, cancel: '12-26 12:00前免费取消', breakfast: '不含早（+$63.83/人可选；含早价$1,562/晚）' },
-  suite: { room: 'Sentosa Suite', perNightUSD: 1740, totalUSD: 5690, totalInclTax: true, cancel: '12-26 12:00前免费取消', breakfast: '不含早（+$63.83/人可选；含早价$1,779/晚）', note: '该价仅剩5间' },
-  source: 'Trip.com', checkedAt: '2026-09-26 15:11 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Premier King Room With Garden View（828平方英尺，花园景观）', perNightUSD: 1218, totalUSD: 6090, totalInclTax: false, cancel: '12月9日18:00前免费取消（到店付款）', breakfast: '不含早（+$63.83/人可选）', note: '到店付款价；5晚总价页面未显示（按每晚价×5估算，税费另计）；预付替代价$1,340/晚（5晚含税$7,303，12-8前免费取消）' },
+  suite: { room: 'Sentosa Suite（925平方英尺，海景）', perNightUSD: 1581, totalUSD: 7905, totalInclTax: false, cancel: '12月9日18:00前免费取消（到店付款）', breakfast: '不含早（+$63.83/人可选）', note: '总价按每晚价×5估算；预付价$1,740/晚（12-8前免费取消，仅剩5间）；One Bedroom Garden Villa同价$1,581–$1,740（别墅非套房）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
  },
  'Raffles Singapore': {
   checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
@@ -343,10 +343,10 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-26 15:11 UTC',
  },
  'Marina Bay Sands': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: null, suite: null,
-  unavailable: '该日期无可订房：Trip.com明确显示所选日期无空房，且该日期段要求至少连住4晚（3晚不符合要求）',
-  source: 'Trip.com', checkedAt: '2026-09-26 15:11 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Sands Premier King（484平方英尺，2–12层）', perNightUSD: 741, totalUSD: 4036, totalInclTax: true, cancel: '12月10日23:59前免费取消（预付）', breakfast: '含双早', note: '多晚连住专享价·早鸟价；Sands Premier Double Queen同$741/晚，仅剩4间' },
+  suite: { room: 'Sands Bay Suite King Gardens By The Bay View（871平方英尺，6–34层）', perNightUSD: 1391, totalUSD: 6955, totalInclTax: false, cancel: '12月10日23:59前免费取消（预付）', breakfast: '含双早', note: '总价页面未显示（按每晚价×5估算）；$1,464/晚另含单程机场接送+套房礼遇；多款高阶房型仅剩1间' },
+  source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
  },
 };
 
