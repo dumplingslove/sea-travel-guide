@@ -20,6 +20,7 @@ import {
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
+import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { Flights, HotelCatalog, RestaurantCatalog, Transport, usePlanScope, planDateShort } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
@@ -279,6 +280,12 @@ function BookingsInner() {
       summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」只显示行程规划里定好的城市和日期（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
       <SyncBanner mode={syncMode} />
+
+      {/* 每日预订动态横幅：三个每日任务的最新结果汇总，点每行跳到对应菜单看明细 */}
+      <DailyDigestBanner
+        scopeCities={scoped ? planCities : undefined}
+        onJump={setMenu}
+      />
 
       {scoped && (
         <div className="mb-4 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">

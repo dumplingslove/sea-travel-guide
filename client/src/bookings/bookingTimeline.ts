@@ -52,7 +52,7 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 3 段城际 + 3 段国际（西安→新加坡、清迈→北京、清迈→西安）。本轮 2026-09-27 02:46 PDT 实查刷新：XIY→SIN、BKK→CNX、CNX→PEK；SIN→HKT、HKT→BKK、CNX→XIY 本轮未查到（Duffel 搜索预算 3 次/轮已用完），保留 2026-09-27 02:17/02:40 PDT 上一轮快照。 */
+/** 3 段城际 + 3 段国际（西安→新加坡、清迈→北京、清迈→西安）。用户要求只看直飞：options 仅保留 stops=0，无直飞的段 options 为空。本轮 2026-09-27 02:46 PDT 实查刷新：XIY→SIN、BKK→CNX、CNX→PEK；SIN→HKT、HKT→BKK、CNX→XIY 本轮未查到（Duffel 搜索预算 3 次/轮已用完），保留 2026-09-27 02:17/02:40 PDT 上一轮快照。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out",
@@ -70,9 +70,6 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     queriedAt: "2026-09-27 02:46 PDT",
     priceBasis: "1成人单价",
     options: [
-      { carrier: "Air China", flight: "CA1230+CA0975", depart: "19:30", arrive: "06:50", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 172.70, refundable: "no", changeable: "yes" },
-      { carrier: "Air China", flight: "CA1236+CA0889", depart: "20:35", arrive: "16:15", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 172.70, refundable: "no", changeable: "yes" },
-      { carrier: "Shenzhen Airlines", flight: "ZH9204+ZH0227", depart: "14:10", arrive: "02:00", arrivePlusDay: true, stops: 1, via: "深圳", bags: "1件", price: 188.80, refundable: "no", changeable: "yes" },
       { carrier: "Scoot（Hahn Air 出票）", flight: "TR0135", depart: "01:55", arrive: "07:50", stops: 0, bags: "1件", price: 289.40, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天唯一真直飞，5小时55分；01:55红眼出发、07:50当天抵达，Day 1 整天可用；比最便宜中转只贵约$117" },
     ],
   },
@@ -185,9 +182,6 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "1成人单价",
     options: [
       { carrier: "Air China", flight: "CA0824", depart: "23:05", arrive: "04:20", arrivePlusDay: true, stops: 0, bags: "1件", price: 226.60, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天唯一真直飞且最低价；23:05红眼、04:20到北京，4小时15分；凌晨到需提前安排接机/酒店入住" },
-      { carrier: "Thai Airways", flight: "TG0121+TG0674", depart: "21:10", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0111+TG0674", depart: "15:25", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
-      { carrier: "Thai Airways", flight: "TG0105+TG0674", depart: "12:15", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
     ],
   },
   {
@@ -197,19 +191,15 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-24",
     day: 13,
     kind: "intl",
-    note: "回程国际段（妻子回西安）；Day 13（12-24）在清迈结束，当天或次日离开；当天无直飞；本轮未查到（2026-09-27 02:46 PDT，Duffel 搜索预算 3 次/轮已用完），保留上一轮快照",
-    carrier: "China Southern Airlines CZ3034+CZ3201",
-    schedule: "18:50→10:00+1（经广州）",
-    priceNote: "1人 $280.00 起",
+    note: "回程国际段（妻子回西安）；Day 13（12-24）在清迈结束；Duffel 2026-09-27 02:40 PDT 实查当天无直飞，按用户要求只保留直飞选项，本段暂无可选直飞",
+    carrier: null,
+    schedule: null,
+    priceNote: "暂无直飞",
     direct: false,
     fragile: false,
     queriedAt: "2026-09-27 02:40 PDT",
     priceBasis: "1成人单价",
     options: [
-      { carrier: "China Southern Airlines", flight: "CZ3034+CZ3201", depart: "18:50", arrive: "10:00", arrivePlusDay: true, stops: 1, via: "广州", bags: "2件", price: 280.00, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "无直飞里最便宜且可退改，含2件托运行李；经广州中转14小时10分，18:50出发不赶早" },
-      { carrier: "China Southern Airlines", flight: "CZ3034+CZ3219", depart: "18:50", arrive: "14:35", arrivePlusDay: true, stops: 1, via: "广州", bags: "2件", price: 280.00, refundable: "yes", changeable: "yes" },
-      { carrier: "Air China", flight: "CA0824+CA1231", depart: "23:05", arrive: "09:20", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 340.20, refundable: "no", changeable: "yes" },
-      { carrier: "Air China", flight: "CA0824+CA1289", depart: "23:05", arrive: "11:00", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 340.20, refundable: "no", changeable: "yes" },
     ],
   },
 ];
