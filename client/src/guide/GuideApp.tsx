@@ -224,7 +224,75 @@ export function RestaurantCatalog({onBook}:{onBook?:OnBook}){
 
 export function Flights({onBook}:{onBook?:OnBook}){const curLegs:[string,string,string][]=[['→ 新加坡','国际航班','去程国际段待定；Day 1（12-12）当天必须抵达新加坡'],['新加坡 → 普吉','城际直飞','D6转场（12-17）；实时价格见「预订行动」时间线'],['普吉 → 曼谷','城际直飞','D9转场（12-20）；实时价格见「预订行动」时间线'],['曼谷 → 清迈','城际直飞','D12转场（12-23）；实时价格见「预订行动」时间线'],['清迈 / 曼谷 →','国际航班','回程国际段待定；Day 13（12-24）在清迈结束']];const legPager=usePaged(curLegs,5,'个航段');return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="五段移动按单向路线排布。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进“我的预订”</p></div><div className="flightsummary"><article><b>5</b><span>个航段</span></article><article><b>3</b><span>段城际直飞</span></article><article><b>2</b><span>入境国家（新加坡、泰国）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=curLegs.indexOf(l);const dd=legDateDay[i];return <article key={l[0]}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l[0]}</h3><strong>{l[1]}</strong><p>{l[2]}</p><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l[0],date:dd?.[0],day:dd?.[1]??null})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>当前行程 2026-12-12～12-24（13天4城）；不含实时航班数据，实时价格见「预订行动」时间线</Source></div>}
 
-export function Transport(){const [mcity,setMcity]=useState(cities[0]!);return <div className="page"><PageHero eyebrow="GROUND PLAN" title="交通指南" summary="跨城航段与八城落地方式分开看：先锁定主线，再为每个城市选择最低摩擦的移动组合。" image={klImg}/><section className="sectionblock"><div className="sectiontitle"><h2>跨城衔接</h2><p>所有时间均为行程规划参考，不代替出票信息</p></div><div className="transportlist">{legs.slice(1,-1).map((l,i)=><article key={l[0]}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{l[0]}</h3><p>{l[1]}</p></div><b>{l[2]}</b></article>)}</div></section><section className="mobility"><div className="sectiontitle"><span>ON THE GROUND</span><h2>八城落地策略</h2><p>切换城市，一次只看一城的移动组合</p></div><CityTabs city={mcity} setCity={setMcity} label="交通城市切换"/><div className="mobilitysingle"><article key={mcity}><header style={{background:accents[mcity]}}><b>{mcity}</b><span>{cityMobility[mcity]?.[0]}</span></header><p>{cityMobility[mcity]?.[1]}</p><small>{cityMobility[mcity]?.[2]}</small></article></div></section><section className="darkpanel"><h2>交通底线</h2><div><article><h3>海岛出行</h3><p>船班受海况影响，贵重物品放防水袋，不把次日早班机排得过紧。选船看人：大船稳、长尾船慢有味道、快艇快但颠；易晕船提前吃药选大船。</p></article><article><h3>机场衔接</h3><p>跨国航班与托运行李需要更长缓冲；出票后再固化当天时间线。</p></article><article><h3>网约车</h3><p>按 App 显示车牌核对，机场与码头上车点提前确认。</p></article><article><h3>步行日</h3><p>热带正午把室外长距离拆开，以室内馆、咖啡或酒店休息降温。</p></article></div></section></div>}
+export function Transport(){const [mcity,setMcity]=useState(cities[0]!);
+ const flightLegs:{route:string;time:string;airlines:string;tip:string}[]=[
+  {route:'曼谷 → 清迈',time:'直飞约1小时15分',airlines:'亚航(AirAsia)、曼谷航空、泰航微笑',tip:'亚航班次最多最便宜（Skytrax连续16年全球最佳廉航）；曼谷航空是精品航司，含免费行李+餐食，体验好。建议上午飞，下午游古城。'},
+  {route:'清迈 → 普吉',time:'直飞约2小时',airlines:'亚航直飞',tip:'亚航有直飞，别选经停曼谷的。落地普吉后只排海滩/酒店，周转别太紧。'},
+  {route:'普吉 → 槟城',time:'经吉隆坡中转约4-5小时',airlines:'亚航（普吉-吉隆坡-槟城）',tip:'无直飞，亚航经吉隆坡中转最顺。避免中转时间<2小时，行李直挂要确认。'},
+  {route:'槟城 → 吉隆坡',time:'直飞约1小时',airlines:'亚航、马航、Firefly',tip:'三家都飞，亚航最便宜；Firefly用苏丹机场(SZB)离市区近。短途随便选，看时间。'},
+  {route:'吉隆坡 → 胡志明市',time:'直飞约2小时',airlines:'亚航、越捷、越南航空',tip:'亚航班次密；越南航空是全服务含行李餐食。提前办好越南电子签，值机时查验。'},
+  {route:'胡志明市 → 富国岛',time:'直飞约1小时',airlines:'越捷、越南航空、竹航',tip:'越捷最便宜但准点率一般；越南航空稳。富国岛机场小，落地后酒店多有接送。'},
+  {route:'富国岛 → 新加坡',time:'经胡志明市中转约4-5小时',airlines:'越捷/越南航空（经SGN）',tip:'无直飞，经胡志明市中转。预留3小时+中转缓冲，国际转国际要重新安检。'},
+ ];
+ const cityDetail:Record<string,{title:string;sections:{h:string;p:string}[]}>={
+  '曼谷':{title:'BTS+MRT是命，船是彩蛋',sections:[
+   {h:'🚇 BTS/MRT（首选）',p:'BTS空铁16-59泰铢，MRT地铁16-42泰铢，06:00-24:00。Rabbit卡/Token/银行卡感应都行。暹罗、奇隆、阿索克等商圈全覆盖，堵车时段唯一靠谱选择。'},
+   {h:'🚕 Grab/Bolt打车',p:'Grab英文界面、固定价、可刷卡，不用跟司机扯皮。Bolt车少但通常比Grab便宜10-20%。高峰期堵车严重，短途不如地铁。出租车起步40泰铢，务必确认"by meter"打表，备泰文地址。'},
+   {h:'🚤 昭披耶河船（必体验）',p:'橘旗船16泰铢全程，大皇宫、卧佛寺、郑王庙、IconSiam一串全到，比打车快还便宜。蓝旗观光船45泰铢。09:15-15:00橘旗停运改黄旗。码头现金购票。'},
+   {h:'✈️ 机场进城',p:'BKK素万那普：机场快线ARL 45泰铢30分钟到Phaya Thai转BTS，最划算；人多行李多就Grab约300-500泰铢。DMK廊曼：A1公交30泰铢到Mo Chit转BTS，或SRT红线。'},
+   {h:'🛺 嘟嘟车',p:'体验一次就行，上车前必议价，司机会绕路去购物点拿回扣。短途代步可以，长途别坐，又晒又贵。'}]},
+  '清迈':{title:'古城靠走，远郊包车',sections:[
+   {h:'🚶 古城步行',p:'古城1.5km见方，寺庙全靠走。塔佩门、契迪龙、帕辛寺步行串联最舒服。'},
+   {h:'🛺 双条车/ Grab',p:'双条车招手即停，古城内30-50泰铢/人，讲价。Grab覆盖全城，去宁曼路、瓦洛洛市场都方便。'},
+   {h:'🚗 远郊包车',p:'双龙寺、清莱白庙、大象营都在郊外，包车半天约1500-2500泰铢，酒店前台或Klook订。双龙寺山路18弯，包车比自驾省心。'},
+   {h:'💡 小贴士',p:'清迈打车不贵但车少，深夜从酒吧街回酒店提前叫Grab。租摩托需国际驾照，交警查得严。'}]},
+  '普吉':{title:'景点分散，包车为王',sections:[
+   {h:'🚗 包车/ Grab',p:'普吉景点跨度大（卡塔-芭东-攀牙湾），包车一天约2500-3500泰铢最省心。Grab在芭东、卡塔好叫，去偏远海滩车少。'},
+   {h:'🚤 出海交通',p:'一日游多含酒店接送+码头集合。选大船不晕，快艇刺激但颠。皇帝岛、皮皮岛船程1-2小时，晕船药提前吃。'},
+   {h:'🛵 租摩托',p:'月租便宜但风险高，普吉车祸率不低，无国际驾照被查罚款。短途可用，长途别骑。'},
+   {h:'💡 小贴士',p:'普吉打车比曼谷贵30-50%，认准Grab明码价。芭东夜生活区晚上堵车，步行更快。'}]},
+  '槟城':{title:'乔治市步行，远郊打车',sections:[
+   {h:'🚶 乔治市步行',p:'世遗核心区不大，壁画街、姓氏桥、蓝屋步行全搞定。美食都在步行范围内，边走边吃。'},
+   {h:'🚕 Grab',p:'槟城Grab便宜好叫，升旗山、极乐寺、巴都丁宜海滩打车串联。市区内一趟约8-15马币。'},
+   {h:'🚌 公交',p:'Rapid Penang公交覆盖主要景点，1.4-4马币，CAT免费巴士绕行乔治市。时间充裕可体验。'},
+   {h:'💡 小贴士',p:'槟城不大，别包车，Grab随叫随到。升旗山小火车排队久，早上去。'}]},
+  '吉隆坡':{title:'轨道+Grab，雨天走连廊',sections:[
+   {h:'🚇 轨道交通',p:'MRT/LRT/Monorail覆盖KLCC、武吉免登、中央市场。Touch n Go卡或银行卡感应。双子塔、独立广场、茨厂街轨道直达。'},
+   {h:'🚕 Grab',p:'吉隆坡Grab是主力，市区内一趟10-20马币。去黑风洞、布城打车比轨道转车快。'},
+   {h:'✈️ 机场进城',p:'KLIA Ekspres机场快线28分钟到KL Sentral，55马币。Grab约65-80马币/1小时。亚航多在KLIA2，提前查航站楼。'},
+   {h:'🌧️ 雨天策略',p:'KL雨说下就下，武吉免登各商场有连廊互通，雨天 indoor 逛街不受影响。'}]},
+  '胡志明市':{title:'Grab摩托是灵魂',sections:[
+   {h:'🛵 Grab（汽车/摩托）',p:'胡志明市摩托大军，Grab Bike比汽车快一倍还便宜，第一郡内一趟约2-4万越南盾。怕晒选汽车，约4-8万盾。'},
+   {h:'🚶 第一郡步行',p:'滨城市场、红教堂、中央邮局、范五老街全在步行圈。过马路别犹豫，保持匀速走，摩托会绕开你。'},
+   {h:'🚕 出租车',p:'认准Vinasun、Mai Linh两家正规公司，打表。路边野鸡车宰客，小心。'},
+   {h:'💡 小贴士',p:'胡志明市打车全东南亚最便宜，但堵车也凶。短途摩托，长途汽车。晚上范五老街回酒店走路都行。'}]},
+  '富国岛':{title:'南北距离长，别折返跑',sections:[
+   {h:'🚗 包车/酒店车',p:'富国岛南北40km，珍珠乐园在北、撒哈拉沙漠（Sao Beach）在南。包车一天约100-150万越南盾，或靠酒店接驳车。'},
+   {h:'🛵 租摩托/ Grab',p:'Grab在杨东镇好叫，去偏远海滩车少。租摩托约15-20万盾/天，环岛骑行爽但注意防晒。'},
+   {h:'🚤 出海',p:'富国岛出海去小岛浮潜，酒店或旅行社订一日游含接送。12月干季海况好。'},
+   {h:'💡 小贴士',p:'行程按南北分区：北岛一天、南岛一天，别来回折腾。日落看西海岸，Sao Beach看日出。'}]},
+  '新加坡':{title:'MRT无敌，带娃少换乘',sections:[
+   {h:'🚇 MRT（首选）',p:'主景点全覆盖：滨海湾、乌节路、牛车水、小印度、圣淘沙。EZ-Link卡或银行卡/手机直接刷，起步约0.9新币。06:00-24:00，准点到分钟。'},
+   {h:'🚌 公交',p:'双层巴士当观光车坐，滨海湾一圈风景好。Google Maps查班次准。'},
+   {h:'🚕 Grab/出租车',p:'新加坡打车贵，起步4新币+，机场到市区约20-30新币。带娃/行李多时用，平时MRT够了。Grab和ComfortDelGro都行。'},
+   {h:'🚶 圣淘沙',p:'圣淘沙捷运Sentosa Express 4新币，岛上免费摆渡车。环球影城、S.E.A海洋馆都在岛上，安排一整天。'},
+   {h:'💡 带娃贴士',p:'MRT换乘对推车友好，都有电梯。带2岁半娃减少换乘次数，直达优先。樟宜机场有免费推车借。'}]},
+ };
+ const rideApps=[
+  {name:'Grab',desc:'东南亚第一打车软件，8城全覆盖。英文界面、固定价、可刷卡/现金。汽车+摩托+外卖全有，必装。'},
+  {name:'Bolt',desc:'曼谷可用，车比Grab少但通常便宜10-20%。其他城市覆盖弱。'},
+  {name:'inDrive',desc:'部分城市可用，可议价模式，适合想砍价的。'},
+  {name:'本地出租',desc:'曼谷认"by meter"、胡志明市认Vinasun/Mai Linh、新加坡ComfortDelGro。短途可坐，长途用Grab。'},
+ ];
+ return <div className="page"><PageHero eyebrow="GROUND PLAN" title="交通指南" summary="跨城航班怎么选、每城怎么挪、打车用什么软件，全在这页。先看跨城主线，再按城市查落地细节。" image={klImg}/>
+ <section className="sectionblock"><div className="sectiontitle"><span>INTERCITY FLIGHTS</span><h2>跨城航班详解</h2><p>7段跨城航段：选哪家航司、注意什么。所有时间为参考，不代替出票信息</p></div>
+ <div className="transportlist">{flightLegs.map((l,i)=><article key={l.route}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{l.route} · {l.time}</h3><p><b>推荐航司：</b>{l.airlines}</p><p>{l.tip}</p></div></article>)}</div>
+ <div className="notice" style={{marginTop:12}}><h2>航司口碑速览</h2><p>亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。</p></div>
+ </section>
+ <section className="mobility"><div className="sectiontitle"><span>ON THE GROUND</span><h2>八城落地交通详解</h2><p>切换城市，一次只看一城：怎么挪、用什么软件、多少钱、水上交通</p></div><CityTabs city={mcity} setCity={setMcity} label="交通城市切换"/><div className="mobilitysingle"><article key={mcity}><header style={{background:accents[mcity]}}><b>{mcity}</b><span>{cityDetail[mcity]?.title}</span></header>{cityDetail[mcity]?.sections.map((s,si)=><div key={si} style={{marginTop:si?10:6}}><h4 style={{fontSize:14,margin:'0 0 4px'}}>{s.h}</h4><p style={{margin:0,fontSize:13,lineHeight:1.7}}>{s.p}</p></div>)}</article></div></section>
+ <section className="sectionblock"><div className="sectiontitle"><span>RIDE HAILING</span><h2>打车软件怎么选</h2><p>到了当地现装也来得及，但提前装好更从容</p></div>
+ <div className="transportlist">{rideApps.map((a,i)=><article key={a.name}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{a.name}</h3><p>{a.desc}</p></div></article>)}</div></section>
+ <section className="darkpanel"><h2>交通底线</h2><div><article><h3>海岛出行</h3><p>船班受海况影响，贵重物品放防水袋，不把次日早班机排得过紧。选船看人：大船稳、长尾船慢有味道、快艇快但颠；易晕船提前吃药选大船。</p></article><article><h3>机场衔接</h3><p>跨国航班与托运行李需要更长缓冲；出票后再固化当天时间线。廉航多在廉价航站楼（曼谷DMK、吉隆坡KLIA2），提前查好别跑错。</p></article><article><h3>网约车</h3><p>按 App 显示车牌核对，机场与码头上车点提前确认。深夜/偏远地点提前叫车，别现等。</p></article><article><h3>步行日</h3><p>热带正午把室外长距离拆开，以室内馆、咖啡或酒店休息降温。带娃时推车+电梯路线提前查。</p></article></div></section></div>}
 
 function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean}){
  const [expanded,setExpanded]=useState<string|null>(null);const [city,setCity]=useState(cities[0]!);
