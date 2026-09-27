@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 13,
+   "complete": 16,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -709,9 +709,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自执行轮次：各补 1 篇严格达标帖（头部互动+≥3 条实质评论+图片逐张翻验），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 02:55Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -743,9 +743,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自执行轮次：各补 1 篇严格达标帖（头部互动+≥3 条实质评论+图片逐张翻验），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 02:55Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -777,9 +777,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-27 主 agent 亲自执行轮次：各补 1 篇严格达标帖（头部互动+≥3 条实质评论+图片逐张翻验），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 02:55Z 轮次记录。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -1112,7 +1112,7 @@ export const initialResearchStatus = {
    "total": 32
   },
   "chiangmai": {
-   "complete": 10,
+   "complete": 11,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -6853,27 +6853,27 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 40,
+ "complete_items": 44,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 14,
+   "xhs_done": 17,
    "ph": 32,
    "de": 32,
-   "all_done": 13
+   "all_done": 16
   },
   "chiangmai": {
    "total": 20,
    "ta": 19,
    "gm": 20,
    "cs": 20,
-   "xhs_done": 11,
+   "xhs_done": 12,
    "ph": 20,
    "de": 20,
-   "all_done": 10
+   "all_done": 11
   },
   "hcmc": {
    "total": 23,
@@ -6945,5 +6945,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T00:08Z"
+ "updated_at": "2026-09-27T04:48Z UTC"
 };
