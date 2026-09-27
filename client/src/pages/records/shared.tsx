@@ -64,7 +64,7 @@ export function PageShell({
   children: ReactNode;
 }) {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-8">
       <p className="text-[11px] tracking-[0.2em] text-teal-700 font-semibold mb-2">
         {eyebrow}
       </p>
