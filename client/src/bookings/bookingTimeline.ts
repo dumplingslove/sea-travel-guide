@@ -23,18 +23,28 @@ export interface FlightLegInfo {
   priceNote?: string | null;
   direct?: boolean | null;
   fragile?: boolean | null;
-  /** Duffel 实查的当天全部直飞选项（2成人总价USD，按价格升序）；空 = 未查询 */
+  /** Duffel 实查的当天全部直飞选项（价格为查询时总价，USD；城际段=2成人，国际段见 priceBasis）；空 = 未查询 */
   options?: FlightOption[] | null;
   /** 实查时间戳，如 "2026-09-27 02:17 PDT" */
   queriedAt?: string | null;
+  /** 价格口径说明，如 "1成人单价"；缺省为 2 成人总价 */
+  priceBasis?: string | null;
 }
 
-/** Duffel 同一天直飞的一个可选航班（价格为查询时 2 成人总价，USD）。 */
+/** Duffel 同一天的一个可选行程（价格为查询时总价，USD；城际段=2成人，国际段=1成人）。 */
 export interface FlightOption {
   carrier: string;
   flight: string;
   depart: string;
   arrive: string;
+  /** 到达为次日时 true，展示为 06:50+1 */
+  arrivePlusDay?: boolean;
+  /** 中转次数；0=直飞 */
+  stops?: number;
+  /** 中转城市，如 "北京"；直飞时不填 */
+  via?: string;
+  /** 托运行李，如 "1件"/"2件"；无依据不填 */
+  bags?: string;
   price: number;
   refundable: string; // "yes" | "no" | "not stated"
   changeable: string;
@@ -42,16 +52,30 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 3 段城际 + 去/回程国际段占位。城际价格已由 Duffel 实查回填（2026-09-27 02:17 PDT，2成人直飞当天全部选项）。 */
+/** 3 段城际 + 3 段国际（西安→新加坡、清迈→北京、清迈→西安）。城际价格由 Duffel 实查回填（2026-09-27 02:17 PDT，2成人直飞当天全部选项）；国际段由 Duffel 实查回填（2026-09-27 02:40 PDT，1成人当天全部行程）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out",
-    route: "→ 新加坡",
-    date: "",
-    dateLabel: "12-12 前",
+    route: "西安 → 新加坡",
+    date: "2026-12-12",
+    dateLabel: "12-12",
     day: 1,
     kind: "intl",
-    note: "去程国际段尚未比价选定；Day 1（12-12）行程从新加坡开始，当天必须抵达",
+    note: "去程国际段；Day 1（12-12）行程从新加坡开始，当天必须抵达",
+    carrier: "Scoot（Hahn Air 出票）TR0135",
+    schedule: "01:55→07:50",
+    priceNote: "1人 $289.40 起",
+    direct: true,
+    fragile: true,
+    queriedAt: "2026-09-27 02:40 PDT",
+    priceBasis: "1成人单价",
+    options: [
+      { carrier: "Air China", flight: "CA1230+CA0975", depart: "19:30", arrive: "06:50", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 172.70, refundable: "no", changeable: "yes" },
+      { carrier: "Shenzhen Airlines", flight: "ZH9204+ZH0227", depart: "14:10", arrive: "02:00", arrivePlusDay: true, stops: 1, via: "深圳", bags: "1件", price: 188.80, refundable: "no", changeable: "yes" },
+      { carrier: "Xiamen Airlines", flight: "MF8258+MF8703", depart: "19:45", arrive: "13:40", arrivePlusDay: true, stops: 1, via: "杭州", bags: "1件", price: 199.00, refundable: "yes", changeable: "yes" },
+      { carrier: "Scoot（Hahn Air出票）", flight: "TR0135", depart: "01:55", arrive: "07:50", stops: 0, bags: "1件", price: 289.40, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天唯一真直飞，5小时55分；01:55红眼出发、07:50当天抵达，Day 1 整天可用；比最便宜中转只贵约$117" },
+      { carrier: "China Eastern Airlines", flight: "MU2768+MU7727", depart: "22:05", arrive: "16:40", arrivePlusDay: true, stops: 1, via: "南京", bags: "1件", price: 309.30, refundable: "no", changeable: "yes" },
+    ],
   },
   {
     id: "sin-hkt",
@@ -146,13 +170,49 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     ],
   },
   {
-    id: "intl-back",
-    route: "清迈 / 曼谷 →",
-    date: "",
-    dateLabel: "12-24 后",
+    id: "intl-back-bj",
+    route: "清迈 → 北京",
+    date: "2026-12-24",
+    dateLabel: "12-24",
     day: 13,
     kind: "intl",
-    note: "回程国际段尚未比价选定；Day 13（12-24）在清迈结束",
+    note: "回程国际段（用户回北京）；Day 13（12-24）在清迈结束，当天或次日离开",
+    carrier: "Air China CA0824",
+    schedule: "23:05→04:20+1",
+    priceNote: "1人 $226.60 起",
+    direct: true,
+    fragile: true,
+    queriedAt: "2026-09-27 02:40 PDT",
+    priceBasis: "1成人单价",
+    options: [
+      { carrier: "Air China", flight: "CA0824", depart: "23:05", arrive: "04:20", arrivePlusDay: true, stops: 0, bags: "1件", price: 226.60, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天唯一真直飞且最低价；23:05红眼、04:20到北京，4小时15分；凌晨到需提前安排接机/酒店入住" },
+      { carrier: "Thai Airways", flight: "TG0121+TG0674", depart: "21:10", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0111+TG0674", depart: "15:25", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0105+TG0674", depart: "12:15", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 358.20, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0103+TG0674", depart: "09:30", arrive: "05:20", arrivePlusDay: true, stops: 1, via: "曼谷", bags: "1件", price: 362.10, refundable: "yes", changeable: "yes" },
+    ],
+  },
+  {
+    id: "intl-back-xiy",
+    route: "清迈 → 西安",
+    date: "2026-12-24",
+    dateLabel: "12-24",
+    day: 13,
+    kind: "intl",
+    note: "回程国际段（妻子回西安）；Day 13（12-24）在清迈结束，当天或次日离开；当天无直飞",
+    carrier: "China Southern Airlines CZ3034+CZ3201",
+    schedule: "18:50→10:00+1（经广州）",
+    priceNote: "1人 $280.00 起",
+    direct: false,
+    fragile: false,
+    queriedAt: "2026-09-27 02:40 PDT",
+    priceBasis: "1成人单价",
+    options: [
+      { carrier: "China Southern Airlines", flight: "CZ3034+CZ3201", depart: "18:50", arrive: "10:00", arrivePlusDay: true, stops: 1, via: "广州", bags: "2件", price: 280.00, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "无直飞里最便宜且可退改，含2件托运行李；经广州中转14小时10分，18:50出发不赶早" },
+      { carrier: "China Southern Airlines", flight: "CZ3034+CZ3219", depart: "18:50", arrive: "14:35", arrivePlusDay: true, stops: 1, via: "广州", bags: "2件", price: 280.00, refundable: "yes", changeable: "yes" },
+      { carrier: "Air China", flight: "CA0824+CA1231", depart: "23:05", arrive: "09:20", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 340.20, refundable: "no", changeable: "yes" },
+      { carrier: "Air China", flight: "CA0824+CA1289", depart: "23:05", arrive: "11:00", arrivePlusDay: true, stops: 1, via: "北京", bags: "1件", price: 340.20, refundable: "no", changeable: "yes" },
+    ],
   },
 ];
 

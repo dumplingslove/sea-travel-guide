@@ -302,27 +302,28 @@ const HISTORICAL_FLIGHT_LEGS:{route:string;time:string;airlines:string;tip:strin
 /** 航司口碑速览（历史研究结论，来源：git 历史交通页已删内容）。 */
 const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
 /** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
-const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务'};
+const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员'};
 
 /** 单个航段的 Duffel 实查选项列表：当天全部直飞按价格排序，推荐项标理由；口碑只写站内研究有的，无依据写「口碑待核验」。 */
 function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const opts=leg.options!;
  const rec=opts.find(o=>o.recommend);
+ const hasConn=opts.some(o=>(o.stops??0)>0);
  const seen:string[]=[];
  const reps:string[]=[];
  opts.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}`);}});
  const unknown=[...new Set(opts.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
  return <Fragment>
   <div className="flightoptions">
-   <p className="flightprice"><b>当天可选 {opts.length} 班直飞</b><span>2成人总价 · Duffel {leg.queriedAt} 实查，非实时价，出票前重查</span></p>
+   <p className="flightprice"><b>当天可选 {opts.length} {hasConn?'个行程（含中转）':'班直飞'}</b><span>{leg.priceBasis??'2成人总价'} · Duffel {leg.queriedAt} 实查，非实时价，出票前重查</span></p>
    <ul>{opts.map((o,oi)=><li key={oi} className={o.recommend?'rec':''}>
-    <span className="fo-time">{o.depart}→{o.arrive}</span>
-    <span className="fo-flight">{o.carrier} {o.flight}</span>
-    <span className="fo-price">2人 ${o.price.toFixed(2)}</span>
-    <span className="fo-fare">{o.refundable==='yes'?'可退':'不可退'}·{o.changeable==='yes'?'可改':'改签未知'}</span>
+    <span className="fo-time">{o.depart}→{o.arrive}{o.arrivePlusDay?'+1':''}</span>
+    <span className="fo-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>
+    <span className="fo-price">${o.price.toFixed(2)}</span>
+    <span className="fo-fare">{o.refundable==='yes'?'可退':'不可退'}·{o.changeable==='yes'?'可改':'改签未知'}{o.bags?`·托运${o.bags}`:''}</span>
     {o.recommend&&<em className="fo-rec">推荐</em>}
    </li>)}</ul>
-   {rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}）：{rec.recommendReason}</p>}
+   {rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   </div>
   <p className="flightreput"><b>航司靠谱程度</b><span>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</span></p>
  </Fragment>;
@@ -337,17 +338,18 @@ export function Flights({onBook}:{onBook?:OnBook}){
    const first=segments[0]!, last=segments[segments.length-1]!;
    const dayOf=(iso:string)=>Math.round((new Date(iso+'T00:00:00').getTime()-new Date(first.start+'T00:00:00').getTime())/86400000)+1;
    const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=[];
-   legs.push({title:`→ ${first.city}`,kind:'国际航班',desc:`去程国际段；Day 1（${planDateShort(first.start)}）当天必须抵达${first.city}`,date:first.start,day:1});
+   legs.push({title:'西安 → 新加坡',kind:'国际航班',desc:`去程国际段；Day 1（${planDateShort(first.start)}）当天必须抵达新加坡`,date:first.start,day:1});
    segments.forEach((sg,i)=>{ if(i===0) return; const pv=segments[i-1]!;
      legs.push({title:`${pv.city} → ${sg.city}`,kind:'城际直飞',desc:`D${dayOf(sg.start)}转场（${planDateShort(sg.start)}）；实时价格见「预订行动」时间线`,date:sg.start,day:dayOf(sg.start)}); });
-   legs.push({title:`${last.city} →`,kind:'国际航班',desc:`回程国际段；Day ${dayOf(last.end)}（${planDateShort(last.end)}）从${last.city}离开`,date:last.end,day:dayOf(last.end)});
+   legs.push({title:'清迈 → 北京',kind:'国际航班',desc:`回程国际段（用户回北京）；Day ${dayOf(last.end)}（${planDateShort(last.end)}）从清迈离开`,date:last.end,day:dayOf(last.end)});
+   legs.push({title:'清迈 → 西安',kind:'国际航班',desc:`回程国际段（妻子回西安）；Day ${dayOf(last.end)}（${planDateShort(last.end)}）从清迈离开`,date:last.end,day:dayOf(last.end)});
    const countries=[...new Set(segments.map(x=>countryOf(x.city)).filter(Boolean))];
    return { legs, countries, totalDays: dayOf(last.end), first, last };
  },[segments]);
- const fallback:[string,string,string][]=[['→ 新加坡','国际航班','去程国际段待定；Day 1（12-12）当天必须抵达新加坡'],['新加坡 → 普吉','城际直飞','D6转场（12-17）；实时价格见「预订行动」时间线'],['普吉 → 曼谷','城际直飞','D9转场（12-20）；实时价格见「预订行动」时间线'],['曼谷 → 清迈','城际直飞','D12转场（12-23）；实时价格见「预订行动」时间线'],['清迈 / 曼谷 →','国际航班','回程国际段待定；Day 13（12-24）在清迈结束']];
- const legDateDay:[string,number][]=[['',1],['2026-12-17',6],['2026-12-20',9],['2026-12-23',12],['',13]];
+ const fallback:[string,string,string][]=[['西安 → 新加坡','国际航班','去程国际段；Day 1（12-12）当天必须抵达新加坡'],['新加坡 → 普吉','城际直飞','D6转场（12-17）；实时价格见「预订行动」时间线'],['普吉 → 曼谷','城际直飞','D9转场（12-20）；实时价格见「预订行动」时间线'],['曼谷 → 清迈','城际直飞','D12转场（12-23）；实时价格见「预订行动」时间线'],['清迈 → 北京','国际航班','回程国际段（用户回北京）；Day 13（12-24）从清迈离开'],['清迈 → 西安','国际航班','回程国际段（妻子回西安）；Day 13（12-24）从清迈离开']];
+ const legDateDay:[string,number][]=[['2026-12-12',1],['2026-12-17',6],['2026-12-20',9],['2026-12-23',12],['2026-12-24',13],['2026-12-24',13]];
  const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=planLegs?planLegs.legs:fallback.map((f,i)=>({title:f[0],kind:f[1],desc:f[2],date:legDateDay[i]?.[0]??'',day:legDateDay[i]?.[1]??1}));
- const midCount=legs.length-2;
+ const midCount=legs.filter(l=>l.kind==='城际直飞').length;
  const countryLabel=planLegs?planLegs.countries.join('、'):'新加坡、泰国';
  const legPager=usePaged(legs,5,'个航段');
  const sourceLine=planLegs?`当前行程 ${planDateShort(planLegs.first.start)}～${planDateShort(planLegs.last.end)}（${planLegs.totalDays}天${segments.length}城）· 按「行程规划」最新保存排布；不含实时航班数据，实时价格见「预订行动」时间线`:'当前行程 2026-12-12～12-24（13天4城）；不含实时航班数据，实时价格见「预订行动」时间线';
