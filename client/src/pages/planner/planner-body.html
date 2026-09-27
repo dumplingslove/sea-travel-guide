@@ -1,19 +1,27 @@
 <main class="shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">东南亚行程规划</p>
-        <h1>一步一步，<br><em>把行程定下来</em></h1>
-        <p class="hero-copy">三步走完：① 选城市、定天数、排顺序 ② 定起始日期、查直飞与日期适宜度 ③ 看景点覆盖、做取舍。最后保存，云端同步到首页、每日详情与地图。机票酒店去「预订」页按排期逐项落实。</p>
+        <p class="eyebrow">2026-11-28 → 2027-01-02 · 35 天大行程</p>
+        <h1>先定大行程，<br><em>再细排每一段</em></h1>
+        <p class="hero-copy">来回时间已定（11/28 西雅图→北京，1/2 北京→西雅图），中间每段几天你来定：北京陪父亲、西安会合岳父母、新加坡亲子、夫妻泰国越南特种兵，最后分头回国跨年。定好天数点保存，云端同步。</p>
       </div>
     </section>
 
     <nav class="tabs" aria-label="页面区域">
-      <button class="tab active" data-tab="wizard" aria-selected="true">🧭 分步规划</button>
+      <button class="tab active" data-tab="trip" aria-selected="true">🗺️ 大行程</button>
+      <button class="tab" data-tab="wizard" aria-selected="false">🧭 分步规划</button>
       <button class="tab" data-tab="calendar" aria-selected="false">📅 日期排期</button>
       <button class="tab" data-tab="coverage" aria-selected="false">🎯 景点取舍</button>
     </nav>
 
-    <section id="wizard" class="panel active">
+    <section id="trip" class="panel active">
+      <div class="section-head">
+        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>35 天大行程，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延，合计须为 34 天（11/29–1/1，首尾为已定的去回程航班日）。定好点「保存大行程」，云端同步、刷新不丢；夫妻段的城市细排去「🧭 分步规划」继续。</p></div>
+      </div>
+      <div id="tripBody" aria-live="polite"></div>
+    </section>
+
+    <section id="wizard" class="panel">
       <div class="section-head">
         <div><p class="eyebrow">GUIDED PLANNER</p><h2>三步定下整趟行程</h2><p class="lede">先选城市，再定每城天数与顺序，然后排具体日期、查直飞与日期适宜度。最后一步点「保存规划」，自动排入日历并同步到首页、每日详情与地图；机票酒店去「预订」页落实。</p></div>
       </div>
