@@ -10,6 +10,7 @@ import {
   placeSlug,
   findPlace,
 } from "@/guide/placeDetail";
+import { mallAnchorId } from "@/guide/data";
 
 interface DayMapProps {
   dayNum: number;
@@ -292,9 +293,10 @@ export default function DayMap({
     for (const m of malls) {
       const pt = LL(m.lat, m.lng);
       placeBoundsPts.push(pt);
+      const mLink = `<br><a href="${base}/practical?shop=${encodeURIComponent(cityZh)}#${mallAnchorId(m.name)}" style="color:#7c3aed;font-weight:700;font-size:12px">查看商场详情 →</a>`;
       L.marker(pt, { icon: shoppingIcon() })
         .bindPopup(
-          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场（购物指南有详细攻略）</span>`,
+          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场</span>${mLink}`,
         )
         .addTo(map);
     }

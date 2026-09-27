@@ -246,6 +246,8 @@ export interface MallDetail{
  photo?:string; photoSource?:string; // 兼容旧单图字段
 }
 export interface ShoppingGuide{ lead:string; malls:MallDetail[]; souvenirs:ShoppingEntry[]; tips:string[] }
+/** 商场详情深链锚点 id：地图 popup 链接与 MallCard 共用，保证两端一致 */
+export function mallAnchorId(name:string):string{ return "mall-"+encodeURIComponent(name); }
 export const shoppingGuides:Record<string,ShoppingGuide>={
 "新加坡":{
 lead:"5天行程的起点和终点：国际品牌集中采购放新加坡，价格透明、退税方便；食品类伴手礼建议最后一天在机场一次补齐。",

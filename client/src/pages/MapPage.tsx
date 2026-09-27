@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
+import { mallAnchorId } from "@/guide/data";
 import { LL, addAmapTiles, wgs84ToGcj02 } from "@/lib/amap";
 import citiesJson from "@/data/cities.json";
 import {
@@ -182,9 +183,17 @@ function MapCanvas({
         .addTo(layer);
     }
     for (const m of malls) {
+      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+      const cityZh =
+        stops.find((s) => s.id === cityId)?.zh ??
+        extraCities.find((e) => e.id === cityId)?.zh ??
+        "";
+      const mLink = cityZh
+        ? `<br><a href="${base}/practical?shop=${encodeURIComponent(cityZh)}#${mallAnchorId(m.name)}" style="color:#7c3aed;font-weight:700;font-size:12px">查看商场详情 →</a>`
+        : "";
       L.marker(LL(m.lat, m.lng), { icon: shoppingIcon() })
         .bindPopup(
-          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场（购物指南有详细攻略）</span>`,
+          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场</span>${mLink}`,
         )
         .addTo(layer);
     }
