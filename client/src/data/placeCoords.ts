@@ -1,5 +1,5 @@
 /**
- * 酒店 / 餐厅坐标数据（2026-09-26 人工核验）
+ * 酒店 / 餐厅 / 商场坐标数据（2026-09-26 人工核验；商场 2026-09-27 Nominatim 地理编码）
  *
  * 来源：Nominatim OSM + map.geocode 交叉核验，每条都核对过 display_name。
  * 精度标注：
@@ -25,6 +25,7 @@ export interface PlaceCoord {
 export interface CityPlaces {
   hotels: PlaceCoord[];
   restaurants: PlaceCoord[];
+  malls: PlaceCoord[];
 }
 
 /** city_id -> 该城市酒店/餐厅 */
@@ -53,6 +54,16 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Ya Kun Kaya Toast", lat: 1.2813622, lng: 103.8448952, precision: "chain", note: "连锁，牛车水 Erskine Road 店为代表" },
       { name: "Lau Pa Sat", lat: 1.2806167, lng: 103.8504802, precision: "exact" },
     ],
+    malls: [
+      { name: "乌节路 ION Orchard", lat: 1.3039479, lng: 103.8319051, precision: "exact" },
+      { name: "义安城（高岛屋）", lat: 1.3025211, lng: 103.8353202, precision: "exact" },
+      { name: "百利宫 Paragon", lat: 1.3037371, lng: 103.8355203, precision: "exact" },
+      { name: "滨海湾金沙 The Shoppes", lat: 1.2840209, lng: 103.8588683, precision: "exact" },
+      { name: "武吉士街 Bugis Street", lat: 1.2993775, lng: 103.8557874, precision: "street" },
+      { name: "牛车水", lat: 1.2799695, lng: 103.8436879, precision: "area" },
+      { name: "慕斯达法中心 Mustafa（小印度）", lat: 1.3101243, lng: 103.8553164, precision: "exact" },
+      { name: "星耀樟宜 Jewel", lat: 1.3602243, lng: 103.9896749, precision: "exact" },
+    ],
   },
   phuket: {
     hotels: [
@@ -73,6 +84,13 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Acqua", lat: 7.9166191, lng: 98.291105, precision: "exact" },
       { name: "Kan Eang@Pier", lat: 7.8197104, lng: 98.3504761, precision: "area", note: "位于 Chalong 码头" },
       { name: "Roti Taew Nam", lat: 7.88483, lng: 98.39088, precision: "exact" },
+    ],
+    malls: [
+      { name: "Central Phuket（+连廊对接 Central Floresta）", lat: 7.8911739, lng: 98.3668714, precision: "exact" },
+      { name: "普吉老镇周日步行街 Lard Yai（Thalang路）", lat: 7.8845565, lng: 98.3920742, precision: "street" },
+      { name: "OTOP 市场", lat: 7.8868490, lng: 98.2956270, precision: "area" },
+      { name: "Chillva Market", lat: 7.9073447, lng: 98.3734774, precision: "area" },
+      { name: "Naka 周末市场", lat: 7.8805332, lng: 98.3663260, precision: "area" },
     ],
   },
   bangkok: {
@@ -101,6 +119,16 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "耀华力夜市 / T&K", lat: 13.7401179, lng: 100.5106666, precision: "exact", note: "T&K Seafood" },
       { name: "Or Tor Kor Market", lat: 13.7971301, lng: 100.5475746, precision: "exact" },
     ],
+    malls: [
+      { name: "ICONSIAM 暹罗天地", lat: 13.7268227, lng: 100.5102940, precision: "exact" },
+      { name: "Siam Paragon 暹罗百丽宫", lat: 13.7467785, lng: 100.5349540, precision: "exact" },
+      { name: "CentralWorld", lat: 13.7465769, lng: 100.5390414, precision: "exact" },
+      { name: "MBK Center", lat: 13.7447151, lng: 100.5299165, precision: "exact" },
+      { name: "Terminal 21", lat: 13.7382452, lng: 100.5607309, precision: "building" },
+      { name: "恰图恰周末市场 Chatuchak", lat: 13.8002651, lng: 100.5511228, precision: "area" },
+      { name: "Asiatique 河滨夜市", lat: 13.7041568, lng: 100.5027137, precision: "area" },
+      { name: "Big C Supercenter（Ratchadamri店）", lat: 13.7470321, lng: 100.5407658, precision: "exact" },
+    ],
   },
   chiangmai: {
     hotels: [
@@ -120,6 +148,14 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Tong Tem Toh", lat: 18.79672, lng: 98.96775, precision: "exact", note: "Nimman Soi 11" },
       { name: "Dash! Restaurant", lat: 18.7832738, lng: 98.9914597, precision: "exact" },
       { name: "Ginger Farm Kitchen", lat: 18.8001262, lng: 98.9680725, precision: "building", note: "位于 One Nimman 内" },
+    ],
+    malls: [
+      { name: "瓦洛洛市场 Warorot", lat: 18.7902357, lng: 99.0005350, precision: "area" },
+      { name: "周日步行街（塔佩门–帕辛寺）", lat: 18.7877625, lng: 98.9932697, precision: "area" },
+      { name: "周六步行街", lat: 18.7733366, lng: 98.9803664, precision: "street" },
+      { name: "宁曼路 / One Nimman", lat: 18.8001262, lng: 98.9680725, precision: "exact" },
+      { name: "Baan Kang Wat", lat: 18.7767499, lng: 98.9482643, precision: "exact" },
+      { name: "Maya / Central Festival", lat: 18.8024324, lng: 98.9672980, precision: "exact" },
     ],
   },
   penang: {
@@ -142,6 +178,10 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "CEKI Nyonya", lat: 5.4209, lng: 100.332312, precision: "exact", note: "11-A Jalan Sri Bahari" },
       { name: "Green House Prawn Mee", lat: 5.4183797, lng: 100.3279952, precision: "exact" },
     ],
+    malls: [
+      { name: "乔治市骑楼店", lat: 5.4157748, lng: 100.3364302, precision: "street" },
+      { name: "Gurney Plaza", lat: 5.4372970, lng: 100.3094027, precision: "exact" },
+    ],
   },
   kualalumpur: {
     hotels: [
@@ -162,6 +202,11 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Gulainya", lat: 3.149261, lng: 101.653724, precision: "exact", note: "44-G Jalan Medan Setia 2" },
       { name: "Village Park", lat: 3.1377593, lng: 101.6233892, precision: "exact" },
       { name: "THIRTY8", lat: 3.1536113, lng: 101.7121373, precision: "building", note: "Grand Hyatt Kuala Lumpur 38 层" },
+    ],
+    malls: [
+      { name: "Pavilion（武吉免登）", lat: 3.1491540, lng: 101.7129531, precision: "exact" },
+      { name: "Suria KLCC（双子塔下）", lat: 3.1573751, lng: 101.7123797, precision: "exact" },
+      { name: "中央市场", lat: 3.1440818, lng: 101.6954483, precision: "exact" },
     ],
   },
   hochiminh: {
@@ -184,6 +229,10 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "The Workshop Coffee", lat: 10.7734061, lng: 106.7055391, precision: "exact" },
       { name: "Cong Caphe", lat: 10.7666057, lng: 106.6920800, precision: "chain", note: "129 Bùi Viện（代表性分店）" },
     ],
+    malls: [
+      { name: "同起街", lat: 10.7762521, lng: 106.7028775, precision: "street" },
+      { name: "Tan Dinh / Binh Tay（平西）", lat: 10.7898998, lng: 106.6900513, precision: "area" },
+    ],
   },
   phuquoc: {
     hotels: [
@@ -205,10 +254,13 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "On the Rocks", lat: 10.2673529, lng: 103.9497614, precision: "area", note: "Ông Lang 区域" },
       { name: "Ocean Club", lat: 10.131056, lng: 103.989822, precision: "building", note: "Regent Phu Quoc 馆内" },
     ],
+    malls: [
+      { name: "阳东镇正规商店", lat: 10.1825958, lng: 103.9722233, precision: "area" },
+    ],
   },
 };
 
 /** 取某城市的酒店+餐厅（DayMap / 城市地图用） */
 export function placesForCity(cityId: string): CityPlaces {
-  return cityPlaces[cityId] ?? { hotels: [], restaurants: [] };
+  return cityPlaces[cityId] ?? { hotels: [], restaurants: [], malls: [] };
 }

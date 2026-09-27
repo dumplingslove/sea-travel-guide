@@ -348,3 +348,40 @@
 .guide-scope .availsummary>span{font-size:12px!important;color:#5c5340!important;font-weight:700}
 .guide-scope .availdetail{font-size:13px!important;line-height:1.7;color:var(--text)}
 .guide-scope .availchannel{font-size:11.5px!important;color:#7a6f56!important;margin-top:6px!important}
+.guide-scope .malllist{display:grid;gap:10px;margin-top:8px}
+.guide-scope .mallcard{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.guide-scope .mallhead{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;padding:10px 12px;cursor:pointer}
+.guide-scope .mallhead img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.guide-scope .mallph{width:64px;height:64px;display:grid;place-items:center;font-size:28px;background:#f3f0e9;border-radius:8px;flex-shrink:0}
+.guide-scope .malltitle{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.guide-scope .malltitle b{color:#22333b;font-size:15px}
+.guide-scope .malltitle i{font-style:normal;font-size:12px;color:var(--accent);font-weight:700}
+.guide-scope .mallpos{font-size:13px;color:#4f636d;line-height:1.5}
+.guide-scope .malltoggle{flex-shrink:0;font-size:12px;color:var(--accent);font-weight:700;white-space:nowrap}
+.guide-scope .mallbody{border-top:1px solid var(--border);padding:14px}
+.guide-scope .mallbig{width:100%;max-height:280px;object-fit:cover;border-radius:8px;margin-bottom:12px}
+.guide-scope .mallbody dl{margin:0}
+.guide-scope .mallbody dl div{display:grid;grid-template-columns:96px 1fr;gap:12px;border-top:1px solid var(--border);padding:10px 0}
+.guide-scope .mallbody dl div:first-child{border-top:0}
+.guide-scope .mallbody dt{font-weight:800;color:var(--accent);font-size:13px;white-space:nowrap}
+.guide-scope .mallbody dd{margin:0;color:var(--dim);line-height:1.7;font-size:13.5px}
+.guide-scope .mallbody dd ul{margin:4px 0 0;padding-left:16px}
+.guide-scope .mallcredit{font-size:12px;color:#9aa5ad;margin:8px 0 0}
+.guide-scope .countryadvice{display:grid;gap:10px;margin:0 0 6px}
+.guide-scope .countrycard{background:#fff;border:1px solid var(--border);border-left:4px solid #7c3aed;border-radius:8px;padding:14px 16px}
+.guide-scope .countrycard h5{margin:0 0 6px;font-size:14px;color:#22333b}
+.guide-scope .countrycard p{margin:4px 0;font-size:13.5px;line-height:1.7;color:#4f636d}
+.guide-scope .packbox{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:14px}
+.guide-scope .packbox h4{margin-top:0}
+.guide-scope .packchips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.guide-scope .packchips button{border:1px solid var(--border);background:#f7f5ef;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;color:#22333b}
+.guide-scope .packchips button.added{background:#e6f4ea;border-color:#34a853;color:#1a7f37}
+.guide-scope .packgo{font-size:13px;color:var(--accent);font-weight:700;background:none;border:0;cursor:pointer;padding:0}
+.guide-scope .mallgallery{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;padding-bottom:4px}
+.guide-scope .mallgallery button{border:2px solid transparent;border-radius:8px;padding:0;cursor:pointer;background:none;flex:0 0 auto}
+.guide-scope .mallgallery button.active{border-color:#7c3aed}
+.guide-scope .mallgallery img{width:64px;height:48px;object-fit:cover;border-radius:6px;display:block}
+.guide-scope .malllinks{display:flex;gap:10px;margin:10px 0}
+.guide-scope .malllinks a{font-size:13px;font-weight:700;color:#7c3aed;text-decoration:none;border:1px solid #ddd6fe;background:#f5f3ff;border-radius:999px;padding:6px 14px}
+.guide-scope .mallsrc{font-size:12px;color:#8a9aa3;margin:8px 0 0;line-height:1.6}
+.guide-scope .mallsrc a{color:#7c3aed;margin:0 2px}

@@ -67,6 +67,21 @@ function restaurantIcon() {
   });
 }
 
+function shoppingIcon() {
+  return L.divIcon({
+    className: "sea-daymap-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:#ffffff;color:#7c3aed;
+      border:2px solid #7c3aed;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.35);
+    ">🛍️</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
 /** 站点级编号标记：圆底白字序号，与当天时间线顺序对应 */
 function numIcon(n: number) {
   return L.divIcon({
@@ -228,7 +243,7 @@ export default function DayMap({
 
     // 酒店 / 餐厅标记：只标位置、不并入当天动线（用户要求：预订前只看位置、方便选酒店）。
     // 已确认预订的酒店（booked=true）才接入动线：酒店→首站、末站→酒店。
-    const { hotels, restaurants } = placesForCity(cityId);
+    const { hotels, restaurants, malls } = placesForCity(cityId);
     const placeBoundsPts: L.LatLng[] = [];
     const bookedHotel = hotels.find((h) => h.booked);
     for (const h of hotels) {
@@ -248,6 +263,15 @@ export default function DayMap({
       L.marker(pt, { icon: restaurantIcon() })
         .bindPopup(
           `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
+        )
+        .addTo(map);
+    }
+    for (const m of malls) {
+      const pt = L.latLng(m.lat, m.lng);
+      placeBoundsPts.push(pt);
+      L.marker(pt, { icon: shoppingIcon() })
+        .bindPopup(
+          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场（购物指南有详细攻略）</span>`,
         )
         .addTo(map);
     }

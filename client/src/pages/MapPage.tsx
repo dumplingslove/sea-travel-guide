@@ -24,6 +24,7 @@ interface ExtraCity {
   lng: number;
   hotelCount: number;
   restCount: number;
+  mallCount: number;
 }
 
 /** 8 城坐标（WGS84），与 cities.json 的顺序一致即行程顺序；数据见 @/data/cityCoords */
@@ -81,6 +82,20 @@ function restaurantIcon() {
   });
 }
 
+function shoppingIcon() {
+  return L.divIcon({
+    className: "sea-route-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+      background:#ffffff;color:#7c3aed;border:2px solid #7c3aed;font-size:15px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.35);
+    ">🛍️</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
 /**
  * 地图页：城市站点来自全站共享的行程事实源（云端规划优先，静态回退）。
  * 站点变化时整个画布按 key 重建，保证地图与列表一致。
@@ -99,7 +114,7 @@ export default function MapPage() {
       .filter((c) => !stopIds.has(c.id))
       .map((c) => {
         const coord = COORDS[c.id];
-        const { hotels, restaurants } = placesForCity(c.id);
+        const { hotels, restaurants, malls } = placesForCity(c.id);
         return {
           id: c.id,
           zh: c.zh,
@@ -108,6 +123,7 @@ export default function MapPage() {
           lng: coord[1],
           hotelCount: hotels.length,
           restCount: restaurants.length,
+          mallCount: malls.length,
         };
       });
   }, [plan]);
@@ -147,8 +163,8 @@ function MapCanvas({
       placesLayerRef.current.remove();
       placesLayerRef.current = null;
     }
-    const { hotels, restaurants } = placesForCity(cityId);
-    if (hotels.length === 0 && restaurants.length === 0) return;
+    const { hotels, restaurants, malls } = placesForCity(cityId);
+    if (hotels.length === 0 && restaurants.length === 0 && malls.length === 0) return;
     const layer = L.layerGroup();
     for (const h of hotels) {
       L.marker([h.lat, h.lng], { icon: hotelIcon() })
@@ -161,6 +177,13 @@ function MapCanvas({
       L.marker([r.lat, r.lng], { icon: restaurantIcon() })
         .bindPopup(
           `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
+        )
+        .addTo(layer);
+    }
+    for (const m of malls) {
+      L.marker([m.lat, m.lng], { icon: shoppingIcon() })
+        .bindPopup(
+          `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场（购物指南有详细攻略）</span>`,
         )
         .addTo(layer);
     }
@@ -261,7 +284,7 @@ function MapCanvas({
             </span>
           )}
           <span className="ml-2 text-gray-400">
-            · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅（仅位置）
+            · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅 / 🛍️ 值得逛商场（仅位置）
           </span>
         </p>
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
@@ -318,7 +341,7 @@ function MapCanvas({
                     更多研究城市
                   </span>
                   <span className="block text-xs text-gray-400 mt-0.5">
-                    不在当前行程内，点选查看 🏨 候选酒店 / 🍽️ 推荐餐厅位置
+                    不在当前行程内，点选查看 🏨 候选酒店 / 🍽️ 推荐餐厅 / 🛍️ 值得逛商场位置
                   </span>
                 </div>
                 <ul className="divide-y divide-gray-100">
@@ -338,7 +361,7 @@ function MapCanvas({
                             </span>
                           </span>
                           <span className="block text-xs text-gray-500 mt-0.5">
-                            🏨 {c.hotelCount} 家候选 · 🍽️ {c.restCount} 家推荐
+                            🏨 {c.hotelCount} 家候选 · 🍽️ {c.restCount} 家推荐 · 🛍️ {c.mallCount} 家值得逛
                           </span>
                         </span>
                       </button>

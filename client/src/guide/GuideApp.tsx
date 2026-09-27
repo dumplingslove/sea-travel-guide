@@ -6,7 +6,7 @@ function SafeAreaTopScrim(_props: { backgroundColor?: string }) { return null; }
 import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
-import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, legs, cityMobility, type HotelGroup, type Item } from './data';
+import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, type HotelGroup, type Item, type MallDetail } from './data';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -221,21 +221,73 @@ function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean
  return <div className="page">{standalone&&<PageHero eyebrow="ATTRACTION GUIDE" title="景点指南" summary="八城景点完整攻略：按城市筛选，点击卡片展开查看游览重点、实用信息与小红书实读口碑。" image={chiangmaiImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>八城景点指南</h2><p>按城市筛选，点击展开查看完整攻略</p></div><CityTabs city={city} setCity={setCity} label="景点城市筛选"/><InfographicPanel city={city}/><div className="catalog rich">{attrPager.visible.map((it,i)=>{const akey=it.city+it.name;const aopen=expanded===akey;return <Fragment key={akey}><article className="itemcard"><ItemMedia item={it} kind="景点" index={i}/><div><span className="citytag">{it.city} · 景点</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么安排</b><span>{it.best}</span></div><XhsMini item={it}/><button className="solid" onClick={()=>setExpanded(aopen?null:akey)}>{aopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button className="solid" onClick={()=>onBook({bkind:'attraction',name:it.name,city:it.city})}>预订门票</button>}<FavButton name={it.name} city={it.city}/></div></article>{aopen&&<InlineDetail item={it} kind="景点" onBook={onBook} onCollapse={()=>setExpanded(null)}/>}</Fragment>})}</div>{attrPager.toggle}</section></div>
 }
 
-function Practical({onBook}:{onBook?:OnBook}){
+function CountryAdvice(){
+ return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;
+}
+
+function PackingStrip({onGoTab}:{onGoTab?:(t:Tab)=>void}){
+ const items=['护照与签证副本','轻薄雨衣','SPF50防晒','防蚊用品','海岛防水袋','全球转换插头','常用药与处方证明'];
+ const [added,setAdded]=useState<string[]>([]);
+ const [existing,setExisting]=useState<string[]>([]);
+ useEffect(()=>{listRecords().then(({records})=>setExisting(records.filter(r=>r.kind==='packing').map(r=>r.title))).catch(()=>{});},[]);
+ const add=async(x:string)=>{
+  if(added.includes(x)||existing.includes(x))return;
+  try{await saveRecord({kind:'packing',title:x,body:'购物页快捷添加',day:null,done:false});setAdded(a=>[...a,x]);}catch{/* ignore */}
+ };
+ return <section className="packbox"><h4>🧳 行前打包清单</h4>
+ <p className="shoptext">先把行李收好再买买买：热带海岛行程建议清单，点一下直接加入你的打包清单（与「打包清单」页互通）。</p>
+ <div className="packchips">{items.map(x=>{const done=added.includes(x)||existing.includes(x);return <button key={x} className={done?'added':''} onClick={()=>add(x)} disabled={done}>{done?'✓ ':'＋ '}{x}</button>;})}</div>
+ {onGoTab&&<button className="packgo" onClick={()=>onGoTab('打包清单')}>去「打包清单」页管理全部 →</button>}
+ </section>;
+}
+
+function Practical({onBook,onGoTab}:{onBook?:OnBook;onGoTab?:(t:Tab)=>void}){
  const [mode,setMode]=useState<'实用信息'|'购物推荐'>('实用信息');
  const info=[['签证','中国护照：泰国、新加坡免签；越南需提前办理电子签。免签入境通常要求护照有效期6个月以上+返程机票，政策可能变化，出发前向官方移民部门复核。'],['12月天气','12月是泰国（曼谷/普吉/清迈）的干季：曼谷28°C上下、清迈早晚凉爽、普吉晴多；新加坡12月多阵雨，备轻薄雨衣，行程里留室内备选。'],['货币','泰国用泰铢（THB）、新加坡用新币（SGD）。商场/超市刷卡方便，夜市和路边摊多收现金，落地先取少量现金；参考汇率不等于实际成交价。'],['网络','提前买一张覆盖泰国+新加坡的eSIM（或落地机场买本地SIM卡）；海岛出海日提前下载离线地图。'],['插头与电压','泰国多用两孔扁/圆插（A/B/C型），新加坡用英标三方插（G型）；带一只全球转换插头+多口充电器全程通用。'],['健康','热带防晒、防蚊、补水是三件套；Soffell驱蚊液到泰国Big C买最方便。出海和长途飞行带常用药，处方药保留原包装。']];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div>}</div>
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div><PackingStrip onGoTab={onGoTab}/></>}</div>
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
 const shopRouteOrder=['新加坡','普吉','曼谷','清迈'];
 const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-12～12-16','普吉':'D6–D8 · 12-17～12-19','曼谷':'D9–D11 · 12-20～12-22','清迈':'D12–D13 · 12-23～12-24'};
 const shopCities=[...shopRouteOrder,...cities.filter(c=>!shopRouteOrder.includes(c))];
+function MallCard({m}:{m:MallDetail}){
+ const [open,setOpen]=useState(false);
+ const [phIdx,setPhIdx]=useState(0);
+ const photos=(m.photos&&m.photos.length>0)?m.photos:(m.photo?[{url:m.photo,source:m.photoSource||''}]:[]);
+ const srcs=m.sources||[];
+ return <article className="mallcard">
+  <button className="mallhead" onClick={()=>setOpen(o=>!o)} aria-expanded={open}>
+   {photos.length>0?<img src={photos[0].url} alt={m.name} loading="lazy"/>:<span className="mallph">🛍️</span>}
+   <span className="malltitle"><b>{m.name}</b>{m.area&&<i>{m.area}</i>}<span className="mallpos">{m.positioning}</span></span>
+   <span className="malltoggle">{open?'收起 ▲':'查看详细信息 ▾'}</span>
+  </button>
+  {open&&<div className="mallbody">
+   {photos.length>1&&<div className="mallgallery">{photos.map((p,i)=><button key={i} className={i===phIdx?'active':''} onClick={()=>setPhIdx(i)}><img src={p.url} alt={`${m.name} ${i+1}`} loading="lazy"/></button>)}</div>}
+   {photos.length>0&&<img className="mallbig" src={photos[phIdx]?photos[phIdx].url:photos[0].url} alt={m.name} loading="lazy"/>}
+   <dl>
+    {m.address&&<div><dt>📍 位置</dt><dd>{m.address}</dd></div>}
+    {m.transport&&<div><dt>🚇 交通</dt><dd>{m.transport}</dd></div>}
+    {m.hours&&<div><dt>🕙 营业时间</dt><dd>{m.hours}</dd></div>}
+    {m.highlights.length>0&&<div><dt>✨ 值得逛</dt><dd><ul>{m.highlights.map((h,i)=><li key={i}>{h}</li>)}</ul></dd></div>}
+    {m.review&&<div><dt>💬 详细评价</dt><dd>{m.review}</dd></div>}
+    {m.tips&&<div><dt>📌 实用贴士</dt><dd>{m.tips}</dd></div>}
+   </dl>
+   <div className="malllinks">
+    {m.mapUrl&&<a href={m.mapUrl} target="_blank" rel="noreferrer">🗺️ 地图导航</a>}
+    {m.officialUrl&&<a href={m.officialUrl} target="_blank" rel="noreferrer">🌐 官网</a>}
+   </div>
+   {(m.updatedAt||srcs.length>0)&&<p className="mallsrc">{m.updatedAt&&<>资料查询于 {m.updatedAt}；</>}营业时间等易变信息以官方最新公布为准{srcs.length>0&&<> · 来源：{srcs.map((s,i)=><a key={i} href={s} target="_blank" rel="noreferrer">{i+1}</a>)}</>}</p>}
+   {photos[phIdx]&&photos[phIdx].source&&<p className="mallcredit">图片来源：<a href={photos[phIdx].source} target="_blank" rel="noreferrer">来源页</a></p>}
+  </div>}
+ </article>;
+}
+
 function ShopGuide({city}:{city:string}){
  const g=shoppingGuides[city];
  if(!g) return <p className="shoptext">{shopping[city as keyof typeof shopping]}</p>;
  return <div className="shopguide"><p className="shoptext">{g.lead}</p>
- <h4>值得逛</h4><ul>{g.malls.map(m=><li key={m.name}><b>{m.name}</b>——{m.note}</li>)}</ul>
+ <h4>值得逛（点击查看详细信息）</h4><div className="malllist">{g.malls.map(m=><MallCard key={m.name} m={m}/>)}</div>
  <h4>最值得买的伴手礼</h4><ul>{g.souvenirs.map(s=><li key={s.name}>{s.star?'★ ':''}<b>{s.name}</b>——{s.note}</li>)}</ul>
  {g.tips.length>0 && <div className="shoptips"><h4>购物贴士</h4><ul>{g.tips.map(t=><li key={t}>{t}</li>)}</ul></div>}</div>;
 }
@@ -263,7 +315,7 @@ export function GuideApp({initialTab='酒店',hideChrome=false}:{initialTab?:Tab
  const [tab,setTab]=useState<Tab>(initialTab);
  const [bookingPreset,setBookingPreset]=useState<BookingPreset|null>(null);
  const onBook:OnBook=(p)=>setBookingPreset(p);
- const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <Practical onBook={onBook}/>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='打包清单')return <RecordsPage kind="packing" title="打包清单" summary="按四国、海岛和长途飞行整理；勾选状态保存在私人数据库中。" image={phuketImg}/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
+ const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <Practical onBook={onBook} onGoTab={go}/>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='打包清单')return <RecordsPage kind="packing" title="打包清单" summary="按四国、海岛和长途飞行整理；勾选状态保存在私人数据库中。" image={phuketImg}/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
  const go=(t:Tab)=>{setTab(t);window.scrollTo({top:0,behavior:'auto'})};
  return <div className="app"><SafeAreaTopScrim backgroundColor="var(--surface)"/>{!hideChrome&&<div className="migration-notice" role="note">⚠️ 数据更新中：本页为旧版攻略站整体迁移（研究快照 2026-09-12）；小红书严格实读与 189 项详情重做完成后会替换更新。</div>}{!hideChrome&&<nav className="mainnav" aria-label="攻略章节">{tabs.map(t=><button key={t} className={tab===t?'active':''} aria-current={tab===t?'page':undefined} onClick={()=>go(t)}><NavIcon tab={t}/><span>{t}</span></button>)}</nav>}<main>{content}</main>{!hideChrome&&<footer><strong>13天 · 2国 · 4城</strong><p>固定研究快照：2026-09-12。开放时间、价格、签证、航班与房态请在出发前向官方渠道复核。</p></footer>}<BookingDialog open={!!bookingPreset} preset={bookingPreset} onClose={()=>setBookingPreset(null)}/></div>
 }
