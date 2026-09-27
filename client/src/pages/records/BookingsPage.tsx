@@ -78,6 +78,84 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
   );
 }
 
+/** 收藏的待预订：酒店/餐厅收藏后出现在这里，带"何时订"指导，一键转入预订 */
+function FavoriteActionList({
+  onAddFavorite,
+}: {
+  onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
+}) {
+  const { rows, del } = useRecordsData(["favorite"]);
+  const favs = rows
+    .map((r) => {
+      try {
+        const d = JSON.parse(r.body) as {
+          city?: string;
+          note?: string;
+          type?: string;
+        };
+        return { row: r, city: d.city ?? "", type: d.type ?? "attraction" };
+      } catch {
+        return { row: r, city: "", type: "attraction" };
+      }
+    })
+    .filter((f) => f.type === "hotel" || f.type === "restaurant");
+
+  if (!favs.length) return null;
+
+  const timingTip = (type: string) =>
+    type === "hotel"
+      ? "12月是旺季，建议现在就订（提前2-3个月），好房型先到先得"
+      : "热门餐厅提前1-2周订位；米其林/必订餐厅现在可查档期";
+
+  return (
+    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+      <h3 className="font-bold text-gray-900 mb-1">⭐ 我的待预订收藏</h3>
+      <p className="text-xs text-gray-500 mb-3">
+        在酒店/餐厅页点了收藏的会出现在这里，确认要订就转入预订记录
+      </p>
+      <div className="space-y-2">
+        {favs.map((f) => (
+          <div
+            key={f.row.id}
+            className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
+          >
+            <div className="min-w-0">
+              <div className="text-sm font-medium text-gray-900 truncate">
+                {f.row.title}
+                <span className="ml-2 text-xs font-normal text-gray-400">
+                  {f.city} · {f.type === "hotel" ? "酒店" : "餐厅"}
+                </span>
+              </div>
+              <div className="text-xs text-amber-700">{timingTip(f.type)}</div>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <button
+                onClick={() =>
+                  onAddFavorite(
+                    f.row.title,
+                    f.city,
+                    f.type === "hotel" ? "hotel" : "restaurant",
+                  )
+                }
+                className="px-3 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-medium hover:bg-teal-800"
+              >
+                加入预订
+              </button>
+              <button
+                onClick={() => del.mutate({ id: f.row.id })}
+                className="px-2 py-1.5 rounded-lg text-gray-400 text-xs hover:text-gray-600"
+                aria-label={`移除收藏${f.row.title}`}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
@@ -122,6 +200,11 @@ function BookingsInner() {
 
   const openNew = (bkind: BookingKind = "hotel") => {
     setPreset({ bkind, name: "" });
+    setDialogOpen(true);
+  };
+  /** 收藏 → 预订：把收藏的酒店/餐厅直接带入预订弹窗 */
+  const addFavoriteToBooking = (name: string, city: string, bkind: BookingKind) => {
+    setPreset({ bkind, name, city });
     setDialogOpen(true);
   };
   /** 清单项 → 已加入的记录：先按 sourceId（改名后依然对得上），再按名称回退 */
@@ -209,6 +292,9 @@ function BookingsInner() {
         <>
       {/* 行动总览：现在要干什么，一眼看清 */}
       <ActionStrip confirmedCount={confirmedCount} />
+
+      {/* 收藏的待预订：酒店/餐厅页收藏后出现在这里 */}
+      <FavoriteActionList onAddFavorite={addFavoriteToBooking} />
 
       {/* 预订行动时间线：按最晚行动时间排，机票/酒店/餐厅/景点一体 */}
       <h2 className="text-lg font-bold text-gray-900 mb-3">📋 预订行动时间线</h2>

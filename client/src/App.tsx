@@ -13,7 +13,6 @@ import { usePlanItinerary } from "@/guide/plannerSchedule";
 import NotesPage from "@/pages/records/NotesPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
-import FavoritesPage from "@/pages/records/FavoritesPage";
 import {
   AttractionDetailPage,
   RestaurantDetailPage,
@@ -27,7 +26,6 @@ const NAV = [
   { to: "/attractions", label: "景点" },
   { to: "/notes", label: "笔记" },
   { to: "/expenses", label: "记账" },
-  { to: "/favorites", label: "收藏" },
   { to: "/practical", label: "实用信息" },
   { to: "/research", label: "研究状态" },
 ];
@@ -166,14 +164,6 @@ function AppRouter() {
               element={
                 <RecordsProvider>
                   <ExpensesPage />
-                </RecordsProvider>
-              }
-            />
-            <Route
-              path="/favorites"
-              element={
-                <RecordsProvider>
-                  <FavoritesPage />
                 </RecordsProvider>
               }
             />

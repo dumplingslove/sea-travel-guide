@@ -49,6 +49,78 @@ function shortDate(d: string): string {
   return d;
 }
 
+/** 收藏的景点 → 行程排入检查：收藏的必去景点是否已在行程中 */
+function FavoriteItineraryCheck({
+  cityScheduled,
+}: {
+  cityScheduled: Map<string, Set<string>>;
+}) {
+  const { rows } = useRecordsData(["favorite"]);
+  const favs = rows
+    .map((r) => {
+      try {
+        const d = JSON.parse(r.body) as {
+          city?: string;
+          type?: string;
+        };
+        return {
+          name: r.title,
+          city: d.city ?? "",
+          type: d.type ?? "attraction",
+        };
+      } catch {
+        return { name: r.title, city: "", type: "attraction" };
+      }
+    })
+    .filter((f) => f.type === "attraction");
+
+  if (!favs.length) return null;
+
+  // 检查每个收藏的景点是否在对应城市的行程中（模糊匹配：名称包含或被包含）
+  const checkScheduled = (name: string, city: string) => {
+    const scheduled = cityScheduled.get(city);
+    if (!scheduled) return false;
+    const n = name.toLowerCase();
+    for (const s of scheduled) {
+      const sl = s.toLowerCase();
+      if (sl.includes(n) || n.includes(sl)) return true;
+    }
+    return false;
+  };
+
+  const unscheduled = favs.filter((f) => !checkScheduled(f.name, f.city));
+
+  return (
+    <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-6">
+      <h3 className="font-bold text-gray-900 mb-1">⭐ 我的必去景点</h3>
+      <p className="text-xs text-gray-500 mb-3">
+        在景点页收藏的必去项，系统会检查是否已排入行程
+      </p>
+      <div className="space-y-1.5">
+        {favs.map((f) => {
+          const ok = checkScheduled(f.name, f.city);
+          return (
+            <div key={f.name} className="flex items-center gap-2 text-sm">
+              <span>{ok ? "✅" : "⚠️"}</span>
+              <span className="font-medium text-gray-900">{f.name}</span>
+              <span className="text-xs text-gray-400">{f.city}</span>
+              <span className="text-xs text-gray-500">
+                {ok ? "已排入行程" : "未排入行程，建议手动加入某天"}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      {unscheduled.length > 0 && (
+        <p className="text-xs text-amber-700 mt-3">
+          有 {unscheduled.length}{" "}
+          个收藏未排入：{unscheduled.map((f) => f.name).join("、")}。可在对应城市找空闲半天手动加入。
+        </p>
+      )}
+    </div>
+  );
+}
+
 function ItineraryTab() {
   const plan = usePlanItinerary();
   const days: Day[] = plan.days;
@@ -131,6 +203,9 @@ function ItineraryTab() {
           ))}
         </div>
       </div>
+
+      {/* 收藏的景点：检查是否已排入行程 */}
+      <FavoriteItineraryCheck cityScheduled={cityScheduled} />
 
       {/* 每日完整行程卡（意大利站逻辑：一天一卡，信息全在卡里） */}
       <h2 className="text-xl font-bold mb-4">{plan.totalDays} 天详细行程</h2>
