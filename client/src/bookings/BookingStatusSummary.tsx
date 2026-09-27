@@ -21,7 +21,8 @@ import {
 import { bookingPolicyBadge } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
 
-const CITIES = ["新加坡", "普吉", "曼谷", "清迈"];
+/** 预订页未传 scopeCities（无保存行程）时的回退：全部 8 城 */
+const ALL_CITIES = ["新加坡", "普吉", "曼谷", "清迈", "槟城", "吉隆坡", "胡志明市", "富国岛"];
 
 /** 需要提前订票的景点（无余票数据时显示"建议提前订票"，其余显示"无需提前订票"） */
 const NEEDS_ADVANCE_BOOKING = new Set([
@@ -204,15 +205,18 @@ function CityBlock({ cityZh }: { cityZh: string }) {
   );
 }
 
-export default function BookingStatusSummary() {
+export default function BookingStatusSummary({ scopeCities }: { scopeCities?: string[] }) {
   const [open, setOpen] = useState(true);
   const av = useAvailability();
+  /** 有保存行程时只看行程城市；无保存行程时回退全部城市。不写死，跟行程规划走。 */
+  const list = scopeCities && scopeCities.length ? scopeCities : ALL_CITIES;
+  const inScope = (city: string) => list.includes(city);
   const pricedTotal = hotels.filter((h) => {
     const p = getLiveHotelPrice(h.name);
-    return p && !p.unavailable && p.base;
+    return inScope(h.city) && p && !p.unavailable && p.base;
   }).length;
-  const restAvTotal = restaurants.filter((r) => av.get(r.name)).length;
-  const attrAvTotal = attractions.filter((a) => av.get(a.name)).length;
+  const restAvTotal = restaurants.filter((r) => inScope(r.city) && av.get(r.name)).length;
+  const attrAvTotal = attractions.filter((a) => inScope(a.city) && av.get(a.name)).length;
   return (
     <section className="mb-6">
       <button
@@ -236,7 +240,7 @@ export default function BookingStatusSummary() {
             按城市列出每家酒店的实时房价、每家餐厅的空位/预订政策、每个景点的余票状态。
             餐厅没有空位数据时如实标注「需要预定/建议预定/无需预定/预定状态未查询」，不留空。
           </p>
-          {CITIES.map((c) => (
+          {list.map((c) => (
             <CityBlock key={c} cityZh={c} />
           ))}
         </>

@@ -321,9 +321,9 @@ function BookingsInner() {
       <h2 className="text-lg font-bold text-gray-900 mb-3">📋 预订行动时间线</h2>
       <BookingTimeline onAdd={addFromChecklist} matchRecord={matchRecord} />
 
-      {/* 城市参考：四城每家明细（酒店实时价 / 餐厅政策 / 景点余票） */}
+      {/* 城市参考：行程城市每家明细（酒店实时价 / 餐厅政策 / 景点余票）；无保存行程时回退全部城市 */}
       <div id="city-ref" className="scroll-mt-24">
-        <BookingStatusSummary />
+        <BookingStatusSummary scopeCities={scoped ? planCities : undefined} />
       </div>
 
       <div className="flex items-center justify-between mb-4">
@@ -460,7 +460,7 @@ function BookingsInner() {
         </div>
       ) : (
         <div className="guide-scope">
-          <Transport />
+          <Transport scopeCities={scoped ? planCities : undefined} />
         </div>
       )}
 

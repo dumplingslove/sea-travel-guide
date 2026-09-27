@@ -407,3 +407,5 @@
 .guide-scope .packcat .packchips{padding:0 14px 12px;margin:10px 0 0}
 .flightprice{border-top:1px solid #e5eae8;padding-top:10px;margin-top:11px;font-size:12px;color:#425963;line-height:1.6}
 .flightprice b{display:block;font-size:11px;color:var(--accent);margin-bottom:4px}
+.flightreput{border-top:1px dashed #e5eae8;padding-top:10px;margin-top:8px;font-size:12px;color:#425963;line-height:1.6}
+.flightreput b{display:block;font-size:11px;color:var(--accent);margin-bottom:4px}
