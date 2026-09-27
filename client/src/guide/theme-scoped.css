@@ -395,3 +395,9 @@
 .guide-scope .malllinks a{font-size:13px;font-weight:700;color:#7c3aed;text-decoration:none;border:1px solid #ddd6fe;background:#f5f3ff;border-radius:999px;padding:6px 14px}
 .guide-scope .mallsrc{font-size:12px;color:#8a9aa3;margin:8px 0 0;line-height:1.6}
 .guide-scope .mallsrc a{color:#7c3aed;margin:0 2px}
+.guide-scope .packcats{margin-top:16px}
+.guide-scope .packcats h4{margin:0 0 10px}
+.guide-scope .packcat{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;background:#fff}
+.guide-scope .packcathead{width:100%;display:flex;justify-content:space-between;align-items:center;background:#f7f5ef;border:0;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;color:#22333b}
+.guide-scope .packcathead span{font-size:12px;color:#888}
+.guide-scope .packcat .packchips{padding:0 14px 12px;margin:10px 0 0}

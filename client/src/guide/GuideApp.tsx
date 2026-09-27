@@ -237,6 +237,50 @@ function CountryAdvice(){
  return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;
 }
 
+function PackingTab(){
+ const categories:{title:string;items:string[]}[]=[
+  {title:'📄 证件与重要文件',items:['护照（有效期6个月以上）','越南电子签打印件','往返机票行程单','酒店确认单','旅行保险保单','证件复印件（与原件分开放）','2寸证件照2张备用']},
+  {title:'👕 衣物（速干透气为主）',items:['速干T恤 3-4件','薄长袖1-2件（寺庙遮肩+防晒）','速干短裤2-3条','轻薄长裤1-2条（寺庙+飞机上）','泳衣/泳裤','轻薄外套1件（商场空调+清迈早晚凉）','速干内衣裤4-5套','短袜2-3双','睡衣1套']},
+  {title:'👟 鞋类（别超2双+拖鞋）',items:['好走的凉鞋/洞洞鞋1双','人字拖1双（酒店+海滩）','轻便运动鞋1双（暴走日）']},
+  {title:'🌧️ 雨季防护（12月新加坡多阵雨）',items:['轻便可折叠雨衣','防水手机袋','防水背包罩或干湿分离袋','速干毛巾1条','密封袋若干（装湿衣物/电子产品）']},
+  {title:'💊 健康与药品',items:['SPF50+防晒霜','驱蚊液（含DEET或派卡瑞丁）','晒后修复/芦荟胶','常用药（感冒/肠胃/过敏）','处方药+原包装+处方证明','创可贴+消毒湿巾','电解质冲剂','清凉油/风油精']},
+  {title:'👶 带娃专项（2岁半·新加坡段）',items:['轻便可折叠推车','儿童SPF50+物理防晒霜','宽檐遮阳帽','安抚玩具/绘本','飞机起降零食（缓解耳压）','尿不湿（按每天8片×天数）','湿巾大包','换洗衣物3套（含长袖长裤防空调）','保温水壶','便携餐具']},
+  {title:'🔌 电子与充电',items:['全球转换插头（含英标G型）','多口USB充电器','充电宝10000mAh+','短数据线2根','耳机（飞机上用）']},
+  {title:'🛍️ 购物专项（买买买必备）',items:['折叠购物袋2-3个','可封口防漏袋（装液体/药膏）','易碎品缓冲材料（气泡膜/衣服）','退税单据收纳袋','小额现金分装袋','便携行李秤','预留半箱行李空间']},
+  {title:'🎒 日用与收纳',items:['分装瓶（洗护100ml内）','折叠衣架2-3个','洗衣片/便携皂','眼罩+耳塞','U型枕','纸巾/湿巾随身包']},
+ ];
+ const [rows,setRows]=useState<GuideRecord[]>([]);
+ const [custom,setCustom]=useState('');
+ const [openCat,setOpenCat]=useState<string|null>(categories[0]!.title);
+ const refresh=()=>{listRecords().then(({records})=>setRows(records.filter(r=>r.kind==='packing'))).catch(()=>{});};
+ useEffect(refresh,[]);
+ const titles=rows.map(r=>r.title);
+ const norm=(s:string)=>s.replace(/\s+/g,'');
+ const normTitles=titles.map(norm);
+ const add=async(x:string)=>{
+  const t=x.trim();
+  if(!t||normTitles.includes(norm(t)))return;
+  try{await saveRecord({kind:'packing',title:t,body:'打包清单添加',day:null,done:false});setCustom('');refresh();}catch{/* ignore */}
+ };
+ const toggle=async(r:GuideRecord)=>{
+  try{await saveRecord({id:r.id,kind:r.kind,title:r.title,body:r.body,day:r.day,done:!r.done});refresh();}catch{/* ignore */}
+ };
+ const del=async(id:number)=>{
+  try{await deleteRecord({id});refresh();}catch{/* ignore */}
+ };
+ const doneCount=rows.filter(r=>r.done).length;
+ return <div className="page"><PageHero eyebrow="PACKING LIST" title="打包清单" summary="按分类逐项准备：点＋加入你的清单，可勾选、删除、自己加。建议提前一周开始收，分批装箱。" image={hcmImg}/>
+ <section className="packbox"><h4>🧳 我的打包进度 {rows.length>0&&`（${doneCount}/${rows.length}）`}</h4>
+ <div className="packadd"><input value={custom} onChange={e=>setCustom(e.target.value)} placeholder="自己加一项，例如：折叠购物袋" aria-label="自定义打包项"/><button onClick={()=>add(custom)} disabled={!custom.trim()}>加入</button></div>
+ {rows.length>0&&<ul className="packlist">{rows.map(r=><li key={r.id} className={r.done?'done':''}><button className="check" aria-label={`${r.done?'取消完成':'标记完成'}${r.title}`} onClick={()=>toggle(r)}>{r.done?'✓':'○'}</button><span>{r.title}</span><button className="packdel" aria-label={`删除${r.title}`} onClick={()=>r.id!==undefined&&del(r.id)}>删除</button></li>)}</ul>}
+ </section>
+ <section className="packcats"><h4>📋 分类推荐：点＋加入清单</h4>
+ {categories.map(c=>{const open=openCat===c.title;return <div key={c.title} className="packcat"><button className="packcathead" onClick={()=>setOpenCat(open?null:c.title)}>{c.title} <span>{open?'▲':'▼'}</span></button>{open&&<div className="packchips">{c.items.map(x=>{const added=normTitles.includes(norm(x));return <button key={x} className={added?'added':''} onClick={()=>add(x)} disabled={added}>{added?'✓ ':'＋ '}{x}</button>;})}</div>}</div>;})}
+ </section>
+ <section className="notice"><h2>打包小贴士</h2><p>① 别带牛仔裤：湿了又重又难干。② 雨伞不如雨衣：东南亚阵雨来得急，雨衣更实用。③ 液体分装100ml内随身，超量托运。④ 鱼露、药膏等有气味液体务必密封+托运。⑤ 退税单据单独收纳，离境时海关要查验。</p></section>
+ </div>;
+}
+
 function PackingStrip(){
  const items=['护照与签证副本','轻薄雨衣','SPF50防晒','防蚊用品','海岛防水袋','全球转换插头','常用药与处方证明'];
  const [rows,setRows]=useState<GuideRecord[]>([]);
@@ -263,9 +307,24 @@ function PackingStrip(){
 }
 
 function Practical({onBook}:{onBook?:OnBook}){
- const [mode,setMode]=useState<'实用信息'|'购物推荐'>('实用信息');
- const info=[['签证','中国护照：泰国、新加坡免签；越南需提前办理电子签。免签入境通常要求护照有效期6个月以上+返程机票，政策可能变化，出发前向官方移民部门复核。'],['12月天气','12月是泰国（曼谷/普吉/清迈）的干季：曼谷28°C上下、清迈早晚凉爽、普吉晴多；新加坡12月多阵雨，备轻薄雨衣，行程里留室内备选。'],['货币','泰国用泰铢（THB）、新加坡用新币（SGD）。商场/超市刷卡方便，夜市和路边摊多收现金，落地先取少量现金；参考汇率不等于实际成交价。'],['网络','提前买一张覆盖泰国+新加坡的eSIM（或落地机场买本地SIM卡）；海岛出海日提前下载离线地图。'],['插头与电压','泰国多用两孔扁/圆插（A/B/C型），新加坡用英标三方插（G型）；带一只全球转换插头+多口充电器全程通用。'],['健康','热带防晒、防蚊、补水是三件套；Soffell驱蚊液到泰国Big C买最方便。出海和长途飞行带常用药，处方药保留原包装。']];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div><PackingStrip/></SectionErrorBoundary>}</div>
+ const [mode,setMode]=useState<'实用信息'|'购物推荐'|'打包清单'>('实用信息');
+ const info=[
+ ['签证（分国家）','中国护照：泰国免签（停留不超60天）、新加坡免签（30天）、马来西亚免签（30天）；越南需提前办电子签（e-Visa，官网申请约3-5个工作日）。所有免签入境通常要求：护照有效期6个月以上、返程机票、酒店订单。政策可能变化，出发前务必向各国移民局官网复核。'],
+ ['12月天气（分城市）','曼谷：28°C上下，干季，晴多，早晚舒适。清迈：15-28°C，早晚凉（需薄外套），干季少雨。普吉：26-31°C，干季，海况好，适合出海。新加坡：25-31°C，全年多雨，12月阵雨频繁，备雨衣+室内备选。吉隆坡/槟城：26-32°C，午后阵雨。胡志明市：22-32°C，干季开始。富国岛：25-30°C，干季，海况佳。'],
+ ['货币与支付','泰国泰铢(THB)、新加坡新币(SGD)、马来西亚林吉特(MYR)、越南盾(VND)。商场/超市/餐厅刷卡方便（Visa/Master全覆盖）；夜市、路边摊、打车多收现金。落地机场先取少量现金；泰国Big C、越南金店汇率较好。参考汇率≠实际成交价，大额消费刷卡看实时汇率。'],
+ ['网络与电话卡','提前买覆盖四国的eSIM最省事（淘宝/京东搜"东南亚eSIM"）；或落地机场买本地SIM：泰国AIS/TrueMove、马来西亚Digi、新加坡Singtel、越南Viettel。海岛出海日提前下载离线地图（Google Maps离线包）。酒店WiFi普遍可用，但速度不稳定，重要预订用流量操作。'],
+ ['插头与电压','四国电压220-240V。泰国：A/B/C型（两孔扁/圆）；新加坡/马来西亚：G型（英标三方）；越南：A/C型。带一只全球转换插头+多口USB充电器全程通用。充电宝10000mAh以上随身，长途转场必备。'],
+ ['市内交通','曼谷：BTS/MRT+打车（Grab），堵车严重时地铁优先。清迈：双条车+Grab。普吉：包车/ Grab，景点分散。新加坡：MRT+公交，EZ-Link卡或银行卡直接刷。吉隆坡：Grab为主，MRT覆盖主要商圈。胡志明市：Grab打车/摩托，便宜但注意安全。富国岛：包车/酒店接送。'],
+ ['城际交通','曼谷↔清迈：飞机1.5h（推荐）或夜行火车。曼谷↔普吉：飞机1.5h。吉隆坡↔槟城：飞机1h或大巴4-5h。新加坡↔吉隆坡：大巴5-6h或飞机1h。胡志明市↔富国岛：飞机1h。提前订亚航/越捷等廉航，注意行李额另购。'],
+ ['语言','旅游区英语基本通用（新加坡全英语）；泰国/越南小摊贩英语有限，备好翻译App（Google翻译拍照翻菜单）。学几句当地语：萨瓦迪卡（你好/泰）、Terima kasih（谢谢/马来）、Cảm ơn（谢谢/越南），微笑是通用语言。'],
+ ['购物退税','新加坡：GST 9%，单店消费满100新币可退税，机场eTRS自助办理，退信用卡或现金。泰国：单日单店满2000泰铢可退，VAT 7%，机场退税处办理，需出示P.P.10表格+商品。马来西亚：无统一游客退税。越南：部分指定商店可退10% VAT，机场办理。退税商品需未使用+原包装，海关可能查验。'],
+ ['健康与医疗','热带三件套：防晒、防蚊、补水。Soffell驱蚊液到泰国Big C买最便宜。肠胃药、过敏药、感冒药自备；处方药保留原包装+处方证明。东南亚私立医院水平不错（曼谷康民、新加坡莱佛士），买足旅行保险。生水别喝，路边摊选人多的，水果去皮吃。'],
+ ['安全','四国治安总体良好。注意：① 财物分开放，护照放酒店保险箱；② 夜间偏僻小巷结伴；③ 摩托艇/水上项目选正规公司；④ 换汇去正规点，警惕"低价换汇"骗局；⑤ 泰国南部边境、马来西亚东部海岛暂不建议去。'],
+ ['紧急电话','泰国：旅游警察1155、急救1669；新加坡：报警999、急救995；马来西亚：报警999；越南：报警113、急救115。中国驻外使领馆电话存手机里。旅行保险24小时救援电话打印一份放钱包。'],
+ ['寺庙礼仪与着装','进寺庙/清真寺：脱鞋，着装遮肩过膝（备一条纱笼/薄长袖）。不要摸小孩头、不要用脚指人像。泰国王室话题慎言。参观大皇宫、双龙寺等有严格着装要求，不合规会被拦下租纱笼。'],
+ ['小费文化','泰国：按摩/酒店行李给20-50泰铢小费是习惯；餐厅已收服务费可不另给。新加坡/马来西亚：一般不给小费（账单含服务费）。越南：高档餐厅可给5-10%。小费自愿，不强制，给了是对服务认可。']
+ ];
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、打包、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐','打包清单'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div></SectionErrorBoundary>}{mode==='打包清单'&&<SectionErrorBoundary label="打包清单"><PackingTab/></SectionErrorBoundary>}</div>
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
