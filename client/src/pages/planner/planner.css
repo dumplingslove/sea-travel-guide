@@ -54,7 +54,7 @@ h4{font-size:16px;margin:0;font-weight:700}
 .stack{display:grid;gap:14px}
 
 /* —— 胶囊 tabs：选中 teal 实底白字，未选中灰字；padding/字号统一 —— */
-.tabs{position:sticky;top:0;z-index:20;margin:18px 0 26px;padding:6px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--surface);border:1px solid var(--line);backdrop-filter:blur(8px);border-radius:var(--r-pill);box-shadow:var(--shadow-sm)}
+.tabs{position:sticky;top:0;z-index:20;margin:18px 0 26px;padding:6px;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;background:var(--surface);border:1px solid var(--line);backdrop-filter:blur(8px);border-radius:var(--r-pill);box-shadow:var(--shadow-sm)}
 .tab{border:0;background:transparent;padding:10px 8px;font-size:14px;font-weight:600;color:var(--muted);border-radius:var(--r-pill);transition:background .15s ease,color .15s ease}
 .tab:hover{color:var(--ink);background:var(--paper)}
 .tab[aria-selected="true"]{background:var(--teal);color:#fff;font-weight:700}
