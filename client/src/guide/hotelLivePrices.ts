@@ -1,6 +1,6 @@
 /** 按行程实际住宿日期实查的酒店价格（USD）。
  * 数据来源：Trip.com 房型级实时价格，2 成人 1 间。
- * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）。
+ * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）。
  * 价格为动态数据：行程日期变化或定期刷新时由 hotel-price-watch 任务重查并更新本文件。
  * 键必须与 data.ts 酒店名逐字一致（含中文后缀）。
  */
@@ -68,21 +68,21 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
  },
  'JW Marriott Phuket Resort & Spa 普吉JW万豪': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'Guest Room 2 Double Garden View（阳台）', perNightUSD: 434, totalUSD: 1544, totalInclTax: true, cancel: '12-14 23:59 前免费取消', breakfast: '不含早（+ $31.71/人可选）' },
-  suite: { room: '1 Bedroom Suite 1 King Oceanfront（漩涡浴缸）', perNightUSD: 1061, totalUSD: 3779, totalInclTax: true, cancel: '12-14 23:59 前免费取消', breakfast: '不含早（+ $31.71/人可选）' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:31 UTC',
+  base: { room: 'Guest Room 2 Double Garden View（阳台；1 King同价）', perNightUSD: 481, totalUSD: 1547, totalInclTax: true, cancel: '12-14 23:59前免费取消（到店付；预付同价）', breakfast: '不含早（+$31.73/人可选）', note: 'Last booked 4 hrs ago' },
+  suite: { room: '1 Bedroom Suite 1 King Oceanfront（漩涡浴缸）', perNightUSD: 1177, totalUSD: 3531, totalInclTax: false, cancel: '12-14 23:59前免费取消（到店付；预付$1,217/晚）', breakfast: '不含早（+$31.73/人可选）', note: '3晚总价页面未显示（按每晚价×3估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'The Surin Phuket': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'One Bedroom Hillside Cottage', perNightUSD: 737, totalUSD: 2625, totalInclTax: true, cancel: '11-17 23:59 前免费取消', breakfast: '含双早', note: '88 折后价，原价 $857/晚' },
-  suite: { room: 'Beach Suite', perNightUSD: 1589, totalUSD: 5659, totalInclTax: true, cancel: '11-17 23:59 前免费取消', breakfast: '含双早', note: '88 折后价，原价 $1,849/晚' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:33 UTC',
+  base: { room: 'Two-Bedroom Family Cottages', perNightUSD: 1620, totalUSD: 5212, totalInclTax: true, cancel: '11-17 23:59前免费取消', breakfast: '含4人早', note: '11% off，原价$1,837/晚；Our last 1!；原$737/晚的One Bedroom Hillside Cottage本轮无可订' },
+  suite: { room: 'Beach Suite', perNightUSD: 1782, totalUSD: 5346, totalInclTax: false, cancel: '11-17 23:59前免费取消', breakfast: '含双早', note: '11% off，原价$2,021/晚；3晚总价页面未显示（按每晚价×3估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'Keemala': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'Tent Pool Villa', perNightUSD: 810, totalUSD: 2886, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '限时 45 折，原价 $1,597/晚' },
-  suite: null, suiteNote: '该日期未找到可订套房',
-  source: 'Trip.com', checkedAt: '2026-09-25 03:36 UTC',
+  base: { room: 'Tent Pool Villa', perNightUSD: 899, totalUSD: 2891, totalInclTax: true, cancel: '不可退（到店付）', breakfast: '含双早', note: '45% off，原价$1,687/晚；Our last 4!' },
+  suite: null, suiteNote: '该日期无套房（在售均为Villa命名房型）',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'Penang Marriott Hotel 槟城万豪': {
   checkIn: '2026-12-20', checkOut: '2026-12-22', nights: 2,
@@ -236,21 +236,21 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
  },
  'Amanpuri': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'Three-Bedroom Ocean Villa', perNightUSD: 14391, totalUSD: 46293, totalInclTax: true, cancel: '11-16 23:59前免费取消', breakfast: '含双早', note: '该价仅剩1间；可住5位成人' },
+  base: { room: 'Three-Bedroom Ocean Villa', perNightUSD: 14391, totalUSD: 46293, totalInclTax: true, cancel: '11-16 23:59前免费取消', breakfast: '含双早', note: '该价仅剩1间；可住5位成人；本轮重查价格无变化' },
   suite: null, suiteNote: '该日期无套房（在售均为Villa命名房型）',
-  source: 'Trip.com', checkedAt: '2026-09-26 15:26 UTC',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'Trisara': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'Ocean View Pool Junior Suite', perNightUSD: 1766, totalUSD: 6290, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '135㎡，含普吉机场接送1次；该房型不接待儿童；该价仅剩4间' },
-  suite: { room: 'Ocean View Pool Junior Suite（入门房即为Suite，最低即套房）', perNightUSD: 1766, totalUSD: 6290, totalInclTax: true, cancel: '不可退', breakfast: '含双早' },
-  source: 'Trip.com', checkedAt: '2026-09-26 15:26 UTC',
+  base: { room: 'Ocean View Pool Junior Suite', perNightUSD: 1922, totalUSD: 6184, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: 'Our last 4!；Last booked 6 hrs ago' },
+  suite: { room: 'Signature Ocean View Pool Suite', perNightUSD: 3205, totalUSD: 9615, totalInclTax: false, cancel: '不可退', breakfast: '含双早', note: '到店付价；预付价$3,567/晚；Our last 3!；3晚总价页面未显示（按每晚价×3估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'Banyan Tree Phuket': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
-  base: { room: 'Banyan Pool Villa', perNightUSD: 916, totalUSD: 2947, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '该价仅剩3间；免费取消价$1,145/晚、总计$3,684' },
+  base: { room: 'Banyan Pool Villa', perNightUSD: 916, totalUSD: 2947, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '该价仅剩3间；免费取消价$1,145/晚、总计$3,684；本轮重查价格无变化' },
   suite: null, suiteNote: '该日期无明确标Suite的房型（均为Pool Villa/Residence命名）',
-  source: 'Trip.com', checkedAt: '2026-09-26 15:26 UTC',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:51 UTC',
  },
  'Eastern & Oriental Hotel': {
   checkIn: '2026-12-20', checkOut: '2026-12-22', nights: 2,
