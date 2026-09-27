@@ -30,7 +30,9 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('曼谷文华东方，略失望。','https://www.xiaohongshu.com/explore/68e35ff60000000003021a63','2025-10-07 · 负面体验样本')],
  'The Siam':[
   L('The Siam｜绝美，但不会再住了','https://www.xiaohongshu.com/explore/68e3700e0000000004015b56','2025-10-06 · 正文与评论区已复核'),
-  L('曼谷The Siam｜住进《博物馆奇妙夜》','https://www.xiaohongshu.com/explore/6a7479a60000000026037c20','设计与古董收藏体验帖')],
+  L('曼谷The Siam｜住进《博物馆奇妙夜》','https://www.xiaohongshu.com/explore/6a7479a60000000026037c20','设计与古董收藏体验帖'),
+  L('泰国｜曼谷湄南河畔The Siam Hotel','https://www.xiaohongshu.com/explore/69857a560000000028022b47','2026-03-12 · 必打卡机位：条纹无边泳池/黑胶室/庭院下午茶'),
+  L('为什么国内和曼谷的艺术酒店差别这么大','https://www.xiaohongshu.com/explore/6a12d57b000000003501ca20','2026-05-24 · 1361赞 · 米其林星钥三星+Bill Bensley设计')],
  'Sorn':[
   L('为了这家米三泰国菜 我专门飞到了曼谷','https://www.xiaohongshu.com/explore/6970803c000000000d00b5fa','正文与评论区已复核'),
   L('随手订到的Sorn到底值不值','https://www.xiaohongshu.com/explore/69edb79f0000000022028274','价格、订位与菜品反馈已复核')],
@@ -56,10 +58,16 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('避坑指南｜nahm','https://www.xiaohongshu.com/explore/65d1afd8000000000b00d0a5','2024-02-18 · 负面口碑样本')],
  'Jay Fai':[
   L('米其林一星 Jay Fai','https://www.xiaohongshu.com/explore/69fac657000000002202b429','2026仍营业、预约与营业信息核对'),
-  L('曼谷街头米其林｜Raan Jay Fai餐厅宣布关闭！','https://www.xiaohongshu.com/explore/6721a8e8000000003c01b55f','2024关闭传闻样本；与2026营业帖交叉判断')],
+  L('曼谷街头米其林｜Raan Jay Fai餐厅宣布关闭！','https://www.xiaohongshu.com/explore/6721a8e8000000003c01b55f','2024关闭传闻样本；与2026营业帖交叉判断'),
+  L('泰国米其林名厨Jay Fai天价蟹肉煎蛋惹争议','https://www.xiaohongshu.com/explore/68a2dbf8000000001d015143','2025-08-18 · 未明码标价被罚2000铢，评论一边倒质疑性价比'),
+  L('曼谷米其林一星Jayfai','https://www.xiaohongshu.com/explore/68a95fa5000000001d0293bd','2025-08-23 · 代排体验：锅气有但不惊艳'),
+  L('米其林一星曼谷痣姐热炒未明码标价遭罚','https://www.xiaohongshu.com/explore/68a5d748000000001b033ec6','2025-08-20 · 标价1500铢收4000铢被罚，82岁主厨自2017年一星')],
  'Thipsamai':[
   L('曼谷必吃老字号｜Thipsamai Pad Thai','https://www.xiaohongshu.com/explore/69ee29df000000001f00714c','鬼门原店体验帖'),
-  L('曼谷拔草！米其林餐厅thipsamai','https://www.xiaohongshu.com/explore/66f26fb3000000001a022713','ICONSIAM分店负面样本；与原店区分')],
+  L('曼谷拔草！米其林餐厅thipsamai','https://www.xiaohongshu.com/explore/66f26fb3000000001a022713','ICONSIAM分店负面样本；与原店区分'),
+  L('泰国本地人排了85年队的炒粉一定要来试试','https://www.xiaohongshu.com/explore/65d46b870000000007025a10','2024-02-20 · 1531赞 · 招牌炒粉150铢，1939年85年老店'),
+  L('Thip Samai, 最便宜的米其林餐厅','https://www.xiaohongshu.com/explore/66f3a3d8000000002c015fdf','2024-09-25 · ICONSIAM分店 · 橘子汁必点'),
+  L('曼谷必吃炒河粉！Thipsamai','https://www.xiaohongshu.com/explore/6667c5b3000000000d00f31e','2024-06-11 · 干虾蛋包炒粉锅气足，Cash Only')],
  '耀华力夜市 / T&K':[
   L('打卡曼谷唐人街T&K SEAFOOD','https://www.xiaohongshu.com/explore/6a9a66b5000000002601950f','打卡样本'),
   L('踩雷 踩雷','https://www.xiaohongshu.com/explore/69481f75000000001e020021','2025-12-22 · 菜品负面样本')],
