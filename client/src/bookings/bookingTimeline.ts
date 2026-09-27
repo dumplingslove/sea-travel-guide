@@ -23,9 +23,26 @@ export interface FlightLegInfo {
   priceNote?: string | null;
   direct?: boolean | null;
   fragile?: boolean | null;
+  /** Duffel 实查的当天全部直飞选项（2成人总价USD，按价格升序）；空 = 未查询 */
+  options?: FlightOption[] | null;
+  /** 实查时间戳，如 "2026-09-27 02:17 PDT" */
+  queriedAt?: string | null;
 }
 
-/** 3 段城际 + 去/回程国际段占位。城际价格已由 Duffel 实查回填（2026-09-26）。 */
+/** Duffel 同一天直飞的一个可选航班（价格为查询时 2 成人总价，USD）。 */
+export interface FlightOption {
+  carrier: string;
+  flight: string;
+  depart: string;
+  arrive: string;
+  price: number;
+  refundable: string; // "yes" | "no" | "not stated"
+  changeable: string;
+  recommend?: boolean;
+  recommendReason?: string;
+}
+
+/** 3 段城际 + 去/回程国际段占位。城际价格已由 Duffel 实查回填（2026-09-27 02:17 PDT，2成人直飞当天全部选项）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out",
@@ -43,12 +60,28 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-17",
     day: 6,
     kind: "intercity",
-    note: "D6 转场：新加坡段结束、普吉段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 13 班可选；不可退、可改有手续费，含托运行李 1 件）",
+    note: "D6 转场：新加坡段结束、普吉段开始；Duffel 实查 2026-09-27 02:17 PDT（2 成人直飞，当天 13 班可选）",
     carrier: "Scoot TR0652",
     schedule: "18:15→19:20",
     priceNote: "2人 $741.40 起",
     direct: true,
     fragile: false,
+    queriedAt: "2026-09-27 02:17 PDT",
+    options: [
+      { carrier: "Scoot", flight: "TR0652", depart: "18:15", arrive: "19:20", price: 741.40, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天最低价；酷航是新航旗下廉航，新加坡进出首选" },
+      { carrier: "Scandinavian Airlines Ireland Limited", flight: "SL0103", depart: "15:30", arrive: "16:20", price: 745.40, refundable: "no", changeable: "yes" },
+      { carrier: "Scoot", flight: "TR0678", depart: "08:40", arrive: "09:40", price: 865.40, refundable: "no", changeable: "yes" },
+      { carrier: "Scoot", flight: "TR0644", depart: "11:15", arrive: "12:20", price: 865.40, refundable: "no", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0724", depart: "06:55", arrive: "07:50", price: 957.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG4716", depart: "08:15", arrive: "09:15", price: 1045.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG4722", depart: "16:10", arrive: "17:10", price: 1045.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG4724", depart: "18:35", arrive: "19:35", price: 1045.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0740", depart: "18:35", arrive: "19:35", price: 1047.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0732", depart: "12:50", arrive: "13:55", price: 1227.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0728", depart: "09:00", arrive: "10:05", price: 1227.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0736", depart: "16:10", arrive: "17:10", price: 1227.40, refundable: "yes", changeable: "yes" },
+      { carrier: "Singapore Airlines", flight: "SQ0726", depart: "08:15", arrive: "09:15", price: 1227.40, refundable: "yes", changeable: "yes" },
+    ],
   },
   {
     id: "hkt-bkk",
@@ -57,12 +90,30 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-20",
     day: 9,
     kind: "intercity",
-    note: "D9 转场：普吉段结束、曼谷段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 15 班可选；不可退、可改。泰航当天 9 班同价 $231.80，可退可改）",
+    note: "D9 转场：普吉段结束、曼谷段开始；Duffel 实查 2026-09-27 02:17 PDT（2 成人直飞，当天 15 班可选；泰航当天 9 班同价 $231.80，可退可改）",
     carrier: "Bangkok Airways PG0270",
     schedule: "07:45→09:20",
     priceNote: "2人 $207.80 起",
     direct: true,
     fragile: false,
+    queriedAt: "2026-09-27 02:17 PDT",
+    options: [
+      { carrier: "Bangkok Airways", flight: "PG0270", depart: "07:45", arrive: "09:20", price: 207.80, refundable: "no", changeable: "yes", recommend: true, recommendReason: "当天最低价+早班机；曼谷航空是精品航司，票价含20kg行李+餐食+贵宾室" },
+      { carrier: "Bangkok Airways", flight: "PG0280", depart: "22:00", arrive: "23:35", price: 207.80, refundable: "no", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0228", depart: "09:05", arrive: "10:35", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0202", depart: "09:50", arrive: "11:20", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0204", depart: "10:25", arrive: "11:55", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0206", depart: "11:50", arrive: "13:20", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0208", depart: "13:40", arrive: "15:10", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0212", depart: "16:05", arrive: "17:35", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0216", depart: "17:10", arrive: "18:40", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0218", depart: "19:25", arrive: "21:00", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0222", depart: "20:40", arrive: "22:15", price: 231.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0274", depart: "15:00", arrive: "16:35", price: 231.80, refundable: "no", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0278", depart: "19:50", arrive: "21:25", price: 231.80, refundable: "no", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0272", depart: "10:20", arrive: "11:55", price: 261.80, refundable: "no", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0276", depart: "12:45", arrive: "14:20", price: 261.80, refundable: "no", changeable: "yes" },
+    ],
   },
   {
     id: "bkk-cnx",
@@ -71,12 +122,28 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-23",
     day: 12,
     kind: "intercity",
-    note: "D12 转场：曼谷段结束、清迈段开始；Duffel 实查 2026-09-26 14:42 PDT（2 成人直飞，当天 13 班可选；可退可改）",
+    note: "D12 转场：曼谷段结束、清迈段开始；Duffel 实查 2026-09-27 02:17 PDT（2 成人直飞，当天 13 班可选；可退可改）",
     carrier: "Thai Airways TG0100",
     schedule: "06:00→07:20",
     priceNote: "2人 $167.80 起",
     direct: true,
     fragile: false,
+    queriedAt: "2026-09-27 02:17 PDT",
+    options: [
+      { carrier: "Thai Airways", flight: "TG0100", depart: "06:00", arrive: "07:20", price: 167.80, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "当天最低价+早班机+可退可改；上午到清迈，下午能直接玩" },
+      { carrier: "Thai Airways", flight: "TG0122", depart: "09:00", arrive: "10:20", price: 227.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0114", depart: "17:30", arrive: "18:50", price: 227.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0102", depart: "07:25", arrive: "08:45", price: 243.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0120", depart: "19:05", arrive: "20:25", price: 243.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0215", depart: "08:05", arrive: "09:25", price: 257.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0104", depart: "10:15", arrive: "11:30", price: 273.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0112", depart: "15:05", arrive: "16:25", price: 273.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0223", depart: "10:00", arrive: "11:20", price: 299.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0219", depart: "17:40", arrive: "19:00", price: 299.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0106", depart: "12:00", arrive: "13:20", price: 315.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Bangkok Airways", flight: "PG0225", depart: "12:25", arrive: "13:45", price: 381.80, refundable: "yes", changeable: "yes" },
+      { carrier: "Thai Airways", flight: "TG0110", depart: "13:25", arrive: "14:40", price: 395.80, refundable: "yes", changeable: "yes" },
+    ],
   },
   {
     id: "intl-back",
