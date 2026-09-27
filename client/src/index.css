@@ -7,6 +7,8 @@
 
 html {
   font-family: var(--font-sans);
+  /* 始终预留滚动条槽位：长页面（有滚动条）和短页面（无滚动条）的居中内容列不再左右错位 */
+  scrollbar-gutter: stable;
 }
 
 body {
