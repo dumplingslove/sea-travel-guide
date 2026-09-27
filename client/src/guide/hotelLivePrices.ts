@@ -1,6 +1,6 @@
 /** 按行程实际住宿日期实查的酒店价格（USD）。
  * 数据来源：Trip.com 房型级实时价格，2 成人 1 间。
- * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）；2026-09-27 08:54 PDT（清迈 6 家按新行程日期 12/23–12/25 重查）。
+ * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）；2026-09-27 08:54 PDT（清迈 6 家按新行程日期 12/23–12/25 重查）；2026-09-27 08:57 PDT（新加坡 Raffles/Ritz-Carlton/文华东方按 12/12–12/17 重查＋富丽敦套房补齐）。
  * 价格为动态数据：行程日期变化或定期刷新时由 hotel-price-watch 任务重查并更新本文件。
  * 键必须与 data.ts 酒店名逐字一致（含中文后缀）。
  */
@@ -145,10 +145,10 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com / Google Hotels / Kayak / 官网', checkedAt: '2026-09-25 04:35 UTC',
  },
  'Mandarin Oriental Singapore 文华东方': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Sea View Room King', perNightUSD: 1147, totalUSD: 4124, totalInclTax: true, cancel: '预付不可退', breakfast: '不含早' },
-  suite: { room: 'Premier Family Suite（95㎡）', perNightUSD: 2189, totalUSD: 7873, totalInclTax: true, cancel: '不可退；含早价 $2,204/晚（3 晚 $7,929）', breakfast: '不含早（含早另计）' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:22 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Sea View Room King', perNightUSD: 490, totalUSD: 2671, totalInclTax: true, cancel: '12-10 18:00前免费取消（预付）', breakfast: '不含早（+$33.79/人可选）', note: 'Last booked 24 mins ago；Sea View Room Twin $511/晚、Marina Bay View Room Twin $616/晚均Our last 4!' },
+  suite: { room: 'Family Suite', perNightUSD: 1353, totalUSD: 6765, totalInclTax: false, cancel: '12-10 18:00前免费取消（预付）', breakfast: '含1份早餐', note: '该价为1成人价；2成人价页面未列；Family Suite Twin $1,378/晚（1成人价）Our last 1!；5晚总价页面未显示（按每晚价×5估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:57 UTC',
  },
  'Shangri-La Singapore 香格里拉': {
   checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
@@ -159,14 +159,14 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
  'The Fullerton Hotel Singapore 新加坡富丽敦酒店': {
   checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
   base: { room: 'Premier Courtyard Room（452平方英尺，1张大床）', perNightUSD: 329, totalUSD: 1793, totalInclTax: true, cancel: '不可退（预付）', breakfast: '不含早', note: '多晚连住专享价·今日最优价；Marina Bay View Room $480仅剩5间；Esplanade Room King $499仅剩2间' },
-  suite: null, suiteNote: '本轮未及核查（浏览器会话在展开剩余房型时中断）',
-  source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
+  suite: { room: 'Palladian Suite（1 king bed，742–1001 ft²）', perNightUSD: 774, totalUSD: 4220, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: 'Our last 3!；Loft Suite $1,352/晚更贵' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:57 UTC',
  },
  'The Ritz-Carlton, Millenia Singapore': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Deluxe Kallang King（51㎡）', perNightUSD: 844, totalUSD: 3037, totalInclTax: true, cancel: '9-26 23:59 前免费取消（预付）', breakfast: '不含早（+ $60.94/人可选）' },
-  suite: { room: 'Club Premier King Suite（72㎡，行政酒廊，高层海湾景）', perNightUSD: 2447, totalUSD: 7341, totalInclTax: false, cancel: '9-26 23:59 前免费取消（预付）', breakfast: '含早', note: '总价为税前小计；Club Deluxe King Suite 同价 $2,447/晚' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:45 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'Deluxe Kallang King', perNightUSD: 413, totalUSD: 2253, totalInclTax: true, cancel: '9-28 23:59前免费取消（预付）', breakfast: '不含早（+$61.01/人可选）', note: 'Last booked 43 mins ago' },
+  suite: { room: 'Club Deluxe King Suite（行政酒廊，高层）', perNightUSD: 844, totalUSD: 4220, totalInclTax: false, cancel: '9-28 23:59前免费取消（预付）', breakfast: '含1份早餐', note: '该价为1成人价；2成人站内建议订2间；5晚总价页面未显示（按每晚价×5估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:57 UTC',
  },
  'The Ritz-Carlton, Bangkok': {
   checkIn: '2026-12-12', checkOut: '2026-12-15', nights: 3,
@@ -337,10 +337,10 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-27 13:59 UTC',
  },
  'Raffles Singapore': {
-  checkIn: '2026-12-29', checkOut: '2027-01-01', nights: 3,
-  base: { room: 'Palm Court Suite 2 Doubles', perNightUSD: 2431, totalUSD: 7948, totalInclTax: true, cancel: '不可退', breakfast: '不含早（+$76.97/人可选；含早价$2,572/晚）', note: '全套房酒店，最低即套房' },
-  suite: { room: 'Palm Court Suite 2 Doubles（全套房酒店，最低即套房）', perNightUSD: 2431, totalUSD: 7948, totalInclTax: true, cancel: '不可退', breakfast: '不含早（+$76.97/人可选）' },
-  source: 'Trip.com', checkedAt: '2026-09-26 15:11 UTC',
+  checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
+  base: { room: 'State Room Suite 2 Doubles', perNightUSD: 1367, totalUSD: 7449, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早', note: '全套房酒店，最低即套房；可免费取消替代价$1,444/晚（12-09 18:00前）；Last booked 18 hrs ago' },
+  suite: { room: 'State Room Suite 2 Doubles（全套房酒店，最低即套房）', perNightUSD: 1367, totalUSD: 7449, totalInclTax: true, cancel: '不可退（预付）', breakfast: '含双早' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:57 UTC',
  },
  'Marina Bay Sands': {
   checkIn: '2026-12-12', checkOut: '2026-12-17', nights: 5,
