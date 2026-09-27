@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import {
   ItineraryDayCard,
   detailForPlanDay,
@@ -52,6 +52,25 @@ function shortDate(d: string): string {
 function ItineraryTab() {
   const plan = usePlanItinerary();
   const days: Day[] = plan.days;
+  const dateNavRef = useRef<HTMLDivElement>(null);
+  // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
+  useLayoutEffect(() => {
+    const nav = dateNavRef.current;
+    if (!nav) return;
+    const sync = () => {
+      const header = document.querySelector("header.sticky");
+      if (header) nav.style.top = `${Math.round(header.getBoundingClientRect().height)}px`;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    const header = document.querySelector("header.sticky");
+    if (header) ro.observe(header);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
   const { rows } = useRecordsData(["booking"]);
   // 每城第几天（用于匹配静态内容：首日=抵达内容，末日=离境内容）
   const idxInCity = new Map<number, number>();
@@ -94,8 +113,8 @@ function ItineraryTab() {
   const isCloudPlan = plan.source === "cloud";
   return (
     <>
-      {/* 悬浮日期导航（意大利站逻辑） */}
-      <div className="sticky top-[92px] z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200">
+      {/* 悬浮日期导航（紧贴 header 底部，top 由 JS 动态测量 header 高度设置） */}
+      <div ref={dateNavRef} className="sticky z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200">
         <div className="flex gap-1.5 overflow-x-auto pb-0.5">
           {days.map((d) => (
             <button

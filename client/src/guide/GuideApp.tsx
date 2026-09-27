@@ -1,8 +1,21 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Component, Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // space-sdk 在 GitHub Pages 新站不可用：顶部署名条由新站全局 Header 承担，此处 stub 为空，保持视觉一致。
 function SafeAreaTopScrim(_props: { backgroundColor?: string }) { return null; }
+
+/** 错误边界：子组件渲染崩溃时显示兜底，不让整页白屏、保证能返回 */
+class SectionErrorBoundary extends Component<{children:ReactNode;label:string},{err:Error|null}>{
+ state={err:null as Error|null};
+ static getDerivedStateFromError(err:Error){return {err};}
+ componentDidCatch(err:Error){console.error(`[${this.props.label}]`,err);}
+ render(){
+  if(this.state.err){
+   return <section className="notice" role="alert"><h2>这部分内容暂时打不开</h2><p>技术细节：{String(this.state.err.message||this.state.err)}</p><p><button className="secondary" onClick={()=>this.setState({err:null})}>重试</button></p></section>;
+  }
+  return this.props.children;
+ }
+}
 import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
@@ -28,7 +41,7 @@ import hcmImg from './assets/cities/ho-chi-minh.jpg';
 import phuquocImg from './assets/cities/phu-quoc.jpg';
 import singaporeImg from './assets/cities/singapore.jpg';
 
-type Tab='航班'|'交通'|'酒店'|'餐厅'|'景点'|'实用信息'|'打包清单'|'我的预订'|'游记'|'信息来源搜索状态';
+type Tab='航班'|'交通'|'酒店'|'餐厅'|'景点'|'实用信息'|'我的预订'|'游记'|'信息来源搜索状态';
 export type GuideTab=Tab;
 type RecordKind='booking'|'note'|'packing'|'journal';
 type RecordRow=GuideRecord;
@@ -48,7 +61,7 @@ function AuthorName({ userId }: { userId: string | null }) {
   return <small className="recordauthor">· {name} 添加</small>;
 }
 
-const tabs:Tab[]=['航班','交通','酒店','餐厅','实用信息','信息来源搜索状态','打包清单','我的预订','游记'];
+const tabs:Tab[]=['航班','交通','酒店','餐厅','实用信息','信息来源搜索状态','我的预订','游记'];
 const accents:Record<string,string>={'曼谷':'#0c7890','清迈':'#a66c25','普吉':'#18877f','槟城':'#ad5833','吉隆坡':'#405d82','胡志明市':'#a0443d','富国岛':'#287a6d','新加坡':'#a83748'};
 const cityImages:Record<string,string>={'曼谷':bangkokImg,'清迈':chiangmaiImg,'普吉':phuketImg,'槟城':penangImg,'吉隆坡':klImg,'胡志明市':hcmImg,'富国岛':phuquocImg,'新加坡':singaporeImg};
 const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','2天','12/15–16'],['普吉','3天','12/17–19'],['槟城','2天','12/20–21'],['吉隆坡','2天','12/22–23'],['胡志明市','2天','12/24–25'],['富国岛','3天','12/26–28'],['新加坡','3天','12/29–31']];
@@ -84,7 +97,6 @@ const navPaths:Record<Tab,React.ReactNode>={
  '景点':<><path d="M3 20 9 8l4 7 3-4 5 9z"/><circle cx="17" cy="5" r="2"/></>,
  '实用信息':<><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></>,
  '信息来源搜索状态':<><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/><path d="M2 21h22M3 6l6-3 6 5 7-6"/></>,
- '打包清单':<><rect x="6" y="6" width="12" height="15" rx="2"/><path d="M9 6V4a3 3 0 0 1 6 0v2M6 11h12M4 9v8M20 9v8"/></>,
  '我的预订':<><path d="M6 3h12v18l-6-4-6 4z"/><path d="m9 10 2 2 4-4"/></>,
  '游记':<><path d="M3 5a4 4 0 0 1 4-2h5v18H7a4 4 0 0 0-4 2zM21 5a4 4 0 0 0-4-2h-5v18h5a4 4 0 0 1 4 2z"/></>
 };
@@ -225,26 +237,35 @@ function CountryAdvice(){
  return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;
 }
 
-function PackingStrip({onGoTab}:{onGoTab?:(t:Tab)=>void}){
+function PackingStrip(){
  const items=['护照与签证副本','轻薄雨衣','SPF50防晒','防蚊用品','海岛防水袋','全球转换插头','常用药与处方证明'];
- const [added,setAdded]=useState<string[]>([]);
- const [existing,setExisting]=useState<string[]>([]);
- useEffect(()=>{listRecords().then(({records})=>setExisting(records.filter(r=>r.kind==='packing').map(r=>r.title))).catch(()=>{});},[]);
+ const [rows,setRows]=useState<GuideRecord[]>([]);
+ const [custom,setCustom]=useState('');
+ const refresh=()=>{listRecords().then(({records})=>setRows(records.filter(r=>r.kind==='packing'))).catch(()=>{});};
+ useEffect(refresh,[]);
+ const titles=rows.map(r=>r.title);
  const add=async(x:string)=>{
-  if(added.includes(x)||existing.includes(x))return;
-  try{await saveRecord({kind:'packing',title:x,body:'购物页快捷添加',day:null,done:false});setAdded(a=>[...a,x]);}catch{/* ignore */}
+  if(!x.trim()||titles.includes(x.trim()))return;
+  try{await saveRecord({kind:'packing',title:x.trim(),body:'购物页添加',day:null,done:false});setCustom('');refresh();}catch{/* ignore */}
+ };
+ const toggle=async(r:GuideRecord)=>{
+  try{await saveRecord({id:r.id,kind:r.kind,title:r.title,body:r.body,day:r.day,done:!r.done});refresh();}catch{/* ignore */}
+ };
+ const del=async(id:number)=>{
+  try{await deleteRecord({id});refresh();}catch{/* ignore */}
  };
  return <section className="packbox"><h4>🧳 行前打包清单</h4>
- <p className="shoptext">先把行李收好再买买买：热带海岛行程建议清单，点一下直接加入你的打包清单（与「打包清单」页互通）。</p>
- <div className="packchips">{items.map(x=>{const done=added.includes(x)||existing.includes(x);return <button key={x} className={done?'added':''} onClick={()=>add(x)} disabled={done}>{done?'✓ ':'＋ '}{x}</button>;})}</div>
- {onGoTab&&<button className="packgo" onClick={()=>onGoTab('打包清单')}>去「打包清单」页管理全部 →</button>}
+ <p className="shoptext">先把行李收好再买买买：点一下把建议加入清单，可勾选、删除，也可自己加。下面就是你的完整打包清单。</p>
+ <div className="packchips">{items.map(x=>{const done=titles.includes(x);return <button key={x} className={done?'added':''} onClick={()=>add(x)} disabled={done}>{done?'✓ ':'＋ '}{x}</button>;})}</div>
+ <div className="packadd"><input value={custom} onChange={e=>setCustom(e.target.value)} placeholder="自己加一项，例如：折叠购物袋" aria-label="自定义打包项"/><button onClick={()=>add(custom)} disabled={!custom.trim()}>加入</button></div>
+ {rows.length>0&&<ul className="packlist">{rows.map(r=><li key={r.id} className={r.done?'done':''}><button className="check" aria-label={`${r.done?'取消完成':'标记完成'}${r.title}`} onClick={()=>toggle(r)}>{r.done?'✓':'○'}</button><span>{r.title}</span><button className="packdel" aria-label={`删除${r.title}`} onClick={()=>r.id!==undefined&&del(r.id)}>删除</button></li>)}</ul>}
  </section>;
 }
 
-function Practical({onBook,onGoTab}:{onBook?:OnBook;onGoTab?:(t:Tab)=>void}){
+function Practical({onBook}:{onBook?:OnBook}){
  const [mode,setMode]=useState<'实用信息'|'购物推荐'>('实用信息');
  const info=[['签证','中国护照：泰国、新加坡免签；越南需提前办理电子签。免签入境通常要求护照有效期6个月以上+返程机票，政策可能变化，出发前向官方移民部门复核。'],['12月天气','12月是泰国（曼谷/普吉/清迈）的干季：曼谷28°C上下、清迈早晚凉爽、普吉晴多；新加坡12月多阵雨，备轻薄雨衣，行程里留室内备选。'],['货币','泰国用泰铢（THB）、新加坡用新币（SGD）。商场/超市刷卡方便，夜市和路边摊多收现金，落地先取少量现金；参考汇率不等于实际成交价。'],['网络','提前买一张覆盖泰国+新加坡的eSIM（或落地机场买本地SIM卡）；海岛出海日提前下载离线地图。'],['插头与电压','泰国多用两孔扁/圆插（A/B/C型），新加坡用英标三方插（G型）；带一只全球转换插头+多口充电器全程通用。'],['健康','热带防晒、防蚊、补水是三件套；Soffell驱蚊液到泰国Big C买最方便。出海和长途飞行带常用药，处方药保留原包装。']];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div><PackingStrip onGoTab={onGoTab}/></>}</div>
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0}><ShopGuide city={c}/></Fold>)}</div><PackingStrip/></SectionErrorBoundary>}</div>
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
@@ -315,7 +336,7 @@ export function GuideApp({initialTab='酒店',hideChrome=false}:{initialTab?:Tab
  const [tab,setTab]=useState<Tab>(initialTab);
  const [bookingPreset,setBookingPreset]=useState<BookingPreset|null>(null);
  const onBook:OnBook=(p)=>setBookingPreset(p);
- const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <Practical onBook={onBook} onGoTab={go}/>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='打包清单')return <RecordsPage kind="packing" title="打包清单" summary="按四国、海岛和长途飞行整理；勾选状态保存在私人数据库中。" image={phuketImg}/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
+ const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <SectionErrorBoundary label="实用信息"><Practical onBook={onBook}/></SectionErrorBoundary>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
  const go=(t:Tab)=>{setTab(t);window.scrollTo({top:0,behavior:'auto'})};
  return <div className="app"><SafeAreaTopScrim backgroundColor="var(--surface)"/>{!hideChrome&&<div className="migration-notice" role="note">⚠️ 数据更新中：本页为旧版攻略站整体迁移（研究快照 2026-09-12）；小红书严格实读与 189 项详情重做完成后会替换更新。</div>}{!hideChrome&&<nav className="mainnav" aria-label="攻略章节">{tabs.map(t=><button key={t} className={tab===t?'active':''} aria-current={tab===t?'page':undefined} onClick={()=>go(t)}><NavIcon tab={t}/><span>{t}</span></button>)}</nav>}<main>{content}</main>{!hideChrome&&<footer><strong>13天 · 2国 · 4城</strong><p>固定研究快照：2026-09-12。开放时间、价格、签证、航班与房态请在出发前向官方渠道复核。</p></footer>}<BookingDialog open={!!bookingPreset} preset={bookingPreset} onClose={()=>setBookingPreset(null)}/></div>
 }
