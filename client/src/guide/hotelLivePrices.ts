@@ -1,6 +1,6 @@
 /** 按行程实际住宿日期实查的酒店价格（USD）。
  * 数据来源：Trip.com 房型级实时价格，2 成人 1 间。
- * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）。
+ * 查询时间：2026-09-24 20:15–21:35 PDT（21 家首批）；2026-09-26 07:43–08:26 PDT（30 家补齐，全站 51 家覆盖）；2026-09-27 06:59 PDT（新加坡 4 家按新行程日期 12/12–12/17 重查）；2026-09-27 08:51 PDT（普吉 6 家同日期 12/17–12/20 重查）；2026-09-27 08:54 PDT（清迈 6 家按新行程日期 12/23–12/25 重查）。
  * 价格为动态数据：行程日期变化或定期刷新时由 hotel-price-watch 任务重查并更新本文件。
  * 键必须与 data.ts 酒店名逐字一致（含中文后缀）。
  */
@@ -49,22 +49,22 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-25 03:22 UTC',
  },
  'Anantara Chiang Mai': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Deluxe Room Garden View', perNightUSD: 456, totalUSD: 1082, totalInclTax: true, cancel: '早鸟价不可退；免费取消价 $532/晚', breakfast: '含早' },
-  suite: { room: 'Lanna Garden View Suite（105㎡）', perNightUSD: 599, totalUSD: 1421, totalInclTax: true, cancel: '不可退；免费取消价 $741/晚（2 晚 $1,760）', breakfast: '含早' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:22 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: null, suite: null,
+  unavailable: '该日期无可订房：Trip.com列表页明确显示Sold out（2026-12-23至12-25）',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'Shangri-La Chiang Mai 清迈香格里拉': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Deluxe King Room Pool View', perNightUSD: 203, totalUSD: 483, totalInclTax: true, cancel: '12-14 18:00 前免费取消', breakfast: '不含早（+ $21.54/人可选）' },
-  suite: { room: 'Executive King Suite', perNightUSD: 314, totalUSD: 746, totalInclTax: true, cancel: '12-14 18:00 前免费取消', breakfast: '含双早 + 行政酒廊', note: '85 折后价，原价 $380/晚' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:26 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: { room: 'Deluxe King Room（1 king bed，山景，462 ft²）', perNightUSD: 332, totalUSD: 711, totalInclTax: true, cancel: '12-22 18:00前免费取消（预付）', breakfast: '不含早（+$21.55/人可选）', note: '13% off，原价$385/晚；Deluxe Twin同价；Our last 4!' },
+  suite: null, suiteNote: '已展开全部房型：无可订Suite房型',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'Chiang Mai Marriott Hotel 清迈万豪': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Deluxe King City View', perNightUSD: 179, totalUSD: 426, totalInclTax: true, cancel: '12-14 23:59 前免费取消', breakfast: '不含早（+ $22.89/人可选）' },
-  suite: { room: 'Executive Suite 1 Bedroom（行政酒廊）', perNightUSD: 299, totalUSD: 710, totalInclTax: true, cancel: '12-14 23:59 前免费取消', breakfast: '不含早（+ $22.89/人可选）' },
-  source: 'Trip.com', checkedAt: '2026-09-25 03:28 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: { room: 'Deluxe King - City View（1 king bed，387 ft²）', perNightUSD: 364, totalUSD: 786, totalInclTax: true, cancel: '12-22 23:59前免费取消（到店付/预付同价）', breakfast: '不含早（+$22.90/人可选）', note: 'Last booked 1 hr ago' },
+  suite: { room: 'Executive Suite, 1 Bedroom, 1 King, Club Lounge Access（818 ft²，山景）', perNightUSD: 529, totalUSD: 1058, totalInclTax: false, cancel: '12-22 23:59前免费取消', breakfast: '不含早（+$22.90/人可选）', note: '含M Club行政酒廊；2晚总价页面未显示（按每晚价×2估算，税费另计）' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'JW Marriott Phuket Resort & Spa 普吉JW万豪': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
@@ -217,22 +217,22 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-09-26 14:57 UTC',
  },
  '137 Pillars House': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Rajah Brooke Suite', perNightUSD: 541, totalUSD: 1285, totalInclTax: true, cancel: '11-23 01:00前免费取消', breakfast: '含双早', note: '85折后价，原价$612；该价仅剩5间' },
-  suite: { room: 'Rajah Brooke Suite（全店房型皆为Suite，最低即套房）', perNightUSD: 541, totalUSD: 1285, totalInclTax: true, cancel: '11-23 01:00前免费取消', breakfast: '含双早' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:45 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: { room: 'Rajah Brooke Suite（1 king bed，753 ft²，花园景观）', perNightUSD: 1379, totalUSD: 2958, totalInclTax: true, cancel: '11-08 23:59前免费取消（预付）', breakfast: '含双早', note: '21% off，原价$1,763/晚；到店付价$1,569/晚；Our last 2!' },
+  suite: { room: 'Rajah Brooke Suite（全店房型皆为Suite，最低即套房）', perNightUSD: 1379, totalUSD: 2958, totalInclTax: true, cancel: '11-08 23:59前免费取消（预付）', breakfast: '含双早' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'Four Seasons Resort Chiang Mai': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Upper Garden Pavilion King', perNightUSD: 1382, totalUSD: 3282, totalInclTax: true, cancel: '不可退', breakfast: '含双早', note: '该价仅剩1间' },
-  suite: null, suiteNote: '该日期无明确标Suite的房型',
-  source: 'Trip.com', checkedAt: '2026-09-26 14:45 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: null, suite: null,
+  unavailable: '该日期无可订房：Trip.com列表页明确显示Sold out（2026-12-23至12-25）',
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'Raya Heritage': {
-  checkIn: '2026-12-15', checkOut: '2026-12-17', nights: 2,
-  base: { room: 'Rin Suite with Terrace', perNightUSD: 448, totalUSD: 896, totalInclTax: false, cancel: '11-24 18:00前免费取消', breakfast: '含双早', note: '到店付；该价仅剩1间；页面未显示该价整段总价；页面未显示该房型整段总价；为每晚价×晚数（税前口径）' },
-  suite: { room: 'Rin Suite with Terrace（全店房型皆为Suite，最低即套房）', perNightUSD: 448, totalUSD: 896, totalInclTax: false, cancel: '11-24 18:00前免费取消', breakfast: '含双早', note: '页面未显示该房型整段总价；为每晚价×晚数（税前口径）' },
-  source: 'Trip.com', checkedAt: '2026-09-26 14:45 UTC',
+  checkIn: '2026-12-23', checkOut: '2026-12-25', nights: 2,
+  base: { room: 'Huen Bon Suite（1 king bed，河景，807 ft²）', perNightUSD: 987, totalUSD: 2118, totalInclTax: true, cancel: '11-08 23:59前免费取消（预付）', breakfast: '含双早', note: '预付价$987/晚；到店付$913/晚（免费取消到11-08 18:00）；12月24日房价含2人强制圣诞晚宴，加人另收费；Our last 1!' },
+  suite: { room: 'Huen Bon Suite（本身即为套房，最低即套房）', perNightUSD: 987, totalUSD: 2118, totalInclTax: true, cancel: '11-08 23:59前免费取消（预付）', breakfast: '含双早' },
+  source: 'Trip.com', checkedAt: '2026-09-27 15:54 UTC',
  },
  'Amanpuri': {
   checkIn: '2026-12-17', checkOut: '2026-12-20', nights: 3,
