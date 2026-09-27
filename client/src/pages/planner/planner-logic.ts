@@ -586,13 +586,12 @@ interface TripSegDef { id: string; label: string; sub: string; mode: string; not
 const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
 const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
 const TRIP_SEGS: TripSegDef[] = [
-  { id:"beijing1", label:"北京", sub:"陪父亲", mode:"🏠 家庭", note:"倒时差＋陪父亲" },
-  { id:"xian", label:"西安", sub:"与岳父母会合", mode:"🏠 家庭", note:"会合岳父母，准备同飞新加坡" },
+  { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
-  { id:"couple", label:"夫妻东南亚", sub:"泰国＋越南（两人）", mode:"⚡ 特种兵", note:"首日岳父母带娃回国，你俩直飞东南亚", cta:true },
+  { id:"couple", label:"夫妻泰国", sub:"普吉＋曼谷＋清迈（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
   { id:"beijing2", label:"北京 / 西安", sub:"分头跨年", mode:"🏠 家庭", note:"你回北京陪父亲跨年，老婆回西安" },
 ];
-let tripDays: Record<string, number> = { beijing1:13, xian:4, singapore:5, couple:9, beijing2:3 };
+let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, beijing2:14 };
 
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
@@ -600,9 +599,28 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
+interface TripDuffelLeg { results: number; min: number; max: number; carriers: string[]; direct: boolean }
+/* 大行程新增航段 Duffel 实测（只看直飞；2026-09-27 主 agent 重查后填入） */
+const TRIP_DUFFEL: Record<string, TripDuffelLeg> = {};
+/* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
+interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[] }
+const TRIP_TRANSITIONS: TripTransition[] = [
+  { after:"beijing1", before:"singapore", title:"北京→新加坡（2大1小）＋ 西安→新加坡（岳父母2人）",
+    legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
+  { after:"singapore", before:"couple", title:"新加坡→普吉（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
+    legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
+  { after:"couple", before:"beijing2", title:"清迈→北京（1人）＋ 清迈→西安（1人）",
+    legs:[{code:"CNX-PEK",label:"清迈→北京"},{code:"CNX-XIY",label:"清迈→西安"}] },
+];
+function tripDuffelNote(key: string, label: string){
+  const d=TRIP_DUFFEL[key];
+  if(!d) return `${label}：航班价格待重查`;
+  if(!d.direct) return `${label}：暂无直飞`;
+  return `${label}：${d.results}个结果，$${d.min}–$${d.max}，${d.carriers.join(" / ")}`;
+}
 function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
-  const segHtml=TRIP_SEGS.map(s=>{
+  const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
@@ -613,10 +631,21 @@ function renderTrip(){
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
-  }).join("");
+  };
+  const parts: string[] = [];
+  for(const s of TRIP_SEGS){
+    parts.push(segCard(s));
+    const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
+    if(t){
+      const date=ranges[t.before].from, md=date.slice(5).replace("-","/");
+      const notes=t.legs.map(l=>tripDuffelNote(`${l.code}|${date}`,l.label)).join(" · ");
+      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${md} ${t.title}</strong><span>转场</span></div>
+    <p class="micro">${notes}</p>`);
+    }
+  }
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
-    ${segHtml}
+    ${parts.join("\n    ")}
     <div class="trip-flight"><span>✈️</span><strong>1/2（周六）北京 → 西雅图</strong><span>回程（时间已定）</span></div>
     <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天${ok?" ✓":` <span class="mismatch">⚠️ 合计须为 ${TRIP_MIDDLE_DAYS} 天（11/29–1/1），请调整</span>`}</p>
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
