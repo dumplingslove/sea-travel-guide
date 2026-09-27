@@ -5,9 +5,9 @@
  * 已按要求移入预订 Tab 集中展示，行程页开头不再出现。
  *
  * 每城列出：
- * - 酒店：按行程日期的实时房价（USD）与查询时间；没有的如实写“暂无实时价”
+ * - 酒店：按行程日期的实时房价（USD）与查询时间；没有的如实写"暂无实时价"
  * - 餐厅：空位徽章（有研究数据）或预订政策徽章（需要预定/建议预定/无需预定/未查询）
- * - 景点：余票徽章（有研究数据才显示）
+ * - 景点：余票徽章（有研究数据才显示）；无数据时按是否需要提前订票显示"建议提前订票"/"无需提前订票"
  */
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -22,6 +22,24 @@ import { bookingPolicyBadge } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
 
 const CITIES = ["新加坡", "普吉", "曼谷", "清迈"];
+
+/** 需要提前订票的景点（无余票数据时显示"建议提前订票"，其余显示"无需提前订票"） */
+const NEEDS_ADVANCE_BOOKING = new Set([
+  "环球影城",
+  "双子塔",
+  "滨海湾花园",
+  "Mahanakhon 天空步道",
+  "Siam Niramit",
+  "大象自然公园",
+  "Phuket Elephant Sanctuary",
+  "攀牙湾",
+  "皮皮岛",
+  "VinWonders",
+  "Vinpearl Safari",
+  "古芝地道",
+  "大城府 Ayutthaya 古城遗迹",
+  "丹嫩沙多水上市场+美功铁道",
+]);
 
 function CityBlock({ cityZh }: { cityZh: string }) {
   const [open, setOpen] = useState(false);
@@ -169,7 +187,9 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                         </span>
                       ) : (
                         <span className="text-xs text-gray-400 shrink-0">
-                          余票未查询
+                          {NEEDS_ADVANCE_BOOKING.has(a.name)
+                            ? "建议提前订票"
+                            : "无需提前订票"}
                         </span>
                       )}
                     </div>
