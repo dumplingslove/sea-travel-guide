@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 16,
+   "complete": 17,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -4279,7 +4279,7 @@ export const initialResearchStatus = {
    "total": 24
   },
   "phuket": {
-   "complete": 0,
+   "complete": 4,
    "items": [
     {
      "name": "Amanpuri",
@@ -4883,9 +4883,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-phuket.md 2026-09-27 06:45Z 轮次记录。",
        "posts": 2,
-       "status": "partial",
+       "status": "done",
        "target": 10
       }
      },
@@ -4918,9 +4918,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-phuket.md 2026-09-27 06:45Z 轮次记录。",
        "posts": 2,
-       "status": "partial",
+       "status": "done",
        "target": 10
       }
      },
@@ -4952,9 +4952,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-phuket.md 2026-09-27 06:45Z 轮次记录。",
        "posts": 2,
-       "status": "partial",
+       "status": "done",
        "target": 10
       }
      },
@@ -6853,17 +6853,17 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 44,
+ "complete_items": 49,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 17,
+   "xhs_done": 18,
    "ph": 32,
    "de": 32,
-   "all_done": 16
+   "all_done": 17
   },
   "chiangmai": {
    "total": 20,
@@ -6910,10 +6910,10 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 0,
+   "xhs_done": 2,
    "ph": 24,
    "de": 24,
-   "all_done": 0
+   "all_done": 2
   },
   "phuquoc": {
    "total": 22,
@@ -6934,7 +6934,9 @@ export const initialResearchStatus = {
    "ph": 28,
    "de": 28,
    "all_done": 16
-  }
+  },
+  "xhs_done": 53,
+  "all_done": 49
  },
  "targets": {
   "chinese_sites": "done",
@@ -6945,5 +6947,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-27T06:35Z"
+ "updated_at": "2026-09-27T06:53Z"
 };
