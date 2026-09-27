@@ -50,19 +50,18 @@ export function wgs84ToGcj02(lat: number, lng: number): [number, number] {
   return [lat + adjLat, lng + adjLng];
 }
 
-/** WGS-84 经纬度 → 可直接叠加在高德底图上的 Leaflet LatLng */
+/** WGS-84 经纬度 → Leaflet LatLng。当前底图为 Esri（WGS-84），直接透传不做 GCJ-02 转换。 */
 export function LL(lat: number, lng: number): L.LatLng {
-  const [gLat, gLng] = wgs84ToGcj02(lat, lng);
-  return L.latLng(gLat, gLng);
+  return L.latLng(lat, lng);
 }
 
-/** 高德中文街道底图（lang=zh_cn），直接 addTo(map) */
+/** 地图底图：Esri World Street Map（高德 appmaptile 自 2026-09-27 起返回空白图，已废弃） */
 export function addAmapTiles(map: L.Map): L.TileLayer {
   return L.tileLayer(
-    "https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     {
-      subdomains: "1234",
-      attribution: '&copy; <a href="https://www.amap.com/">高德地图 AutoNavi</a>',
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
       maxZoom: 19,
     },
   ).addTo(map);
