@@ -630,14 +630,42 @@ export default function BookingTimeline({
                     to={placeDetailPath("attraction", a.city, a.name)}
                     expandLabel="查看选这个"
                     expandContent={
-                      <div className="flex items-center justify-between gap-2">
-                        <Link
-                          to={placeDetailPath("attraction", a.city, a.name)}
-                          className="text-xs text-teal-700 underline underline-offset-2"
-                        >
-                          完整详情页
-                        </Link>
-                        <PickState action={act} pickLabel="就选这个" />
+                      <div className="text-xs text-gray-600 space-y-1.5">
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            为什么提前订：
+                          </span>
+                          {a.reason}
+                        </div>
+                        {a.channel && (
+                          <div>
+                            <span className="font-medium text-gray-700">
+                              购票渠道：
+                            </span>
+                            {a.channel}
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between gap-2 pt-1">
+                          <div className="flex items-center gap-3">
+                            {a.ticketUrl && (
+                              <a
+                                href={a.ticketUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-medium text-teal-700 underline underline-offset-2"
+                              >
+                                官方购票 ↗
+                              </a>
+                            )}
+                            <Link
+                              to={placeDetailPath("attraction", a.city, a.name)}
+                              className="text-teal-700 underline underline-offset-2"
+                            >
+                              完整详情页
+                            </Link>
+                          </div>
+                          <PickState action={act} pickLabel="就选这个" />
+                        </div>
                       </div>
                     }
                     onAdd={act.onAdd}
