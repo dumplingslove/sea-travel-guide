@@ -1,9 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { stopCoordsForDay, type StopCoord } from "@/data/stopCoords";
 import { placesForCity } from "@/data/placeCoords";
+import { LL, addAmapTiles } from "@/lib/amap";
+import {
+  placeDetailPath,
+  placeSlug,
+  findPlace,
+} from "@/guide/placeDetail";
 
 interface DayMapProps {
   dayNum: number;
@@ -115,6 +121,11 @@ export default function DayMap({
 }: DayMapProps) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** 全屏切换后重算视野：effect 内赋值，toggle 里调用 */
+  const refitRef = useRef<(() => void) | null>(null);
+  /** 点击展开全屏（2026-09-27 用户要求：看清每个地点的位置） */
+  const [expanded, setExpanded] = useState(false);
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const coord = CITY_COORDS[cityId];
   const prevCoord = prevCityId ? CITY_COORDS[prevCityId] : null;
@@ -155,14 +166,8 @@ export default function DayMap({
       zoomControl: true,
       scrollWheelZoom: false,
     });
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution:
-          "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    // 高德中文底图（2026-09-27 用户要求）；坐标统一走 LL() 做 GCJ-02 校正
+    addAmapTiles(map);
 
     let from: L.LatLng | null = null;
     let to: L.LatLng | null = null;
@@ -170,8 +175,8 @@ export default function DayMap({
     /** 单点位日期：fitBounds 零面积会缩到最大 zoom，改用固定缩放的 setView */
     let singleStop: L.LatLng | null = null;
     if (showLeg && prevCoord) {
-      from = L.latLng(prevCoord[0], prevCoord[1]);
-      to = L.latLng(coord[0], coord[1]);
+      from = LL(prevCoord[0], prevCoord[1]);
+      to = LL(coord[0], coord[1]);
       L.polyline([from, to], {
         color: "#0f766e",
         weight: 3,
@@ -184,7 +189,7 @@ export default function DayMap({
           direction: "center",
           className: "sea-daymap-tip",
         })
-          .setLatLng(L.latLng((from.lat + to.lat) / 2, (from.lng + to.lng) / 2))
+          .setLatLng(LL((from.lat + to.lat) / 2, (from.lng + to.lng) / 2))
           .setContent(
             `<span style="background:#0f766e;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap">✈ ${transferLabel}</span>`,
           )
@@ -206,11 +211,16 @@ export default function DayMap({
       // （含转场日：当天实际景点优先，航线不再单独成图）
       const stops = routeStops!;
       {
-        const pts = stops.map((s) => L.latLng(s.lat, s.lng));
+        const pts = stops.map((s) => LL(s.lat, s.lng));
         stops.forEach((s, i) => {
+          // 详情链接：只有 slug 能在站内找到对应条目时才给，避免 404
+          const stopSlug = placeSlug(cityId, s.name);
+          const stopLink = findPlace("attraction", stopSlug)
+            ? `<br><a href="${base}${placeDetailPath("attraction", cityId, s.name)}" style="color:#0f766e;font-weight:700;font-size:12px">查看详情 →</a>`
+            : "";
           L.marker(pts[i], { icon: numIcon(i + 1) })
             .bindPopup(
-              `<b>${i + 1} · ${s.name}</b><br><span style="font-size:12px;color:#6b7280">${s.time}${s.note ? ` · ${s.note}` : ""}</span>`,
+              `<b>${i + 1} · ${s.name}</b><br><span style="font-size:12px;color:#6b7280">${s.time}${s.note ? ` · ${s.note}` : ""}</span>${stopLink}`,
             )
             .addTo(map);
         });
@@ -232,7 +242,7 @@ export default function DayMap({
     } else {
       // 无站点坐标的非纯转场日：回退到城市级标记
       {
-        const at = L.latLng(coord[0], coord[1]);
+        const at = LL(coord[0], coord[1]);
         to = at;
         L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
           .bindPopup(`<b>${cityZh}</b>`)
@@ -247,27 +257,33 @@ export default function DayMap({
     const placeBoundsPts: L.LatLng[] = [];
     const bookedHotel = hotels.find((h) => h.booked);
     for (const h of hotels) {
-      const pt = L.latLng(h.lat, h.lng);
+      const pt = LL(h.lat, h.lng);
       placeBoundsPts.push(pt);
+      const hLink = findPlace("hotel", placeSlug(cityId, h.name))
+        ? `<br><a href="${base}${placeDetailPath("hotel", cityId, h.name)}" style="color:#1d4ed8;font-weight:700;font-size:12px">查看酒店详情 →</a>`
+        : "";
       L.marker(pt, { icon: hotelIcon(!!h.booked) })
         .bindPopup(
           `<b>🏨 ${h.name}</b><br><span style="font-size:12px;color:#6b7280">${
             h.booked ? "已确认预订" : "候选酒店（未预订，仅标位置）"
-          }${h.note ? ` · ${h.note}` : ""}</span>`,
+          }${h.note ? ` · ${h.note}` : ""}</span>${hLink}`,
         )
         .addTo(map);
     }
     for (const r of restaurants) {
-      const pt = L.latLng(r.lat, r.lng);
+      const pt = LL(r.lat, r.lng);
       placeBoundsPts.push(pt);
+      const rLink = findPlace("restaurant", placeSlug(cityId, r.name))
+        ? `<br><a href="${base}${placeDetailPath("restaurant", cityId, r.name)}" style="color:#c2410c;font-weight:700;font-size:12px">查看餐厅详情 →</a>`
+        : "";
       L.marker(pt, { icon: restaurantIcon() })
         .bindPopup(
-          `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
+          `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>${rLink}`,
         )
         .addTo(map);
     }
     for (const m of malls) {
-      const pt = L.latLng(m.lat, m.lng);
+      const pt = LL(m.lat, m.lng);
       placeBoundsPts.push(pt);
       L.marker(pt, { icon: shoppingIcon() })
         .bindPopup(
@@ -277,9 +293,9 @@ export default function DayMap({
     }
     // 已订酒店接入动线
     if (bookedHotel && hasStops && routeStops && routeStops.length > 0) {
-      const hpt = L.latLng(bookedHotel.lat, bookedHotel.lng);
-      const first = L.latLng(routeStops[0].lat, routeStops[0].lng);
-      const last = L.latLng(
+      const hpt = LL(bookedHotel.lat, bookedHotel.lng);
+      const first = LL(routeStops[0].lat, routeStops[0].lng);
+      const last = LL(
         routeStops[routeStops.length - 1].lat,
         routeStops[routeStops.length - 1].lng,
       );
@@ -337,9 +353,12 @@ export default function DayMap({
       raf = requestAnimationFrame(refit);
     });
     const timer = window.setTimeout(refit, 400);
+    // 全屏切换后复用同一套视野重算
+    refitRef.current = refit;
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
+      refitRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -349,19 +368,81 @@ export default function DayMap({
 
   if (!coord) return null;
 
+  const toggleExpand = () => {
+    setExpanded((v) => !v);
+    // 等 DOM class 切换完成后再刷新尺寸并重算视野
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const m = mapRef.current;
+        if (m) {
+          m.invalidateSize();
+          refitRef.current?.();
+        }
+      }),
+    );
+  };
+
+  // 全屏时：Esc 关闭 + 锁 body 滚动
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [expanded]);
+
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
-      <div ref={mapEl} className="w-full z-0" style={{ height: 280 }} />
-      <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-        {showLeg
-          ? `Day ${dayNum} 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""}`
-          : hasStops
-            ? `Day ${dayNum}${isTransfer ? ` 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""} ·` : " ·"} 站点顺序动线（编号对应当天时间线）`
-            : `Day ${dayNum} · ${cityZh}市内游`}
-        <span className="ml-2 text-gray-400">
-          ①-⑳ 景点动线 · 🏨 候选酒店（仅位置） · 🍽️ 推荐餐厅
-        </span>
-      </p>
+    <div
+      className={
+        expanded
+          ? "fixed inset-0 z-[90] bg-white flex flex-col"
+          : "relative bg-white rounded-xl border border-gray-200 overflow-hidden mb-6"
+      }
+    >
+      {expanded && (
+        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 shrink-0">
+          <span className="text-sm font-bold text-teal-800">
+            Day {dayNum} · {cityZh} 地图
+          </span>
+          <button
+            onClick={toggleExpand}
+            className="text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-1"
+          >
+            ✕ 关闭
+          </button>
+        </div>
+      )}
+      <div
+        ref={mapEl}
+        className={`w-full z-0 ${expanded ? "flex-1 min-h-0" : ""}`}
+        style={expanded ? undefined : { height: 280 }}
+      />
+      {!expanded && (
+        <>
+          <button
+            onClick={toggleExpand}
+            className="absolute top-2 right-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+          >
+            ⛶ 全屏
+          </button>
+          <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
+            {showLeg
+              ? `Day ${dayNum} 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""}`
+              : hasStops
+                ? `Day ${dayNum}${isTransfer ? ` 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""} ·` : " ·"} 站点顺序动线（编号对应当天时间线）`
+                : `Day ${dayNum} · ${cityZh}市内游`}
+            <span className="ml-2 text-gray-400">
+              ①-⑳ 景点动线 · 🏨 候选酒店（仅位置） · 🍽️ 推荐餐厅
+            </span>
+          </p>
+        </>
+      )}
     </div>
   );
 }

@@ -68,10 +68,7 @@ export function PageShell({
       <p className="text-[11px] tracking-[0.2em] text-teal-700 font-semibold mb-2">
         {eyebrow}
       </p>
-      <h1
-        className="text-3xl mb-2 text-[#143c34]"
-        style={{ fontFamily: 'Georgia,"Noto Serif SC",serif' }}
-      >
+      <h1 className="text-3xl mb-2 text-[#143c34] font-bold">
         {title}
       </h1>
       <p className="text-sm text-gray-500 mb-6">{summary}</p>

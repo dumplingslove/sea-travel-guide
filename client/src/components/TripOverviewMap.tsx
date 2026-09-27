@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { LL, addAmapTiles } from "@/lib/amap";
 import cities from "@/data/cities.json";
 
 export interface TripStop {
@@ -36,6 +37,10 @@ function markerIcon(order: number) {
  */
 export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
   const mapEl = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const refitRef = useRef<(() => void) | null>(null);
+  /** 点击展开全屏（2026-09-27 用户要求） */
+  const [expanded, setExpanded] = useState(false);
   const mapStops: TripStop[] =
     stops && stops.length ? stops : (cities as TripStop[]);
   const stopsKey = mapStops
@@ -53,18 +58,12 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       zoomControl: true,
       scrollWheelZoom: false,
     });
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution:
-          "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    // 高德中文底图（2026-09-27 用户要求）；坐标统一走 LL() 做 GCJ-02 校正
+    addAmapTiles(map);
 
     const latlngs = cur.map((s) => {
       const c = CITY_COORDS[s.id];
-      return L.latLng(c[0], c[1]);
+      return LL(c[0], c[1]);
     });
     L.polyline(latlngs, {
       color: "#0f766e",
@@ -75,7 +74,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
 
     cur.forEach((s, i) => {
       const c = CITY_COORDS[s.id];
-      L.marker([c[0], c[1]], { icon: markerIcon(i + 1) })
+      L.marker(LL(c[0], c[1]), { icon: markerIcon(i + 1) })
         .bindPopup(
           `<div style="min-width:150px;font-family:inherit">
             <div style="font-weight:800;font-size:14px;color:#134e4a">${i + 1}. ${s.zh}</div>
@@ -100,21 +99,86 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       raf = requestAnimationFrame(fixSize);
     });
     const timer = window.setTimeout(fixSize, 400);
+    refitRef.current = fixSize;
+    mapRef.current = map;
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
+      refitRef.current = null;
+      mapRef.current = null;
       map.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stopsKey]);
 
+  const toggleExpand = () => {
+    setExpanded((v) => !v);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const m = mapRef.current;
+        if (m) {
+          m.invalidateSize();
+          refitRef.current?.();
+        }
+      }),
+    );
+  };
+
+  // 全屏时：Esc 关闭 + 锁 body 滚动
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [expanded]);
+
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-      <div ref={mapEl} className="w-full z-0" style={{ height: 300 }} />
-      <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-        {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
-        点标记查看天数
-      </p>
+    <div
+      className={
+        expanded
+          ? "fixed inset-0 z-[90] bg-white flex flex-col"
+          : "relative bg-white rounded-xl border border-gray-200 overflow-hidden"
+      }
+    >
+      {expanded && (
+        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 shrink-0">
+          <span className="text-sm font-bold text-teal-800">
+            {totalDays}天路线总览
+          </span>
+          <button
+            onClick={toggleExpand}
+            className="text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-1"
+          >
+            ✕ 关闭
+          </button>
+        </div>
+      )}
+      <div
+        ref={mapEl}
+        className={`w-full z-0 ${expanded ? "flex-1 min-h-0" : ""}`}
+        style={expanded ? undefined : { height: 300 }}
+      />
+      {!expanded && (
+        <>
+          <button
+            onClick={toggleExpand}
+            className="absolute top-2 right-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+          >
+            ⛶ 全屏
+          </button>
+          <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
+            {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
+            点标记查看天数
+          </p>
+        </>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
+import { LL, addAmapTiles, wgs84ToGcj02 } from "@/lib/amap";
 import citiesJson from "@/data/cities.json";
 import {
   usePlanItinerary,
@@ -167,21 +168,21 @@ function MapCanvas({
     if (hotels.length === 0 && restaurants.length === 0 && malls.length === 0) return;
     const layer = L.layerGroup();
     for (const h of hotels) {
-      L.marker([h.lat, h.lng], { icon: hotelIcon() })
+      L.marker(LL(h.lat, h.lng), { icon: hotelIcon() })
         .bindPopup(
           `<b>🏨 ${h.name}</b><br><span style="font-size:12px;color:#6b7280">候选酒店（未预订，仅标位置）${h.note ? ` · ${h.note}` : ""}</span>`,
         )
         .addTo(layer);
     }
     for (const r of restaurants) {
-      L.marker([r.lat, r.lng], { icon: restaurantIcon() })
+      L.marker(LL(r.lat, r.lng), { icon: restaurantIcon() })
         .bindPopup(
           `<b>🍽️ ${r.name}</b><br><span style="font-size:12px;color:#6b7280">推荐餐厅${r.note ? ` · ${r.note}` : ""}</span>`,
         )
         .addTo(layer);
     }
     for (const m of malls) {
-      L.marker([m.lat, m.lng], { icon: shoppingIcon() })
+      L.marker(LL(m.lat, m.lng), { icon: shoppingIcon() })
         .bindPopup(
           `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场（购物指南有详细攻略）</span>`,
         )
@@ -194,19 +195,13 @@ function MapCanvas({
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { zoomControl: true }).setView(
-      [11.5, 102.5],
+      LL(11.5, 102.5),
       5,
     );
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution:
-          "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    // 高德中文底图（2026-09-27 用户要求）；坐标统一走 LL() 做 GCJ-02 校正
+    addAmapTiles(map);
 
-    const latlngs = stops.map((s) => L.latLng(s.lat, s.lng));
+    const latlngs = stops.map((s) => LL(s.lat, s.lng));
     L.polyline(latlngs, {
       color: "#0f766e",
       weight: 3,
@@ -215,7 +210,7 @@ function MapCanvas({
     }).addTo(map);
 
     markersRef.current = stops.map((s, i) => {
-      const m = L.marker([s.lat, s.lng], { icon: markerIcon(i + 1, false) });
+      const m = L.marker(LL(s.lat, s.lng), { icon: markerIcon(i + 1, false) });
       m.bindPopup(
         `<div style="min-width:180px;font-family:inherit">
           <div style="font-weight:800;font-size:15px;color:#134e4a">${i + 1}. ${s.zh} <span style="font-weight:400;color:#6b7280;font-size:12px">${s.en}</span></div>
@@ -251,7 +246,7 @@ function MapCanvas({
       markersRef.current.forEach((m, i) =>
         m.setIcon(markerIcon(i + 1, i === idx)),
       );
-      map.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 7), { duration: 0.8 });
+      map.flyTo(LL(s.lat, s.lng), Math.max(map.getZoom(), 7), { duration: 0.8 });
       const marker = markersRef.current[idx];
       window.setTimeout(() => marker.openPopup(), 850);
     } else {
@@ -259,7 +254,7 @@ function MapCanvas({
       const c = extraCities.find((e) => e.id === id);
       if (!c) return;
       markersRef.current.forEach((m, i) => m.setIcon(markerIcon(i + 1, false)));
-      map.flyTo([c.lat, c.lng], Math.max(map.getZoom(), 8), { duration: 0.8 });
+      map.flyTo(LL(c.lat, c.lng), Math.max(map.getZoom(), 8), { duration: 0.8 });
     }
     // 点选城市后叠加该城酒店/餐厅
     window.setTimeout(() => showCityPlaces(id), 850);
