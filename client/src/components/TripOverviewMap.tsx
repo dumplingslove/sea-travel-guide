@@ -169,7 +169,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       )}
       <div
         ref={mapEl}
-        className={`w-full z-0 ${expanded ? "flex-1 min-h-0" : ""}`}
+        className={`leaflet-container w-full z-0 ${expanded ? "flex-1 min-h-0" : ""}`}
         style={expanded ? undefined : { height: 300 }}
       />
       {!expanded && (
