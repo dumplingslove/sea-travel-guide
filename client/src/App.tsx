@@ -21,9 +21,9 @@ import {
 
 const NAV = [
   { to: "/", label: "行程" },
-  { to: "/bookings", label: "预订" },
   { to: "/planner", label: "行程规划" },
-  { to: "/attractions", label: "景点" },
+  { to: "/bookings", label: "预订" },
+  { to: "/travel-research", label: "旅行研究" },
   { to: "/notes", label: "笔记" },
   { to: "/expenses", label: "记账" },
   { to: "/practical", label: "实用信息" },
@@ -132,7 +132,8 @@ function AppRouter() {
             {/* 酒店/餐厅/航班/交通已并入 /bookings 二级菜单；地图已并入 /planner 子视图；旧链接跳转到对应位置 */}
             <Route path="/hotels" element={<Navigate to="/bookings?menu=hotels" replace />} />
             <Route path="/restaurants" element={<Navigate to="/bookings?menu=restaurants" replace />} />
-            <Route path="/attractions" element={<GuidePage tab="景点" />} />
+            <Route path="/attractions" element={<Navigate to="/travel-research" replace />} />
+            <Route path="/travel-research" element={<GuidePage tab="旅行研究" />} />
             <Route path="/practical" element={<GuidePage tab="实用信息" />} />
             <Route path="/flights" element={<Navigate to="/bookings?menu=flights" replace />} />
             <Route path="/transport" element={<Navigate to="/bookings?menu=transport" replace />} />

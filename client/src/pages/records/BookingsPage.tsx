@@ -7,7 +7,7 @@
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
   PageShell,
@@ -20,7 +20,7 @@ import {
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
-import { Flights, HotelCatalog, RestaurantCatalog, Transport } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, Transport, usePlanScope, planDateShort } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -173,6 +173,17 @@ function BookingsInner() {
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "action";
   });
+  /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
+  const { segments } = usePlanScope();
+  const planCities = useMemo(() => segments.map((s) => s.city), [segments]);
+  const stayDates = useMemo(() => {
+    const m: Record<string, string> = {};
+    segments.forEach((s) => {
+      m[s.city] = `${planDateShort(s.start)}–${planDateShort(s.end)}`;
+    });
+    return m;
+  }, [segments]);
+  const scoped = segments.length > 0;
   /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
   const onBookPreset = (p: BookingPreset) => {
     setPreset(p);
@@ -265,9 +276,19 @@ function BookingsInner() {
     <PageShell
       eyebrow="MY BOOKINGS"
       title="预订"
-      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」是全部详细信息（照片、口碑、实时价、订位政策），挑中了直接点预订。"
+      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」只显示行程规划里定好的城市和日期（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
       <SyncBanner mode={syncMode} />
+
+      {scoped && (
+        <div className="mb-4 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">
+          <span className="font-bold">📅 按行程规划只看这些：</span>
+          {segments.map((s) => `${s.city} ${planDateShort(s.start)}–${planDateShort(s.end)}`).join(" · ")}
+          <Link to="/planner" className="ml-2 font-medium text-teal-700 underline">
+            去行程规划调整 →
+          </Link>
+        </div>
+      )}
 
       {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通 */}
       <div className="flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
@@ -427,11 +448,11 @@ function BookingsInner() {
         </>
       ) : menu === "hotels" ? (
         <div className="guide-scope">
-          <HotelCatalog onBook={onBookPreset} />
+          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
         </div>
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
-          <RestaurantCatalog onBook={onBookPreset} />
+          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">

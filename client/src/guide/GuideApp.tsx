@@ -40,11 +40,52 @@ import klImg from './assets/cities/kuala-lumpur.jpg';
 import hcmImg from './assets/cities/ho-chi-minh.jpg';
 import phuquocImg from './assets/cities/phu-quoc.jpg';
 import singaporeImg from './assets/cities/singapore.jpg';
+import { readPlannerCache, loadPlannerPlan, type LoadedPlan } from './plannerSchedule';
 
-type Tab='航班'|'交通'|'酒店'|'餐厅'|'景点'|'实用信息'|'我的预订'|'游记'|'信息来源搜索状态';
+type Tab='航班'|'交通'|'酒店'|'餐厅'|'景点'|'实用信息'|'我的预订'|'游记'|'信息来源搜索状态'|'旅行研究';
 export type GuideTab=Tab;
 type RecordKind='booking'|'note'|'packing'|'journal';
 type RecordRow=GuideRecord;
+
+/** 行程规划里定好的城市分段：城市 → 起止日期（YYYY-MM-DD）→ 天数 */
+export interface PlanCityScope { city: string; start: string; end: string; days: number; }
+/** YYYY-MM-DD → M/D */
+export function planDateShort(iso: string): string {
+  const p = iso.split('-');
+  return `${Number(p[1])}/${Number(p[2])}`;
+}
+const CITY_COUNTRY: Record<string,string> = {
+  '新加坡':'新加坡','曼谷':'泰国','清迈':'泰国','普吉':'泰国',
+  '槟城':'马来西亚','吉隆坡':'马来西亚','胡志明市':'越南','富国岛':'越南',
+};
+export function countryOf(city: string): string { return CITY_COUNTRY[city] ?? ''; }
+
+/**
+ * 读取用户在「行程规划」里保存的规划，算出按顺序的城市分段。
+ * 先读本机缓存立刻出结果，再异步拉云端最新。没保存过则 segments 为空。
+ */
+export function usePlanScope(): { segments: PlanCityScope[]; source: 'cloud'|'cache'|null } {
+  const [loaded, setLoaded] = useState<LoadedPlan | null>(() => readPlannerCache());
+  useEffect(() => {
+    let live = true;
+    loadPlannerPlan().then((p) => { if (live && p) setLoaded(p); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
+  const segments = useMemo(() => {
+    const sched = loaded?.plan?.schedule;
+    if (!sched) return [];
+    const dates = Object.keys(sched).sort();
+    const segs: PlanCityScope[] = [];
+    for (const d of dates) {
+      const c = sched[d]!.city;
+      const last = segs[segs.length - 1];
+      if (last && last.city === c) { last.end = d; last.days += 1; }
+      else segs.push({ city: c, start: d, end: d, days: 1 });
+    }
+    return segs;
+  }, [loaded]);
+  return { segments, source: loaded?.source ?? null };
+}
 
 /** 署名：显示这条记录是谁添加的（家庭共享时区分），数据复用 sea_profiles。 */
 let guideProfileMapPromise: Promise<Map<string,string>> | null = null;
@@ -98,7 +139,8 @@ const navPaths:Record<Tab,React.ReactNode>={
  '实用信息':<><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></>,
  '信息来源搜索状态':<><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/><path d="M2 21h22M3 6l6-3 6 5 7-6"/></>,
  '我的预订':<><path d="M6 3h12v18l-6-4-6 4z"/><path d="m9 10 2 2 4-4"/></>,
- '游记':<><path d="M3 5a4 4 0 0 1 4-2h5v18H7a4 4 0 0 0-4 2zM21 5a4 4 0 0 0-4-2h-5v18h5a4 4 0 0 1 4 2z"/></>
+ '游记':<><path d="M3 5a4 4 0 0 1 4-2h5v18H7a4 4 0 0 0-4 2zM21 5a4 4 0 0 0-4-2h-5v18h5a4 4 0 0 1 4 2z"/></>,
+ '旅行研究':<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></>
 };
 function NavIcon({tab}:{tab:Tab}){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{navPaths[tab]}</svg>}
 
@@ -207,28 +249,57 @@ function InlineDetail({item,kind,onBook,onCollapse}:{item:Item;kind:'酒店'|'�
  return <section ref={ref} className="detail-inline" aria-label={`${item.name}完整攻略`}><DetailBody item={item} kind={kind} onClose={onCollapse} onBook={onBook} inline={true}/></section>
 }
 
-function CityTabs({city,setCity,label}:{city:string;setCity:(x:string)=>void;label:string}){return <div className="citytabs" aria-label={label}>{cities.map(c=><button key={c} className={city===c?'active':''} onClick={()=>setCity(c)}>{c}</button>)}</div>}
+function CityTabs({city,setCity,label,list}:{city:string;setCity:(x:string)=>void;label:string;list?:string[]}){const tabs=list&&list.length?list:cities;return <div className="citytabs" aria-label={label}>{tabs.map(c=><button key={c} className={city===c?'active':''} onClick={()=>setCity(c)}>{c}</button>)}</div>}
 
 function HotelGroupBadge({group}:{group?:HotelGroup}){const label=group==='Marriott'?'Marriott · 万豪系':group==='Hyatt'?'Hyatt · 凯悦系':'其他集团';return <span className={`hotelgroup ${(group||'Other').toLowerCase()}`}>{label}</span>}
 
 function HotelGroupMatrix(){return <section className="hotelmatrix" aria-label="八城万豪与凯悦最高端在营酒店核验"><header><div><span>OFFICIAL HOTEL CHECK · 2026-09-13</span><h2>每站 Marriott / Hyatt 顶级选择</h2><p>按官方在营状态与集团品牌层级筛选，不拿异地酒店补空缺；“未找到”不是永久不存在，入住前仍需复核。点击城市展开查看。</p></div><div className="matrixlegend"><HotelGroupBadge group="Marriott"/><HotelGroupBadge group="Hyatt"/></div></header><div className="matrixfolds">{hotelCityChecks.map((row,i)=><Fold key={row.city} className="matrixfold" eyebrow={`核验 ${row.checked}`} title={row.city} meta={`住宿 ${row.dates}`} defaultOpen={i===0}><div className="matrixchoices">{row.choices.map(choice=><section key={choice.group} className={`${choice.group.toLowerCase()} ${choice.status}`}><HotelGroupBadge group={choice.group}/>{choice.hotel?<><h3>{choice.hotel}</h3><b>{choice.brand} · {choice.loyaltyProgram}</b></>:<><h3>{choice.status==='coming-soon'?'没有在营选择':'截至核验日未找到'}</h3><b>{choice.brand||choice.loyaltyProgram}</b></>}<p>{choice.note}</p><a href={choice.officialUrl} target="_blank" rel="noreferrer">查看官方依据 ↗</a></section>)}</div></Fold>)}</div></section>}
 
-export function HotelCatalog({onBook}:{onBook?:OnBook}){
+export function HotelCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnBook;scopeCities?:string[];stayDates?:Record<string,string>;bare?:boolean}){
  const hotelEntries=useHotelEntries();const chainFor=(item:Item)=>findHotelChain(hotelEntries,item.name,item.city);const tierFor=(item:Item)=>findHotelTier(hotelEntries,item.name,item.city);
- const [city,setCity]=useState(cities[0]!);const [expandedKey,setExpandedKey]=useState<string|null>(null);const [listExpanded,setListExpanded]=useState(false);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=route.find(x=>x[0]===city)?.[2];
+ const list=useMemo(()=>scopeCities&&scopeCities.length?scopeCities:cities,[scopeCities]);
+ const [city,setCity]=useState(list[0]!);
+ useEffect(()=>{ if(!list.includes(city)) setCity(list[0]!); },[list,city]);
+ const [expandedKey,setExpandedKey]=useState<string|null>(null);const [listExpanded,setListExpanded]=useState(false);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=stayDates?.[city] ?? route.find(x=>x[0]===city)?.[2];
  const toggle=(it:Item)=>setCompare(x=>x.some(y=>y.name===it.name)?x.filter(y=>y.name!==it.name):x.length<3?[...x,it]:x);
  const visibleHotels=listExpanded?shown:shown.slice(0,4);const listToggle=shown.length>4?<div className="showmore"><button type="button" className="secondary" onClick={()=>setListExpanded(v=>!v)} aria-expanded={listExpanded}>{listExpanded?'收起':'展开全部'} · {visibleHotels.length}/{shown.length} 家酒店</button></div>:null;const pickCity=(c:string)=>{setCity(c);setExpandedKey(null);setListExpanded(false)};const openHotelDetail=(it:Item)=>{const key=it.city+it.name;if(!visibleHotels.some(x=>x.city+x.name===key))setListExpanded(true);setExpandedKey(prev=>prev===key?null:key)};
- return <div className="page"><PageHero eyebrow="STAY COLLECTION" title="酒店推荐" summary="沿八城路线比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。" image={singaporeImg}/><HotelGroupMatrix/><section className="sectionblock"><div className="sectiontitle"><h2>按城市浏览</h2><p>{hotels.length} 家候选 · 最多选择 3 家并排比较</p></div><CityTabs city={city} setCity={pickCity} label="酒店城市筛选"/><div className="citycover"><img src={cityImages[city]} alt={`${city}城市实景`}/><div><span>建议住宿日期 {dates}</span><h3>{city}</h3><p>{shown.length} 家酒店候选</p></div></div>{compare.length>0&&<section className="comparepanel"><header><h3>酒店对比 <span>{compare.length}/3</span></h3><button onClick={()=>setCompare([])}>清空</button></header><div>{compare.map(x=><article key={x.name}><HotelBadges chain={chainFor(x)} tier={tierFor(x)}/><b>{x.name}</b><span>{x.meta}</span><p>{x.best}</p><button onClick={()=>openHotelDetail(x)}>查看详情</button></article>)}</div></section>}<div className="catalog rich">{visibleHotels.map((it,i)=>{const hkey=it.city+it.name;const hopen=expandedKey===hkey;return <Fragment key={hkey}><article className="itemcard"><ItemMedia item={it} kind="酒店" index={i}/><div><HotelBadges chain={chainFor(it)} tier={tierFor(it)}/><span className="citytag">{it.city} · 住宿</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么选</b><span>{it.best}</span></div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>setExpandedKey(hopen?null:hkey)}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)}/>}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
+ return <div className="page">{!bare&&<PageHero eyebrow="STAY COLLECTION" title="酒店推荐" summary={list.length!==cities.length?`按行程规划的${list.length}个城市比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`:"沿八城路线比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。"} image={singaporeImg}/>}<HotelGroupMatrix/><section className="sectionblock"><div className="sectiontitle"><h2>按城市浏览</h2><p>{hotels.length} 家候选 · 最多选择 3 家并排比较</p></div><CityTabs city={city} setCity={pickCity} label="酒店城市筛选" list={list}/><div className="citycover"><img src={cityImages[city]} alt={`${city}城市实景`}/><div><span>建议住宿日期 {dates}</span><h3>{city}</h3><p>{shown.length} 家酒店候选</p></div></div>{compare.length>0&&<section className="comparepanel"><header><h3>酒店对比 <span>{compare.length}/3</span></h3><button onClick={()=>setCompare([])}>清空</button></header><div>{compare.map(x=><article key={x.name}><HotelBadges chain={chainFor(x)} tier={tierFor(x)}/><b>{x.name}</b><span>{x.meta}</span><p>{x.best}</p><button onClick={()=>openHotelDetail(x)}>查看详情</button></article>)}</div></section>}<div className="catalog rich">{visibleHotels.map((it,i)=>{const hkey=it.city+it.name;const hopen=expandedKey===hkey;return <Fragment key={hkey}><article className="itemcard"><ItemMedia item={it} kind="酒店" index={i}/><div><HotelBadges chain={chainFor(it)} tier={tierFor(it)}/><span className="citytag">{it.city} · 住宿</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么选</b><span>{it.best}</span></div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>setExpandedKey(hopen?null:hkey)}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)}/>}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
 }
 
-export function RestaurantCatalog({onBook}:{onBook?:OnBook}){
- const [view,setView]=useState<'每日用餐计划'|'按城市浏览'>('每日用餐计划');const [city,setCity]=useState(cities[0]!);const [expandedKey,setExpandedKey]=useState<string|null>(null);const shown=restaurants.filter(x=>x.city===city);const pickView=(v:'每日用餐计划'|'按城市浏览')=>{setView(v);setExpandedKey(null)};const pickCity=(c:string)=>{setCity(c);setExpandedKey(null)};const cityDays=days.filter(d=>d.city===city);
+export function RestaurantCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnBook;scopeCities?:string[];stayDates?:Record<string,string>;bare?:boolean}){
+ const [view,setView]=useState<'每日用餐计划'|'按城市浏览'>('每日用餐计划');
+ const list=useMemo(()=>scopeCities&&scopeCities.length?scopeCities:cities,[scopeCities]);
+ const [city,setCity]=useState(list[0]!);
+ useEffect(()=>{ if(!list.includes(city)) setCity(list[0]!); },[list,city]);
+ const [expandedKey,setExpandedKey]=useState<string|null>(null);const shown=restaurants.filter(x=>x.city===city);const pickView=(v:'每日用餐计划'|'按城市浏览')=>{setView(v);setExpandedKey(null)};const pickCity=(c:string)=>{setCity(c);setExpandedKey(null)};const cityDays=days.filter(d=>d.city===city);
  const restPager=usePaged(shown,6,'个餐饮选择');
- return <div className="page"><PageHero eyebrow="DINING PLAN" title="餐厅预订决策指南" summary="把每日吃什么、必须提前订的餐桌、街头小吃与风险提醒放进同一套决策流程。" image={bangkokImg}/><div className="viewtoggle" role="tablist"><button className={view==='每日用餐计划'?'active':''} onClick={()=>pickView('每日用餐计划')}>每日用餐计划</button><button className={view==='按城市浏览'?'active':''} onClick={()=>pickView('按城市浏览')}>按城市浏览</button></div>{view==='每日用餐计划'?<section className="sectionblock mealplan"><div className="sectiontitle"><h2>20 天用餐路线</h2><p>按城市展开，查看每天的用餐组合与取舍</p></div>{route.map(([c],ci)=>{const cDays=days.filter(d=>d.city===c);return <Fold key={c} eyebrow={route.find(x=>x[0]===c)?.[2]} title={c} meta={`${cDays.length} 天用餐安排 · 点击展开`} image={cityImages[c]} defaultOpen={ci===0}><div className="mealdaylist">{cDays.map(d=><article key={d.day}><b>Day {d.day}</b><div><h4>{d.title}</h4><p>{d.food}</p></div><button onClick={()=>{setCity(c);pickView('按城市浏览')}}>查看 {c} 餐厅</button></article>)}</div></Fold>})}</section>:<section className="sectionblock"><div className="sectiontitle"><h2>按城市浏览</h2><p>{restaurants.length} 个餐饮选择 · 星级餐厅、老店与街头小吃分开判断</p></div><CityTabs city={city} setCity={pickCity} label="餐厅城市筛选"/><div className="bookingbrief"><strong>{city} · {cityDays.length}天</strong><p>{cityDays.map(d=>d.food).join(' ')}</p></div><div className="catalog rich">{restPager.visible.map((it,i)=>{const rkey=it.city+it.name;const ropen=expandedKey===rkey;return <Fragment key={rkey}><article className="itemcard"><ItemMedia item={it} kind="餐厅" index={i}/><div><span className="citytag">{it.city} · 餐饮</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>订位 / 点单</b><span>{it.best}</span></div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>setExpandedKey(ropen?null:rkey)}>{ropen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'restaurant',name:it.name,city:it.city})}>预订 / 订位</button>}<FavButton name={it.name} city={it.city} type='restaurant'/><a href={mapLink(it.name,it.city)} target="_blank" rel="noreferrer">地图 App</a></div></div></article>{ropen&&<InlineDetail item={it} kind="餐厅" onBook={onBook} onCollapse={()=>setExpandedKey(null)}/>}</Fragment>})}</div>{restPager.toggle}</section>}<ResearchStatus/></div>
+ return <div className="page">{!bare&&<PageHero eyebrow="DINING PLAN" title="餐厅预订决策指南" summary="把每日吃什么、必须提前订的餐桌、街头小吃与风险提醒放进同一套决策流程。" image={bangkokImg}/>}<div className="viewtoggle" role="tablist"><button className={view==='每日用餐计划'?'active':''} onClick={()=>pickView('每日用餐计划')}>每日用餐计划</button><button className={view==='按城市浏览'?'active':''} onClick={()=>pickView('按城市浏览')}>按城市浏览</button></div>{view==='每日用餐计划'?<section className="sectionblock mealplan"><div className="sectiontitle"><h2>行程用餐路线</h2><p>按城市展开，查看每天的用餐组合与取舍</p></div>{list.map((c,ci)=>{const cDays=days.filter(d=>d.city===c);return <Fold key={c} eyebrow={stayDates?.[c] ?? route.find(x=>x[0]===c)?.[2]} title={c} meta={`${cDays.length} 天用餐安排 · 点击展开`} image={cityImages[c]} defaultOpen={ci===0}><div className="mealdaylist">{cDays.map(d=><article key={d.day}><b>Day {d.day}</b><div><h4>{d.title}</h4><p>{d.food}</p></div><button onClick={()=>{setCity(c);pickView('按城市浏览')}}>查看 {c} 餐厅</button></article>)}</div></Fold>})}</section>:<section className="sectionblock"><div className="sectiontitle"><h2>按城市浏览</h2><p>{restaurants.length} 个餐饮选择 · 星级餐厅、老店与街头小吃分开判断</p></div><CityTabs city={city} setCity={pickCity} label="餐厅城市筛选" list={list}/><div className="bookingbrief"><strong>{city} · {cityDays.length}天</strong><p>{cityDays.map(d=>d.food).join(' ')}</p></div><div className="catalog rich">{restPager.visible.map((it,i)=>{const rkey=it.city+it.name;const ropen=expandedKey===rkey;return <Fragment key={rkey}><article className="itemcard"><ItemMedia item={it} kind="餐厅" index={i}/><div><span className="citytag">{it.city} · 餐饮</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>订位 / 点单</b><span>{it.best}</span></div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>setExpandedKey(ropen?null:rkey)}>{ropen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'restaurant',name:it.name,city:it.city})}>预订 / 订位</button>}<FavButton name={it.name} city={it.city} type='restaurant'/><a href={mapLink(it.name,it.city)} target="_blank" rel="noreferrer">地图 App</a></div></div></article>{ropen&&<InlineDetail item={it} kind="餐厅" onBook={onBook} onCollapse={()=>setExpandedKey(null)}/>}</Fragment>})}</div>{restPager.toggle}</section>}<ResearchStatus/></div>
 }
 
 
-export function Flights({onBook}:{onBook?:OnBook}){const curLegs:[string,string,string][]=[['→ 新加坡','国际航班','去程国际段待定；Day 1（12-12）当天必须抵达新加坡'],['新加坡 → 普吉','城际直飞','D6转场（12-17）；实时价格见「预订行动」时间线'],['普吉 → 曼谷','城际直飞','D9转场（12-20）；实时价格见「预订行动」时间线'],['曼谷 → 清迈','城际直飞','D12转场（12-23）；实时价格见「预订行动」时间线'],['清迈 / 曼谷 →','国际航班','回程国际段待定；Day 13（12-24）在清迈结束']];const legPager=usePaged(curLegs,5,'个航段');return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="五段移动按单向路线排布。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进“我的预订”</p></div><div className="flightsummary"><article><b>5</b><span>个航段</span></article><article><b>3</b><span>段城际直飞</span></article><article><b>2</b><span>入境国家（新加坡、泰国）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=curLegs.indexOf(l);const dd=legDateDay[i];return <article key={l[0]}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l[0]}</h3><strong>{l[1]}</strong><p>{l[2]}</p><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l[0],date:dd?.[0],day:dd?.[1]??null})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>当前行程 2026-12-12～12-24（13天4城）；不含实时航班数据，实时价格见「预订行动」时间线</Source></div>}
+export function Flights({onBook}:{onBook?:OnBook}){
+ const { segments } = usePlanScope();
+ /** 按行程规划的城市顺序算航段；没保存过规划时回退到固定文案 */
+ const planLegs = useMemo(()=>{
+   if(!segments.length) return null;
+   const first=segments[0]!, last=segments[segments.length-1]!;
+   const dayOf=(iso:string)=>Math.round((new Date(iso+'T00:00:00').getTime()-new Date(first.start+'T00:00:00').getTime())/86400000)+1;
+   const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=[];
+   legs.push({title:`\u2192 ${first.city}`,kind:'\u56fd\u9645\u822a\u73ed',desc:`\u53bb\u7a0b\u56fd\u9645\u6bb5\uff1bDay 1\uff08${planDateShort(first.start)}\uff09\u5f53\u5929\u5fc5\u987b\u62b5\u8fbe${first.city}`,date:first.start,day:1});
+   segments.forEach((sg,i)=>{ if(i===0) return; const pv=segments[i-1]!;
+     legs.push({title:`${pv.city} \u2192 ${sg.city}`,kind:'\u57ce\u9645\u76f4\u98de',desc:`D${dayOf(sg.start)}\u8f6c\u573a\uff08${planDateShort(sg.start)}\uff09\uff1b\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf`,date:sg.start,day:dayOf(sg.start)}); });
+   legs.push({title:`${last.city} \u2192`,kind:'\u56fd\u9645\u822a\u73ed',desc:`\u56de\u7a0b\u56fd\u9645\u6bb5\uff1bDay ${dayOf(last.end)}\uff08${planDateShort(last.end)}\uff09\u4ece${last.city}\u79bb\u5f00`,date:last.end,day:dayOf(last.end)});
+   const countries=[...new Set(segments.map(x=>countryOf(x.city)).filter(Boolean))];
+   return { legs, countries, totalDays: dayOf(last.end), first, last };
+ },[segments]);
+ const fallback:[string,string,string][]=[['\u2192 \u65b0\u52a0\u5761','\u56fd\u9645\u822a\u73ed','\u53bb\u7a0b\u56fd\u9645\u6bb5\u5f85\u5b9a\uff1bDay 1\uff0812-12\uff09\u5f53\u5929\u5fc5\u987b\u62b5\u8fbe\u65b0\u52a0\u5761'],['\u65b0\u52a0\u5761 \u2192 \u666e\u5409','\u57ce\u9645\u76f4\u98de','D6\u8f6c\u573a\uff0812-17\uff09\uff1b\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf'],['\u666e\u5409 \u2192 \u66fc\u8c37','\u57ce\u9645\u76f4\u98de','D9\u8f6c\u573a\uff0812-20\uff09\uff1b\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf'],['\u66fc\u8c37 \u2192 \u6e05\u8fc8','\u57ce\u9645\u76f4\u98de','D12\u8f6c\u573a\uff0812-23\uff09\uff1b\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf'],['\u6e05\u8fc8 / \u66fc\u8c37 \u2192','\u56fd\u9645\u822a\u73ed','\u56de\u7a0b\u56fd\u9645\u6bb5\u5f85\u5b9a\uff1bDay 13\uff0812-24\uff09\u5728\u6e05\u8fc8\u7ed3\u675f']];
+ const legDateDay:[string,number][]=[['',1],['2026-12-17',6],['2026-12-20',9],['2026-12-23',12],['',13]];
+ const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=planLegs?planLegs.legs:fallback.map((f,i)=>({title:f[0],kind:f[1],desc:f[2],date:legDateDay[i]?.[0]??'',day:legDateDay[i]?.[1]??1}));
+ const midCount=legs.length-2;
+ const countryLabel=planLegs?planLegs.countries.join('\u3001'):'\u65b0\u52a0\u5761\u3001\u6cf0\u56fd';
+ const legPager=usePaged(legs,5,'\u4e2a\u822a\u6bb5');
+ const sourceLine=planLegs?`\u5f53\u524d\u884c\u7a0b ${planDateShort(planLegs.first.start)}\uff5e${planDateShort(planLegs.last.end)}\uff08${planLegs.totalDays}\u5929${segments.length}\u57ce\uff09\u00b7 \u6309\u300c\u884c\u7a0b\u89c4\u5212\u300d\u6700\u65b0\u4fdd\u5b58\u6392\u5e03\uff1b\u4e0d\u542b\u5b9e\u65f6\u822a\u73ed\u6570\u636e\uff0c\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf`:'\u5f53\u524d\u884c\u7a0b 2026-12-12\uff5e12-24\uff0813\u59294\u57ce\uff09\uff1b\u4e0d\u542b\u5b9e\u65f6\u822a\u73ed\u6570\u636e\uff0c\u5b9e\u65f6\u4ef7\u683c\u89c1\u300c\u9884\u8ba2\u884c\u52a8\u300d\u65f6\u95f4\u7ebf';
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="\u822a\u73ed\u4fe1\u606f" summary="\u5404\u6bb5\u79fb\u52a8\u6309\u884c\u7a0b\u89c4\u5212\u7684\u57ce\u5e02\u987a\u5e8f\u6392\u5e03\u3002\u672a\u786e\u8ba4\u822a\u73ed\u53f7\u3001\u5b9e\u65f6\u7968\u4ef7\u4e0e\u5e93\u5b58\u4e0d\u4f1a\u88ab\u5199\u6210\u4e8b\u5b9e\u3002" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>\u822a\u6bb5\u603b\u89c8</h2><p>\u51fa\u7968\u540e\u628a\u822a\u73ed\u53f7\u3001\u65f6\u95f4\u4e0e\u786e\u8ba4\u53f7\u5b58\u8fdb"\u6211\u7684\u9884\u8ba2"</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>\u4e2a\u822a\u6bb5</span></article><article><b>{midCount}</b><span>\u6bb5\u57ce\u9645\u76f4\u98de</span></article><article><b>{planLegs?planLegs.countries.length:2}</b><span>\u4e2a\u5165\u5883\u56fd\u5bb6\uff08{countryLabel}\uff09</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.title}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>\u5f85\u9884\u8ba2</em></header><h3>{l.title}</h3><strong>{l.kind}</strong><p>{l.desc}</p><dl><div><dt>\u51fa\u7968\u524d</dt><dd>\u6838\u9a8c\u65e5\u671f\u4e0e\u673a\u573a</dd></div><div><dt>\u51fa\u7968\u540e</dt><dd>\u4fdd\u5b58\u822a\u73ed\u53f7\u4e0e\u786e\u8ba4\u53f7</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>\u8bb0\u5f55\u9884\u8ba2</button></div>}</article>})}</div>{legPager.toggle}</section><section className="checklistband"><h2>\u6bcf\u6bb5\u90fd\u8981\u6838\u5bf9</h2><div><span>\u822a\u7ad9\u697c</span><span>\u6258\u8fd0\u884c\u674e\u989d</span><span>\u8f6c\u673a\u7b7e\u8bc1</span><span>\u6700\u77ed\u8854\u63a5\u65f6\u95f4</span><span>\u672b\u73ed\u63a5\u9a73</span><span>\u53d6\u6d88\u4e0e\u6539\u7b7e</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport(){const [mcity,setMcity]=useState(cities[0]!);
  const flightLegs:{route:string;time:string;airlines:string;tip:string}[]=[
@@ -307,8 +378,14 @@ function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean
  return <div className="page">{standalone&&<PageHero eyebrow="ATTRACTION GUIDE" title="景点指南" summary="八城景点完整攻略：按城市筛选，点击卡片展开查看游览重点、实用信息与小红书实读口碑。" image={chiangmaiImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>八城景点指南</h2><p>按城市筛选，点击展开查看完整攻略</p></div><CityTabs city={city} setCity={setCity} label="景点城市筛选"/><InfographicPanel city={city}/><div className="catalog rich attractions">{attrPager.visible.map((it,i)=>{const akey=it.city+it.name;const aopen=expanded===akey;return <Fragment key={akey}><article className="itemcard"><ItemMedia item={it} kind="景点" index={i}/><div><span className="citytag">{it.city} · 景点</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么安排</b><span>{it.best}</span></div><XhsMini item={it}/><button className="solid" onClick={()=>setExpanded(aopen?null:akey)}>{aopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button className="solid" onClick={()=>onBook({bkind:'attraction',name:it.name,city:it.city})}>预订门票</button>}<FavButton name={it.name} city={it.city} type='attraction'/></div></article>{aopen&&<InlineDetail item={it} kind="景点" onBook={onBook} onCollapse={()=>setExpanded(null)}/>}</Fragment>})}</div>{attrPager.toggle}</section></div>
 }
 
-function CountryAdvice(){
- return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;
+/** 旅行研究：纯参考资料库。酒店/美食/景点三个子分类，复用完整目录（含城市筛选），不带预订入口。 */
+function TravelResearch(){
+ const [kind,setKind]=useState<'景点'|'美食'|'酒店'>('景点');
+ const kinds:{key:'景点'|'美食'|'酒店';label:string}[]=[{key:'景点',label:'🏛️ 景点'},{key:'美食',label:'🍽️ 美食'},{key:'酒店',label:'🏨 酒店'}];
+ return <div className="page"><PageHero eyebrow="TRAVEL RESEARCH" title="旅行研究" summary="出行前的参考资料库：八城酒店、美食、景点完整研究，按城市筛选、点击展开看完整攻略。这里只做参考——定好城市和日期后，去「预订」下单。" image={chiangmaiImg}/><div className="viewtoggle" role="tablist" aria-label="研究分类">{kinds.map(k=><button key={k.key} className={kind===k.key?'active':''} aria-selected={kind===k.key} onClick={()=>setKind(k.key)}>{k.label}</button>)}</div>{kind==='酒店'?<HotelCatalog bare/>:kind==='美食'?<RestaurantCatalog bare/>:<AttractionGuide/>}<ResearchStatus/></div>;
+}
+
+function CountryAdvice(){ return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;
 }
 
 function PackingTab(){
@@ -470,7 +547,7 @@ export function GuideApp({initialTab='酒店',hideChrome=false}:{initialTab?:Tab
  const [tab,setTab]=useState<Tab>(initialTab);
  const [bookingPreset,setBookingPreset]=useState<BookingPreset|null>(null);
  const onBook:OnBook=(p)=>setBookingPreset(p);
- const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <SectionErrorBoundary label="实用信息"><Practical onBook={onBook}/></SectionErrorBoundary>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
+ const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <SectionErrorBoundary label="实用信息"><Practical onBook={onBook}/></SectionErrorBoundary>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='旅行研究')return <TravelResearch/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
  const go=(t:Tab)=>{setTab(t);window.scrollTo({top:0,behavior:'auto'})};
  return <div className="app"><SafeAreaTopScrim backgroundColor="var(--surface)"/>{!hideChrome&&<div className="migration-notice" role="note">⚠️ 数据更新中：本页为旧版攻略站整体迁移（研究快照 2026-09-12）；小红书严格实读与 189 项详情重做完成后会替换更新。</div>}{!hideChrome&&<nav className="mainnav" aria-label="攻略章节">{tabs.map(t=><button key={t} className={tab===t?'active':''} aria-current={tab===t?'page':undefined} onClick={()=>go(t)}><NavIcon tab={t}/><span>{t}</span></button>)}</nav>}<main>{content}</main>{!hideChrome&&<footer><strong>13天 · 2国 · 4城</strong><p>固定研究快照：2026-09-12。开放时间、价格、签证、航班与房态请在出发前向官方渠道复核。</p></footer>}<BookingDialog open={!!bookingPreset} preset={bookingPreset} onClose={()=>setBookingPreset(null)}/></div>
 }
