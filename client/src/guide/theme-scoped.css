@@ -211,7 +211,7 @@
 .guide-scope .showmore button{min-width:220px}
 
 /* 交通：一次只看一城 */
-.guide-scope .mobility .mobilitysingle{display:block;max-width:680px}
+.guide-scope .mobility>div.mobilitysingle{display:block;max-width:none}
 
 /* 详情弹窗：目录更好用 —— 锚点留出吸顶目录高度 + 回到目录 */
 .guide-scope #decision, .guide-scope #facts, .guide-scope #xhs, .guide-scope #sources{scroll-margin-top:70px}
