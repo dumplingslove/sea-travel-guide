@@ -332,28 +332,25 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
 export function Flights({onBook}:{onBook?:OnBook}){
  const { segments } = usePlanScope();
  const [showHist,setShowHist]=useState(false);
- /** 按行程规划的城市顺序算航段；没保存过规划时回退到固定文案 */
- const planLegs = useMemo(()=>{
-   if(!segments.length) return null;
-   const first=segments[0]!, last=segments[segments.length-1]!;
-   const dayOf=(iso:string)=>Math.round((new Date(iso+'T00:00:00').getTime()-new Date(first.start+'T00:00:00').getTime())/86400000)+1;
-   const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=[];
-   legs.push({title:'西安 → 新加坡',kind:'国际航班',desc:`去程国际段；Day 1（${planDateShort(first.start)}）当天必须抵达新加坡`,date:first.start,day:1});
-   segments.forEach((sg,i)=>{ if(i===0) return; const pv=segments[i-1]!;
-     legs.push({title:`${pv.city} → ${sg.city}`,kind:'城际直飞',desc:`D${dayOf(sg.start)}转场（${planDateShort(sg.start)}）；实时价格见「预订行动」时间线`,date:sg.start,day:dayOf(sg.start)}); });
-   legs.push({title:'清迈 → 北京',kind:'国际航班',desc:`回程国际段（用户回北京）；Day ${dayOf(last.end)}（${planDateShort(last.end)}）从清迈离开`,date:last.end,day:dayOf(last.end)});
-   legs.push({title:'清迈 → 西安',kind:'国际航班',desc:`回程国际段（妻子回西安）；Day ${dayOf(last.end)}（${planDateShort(last.end)}）从清迈离开`,date:last.end,day:dayOf(last.end)});
-   const countries=[...new Set(segments.map(x=>countryOf(x.city)).filter(Boolean))];
-   return { legs, countries, totalDays: dayOf(last.end), first, last };
+ /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 8 段全量）：
+  * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
+  * 与「预订行动」时间线、页顶每日动态横幅同一来源。
+  * 旧逻辑按行程规划的城市对推导航段，硬编码了旧 13 天行程的 6 段结构
+  * （西安→新加坡出境 + 城市对城际 + 清迈→北京/西安回程、日期写死 last.end），
+  * 丢了北京→新加坡与新加坡→西安（TR0134）两段家庭分流航段——这就是横幅写 8 段、列表只显示 6 段的原因。 */
+ const legs:{title:string;kind:string;desc:string;date:string;day:number;leg:FlightLegInfo}[]=useMemo(
+   ()=>FLIGHT_LEGS.map(f=>({title:f.route,kind:f.kind==='intl'?'国际航班':'城际直飞',desc:f.note,date:f.date,day:f.day,leg:f})),
+   []
+ );
+ const countries=useMemo(()=>{
+   const s=[...new Set(segments.map(x=>countryOf(x.city)).filter(Boolean))];
+   return s.length?s:['新加坡','泰国'];
  },[segments]);
- const fallback:[string,string,string][]=[['西安 → 新加坡','国际航班','去程国际段；Day 1（12-12）当天必须抵达新加坡'],['新加坡 → 普吉','城际直飞','D6转场（12-17）；实时价格见「预订行动」时间线'],['普吉 → 曼谷','城际直飞','D9转场（12-20）；实时价格见「预订行动」时间线'],['曼谷 → 清迈','城际直飞','D12转场（12-23）；实时价格见「预订行动」时间线'],['清迈 → 北京','国际航班','回程国际段（用户回北京）；Day 13（12-24）从清迈离开'],['清迈 → 西安','国际航班','回程国际段（妻子回西安）；Day 13（12-24）从清迈离开']];
- const legDateDay:[string,number][]=[['2026-12-12',1],['2026-12-17',6],['2026-12-20',9],['2026-12-23',12],['2026-12-24',13],['2026-12-24',13]];
- const legs:{title:string;kind:string;desc:string;date:string;day:number}[]=planLegs?planLegs.legs:fallback.map((f,i)=>({title:f[0],kind:f[1],desc:f[2],date:legDateDay[i]?.[0]??'',day:legDateDay[i]?.[1]??1}));
  const midCount=legs.filter(l=>l.kind==='城际直飞').length;
- const countryLabel=planLegs?planLegs.countries.join('、'):'新加坡、泰国';
+ const countryLabel=countries.join('、');
  const legPager=usePaged(legs,5,'个航段');
- const sourceLine=planLegs?`当前行程 ${planDateShort(planLegs.first.start)}～${planDateShort(planLegs.last.end)}（${planLegs.totalDays}天${segments.length}城）· 按「行程规划」最新保存排布；不含实时航班数据，实时价格见「预订行动」时间线`:'当前行程 2026-12-12～12-24（13天4城）；不含实时航班数据，实时价格见「预订行动」时间线';
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按行程规划的城市顺序排布。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订"</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{planLegs?planLegs.countries.length:2}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.title}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l.title}</h3><strong>{l.kind}</strong><p>{l.desc}</p>{(()=>{const f=FLIGHT_LEGS.find(x=>x.route===l.title);return f&&f.options&&f.options.length?<FlightLegOptions leg={f}/>:<p className="flightprice"><b>实查参考价</b><span>{f&&f.queriedAt?`Duffel ${f.queriedAt} 实查：暂无直飞`:'国际段价格待核验'}</span></p>})()}<dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><section className="sectionblock"><div className="sectiontitle"><span>HISTORICAL RESEARCH</span><h2>历史实查参考</h2><p>2026-09-14/15 Duffel 实测（2成人直飞当前库存）· 旧8城行程版本 · 非实时价，仅供参考，不代替出票</p><button className="secondary" onClick={()=>setShowHist(!showHist)} aria-expanded={showHist}>{showHist?'收起 ▲':'展开 7 段旧行程实查 ▾'}</button></div>{showHist&&<Fragment><div className="transportlist">{HISTORICAL_FLIGHT_LEGS.map((h,i)=><article key={h.route}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{h.route} · {h.time}</h3><p><b>推荐航司：</b>{h.airlines}</p><p>{h.tip}</p><p><b>Duffel实测 {h.measured.date.slice(5).replace('-','/')}</b>：{h.measured.offers} 个结果，2人 ${h.measured.min.toFixed(2)}–${h.measured.max.toFixed(2)}（{h.measured.carriers}）{h.measured.fragile?' · ⚠ 当天仅1班，先锁这段':''} · 非实时价</p></div></article>)}</div><p style={{fontSize:12,color:'#61747d',marginTop:10}}>7段最低合计约 $1,520.60/2人（各段最低价相加；价格随库存变，Duffel未返回退改信息，出票前重查）</p></Fragment>}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ const sourceLine='航段与直飞选项由每日航班刷新维护（Duffel 实查，非实时价，出票前重查退改）；实时价格与推荐见「预订行动」时间线';
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订"</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.title}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l.title}</h3><strong>{l.kind}</strong><p>{l.desc}</p>{(()=>{const f=l.leg;return f.options&&f.options.length?<FlightLegOptions leg={f}/>:<p className="flightprice"><b>实查参考价</b><span>{f.queriedAt?`Duffel ${f.queriedAt} 实查：暂无直飞`:'国际段价格待核验'}</span></p>})()}<dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><section className="sectionblock"><div className="sectiontitle"><span>HISTORICAL RESEARCH</span><h2>历史实查参考</h2><p>2026-09-14/15 Duffel 实测（2成人直飞当前库存）· 旧8城行程版本 · 非实时价，仅供参考，不代替出票</p><button className="secondary" onClick={()=>setShowHist(!showHist)} aria-expanded={showHist}>{showHist?'收起 ▲':'展开 7 段旧行程实查 ▾'}</button></div>{showHist&&<Fragment><div className="transportlist">{HISTORICAL_FLIGHT_LEGS.map((h,i)=><article key={h.route}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{h.route} · {h.time}</h3><p><b>推荐航司：</b>{h.airlines}</p><p>{h.tip}</p><p><b>Duffel实测 {h.measured.date.slice(5).replace('-','/')}</b>：{h.measured.offers} 个结果，2人 ${h.measured.min.toFixed(2)}–${h.measured.max.toFixed(2)}（{h.measured.carriers}）{h.measured.fragile?' · ⚠ 当天仅1班，先锁这段':''} · 非实时价</p></div></article>)}</div><p style={{fontSize:12,color:'#61747d',marginTop:10}}>7段最低合计约 $1,520.60/2人（各段最低价相加；价格随库存变，Duffel未返回退改信息，出票前重查）</p></Fragment>}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 
