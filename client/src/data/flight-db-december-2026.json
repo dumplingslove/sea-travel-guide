@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T17:02:39+00:00",
+ "updated_at": "2026-09-28T18:56:15+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2769,6 +2769,79 @@
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天有直飞但商务舱价格不可用"
+    },
+    "2026-12-29": {
+     "economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "economy_usd": 525.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h55m",
+       "price_usd": 525.0
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T18:56:15+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-30": {
+     "economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "economy_usd": 525.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h55m",
+       "price_usd": 525.0
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU2069",
+       "dep": "07:20",
+       "arr": "12:55",
+       "duration": "5h35m",
+       "price_usd": 686.0
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T18:56:15+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价"
+    },
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "economy_usd": 693.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h55m",
+       "price_usd": 693.0
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T18:56:15+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
     }
    }
   },
@@ -3642,7 +3715,94 @@
      "business_queried_at": "2026-09-28T07:53:44+00:00",
      "business_usd": 14323,
      "business_price_basis": "2大1小总价",
-     "business_note": "Cheapest标签页曾显示14105美元，Best标签页显示14323美元，采用14323美元"
+     "business_note": "Cheapest标签页曾显示14105美元，Best标签页显示14323美元，采用14323美元",
+     "onestop_economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_economy_usd": 3318.0,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_economy_note": "除卡航/新航外其余为分开出票自行转机(Self transfer)",
+     "onestop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439/AS120",
+       "dep": "08:30",
+       "arr": "12:55",
+       "duration": "20h25m",
+       "via": "首尔",
+       "price_usd": 3318.0,
+       "business_price_usd": 11802.0
+      },
+      {
+       "airline": "Qatar Airways",
+       "flight": "QR881/QR719",
+       "dep": "01:10",
+       "arr": "11:40",
+       "duration": "26h30m",
+       "via": "多哈",
+       "price_usd": 3645.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA439/KE41",
+       "dep": "08:30",
+       "arr": "09:05",
+       "duration": "16h35m",
+       "via": "首尔",
+       "price_usd": 5015.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA469/CI22",
+       "dep": "15:20",
+       "arr": "18:10",
+       "duration": "18h50m",
+       "via": "台北",
+       "price_usd": 5257.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA469/BR26",
+       "dep": "15:20",
+       "arr": "18:10",
+       "duration": "18h50m",
+       "via": "台北",
+       "price_usd": 5376.0,
+       "business_price_usd": 21153.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA469/BR24",
+       "dep": "15:20",
+       "arr": "17:30",
+       "duration": "18h10m",
+       "via": "台北",
+       "price_usd": 5608.0,
+       "business_price_usd": 21153.0
+      },
+      {
+       "airline": "Hong Kong Airlines",
+       "flight": "HX497/CX852",
+       "dep": "08:40",
+       "arr": "08:45",
+       "duration": "16h5m",
+       "via": "香港",
+       "price_usd": 5898.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ819/SQ28",
+       "dep": "02:35",
+       "arr": "07:05+1",
+       "duration": "44h30m",
+       "via": "新加坡",
+       "price_usd": 7046.0,
+       "business_price_usd": 18211.0
+      }
+     ],
+     "onestop_count": 8,
+     "onestop_business_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_business_usd": 11338.0,
+     "onestop_business_price_basis": "2大1小总价",
+     "onestop_business_note": "除新航外其余为分开出票自行转机(Self transfer)；国航+长荣联程首段为经济舱"
     },
     "2027-01-01": {
      "economy_queried_at": "2026-09-28T07:53:44+00:00",
@@ -3657,7 +3817,91 @@
      "business_queried_at": "2026-09-28T07:53:44+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞",
+     "onestop_economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_economy_usd": 4357.0,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_economy_note": "除新航外其余为分开出票自行转机(Self transfer)",
+     "onestop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439/AS120",
+       "dep": "08:30",
+       "arr": "12:55",
+       "duration": "20h25m",
+       "via": "首尔",
+       "price_usd": 4357.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA439/KE41",
+       "dep": "08:30",
+       "arr": "09:05",
+       "duration": "16h35m",
+       "via": "首尔",
+       "price_usd": 4632.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA439/KE47",
+       "dep": "08:30",
+       "arr": "14:10",
+       "duration": "21h40m",
+       "via": "首尔",
+       "price_usd": 4935.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA409/JX32",
+       "dep": "15:20",
+       "arr": "15:05",
+       "duration": "15h45m",
+       "via": "台北",
+       "price_usd": 5503.0
+      },
+      {
+       "airline": "Sichuan Airlines",
+       "flight": "3U8183/BR26",
+       "dep": "15:05",
+       "arr": "18:10",
+       "duration": "19h5m",
+       "via": "台北",
+       "price_usd": 5953.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA409/BR26",
+       "dep": "15:20",
+       "arr": "18:10",
+       "duration": "18h50m",
+       "via": "台北",
+       "price_usd": 6042.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA419/CX852",
+       "dep": "11:50",
+       "arr": "08:45+1",
+       "duration": "36h55m",
+       "via": "香港",
+       "price_usd": 6836.0,
+       "business_price_usd": 22055.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ819/SQ28",
+       "dep": "02:35",
+       "arr": "07:05",
+       "duration": "20h30m",
+       "via": "新加坡",
+       "price_usd": 6928.0
+      }
+     ],
+     "onestop_count": 8,
+     "onestop_business_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_business_usd": 22055.0,
+     "onestop_business_price_basis": "2大1小总价",
+     "onestop_business_note": "新加坡航空为混合舱位(Economy + Business Class)，价格不可用"
     },
     "2027-01-02": {
      "economy_queried_at": "2026-09-28T07:53:44+00:00",
@@ -3672,7 +3916,36 @@
      "business_queried_at": "2026-09-28T07:53:44+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞",
+     "onestop_economy_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_economy_usd": 3276.0,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "Qatar Airways",
+       "flight": "QR881/QR719",
+       "dep": "01:10",
+       "arr": "11:40",
+       "duration": "26h30m",
+       "via": "多哈",
+       "price_usd": 3276.0
+      },
+      {
+       "airline": "Hainan Airlines",
+       "flight": "HU7268/HU495",
+       "dep": "08:50",
+       "arr": "08:20",
+       "duration": "15h30m",
+       "via": "北京",
+       "price_usd": 7177.0,
+       "business_price_usd": 22842.0
+      }
+     ],
+     "onestop_count": 2,
+     "onestop_business_queried_at": "2026-09-28T18:56:15+00:00",
+     "onestop_business_usd": 11455.0,
+     "onestop_business_price_basis": "2大1小总价",
+     "onestop_business_note": "除海南/新航外其余为分开出票自行转机(Self transfer)"
     }
    }
   }
