@@ -998,9 +998,9 @@ function wzStep2(){
   return `<div class="section-head"><div><p class="eyebrow">STEP 2/2</p><h2>定天数与顺序</h2><p class="lede">1–6 天可调，用 ↑ ↓ 定城市顺序；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定顺序）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
-    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定顺序 →</button></div>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：检查确认 →</button></div>`;
 }
-/* 📅 定顺序 tab：统一日历 + 东南亚城市顺序微调。
+/* 🔍 检查确认 tab：统一日历排雷。
    2026-09-28 用户要求：从向导 Step 3 升级为独立 tab，一上来就显示日历；
    点日期看详情（modal），排雷报告移除（山寨感）；
    大行程结构性改动回「🗺️ 大行程」做，这里只给跳转。 */
@@ -1046,7 +1046,7 @@ function wzUnifiedCalendar(){
       const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
       const badges=[legByDate[d]?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
       const color=segColor[info.seg]||"#94a3b8";
-      html+=`<button class="wz-calday ${sev}" data-wzday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${Number(d.slice(8))}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
+      html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${Number(d.slice(8))}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
     }
     html+=`</div></div>`;
   }
