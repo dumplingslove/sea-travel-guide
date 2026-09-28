@@ -651,7 +651,7 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
       .map(c=>`<button class="${returnCity===c?"primary":"ghost"}" data-returncity="${c}">${RETURN_CITY_META[c].airport}</button>`))
     .join(" ");
   const dest=returnCity?`${RETURN_CITY_META[returnCity].city} → 西雅图`:`？ → 西雅图（出发城市待定）`;
-  const gather=returnCity?`你（北京）＋ 妻（西安）→ 在${RETURN_CITY_META[returnCity].city}会合后一起飞西雅图`:`你（北京）＋ 妻（西安）→ 在回程城市会合后一起飞西雅图（先定出发城市）`;
+  const gather=returnCity?`你${returnCity==="PEK"?"已在北京":"从北京出发"}；其他家人前往${RETURN_CITY_META[returnCity].city}的路线待定；会合后一起飞西雅图`:`回程城市待定：你从北京出发，其他家人前往集合城市的路线待定；会合后一起飞西雅图`;
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
@@ -707,20 +707,21 @@ function renderTrip(){
     <p class="micro">${notes}</p>`);
     }
   }
-  /* 国内集结段：回程城市一定下来，你（北京）＋ 妻（西安）分别飞往集结城市会合；
-     北京集结则只需妻从西安过来。这是北京独自停留之后、国际航班之前单独的一步，不许并入北京那段。 */
+  /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
+     只写你本人的路线（你从北京出发）；其他家人前往集合城市的具体路线不编造，统一写"路线待定"。 */
   const gatherRow=(()=>{
     if(!returnCity) return "";
     const m=RETURN_CITY_META[returnCity];
     const date=ranges["beijing3"].to;
     const legs=returnCity==="PEK"
-      ? [{code:"XIY-PEK",label:"西安→北京（妻前来会合）"}]
-      : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你）`},{code:`XIY-${returnCity}`,label:`西安→${m.city}（妻）`}];
-    const title=returnCity==="PEK" ? "西安→北京（妻前来会合）" : `北京→${m.city}（国内集结）`;
+      ? []
+      : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你一人）`}];
+    const title=returnCity==="PEK" ? "国内集结（北京）" : `北京→${m.city}（国内集结）`;
+    const others=returnCity==="PEK" ? "你已在北京" : "";
     const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
     return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    <p class="micro">需在国际航班起飞前到达${m.city}。</p>
-    <p class="micro">${notes}</p>`;
+    <p class="micro">${others?others+"；":""}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
+    ${notes?`<p class="micro">${notes}</p>`:""}`;
   })();
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
