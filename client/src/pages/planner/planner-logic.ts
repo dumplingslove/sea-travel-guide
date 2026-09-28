@@ -660,7 +660,7 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
   /* 用户 2026-09-28：西安→北京不坐飞机了，删掉这张机票卡；航班库也不再查 XIY-PEK */
   { after:"xian", before:"beijing3", title:"西安→北京（用户一人）", noFlight:true,
-    note:"你不坐飞机去北京，这段的航班信息不再查询。",
+    note:"你坐高铁去北京，不需要机票。",
     legs:[] },
 ];
 /* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落 */
