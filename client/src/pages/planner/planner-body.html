@@ -9,21 +9,19 @@
 
     <nav class="tabs" aria-label="页面区域">
       <button class="tab active" data-tab="trip" aria-selected="true">🗺️ 大行程</button>
-      <button class="tab" data-tab="wizard" aria-selected="false">🧭 分步规划</button>
-      <button class="tab" data-tab="calendar" aria-selected="false">📅 日期排期</button>
-      <button class="tab" data-tab="coverage" aria-selected="false">🎯 景点取舍</button>
+      <button class="tab" data-tab="wizard" aria-selected="false">🧭 东南亚城市规划</button>
     </nav>
 
     <section id="trip" class="panel active">
       <div class="section-head">
-        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>大行程，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延（北京→新加坡→东南亚→西安→北京；回北京之后暂不规划）。定好点「保存大行程」，云端同步、刷新不丢；夫妻段的城市细排去「🧭 分步规划」继续。</p></div>
+        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>大行程，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延（北京→新加坡→夫妻东南亚→西安→北京（你一人）；最后在回程城市集结飞西雅图）。定好点「保存大行程」，云端同步、刷新不丢；夫妻段的城市细排去「🧭 东南亚城市规划」继续。</p></div>
       </div>
       <div id="tripBody" aria-live="polite"></div>
     </section>
 
     <section id="wizard" class="panel">
       <div class="section-head">
-        <div><p class="eyebrow">GUIDED PLANNER</p><h2>三步定下整趟行程</h2><p class="lede">先选城市，再定每城天数与顺序，然后排具体日期、查直飞与日期适宜度。最后一步点「保存规划」，自动排入日历并同步到首页、每日详情与地图；机票酒店去「预订」页落实。</p></div>
+        <div><p class="eyebrow">GUIDED PLANNER · 夫妻东南亚段</p><h2>三步定下夫妻东南亚</h2><p class="lede">只细分大行程「夫妻东南亚」段。先选城市，再定每城天数（每城附景点取舍标注，帮你判断几天够），然后在日期排期里定具体日期、查直飞与适宜度。保存后同步到首页、每日详情与地图；机票酒店去「预订」页落实。</p></div>
       </div>
       <ol class="wz-steps" id="wzSteps" aria-label="规划步骤">
         <li data-wzstep="1"><b>①</b><span>选城市</span></li>
@@ -31,46 +29,6 @@
         <li data-wzstep="3"><b>③</b><span>定日期</span></li>
       </ol>
       <div id="wzBody" aria-live="polite"></div>
-    </section>
-
-    <section id="calendar" class="panel">
-      <div class="section-head">
-        <div><p class="eyebrow">STEP 02</p><h2>日期排期，可逐日微调</h2><p class="lede">初始排期来自「🧭 分步规划」的选择；点击任意日期可改城市或模式。点「保存到云端」后，首页行程、每日详情与地图都会同步更新；两个账号共享同一份规划，刷新不丢。</p></div>
-        <div class="section-head-actions" style="display:flex;gap:8px;flex-shrink:0">
-          <button class="primary" id="savePlanCloud">保存到云端</button>
-          <button class="ghost" id="copyPlan">复制当前行程</button>
-        </div>
-      </div>
-      <p class="planner-sync-note micro" id="plannerSyncNote" role="status" style="margin:0 0 12px">正在加载云端规划…</p>
-      <div class="calendar-tools">
-        <div class="field"><label for="startDate">开始日期（来自大行程）</label><input id="startDate" type="date" aria-label="开始日期（来自大行程，只读）" min="2026-12-01" max="2026-12-31" value="2026-12-12"></div>
-        <button class="ghost" id="resetRecommended">按分步规划重排</button>
-        <div class="cal-mode-toggle" role="group" aria-label="日历视图">
-          <button class="ghost active" id="calModeDecision" aria-pressed="true">决策视图</button>
-          <button class="ghost" id="calModeSchedule" aria-pressed="false">排期视图</button>
-        </div>
-        <div class="legend"><span id="coupleLegend"><i class="dot couple"></i>双人</span><span><i class="dot family"></i>亲子慢节奏</span><span><i class="dot holiday"></i>节假日</span><span><i class="dot suit-ok"></i>宜</span><span><i class="dot suit-warn"></i>谨慎</span><span><i class="dot suit-blocked"></i>不宜</span></div>
-      </div>
-      <section class="card hard-check" aria-labelledby="hardCheckTitle">
-        <div class="hard-check-head">
-          <div><h3 id="hardCheckTitle">硬性条件检查</h3><p>每次改排期都会重算：先列真正撞上的限制，再说明这次会错过什么。</p></div>
-          <span class="hard-count" id="hardCount">检查中</span>
-        </div>
-        <div class="hard-list" id="hardList" aria-live="polite"></div>
-      </section>
-      <div class="transfer-alerts" id="transferAlerts" aria-live="polite"></div>
-      <div class="calendar" aria-label="2026年12月与2027年1月行程日历">
-        <div class="weekdays"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </div>
-      <div class="calendar-note" id="calendarNote"></div>
-    </section>
-
-    <section id="coverage" class="panel">
-      <div class="section-head"><div><p class="eyebrow">STEP 03</p><h2>景点取舍</h2><p class="lede">“必看 / 可选 / 建议舍去”是为了在现有天数内做取舍的规划优先级，不是景点评分。名单严格来自 8 城 67 个精华景点清单；覆盖数按各城经典路线逐日实际命中去重计算，城外日不计入。</p></div></div>
-      <div class="summary-grid" id="coverageGrid"></div>
-      <div class="details-intro"><p class="eyebrow">DETAIL MODEL · 8 城</p><h2>景点详情字段</h2><p class="lede">曼谷 9 项已按地址、营业时间、最后入场、票价、交通、必看、推荐原因与避坑完整展开（2026-09-14 研究）；存在多源分歧的票价或时段会原样标注并提醒出发前复核。其余 7 城的研究资料尚未整理为详情字段，暂不展示——不拿占位文案冒充完成。</p></div>
-      <div class="spot-detail-list" id="spotDetailList"></div>
     </section>
 
 

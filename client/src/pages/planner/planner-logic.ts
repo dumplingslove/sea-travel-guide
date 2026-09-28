@@ -63,6 +63,8 @@ export function initPlanner(hostEl: HTMLElement): () => void {
     if (!n) throw new Error(`planner: #${id} 不存在`);
     return n as HTMLElement;
   };
+  /* 日历/景点详情等区块已并入向导步骤内按需渲染，不在 DOM 时返回 null 而不是抛错 */
+  const elOpt = (id: string): HTMLElement | null => S.getElementById(id) as HTMLElement | null;
   const inputVal = (id: string): string => (el(id) as HTMLInputElement | HTMLSelectElement).value;
 
   /* 地点清单：研究数据（程序化生成），替换原 citySpots 字面量 */
@@ -359,7 +361,9 @@ function scheduleTransitions(){
   return rows;
 }
 function renderTransferAlerts(){
-  const rows=scheduleTransitions(),wrap=el("transferAlerts");
+  const wrap=elOpt("transferAlerts");
+  if(!wrap) return;
+  const rows=scheduleTransitions();
   if(!rows.length){wrap.innerHTML='<div class="transfer-alert"><strong>暂无转场</strong><p>当前日历没有连续两天切换城市。安排城市后，这里会按当天星期查询完整矩阵。</p></div>';return}
   wrap.innerHTML=rows.map(r=>{
     const routeLabel=`${r.date.slice(5)} · ${esc(r.from)}→${esc(r.to)}`,a=r.assessment;
@@ -437,9 +441,10 @@ function renderHardConstraints(){
   const family=entries.filter(([,p])=>p.mode==="family");
   if(family.length)add("pass","带娃节奏已保留",`${family.length} 个亲子日继续按每天 1–2 个景点＋午休计算；转场当天不要追加晚场。`,`亲子日：${family.map(([d,p])=>`${d.slice(5)} ${p.city}`).join("、")}`);
 
-  const actionable=items.filter(x=>x.level==="warn"||x.level==="blocked").length, count=el("hardCount");
+  const actionable=items.filter(x=>x.level==="warn"||x.level==="blocked").length, count=elOpt("hardCount"), list=elOpt("hardList");
+  if(!count||!list) return;
   count.textContent=actionable?`${actionable} 条需处理`:"全部通过";count.classList.toggle("clear",!actionable);
-  el("hardList").innerHTML=items.map(x=>`<article class="hard-item ${x.level}"><strong>${x.level==="blocked"?"⛔ ":x.level==="warn"?"⚠ ":"✓ "}${x.title}</strong><p>${x.body}</p>${x.source?`<div class="hard-meta">${x.source}</div>`:""}</article>`).join("");
+  list.innerHTML=items.map(x=>`<article class="hard-item ${x.level}"><strong>${x.level==="blocked"?"⛔ ":x.level==="warn"?"⚠ ":"✓ "}${x.title}</strong><p>${x.body}</p>${x.source?`<div class="hard-meta">${x.source}</div>`:""}</article>`).join("");
 }
 /* ---------------- 决策日历：城市适宜度 × 当日直飞 ---------------- */
 const decisionCityList = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
@@ -493,13 +498,17 @@ function renderDayIntel(date: string){
 }
 function syncCalMode(){
   const d = state.calMode === "decision";
-  el("calModeDecision").classList.toggle("active", d);
-  el("calModeSchedule").classList.toggle("active", !d);
-  el("calModeDecision").setAttribute("aria-pressed", String(d));
-  el("calModeSchedule").setAttribute("aria-pressed", String(!d));
+  const t1=elOpt("calModeDecision"), t2=elOpt("calModeSchedule");
+  if(!t1||!t2) return;
+  t1.classList.toggle("active", d);
+  t2.classList.toggle("active", !d);
+  t1.setAttribute("aria-pressed", String(d));
+  t2.setAttribute("aria-pressed", String(!d));
 }
 function renderCalendar(){
-  const grid=el("calendarGrid"),mc=monthCells(),dates=mc.cells;grid.innerHTML="";
+  const grid=elOpt("calendarGrid");
+  if(!grid) return; /* 日历只在向导 Step 3 里渲染，其它步骤直接跳过 */
+  const mc=monthCells(),dates=mc.cells;grid.innerHTML="";
   S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
   dates.forEach(date=>{
@@ -527,24 +536,13 @@ function renderCalendar(){
   });
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
   const paceName="特种兵";
-  el("calendarNote").textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
+  const note=elOpt("calendarNote");
+  if(note) note.textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
   renderTransferAlerts();
   renderHardConstraints();
 }
-function cityDayCounts(){const counts: Record<string, { couple: number; family: number }> = {};Object.values(state.schedule).forEach(x=>{const mode=x.mode as "couple"|"family";if(!counts[x.city])counts[x.city]={couple:0,family:0};counts[x.city][mode]=(counts[x.city][mode]||0)+1});return counts}
-function renderCoverage(){
-  const counts=cityDayCounts();
-  el("coverageGrid").innerHTML=Object.keys(citySpots).map(city=>{
-    const c=counts[city]||{couple:0,family:0},days=c.couple+c.family;
-    const cov=classicCoverage(city,days),list=citySpots[city],hitsArr=classicSpotHits[city]||[];
-    const hitSet=new Set<string>(),hitOrdered: string[]=[];
-    for(let i=0;i<Math.min(days,hitsArr.length);i++)(hitsArr[i]||[]).forEach(h=>{if(list.includes(h)&&!hitSet.has(h)){hitSet.add(h);hitOrdered.push(h)}});
-    const rest=list.filter(s=>!hitSet.has(s));
-    const must=hitOrdered,optional=rest.slice(0,2),drop=rest.slice(2);
-    return `<article class="card city-summary"><div class="city-top"><div><h3>${esc(city)}</h3><div class="micro">${c.couple?`双人 ${c.couple}天`:""}${c.couple&&c.family?" · ":""}${c.family?`亲子 ${c.family}天`:""}${!days?"未排入":""}</div></div><span>${days}D · 实际命中 ${cov.n}/${cov.total}${cov.estimated?"（估算）":""}</span></div><div class="meter"><b style="width:${cov.pct}%"></b></div><div class="micro meter-note">按经典路线逐日命中去重；城外日不计入。</div><div class="spot-groups"><div class="spot-group"><strong>优先排</strong> ${must.length?must.map(s=>`<span class="spot-chip must">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>有余力再去</strong> ${optional.length?optional.map(s=>`<span class="spot-chip">${esc(s)}</span>`).join(""):"—"}</div><div class="spot-group"><strong>本轮建议舍去</strong> ${drop.length?drop.map(s=>`<span class="spot-chip drop">${esc(s)}</span>`).join(""):"—"}</div></div></article>`
-  }).join("");
-  renderSpotDetails();
-}
+/* 景点取舍已并入向导 Step 2（定天数）：每城行内直接标注"优先排 / 有余力再去 / 建议舍去"，
+   不再有独立 tab；旧的 coverageGrid 卡片渲染与 cityDayCounts 已删除。 */
 // 景点详情字段：目前仅曼谷 9 项完成 8 字段研究；其余 7 城研究资料尚未整理为详情字段，
 // 结构预留按城接入，数据就绪后直接填入对应数组即可，不拿占位文案冒充完成。
 const spotDetails: Record<string, SpotDetail[]> = {"曼谷":bangkokSpotDetails};
@@ -553,7 +551,10 @@ function spotDetailCard(s: SpotDetail, open: boolean){
   return `<details class="spot-detail" ${open?"open":""}><summary>${esc(s.name)}<span>${open?"完整示例":"详情字段"}</span></summary><div class="spot-detail-body"><div class="spot-fields"><div class="spot-field"><b>地址</b><span class="${s.address.includes("待")?"pending-text":""}">${esc(s.address)}</span></div><div class="spot-field"><b>营业时间</b><span class="${s.hours.includes("待")?"pending-text":""}">${esc(s.hours)}</span></div><div class="spot-field"><b>最后入场</b><span class="${s.lastEntry.includes("待")?"pending-text":""}">${esc(s.lastEntry)}</span></div><div class="spot-field"><b>门票／价格</b><span class="${s.price.includes("待")?"pending-text":""}">${esc(s.price)}</span></div><div class="spot-field"><b>交通</b><span class="${s.transit.includes("待")?"pending-text":""}">${esc(s.transit)}</span></div><div class="spot-field"><b>必看／必做</b>${esc(s.must)}</div></div><p><strong>推荐原因：</strong>${esc(s.reason)}</p><p><strong>避坑：</strong><span class="${s.avoid.includes("待")?"pending-text":""}">${esc(s.avoid)}</span></p>${(s.sources||[]).length?`<p class="safety-note"><strong>资料来源：</strong> ${(s.sources||[]).map(sourceLink).join(" · ")}</p>`:""}</div></details>`;
 }
 function renderSpotDetails(){
-  el("spotDetailList").innerHTML=detailCityOrder.map(city=>{
+  const listEl=elOpt("spotDetailList");
+  if(!listEl) return;
+
+  listEl.innerHTML=detailCityOrder.map(city=>{
     const details=spotDetails[city];
     if(details&&details.length)return `<h3 class="sec-title">📍 ${esc(city)} · ${details.length} 项已展开</h3>`+details.map((s,i)=>spotDetailCard(s,city==="曼谷"&&i===0)).join("");
     return `<article class="card card-slim"><h3>📍 ${esc(city)}</h3><p class="route-note">⚠ <strong>详情整理中：</strong>${esc(city)}的景点详情字段（地址／营业时间／最后入场／票价／交通／必看／避坑）研究资料尚未整理完成，暂不展示。数据就绪后接入，不拿占位文案冒充完成。</p></article>`;
@@ -565,11 +566,11 @@ function saveDay(){
   if(!modalDate)return;
   const mode=inputVal("modalMode");
   if(mode==="free")delete state.schedule[modalDate];else state.schedule[modalDate]={city:inputVal("modalCity"),mode};
-  state.edited=true;closeModal();renderCalendar();renderCoverage();
+  state.edited=true;closeModal();renderCalendar();renderSpotDetails();
   const nextDate=addDays(modalDate,1),blocked=scheduleTransitions().filter(r=>r.assessment.kind!=="direct"&&(r.date===modalDate||r.date===nextDate));
   if(blocked.length){const r=blocked[0],label=r.assessment.kind==="no-direct"?"已确认无直飞":r.assessment.kind==="no-service"?"当天无直飞":"精确日期待核验";toast(`${r.date.slice(5)} ${r.from}→${r.to}：${label}。请查看中转、铁路或改期方案。`,true)}else toast("这一天已调整");
 }
-function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();renderCoverage();toast("这一天已留白")}
+function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();renderSpotDetails();toast("这一天已留白")}
 function planText(){
   const lines=["2026年12月东南亚行程",""];
   Object.keys(state.schedule).sort().forEach(date=>{const p=state.schedule[date];lines.push(`${date}｜${p.city}｜${p.mode==="family"?"亲子 2大1小（1–2个点＋午休）":p.mode==="free"?"留白 / 休整":"双人"}`)});
@@ -578,7 +579,7 @@ function planText(){
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
 function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
-function updateAll(){renderCalendar();renderCoverage();renderTrip();cachePlannerLocal()}
+function updateAll(){renderCalendar();renderSpotDetails();renderTrip();cachePlannerLocal()}
 
 
 /* ================= 🗺️ 大行程总览（11/28 去程＋中间各段＋1/2 回程；回北京之后暂不规划） ================= */
@@ -590,7 +591,7 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
   { id:"couple", label:"夫妻东南亚", sub:"普吉→清迈→曼谷（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
   { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
-  { id:"beijing3", label:"北京", sub:"用户一人回北京", mode:"🏠 家庭", note:"之后行程暂不规划" },
+  { id:"beijing3", label:"北京", sub:"用户一人回北京陪父亲", mode:"🏠 家庭", note:"西安待几天后你一人飞回北京；最后大家在回程城市集结，一起飞西雅图" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
 /* 夫妻东南亚段城市顺序（用户可调）；最后一段飞西安的航班跟着末城动态变 */
@@ -613,13 +614,6 @@ const RETURN_CITY_META: Record<Exclude<ReturnCityCode,"">,{city:string;airport:s
    "last" = 本段最后一天飞（默认：最后一天要算上坐飞机的时间），"next" = 次日飞 */
 let tripFlightDay: Record<string,"last"|"next"> = {};
 function tripFlyChoice(key: string): "last"|"next"{ return tripFlightDay[key]==="next" ? "next" : "last"; }
-/* 西安→回程城市的国内集结段（1人），跟着回程城市变量动态变 */
-function xianToReturnLeg(){
-  if(!returnCity) return { code:"", label:"西安→？", title:"西安→回程城市（1人，城市待定）" };
-  const m=RETURN_CITY_META[returnCity];
-  return { code:`XIY-${returnCity}`, label:`西安→${m.city}`, title:`西安→${m.city}（1人）` };
-}
-
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
   const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
@@ -638,8 +632,8 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
   { after:"couple", before:"xian", title:"__COUPLE_XIY__",
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
-  { after:"xian", before:"beijing3", title:"__XIY_RETURN__",
-    legs:[{code:"__XIY_RETURN_CODE__",label:"__XIY_RETURN_LABEL__"}] },
+  { after:"xian", before:"beijing3", title:"西安→北京（用户一人）",
+    legs:[{code:"XIY-PEK",label:"西安→北京"}] },
 ];
 function tripFlightNote(key: string, label: string){
   const d=TRIP_FLIGHTS[key];
@@ -657,9 +651,11 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
       .map(c=>`<button class="${returnCity===c?"primary":"ghost"}" data-returncity="${c}">${RETURN_CITY_META[c].airport}</button>`))
     .join(" ");
   const dest=returnCity?`${RETURN_CITY_META[returnCity].city} → 西雅图`:`？ → 西雅图（出发城市待定）`;
+  const gather=returnCity?`你（北京）＋ 妻（西安）→ 在${RETURN_CITY_META[returnCity].city}会合后一起飞西雅图`:`你（北京）＋ 妻（西安）→ 在回程城市会合后一起飞西雅图（先定出发城市）`;
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
+      <div class="micro">🧑‍🤝‍🧑 集结：${gather}</div>
       <div class="micro">出发城市：${cityBtns}</div>
       <div class="micro">起飞日：
         <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">集结最后一天 ${dateLabel(lastDay)} 飞</button>
@@ -685,7 +681,7 @@ function renderTrip(){
         <div class="trip-seg-meta">${s.mode} · ${segNote}</div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
         ${coupleOrderBtns}
-        ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
+        ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「东南亚城市规划」定这 ${d} 天的城市 →</button></div>`:""}
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
@@ -700,13 +696,10 @@ function renderTrip(){
       const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
       const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
-      const xr = xianToReturnLeg();
-      const title = t.title
-        .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
-        .replace("__XIY_RETURN__", xr.title);
+      const title = t.title.replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`);
       const legs = t.legs.map(l=>({
-        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__XIY_RETURN_CODE__", xr.code),
-        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__XIY_RETURN_LABEL__", xr.label),
+        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
+        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
       }));
       const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
       parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
@@ -721,7 +714,8 @@ function renderTrip(){
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${parts.join("\n    ")}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> 天（北京→新加坡→东南亚→西安→${returnCity?RETURN_CITY_META[returnCity].city:"回程集结"}；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
+    ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天必须全部分配完才能保存，用上面各段的 ＋ / － 调整。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
@@ -756,7 +750,7 @@ function renderTrip(){
   });
 }
 
-/* ================= 🧭 分步规划向导 ================= */
+/* ================= 🧭 东南亚城市规划向导 ================= */
 interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string }
 /* 向导城市池：只含东南亚 7 城。新加坡已在大行程里单独成段（亲子 5 天），不在这里重复选、不重复占天数。 */
 const WZ_ORDER = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛"];
@@ -820,15 +814,27 @@ function wzSetStep(n: number){
   wz.step=n; wzRender();
   (el("wizard") as HTMLElement).scrollIntoView({behavior:"smooth",block:"start"});
 }
+/* Step 3 日历与向导选择的同步指纹：指纹变化（城市／天数／顺序／起止）时才按向导重排日历，
+   Step 3 里的逐日手工微调不会被反复渲染覆盖；点「🔄 按向导重排日历」可强制同步。 */
+let wzLastCalSig="";
+function wzCalSig(){
+  const cities=wz.order.filter(c=>wz.cities.includes(c));
+  return JSON.stringify({cities,days:cities.map(c=>wz.days[c]||1),couple:tripDays["couple"]||0,start:wz.start});
+}
 function wzRender(){
   const steps=[...S.querySelectorAll("#wzSteps li")] as HTMLElement[];
   steps.forEach(li=>{ const n=Number(li.dataset.wzstep); li.classList.toggle("active",n===wz.step); li.classList.toggle("done",n<wz.step); li.onclick=()=>wzSetStep(n) });
   const body=el("wzBody");
   if(wz.step===1) body.innerHTML=wzStep1();
   else if(wz.step===2) body.innerHTML=wzStep2();
-  else if(wz.step===3) body.innerHTML=wzStep3();
   else body.innerHTML=wzStep3();
   wzWire();
+  if(wz.step===2) renderSpotDetails();
+  else if(wz.step===3){
+    const sig=wzCalSig();
+    if(sig!==wzLastCalSig){ wzApplySchedule(); wzLastCalSig=sig; }
+    syncStartDateInput(); syncCalMode(); renderCalendar();
+  }
 }
 function wzStep1(){
   const cards=WZ_ORDER.map(city=>{
@@ -881,6 +887,17 @@ function wzCovPreview(city: string){
   const rows=[1,2,3,4,5].map(n=>wzCovRow(city,n)).join("");
   return `<details class="wz-cov"><summary>📅 各天数覆盖预览：选 1/2/3/4/5 天分别覆盖／舍弃哪些</summary><div>${rows}</div></details>`;
 }
+/* 定天数页的行内景点取舍标注：给定天数下"优先排 / 有余力再去 / 建议舍去"三组（与旧景点取舍 tab 同口径），
+   帮用户判断每城几天够。这是规划优先级取舍，不是景点评分。 */
+function wzCoverageChips(city: string, days: number){
+  const list=citySpots[city]||[], hitsArr=classicSpotHits[city]||[];
+  const hitSet=new Set<string>(), hitOrdered: string[]=[];
+  for(let i=0;i<Math.min(days,hitsArr.length);i++)(hitsArr[i]||[]).forEach(h=>{if(list.includes(h)&&!hitSet.has(h)){hitSet.add(h);hitOrdered.push(h)}});
+  const rest=list.filter(s=>!hitSet.has(s));
+  const chip=(t:string,cls:string)=>`<span class="spot-chip ${cls}">${esc(t)}</span>`;
+  const grp=(label:string,cls:string,arr:string[])=>`<div class="spot-group"><strong>${label}</strong> ${arr.length?arr.map(s=>chip(s,cls)).join(""):"—"}</div>`;
+  return `<div class="spot-groups wz-annot">${grp(`✅ 优先排（${days}天能覆盖）`,"must",hitOrdered)}${grp("🟡 有余力再去","",rest.slice(0,2))}${grp("🚫 建议舍去","drop",rest.slice(2))}</div>`;
+}
 function wzStep2(){
   const total=wzOrderTotal();
   const seaBudget=tripDays["couple"]||0;
@@ -889,13 +906,15 @@ function wzStep2(){
   const rows=wz.order.filter(c=>wz.cities.includes(c)).map(city=>{
     const d=wz.days[city]||1, route=classicRoutes[city], verdict=d<=5?route.verdicts[d-1]:"深度版＋留白", cov=classicCoverage(city,Math.min(d,5));
     return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
-      <details class="wz-cov wz-cov-inline"><summary>看 ${d} 天覆盖／舍弃哪些</summary><div>${wzCovRow(city,d)}</div></details></div>
+      ${wzCoverageChips(city,Math.min(d,5))}
+      <details class="wz-cov wz-cov-inline"><summary>看 ${d} 天逐日主题</summary><div>${wzCovRow(city,d)}</div></details></div>
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天"${atCap?" disabled title=\"已达大行程天数上限\"":""}>＋</button></div></div>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；评语与覆盖数来自各城经典路线（1–5天版本）。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定日期）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
-    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>
+    <details class="spot-details-fold"><summary>📋 景点详情字段（研究资料：曼谷已完成，其余整理中）</summary><div class="spot-detail-list" id="spotDetailList"></div></details>`;
 }
 function wzStep3(){
   const rows=wzRanges();
@@ -913,34 +932,53 @@ function wzStep3(){
     if(!notes.length) return "";
     return `<div class="wz-leg warn"><strong>${r.city} · ${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")}</strong><p>${notes.map(n=>`⚠ ${esc(n)}`).join("<br>")}</p></div>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>定具体日期</h2><p class="lede">调顺序用 ↑ ↓；日期与天数继承大行程「夫妻东南亚」段，这里只定城市顺序。每段转场按当天星期查直飞，每城日期段自动检查适宜度。</p></div></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>定具体日期</h2><p class="lede">城市顺序用 ↑ ↓ 调；下面就是日期排期——每天的限制（直飞、适宜度、节假日）直接标在格子里，点任意日期可改城市或模式。对照着排期定日期：改了上面的顺序／天数后，点「🔄 按向导重排日历」同步到下方日历。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」，这里不重复选日期） <button class="ghost" id="wzToTrip">去大行程调整 →</button></div></div>
     ${orderRows}
     <h3 class="sec-title">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}
     ${suitRows?`<h3 class="sec-title">📅 日期适宜度提醒</h3>${suitRows}`:""}
+    <h3 class="sec-title">📅 日期排期</h3>
+    <p class="micro" style="margin:-6px 0 10px">决策视图下每格直接显示当日适宜度与直飞汇总；点任意日期可改城市或模式，保存后同步到首页、每日详情与地图。</p>
+    <div class="btn-row" style="margin-bottom:10px"><button class="ghost" id="resetRecommended">🔄 按向导重排日历</button><button class="ghost" id="copyPlan">复制当前行程</button></div>
+    <p class="planner-sync-note micro" id="plannerSyncNote" role="status" style="margin:0 0 12px"></p>
+    <div class="calendar-tools">
+      <div class="field"><label for="startDate">开始日期（来自大行程）</label><input id="startDate" type="date" aria-label="开始日期（来自大行程，只读）" value="${state.start}" disabled title="日期来自「🗺️ 大行程」，去大行程调整天数"></div>
+      <div class="cal-mode-toggle" role="group" aria-label="日历视图">
+        <button class="ghost active" id="calModeDecision" aria-pressed="true">决策视图</button>
+        <button class="ghost" id="calModeSchedule" aria-pressed="false">排期视图</button>
+      </div>
+      <div class="legend"><span id="coupleLegend"><i class="dot couple"></i>双人</span><span><i class="dot family"></i>亲子慢节奏</span><span><i class="dot holiday"></i>节假日</span><span><i class="dot suit-ok"></i>宜</span><span><i class="dot suit-warn"></i>谨慎</span><span><i class="dot suit-blocked"></i>不宜</span></div>
+    </div>
+    <section class="card hard-check" aria-labelledby="hardCheckTitle">
+      <div class="hard-check-head">
+        <div><h3 id="hardCheckTitle">硬性条件检查</h3><p>每次改排期都会重算：先列真正撞上的限制，再说明这次会错过什么。</p></div>
+        <span class="hard-count" id="hardCount">检查中</span>
+      </div>
+      <div class="hard-list" id="hardList" aria-live="polite"></div>
+    </section>
+    <div class="transfer-alerts" id="transferAlerts" aria-live="polite"></div>
+    <div class="calendar" aria-label="行程日历">
+      <div class="weekdays"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+    <div class="calendar-note" id="calendarNote"></div>
     <p class="micro" id="wzSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
-    <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><span class="btn-row"><button class="primary" id="wzSave">💾 保存规划</button><button class="ghost" id="wzApply">排入日历并查看 →</button></span></div>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><button class="primary" id="wzSave">💾 保存规划</button></div>`;
 }
 function wzApplySchedule(){
   const m=buildMergedSchedule();
   state.schedule=m.schedule; state.edited=true; state.start=m.start;
   syncStartDateInput();
-  renderCalendar(); renderCoverage();
+  renderCalendar(); renderSpotDetails();
 }
-function wzApplyToCalendar(){
-  if(!wzBudgetOk()) return; /* 天数对不上时不许排入日历 */
-  wzApplySchedule();
-  (S.querySelector('[data-tab="calendar"]') as HTMLElement).click();
-  toast("已按分步规划排入日历");
-}
-/* 向导最后一步的保存：先把向导排期写入日历，再走云端保存（未登录则本机缓存） */
+/* 向导最后一步的保存：向导选择变化时先把排期写入日历（Step 3 里的逐日手工微调予以保留），再走云端保存（未登录则本机缓存） */
 function wzSaveNote(t: string){ const n=S.getElementById("wzSaveNote"); if(n) n.textContent=t; }
 async function wzSavePlan(){
   if(!wzBudgetOk()) return; /* 天数对不上时不许保存 */
   const btn=S.getElementById("wzSave") as HTMLButtonElement|null;
   if(btn) btn.disabled=true;
   try{
-    wzApplySchedule();
+    const sig=wzCalSig(); if(sig!==wzLastCalSig){ wzApplySchedule(); wzLastCalSig=sig; }
     await persistPlanToCloud(wzSaveNote);
   }finally{ if(btn) btn.disabled=false; }
 }
@@ -984,7 +1022,12 @@ function wzWire(){
   on("wzNext1",()=>wzSetStep(2)); on("wzBack2",()=>wzSetStep(1)); on("wzNext2",()=>wzSetStep(3));
   on("wzBack3",()=>wzSetStep(2));
   on("wzToTrip",()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); });
-  on("wzApply",wzApplyToCalendar); on("wzSave",wzSavePlan);
+  on("wzSave",wzSavePlan);
+  /* Step 3 内嵌了原日期排期页：重排／复制／视图切换按钮只在 Step 3 渲染出来后才存在，按需绑定 */
+  on("resetRecommended",()=>{ wzApplySchedule(); wzLastCalSig=wzCalSig(); syncCalMode(); toast("已按向导重排日历"); });
+  on("copyPlan",copyPlan);
+  on("calModeDecision",()=>{state.calMode="decision";syncCalMode();renderCalendar()});
+  on("calModeSchedule",()=>{state.calMode="schedule";syncCalMode();renderCalendar()});
   S.querySelectorAll("[data-wzday]").forEach(b=>(b as HTMLElement).onclick=(e)=>{ e.stopPropagation(); const [city,d]=((b as HTMLElement).dataset.wzday||"").split("|"); const dd=Number(d);
     /* 硬约束：已达大行程上限时 ＋ 不再生效（按钮本身已 disabled，这里防极端情况） */
     if(dd>0&&wzOrderTotal()>=(tripDays["couple"]||0)){ toast("已达大行程「夫妻东南亚」的天数上限",true); return; }
@@ -1054,18 +1097,8 @@ function cachePlannerLocal(){
 
 // init controls
 ([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
-/* 日历「开始日期」只读展示：排期锚点 = 大行程新加坡阶段起始日，不再允许单独改日期（改日期去大行程） */
-{ const sd=el("startDate") as HTMLInputElement; sd.disabled=true; sd.title="日期来自「🗺️ 大行程」，去大行程调整天数"; }
-el("resetRecommended").onclick=()=>{buildDefaultScheduleFromWizard();renderCalendar();renderCoverage();toast("已按分步规划重排")};
-el("copyPlan").onclick=copyPlan;
-el("savePlanCloud").onclick=async ()=>{
-  const btn=el("savePlanCloud") as HTMLButtonElement; btn.disabled=true;
-  try{ await persistPlanToCloud(setSyncNote); }
-  finally{ btn.disabled=false; }
-};
-el("calModeDecision").onclick=()=>{state.calMode="decision";syncCalMode();renderCalendar()};
-el("calModeSchedule").onclick=()=>{state.calMode="schedule";syncCalMode();renderCalendar()};
-syncCalMode();
+/* 日历／景点取舍已并入向导步骤内按需渲染：开始日期、重排、复制、视图切换按钮只在 Step 3 出现，由 wzWire() 按需绑定；
+   云端保存统一走向导 Step 3 的「保存规划」与大行程的「保存大行程」，不再有独立的「保存到云端」按钮。 */
 el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
 el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
 const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
@@ -1087,7 +1120,7 @@ let alive=true;
     wzRender();
   }else{
     buildDefaultScheduleFromWizard();
-    setSyncNote("☁️ 未找到云端规划，已按分步规划排期；调整后点「保存到云端」同步到全站。");
+    setSyncNote("☁️ 未找到云端规划，已按向导默认排期；去「🧭 东南亚城市规划」第三步点「保存规划」同步到全站。");
   }
   updateAll();
 })();

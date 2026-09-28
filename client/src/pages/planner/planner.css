@@ -497,3 +497,10 @@ h4{font-size:16px;margin:0;font-weight:700}
 .planner-scope{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
 /* 在应用页内嵌时取消 tabs 吸顶：避免盖住站点 sticky 导航 */
 .tabs{position:static}
+/* 向导 Step 2 行内景点取舍标注：三组 chip 之间的间距 */
+.wz-annot{margin-top:8px}
+/* 向导 Step 2 底部的景点详情字段折叠区：默认收起，不把长详情堆回页面 */
+.spot-details-fold{margin-top:12px}
+.spot-details-fold>summary{cursor:pointer;font-weight:700;padding:10px 0}
+/* 通用：天数对不上等需要强调的警示文字 */
+.mismatch{color:var(--danger);font-weight:700}
