@@ -462,14 +462,18 @@ const MUST_GO_CLOSURES: Record<string, MustGoClosure[]> = {
   ],
 };
 type DaySeverity = "ok" | "warn" | "critical";
-interface DayIssue { severity: DaySeverity; text: string }
+interface DayIssue { severity: DaySeverity; text: string; why?: string }
 /** 某天某城市的闭馆问题：返回带严重级别的问题列表 */
 function dayClosureIssues(city: string, date: string): DayIssue[] {
   const dow = new Date(date + "T12:00:00Z").getUTCDay();
   const out: DayIssue[] = [];
   for (const c of MUST_GO_CLOSURES[city] || []) {
     if (c.closedDow.includes(dow)) {
-      out.push({ severity: c.mustGo ? "critical" : "warn", text: `${c.name}今日不开（${c.reason}）${c.mustGo ? " · 必去" : ""}` });
+      out.push({ 
+        severity: c.mustGo ? "critical" : "warn", 
+        text: `${c.name}今日不开（${c.reason}）${c.mustGo ? " · 必去" : ""}`,
+        why: c.mustGo ? `「必去」是按该城市行程中不可替代的核心地标/体验暂定的，点上方「查看${city}景点」核实` : undefined
+      });
     }
   }
   return out;
@@ -1052,8 +1056,43 @@ function wzUnifiedCalendar(){
   }
   return html;
 }
+/* 大行程转场日的航班检查：北京→新加坡 / 新加坡→东南亚 / 东南亚→西安 / 回西雅图。
+   用 TRIP_FLIGHTS（Google Flights 实查库）；库里没有=待查询，有但直飞为0=暂无直飞。 */
+function tripTransitionFlightIssues(date: string): DayIssue[] {
+  const out: DayIssue[] = [];
+  const ranges = tripRanges();
+  const check = (code: string, label: string) => {
+    const d = TRIP_FLIGHTS[`${code}|${date}`];
+    if(!d) return; /* 还没查过，不打扰 */
+    if(!d.direct) out.push({ severity: "critical", text: `✈️ ${label}（${date.slice(5).replace("-","/")}）：实查确认无直飞`, why: `Google Flights ${d.queriedAt||"近期"}实查当天无直飞，需要改期或看中转方案` });
+  };
+  /* 北京→新加坡：beijing1 最后一天 */
+  const b1 = ranges["beijing1"], sg = ranges["singapore"];
+  if(b1 && sg && date === b1.to){
+    check("PEK-SIN", "北京→新加坡");
+    check("XIY-SIN", "西安→新加坡（岳父母）");
+  }
+  /* 新加坡→东南亚段：singapore 最后一天 */
+  const cp = ranges["couple"];
+  if(sg && cp && date === sg.to){
+    const firstCity = wz.order.filter(c=>wz.cities.includes(c))[0];
+    const cityCode: Record<string,string> = {"普吉":"HKT","清迈":"CNX","曼谷":"BKK","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC"};
+    if(firstCity && cityCode[firstCity]) check(`SIN-${cityCode[firstCity]}`, `新加坡→${firstCity}`);
+    check("SIN-XIY", "新加坡→西安（岳父母带娃）");
+  }
+  /* 东南亚段→西安：couple 最后一天 */
+  const xa = ranges["xian"];
+  if(cp && xa && date === cp.to){
+    const cities = wz.order.filter(c=>wz.cities.includes(c));
+    const lastCity = cities[cities.length-1];
+    const cityCode: Record<string,string> = {"普吉":"HKT","清迈":"CNX","曼谷":"BKK","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC"};
+    if(lastCity && cityCode[lastCity]) check(`${cityCode[lastCity]}-XIY`, `${lastCity}→西安`);
+  }
+  return out;
+}
 function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] {
   const out: DayIssue[]=[];
+  out.push(...tripTransitionFlightIssues(date));
   out.push(...dayClosureIssues(city, date));
   const suits=citySuitability(date).filter(x=>x.city===city&&x.level!=="ok");
   suits.forEach(s=>out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${s.reasons.join("；")}` }));
@@ -1070,11 +1109,31 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
   }
   return out;
 }
+/* 🔍 检查确认 tab：日历置顶纯展示，点日期原地展开看详情（含原因+跳转）；
+   调整入口放日历下方；本 tab 不做任何编辑。 */
+let ordExpandedDay: string | null = null;
 function renderOrderTab(){
   const body = el("orderBody");
   body.innerHTML = `
-    <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」） <button class="ghost" id="ordToTrip">去大行程调整 →</button> <button class="ghost" id="ordToWizard">去改城市顺序 →</button></div></div>
-    <h3 class="sec-title">🗓️ 全行程日历 <span class="micro">点任意一天看详情</span></h3>
+    <div class="wz-unical-legend" style="margin-bottom:10px">
+      <span><i class="wz-segdot" style="background:#3b82f6"></i>北京</span>
+      <span><i class="wz-segdot" style="background:#22c55e"></i>新加坡</span>
+      <span><i class="wz-segdot" style="background:#f59e0b"></i>东南亚段</span>
+      <span><i class="wz-segdot" style="background:#8b5cf6"></i>西安</span>
+      <span class="wz-legbadge">✈️ 转场</span>
+      <span class="wz-legbadge">⚠️ 提醒</span>
+      <span class="wz-legbadge">🚫 必去闭馆</span>
+      <span class="micro">点任意一天展开详情</span>
+    </div>
+    <div class="wz-unical">${wzUnifiedCalendar()}</div>
+    <div id="ordDayDetail"></div>
+    <div class="card" style="margin-top:16px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」）</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ghost" id="ordToTrip">🗺️ 去大行程调整天数 →</button>
+        <button class="ghost" id="ordToWizard">🧭 去改东南亚城市顺序 →</button>
+      </div></div>
+    <p class="micro" id="ordSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
+    <div class="wz-nav"><button class="primary" id="ordSave">💾 保存规划</button></div>
     <div class="wz-unical-legend">
       <span><i class="wz-segdot" style="background:#3b82f6"></i>北京</span>
       <span><i class="wz-segdot" style="background:#22c55e"></i>新加坡</span>
@@ -1097,11 +1156,14 @@ function wireOrderTab(){
   on("ordToTrip", ()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); });
   on("ordToWizard", ()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); wzSetStep(2); });
   on("ordSave", wzSavePlan);
-  /* 点日期 → modal 详情（替代 toast，更正式） */
-  qa("[data-ordday]").forEach(b=>b.onclick=()=>showDayModal(b.dataset.ordday!));
+  /* 点日期 → 在日历下方原地展开详情（不弹窗，纯信息展示） */
+  qa("[data-ordday]").forEach(b=>b.onclick=()=>toggleOrdDay(b.dataset.ordday!));
 }
-/* 日期详情 modal */
-function showDayModal(d: string){
+/* 点日期 → 在日历下方原地展开详情卡（含原因说明+跳转链接）；再点一次收起 */
+function toggleOrdDay(d: string){
+  const detail = el("ordDayDetail");
+  if(ordExpandedDay === d){ ordExpandedDay = null; detail.innerHTML = ""; return; }
+  ordExpandedDay = d;
   const rows = wzRanges(), ranges = tripRanges();
   let city = "", segLabel = "";
   for(const s of TRIP_SEGS){
@@ -1117,17 +1179,21 @@ function showDayModal(d: string){
   const wd = ["周日","周一","周二","周三","周四","周五","周六"][new Date(d+"T12:00:00Z").getUTCDay()];
   const crit = issues.filter(x=>x.severity==="critical");
   const warn = issues.filter(x=>x.severity!=="critical");
-  const modal = el("dayModal");
-  el("modalTitle").textContent = `${d.slice(5).replace("-","/")} ${wd} · ${city||segLabel}`;
-  el("dayIntel").innerHTML = `
+  const cityLink = city ? `<a href="/sea-travel-guide/travel-research?from=planner&kind=景点&city=${encodeURIComponent(city)}">🏛 查看${esc(city)}景点 →</a>` : "";
+  detail.innerHTML = `
+  <div class="card ord-daydetail" style="margin:12px 0;border-left:4px solid ${crit.length?"#ef4444":warn.length?"#f59e0b":"#22c55e"}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <b>${d.slice(5).replace("-","/")} ${wd} · ${city||segLabel}</b>
+      <button class="icon-btn" id="ordDayClose" aria-label="收起">×</button>
+    </div>
     ${leg?`<p><b>✈️ 转场：</b>${leg.from} → ${leg.to}</p>`:""}
-    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4><p>${crit.map(x=>`🚫 ${esc(x.text)}`).join("<br>")}</p></div>`:""}
-    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4><p class="micro">${warn.map(x=>`⚠️ ${esc(x.text)}`).join("<br>")}</p></div>`:""}
-    ${!issues.length?`<p class="micro">✅ 当天无问题。</p>`:""}
-    ${crit.length?`<p style="margin-top:10px"><button class="ghost" id="dayModalToTrip">去大行程调整 →</button></p>`:""}`;
-  modal.classList.add("open");
-  const toTrip = el("dayModalToTrip");
-  if(toTrip) toTrip.onclick=()=>{ modal.classList.remove("open"); (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); };
+    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 ${esc(x.text)}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
+    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ ${esc(x.text)}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
+    ${!issues.length?`<p class="micro">✅ 当天无问题，放心玩。</p>`:""}
+    ${cityLink?`<p style="margin-top:8px">${cityLink}</p>`:""}
+  </div>`;
+  el("ordDayClose").onclick = ()=>{ ordExpandedDay = null; detail.innerHTML = ""; };
+  detail.scrollIntoView({behavior:"smooth", block:"nearest"});
 }
 function wzApplySchedule(){
   const m=buildMergedSchedule();
