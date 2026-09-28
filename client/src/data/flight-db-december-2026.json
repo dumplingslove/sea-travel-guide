@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T07:08:29+00:00",
+ "updated_at": "2026-09-28T07:53:44+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -1523,6 +1523,200 @@
      "business_usd": 3034,
      "business_price_basis": "2大1小总价",
      "business_note": "顶层商务价来自浏览器返回 business_price_usd（整单2大1小总价）"
+    },
+    "2026-12-29": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": 1962,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 1962
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h 35m",
+       "price_usd": 1962
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 2463
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h 30m"
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h 35m"
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:45",
+       "arr": "21:55",
+       "duration": "6h 10m"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "商务舱全部6班直飞页面均显示Price unavailable，无价格数据，price_usd记null"
+    },
+    "2026-12-30": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": 1001,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:45",
+       "arr": "21:55",
+       "duration": "6h 10m",
+       "price_usd": 1001,
+       "business_price_usd": 4142
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h 35m",
+       "price_usd": 1323,
+       "business_price_usd": 4782
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 1323,
+       "business_price_usd": 4782
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h 30m",
+       "price_usd": 1334,
+       "business_price_usd": 4142
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 1417,
+       "business_price_usd": 5173
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h 35m",
+       "price_usd": 1706,
+       "business_price_usd": 4142
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": 4142,
+     "business_price_basis": "2大1小总价",
+     "business_note": "Best标签页曾显示国航4322美元，Cheapest标签页显示4142美元，采用4142美元"
+    },
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": 1001,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h 30m",
+       "price_usd": 1001,
+       "business_price_usd": 4142
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h 35m",
+       "price_usd": 1001,
+       "business_price_usd": 4142
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 1284,
+       "business_price_usd": 4743
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 1284,
+       "business_price_usd": 4743
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h 35m",
+       "price_usd": 1284,
+       "business_price_usd": 4743
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:45",
+       "arr": "21:55",
+       "duration": "6h 10m",
+       "price_usd": 2046,
+       "business_price_usd": 6353
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": 4142,
+     "business_price_basis": "2大1小总价"
     }
    }
   },
@@ -1928,7 +2122,62 @@
     2
    ],
    "label": "重庆→西雅图（2大1小）",
-   "days": {}
+   "days": {
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": 6399,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "Cheapest标签页曾显示6263美元，Best标签页与日期价格日历均显示6399美元，采用6399美元",
+     "nonstop_flights": [
+      {
+       "airline": "Hainan Airlines",
+       "flight": "HU445",
+       "dep": "12:20",
+       "arr": "08:05",
+       "duration": "11h 45m",
+       "price_usd": 6399,
+       "business_price_usd": 14323
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": 14323,
+     "business_price_basis": "2大1小总价",
+     "business_note": "Cheapest标签页曾显示14105美元，Best标签页显示14323美元，采用14323美元"
+    },
+    "2027-01-01": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2027-01-02": {
+     "economy_queried_at": "2026-09-28T07:53:44+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-09-28T07:53:44+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    }
+   }
   }
  }
 }
