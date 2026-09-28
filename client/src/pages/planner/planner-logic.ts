@@ -1334,10 +1334,8 @@ function cachePlannerLocal(){
 // init controls
 ([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));if(btn.dataset.tab==="order") renderOrderTab();hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
 /* 日历／景点取舍已并入向导步骤内按需渲染：开始日期、重排、复制、视图切换按钮只在 Step 3 出现，由 wzWire() 按需绑定；
-   云端保存统一走向导 Step 3 的「保存规划」与大行程的「保存大行程」，不再有独立的「保存到云端」按钮。 */
-el("closeModal").onclick=closeModal;el("saveDay").onclick=saveDay;el("removeDay").onclick=removeDay;
-el("dayModal").onclick=e=>{if((e.target as HTMLElement).id==="dayModal")closeModal()};document.addEventListener("keydown",onKeyDown);
-const citySelect=el("modalCity") as HTMLSelectElement;Object.keys(citySpots).forEach(c=>citySelect.add(new Option(c,c)));
+   云端保存统一走向导 Step 3 的「保存规划」与大行程的「保存大行程」，不再有独立的「保存到云端」按钮。
+   旧 day-modal 已删除（2026-09-28），其事件绑定一并移除。 */
 syncWzStart();
 initWizard();
 
