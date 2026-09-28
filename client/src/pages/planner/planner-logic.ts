@@ -973,45 +973,77 @@ function wzStep3(){
       <div><b>${i+1}. ${r.city}</b><div class="micro">${r.from.slice(5).replace("-","/")} – ${r.to.slice(5).replace("-","/")} · ${wz.days[r.city]}天</div></div>
       <select data-wzmode="${r.city}" aria-label="${r.city}旅行模式"><option value="couple" ${r.mode==="couple"?"selected":""}>双人快节奏</option><option value="family" ${r.mode==="family"?"selected":""}>亲子慢节奏</option></select></div>`;
   }).join("");
-  const legs=wzLegs().map(l=>{ const c=wzLegCheck(l.from,l.to,l.date); return `<div class="wz-leg ${c.level}"><strong>${l.date.slice(5).replace("-","/")} · ${l.from} → ${l.to}</strong><p>${c.html}</p></div>` }).join("");
-  const suitRows=rows.map(r=>{
-    const notes: string[]=[];
-    for(let d=r.from;d<=r.to;d=addDays(d,1)){ const s=citySuitability(d).find(x=>x.city===r.city); if(s&&s.level!=="ok") notes.push(`${d.slice(5).replace("-","/")}: ${s.reasons.join("；")}`) }
-    if(!notes.length) return "";
-    return `<div class="wz-leg warn"><strong>${r.city} · ${r.from.slice(5).replace("-","/")}–${r.to.slice(5).replace("-","/")}</strong><p>${notes.map(n=>`⚠ ${esc(n)}`).join("<br>")}</p></div>`;
-  }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>定具体日期</h2><p class="lede">城市顺序用 ↑ ↓ 调；下面就是日期排期——每天的限制（直飞、适宜度、节假日）直接标在格子里，点任意日期可改城市或模式。对照着排期定日期：改了上面的顺序／天数后，点「🔄 按向导重排日历」同步到下方日历。</p></div></div>
-    <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」，这里不重复选日期） <button class="ghost" id="wzToTrip">去大行程调整 →</button></div></div>
+  /* 2026-09-28 用户要求：Step 3 改为排雷确认。日历只显示当前排期状态+问题标记，
+     复杂信息全部精简；排雷详情放下面。 */
+  const dayList=wzDayStatusList();
+  const report=wzRiskReport();
+  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>🛡 排雷确认</h2><p class="lede">这一步只干一件事：确认当前城市顺序、天数、日期没有踩雷。下面是按你选好的排期逐日列出的状态，有问题的日子会标出来；具体是什么雷翻到下面看。发现问题就回上一步调，调完再来确认。</p></div></div>
+    <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」） <button class="ghost" id="wzToTrip">去大行程调整 →</button></div></div>
     ${orderRows}
-    <h3 class="sec-title">✈ 转场直飞检查</h3>${legs||'<p class="micro">只有一城，无转场。</p>'}
-    ${suitRows?`<h3 class="sec-title">📅 日期适宜度提醒</h3>${suitRows}`:""}
-    <h3 class="sec-title">📅 日期排期</h3>
-    <p class="micro" style="margin:-6px 0 10px">决策视图下每格直接显示当日适宜度与直飞汇总；点任意日期可改城市或模式，保存后同步到首页、每日详情与地图。</p>
-    <div class="btn-row" style="margin-bottom:10px"><button class="ghost" id="resetRecommended">🔄 按向导重排日历</button><button class="ghost" id="copyPlan">复制当前行程</button></div>
-    <p class="planner-sync-note micro" id="plannerSyncNote" role="status" style="margin:0 0 12px"></p>
-    <div class="calendar-tools">
-      <div class="field"><label for="startDate">开始日期（来自大行程）</label><input id="startDate" type="date" aria-label="开始日期（来自大行程，只读）" value="${state.start}" disabled title="日期来自「🗺️ 大行程」，去大行程调整天数"></div>
-      <div class="cal-mode-toggle" role="group" aria-label="日历视图">
-        <button class="ghost active" id="calModeDecision" aria-pressed="true">决策视图</button>
-        <button class="ghost" id="calModeSchedule" aria-pressed="false">排期视图</button>
-      </div>
-      <div class="legend"><span id="coupleLegend"><i class="dot couple"></i>双人</span><span><i class="dot family"></i>亲子慢节奏</span><span><i class="dot holiday"></i>节假日</span><span><i class="dot suit-ok"></i>宜</span><span><i class="dot suit-warn"></i>谨慎</span><span><i class="dot suit-blocked"></i>不宜</span></div>
-    </div>
-    <section class="card hard-check" aria-labelledby="hardCheckTitle">
-      <div class="hard-check-head">
-        <div><h3 id="hardCheckTitle">硬性条件检查</h3><p>每次改排期都会重算：先列真正撞上的限制，再说明这次会错过什么。</p></div>
-        <span class="hard-count" id="hardCount">检查中</span>
-      </div>
-      <div class="hard-list" id="hardList" aria-live="polite"></div>
-    </section>
-    <div class="transfer-alerts" id="transferAlerts" aria-live="polite"></div>
-    <div class="calendar" aria-label="行程日历">
-      <div class="weekdays"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </div>
-    <div class="calendar-note" id="calendarNote"></div>
+    <h3 class="sec-title">📋 逐日状态</h3>
+    <div class="wz-daylist">${dayList}</div>
+    <h3 class="sec-title">🔍 排雷报告</h3>
+    <div class="wz-riskreport">${report}</div>
     <p class="micro" id="wzSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
     <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><button class="primary" id="wzSave">💾 保存规划</button></div>`;
+}
+/* Step 3 逐日状态列表：线性列出每一天的城市+状态，有问题标 ⚠️。替代原来信息过载的月历格子。 */
+function wzDayStatusList(){
+  const rows=wzRanges(), legs=wzLegs();
+  const legByDate: Record<string,{from:string;to:string}> = {};
+  legs.forEach(l=>legByDate[l.date]=l);
+  let html="";
+  for(const r of rows){
+    for(let d=r.from; d<=r.to; d=addDays(d,1)){
+      const wd=["周日","周一","周二","周三","周四","周五","周六"][new Date(d+"T12:00:00Z").getUTCDay()];
+      const leg=legByDate[d];
+      const issues: string[]=[];
+      let icon="✅", cls="ok";
+      /* 转场日：查直飞 */
+      if(leg){
+        const c=wzLegCheck(leg.from,leg.to,d);
+        if(c.level!=="pass"){ icon="⚠️"; cls="warn"; issues.push("转场直飞有问题"); }
+        else if(c.html.includes("待查询")||c.html.includes("待核验")){ icon="⏳"; cls="pending"; issues.push("直飞待查询"); }
+      }
+      /* 当天城市适宜度 */
+      const suits=citySuitability(d).filter(x=>x.city===r.city&&x.level!=="ok");
+      if(suits.length){ if(icon==="✅"){icon="⚠️";cls="warn";} suits.forEach(s=>issues.push(s.reasons[0]||"适宜度提醒")); }
+      /* 节假日 */
+      const hd=publicHolidays[d];
+      if(hd&&hd.countries.includes(cityCountry[r.city])){ if(icon==="✅"){icon="⚠️";cls="warn";} issues.push(hd.short); }
+      const transferTag=leg?`<span class="micro">✈️ ${leg.from}→${leg.to}</span>`:"";
+      html+=`<div class="wz-dayrow ${cls}"><span class="wz-daydate">${d.slice(5).replace("-","/")} ${wd}</span><b>${r.city}</b>${transferTag}<span class="wz-daystatus">${icon}</span>${issues.length?`<span class="micro wz-dayissues">${issues.map(esc).join("；")}</span>`:""}</div>`;
+    }
+  }
+  return html;
+}
+/* Step 3 排雷报告：所有发现的问题放这里，没问题就显示"暂无"。 */
+function wzRiskReport(){
+  const rows=wzRanges(), legs=wzLegs();
+  const parts: string[]=[];
+  /* 转场直飞 */
+  const legIssues=legs.map(l=>{ const c=wzLegCheck(l.from,l.to,l.date); return {l,c}; }).filter(x=>x.c.level!=="pass");
+  if(legIssues.length){
+    parts.push(`<div class="wz-risk-sec"><h4>✈️ 转场直飞（${legIssues.length} 个问题）</h4>${legIssues.map(x=>`<div class="wz-leg ${x.c.level}"><strong>${x.l.date.slice(5).replace("-","/")} · ${x.l.from} → ${x.l.to}</strong><p>${x.c.html}</p></div>`).join("")}</div>`);
+  } else if(legs.length){
+    parts.push(`<div class="wz-risk-sec"><h4>✈️ 转场直飞</h4><p class="micro">✅ ${legs.length} 个转场都有直飞，无问题。</p></div>`);
+  }
+  /* 日期适宜度/节假日 */
+  const suitNotes: string[]=[];
+  for(const r of rows){
+    for(let d=r.from; d<=r.to; d=addDays(d,1)){
+      const ss=citySuitability(d).filter(x=>x.city===r.city&&x.level!=="ok");
+      ss.forEach(s=>suitNotes.push(`${d.slice(5).replace("-","/")} ${r.city}：${s.reasons.join("；")}`));
+      const hd=publicHolidays[d];
+      if(hd&&hd.countries.includes(cityCountry[r.city])) suitNotes.push(`${d.slice(5).replace("-","/")} ${r.city}：${hd.short}（${hd.name}）`);
+    }
+  }
+  if(suitNotes.length){
+    parts.push(`<div class="wz-risk-sec"><h4>📅 日期与节假日（${suitNotes.length} 条提醒）</h4><p class="micro">${suitNotes.map(n=>`⚠️ ${esc(n)}`).join("<br>")}</p></div>`);
+  } else {
+    parts.push(`<div class="wz-risk-sec"><h4>📅 日期与节假日</h4><p class="micro">✅ 所选日期无节假日冲突、无闭馆提醒。</p></div>`);
+  }
+  return parts.join("");
 }
 function wzApplySchedule(){
   const m=buildMergedSchedule();
