@@ -440,7 +440,7 @@ function renderHardConstraints(){
 /* ---------------- 决策日历：城市适宜度 × 当日直飞 ---------------- */
 const decisionCityList = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
 type SuitLevel = "ok" | "warn" | "blocked";
-interface CitySuit { city: string; level: SuitLevel; reasons: string[] }
+interface CitySuit { city: string; level: SuitLevel; reasons: {text: string; link?: string; linkText?: string}[] }
 /* 2026-09-28 必去景点闭馆数据：必去=闭馆日用 🚫（critical），非必去=⚠️（warning）。
    判定标准：该城市行程中不可替代的核心地标/体验。 */
 interface MustGoClosure { name: string; mustGo: boolean; closedDow: number[]; reason: string }
