@@ -24,7 +24,8 @@ export interface PlannerScheduleDay {
 }
 
 export interface PlannerPlan {
-  version: 1;
+  /** v1=旧模型（向导含新加坡+独立起始日），v2=新模型（向导只细分夫妻东南亚、日期继承大行程） */
+  version: 1 | 2;
   /** 双人国家（TH/MY/VN/SG） */
   selected: string[];
   coupleDays: number;
