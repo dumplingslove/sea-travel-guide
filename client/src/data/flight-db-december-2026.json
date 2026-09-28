@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T05:33:01+00:00",
+ "updated_at": "2026-09-28T05:44:38+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -748,14 +748,15 @@
        "dep": "07:20",
        "duration": "5h35m",
        "flight": "MU2069",
-       "price_usd": 418.0
+       "price_usd": 418.0,
+       "business_price_usd": 1384.0
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_queried_at": "2026-09-28T05:44:38+00:00",
      "business_usd": 1384.0,
      "business_price_basis": "2成人总价",
-     "business_note": "Only nonstop flight with a business cabin; the other nonstop (Scoot TR135) has no business class."
+     "business_note": "当天直飞仅1班东航MU2069；2成人商务整单起价$1384"
     },
     "2026-12-04": {
      "economy_queried_at": "2026-09-28T05:33:01+00:00",
@@ -839,10 +840,10 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_queried_at": "2026-09-28T05:44:38+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "business_note": "当天无直飞"
+     "business_note": "Google Flights 实查：当天直飞无商务舱（唯一一班直飞为酷航Scoot，无商务舱）"
     }
    }
   },
@@ -867,7 +868,8 @@
        "dep": "06:55",
        "duration": "1h55m",
        "flight": "SQ724",
-       "price_usd": 335.0
+       "price_usd": 335.0,
+       "business_price_usd": 1422.0
       },
       {
        "airline": "Singapore Airlines",
@@ -875,7 +877,8 @@
        "dep": "08:15",
        "duration": "2h",
        "flight": "SQ726",
-       "price_usd": 386.0
+       "price_usd": 386.0,
+       "business_price_usd": 1828.0
       },
       {
        "airline": "Scoot",
@@ -891,7 +894,8 @@
        "dep": "09:00",
        "duration": "2h5m",
        "flight": "SQ728",
-       "price_usd": 400.0
+       "price_usd": 400.0,
+       "business_price_usd": 2278.0
       },
       {
        "airline": "Scoot",
@@ -907,7 +911,8 @@
        "dep": "12:50",
        "duration": "2h5m",
        "flight": "SQ732",
-       "price_usd": 400.0
+       "price_usd": 400.0,
+       "business_price_usd": 1828.0
       },
       {
        "airline": "Singapore Airlines",
@@ -915,7 +920,8 @@
        "dep": "16:10",
        "duration": "2h",
        "flight": "SQ736",
-       "price_usd": 374.0
+       "price_usd": 374.0,
+       "business_price_usd": 2122.0
       },
       {
        "airline": "Scoot",
@@ -931,14 +937,15 @@
        "dep": "18:35",
        "duration": "2h",
        "flight": "SQ740",
-       "price_usd": 320.0
+       "price_usd": 320.0,
+       "business_price_usd": 2278.0
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_queried_at": "2026-09-28T05:44:38+00:00",
      "business_usd": 1422.0,
      "business_price_basis": "2成人总价",
-     "business_note": "Cheapest tab 'From' prices; the Best tab briefly showed $1809/$2122/$2435/$4125 before a price refresh. Scoot flights have no business class."
+     "business_note": "当天直飞商务舱仅新航6班；酷航有直飞但无商务舱未计入"
     }
    }
   },
