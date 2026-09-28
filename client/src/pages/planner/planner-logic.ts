@@ -441,6 +441,39 @@ function renderHardConstraints(){
 const decisionCityList = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
 type SuitLevel = "ok" | "warn" | "blocked";
 interface CitySuit { city: string; level: SuitLevel; reasons: string[] }
+/* 2026-09-28 必去景点闭馆数据：必去=闭馆日用 🚫（critical），非必去=⚠️（warning）。
+   判定标准：该城市行程中不可替代的核心地标/体验。 */
+interface MustGoClosure { name: string; mustGo: boolean; closedDow: number[]; reason: string }
+const MUST_GO_CLOSURES: Record<string, MustGoClosure[]> = {
+  "曼谷": [
+    { name: "恰图恰周末市场", mustGo: true, closedDow: [1,2,3,4,5], reason: "仅周末开放" },
+    { name: "大皇宫/玉佛寺", mustGo: true, closedDow: [], reason: "王室仪式可能临时关闭，出发前查官网" },
+  ],
+  "清迈": [
+    { name: "周日步行街", mustGo: true, closedDow: [1,2,3,4,5,6], reason: "仅周日开放" },
+    { name: "周六步行街", mustGo: false, closedDow: [0,1,2,3,4,5], reason: "仅周六开放" },
+  ],
+  "普吉": [
+    { name: "Lard Yai 周日步行街", mustGo: false, closedDow: [1,2,3,4,5,6], reason: "仅周日开放" },
+    { name: "Siam Niramit", mustGo: false, closedDow: [2], reason: "每周二休演" },
+  ],
+  "吉隆坡": [
+    { name: "双子塔", mustGo: true, closedDow: [1], reason: "周一闭馆" },
+  ],
+};
+type DaySeverity = "ok" | "warn" | "critical";
+interface DayIssue { severity: DaySeverity; text: string }
+/** 某天某城市的闭馆问题：返回带严重级别的问题列表 */
+function dayClosureIssues(city: string, date: string): DayIssue[] {
+  const dow = new Date(date + "T12:00:00Z").getUTCDay();
+  const out: DayIssue[] = [];
+  for (const c of MUST_GO_CLOSURES[city] || []) {
+    if (c.closedDow.includes(dow)) {
+      out.push({ severity: c.mustGo ? "critical" : "warn", text: `${c.name}今日不开（${c.reason}）${c.mustGo ? " · 必去" : ""}` });
+    }
+  }
+  return out;
+}
 /** 某一天 8 个城市各自是否适宜：闭馆日、限定日缺失、公共假日、特殊开放日、跨年旺季。 */
 function citySuitability(date: string): CitySuit[] {
   const dow = new Date(date + "T12:00:00Z").getUTCDay(), weekend = dow === 0 || dow === 6;
@@ -855,7 +888,7 @@ function wzLegCheck(from: string, to: string, date: string){
 function wzSetStep(n: number){
   if(n===2&&wz.cities.length<2){ toast("至少选 2 个城市才能继续",true); return }
   if(n>=3&&!wz.order.filter(c=>wz.cities.includes(c)).length){ toast("先选城市",true); return }
-  if(n>=3&&!wzBudgetOk()) return; /* 天数与大行程不一致时锁死，不许进定日期 */
+  if(n>=3&&!wzBudgetOk()) return; /* 天数与大行程不一致时锁死，不许进定顺序 */
   wz.step=n; wzRender();
   (el("wizard") as HTMLElement).scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -960,9 +993,9 @@ function wzStep2(){
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天"${atCap?" disabled title=\"已达大行程天数上限\"":""}>＋</button></div></div>`;
   }).join("");
   return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
-    <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定日期）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
+    <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定顺序）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
-    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定顺序 →</button></div>`;
 }
 function wzStep3(){
   const rows=wzRanges();
@@ -973,76 +1006,126 @@ function wzStep3(){
       <div><b>${i+1}. ${r.city}</b><div class="micro">${r.from.slice(5).replace("-","/")} – ${r.to.slice(5).replace("-","/")} · ${wz.days[r.city]}天</div></div>
       <select data-wzmode="${r.city}" aria-label="${r.city}旅行模式"><option value="couple" ${r.mode==="couple"?"selected":""}>双人快节奏</option><option value="family" ${r.mode==="family"?"selected":""}>亲子慢节奏</option></select></div>`;
   }).join("");
-  /* 2026-09-28 用户要求：Step 3 改为排雷确认。日历只显示当前排期状态+问题标记，
-     复杂信息全部精简；排雷详情放下面。 */
-  const dayList=wzDayStatusList();
-  const report=wzRiskReport();
-  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>🛡 排雷确认</h2><p class="lede">这一步只干一件事：确认当前城市顺序、天数、日期没有踩雷。下面是按你选好的排期逐日列出的状态，有问题的日子会标出来；具体是什么雷翻到下面看。发现问题就回上一步调，调完再来确认。</p></div></div>
+  /* 2026-09-28 用户要求：Step 3 改名"定顺序"，日历升级为大行程+小行程统一视图，
+     按严重级别标注（必去闭馆=🚫，普通=⚠️）。 */
+  return `<div class="section-head"><div><p class="eyebrow">STEP 3/3</p><h2>定顺序</h2><p class="lede">用 ↑ ↓ 调整城市顺序；下面是<b>大行程＋东南亚段统一日历</b>，每天在哪个城市一目了然。有 ⚠️ / 🚫 标记的日子点开看详情，确认没问题再保存。必去景点闭馆用 🚫（严重），普通提醒用 ⚠️。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」） <button class="ghost" id="wzToTrip">去大行程调整 →</button></div></div>
     ${orderRows}
-    <h3 class="sec-title">📋 逐日状态</h3>
-    <div class="wz-daylist">${dayList}</div>
+    <h3 class="sec-title">🗓️ 全行程日历</h3>
+    <div class="wz-unical-legend">
+      <span><i class="wz-segdot" style="background:#3b82f6"></i>北京</span>
+      <span><i class="wz-segdot" style="background:#22c55e"></i>新加坡</span>
+      <span><i class="wz-segdot" style="background:#f59e0b"></i>东南亚段</span>
+      <span><i class="wz-segdot" style="background:#8b5cf6"></i>西安</span>
+      <span class="wz-legbadge">✈️ 转场</span>
+      <span class="wz-legbadge">⚠️ 提醒</span>
+      <span class="wz-legbadge">🚫 必去闭馆</span>
+    </div>
+    <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <h3 class="sec-title">🔍 排雷报告</h3>
-    <div class="wz-riskreport">${report}</div>
+    <div class="wz-riskreport">${wzRiskReport()}</div>
     <p class="micro" id="wzSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
     <div class="wz-nav"><button class="ghost" id="wzBack3">← 上一步</button><button class="primary" id="wzSave">💾 保存规划</button></div>`;
 }
-/* Step 3 逐日状态列表：线性列出每一天的城市+状态，有问题标 ⚠️。替代原来信息过载的月历格子。 */
-function wzDayStatusList(){
-  const rows=wzRanges(), legs=wzLegs();
-  const legByDate: Record<string,{from:string;to:string}> = {};
-  legs.forEach(l=>legByDate[l.date]=l);
-  let html="";
-  for(const r of rows){
+/* 全行程统一日历：大行程各段 + 东南亚段城市细分，按月分组渲染。
+   每天显示城市 + 严重级别标记（🚫 critical > ⚠️ warn）。 */
+function wzUnifiedCalendar(){
+  const ranges=tripRanges();
+  const seaRows=wzRanges();
+  /* 建立日期→城市映射：先按大行程段，再用东南亚段城市覆盖 couple 段 */
+  const dayCity: Record<string,{seg:string;label:string;city:string}> = {};
+  const segColor: Record<string,string> = { beijing1:"#3b82f6", singapore:"#22c55e", couple:"#f59e0b", xian:"#8b5cf6", beijing3:"#3b82f6" };
+  const segCity: Record<string,string> = { beijing1:"北京", singapore:"新加坡", xian:"西安", beijing3:"北京" };
+  for(const s of TRIP_SEGS){
+    const r=ranges[s.id]; if(!r) continue;
     for(let d=r.from; d<=r.to; d=addDays(d,1)){
-      const wd=["周日","周一","周二","周三","周四","周五","周六"][new Date(d+"T12:00:00Z").getUTCDay()];
-      const leg=legByDate[d];
-      const issues: string[]=[];
-      let icon="✅", cls="ok";
-      /* 转场日：查直飞 */
-      if(leg){
-        const c=wzLegCheck(leg.from,leg.to,d);
-        if(c.level!=="pass"){ icon="⚠️"; cls="warn"; issues.push("转场直飞有问题"); }
-        else if(c.html.includes("待查询")||c.html.includes("待核验")){ icon="⏳"; cls="pending"; issues.push("直飞待查询"); }
-      }
-      /* 当天城市适宜度 */
-      const suits=citySuitability(d).filter(x=>x.city===r.city&&x.level!=="ok");
-      if(suits.length){ if(icon==="✅"){icon="⚠️";cls="warn";} suits.forEach(s=>issues.push(s.reasons[0]||"适宜度提醒")); }
-      /* 节假日 */
-      const hd=publicHolidays[d];
-      if(hd&&hd.countries.includes(cityCountry[r.city])){ if(icon==="✅"){icon="⚠️";cls="warn";} issues.push(hd.short); }
-      const transferTag=leg?`<span class="micro">✈️ ${leg.from}→${leg.to}</span>`:"";
-      html+=`<div class="wz-dayrow ${cls}"><span class="wz-daydate">${d.slice(5).replace("-","/")} ${wd}</span><b>${r.city}</b>${transferTag}<span class="wz-daystatus">${icon}</span>${issues.length?`<span class="micro wz-dayissues">${issues.map(esc).join("；")}</span>`:""}</div>`;
+      dayCity[d]={ seg:s.id, label:s.label, city:segCity[s.id]||s.label };
     }
+  }
+  for(const r of seaRows){
+    for(let d=r.from; d<=r.to; d=addDays(d,1)){
+      if(dayCity[d]) dayCity[d]={ seg:"couple", label:"东南亚", city:r.city };
+    }
+  }
+  /* 转场日 */
+  const legs=wzLegs();
+  const legByDate: Record<string,string> = {};
+  legs.forEach(l=>legByDate[l.date]=`${l.from}→${l.to}`);
+  /* 按月分组 */
+  const dates=Object.keys(dayCity).sort();
+  if(!dates.length) return '<p class="micro">暂无行程日期。</p>';
+  const months: Record<string,string[]> = {};
+  dates.forEach(d=>{ const m=d.slice(0,7); (months[m]=months[m]||[]).push(d); });
+  const monthNames=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+  let html="";
+  for(const m of Object.keys(months).sort()){
+    const [y,mo]=m.split("-").map(Number);
+    const firstDow=new Date(m+"-01T12:00:00Z").getUTCDay();
+    const startPad=(firstDow+6)%7; /* 周一开头 */
+    html+=`<div class="wz-calmonth"><h4>${y}年${monthNames[mo-1]}</h4><div class="wz-calgrid"><div class="wz-calwd">一</div><div class="wz-calwd">二</div><div class="wz-calwd">三</div><div class="wz-calwd">四</div><div class="wz-calwd">五</div><div class="wz-calwd">六</div><div class="wz-calwd">日</div>`;
+    for(let i=0;i<startPad;i++) html+=`<div class="wz-calday empty"></div>`;
+    for(const d of months[m]){
+      const info=dayCity[d];
+      const issues=wzDayIssues(d, info.city, legByDate[d]);
+      const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
+      const badges=[legByDate[d]?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
+      const color=segColor[info.seg]||"#94a3b8";
+      html+=`<button class="wz-calday ${sev}" data-wzday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${Number(d.slice(8))}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
+    }
+    html+=`</div></div>`;
   }
   return html;
 }
-/* Step 3 排雷报告：所有发现的问题放这里，没问题就显示"暂无"。 */
-function wzRiskReport(){
-  const rows=wzRanges(), legs=wzLegs();
-  const parts: string[]=[];
-  /* 转场直飞 */
-  const legIssues=legs.map(l=>{ const c=wzLegCheck(l.from,l.to,l.date); return {l,c}; }).filter(x=>x.c.level!=="pass");
-  if(legIssues.length){
-    parts.push(`<div class="wz-risk-sec"><h4>✈️ 转场直飞（${legIssues.length} 个问题）</h4>${legIssues.map(x=>`<div class="wz-leg ${x.c.level}"><strong>${x.l.date.slice(5).replace("-","/")} · ${x.l.from} → ${x.l.to}</strong><p>${x.c.html}</p></div>`).join("")}</div>`);
-  } else if(legs.length){
-    parts.push(`<div class="wz-risk-sec"><h4>✈️ 转场直飞</h4><p class="micro">✅ ${legs.length} 个转场都有直飞，无问题。</p></div>`);
-  }
-  /* 日期适宜度/节假日 */
-  const suitNotes: string[]=[];
-  for(const r of rows){
-    for(let d=r.from; d<=r.to; d=addDays(d,1)){
-      const ss=citySuitability(d).filter(x=>x.city===r.city&&x.level!=="ok");
-      ss.forEach(s=>suitNotes.push(`${d.slice(5).replace("-","/")} ${r.city}：${s.reasons.join("；")}`));
-      const hd=publicHolidays[d];
-      if(hd&&hd.countries.includes(cityCountry[r.city])) suitNotes.push(`${d.slice(5).replace("-","/")} ${r.city}：${hd.short}（${hd.name}）`);
+/* 某天的全部问题（带严重级别）：闭馆 + 适宜度 + 转场直飞 + 节假日 */
+function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] {
+  const out: DayIssue[]=[];
+  out.push(...dayClosureIssues(city, date));
+  const suits=citySuitability(date).filter(x=>x.city===city&&x.level!=="ok");
+  suits.forEach(s=>out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${s.reasons.join("；")}` }));
+  const hd=publicHolidays[date];
+  if(hd&&hd.countries.includes(cityCountry[city])) out.push({ severity:"warn", text:`${hd.short}（${hd.name}）人多价高` });
+  if(legLabel){
+    const legs=wzLegs();
+    const leg=legs.find(l=>l.date===date);
+    if(leg){
+      const c=wzLegCheck(leg.from,leg.to,date);
+      if(c.level==="blocked") out.push({ severity:"critical", text:`转场 ${legLabel}：无直飞` });
+      else if(c.level!=="pass") out.push({ severity:"warn", text:`转场 ${legLabel}：直飞待确认` });
     }
   }
-  if(suitNotes.length){
-    parts.push(`<div class="wz-risk-sec"><h4>📅 日期与节假日（${suitNotes.length} 条提醒）</h4><p class="micro">${suitNotes.map(n=>`⚠️ ${esc(n)}`).join("<br>")}</p></div>`);
-  } else {
-    parts.push(`<div class="wz-risk-sec"><h4>📅 日期与节假日</h4><p class="micro">✅ 所选日期无节假日冲突、无闭馆提醒。</p></div>`);
+  return out;
+}
+/* Step 3 排雷报告：按严重级别分组，critical 在前。 */
+function wzRiskReport(){
+  const rows=wzRanges(), ranges=tripRanges();
+  const legs=wzLegs();
+  const legByDate: Record<string,string> = {};
+  legs.forEach(l=>legByDate[l.date]=`${l.from}→${l.to}`);
+  const crit: string[]=[], warn: string[]=[];
+  /* 遍历全行程每一天 */
+  const allDates: string[]=[];
+  for(const s of TRIP_SEGS){
+    const r=ranges[s.id]; if(!r) continue;
+    for(let d=r.from; d<=r.to; d=addDays(d,1)) allDates.push(d);
   }
+  const seaCityByDate: Record<string,string> = {};
+  rows.forEach(r=>{ for(let d=r.from; d<=r.to; d=addDays(d,1)) seaCityByDate[d]=r.city; });
+  const segCity: Record<string,string> = { beijing1:"北京", singapore:"新加坡", xian:"西安", beijing3:"北京" };
+  for(const s of TRIP_SEGS){
+    const r=ranges[s.id]; if(!r) continue;
+    for(let d=r.from; d<=r.to; d=addDays(d,1)){
+      const city=s.id==="couple"?(seaCityByDate[d]||"东南亚"):segCity[s.id];
+      const issues=wzDayIssues(d, city, legByDate[d]);
+      issues.forEach(it=>{
+        const line=`${d.slice(5).replace("-","/")} ${city}：${it.text}`;
+        (it.severity==="critical"?crit:warn).push(line);
+      });
+    }
+  }
+  const parts: string[]=[];
+  if(crit.length) parts.push(`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4><p>${crit.map(x=>`🚫 ${esc(x)}`).join("<br>")}</p></div>`);
+  if(warn.length) parts.push(`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4><p class="micro">${warn.map(x=>`⚠️ ${esc(x)}`).join("<br>")}</p></div>`);
+  if(!crit.length&&!warn.length) parts.push(`<div class="wz-risk-sec"><h4>✅ 排雷报告</h4><p class="micro">全行程无必去闭馆、无转场直飞问题、无节假日冲突。</p></div>`);
   return parts.join("");
 }
 function wzApplySchedule(){
@@ -1103,6 +1186,26 @@ function wzWire(){
   on("wzBack3",()=>wzSetStep(2));
   on("wzToTrip",()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); });
   on("wzSave",wzSavePlan);
+  /* Step 3 统一日历：点日期看当天详情 */
+  S.querySelectorAll("[data-wzday]").forEach(b=>{
+    (b as HTMLElement).onclick=()=>{
+      const d=(b as HTMLElement).dataset.wzday!;
+      const rows=wzRanges(), ranges=tripRanges();
+      let city="", segLabel="";
+      for(const s of TRIP_SEGS){
+        const r=ranges[s.id];
+        if(r&&d>=r.from&&d<=r.to){ segLabel=s.label; city=s.id==="couple"?"":s.label; break; }
+      }
+      if(!city){
+        for(const r of rows){ if(d>=r.from&&d<=r.to){ city=r.city; segLabel="东南亚"; break; } }
+      }
+      const legs=wzLegs();
+      const leg=legs.find(l=>l.date===d);
+      const issues=wzDayIssues(d, city||segLabel, leg?`${leg.from}→${leg.to}`:undefined);
+      const wd=["周日","周一","周二","周三","周四","周五","周六"][new Date(d+"T12:00:00Z").getUTCDay()];
+      toast(`${d.slice(5).replace("-","/")} ${wd} · ${city||segLabel}${leg?` ✈️转场${leg.from}→${leg.to}`:""}${issues.length?"<br>"+issues.map(x=>`${x.severity==="critical"?"🚫":"⚠️"} ${esc(x.text)}`).join("<br>"):"<br>✅ 当天无问题"}`, issues.some(x=>x.severity==="critical"));
+    };
+  });
   /* Step 3 内嵌了原日期排期页：重排／复制／视图切换按钮只在 Step 3 渲染出来后才存在，按需绑定 */
   on("resetRecommended",()=>{ wzApplySchedule(); wzLastCalSig=wzCalSig(); syncCalMode(); toast("已按向导重排日历"); });
   on("copyPlan",copyPlan);
