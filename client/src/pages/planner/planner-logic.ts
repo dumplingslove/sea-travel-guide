@@ -1037,6 +1037,20 @@ function wzUnifiedCalendar(){
   const legs=wzLegs();
   const legByDate: Record<string,string> = {};
   legs.forEach(l=>legByDate[l.date]=`${l.from}→${l.to}`);
+  /* 大行程转场日也打 ✈️ 徽标（2026-09-28 用户：北京/新加坡/西安的转场也要有标识，不只东南亚内部） */
+  const flightByDate: Record<string,string> = {};
+  for(const t of TRIP_TRANSITIONS){
+    if(t.noFlight) continue; /* 西安→北京坐高铁，不打 ✈️ */
+    const choice = tripFlyChoice(t.after);
+    const tdate = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(tdate) flightByDate[tdate]=t.title;
+  }
+  const b3 = ranges["beijing3"];
+  if(b3){
+    const rc = tripFlyChoice("return");
+    const flyDate = rc==="last" ? b3.to : addDays(b3.to, 1);
+    flightByDate[flyDate]="回西雅图";
+  }
   /* 按月分组 */
   const dates=Object.keys(dayCity).sort();
   if(!dates.length) return '<p class="micro">暂无行程日期。</p>';
@@ -1054,7 +1068,7 @@ function wzUnifiedCalendar(){
       const info=dayCity[d];
       const issues=wzDayIssues(d, info.city, legByDate[d]);
       const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
-      const badges=[legByDate[d]?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
+      const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
       const color=segColor[info.seg]||"#94a3b8";
       html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${Number(d.slice(8))}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
     }
@@ -1101,7 +1115,12 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
   out.push(...tripTransitionFlightIssues(date));
   out.push(...dayClosureIssues(city, date));
   const suits=citySuitability(date).filter(x=>x.city===city&&x.level!=="ok");
-  suits.forEach(s=>s.reasons.forEach(r=>out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${r.text}`, link:r.link, linkText:r.linkText })));
+  /* 去重（2026-09-28 用户：dayClosureIssues 已按严重级别+深链输出过的，不再重复一条提醒） */
+  const closureNames=(MUST_GO_CLOSURES[city]||[]).map(c=>c.name);
+  suits.forEach(s=>s.reasons.forEach(r=>{
+    if(closureNames.some(n=>r.text.includes(n))) return;
+    out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${r.text}`, link:r.link, linkText:r.linkText });
+  }));
   const hd=publicHolidays[date];
   if(hd&&hd.countries.includes(cityCountry[city])) out.push({ severity:"warn", text:`${hd.short}（${hd.name}）人多价高` });
   if(legLabel){
