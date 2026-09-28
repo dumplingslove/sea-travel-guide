@@ -569,7 +569,7 @@ h4{font-size:16px;margin:0;font-weight:700}
 .wz-risk-sec h4{margin:0 0 8px;font-size:14px}
 
 /* 2026-09-28 规划页只有 2 个 tab，不用 6 列布局 */
-nav.tabs{grid-template-columns:repeat(2,1fr)}
+nav.tabs{grid-template-columns:repeat(3,1fr)}
 nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
 @media (max-width:480px){
   nav.tabs .tab{font-size:14px;padding:11px 6px}
