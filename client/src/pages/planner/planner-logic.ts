@@ -581,17 +581,18 @@ function toast(msg: string, warning = false){const t=el("toast");t.textContent=m
 function updateAll(){renderCalendar();renderCoverage();renderTrip();cachePlannerLocal()}
 
 
-/* ================= 🗺️ 大行程总览（35 天：11/28 去程＋中间 34 天＋1/2 回程） ================= */
+/* ================= 🗺️ 大行程总览（11/28 去程＋中间各段＋1/2 回程；回北京之后暂不规划） ================= */
 interface TripSegDef { id: string; label: string; sub: string; mode: string; note: string; cta?: boolean }
 const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
 const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
 const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
-  { id:"couple", label:"夫妻泰国", sub:"普吉＋曼谷＋清迈（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
-  { id:"beijing2", label:"北京 / 西安", sub:"分头跨年", mode:"🏠 家庭", note:"你回北京陪父亲跨年，老婆回西安" },
+  { id:"couple", label:"夫妻泰国", sub:"普吉→清迈→曼谷（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
+  { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
+  { id:"beijing3", label:"北京", sub:"用户一人回北京", mode:"🏠 家庭", note:"之后行程暂不规划" },
 ];
-let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, beijing2:14 };
+let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
 
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
@@ -609,8 +610,10 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
   { after:"singapore", before:"couple", title:"新加坡→普吉（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
-  { after:"couple", before:"beijing2", title:"清迈→西安（2人）＋ 西安→北京（1人）",
-    legs:[{code:"CNX-XIY",label:"清迈→西安"},{code:"XIY-PEK",label:"西安→北京"}] },
+  { after:"couple", before:"xian", title:"曼谷→西安（2人）",
+    legs:[{code:"BKK-XIY",label:"曼谷→西安"}] },
+  { after:"xian", before:"beijing3", title:"西安→北京（1人）",
+    legs:[{code:"XIY-PEK",label:"西安→北京"}] },
 ];
 function tripDuffelNote(key: string, label: string){
   const d=TRIP_DUFFEL[key];
@@ -647,7 +650,7 @@ function renderTrip(){
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${parts.join("\n    ")}
     <div class="trip-flight"><span>✈️</span><strong>1/2（周六）北京 → 西雅图</strong><span>回程（时间已定）</span></div>
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天${ok?" ✓":` <span class="mismatch">⚠️ 合计须为 ${TRIP_MIDDLE_DAYS} 天（11/29–1/1），请调整</span>`}</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> 天（北京→新加坡→泰国→西安→北京；回北京之后暂不规划）</p>
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
