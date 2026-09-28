@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T08:53:26.169543+00:00",
+ "updated_at": "2026-09-28T09:37:00+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2345,6 +2345,115 @@
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
+    },
+    "2026-12-13": {
+     "economy_queried_at": "2026-09-28T09:37:00+00:00",
+     "economy_usd": 469,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "2026-12-13 01:55",
+       "arr": "2026-12-13 07:50",
+       "duration": "5h 55m",
+       "price_usd": 469
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU2069",
+       "dep": "2026-12-13 07:20",
+       "arr": "2026-12-13 12:55",
+       "duration": "5h 35m"
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T09:37:00+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "直飞航班存在，但商务舱价格在页面上不可用（Price unavailable）"
+    },
+    "2026-12-14": {
+     "economy_queried_at": "2026-09-28T09:37:00+00:00",
+     "economy_usd": 469,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "2026-12-14 01:55",
+       "arr": "2026-12-14 07:50",
+       "duration": "5h 55m",
+       "price_usd": 469
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU2069",
+       "dep": "2026-12-14 07:20",
+       "arr": "2026-12-14 12:55",
+       "duration": "5h 35m"
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T09:37:00+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "直飞航班存在，但商务舱价格在页面上不可用（Price unavailable）"
+    },
+    "2026-12-15": {
+     "economy_queried_at": "2026-09-28T09:37:00+00:00",
+     "economy_usd": 383,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "2026-12-15 01:55",
+       "arr": "2026-12-15 07:50",
+       "duration": "5h 55m",
+       "price_usd": 383
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T09:37:00+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-16": {
+     "economy_queried_at": "2026-09-28T09:37:00+00:00",
+     "economy_usd": 332,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "2026-12-16 01:55",
+       "arr": "2026-12-16 07:50",
+       "duration": "5h 55m",
+       "price_usd": 332
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU2069",
+       "dep": "2026-12-16 07:20",
+       "arr": "2026-12-16 12:55",
+       "duration": "5h 35m"
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T09:37:00+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "直飞航班存在，但商务舱价格在页面上不可用（Price unavailable）"
     }
    }
   },
@@ -2524,6 +2633,28 @@
        "price_usd": 256.0
       }
      ]
+    },
+    "2026-12-26": {
+     "economy_queried_at": "2026-09-28T09:37:00+00:00",
+     "economy_usd": 415,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Spring",
+       "flight": "9C6294",
+       "dep": "2026-12-26 14:35",
+       "arr": "2026-12-26 19:30",
+       "duration": "3h 55m",
+       "price_usd": 415
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T09:37:00+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
     }
    }
   },
@@ -2731,15 +2862,6 @@
      "business_note": "当天无直飞"
     }
    }
-  },
-  "XIY-PEK": {
-   "origin": "XIY",
-   "destination": "PEK",
-   "adults": 1,
-   "child_ages": [],
-   "label": "西安→北京（1成人，你一人）",
-   "days": {},
-   "note": "2026-09-28 用户要求查下午回北京的航班，但只查1天；此前用户说不坐飞机，此为备选数据"
   }
  }
 }
