@@ -512,7 +512,7 @@ const CARRIER_FULLNAME: Record<string, string> = {
 };
 
 interface FlightDbFlight {
-  airline: string; flight: string; dep: string; arr: string;
+  airline: string; flight: string | null; dep: string; arr: string;
   duration?: string; price_usd?: number | null; business_price_usd?: number | null;
 }
 interface FlightDbDay {
@@ -555,7 +555,7 @@ function dbFlightOption(f: FlightDbFlight, cabin: "eco" | "biz"): FlightOption |
   const plusDay = arrRaw.includes("+1");
   return {
     carrier: fullCarrier(f.airline),
-    flight: f.flight,
+    flight: f.flight ?? '',
     depart: f.dep,
     arrive: arrRaw.replace("+1", "").trim(),
     arrivePlusDay: plusDay || undefined,

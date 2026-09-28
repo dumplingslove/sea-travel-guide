@@ -638,7 +638,7 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
+interface FlightDbFlight { airline: string; flight: string|null; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
 interface FlightDbDay {
   economy_usd?: number|null; business_usd?: number|null;
   economy_price_basis?: string; business_price_basis?: string;
@@ -666,14 +666,14 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
       carriers: [...new Set(nf.map(f=>f.airline))],
       direct: nf.length>0,
       queriedAt: (d.economy_queried_at || d.business_queried_at || "").slice(0,10),
-      flights: nf.map(f=>({airline:f.airline, flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null})),
+      flights: nf.map(f=>({airline:f.airline, flight:f.flight??"", dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null})),
       /* 一次转机（2026-09-28 用户：回西雅图三段） */
       onestopResults: of.length,
       onestopEco: d.onestop_economy_usd ?? null,
       onestopBiz: d.onestop_business_usd ?? null,
       onestopBasis: d.onestop_economy_price_basis || d.onestop_business_price_basis || "",
       onestopQueriedAt: (d.onestop_economy_queried_at || d.onestop_business_queried_at || "").slice(0,10),
-      onestopFlights: of.map(f=>({airline:f.airline, flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null, via:f.via||""})),
+      onestopFlights: of.map(f=>({airline:f.airline, flight:f.flight??"", dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null, via:f.via||""})),
     };
   }
 }
