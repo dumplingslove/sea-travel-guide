@@ -757,8 +757,9 @@ function renderTrip(){
     const segHtml = segCard(s);
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
-      /* 起飞日二选一：本段最后一天飞（默认）或次日飞，日期明确写出来，不许含糊 */
-      const choice=tripFlyChoice(t.after);
+      /* 起飞日二选一：本段最后一天飞（默认）或次日飞，日期明确写出来，不许含糊；
+         用户 2026-09-28：西安→北京坐高铁，灵活不需要选出发日，只标日期 */
+      const choice=t.noFlight ? "last" : tripFlyChoice(t.after);
       const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
       const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
@@ -776,10 +777,12 @@ function renderTrip(){
       parts.push(`<div class="trip-seg-group">${segHtml}
       <div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
     ${t.note?`<p class="micro">${t.note}</p>`:""}
-    <div class="micro trip-flydays">${dayWord}：
+    ${t.noFlight
+      ? `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}</div>`
+      : `<div class="micro trip-flydays">${dayWord}：
       <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} ${goWord}</button>
       <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} ${goWord}</button>
-    </div>
+    </div>`}
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
       parts.push(`<div class="trip-seg-group">${segHtml}</div>`);
