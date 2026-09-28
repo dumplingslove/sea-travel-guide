@@ -1,7 +1,7 @@
 export const spots: Record<string, Array<{name:string;where:string;how:string;sampleIndex?:number;sampleCaption?:string}>> = {
   "滨海湾花园": [
-    { name:"灯光秀草坪躺拍", where:"擎天树林（Supertree Grove）中央的大草坪。直接躺在草地上，面向擎天树往上看。", how:"Garden Rhapsody 灯光秀每晚 19:45 和 20:45 各一场；攻略作者称，最享受的方式就是躺在擎天树下的草坪上看完整场（据 Traveloka 攻略）。", sampleIndex:6, sampleCaption:"夜晚仰拍灯光秀中的擎天树" },
-    { name:"OCBC 空中步道", where:"擎天树林中央，买票登上 OCBC Skyway 空中步道，站在步道上俯瞰。", how:"128 米长的悬空步道，可俯瞰整片花园和远处的滨海湾金沙；白天蓝天时最出片（据 Traveloka 攻略）。", sampleIndex:5, sampleCaption:"站在空中步道上，擎天树林与步道伸向远方" },
+    { name:"灯光秀草坪躺拍", where:"擎天树林（Supertree Grove）中央的大草坪。直接躺在草地上，面向擎天树往上看。", how:"Garden Rhapsody 灯光秀每晚 19:45 和 20:45 各一场；攻略作者称，最享受的方式就是躺在擎天树下的草坪上看完整场（据 Traveloka 攻略）。", sampleIndex:0, sampleCaption:"擎天树群仰拍（白天视角；夜晚灯光秀时同一机位更震撼）" },
+    { name:"OCBC 空中步道", where:"擎天树林中央，买票登上 OCBC Skyway 空中步道，站在步道上俯瞰。", how:"128 米长的悬空步道，可俯瞰整片花园和远处的滨海湾金沙；白天蓝天时最出片（据 Traveloka 攻略）。", sampleIndex:4, sampleCaption:"仰拍擎天树间的 OCBC 空中步道" },
     { name:"云雾林室内瀑布", where:"云雾林（Cloud Forest）温室内，走到瀑布正前方。", how:"35 米高的人造山上挂着全世界最高的室内瀑布之一；站在瀑布正前方仰拍最震撼（据 Traveloka 攻略）。", sampleIndex:3, sampleCaption:"云雾林 35 米室内瀑布正前方仰拍" }
   ],
   "环球影城": [
@@ -40,11 +40,11 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   "牛车水": [
     { name:"宝塔街一带市集街景", where:"逛宝塔街、史密斯街、丁加奴街一带的露天市集街道，面向店铺、摊位和店屋拍。", how:"几百个摊位卖丝绸长袍、招财猫等货品，还有街头美食车（点心、脆皮烤鸭）；市集每日约 09:30–20:00 营业，黄昏后街灯亮起更热闹（据 Go Guides 攻略）。", sampleIndex:0, sampleCaption:"店屋立面、街边摊位与灯笼" },
     { name:"佛牙寺唐式建筑", where:"桥南路上的佛牙寺龙华院正门对面的人行道上，面向寺庙的唐式屋顶；也可以走进大门看挑高华丽的主厅。", how:"寺庙共四层，建筑融合唐代佛教元素与曼陀罗格局；四楼高 2 米的纯金佛塔是焦点，屋顶还有一座大型转经轮宝塔。开放时间每日 09:00–18:30（以官网为准）（据 Go Guides 攻略）。", sampleIndex:1, sampleCaption:"佛牙寺唐式多层宝塔建筑外观" },
-    { name:"牛车水大厦熟食中心", where:"到史密斯街 335 号的牛车水大厦，里面有市场和熟食中心。", how:"里面街头小食款式多、价格便宜，边吃边拍最有烟火气；大厦每日 08:00–00:00（据 Go Guides 攻略）。", sampleIndex:5, sampleCaption:"熟食中心内一排摊位与用餐的食客" }
+    { name:"牛车水大厦熟食中心", where:"到史密斯街 335 号的牛车水大厦，里面有市场和熟食中心。", how:"里面街头小食款式多、价格便宜，边吃边拍最有烟火气；大厦每日 08:00–00:00（据 Go Guides 攻略）。", sampleIndex:4, sampleCaption:"夜市食街：摊位林立、食客满座（烟火气实拍）" }
   ],
   "小印度": [
     { name:"陈东龄故居", where:"小印度地铁站附近的水牛巷（Kerbau Road），找到漆成五彩缤纷颜色的陈东龄故居（竹脚中心旁）。", how:"这里是小印度最出名的 IG 打卡点，网红最爱来拍；白天去、站在对街把整栋彩色立面收进画面。内部不开放参观，只能拍外观；晚上没有亮灯（据 Follow Us To Travel 攻略）。", sampleIndex:1, sampleCaption:"漆成五彩缤纷的陈东龄故居外观" },
-    { name:"实龙岗路彩色店屋", where:"沿实龙岗路主街慢慢走，站在马路对面，面向刷成粉、黄、绿等鲜艳色彩的店屋立面。", how:"以彩色店屋立面为背景拍人像，随便一站就很出片；附近小印度艺术区的壁画也值得顺路拍（据 Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"马路对面看色彩鲜艳的店屋立面" },
+    { name:"实龙岗路彩色店屋", where:"沿实龙岗路主街慢慢走，站在马路对面，面向刷成粉、黄、绿等鲜艳色彩的店屋立面。", how:"以彩色店屋立面为背景拍人像，随便一站就很出片；附近小印度艺术区的壁画也值得顺路拍（据 Follow Us To Travel 攻略）。", sampleIndex:1, sampleCaption:"色彩鲜艳的店屋立面（实龙岗路一带）" },
     { name:"维拉玛卡里雅曼兴都庙塔门", where:"实龙岗路上的 Sri Veeramakaliamman Temple 正门外，站在对面人行道上，面向色彩斑斓的塔门。", how:"塔门上布满色彩鲜艳的神像浮雕；寺庙可免费入内参观，进庙要脱鞋。开放时间为每日 08:30–12:30 及 16:00–20:30（以现场为准）（据 Go Guides 攻略）。", sampleIndex:4, sampleCaption:"色彩斑斓的神像浮雕塔门" }
   ],
   "Kampong Glam": [
@@ -53,12 +53,12 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "乌节路": [
     { name:"Orchard Gateway 纯白天桥", where:"乌节路上连接 Somerset 与 Orchard Gateway 的过街人行天桥，走到桥上。", how:"纯白柱体配两侧整面玻璃窗：白天日系小清新，夜晚灯光倒影如科幻片场景；傍晚夕阳直穿玻璃时最出片，是拍人像的好地方（据新加坡省钱皇后情报局）。" },
-    { name:"ION Sky 55 楼观景台", where:"ION Orchard（乌节路 2 号）55 楼的 ION Sky 观景台。", how:"乌节路上最高的观景台，218 米高空 360 度俯瞰市区，可远眺滨海湾金沙和艺术科学博物馆；每日 15:00–18:00 开放（最后入场 17:30），凭 ION Orchard 当日消费收据免费进场（Klook 称至少消费 S$20）（据 Klook 攻略）。", sampleIndex:5, sampleCaption:"ION Sky 观景台上，游客隔窗眺望市区" },
+    { name:"ION Sky 55 楼观景台", where:"ION Orchard（乌节路 2 号）55 楼的 ION Sky 观景台。", how:"乌节路上最高的观景台，218 米高空 360 度俯瞰市区，可远眺滨海湾金沙和艺术科学博物馆；每日 15:00–18:00 开放（最后入场 17:30），凭 ION Orchard 当日消费收据免费进场（Klook 称至少消费 S$20）（据 Klook 攻略）。", sampleIndex:1, sampleCaption:"ION Orchard 商场外观（ION Sky 观景台位于商场高层）" },
     { name:"圣诞灯饰夜景（12月限定）", where:"12 月的乌节路主街，站在灯饰最密的一段人行道上。", how:"乌节圣诞大街欢（Christmas on A Great Street）期间整条路化身节日奇境：灯饰长廊、两个圣诞村、万事达卡圣诞树下的夜间飘雪秀，圣诞前夜还有街头派对。往年约 11 月初至 1 月 1 日，以当季官网公布为准（据乌节路商联会官网）。", sampleIndex:2, sampleCaption:"乌节路“圣诞大街”主题灯饰拱门" }
   ],
   "圣淘沙海滩": [
     { name:"巴拉望海滩“亚洲大陆最南端”", where:"走到巴拉望海滩（Palawan Beach）南端，过吊桥登上对面的小岛，爬上岛上的观景塔。", how:"吊桥＋观景塔＋“亚洲大陆最南端”地标，是圣淘沙最有仪式感的打卡点，适合拍照留念。注意：严格来说圣淘沙 Cove 住宅区还有更靠南的位置，这里是名义上的最南端点（据 Little Day Out）。", sampleIndex:4, sampleCaption:"从观景塔俯瞰巴拉望吊桥与海滩" },
-    { name:"西乐索海滩日落", where:"圣淘沙西乐索海滩（Siloso Beach），面向大海。", how:"西乐索以壮观日落著称，是拍照爱好者的绝佳背景；黄金时段约 17:30–19:00，早点到占好位置，晴天最佳（据 Lemon8 攻略）。", sampleIndex:5, sampleCaption:"西乐索海滩日落，棕榈剪影与金色海面" }
+    { name:"西乐索海滩日落", where:"圣淘沙西乐索海滩（Siloso Beach），面向大海。", how:"西乐索以壮观日落著称，是拍照爱好者的绝佳背景；黄金时段约 17:30–19:00，早点到占好位置，晴天最佳（据 Lemon8 攻略）。", sampleIndex:3, sampleCaption:"棕榈海滩（白天视角；日落时分金色海面更出片）" }
   ],
   "新加坡河游船": [
     { name:"克拉码头上船点黄昏", where:"克拉码头（Clarke Quay）的 bumboat 码头（Clarke Quay Jetty）边，站在河岸一带，面向河面和停靠的木船。", how:"游船从克拉码头 Jetty 出发并返回，日落时分河面倒映着两岸灯光，适合在上船前先在岸上拍摄。记得提前 15 分钟到售票处换票（据 Traveloka 攻略）。", sampleIndex:4, sampleCaption:"黄昏时分的 bumboat 与克拉码头" },
