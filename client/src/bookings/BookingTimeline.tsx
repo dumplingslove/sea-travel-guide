@@ -364,10 +364,23 @@ export default function BookingTimeline({
         {FLIGHT_LEGS.map((f) => {
           const isIntl = f.kind === "intl";
           const directCount = (f.options ?? []).filter((o) => (o.stops ?? 0) === 0).length;
-          const headline = isIntl ? (
-            <span className="text-amber-700">待定：尚未比价选定</span>
+          const nonstopBadge = f.flightState === "ok" ? (
+            <span className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-600 text-white align-middle">
+              ✈️ 直飞
+            </span>
+          ) : null;
+          const headline = f.flightState === "none" ? (
+            <span className="text-gray-500">
+              暂无直飞{f.queriedAt ? `（${f.queriedAt}实查）` : ""}
+            </span>
+          ) : isIntl ? (
+            <span>
+              <span className="text-amber-700">待定：尚未比价选定</span>
+              {nonstopBadge}
+            </span>
           ) : f.priceNote ? (
             <span>
+              {nonstopBadge}
               <b className="text-teal-700">{f.priceNote}</b>
               {f.businessPriceNote && (
                 <span className="text-gray-500"> · 商务舱 {f.businessPriceNote}</span>
@@ -438,9 +451,13 @@ export default function BookingTimeline({
                             <div className="text-xs text-gray-500 mt-0.5">
                               {o.depart} → {o.arrive}
                               {o.arrivePlusDay ? "+1" : ""} ·{" "}
-                              {(o.stops ?? 0) === 0
-                                ? "直飞"
-                                : `${o.stops}停${o.via ? `经${o.via}` : ""}`}{" "}
+                              {(o.stops ?? 0) === 0 ? (
+                                <span className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-600 text-white align-middle">
+                                  ✈️ 直飞
+                                </span>
+                              ) : (
+                                `${o.stops}停${o.via ? `经${o.via}` : ""}`
+                              )}{" "}
                               ·{" "}
                               <b className="text-teal-700">${o.price}</b>
                               {f.priceBasis ? `（${f.priceBasis}）` : ""}

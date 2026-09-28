@@ -5,7 +5,12 @@
  * 组织原则（对标 Google Travel / Booking.com / Trip.com）：
  * 按"最晚行动时间"排，不是按"酒店/餐厅/景点"分类堆。
  * 行动（时间线）/ 参考（城市明细）/ 记录（我的预订）三层各司其职。
+ *
+ * 航班数据：统一读 Google Flights 航班库（client/src/data/flight-db-december-2026.json），
+ * 本文件底部的 applyFlightDb() 在模块加载时把库数据灌进 FLIGHT_LEGS；
+ * 只看直飞，中转选项一律不保留。
  */
+import flightDbJson from "../data/flight-db-december-2026.json";
 
 export type BookByGroup = "now" | "d60" | "d30" | "d14" | "local";
 
@@ -17,6 +22,12 @@ export interface FlightLegInfo {
   day: number;
   kind: "intercity" | "intl";
   note: string;
+  /** 航班库航段代码（如 "PEK-SIN"）；有则 applyFlightDb() 用库数据覆盖 options */
+  dbSeg?: string;
+  /** 写进 note 的固定上下文（不受库刷新影响的部分） */
+  ctx?: string;
+  /** ok=有直飞 / none=实查确认无直飞 / pending=待查询；由 applyFlightDb() 维护 */
+  flightState?: "ok" | "none" | "pending";
   /** 以下为浏览器实查后填写；null = 待核验，不写成定论 */
   carrier?: string | null;
   schedule?: string | null;
@@ -36,7 +47,7 @@ export interface FlightLegInfo {
 }
 
 /** Google Flights 同一天的一个可选行程（价格为查询时总价，USD；城际段=2成人，国际段见 priceBasis）。
- *  亚洲城际段只保留直飞（stops=0）；跨太平洋回程段为方便比价含优选中转（stops/via 如实标注）。 */
+ *  全站只保留直飞（stops=0）；中转选项一律不展示。 */
 export interface FlightOption {
   carrier: string;
   flight: string;
@@ -44,7 +55,7 @@ export interface FlightOption {
   arrive: string;
   /** 到达为次日时 true，展示为 06:50+1 */
   arrivePlusDay?: boolean;
-  /** 中转次数；0=直飞 */
+  /** 中转次数；0=直飞（全站只允许 0） */
   stops?: number;
   /** 中转城市，如 "北京"；直飞时不填 */
   via?: string;
@@ -58,10 +69,12 @@ export interface FlightOption {
 }
 
 /** 3 段城际 + 15 段国际：去程西雅图→北京（2026-11-28）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、西安→北京）、回程北京/上海/重庆→西雅图（2026-12-31、2027-01-01、2027-01-02）9 段。
- * 用户要求：亚洲城际段只看直飞（options 仅保留 stops=0，无直飞的段 options 为空）；跨太平洋去回程为方便比价含优选中转（2026-09-27 用户要求把回程三城三天选项全部放入预订）。 */
+ * 用户要求：全站只看直飞（options 仅保留 stops=0；库里确认无直飞的段 options 为空并标"暂无直飞"，库里没查到的标"待查询"）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "intl-out-bj",
+    dbSeg: "PEK-SIN",
+    ctx: "去程国际段（用户一家三口）",
     route: "北京 → 新加坡",
     date: "2026-12-06",
     dateLabel: "12-06",
@@ -90,6 +103,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "intl-out",
+    dbSeg: "XIY-SIN",
+    ctx: "去程国际段（岳父母）",
     route: "西安 → 新加坡",
     date: "2026-12-06",
     dateLabel: "12-06",
@@ -114,6 +129,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "sin-hkt",
+    dbSeg: "SIN-HKT",
+    ctx: "D6 转场：新加坡段结束、普吉段开始",
     route: "新加坡 → 普吉",
     date: "2026-12-11",
     dateLabel: "12-11",
@@ -149,6 +166,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "sin-xiy",
+    dbSeg: "SIN-XIY",
+    ctx: "新加坡段结束：岳父母带娃回西安",
     route: "新加坡 → 西安",
     date: "2026-12-11",
     dateLabel: "12-11",
@@ -173,6 +192,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "hkt-cnx",
+    dbSeg: "HKT-CNX",
+    ctx: "D9 转场：普吉段结束、清迈段开始",
     route: "普吉 → 清迈",
     date: "2026-12-14",
     dateLabel: "12-14",
@@ -197,6 +218,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "cnx-bkk",
+    dbSeg: "CNX-BKK",
+    ctx: "D12 转场：清迈段结束、曼谷段开始",
     route: "清迈 → 曼谷",
     date: "2026-12-17",
     dateLabel: "12-17",
@@ -228,6 +251,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "bkk-xiy",
+    dbSeg: "BKK-XIY",
+    ctx: "回程：用户夫妻一起回西安（2成人），在西安待3-4天",
     route: "曼谷 → 西安",
     date: "2026-12-19",
     dateLabel: "12-19",
@@ -270,6 +295,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pek-sea-1231",
+    dbSeg: "PEK-SEA",
+    ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
     date: "2026-12-31",
     dateLabel: "12-31",
@@ -285,14 +312,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     queriedAt: "2026-09-27 17:49 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Korean Air + Alaska Airlines", flight: "KE852 / AS120", depart: "10:40", arrive: "12:55", stops: 1, via: "首尔", price: 2616.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；首尔中转6h15m，总时长18h15m" },
-      { carrier: "Korean Air + Alaska Airlines", flight: "KE2052 / AS120", depart: "11:45", arrive: "12:55", stops: 1, via: "首尔（金浦→仁川换机场）", price: 2643.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Korean Air + Delta Air Lines", flight: "KE864 / DL196", depart: "01:30", arrive: "11:56", arrivePlusDay: true, stops: 1, via: "首尔", price: 2663.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "pek-sea-0101",
+    dbSeg: "PEK-SEA",
+    ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
     date: "2027-01-01",
     dateLabel: "01-01",
@@ -308,14 +334,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     queriedAt: "2026-09-27 17:49 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Turkish Airlines", flight: "TK197 / TK203", depart: "08:40", arrive: "17:10", stops: 1, via: "伊斯坦布尔", price: 2978.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；伊斯坦布尔中转仅1h15m，总时长24h30m" },
-      { carrier: "Turkish Airlines + Alaska Airlines", flight: "TK89 / TK179 / AS1375 / AS2134", depart: "00:50", arrive: "20:34", arrivePlusDay: true, stops: 3, via: "伊斯坦布尔/洛杉矶/波特兰（自助转机）", price: 3012.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Cathay Pacific + Alaska Airlines", flight: "CX345 / CX838 / AS1603", depart: "07:30", arrive: "14:40", stops: 2, via: "香港/温哥华", price: 3306.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "pek-sea-0102",
+    dbSeg: "PEK-SEA",
+    ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
     date: "2027-01-02",
     dateLabel: "01-02",
@@ -332,14 +357,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "2大1小总价",
     options: [
       { carrier: "Hainan Airlines", flight: "HU495", depart: "13:40", arrive: "08:20", stops: 0, price: 6925.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一回程直飞；10h40m，带娃最省心（比最便宜中转贵约$3,175）" },
-      { carrier: "Sichuan Airlines + Turkish Airlines", flight: "3U6876 / 3U3827 / TK203", depart: "20:15", arrive: "17:10", arrivePlusDay: true, stops: 2, via: "天府/伊斯坦布尔", price: 3750.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Turkish Airlines", flight: "TK197 / TK203", depart: "08:40", arrive: "17:10", stops: 1, via: "伊斯坦布尔", price: 4030.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Korean Air", flight: "KE2052 / KE47", depart: "11:45", arrive: "14:10", stops: 1, via: "首尔（金浦→仁川换机场）", price: 4164.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "pvg-sea-1231",
+    dbSeg: "PVG-SEA",
+    ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
     date: "2026-12-31",
     dateLabel: "12-31",
@@ -356,14 +380,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "2大1小总价",
     options: [
       { carrier: "Delta Air Lines", flight: "DL280", depart: "17:25", arrive: "12:05", stops: 0, price: 3658.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "三天中直飞最便宜的一天；10h40m直达，只比最便宜中转贵约$1,000，带娃首选" },
-      { carrier: "Korean Air + Alaska Airlines", flight: "KE888 / AS120", depart: "14:00", arrive: "12:55", stops: 1, via: "首尔", price: 2616.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "American Airlines", flight: "AA128 / AA708", depart: "18:50", arrive: "23:09", stops: 1, via: "达拉斯", price: 2907.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Korean Air", flight: "KE888 / KE47", depart: "14:00", arrive: "14:10", stops: 1, via: "首尔", price: 3291.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "pvg-sea-0101",
+    dbSeg: "PVG-SEA",
+    ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
     date: "2027-01-01",
     dateLabel: "01-01",
@@ -380,14 +403,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "2大1小总价",
     options: [
       { carrier: "Delta Air Lines", flight: "DL280", depart: "17:25", arrive: "12:04", stops: 0, price: 4909.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天直飞；10h39m，带娃最省心" },
-      { carrier: "Japan Airlines", flight: "JL80 / JL68", depart: "10:00", arrive: "10:05", stops: 1, via: "东京（羽田→成田换机场）", price: 3444.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Korean Air + Alaska Airlines", flight: "KE882 / KE71 / AS1603", depart: "11:20", arrive: "14:40", stops: 2, via: "首尔/温哥华（自助转机）", price: 3510.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "American Airlines", flight: "AA128 / AA708", depart: "18:50", arrive: "23:09", stops: 1, via: "达拉斯", price: 3730.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "pvg-sea-0102",
+    dbSeg: "PVG-SEA",
+    ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
     date: "2027-01-02",
     dateLabel: "01-02",
@@ -404,14 +426,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "2大1小总价",
     options: [
       { carrier: "Delta Air Lines", flight: "DL280", depart: "17:25", arrive: "12:04", stops: 0, price: 5531.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天直飞；10h39m，带娃最省心" },
-      { carrier: "Sichuan Airlines + Turkish Airlines", flight: "3U6996 / 3U3827 / TK203", depart: "18:45", arrive: "17:10", arrivePlusDay: true, stops: 2, via: "天府/伊斯坦布尔", price: 3750.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "American Airlines", flight: "AA128 / AA708", depart: "18:50", arrive: "23:09", stops: 1, via: "达拉斯", price: 3955.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Turkish Airlines", flight: "TK281 / TK203", depart: "09:55", arrive: "17:10", arrivePlusDay: true, stops: 1, via: "伊斯坦布尔（中转22h25m，自助转机）", price: 3998.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "ckg-sea-1231",
+    dbSeg: "CKG-SEA",
+    ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",
     date: "2026-12-31",
     dateLabel: "12-31",
@@ -428,59 +449,216 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceBasis: "2大1小总价",
     options: [
       { carrier: "Hainan Airlines", flight: "HU445", depart: "12:20", arrive: "08:05", stops: 0, price: 6263.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一直飞；11h45m，带娃最省心（比最便宜中转贵约$3,540）" },
-      { carrier: "Qatar Airways", flight: "QR881 / QR719", depart: "01:10", arrive: "11:40", stops: 1, via: "多哈", price: 2723.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Capital Airlines + Alaska Airlines", flight: "JD5692 / JD471 / AS1601", depart: "10:55", arrive: "07:10", arrivePlusDay: true, stops: 3, via: "杭州/青岛/温哥华（自助转机，中段航班号未显示）", price: 2972.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Air China + Cathay Pacific + Alaska Airlines", flight: "CA419 / CX838 / AS1603", depart: "11:50", arrive: "14:40", stops: 2, via: "香港/温哥华", price: 3579.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "ckg-sea-0101",
+    dbSeg: "CKG-SEA",
+    ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",
     date: "2027-01-01",
     dateLabel: "01-01",
     day: 18,
     kind: "intl",
-    note: "回程国际段候选（重庆出发，2大1小）；Google Flights 实查 2026-09-27 17:49 PDT。当天无直飞。商务舱最低约 $7,174（厦航+阿拉斯加经停厦门/温哥华）。国内集结：北京→重庆（你一人）；其他家人前往集合城市的路线待定",
+    note: "回程国际段候选（重庆出发，2大1小）；Google Flights 实查 2026-09-27 17:49 PDT，当天无直飞。国内集结：北京→重庆（你一人）；其他家人前往集合城市的路线待定",
     carrier: null,
     schedule: null,
-    priceNote: "3人 $3,753 起",
+    priceNote: null,
     businessPriceNote: null,
     direct: false,
     fragile: false,
     queriedAt: "2026-09-27 17:49 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Spring Airlines + Korean Air + Alaska Airlines", flight: "9C6108 / KE882 / KE71 / AS1603", depart: "05:40", arrive: "14:40", stops: 3, via: "上海/首尔/温哥华（自助转机）", price: 3753.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；3停自助转机共25小时，带娃慎选" },
-      { carrier: "Cathay Pacific + Alaska Airlines", flight: "CX929 / CX888 / AS1601", depart: "17:15", arrive: "07:10", arrivePlusDay: true, stops: 2, via: "香港/温哥华", price: 3966.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "XiamenAir + Air Canada", flight: "MF8434 / MF805 / AC8810", depart: "15:30", arrive: "21:57", stops: 2, via: "厦门/温哥华（自助转机）", price: 4390.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
   {
     id: "ckg-sea-0102",
+    dbSeg: "CKG-SEA",
+    ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",
     date: "2027-01-02",
     dateLabel: "01-02",
     day: 18,
     kind: "intl",
-    note: "回程国际段候选（重庆出发，2大1小）；Google Flights 实查 2026-09-27 17:49 PDT。当天无直飞（海航改经北京中转）。商务舱最低约 $9,707（东航+阿拉斯加经停上海/温哥华）。国内集结：北京→重庆（你一人）；其他家人前往集合城市的路线待定",
+    note: "回程国际段候选（重庆出发，2大1小）；Google Flights 实查 2026-09-27 17:49 PDT，当天无直飞。国内集结：北京→重庆（你一人）；其他家人前往集合城市的路线待定",
     carrier: null,
     schedule: null,
-    priceNote: "3人 $3,190 起",
+    priceNote: null,
     businessPriceNote: null,
     direct: false,
     fragile: false,
     queriedAt: "2026-09-27 17:49 PDT（候选日期，待确认后重查）",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Qatar Airways", flight: "QR881 / QR719", depart: "01:10", arrive: "11:40", stops: 1, via: "多哈", price: 3190.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价；多哈中转2h40m，总时长26h30m" },
-      { carrier: "China Eastern + EVA Air", flight: "MU5796 / MU9605 / BR386 / BR24", depart: "06:40", arrive: "17:30", stops: 3, via: "昆明/河内/台北（自助转机）", price: 3323.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Air China + Korean Air", flight: "CA439 / KE41", depart: "08:30", arrive: "09:05", stops: 1, via: "首尔（自助转机）", price: 5275.00, refundable: "not stated", changeable: "not stated" },
     ],
     businessOptions: null,
   },
 ];
+
+/* ============ 预订页航班统一读 Google Flights 航班库 ============
+ * 唯一真实来源：client/src/data/flight-db-december-2026.json（每小时 cron 实查，只含直飞）。
+ * - 库里有该 (航段,日期) → 用库的直飞数据覆盖 options/businessOptions/价格/口径/实查时间；
+ * - 库里没有 → 保留本文件静态直飞选项兜底（已过滤中转），等 cron 填库后自动接管；
+ * - 中转选项一律删除（只看直飞是用户铁律）。
+ * 航司名用英文全名（CARRIER_REPUTATION 按英文前缀匹配，中文名/短名会降级）。 */
+
+/** 库里航司短名 → 英文全名 */
+const CARRIER_FULLNAME: Record<string, string> = {
+  "Hainan": "Hainan Airlines",
+  "Delta": "Delta Air Lines",
+};
+
+interface FlightDbFlight {
+  airline: string; flight: string; dep: string; arr: string;
+  duration?: string; price_usd?: number | null; business_price_usd?: number | null;
+}
+interface FlightDbDay {
+  economy_usd?: number | null; business_usd?: number | null;
+  economy_price_basis?: string; business_price_basis?: string;
+  economy_queried_at?: string; business_queried_at?: string;
+  nonstop_flights?: FlightDbFlight[];
+}
+
+function flightDbDay(seg: string, date: string): FlightDbDay | null {
+  const segs = (flightDbJson as { segments?: Record<string, { days?: Record<string, FlightDbDay> }> }).segments;
+  return segs?.[seg]?.days?.[date] ?? null;
+}
+
+/** ISO UTC → "YYYY-MM-DD HH:MM PDT" */
+function toPDT(iso: string): string {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const t = new Date(d.getTime() - 7 * 3600 * 1000);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())} ${p(t.getUTCHours())}:${p(t.getUTCMinutes())} PDT`;
+}
+
+function fmtUSD(x: number): string {
+  return Number.isInteger(x) ? `$${x}` : `$${x.toFixed(2)}`;
+}
+function basisToPax(basis: string): string {
+  if (basis.includes("2大1小")) return "3人";
+  if (basis.includes("2成人")) return "2人";
+  return "";
+}
+function fullCarrier(short: string): string {
+  return CARRIER_FULLNAME[short] || short;
+}
+
+function dbFlightOption(f: FlightDbFlight, cabin: "eco" | "biz"): FlightOption | null {
+  const price = cabin === "eco" ? f.price_usd : f.business_price_usd;
+  if (price == null) return null;
+  const arrRaw = String(f.arr || "");
+  const plusDay = arrRaw.includes("+1");
+  return {
+    carrier: fullCarrier(f.airline),
+    flight: f.flight,
+    depart: f.dep,
+    arrive: arrRaw.replace("+1", "").trim(),
+    arrivePlusDay: plusDay || undefined,
+    stops: 0,
+    price,
+    refundable: "not stated",
+    changeable: "not stated",
+  };
+}
+
+function applyFlightDb(): void {
+  for (const leg of FLIGHT_LEGS) {
+    // 先删中转：只保留 stops===0（全站铁律）
+    if (leg.options) leg.options = leg.options.filter((o) => (o.stops ?? 0) === 0);
+    if (leg.businessOptions) leg.businessOptions = leg.businessOptions.filter((o) => (o.stops ?? 0) === 0);
+
+    const seg = leg.dbSeg, date = leg.date;
+    if (!seg || !date) {
+      // 不在库覆盖范围（如去程 SEA-PEK）：静态直飞即全部
+      leg.flightState = leg.options && leg.options.length > 0 ? "ok" : "pending";
+      continue;
+    }
+    const day = flightDbDay(seg, date);
+    if (!day) {
+      // 库里还没查到该日期：静态直飞兜底，等 cron 填库后自动接管
+      if (leg.options && leg.options.length > 0) {
+        leg.flightState = "ok";
+      } else if (leg.direct === false) {
+        leg.flightState = "none"; // 静态实查已确认无直飞：价格/航司等字段全部清空，不留中转残留
+        leg.priceNote = null;
+        leg.businessPriceNote = null;
+        leg.carrier = null;
+        leg.schedule = null;
+      } else {
+        leg.flightState = "pending";
+        leg.options = null;
+        leg.businessOptions = null;
+      }
+      continue;
+    }
+    const nf = day.nonstop_flights || [];
+    const queriedAt = toPDT(day.economy_queried_at || day.business_queried_at || "");
+    const basis = day.economy_price_basis || day.business_price_basis || "";
+    const pax = basisToPax(basis);
+    const ctx = leg.ctx || leg.route;
+
+    if (nf.length === 0) {
+      // 库实查确认当天无直飞
+      leg.options = [];
+      leg.businessOptions = [];
+      leg.direct = false;
+      leg.flightState = "none";
+      leg.carrier = null;
+      leg.schedule = null;
+      leg.priceNote = null;
+      leg.businessPriceNote = null;
+      leg.queriedAt = queriedAt || null;
+      leg.priceBasis = basis || null;
+      leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}确认当天无直飞${basis ? `（${basis}）` : ""}。`;
+      continue;
+    }
+
+    const ecoOpts = nf.map((f) => dbFlightOption(f, "eco")).filter((o): o is FlightOption => !!o);
+    const bizOpts = nf.map((f) => dbFlightOption(f, "biz")).filter((o): o is FlightOption => !!o);
+    if (ecoOpts.length > 0) {
+      const cheapest = ecoOpts.reduce((a, b) => (b.price < a.price ? b : a));
+      cheapest.recommend = true;
+      cheapest.recommendReason = "当天直飞最低价";
+    } else if (bizOpts.length > 0) {
+      const cheapest = bizOpts.reduce((a, b) => (b.price < a.price ? b : a));
+      cheapest.recommend = true;
+      cheapest.recommendReason = "当天唯一直飞（商务舱）";
+    }
+    const carrierSummary = (() => {
+      const m = new Map<string, number>();
+      for (const f of nf) { const c = fullCarrier(f.airline); m.set(c, (m.get(c) || 0) + 1); }
+      return [...m.entries()].map(([c, n]) => `${c}×${n}`).join("、");
+    })();
+
+    leg.options = ecoOpts;
+    leg.businessOptions = bizOpts;
+    leg.direct = true;
+    leg.flightState = "ok";
+    leg.priceBasis = basis || null;
+    leg.queriedAt = queriedAt || null;
+    leg.priceNote = ecoOpts.length > 0
+      ? `${pax ? pax + " " : ""}${fmtUSD(day.economy_usd ?? Math.min(...ecoOpts.map((o) => o.price)))} 起`
+      : null;
+    leg.businessPriceNote = bizOpts.length > 0
+      ? `${pax ? pax + " " : ""}${fmtUSD(day.business_usd ?? Math.min(...bizOpts.map((o) => o.price)))} 起`
+      : null;
+    const rec = ecoOpts.find((o) => o.recommend) || ecoOpts[0] || bizOpts[0] || null;
+    if (rec) {
+      leg.carrier = `${rec.carrier} ${rec.flight}`;
+      leg.schedule = `${rec.depart}→${rec.arrive}${rec.arrivePlusDay ? "+1" : ""}`;
+    } else {
+      leg.carrier = null;
+      leg.schedule = null;
+    }
+    leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}（${basis}，当天${nf.length}班直飞：${carrierSummary}）。`;
+  }
+}
+applyFlightDb();
 
 /** 每城住宿段：时间线只列"选 1 家"的行动，候选明细在城市参考区。 */
 export const HOTEL_STAYS = [

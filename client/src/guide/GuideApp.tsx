@@ -303,7 +303,7 @@ const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航�
 /** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
 const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员'};
 
-/** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；只看直飞（回程跨太平洋段含优选中转并如实标注）。 */
+/** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
 function flightDur(o:FlightOption){const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
 function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}

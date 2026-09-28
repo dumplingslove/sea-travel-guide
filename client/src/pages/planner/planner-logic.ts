@@ -677,7 +677,7 @@ function tripFlightCard(key: string, label: string){
     const redeye=!isNaN(dh)&&dh<6;
     const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
     const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
-    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
+    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
   }).join("");
   return `<div class="tfi-leg">${head(`🟢 ${d.results}班直飞`,"ok")}
     <div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>

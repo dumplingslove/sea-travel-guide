@@ -541,5 +541,6 @@ h4{font-size:16px;margin:0;font-weight:700}
 .tfi-fprice.na{color:var(--muted);font-weight:400}
 .tfi-flcap{font-size:11px;color:var(--muted);margin:10px 0 -6px}
 .tfi-redeye{font-size:11px;font-weight:700;color:var(--blue-dark);background:var(--blue-soft);border-radius:var(--r-badge);padding:2px 6px;white-space:nowrap}
+.tfi-nonstop{font-size:11px;font-weight:700;color:#fff;background:#0284c7;border-radius:var(--r-badge);padding:2px 8px;white-space:nowrap}
 .tfi-note{font-size:13px;color:var(--ink);line-height:1.65;margin:8px 0 0}
 .tfi-src{font-size:11px;color:var(--muted);margin-top:8px}
