@@ -638,20 +638,26 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null }
+interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
 interface FlightDbDay {
   economy_usd?: number|null; business_usd?: number|null;
   economy_price_basis?: string; business_price_basis?: string;
   economy_queried_at?: string; business_queried_at?: string;
   nonstop_flights?: FlightDbFlight[];
+  /* 一次转机（2026-09-28 用户：回西雅图三段也要查一次转机） */
+  onestop_flights?: FlightDbFlight[];
+  onestop_economy_usd?: number|null; onestop_business_usd?: number|null;
+  onestop_economy_price_basis?: string; onestop_business_price_basis?: string;
+  onestop_economy_queried_at?: string; onestop_business_queried_at?: string;
 }
-interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null}[] }
+interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via?:string}[]; onestopResults: number; onestopEco: number|null; onestopBiz: number|null; onestopBasis: string; onestopQueriedAt: string; onestopFlights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via:string}[] }
 /* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
    库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
 const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
 for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<string,{days?: Record<string,FlightDbDay>}>}).segments)){
   for(const [date, d] of Object.entries(seg.days||{})){
     const nf=d.nonstop_flights||[];
+    const of=d.onestop_flights||[];
     TRIP_FLIGHTS[`${code}|${date}`]={
       results: nf.length,
       eco: d.economy_usd ?? null,
@@ -660,7 +666,14 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
       carriers: [...new Set(nf.map(f=>f.airline))],
       direct: nf.length>0,
       queriedAt: (d.economy_queried_at || d.business_queried_at || "").slice(0,10),
-      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null})),
+      flights: nf.map(f=>({airline:f.airline, flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null})),
+      /* 一次转机（2026-09-28 用户：回西雅图三段） */
+      onestopResults: of.length,
+      onestopEco: d.onestop_economy_usd ?? null,
+      onestopBiz: d.onestop_business_usd ?? null,
+      onestopBasis: d.onestop_economy_price_basis || d.onestop_business_price_basis || "",
+      onestopQueriedAt: (d.onestop_economy_queried_at || d.onestop_business_queried_at || "").slice(0,10),
+      onestopFlights: of.map(f=>({airline:f.airline, flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null, via:f.via||""})),
     };
   }
 }
@@ -678,12 +691,58 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     note:"你坐高铁去北京，不需要机票。",
     legs:[] },
 ];
-/* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落 */
+/* 航司英文名→中文名（2026-09-28 用户：回西雅图三段航班信息中文显示） */
+const AIRLINE_CN: Record<string,string> = {
+  "United": "美联航", "Delta": "达美航空", "American Airlines": "美国航空", "American": "美国航空",
+  "Air China": "中国国航", "China Eastern": "中国东航", "China Southern": "中国南航",
+  "Hainan Airlines": "海南航空", "XiamenAir": "厦门航空", "Xiamen Air": "厦门航空",
+  "Sichuan Airlines": "四川航空", "Shenzhen Airlines": "深圳航空",
+  "Korean Air": "大韩航空", "Asiana": "韩亚航空", "Asiana Airlines": "韩亚航空",
+  "Japan Airlines": "日本航空", "ANA": "全日空", "All Nippon Airways": "全日空",
+  "Cathay Pacific": "国泰航空", "EVA Air": "长荣航空", "China Airlines": "中华航空",
+  "Singapore Airlines": "新加坡航空", "Thai Airways": "泰国航空",
+  "Air Canada": "加拿大航空", "Alaska Airlines": "阿拉斯加航空",
+  "Juneyao Airlines": "吉祥航空", "Spring Airlines": "春秋航空",
+  "Lucky Air": "祥鹏航空", "Tibet Airlines": "西藏航空",
+};
+/* 回西雅图三段的航段代码 */
+const RETURN_SEA_CODES = new Set(["PEK-SEA", "PVG-SEA", "CKG-SEA"]);
+/* 时长转中文：16h25m → 16小时25分 */
+function durationCn(d: string): string {
+  if(!d) return "";
+  return d.replace(/(\d+)h/i, "$1小时").replace(/(\d+)m/i, "$1分");
+}
+/* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落
+   2026-09-28：回西雅图三段另有一次转机航班，分区显示；回西雅图三段全部中文显示 */
 function tripFlightCard(key: string, label: string){
   const d=TRIP_FLIGHTS[key];
+  const segCode=key.split("|")[0];
+  const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
+  const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
   const head=(status:string,cls:string)=>`<div class="tfi-head"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></div>`;
   if(!d) return `<div class="tfi-leg">${head("⏳ 航班待查询","pending")}<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p></div>`;
-  if(!d.direct) return `<div class="tfi-leg">${head("⚪ 暂无直飞","none")}<p class="tfi-note">Google Flights 实查确认当天无直飞${d.queriedAt?`（${d.queriedAt}）`:""}。</p></div>`;
+  /* 一次转机分区（有就显示） */
+  const onestopHtml=(()=>{
+    if(!d.onestopQueriedAt && !d.onestopResults) return "";
+    if(!d.onestopResults) return `<div class="tfi-onestop"><div class="tfi-onestop-head">🔄 一次转机 <span class="tfi-status none">暂无</span></div><p class="tfi-note">Google Flights 实查确认当天无一次转机${d.onestopQueriedAt?`（${d.onestopQueriedAt}）`:""}。</p></div>`;
+    const prices: string[]=[];
+    if(d.onestopEco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.onestopEco}</b></span>`);
+    if(d.onestopBiz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.onestopBiz}</b></span>`);
+    const rows=d.onestopFlights.map(f=>{
+      const dh=Number(f.dep.slice(0,2));
+      const redeye=!isNaN(dh)&&dh<6;
+      const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
+      const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
+      const al=isReturnSea&&f.airline?`<span class="tfi-airline">${airlineName(f.airline)}</span>`:"";
+      const dur=f.duration?`<span class="tfi-dur">${isReturnSea?durationCn(f.duration):f.duration}</span>`:"";
+      return `<li>${al}<span class="tfi-no">${f.flight}</span><span class="tfi-onestop-via">🔄 经${f.via||"停"}</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${dur}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
+    }).join("");
+    return `<div class="tfi-onestop"><div class="tfi-onestop-head">🔄 一次转机 <span class="tfi-status ok">${d.onestopResults}班</span></div>
+      <div class="tfi-prices">${prices.join("")||"价格待查"}${d.onestopBasis?`<span class="tfi-basis">（${d.onestopBasis}）</span>`:""}</div>
+      <ul class="tfi-flights">${rows}</ul>
+      ${d.onestopQueriedAt?`<div class="tfi-src">Google Flights ${d.onestopQueriedAt} 实查 · 非实时价，出票前重查</div>`:""}</div>`;
+  })();
+  if(!d.direct) return `<div class="tfi-leg">${head("⚪ 暂无直飞","none")}<p class="tfi-note">Google Flights 实查确认当天无直飞${d.queriedAt?`（${d.queriedAt}）`:""}。</p>${onestopHtml}</div>`;
   const prices: string[]=[];
   if(d.eco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.eco}</b></span>`);
   if(d.biz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.biz}</b></span>`);
@@ -692,14 +751,16 @@ function tripFlightCard(key: string, label: string){
     const redeye=!isNaN(dh)&&dh<6;
     const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
     const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
-    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
+    const al=isReturnSea&&f.airline?`<span class="tfi-airline">${airlineName(f.airline)}</span>`:"";
+    const dur=f.duration?`<span class="tfi-dur">${isReturnSea?durationCn(f.duration):f.duration}</span>`:"";
+    return `<li>${al}<span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${dur}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
   }).join("");
   return `<div class="tfi-leg">${head(`🟢 ${d.results}班直飞`,"ok")}
     <div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
-    ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.join(" / ")}</div>`:""}
+    ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.map(c=>airlineName(c)).join(" / ")}</div>`:""}
     <div class="tfi-flcap">各航班整单价（经济 / 商务）</div>
     <ul class="tfi-flights">${rows}</ul>
-    ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}</div>`;
+    ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}</div>`;
 }
 /* 回西雅图卡片：出发城市三选一（未定）＋起飞日二选一，全部在大行程里定清楚 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
@@ -729,9 +790,9 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
         <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
       </div>
       <p class="micro">北京 / 上海 / 重庆三地回西雅图的国际票价、国内集结成本、总耗时、前一晚机场住宿、带娃难度待比较，先不定；起飞日定清楚，查价才不会错位。</p>
-      <div class="micro" style="margin-top:10px"><b>✈️ 三城直飞对比</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
+      <div class="micro" style="margin-top:10px"><b>✈️ 三城航班对比</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查，直飞＋一次转机）</div>
       <div class="trip-flightinfo">${returnCards}</div>
-      <p class="micro">航班库正在查 12-31 / 01-01 / 01-02 三个候选日的三城直飞；上面天数凑满 34 天、起飞日落到候选日后，这里会自动出价对比。</p>
+      <p class="micro">航班库正在查 12-31 / 01-01 / 01-02 三个候选日的三城直飞和一次转机；上面天数凑满 34 天、起飞日落到候选日后，这里会自动出价对比。</p>
     </div>
   </div>`;
 }
