@@ -588,12 +588,12 @@ const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
 const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
-  { id:"couple", label:"夫妻泰国", sub:"普吉→清迈→曼谷（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
+  { id:"couple", label:"夫妻东南亚", sub:"普吉→清迈→曼谷（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
   { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
   { id:"beijing3", label:"北京", sub:"用户一人回北京", mode:"🏠 家庭", note:"之后行程暂不规划" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
-/* 夫妻泰国段城市顺序（用户可调）；最后一段飞西安的航班跟着末城动态变 */
+/* 夫妻东南亚段城市顺序（用户可调）；最后一段飞西安的航班跟着末城动态变 */
 let coupleOrder: string[] = ["普吉","清迈","曼谷"];
 const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
 function coupleLastCity(){ return coupleOrder[coupleOrder.length-1] || "曼谷"; }

@@ -47,7 +47,7 @@ export interface PlannerPlan {
   flightSelections: Record<string, unknown>;
   /** 大行程总览：各段天数（段 id -> 天数），可选以兼容旧保存 */
   trip?: Record<string, number>;
-  /** 大行程总览：夫妻泰国段城市顺序，可选以兼容旧保存 */
+  /** 大行程总览：夫妻东南亚段城市顺序，可选以兼容旧保存 */
   coupleOrder?: string[];
 }
 
