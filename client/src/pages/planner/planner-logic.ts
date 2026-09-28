@@ -593,6 +593,14 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing3", label:"北京", sub:"用户一人回北京", mode:"🏠 家庭", note:"之后行程暂不规划" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
+/* 夫妻泰国段城市顺序（用户可调）；最后一段飞西安的航班跟着末城动态变 */
+let coupleOrder: string[] = ["普吉","清迈","曼谷"];
+const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
+function coupleLastCity(){ return coupleOrder[coupleOrder.length-1] || "曼谷"; }
+function thailandToXianLeg(){
+  const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
+  return { code: `${code}-XIY`, label: `${last}→西安` };
+}
 
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
@@ -610,8 +618,8 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
   { after:"singapore", before:"couple", title:"新加坡→普吉（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
-  { after:"couple", before:"xian", title:"曼谷→西安（2人）",
-    legs:[{code:"BKK-XIY",label:"曼谷→西安"}] },
+  { after:"couple", before:"xian", title:"__COUPLE_XIY__",
+    legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
   { after:"xian", before:"beijing3", title:"西安→北京（1人）",
     legs:[{code:"XIY-PEK",label:"西安→北京"}] },
 ];
@@ -625,11 +633,14 @@ function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
   const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
+    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : s.sub;
+    const coupleOrderBtns = s.id==="couple" ? `<div class="trip-order-btns" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="micro">城市顺序：</span>${coupleOrder.map((c,i)=>`<span class="micro" style="display:inline-flex;align-items:center;gap:2px;"><b>${c}</b>${i>0?`<button class="ghost" data-coupleup="${i}" aria-label="${c}上移" style="padding:2px 6px;">↑</button>`:""}${i<coupleOrder.length-1?`<button class="ghost" data-coupledown="${i}" aria-label="${c}下移" style="padding:2px 6px;">↓</button>`:""}</span>`).join('<span class="micro"> → </span>')}</div>` : "";
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
-        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${s.sub}</span></div>
+        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
+        ${coupleOrderBtns}
         ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -641,8 +652,14 @@ function renderTrip(){
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
       const date=ranges[t.before].from, md=date.slice(5).replace("-","/");
-      const notes=t.legs.map(l=>tripDuffelNote(`${l.code}|${date}`,l.label)).join(" · ");
-      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${md} ${t.title}</strong><span>转场</span></div>
+      const xiyLeg = thailandToXianLeg();
+      const title = t.title.replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`);
+      const legs = t.legs.map(l=>({
+        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
+        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
+      }));
+      const notes=legs.map(l=>tripDuffelNote(`${l.code}|${date}`,l.label)).join(" · ");
+      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${md} ${title}</strong><span>转场</span></div>
     <p class="micro">${notes}</p>`);
     }
   }
@@ -656,6 +673,16 @@ function renderTrip(){
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
     const [id,dd]=((b as HTMLElement).dataset.tripday||"").split("|");
     tripDays[id]=Math.min(20,Math.max(1,(tripDays[id]||1)+Number(dd)));
+    renderTrip(); cachePlannerLocal();
+  });
+  body.querySelectorAll("[data-coupleup]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const i=Number((b as HTMLElement).dataset.coupleup);
+    if(i>0){ const c=coupleOrder[i]; coupleOrder[i]=coupleOrder[i-1]; coupleOrder[i-1]=c; }
+    renderTrip(); cachePlannerLocal();
+  });
+  body.querySelectorAll("[data-coupledown]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const i=Number((b as HTMLElement).dataset.coupledown);
+    if(i<coupleOrder.length-1){ const c=coupleOrder[i]; coupleOrder[i]=coupleOrder[i+1]; coupleOrder[i+1]=c; }
     renderTrip(); cachePlannerLocal();
   });
   const tw=body.querySelector("#tripToWizard") as HTMLElement|null;
@@ -897,6 +924,7 @@ function serializePlan(): PlannerPlan{
     hotelSelections:{},
     flightSelections:{},
     trip:{...tripDays},
+    coupleOrder:[...coupleOrder],
   };
 }
 function applyLoadedPlan(p: PlannerPlan){
@@ -909,6 +937,7 @@ function applyLoadedPlan(p: PlannerPlan){
     if(p.wz.start) wz.start=p.wz.start;
     if(p.wz.modes&&typeof p.wz.modes==="object") wz.modes={...p.wz.modes};
   }
+  if(Array.isArray(p.coupleOrder)&&p.coupleOrder.length) coupleOrder=[...p.coupleOrder];
   if(p.trip&&typeof p.trip==="object"){
     for(const s of TRIP_SEGS){ const v=(p.trip as Record<string,unknown>)[s.id]; if(typeof v==="number"&&v>=1&&v<=20) tripDays[s.id]=v; }
   }
