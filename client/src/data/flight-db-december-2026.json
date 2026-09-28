@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T06:48:34+00:00",
+ "updated_at": "2026-09-28T07:08:29+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -1788,7 +1788,60 @@
     2
    ],
    "label": "北京→西雅图（2大1小）",
-   "days": {}
+   "days": {
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2027-01-01": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2027-01-02": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [
+      {
+       "airline": "Hainan",
+       "flight": "HU495",
+       "dep": "1:40 PM",
+       "arr": "8:20 AM",
+       "duration": "10 hr 40 min",
+       "business_price_usd": 22392
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": 22392,
+     "business_price_basis": "2大1小总价"
+    }
+   }
   },
   "PVG-SEA": {
    "origin": "PVG",
@@ -1798,7 +1851,74 @@
     2
    ],
    "label": "上海→西雅图（2大1小）",
-   "days": {}
+   "days": {
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": 3658,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Delta",
+       "flight": "DL280",
+       "dep": "5:25 PM",
+       "arr": "12:05 PM",
+       "duration": "10 hr 40 min",
+       "price_usd": 3658,
+       "business_price_usd": 20951
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": 20951,
+     "business_price_basis": "2大1小总价"
+    },
+    "2027-01-01": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": 4909,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Delta",
+       "flight": "DL280",
+       "dep": "5:25 PM",
+       "arr": "12:04 PM",
+       "duration": "10 hr 39 min",
+       "price_usd": 4909,
+       "business_price_usd": 21817
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": 21817,
+     "business_price_basis": "2大1小总价"
+    },
+    "2027-01-02": {
+     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_usd": 5531,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Delta",
+       "flight": "DL280",
+       "dep": "5:25 PM",
+       "arr": "12:04 PM",
+       "duration": "10 hr 39 min",
+       "price_usd": 5531,
+       "business_price_usd": 21817
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_usd": 21817,
+     "business_price_basis": "2大1小总价"
+    }
+   }
   },
   "CKG-SEA": {
    "origin": "CKG",
