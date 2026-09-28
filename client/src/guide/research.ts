@@ -18,16 +18,23 @@ const L=(title:string,url:string,note:string):EvidenceLink=>({title,url,note});
 export const xhsEvidence:Record<string,EvidenceLink[]>={
  'Aman Nai Lert Bangkok':[
   L('曼谷安缦奈乐I：又一新作值不值？','https://www.xiaohongshu.com/explore/68aef1ca000000001d006d8d','2025-08-27 · 正文与113条评论区已滚动复核'),
-  L('Aman Nai Lert Bangkok','https://www.xiaohongshu.com/explore/6a23c9b4000000002003954d','图片帖 · 评论区10条已复核')],
+  L('Aman Nai Lert Bangkok','https://www.xiaohongshu.com/explore/6a23c9b4000000002003954d','图片帖 · 评论区10条已复核'),
+  L('Nai Lert Aman✨','https://www.xiaohongshu.com/explore/683b98d7000000002100808f','2025-06-01 · UU_raymond · 2358赞 · 人少/服务周到/泳池小/房价约2W/日'),
+  L('🇹🇭曼谷安缦｜我花3万买了别人三天的注意力','https://www.xiaohongshu.com/explore/6a2d243c000000001e031400','羊妮Persephone · 房价1.5w/晚 · 机场商务车接机/管家主动服务/悬浮森林')],
  'Capella Bangkok':[
   L('曼谷嘉佩乐，是个好酒店，top1给自己招黑了','https://www.xiaohongshu.com/explore/69feb488000000001a02e2eb','正文与18条评论区已复核'),
   L('一言难尽的全球第一酒店曼谷嘉佩乐','https://www.xiaohongshu.com/explore/691044c80000000004002f90','2025-11-09 · 正文与72条评论区已复核')],
  'Four Seasons Bangkok':[
   L('曼谷四季最好订，也最容易订错。','https://www.xiaohongshu.com/explore/6a7c5dac000000002500442c','重点核对同城两家四季的订错风险'),
-  L('曼谷四季 & 嘉佩乐 各有所长','https://www.xiaohongshu.com/explore/693c2b32000000001e038a45','2025-12-12 · 正文与评论区已复核')],
+  L('曼谷四季 & 嘉佩乐 各有所长','https://www.xiaohongshu.com/explore/693c2b32000000001e038a45','2025-12-12 · 正文与评论区已复核'),
+  L('四季酒店毛巾上甚至绣了我的名字缩写？','https://www.xiaohongshu.com/explore/6a1d9a560000000008000321','熊小默 · 毛巾绣名缩写/泳池尊美/折动物园服务'),
+  L('曼谷 Four Seasons room tour','https://www.xiaohongshu.com/explore/6930ed97000000001e028073','静静 · 2025-12-04 · 4000多一晚/泳池比嘉佩乐好看/23年惊艳24年回访一般'),
+  L('泰国人是你能用钱买到的最好的服务者','https://www.xiaohongshu.com/explore/6a0935420000000037034bb6','四百击 · 服务顶级分寸感/无智能马桶硬件可拔草/多住几天才出精髓')],
  '曼谷文华东方':[
   L('每当我对文华东方失去耐心之后……','https://www.xiaohongshu.com/explore/69bac668000000001a02fb8e','正文与85条评论区已复核'),
-  L('曼谷文华东方，略失望。','https://www.xiaohongshu.com/explore/68e35ff60000000003021a63','2025-10-07 · 负面体验样本')],
+  L('曼谷文华东方，略失望。','https://www.xiaohongshu.com/explore/68e35ff60000000003021a63','2025-10-07 · 负面体验样本'),
+  L('曼谷｜文华东方，好的酒店是旅行的目的地','https://www.xiaohongshu.com/explore/6a2b871c0000000017028328','将和也ken · 1062赞 · 河景房日落阳台/Authors\' Lounge下午茶/接驳船去Icon Siam'),
+  L('曼谷文华东方让人不禁感慨有钱真好','https://www.xiaohongshu.com/explore/6aa6b01100000000260218b2','kuno · 2026-09-21 · 150周年/2m泳池/柚木健身房/小船看落日/住3付2约2k/晚/外面像贫民窟/房间老化')],
  'The Siam':[
   L('The Siam｜绝美，但不会再住了','https://www.xiaohongshu.com/explore/68e3700e0000000004015b56','2025-10-06 · 正文与评论区已复核'),
   L('曼谷The Siam｜住进《博物馆奇妙夜》','https://www.xiaohongshu.com/explore/6a7479a60000000026037c20','设计与古董收藏体验帖'),
@@ -76,10 +83,17 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('曼谷乍都乍市集案','https://www.xiaohongshu.com/explore/68878001000000002500db30','2025-07-28安全事件记录')],
  '大皇宫 & 玉佛寺':[
   L('曼谷一日游｜玉佛寺→大皇宫→卧佛寺→郑王庙','https://www.xiaohongshu.com/explore/6a060a490000000008030a64','动线、门票与着装评论已复核'),
-  L('9.11实拍曼谷大皇宫+玉佛寺｜保姆级避坑攻略','https://www.xiaohongshu.com/explore/6aa3d378000000000d026d7e','2026-09-11实拍信息')],
+  L('9.11实拍曼谷大皇宫+玉佛寺｜保姆级避坑攻略','https://www.xiaohongshu.com/explore/6aa3d378000000000d026d7e','2026-09-11实拍信息'),
+  L('关于大皇宫里面的一些骗局提示‼️','https://www.xiaohongshu.com/explore/6a5f18090000000001002571','美好的辣🌱 · 2026-09-28深读 · 皇宫关闭/冰沙800铢/坐船1000铢骗局/免费摆渡车'),
+  L('曼谷大皇宫🇹🇭','https://www.xiaohongshu.com/explore/6a3a746b00000000110137ea','zhazhahong · 2026-09-28深读 · 孔剧13:00/14:30/16:00/沙龙租50铢/殿内禁拍')],
  '卧佛寺 Wat Pho':[
   L('曼谷一日游｜玉佛寺→大皇宫→卧佛寺→郑王庙','https://www.xiaohongshu.com/explore/6a060a490000000008030a64','动线、300泰铢门票与评论已复核'),
-  L('9.11实拍曼谷大皇宫+玉佛寺｜保姆级避坑攻略','https://www.xiaohongshu.com/explore/6aa3d378000000000d026d7e','同日王城线路参照')],
+  L('9.11实拍曼谷大皇宫+玉佛寺｜保姆级避坑攻略','https://www.xiaohongshu.com/explore/6aa3d378000000000d026d7e','同日王城线路参照'),
+  L('关于大皇宫里面的一些骗局提示‼️','https://www.xiaohongshu.com/explore/6a5f18090000000001002571','美好的辣🌱 · 2026-09-28深读 · 108功德钵/Tha Tien码头5.5铢船到郑王庙/卧佛寺周边骗局')],
+ 'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店':[
+  L('曼谷豪华精选｜好喜欢这种隐在都市的松弛感','https://www.xiaohongshu.com/explore/68e5d04a0000000003039a8a','风先森 · 2025-10-16 · 老钱风+空中花园/泳池边坐姿机位'),
+  L('🇹🇭曼谷雅典娜豪华精选｜细节至上','https://www.xiaohongshu.com/explore/6809a4ed000000001c00a40b','Miles · 2025-04-24 · BTS步行5分钟/住三付二约1300-1400/行政酒廊/芒果糯米饭'),
+  L('避雷 曼谷雅典娜豪华精选酒店','https://www.xiaohongshu.com/explore/699727ba000000001b01cc10','Ecstasy · 避雷 · 4点无法入住/补房卡傲慢/卫生差/泳池塑料草坪')],
  '郑王庙 Wat Arun':[
   L('郑王庙机位&湄南河游船攻略','https://www.xiaohongshu.com/explore/69415501000000001e025900','机位、船价与末班时间评论已复核'),
   L('在曼谷花得最值的8元游船','https://www.xiaohongshu.com/explore/69bf6e9b000000002102cc76','蓝调时刻与座位建议')],
@@ -361,10 +375,10 @@ const S=(verdict:XhsAssessment['verdict'],recommend:number,caution:number,avoid:
 
 /** Counts are a transparent coding of the linked strict-review samples, not platform-wide ratings. */
 export const xhsAssessments:Record<string,XhsAssessment>={
- 'Aman Nai Lert Bangkok':S('推荐',2,0,0,'新开业阶段的设计、私密感和服务体验获得明确好评。','价格约¥13,000/晚；新酒店长期稳定性仍需观察。'),
+ 'Aman Nai Lert Bangkok':S('推荐',4,0,0,'新开业阶段的设计、私密感和服务体验获得明确好评；2026-09-28第10轮2篇专帖深读：商务车接机（冰水+青柠薄荷水）、管家主动服务、staff主动避让、"悬浮在曼谷市中心的森林"。','房价约1.5–2万/晚；泳池小；新酒店长期稳定性仍需观察。研究更新：2026-09-28。'),
  'Capella Bangkok':S('谨慎选择',1,0,1,'河畔体验与酒店本身获认可。','“全球第一”抬高预期；有前台推销升级与体验落差反馈。'),
- 'Four Seasons Bangkok':S('推荐',1,1,0,'河畔城市度假体验稳定，适合把泳池与观光结合。','曼谷有同名住宿，务必确认是湄南河畔酒店。'),
- '曼谷文华东方':S('谨慎选择',1,0,1,'150年历史、河畔氛围和品牌情怀突出。','硬件年代感与服务落差评价并存，先确认翻新房型。'),
+ 'Four Seasons Bangkok':S('推荐',4,1,0,'河畔城市度假体验稳定，适合把泳池与观光结合；2026-09-28第11轮3篇专帖深读：服务顶级分寸感、泳池尊美（比嘉佩乐好看）、毛巾绣名缩写细节。','房间无智能马桶（只看硬件可拔草）；曼谷有同名住宿，务必确认是湄南河畔酒店。研究更新：2026-09-28。'),
+ '曼谷文华东方':S('谨慎选择',4,0,1,'150年历史（2026年150周年）、河畔氛围和品牌情怀突出；2026-09-28第11轮3篇专帖深读：Authors\' Lounge下午茶、接驳船去Icon Siam、2m泳池/柚木健身房/专属小船看落日、早餐香槟、spa+bamboo bar"老钱感"；住3付2约2k/晚。','酒店外面像贫民窟/垃圾场"参差"；房间老化、卫生不达标反馈；"全球第一"头衔争议；硬件年代感与服务落差评价并存，先确认翻新房型。研究更新：2026-09-28。'),
  'The Siam':S('谨慎选择',1,0,1,'Bill Bensley设计、古董收藏和博物馆感独一无二。','位置远且无BTS，密集市中心行程会被交通拖累。'),
  'Sorn':S('推荐',2,0,0,'泰南菜体验和前菜、甜点获得两篇正面反馈。','极难订、7,800 THB/位另加税服，酒单评价一般。'),
  'Sühring':S('谨慎选择',1,0,1,'现代德国菜与升三星后的完整体验有强支持。','升三星后也有“份量小、表现下滑”的强烈负评。'),
@@ -378,8 +392,8 @@ export const xhsAssessments:Record<string,XhsAssessment>={
  'Thipsamai':S('推荐',1,0,1,'鬼门原店被视为经典炒河粉打卡点。','ICONSIAM分店有偏甜和“拔草”反馈，别混用两店口碑。'),
  '耀华力夜市 / T&K':S('谨慎选择',0,1,1,'适合放进唐人街扫街路线体验氛围。','炸鸡过咸、咖喱蟹与炸鱿鱼有明确负评，不作正式大餐。'),
  'Or Tor Kor Market':S('谨慎选择',1,1,0,'农产品和熟食质量、市场环境获高赞。','价格高；2025-07-28曾发生严重安全事件，白天去并保持警觉。'),
- '大皇宫 & 玉佛寺':S('推荐',2,0,0,'同一园区、建筑震撼，且可顺路串联卧佛寺。','8:30到避团客；严格遮肩盖膝，现场规则优先。'),
- '卧佛寺 Wat Pho':S('推荐',2,0,0,'46米卧佛与传统按摩可和大皇宫顺路组合。','门票样本为300 THB；按摩另留排队时间。'),
+ '大皇宫 & 玉佛寺':S('推荐',4,0,0,'同一园区、建筑震撼，且可顺路串联卧佛寺；2026-09-28第12轮3篇专帖深读：联票可在两处往返两次、孔剧13:00/14:30/16:00、沙龙租50铢。','8:30到避团客；严格遮肩盖膝，现场规则优先；谨防皇宫关闭/冰沙变价/坐船1000铢搭讪骗局。研究更新：2026-09-28。'),
+ '卧佛寺 Wat Pho':S('推荐',4,0,0,'46米卧佛与传统按摩可和大皇宫顺路组合；2026-09-28第12轮3篇专帖深读：108个功德钵投币祈福有仪式感、Tha Tien码头5.5铢船到郑王庙。','门票样本为300 THB；卧佛寺周边也有搭讪骗局；按摩另留排队时间。研究更新：2026-09-28。'),
  '郑王庙 Wat Arun':S('推荐',2,0,0,'白瓷佛塔、河岸日落和对岸机位获得一致推荐。','台阶陡；闭园和末班船时间需当天复核。'),
  '湄南河游船':S('推荐',2,0,0,'30–40 THB公共船即可获得高性价比蓝调时刻体验。','末班约18:40；双层船座位和天气会影响体验。'),
  '恰图恰周末市场':S('推荐',2,0,0,'规模、手工艺和分区丰富，周末值得专门安排。','门口面馆有找零争议；只在周末完整营业，价格可比较。'),
@@ -398,7 +412,9 @@ export const xhsAssessments:Record<string,XhsAssessment>={
  'Banyan Tree Phuket':S('推荐',2,1,0,'世界首家悦榕庄，乐古浪环礁湖全独栋别墅、每天一次免费SPA，氛围感和服务双天花板；私泳池＋露天浴缸私密性一绝。','雨林环绕蚊虫多（驱蚊备齐）、房间偏旧、Rava海滩俱乐部餐食性价比低。研究更新：2026-09-28。'),
  'JW Marriott Phuket Resort & Spa 普吉JW万豪':S('推荐',2,1,0,'Mai Khao海滩、隔壁海龟村步行可达；公区与儿童友好度受好评，淡季万豪系高性价比。','位置偏远（离热门区域约1.5小时车程）；早餐一般、一楼房潮湿争议、当心听课房/度假会电话推销套餐条款。研究更新：2026-09-28。'),
  'The Surin Phuket':S('推荐',2,1,0,'与Amanpuri共享Pansea私密沙滩，109栋独立小木屋私密性佳；餐饮获赞（打抛猪要"local spicy"、mango chia bowl必点）。','阶梯多坡陡、住山坡房务必叫buggy；六边形泳池1.2米浅游不畅快；人均约1000+人民币/晚。研究更新：2026-09-28。'),
- 'Keemala':S('谨慎选择',1,1,1,'凯悦系、米其林星钥二星，鸟巢别墅旋转楼梯经典机位，猎奇感足。','连住两晚会腻（一晚足矣）、木屋顶暴雨夜如交响乐；无海、交通不便、私泳池卫生争议；凯悦会员无待遇；约5000元/晚。不带娃、不待酒店纯躺才建议。研究更新：2026-09-28。')
+ 'Keemala':S('谨慎选择',1,1,1,'凯悦系、米其林星钥二星，鸟巢别墅旋转楼梯经典机位，猎奇感足。','连住两晚会腻（一晚足矣）、木屋顶暴雨夜如交响乐；无海、交通不便、私泳池卫生争议；凯悦会员无待遇；约5000元/晚。不带娃、不待酒店纯躺才建议。研究更新：2026-09-28。'),
+ /* bangkok：第 13 轮（2026-09-28，老窗口只读，3 篇专帖深读 →done），结论已搬上站 */
+ 'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店':S('谨慎选择',2,0,1,'服务细节与性价比获推荐：BTS步行5分钟、STARS住三付二约1300-1400/晚、行政酒廊全天候点心+调酒、芒果糯米饭推荐。','另有无法按时入住、前台补房卡傲慢与卫生差的避雷帖；泳池铺塑料草坪；服务稳定性存疑。研究更新：2026-09-28。')
 };
 
 Object.assign(xhsEvidence,extraXhsEvidence);
