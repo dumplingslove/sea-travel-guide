@@ -6,7 +6,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "星星海滩": [
     { name:"白沙全景（牛奶沙滩）", where:"沙滩中段，站在沙滩中部面向大海，把两侧的棕榈树当框景收进画面。", how:"上午光线柔和、人也最少，沙子最白；退潮时近岸露出大片浅滩，往水里走几步回拍沙滩，层次更丰富。", sampleIndex:2, sampleCaption:"星星海滩白沙与渐变色海水" },
-    { name:"沙滩秋千人像", where:"沙滩中段营业区的秋千（付费项目），让人坐在秋千上，摄影师站在秋千侧前方约3米、面向大海方向拍。", how:"傍晚前侧逆光，人物头发有金边；手机用人像模式，秋千绳索当前景引导线，背景是海就赢了。", sampleIndex:5, sampleCaption:"游客坐在棕榈秋千上，面朝星星海滩的大海" },
+    { name:"沙滩秋千人像", where:"沙滩中段营业区的秋千（付费项目），让人坐在秋千上，摄影师站在秋千侧前方约3米、面向大海方向拍。", how:"傍晚前侧逆光，人物头发有金边；手机用人像模式，秋千绳索当前景引导线，背景是海就赢了。", sampleIndex:3, sampleCaption:"斜棕榈秋千与日落海面（图为秋千空景，坐上即可拍人像）" },
     { name:"棕榈树框景", where:"沙滩椰林、棕榈树下，蹲低把棕榈树当顶部框景，面向大海。", how:"顺光拍，棕榈配乳白沙滩和湛蓝海水最梦幻；超广角把树冠收全，人小景大。", sampleIndex:1, sampleCaption:"倾斜棕榈框住白沙滩与渐变色海水" },
   ],
   "Khem Beach": [
@@ -21,7 +21,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "VinWonders": [
     { name:"粉红城堡必拍", where:"欧洲街道区：穿过入口有雨遮的长廊走到街道尽头，站在城堡前广场，面向粉红城堡。", how:"城堡各个角度无死角；上午人少好取空景；傍晚闭园秀 Once Show（约18:30）在城堡前广场上演，提前20分钟卡中央位置。", sampleIndex:1, sampleCaption:"城堡前广场正对彩色城堡，摩天轮在城堡后方天空" },
-    { name:"海龟水族馆 Sea Shell", where:"海龟造型建筑 The Sea Shell 正前方广场，低角度把整只“海龟”框进去；馆内有超大水族箱和多条海底隧道。", how:"美人鱼表演每天固定时段（约11:00、14:00），以官网为准提前卡位；馆内全区有冷气，正午可进来躲热、慢慢逛。", sampleIndex:5, sampleCaption:"海龟造型水族馆 The Sea Shell 在日落下全景" },
+    { name:"海龟水族馆 Sea Shell", where:"海龟造型建筑 The Sea Shell 正前方广场，低角度把整只“海龟”框进去；馆内有超大水族箱和多条海底隧道。", how:"美人鱼表演每天固定时段（约11:00、14:00），以官网为准提前卡位；馆内全区有冷气，正午可进来躲热、慢慢逛。", sampleIndex:0, sampleCaption:"海龟造型水族馆 The Sea Shell（图中左侧白色建筑，航拍视角）" },
     { name:"摩天轮俯瞰", where:"冒险世界与水族馆交界处的 Wheel of Time 摩天轮（约120米高），升到制高点俯瞰整个乐园与海龟水族馆。", how:"日落前后搭乘，拍乐园全景与远海；车厢有空调但四面玻璃晒，怕热选傍晚场次。" },
   ],
   "Vinpearl Safari": [
@@ -31,7 +31,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "Dinh Cau 岩": [
     { name:"礁石日落剪影", where:"阳东镇附近的 Dinh Cau 海滩，站在沙滩上，面向正西，把礁石上的庙宇框进画面。", how:"日落前15–30分钟到，把天空变色的全过程拍下来；手机点测光对准天空压暗前景，剪影更干净。", sampleIndex:0, sampleCaption:"Dinh Cau礁石上的庙宇与灯塔" },
-    { name:"沿石阶登庙宇看全景", where:"沿石阶登上礁石上的 Dinh Cau 庙，站在庙前平台，面向海面拍全景；也可以回到下方海滩听浪收尾。", how:"傍晚光线柔和、人相对少；这是当地渔民祈求平安的庙宇，保持安静、着装得体。", sampleIndex:5, sampleCaption:"石阶通向礁石上的 Dinh Cau 庙，庙门与牌坊清晰可见" },
+    { name:"沿石阶登庙宇看全景", where:"沿石阶登上礁石上的 Dinh Cau 庙，站在庙前平台，面向海面拍全景；也可以回到下方海滩听浪收尾。", how:"傍晚光线柔和、人相对少；这是当地渔民祈求平安的庙宇，保持安静、着装得体。", sampleIndex:1, sampleCaption:"石阶通向礁石上的 Dinh Cau 庙，庙门与牌坊清晰可见" },
   ],
   "Ham Ninh 渔村": [
     { name:"长堤与彩色渔船", where:"走到渔村长堤（木栈桥）尽头再回头，面向渔村方向，把彩色渔船群和长堤框在一起。", how:"上午渔船活动多、画面最热闹；长堤全程无遮阴，防晒做足，避开正午顶光。", sampleIndex:4, sampleCaption:"Ham Ninh混凝土码头与彩色渔船群" },
@@ -40,13 +40,13 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "富国岛夜市": [
     { name:"入口霓虹与灯笼街", where:"夜市主入口，站在拱门正前方约5米，面向拱门，把霓虹字和红灯笼街一起框进去。", how:"天刚黑时霓虹最亮、天空还有层次；手机夜景模式，手稳别晃。", sampleIndex:1, sampleCaption:"富国岛夜市入口霓虹拱门与红灯笼街景" },
-    { name:"小吃街人流", where:"小吃街中段，找个台阶高处，面向街道俯拍人流和灯牌。", how:"入夜后人最多；夜景模式拍两张就收，别举太高挡着摊主做生意。", sampleIndex:5, sampleCaption:"夜市灯笼拱门下，游客在小吃街中穿行" },
+    { name:"小吃街人流", where:"小吃街中段，找个台阶高处，面向街道俯拍人流和灯牌。", how:"入夜后人最多；夜景模式拍两张就收，别举太高挡着摊主做生意。", sampleIndex:4, sampleCaption:"夜市灯笼拱门下，游客在小吃街中穿行" },
     { name:"烧烤海鲜摊", where:"海鲜烧烤摊前，蹲低贴近摊位，面向炭火和海鲜，蒸汽升腾时连拍。", how:"炭火是天然暖光源，蒸汽加火光最出片；手机镜头先擦干净，油烟容易糊片；称重前先问清价格。", sampleIndex:6, sampleCaption:"海鲜烧烤摊前炭火窜起火焰，生蚝贝类摆满摊位" },
   ],
   "护国寺": [
     { name:"宝塔前倚山面海全景", where:"宝塔前大广场中央台阶上，面向宝塔，把多层宝塔、红瓦大殿和身后大海一起框进去。", how:"上午顺光，宝塔细节和海面都亮；超广角低角度，宝塔冲天、气势最足。", sampleIndex:4, sampleCaption:"护国寺临海多层宝塔、红瓦大殿与巨型佛像" },
     { name:"大殿前俯瞰海面", where:"大雄宝殿前平台栏杆处，背对大殿、面向大海，海天一色。", how:"晴天海最蓝；把手机靠在栏杆上防抖，开延时快门防手抖。", sampleIndex:5, sampleCaption:"从大殿前平台俯瞰，红瓦殿宇与海天一色" },
-    { name:"院中巨型佛像", where:"院中巨型佛像前，站在佛像侧前方，低角度仰拍。", how:"上午侧光，佛像面部最有立体感；这是宗教场所，保持安静、着装得体，别爬上基座。", sampleIndex:6, sampleCaption:"院中白色巨型观音像面朝大海，红瓦殿宇环绕" },
+    { name:"院中巨型佛像", where:"院中巨型佛像前，站在佛像侧前方，低角度仰拍。", how:"上午侧光，佛像面部最有立体感；这是宗教场所，保持安静、着装得体，别爬上基座。", sampleIndex:4, sampleCaption:"院中白色巨型佛像，红瓦殿宇环绕、海在身后（高处视角）" },
   ],
   "富国岛监狱": [
     { name:"铁丝网与瞭望塔", where:"监狱外围，站在铁丝网围栏外，面向木质瞭望塔，把多层铁丝网当前景。", how:"上午顺光，铁丝网的阴影最有质感；转黑白滤镜，更贴合沉重的主题。", sampleIndex:2, sampleCaption:"富国岛监狱多层带刺铁丝网与木质瞭望塔" },
@@ -56,6 +56,6 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   "鱼露工厂与胡椒园": [
     { name:"鱼露大木桶阵列", where:"鱼露工厂参观动线内的桶区，站在木桶阵列一端，面向纵深拍一排大木桶。", how:"桶区多为顶棚散射光，木桶纹理最好看；跟着参观动线走，别乱碰阀门。", sampleIndex:0, sampleCaption:"红色漆木大木桶阵列沿参观动线排开" },
     { name:"胡椒园小径", where:"胡椒园内，站在两排胡椒架之间的小路，面向纵深，绿色胡椒串垂在两侧。", how:"上午光线柔和，胡椒叶最绿；微距拍胡椒串，背景虚化。", sampleIndex:4, sampleCaption:"富国岛胡椒园" },
-    { name:"红土路引导线", where:"园边红土小路，蹲低把红土路当引导线，面向胡椒架。", how:"红土配绿叶色彩对比强；雨后红土路泥泞，穿不怕脏的鞋。", sampleIndex:5, sampleCaption:"胡椒架之间的红土小路向纵深延伸" },
+    { name:"红土路引导线", where:"园边红土小路，蹲低把红土路当引导线，面向胡椒架。", how:"红土配绿叶色彩对比强；雨后红土路泥泞，穿不怕脏的鞋。", sampleIndex:2, sampleCaption:"胡椒架之间的红土小路向纵深延伸（图中农人劳作）" },
   ],
 };
