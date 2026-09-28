@@ -824,17 +824,18 @@ function renderTrip(){
 }
 
 /* ================= 🧭 东南亚城市规划向导 ================= */
-interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string }
+interface WzCityMeta { tagline: string; decNote: string; stayArea: string; staySource: string; recDays: number; recReason: string }
 /* 向导城市池：只含东南亚 7 城。新加坡已在大行程里单独成段（亲子 5 天），不在这里重复选、不重复占天数。 */
 const WZ_ORDER = ["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛"];
 const WZ_META: Record<string, WzCityMeta> = {
- "曼谷":{tagline:"经典推荐：城市层次完整",decNote:"恰图恰只在周末开；周一博物馆闭馆风险；12/5、12/7、12/10、12/31为泰国假日，人多价高",stayArea:"素坤逸商圈（BTS沿线）或暹罗商圈",staySource:"路线帖住宿案例"},
- "清迈":{tagline:"推荐起点：古城＋素贴山",decNote:"周六/周日步行街只在对应日子开；12月旺季大象项目建议提前6–8周订",stayArea:"古城东南（步行可达塔佩门/清迈门）或宁曼路周边",staySource:"路线帖共识"},
- "普吉":{tagline:"核心初识：本岛＋出海",decNote:"出海看海况，建议留1天机动；Lard Yai只在周日；Siam Niramit周二休演",stayArea:"卡塔/卡伦海滩（近码头，方便出海）",staySource:"路线帖共识"},
- "槟城":{tagline:"甜点天数：历史、美食、山景齐",decNote:"12/25圣诞假日人多；升旗山与极乐寺可拼成Air Itam山线一天",stayArea:"乔治市镇中心（交通方便）或巴都丁宜海边",staySource:"路线帖住宿案例"},
- "吉隆坡":{tagline:"核心推荐：市区＋黑风洞",decNote:"双子塔周一闭馆，提前3–4周在线抢票；12/25圣诞",stayArea:"武吉免登（近地铁/Pavilion/阿罗街）或KLCC附近",staySource:"路线帖评论共识"},
- "胡志明市":{tagline:"经典推荐：再加古芝地道",decNote:"12月无全国性公共假日；古芝地道与湄公河三角洲不要塞在同一天",stayArea:"第一郡（独立宫旁，步行可达各景点）",staySource:"路线帖共识"},
- "富国岛":{tagline:"经典推荐：海、陆、夜市齐",decNote:"风浪可能导致出海取消，建议留1天机动；Park Hyatt 2027-03才开业，本次不可选",stayArea:"中央西岸长滩/阳东镇（Dinh Cau日落＋夜市近）",staySource:"路线帖（信息较弱）"}
+ /* recDays/recReason：基于研究数据的推荐天数（精华景点数量×每天3-4个的节奏，结合路线帖共识的"甜点"判断） */
+ "曼谷":{tagline:"经典推荐：城市层次完整",decNote:"恰图恰只在周末开；周一博物馆闭馆风险；12/5、12/7、12/10、12/31为泰国假日，人多价高",stayArea:"素坤逸商圈（BTS沿线）或暹罗商圈",staySource:"路线帖住宿案例",recDays:3,recReason:"9个精华景点，老城+河岸+市场三线全覆盖，3天是经典不赶的节奏"},
+ "清迈":{tagline:"推荐起点：古城＋素贴山",decNote:"周六/周日步行街只在对应日子开；12月旺季大象项目建议提前6–8周订",stayArea:"古城东南（步行可达塔佩门/清迈门）或宁曼路周边",staySource:"路线帖共识",recDays:2,recReason:"古城+素贴山核心2天够，想加市场/手作/烹饪课再+1天"},
+ "普吉":{tagline:"核心初识：本岛＋出海",decNote:"出海看海况，建议留1天机动；Lard Yai只在周日；Siam Niramit周二休演",stayArea:"卡塔/卡伦海滩（近码头，方便出海）",staySource:"路线帖共识",recDays:3,recReason:"本岛+出海+老城三线，3天经典；多1天可做度假留白"},
+ "槟城":{tagline:"甜点天数：历史、美食、山景齐",decNote:"12/25圣诞假日人多；升旗山与极乐寺可拼成Air Itam山线一天",stayArea:"乔治市镇中心（交通方便）或巴都丁宜海边",staySource:"路线帖住宿案例",recDays:3,recReason:"乔治市+升旗山+娘惹线，3天是公认的甜点天数"},
+ "吉隆坡":{tagline:"核心推荐：市区＋黑风洞",decNote:"双子塔周一闭馆，提前3–4周在线抢票；12/25圣诞",stayArea:"武吉免登（近地铁/Pavilion/阿罗街）或KLCC附近",staySource:"路线帖评论共识",recDays:2,recReason:"市区+黑风洞2天核心，想加文化深度/近郊再+1天"},
+ "胡志明市":{tagline:"经典推荐：再加古芝地道",decNote:"12月无全国性公共假日；古芝地道与湄公河三角洲不要塞在同一天",stayArea:"第一郡（独立宫旁，步行可达各景点）",staySource:"路线帖共识",recDays:3,recReason:"一区核心2天+古芝地道1天，3天经典；湄公河三角洲需再+1天"},
+ "富国岛":{tagline:"经典推荐：海、陆、夜市齐",decNote:"风浪可能导致出海取消，建议留1天机动；Park Hyatt 2027-03才开业，本次不可选",stayArea:"中央西岸长滩/阳东镇（Dinh Cau日落＋夜市近）",staySource:"路线帖（信息较弱）",recDays:3,recReason:"海+陆+夜市三线，3天经典；想加主题乐园/北岛再+1天"}
 };
 /* 2026-09-27 用户明确：查机票一律用 Google Flights，不再使用 Duffel。
    此处 2026-09-14/15 的 7 条 Duffel 历史直飞/价格已删除；精确日期的实查数据改由
@@ -978,9 +979,14 @@ function wzStep2(){
   const atCap=total>=seaBudget;
   const rows=wz.order.filter(c=>wz.cities.includes(c)).map(city=>{
     const d=wz.days[city]||1, route=classicRoutes[city], verdict=d<=5?route.verdicts[d-1]:"深度版＋留白", cov=classicCoverage(city,Math.min(d,5));
+    const meta=WZ_META[city];
+    /* 2026-09-28 用户要求：推荐天数基于研究数据明示，一键应用；自动生成的逐日详细 tour 换成城市景点列表链接 */
+    const recLine=meta?`<div class="micro wz-rec">💡 推荐 <b>${meta.recDays} 天</b>：${esc(meta.recReason)}${d!==meta.recDays?` <button class="link-btn" data-wzrec="${city}">一键设为 ${meta.recDays} 天</button>`:` <span class="micro">✓ 已是推荐天数</span>`}</div>`:"";
+    const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research" target="_blank" rel="noopener">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
     return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
+      ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
-      <details class="wz-cov wz-cov-inline"><summary>看 ${d} 天逐日主题</summary><div>${wzCovRow(city,d)}</div></details></div>
+      ${attrLink}</div>
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天"${atCap?" disabled title=\"已达大行程天数上限\"":""}>＋</button></div></div>`;
   }).join("");
   return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
@@ -1105,6 +1111,11 @@ function wzWire(){
     /* 硬约束：已达大行程上限时 ＋ 不再生效（按钮本身已 disabled，这里防极端情况） */
     if(dd>0&&wzOrderTotal()>=(tripDays["couple"]||0)){ toast("已达大行程「夫妻东南亚」的天数上限",true); return; }
     wz.days[city]=Math.min(6,Math.max(1,(wz.days[city]||1)+dd)); wzRender() });
+  /* 2026-09-28：一键应用推荐天数（需检查大行程上限） */
+  S.querySelectorAll("[data-wzrec]").forEach(b=>(b as HTMLElement).onclick=(e)=>{ e.stopPropagation(); const city=(b as HTMLElement).dataset.wzrec||""; const rec=WZ_META[city]?.recDays; if(!rec) return;
+    const cur=wz.days[city]||1, diff=rec-cur, budget=tripDays["couple"]||0;
+    if(diff>0&&wzOrderTotal()+diff>budget){ toast(`设为 ${rec} 天会超出大行程「夫妻东南亚」的 ${budget} 天上限，先去大行程加天数或从别的城减`,true); return; }
+    wz.days[city]=rec; wzRender(); toast(`${city}已设为推荐的 ${rec} 天`); });
   S.querySelectorAll("[data-wzup]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const city=arr[i]; arr[i]=arr[i-1]; arr[i-1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
   S.querySelectorAll("[data-wzdown]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzdown), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const city=arr[i]; arr[i]=arr[i+1]; arr[i+1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } wzRender() });
   S.querySelectorAll("[data-wzmode]").forEach(s=>((s as HTMLSelectElement).onchange=(e)=>{ wz.modes[(s as HTMLElement).dataset.wzmode||""]=(e.target as HTMLSelectElement).value }));

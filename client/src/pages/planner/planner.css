@@ -544,3 +544,12 @@ h4{font-size:16px;margin:0;font-weight:700}
 .tfi-nonstop{font-size:11px;font-weight:700;color:#fff;background:#0284c7;border-radius:var(--r-badge);padding:2px 8px;white-space:nowrap}
 .tfi-note{font-size:13px;color:var(--ink);line-height:1.65;margin:8px 0 0}
 .tfi-src{font-size:11px;color:var(--muted);margin-top:8px}
+
+/* 2026-09-28：推荐天数 + 景点列表链接（替换自动生成的逐日 tour） */
+.wz-rec{margin-top:6px;padding:6px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:13px}
+.wz-rec b{color:#b45309}
+.wz-attrlink{margin-top:8px;font-size:13px}
+.wz-attrlink a{color:var(--teal-dark);font-weight:700;text-decoration:none}
+.wz-attrlink a:hover{text-decoration:underline}
+.link-btn{background:none;border:none;color:var(--teal-dark);font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0}
+.link-btn:hover{color:var(--teal)}
