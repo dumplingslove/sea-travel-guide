@@ -63,9 +63,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "partial",
-       "posts": 2,
+       "posts": 4,
        "target": 3,
-       "note": "新标准：第10轮2026-09-28 06:28Z审计——艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/268评论，避雷向视频，评论区为主要信息源)/RKDooooo《曼谷嘉佩乐 Stella🦚》(417赞/19评论)达标；急速菜菜(66赞/1评论)未达标。旧口径基线5帖流量未知不计入新标准。还差1篇高流量帖，已回队列待补。人像机位候选：Stella白孔雀酒吧（正文明确\"适合女生去打卡拍照\"，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。"
+       "note": "新标准：第10轮2026-09-28 06:28Z审计——艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/268评论，避雷向视频，评论区为主要信息源)/RKDooooo《曼谷嘉佩乐 Stella🦚》(417赞/19评论)达标；急速菜菜(66赞/1评论)未达标。旧口径基线5帖流量未知不计入新标准。还差1篇高流量帖，已回队列待补。人像机位候选：Stella白孔雀酒吧（正文明确\"适合女生去打卡拍照\"，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。 | 2026-09-28 第17轮+2篇（419赞推荐/1746赞避雷视频），第3篇候选打不开，不死磕"
       }
      },
      "type": "酒店"
@@ -506,9 +506,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "partial",
-       "posts": 1,
+       "posts": 4,
        "target": 3,
-       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第11轮2026-09-28 06:42Z审计——仅戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》(114赞/12评论/13图本轮逐张翻验补完)达相对高流量（该话题XHS专帖最高）；FoodieLouis(10赞/2评论)、走路带风的王同学(2赞/2评论，负向heritage套餐9886.8泰铢实测)流量不足，未计入达标但记入证据。旧口径4帖中另3帖（周半半/祛魅避雷、themaxxtl/踩雷、1基线）按旧实质评论标准计入，流量均低，不计入新标准。结论：话题流量封顶（专帖除戴踏踏外均≤12赞），3帖高流量标准在此话题下不可达，建议后续轮次不再重复投入。证据：xhs-coverage-bangkok.md 第11轮记录。"
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第11轮2026-09-28 06:42Z审计——仅戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》(114赞/12评论/13图本轮逐张翻验补完)达相对高流量（该话题XHS专帖最高）；FoodieLouis(10赞/2评论)、走路带风的王同学(2赞/2评论，负向heritage套餐9886.8泰铢实测)流量不足，未计入达标但记入证据。旧口径4帖中另3帖（周半半/祛魅避雷、themaxxtl/踩雷、1基线）按旧实质评论标准计入，流量均低，不计入新标准。结论：话题流量封顶（专帖除戴踏踏外均≤12赞），3帖高流量标准在此话题下不可达，建议后续轮次不再重复投入。证据：xhs-coverage-bangkok.md 第11轮记录。 | 2026-09-28 第18轮+3篇（114赞推荐/2篇避雷）"
       }
      },
      "type": "餐厅"
@@ -608,9 +608,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "partial",
-       "posts": 1,
+       "posts": 3,
        "target": 3,
-       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第12轮2026-09-28 06:56Z——红豆菠萝包《打卡了曼谷唐人街超🔥的 T&K seafood》(72赞/3评论，话题最高流量，正文+5图翻验)达标；Smaller(3赞)/潘潘(2赞)流量过低不计入。旧口径基线5帖无流量明细不计入新标准。话题专帖流量封顶（最高72赞），3帖标准不可达，已移队列队尾低优先级。证据：xhs-coverage-bangkok.md 第12轮记录。"
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第12轮2026-09-28 06:56Z——红豆菠萝包《打卡了曼谷唐人街超🔥的 T&K seafood》(72赞/3评论，话题最高流量，正文+5图翻验)达标；Smaller(3赞)/潘潘(2赞)流量过低不计入。旧口径基线5帖无流量明细不计入新标准。话题专帖流量封顶（最高72赞），3帖标准不可达，已移队列队尾低优先级。证据：xhs-coverage-bangkok.md 第12轮记录。 | 2026-09-28 第19轮+2篇（73赞推荐/避雷），第3篇候选打不开"
       }
      },
      "type": "餐厅"
@@ -914,9 +914,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "partial",
-       "posts": 2,
+       "posts": 5,
        "target": 3,
-       "note": "新标准：第12轮2026-09-28 06:56Z——悦游CNTraveler《@王彦桐 曼谷第一站》(1590赞/159评论，杂志街拍)/谁动了我的雪球啊~《夜色中的曼谷唐人街》(675赞/39评论，美食+拍照点位)达标；泰好吃啦(937赞视频帖，无静态图可翻验)未达图片标准。还差1篇，已回队列。人像机位候选3组：西瓜美乐蒂4机位（招牌路口/灯笼长廊/小吃摊/天桥俯拍）、悦游骑楼饼铺红门、雪球主街霓虹夜景（均已登记，图片待下载）。证据：xhs-coverage-bangkok.md 第12轮记录。"
+       "note": "新标准：第12轮2026-09-28 06:56Z——悦游CNTraveler《@王彦桐 曼谷第一站》(1590赞/159评论，杂志街拍)/谁动了我的雪球啊~《夜色中的曼谷唐人街》(675赞/39评论，美食+拍照点位)达标；泰好吃啦(937赞视频帖，无静态图可翻验)未达图片标准。还差1篇，已回队列。人像机位候选3组：西瓜美乐蒂4机位（招牌路口/灯笼长廊/小吃摊/天桥俯拍）、悦游骑楼饼铺红门、雪球主街霓虹夜景（均已登记，图片待下载）。证据：xhs-coverage-bangkok.md 第12轮记录。 | 2026-09-28 第18轮+3篇（1590赞/937赞/675赞，均为高流量推荐）"
       }
      },
      "type": "景点"
@@ -1250,8 +1250,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
-       "note": "2026-09-22 17:52 PDT / 2026-09-23 00:52 UTC xhs-continuous-search轮（新3帖高流量标准）：干净轮次无熔断（22:07Z硬熔断已恢复；健康检查：已登录\"🎈菜小盒\"，首页信息流正常，无扫码墙/滑块/操作频繁/空白页/图片黑块；全程只读，未点\"最热\"排序，全程默认排序）。8组关键词轮换搜索（清迈香格里拉/住宿体验/Shangri-La Chiang Mai/豪华阁/亲子/度假/泳池/真实入住）+各结果页滚动加载更多，人类节奏；规律确认：独立住宿专帖点赞普遍<100（偶见100–300），从未出现万赞/数千赞量级，1000+赞结果均为综合攻略/云南香格里拉（错地）/排行帖/合集帖；剔除14篇高赞/易混帖（合集红黑榜、求助选酒店帖、错店错地、餐饮向、营销号等，不再重复打开）；主题相关低流量候选（79赞两次入住等）未深读、留待后续参考。新增高流量计入0；结论：本轮覆盖范围内新增高流量帖基本枯竭，建议后续轮次等待新帖产生再搜，或用户裁决用现有9篇收尾。仍 partial（高流量0/3，旧口径9/10）。 2026-09-22 15:07 PDT / 22:07 UTC xhs-continuous-search轮（新3帖高流量标准）：硬熔断（滑块安全验证）——点击搜索结果页'最热'排序标签后弹出安全验证浮层，按硬约束立即停止（未重试/刷新/换窗口/探针/尝试拖动滑块）；教训：勿再点'最热'排序切换，下轮控制搜索节奏。0篇计入，仍 partial（高流量0/3）；深读2篇剔除2（佳佳蹦咔咔3.3万赞宁曼路他家视频帖；Turbo_xin香格里拉一生拉黑仅6赞低流量未达标）；已计入9篇中6篇搜索卡片点赞核验均<20赞，无一篇达高流量。缺口3篇高流量住宿专帖。 2026-09-22 13:18 PDT轮（新3帖标准）：0/3——8组关键词轮换/14次打开逐项核验，千赞以上新候选均为错地/错店/主题不符，主题相关新帖均为低流量；旧口径9篇严格实读（推荐7/中立2，逐张图片核验）保留在证据文件；建议后续轮次换长尾关键词或等新帖产生后再搜。",
-       "posts": 0,
+       "note": "2026-09-28 第16轮+3篇（105赞亲子推荐/6赞避雷/27赞洲际对比）",
+       "posts": 3,
        "status": "partial",
        "target": 3,
        "verified_at": "2026-09-23T00:52:00Z"
@@ -1363,7 +1363,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。；2026-09-24T02:18Z主会话定时轮xhs-continuous-search授权重试轮（19:49Z滑块硬熔断后、用户30分钟无回复按3.5步协议触发）干净完成无熔断：健康检查通过（18:53–18:56 PDT，菜小盒已登录、首页信息流正常）；滑块熔断解除，consecutive_fuse_count清零；全程只读。item07三组搜索pass（Khao Soi Khun Yai翻2页约50卡片/SP Chicken翻2页约30卡片/清迈米其林烤鸡翻1页约28卡片），8篇深读全剔除（hh bean Maesai陷阱/阿K哥68d4ebc1零评论/小肠儿泡奶Nimman陷阱/mika错主题/Sa💗697428c2 SP实锤零评论/清迈直人6a6f4c17 SP实锤零评论/半透明Translucent店名未实锤仅3条评论/Patrick错店）；新增计入0，累计新3帖标准仍0/3（高流量头部位被陷阱店/合集帖挤占，真货专帖均零评论）。【2026-09-24T08:52Z hourly更新】主会话xhs-continuous-search三轮结论：①09-23 19:36–19:49Z硬熔断终止（滑块验证码；登录态健康检查时正常，未确认丢失），item07本轮0计入（熙熙在迈村/强华两候选均缺实质评论证据，主agent 12:56 PDT裁决纠正worker原报2/3→0/3；特例额度已满不再新增特例）；②09-24 01:53–02:18Z授权重试轮（用户30分钟无回复触发，健康检查通过、熔断解除consecutive清零）干净完成，8深读全剔除（Maesai/Nimman陷阱店4、零评论3、主题不符1），0计入，仍0/3——原因：陷阱店挤占头部、Khun Yai/SP Chicken真货专帖池枯竭（实锤店名2篇均零评论；店名未实锤1篇仅3条评论）；③熔断机制新发现：不带xsec_token的直接URL粘贴会404（error_code=300031，token缺失非删帖），须经站内搜索点入。累计新3帖标准0/3，仍partial（posts=5为旧10帖口径存量，按Capella先例暂留，主agent逐项转换裁决）。",
+       "note": "2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -1398,8 +1398,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item08-kitipanit-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:00Z）：partial 2/10，缺8篇；本轮详情页实读7帖，最后3候选全部剔除（热浪帖图片4-9技术阻塞暂不计入）",
-       "posts": 2,
+       "note": "2026-09-28 第16轮+3篇（2赞中立/28赞中立/2赞偏负）；专帖整体低赞，最高28赞",
+       "posts": 5,
        "status": "partial",
        "target": 10
       }
@@ -1433,8 +1433,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item09-huenphen-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:09Z）：partial 3/10，缺7篇；新关键词组合未发现新候选，本轮浏览约30+搜索卡片、详情页实读5帖，新增可计入0篇；2026-09-26 16:12 PDT轮：关键词\"清迈 Huen Phen餐厅\"翻3页，0篇达标——头部216赞专帖（iibexc）正文核验为另一家餐厅HEUANNAOW已排除，其余专属帖≤106赞且相关性不足；候选池枯竭，维持3/10（证据见xhs-coverage-chiangmai.md）",
-       "posts": 3,
+       "note": "2026-09-28 第15轮+3篇（107赞合集/6赞专帖/10赞视频）；专帖候选池枯竭，217赞系Baan Landai已排除",
+       "posts": 6,
        "status": "partial",
        "target": 10
       }
@@ -1468,8 +1468,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item10-khaokhamoo-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:19Z）：partial 8/10，缺2篇；可计入8篇（正文全文+实质评论+图片逐张翻完+明确年份）；特例2/2已满；详情页完整实读约25+帖、搜索卡片约200+",
-       "posts": 8,
+       "note": "2026-09-28 第15轮+3篇（173赞专帖/5赞避雷/6赞推荐）；英文搜索词无结果，中文\"凤飞飞猪脚饭\"有效",
+       "posts": 11,
        "status": "partial",
        "target": 10
       }
@@ -1504,8 +1504,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md）",
-       "posts": 5,
+       "note": "2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10",
+       "posts": 7,
        "status": "partial",
        "target": 10
       }
@@ -1539,8 +1539,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。；2026-09-27 00:08Z轮（主代理只读）：关键词'Dash! 清迈'未换，翻3页无2026-09-16后新帖、未发现漏掉的高流量专属帖，本轮无新增，继续partial。",
-       "posts": 3,
+       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。；2026-09-27 00:08Z轮（主代理只读）：关键词'Dash! 清迈'未换，翻3页无2026-09-16后新帖、未发现漏掉的高流量专属帖，本轮无新增，继续partial。 | 2026-09-28 第17轮+3篇（6赞避雷/推荐/11赞推荐）；专帖整体低赞，最高11赞",
+       "posts": 6,
        "status": "partial",
        "target": 10
       }
@@ -1574,8 +1574,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item13-elephantnaturepark-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 用户裁决收尾（2026-09-16）：6/10 partial。\"Elephant Nature Park\"英文关键词候选枯竭，4条线索均卡在无年份要求；不再换关键词开新轮",
-       "posts": 6,
+       "note": "xhs-peritem-backfill 用户裁决收尾（2026-09-16）：6/10 partial。\"Elephant Nature Park\"英文关键词候选枯竭，4条线索均卡在无年份要求；不再换关键词开新轮 | 2026-09-28 第17轮+3篇（1868赞高流量/122赞/285赞），均为推荐",
+       "posts": 9,
        "status": "partial",
        "target": 10
       }
@@ -2638,9 +2638,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16新增；本轮任务不碰小红书，由主 agent 安排",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-16新增；本轮任务不碰小红书，由主 agent 安排 | 2026-09-28 第19轮+3篇（推荐/避雷/推荐），评论未深度展开",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2680,9 +2680,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 | 2026-09-28 第19轮+3篇（581赞/347赞推荐/247赞偏负）",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -5055,9 +5055,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "partial",
-       "posts": 2,
+       "posts": 4,
        "target": 3,
-       "note": "新标准：第10轮2026-09-28 06:28Z审计——叫我Grace姐姐《啊啊啊！普吉岛好漂亮的宝藏泰式小村子》(149赞/21评论)/北京陪读妈妈在普吉《我心目中普吉岛的沉浸式体验泰国文化的NO.1》(78赞/24评论)达标（该话题专帖最高149赞，相对高流量）；flyfly_yan(3赞/1评论)未达标。旧口径基线2帖流量未知不计入新标准。还差1篇，已回队列待补。人像机位候选：泰式古村落泰服出片（已登记）。证据：xhs-coverage-phuket.md 第10轮记录。"
+       "note": "新标准：第10轮2026-09-28 06:28Z审计——叫我Grace姐姐《啊啊啊！普吉岛好漂亮的宝藏泰式小村子》(149赞/21评论)/北京陪读妈妈在普吉《我心目中普吉岛的沉浸式体验泰国文化的NO.1》(78赞/24评论)达标（该话题专帖最高149赞，相对高流量）；flyfly_yan(3赞/1评论)未达标。旧口径基线2帖流量未知不计入新标准。还差1篇，已回队列待补。人像机位候选：泰式古村落泰服出片（已登记）。证据：xhs-coverage-phuket.md 第10轮记录。 | 2026-09-28 第18轮+2篇（767赞高流量/41赞），第3篇候选打不开"
       }
      },
      "type": "景点"
@@ -6948,5 +6948,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-28T16:47Z"
+ "updated_at": "2026-09-28T23:08Z"
 };
