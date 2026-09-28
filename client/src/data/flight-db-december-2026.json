@@ -1,0 +1,405 @@
+{
+ "updated_at": "2026-09-28T03:40:01+00:00",
+ "segments": {
+  "PEK-SIN": {
+   "origin": "PEK",
+   "destination": "SIN",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "北京→新加坡（2大1小）",
+   "days": {
+    "2026-12-08": {
+     "economy_queried_at": "2026-09-28T03:03:27+00:00",
+     "economy_usd": 513.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "列表价已确认为3位旅客整单总价：乘客数从1人改为2大1小后，列表价从每人176美元变为513美元以上的整单价。",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h10m",
+       "flight": "CA969"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h15m",
+       "flight": "SQ807"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:03:27+00:00",
+     "business_usd": 3141.0,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-09": {
+     "economy_queried_at": "2026-09-28T03:03:27+00:00",
+     "economy_usd": 537.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h10m",
+       "flight": "CA969"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h15m",
+       "flight": "SQ807"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:03:27+00:00",
+     "business_usd": 3034.0,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-10": {
+     "economy_queried_at": "2026-09-28T03:03:27+00:00",
+     "economy_usd": 513.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h10m",
+       "flight": "CA969"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h15m",
+       "flight": "SQ807"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:03:27+00:00",
+     "business_usd": 3141.0,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-11": {
+     "economy_queried_at": "2026-09-28T03:40:01+00:00",
+     "economy_usd": 601,
+     "currency": "USD",
+     "economy_price_basis": "2 adults + 1 child total",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h 35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h 30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h 10m",
+       "flight": "CA969"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h 35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h 35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h 15m",
+       "flight": "SQ807"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:40:01+00:00",
+     "business_usd": 3034,
+     "business_price_basis": "2 adults + 1 child total"
+    },
+    "2026-12-12": {
+     "economy_queried_at": "2026-09-28T03:40:01+00:00",
+     "economy_usd": 836,
+     "currency": "USD",
+     "economy_price_basis": "2 adults + 1 child total",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h 35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h 35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h 15m",
+       "flight": "SQ807"
+      },
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h 30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h 35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h 10m",
+       "flight": "CA969"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:40:01+00:00",
+     "business_usd": 3229,
+     "business_price_basis": "2 adults + 1 child total"
+    },
+    "2026-12-13": {
+     "economy_queried_at": "2026-09-28T03:40:01+00:00",
+     "economy_usd": 635,
+     "currency": "USD",
+     "economy_price_basis": "2 adults + 1 child total",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h 30m",
+       "flight": "CA889"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h 35m",
+       "flight": "SQ805"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h 35m",
+       "flight": "SQ801"
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h 35m",
+       "flight": "CA975"
+      },
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h 10m",
+       "flight": "CA969"
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h 15m",
+       "flight": "SQ807"
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T03:40:01+00:00",
+     "business_usd": 3034,
+     "business_price_basis": "2 adults + 1 child total"
+    }
+   }
+  },
+  "XIY-SIN": {
+   "origin": "XIY",
+   "destination": "SIN",
+   "adults": 2,
+   "child_ages": [],
+   "label": "西安→新加坡（2成人）",
+   "days": {}
+  },
+  "SIN-XIY": {
+   "origin": "SIN",
+   "destination": "XIY",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "新加坡→西安（2大1小，岳父母带Dylan回西安）",
+   "days": {}
+  },
+  "SIN-HKT": {
+   "origin": "SIN",
+   "destination": "HKT",
+   "adults": 2,
+   "child_ages": [],
+   "label": "新加坡→普吉（2成人）",
+   "days": {}
+  },
+  "HKT-CNX": {
+   "origin": "HKT",
+   "destination": "CNX",
+   "adults": 2,
+   "child_ages": [],
+   "label": "普吉→清迈（2成人）",
+   "days": {}
+  },
+  "CNX-BKK": {
+   "origin": "CNX",
+   "destination": "BKK",
+   "adults": 2,
+   "child_ages": [],
+   "label": "清迈→曼谷（2成人）",
+   "days": {}
+  },
+  "BKK-XIY": {
+   "origin": "BKK",
+   "destination": "XIY",
+   "adults": 2,
+   "child_ages": [],
+   "label": "曼谷→西安（2成人）",
+   "days": {}
+  },
+  "XIY-PEK": {
+   "origin": "XIY",
+   "destination": "PEK",
+   "adults": 1,
+   "child_ages": [],
+   "label": "西安→北京（1成人）",
+   "days": {}
+  }
+ }
+}

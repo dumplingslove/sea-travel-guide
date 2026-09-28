@@ -21,6 +21,9 @@
 import plannerCss from "./planner.css?raw";
 import plannerBody from "./planner-body.html?raw";
 import "../../planner-data/flight-matrix.js";
+/* 大行程转场航班库：Google Flights 实查（hidden_files/flight-db/december-2026.json
+   的构建期同步副本，由 flight-db-gflights-fill 每轮填充后同步；只含直飞，价格为整单总价 USD） */
+import flightDbJson from "../../data/flight-db-december-2026.json";
 import {
   PLANNER_CITY_SPOTS,
   RESEARCH_UPDATED_AT,
@@ -620,9 +623,32 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-interface TripFlightLeg { results: number; min: number; max: number; carriers: string[]; direct: boolean }
-/* 大行程转场航班实查（只看直飞；待 Google Flights 航班库填充后接入，当前为空即显示"待查询"） */
+interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string }
+interface FlightDbDay {
+  economy_usd?: number|null; business_usd?: number|null;
+  economy_price_basis?: string; business_price_basis?: string;
+  economy_queried_at?: string; business_queried_at?: string;
+  nonstop_flights?: FlightDbFlight[];
+}
+interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string}[] }
+/* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
+   库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
 const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
+for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<string,{days?: Record<string,FlightDbDay>}>}).segments)){
+  for(const [date, d] of Object.entries(seg.days||{})){
+    const nf=d.nonstop_flights||[];
+    TRIP_FLIGHTS[`${code}|${date}`]={
+      results: nf.length,
+      eco: d.economy_usd ?? null,
+      biz: d.business_usd ?? null,
+      basis: d.economy_price_basis || d.business_price_basis || "",
+      carriers: [...new Set(nf.map(f=>f.airline))],
+      direct: nf.length>0,
+      queriedAt: (d.economy_queried_at || d.business_queried_at || "").slice(0,10),
+      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr})),
+    };
+  }
+}
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
 interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[] }
 const TRIP_TRANSITIONS: TripTransition[] = [
@@ -638,8 +664,18 @@ const TRIP_TRANSITIONS: TripTransition[] = [
 function tripFlightNote(key: string, label: string){
   const d=TRIP_FLIGHTS[key];
   if(!d) return `${label}：航班待查询（Google Flights 库填充中）`;
-  if(!d.direct) return `${label}：暂无直飞`;
-  return `${label}：${d.results}个结果，$${d.min}–$${d.max}，${d.carriers.join(" / ")}`;
+  if(!d.direct) return `${label}：暂无直飞${d.queriedAt?`（${d.queriedAt} Google Flights 实查）`:""}`;
+  const segs: string[]=[];
+  if(d.eco!=null) segs.push(`经济 $${d.eco}`);
+  if(d.biz!=null) segs.push(`商务 $${d.biz}`);
+  const price=segs.length ? segs.join(" / ")+(d.basis?`（${d.basis}）`:"") : "价格待查";
+  return `${label}：${d.results}班直飞 · ${price} · ${d.carriers.join(" / ")}`;
+}
+/* 班次时间：帮定日期用（某天只有红眼航班之类，一眼能看到） */
+function tripFlightDetail(key: string, label: string){
+  const d=TRIP_FLIGHTS[key];
+  if(!d||!d.direct||!d.flights.length) return "";
+  return `${label}：${d.flights.map(f=>`${f.flight} ${f.dep}→${f.arr}`).join(" · ")}`;
 }
 /* 回西雅图卡片：出发城市三选一（未定）＋起飞日二选一，全部在大行程里定清楚 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
@@ -699,12 +735,14 @@ function renderTrip(){
         label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
       }));
       const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
+      const details=legs.map(l=>tripFlightDetail(`${l.code}|${date}`,l.label)).filter(Boolean).join("<br>");
       parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
     <div class="micro">起飞日：
       <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} 飞</button>
       <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} 飞</button>
     </div>
-    <p class="micro">${notes}</p>`);
+    <p class="micro">${notes}</p>
+    ${details?`<p class="micro">🕐 ${details}</p>`:""}`);
     }
   }
   /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
