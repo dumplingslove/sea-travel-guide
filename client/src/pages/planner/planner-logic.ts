@@ -443,11 +443,11 @@ type SuitLevel = "ok" | "warn" | "blocked";
 interface CitySuit { city: string; level: SuitLevel; reasons: {text: string; link?: string; linkText?: string}[] }
 /* 2026-09-28 必去景点闭馆数据：必去=闭馆日用 🚫（critical），非必去=⚠️（warning）。
    判定标准：该城市行程中不可替代的核心地标/体验。 */
-interface MustGoClosure { name: string; mustGo: boolean; closedDow: number[]; reason: string }
+interface MustGoClosure { name: string; mustGo: boolean; closedDow: number[]; reason: string; spot?: string }
 const MUST_GO_CLOSURES: Record<string, MustGoClosure[]> = {
   "曼谷": [
-    { name: "恰图恰周末市场", mustGo: true, closedDow: [1,2,3,4,5], reason: "仅周末开放" },
-    { name: "大皇宫/玉佛寺", mustGo: true, closedDow: [], reason: "王室仪式可能临时关闭，出发前查官网" },
+    { name: "恰图恰周末市场", mustGo: true, closedDow: [1,2,3,4,5], reason: "仅周末开放", spot: "恰图恰周末市场" },
+    { name: "大皇宫/玉佛寺", mustGo: true, closedDow: [], reason: "王室仪式可能临时关闭，出发前查官网", spot: "大皇宫 & 玉佛寺" },
   ],
   "清迈": [
     { name: "周日步行街", mustGo: true, closedDow: [1,2,3,4,5,6], reason: "仅周日开放" },
@@ -472,7 +472,9 @@ function dayClosureIssues(city: string, date: string): DayIssue[] {
       out.push({ 
         severity: c.mustGo ? "critical" : "warn", 
         text: `${c.name}今日不开（${c.reason}）${c.mustGo ? " · 必去" : ""}`,
-        why: c.mustGo ? `「必去」是按该城市行程中不可替代的核心地标/体验暂定的，点上方「查看${city}景点」核实` : undefined
+        why: c.mustGo ? `「必去」是按该城市行程中不可替代的核心地标/体验暂定的，点上方「查看${city}景点」核实` : undefined,
+        link: c.spot ? `/sea-travel-guide/travel-research?from=planner&spot=${encodeURIComponent(c.spot)}` : undefined,
+        linkText: c.spot ? `查看${c.name}详情 →` : undefined
       });
     }
   }
@@ -1128,7 +1130,7 @@ function renderOrderTab(){
     </div>
     <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <div id="ordDayDetail"></div>
-    ${buildAvoidList()}
+    ${buildCityTaboos()}
     <div class="card" style="margin-top:16px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」）</div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="ghost" id="ordToTrip">🗺️ 去大行程调整天数 →</button>
@@ -1139,48 +1141,38 @@ function renderOrderTab(){
   wireOrderTab();
 }
 /* 检查确认底部：全行程避雷清单（2026-09-28 用户：把所有需要避雷的点列出来供参考） */
-function buildAvoidList(): string {
-  const ranges = tripRanges();
-  const rows = wzRanges();
-  const legs = wzLegs();
-  const allIssues: {date: string; city: string; severity: DaySeverity; text: string; link?: string; linkText?: string}[] = [];
-  
-  /* 遍历所有日期，收集问题 */
-  const start = "2026-11-28", end = "2027-01-02";
-  let d = start;
-  while(d <= end){
-    let city = "", segLabel = "";
-    for(const s of TRIP_SEGS){
-      const r = ranges[s.id];
-      if(r && d>=r.from && d<=r.to){ segLabel=s.label; city=s.id==="couple"?"":s.label; break; }
-    }
-    if(!city){
-      for(const r of rows){ if(d>=r.from&&d<=r.to){ city=r.city; segLabel="东南亚"; break; } }
-    }
-    if(city||segLabel){
-      const leg = legs.find(l=>l.date===d);
-      const issues = wzDayIssues(d, city||segLabel, leg?`${leg.from}→${leg.to}`:undefined);
-      for(const issue of issues){
-        /* 只收录 critical 和 warn，不收录 info */
-        if(issue.severity==="critical" || issue.severity==="warn"){
-          allIssues.push({date: d, city: city||segLabel, severity: issue.severity, text: issue.text, link: issue.link, linkText: issue.linkText});
-        }
-      }
-    }
-    d = addDays(d, 1);
+/* 检查确认底部：选中城市的整体禁忌/问题汇总（2026-09-28 用户：不要按日期的全程避雷清单，要选中城市整体上有哪些禁忌/问题，供参考） */
+function buildCityTaboos(): string {
+  /* 选中的城市：新加坡（固定段）+ 向导选中的东南亚城市（wz 是模块级状态） */
+  const cities: string[] = ["新加坡"];
+  for(const c of wz.order){
+    if(wz.cities.includes(c) && !cities.includes(c)) cities.push(c);
   }
+  /* 每个城市的整体禁忌：MUST_GO_CLOSURES 的常驻规律 + 泰国周一博物馆 */
+  const dowName = ["周日","周一","周二","周三","周四","周五","周六"];
+  const sections = cities.map(city=>{
+    const closures = MUST_GO_CLOSURES[city] || [];
+    const items: string[] = [];
+    for(const c of closures){
+      const closedDays = c.closedDow.length ? `（${c.closedDow.map(d=>dowName[d]).join("、")}不开）` : "";
+      const link = c.spot ? ` <a href="/sea-travel-guide/travel-research?from=planner&spot=${encodeURIComponent(c.spot)}">查看${esc(c.name)}详情 →</a>` : "";
+      items.push(`<p class="micro">${c.mustGo?"🚫":"⚠️"} <b>${esc(c.name)}</b>${closedDays}：${esc(c.reason)}${link}</p>`);
+    }
+    /* 泰国城市周一博物馆闭馆风险 */
+    if(["曼谷","清迈","普吉"].includes(city)){
+      items.push(`<p class="micro">⚠️ <b>泰国博物馆</b>：周一闭馆风险高，需逐馆核对开放时间</p>`);
+    }
+    if(!items.length) return "";
+    return `<div style="margin-bottom:12px"><h4 style="margin:0 0 6px">${esc(city)}</h4>${items.join("")}</div>`;
+  }).filter(Boolean).join("");
   
-  if(!allIssues.length){
-    return `<div class="card" style="margin-top:16px"><h3>🛡️ 全行程避雷清单</h3><p class="micro">✅ 全程无严重问题，放心出行。</p></div>`;
+  if(!sections){
+    return `<div class="card" style="margin-top:16px"><h3>📋 选中城市整体禁忌</h3><p class="micro">所选城市暂无已收录的整体禁忌信息。</p></div>`;
   }
-  
-  const crit = allIssues.filter(x=>x.severity==="critical");
-  const warn = allIssues.filter(x=>x.severity==="warn");
   
   return `<div class="card" style="margin-top:16px">
-    <h3>🛡️ 全行程避雷清单 <span class="micro">（共 ${allIssues.length} 项，供参考）</span></h3>
-    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 <b>${x.date.slice(5).replace("-","/")}</b> ${esc(x.city)}：${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}</p>`).join("")}</div>`:""}
-    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ <b>${x.date.slice(5).replace("-","/")}</b> ${esc(x.city)}：${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}</p>`).join("")}</div>`:""}
+    <h3>📋 选中城市整体禁忌 <span class="micro">（不跟具体日期挂钩，供选城/排期参考）</span></h3>
+    ${sections}
   </div>`;
 }
 function wireOrderTab(){
