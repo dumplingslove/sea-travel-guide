@@ -21,7 +21,7 @@ import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
 import { bookingPolicyBadge } from '../bookings/restaurantBookingStatus';
-import { FLIGHT_LEGS, type FlightLegInfo } from '../bookings/bookingTimeline';
+import { FLIGHT_LEGS, type FlightLegInfo, type FlightOption } from '../bookings/bookingTimeline';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -298,48 +298,51 @@ export function RestaurantCatalog({onBook, scopeCities, stayDates, bare}:{onBook
 
 
 /** 历史航班研究：2026-09-14/15 Duffel 实测（2成人直飞当前库存）+ 每段航司选择建议。旧8城行程版本，仅供参考，非实时价。数据来源：git 历史（交通页已删的「跨城航班详解」）与 planner-logic.ts 的 DUFFEL_MEASURED。 */
-const HISTORICAL_FLIGHT_LEGS:{route:string;time:string;airlines:string;tip:string;measured:{date:string;offers:number;min:number;max:number;carriers:string;fragile?:boolean}}[]=[
- {route:'曼谷 → 清迈',time:'直飞约1小时15分',airlines:'亚航(AirAsia)、曼谷航空、泰航微笑',tip:'亚航班次最多最便宜（Skytrax连续16年全球最佳廉航）；曼谷航空是精品航司，含免费行李+餐食，体验好。建议上午飞，下午游古城。',measured:{date:'2026-12-15',offers:28,min:169.80,max:277.80,carriers:'泰航 / 曼谷航空'}},
- {route:'清迈 → 普吉',time:'直飞约2小时',airlines:'亚航直飞',tip:'亚航有直飞，别选经停曼谷的。落地普吉后只排海滩/酒店，周转别太紧。',measured:{date:'2026-12-17',offers:1,min:391.80,max:471.80,carriers:'曼谷航空 PG0248 14:35–16:40',fragile:true}},
- {route:'普吉 → 槟城',time:'经吉隆坡中转约4-5小时',airlines:'亚航（普吉-吉隆坡-槟城）',tip:'无直飞，亚航经吉隆坡中转最顺。避免中转时间<2小时，行李直挂要确认。',measured:{date:'2026-12-20',offers:1,min:205.80,max:205.80,carriers:'马航 MH5455 14:35–16:35',fragile:true}},
- {route:'槟城 → 吉隆坡',time:'直飞约1小时',airlines:'亚航、马航、Firefly',tip:'三家都飞，亚航最便宜；Firefly用苏丹机场(SZB)离市区近。短途随便选，看时间。',measured:{date:'2026-12-22',offers:28,min:67.00,max:421.20,carriers:'马航 / Malindo'}},
- {route:'吉隆坡 → 胡志明市',time:'直飞约2小时',airlines:'亚航、越捷、越南航空',tip:'亚航班次密；越南航空是全服务含行李餐食。提前办好越南电子签，值机时查验。',measured:{date:'2026-12-24',offers:12,min:222.20,max:557.80,carriers:'越捷 / 越航 / 马航等'}},
- {route:'胡志明市 → 富国岛',time:'直飞约1小时',airlines:'越捷、越南航空、竹航',tip:'越捷最便宜但准点率一般；越南航空稳。富国岛机场小，落地后酒店多有接送。',measured:{date:'2026-12-26',offers:22,min:130.00,max:249.00,carriers:'越捷 / 越航等'}},
- {route:'富国岛 → 新加坡',time:'经胡志明市中转约4-5小时',airlines:'越捷/越南航空（经SGN）',tip:'无直飞，经胡志明市中转。预留3小时+中转缓冲，国际转国际要重新安检。',measured:{date:'2026-12-29',offers:3,min:334.00,max:674.00,carriers:'越捷 / Scoot（Scoot由Hahn Air出票）'}},
-];
 /** 航司口碑速览（历史研究结论，来源：git 历史交通页已删内容）。 */
 const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
 /** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
 const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员'};
 
-/** 单个航段的 Duffel 实查选项列表：当天全部直飞按价格排序，推荐项标理由；口碑只写站内研究有的，无依据写「口碑待核验」。 */
+/** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；只看直飞（回程跨太平洋段含优选中转并如实标注）。 */
+function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
+function flightDur(o:FlightOption){const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
+function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
 function FlightLegOptions({leg}:{leg:FlightLegInfo}){
- const opts=leg.options!;
- const rec=opts.find(o=>o.recommend);
- const hasConn=opts.some(o=>(o.stops??0)>0);
- const seen:string[]=[];
- const reps:string[]=[];
- opts.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}`);}});
- const unknown=[...new Set(opts.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
- return <Fragment>
-  <div className="flightoptions">
-   <p className="flightprice"><b>当天可选 {opts.length} {hasConn?'个行程（含中转）':'班直飞'}</b><span>{leg.priceBasis??'2成人总价'} · Duffel {leg.queriedAt} 实查，非实时价，出票前重查</span></p>
-   <ul>{opts.map((o,oi)=><li key={oi} className={o.recommend?'rec':''}>
-    <span className="fo-time">{o.depart}→{o.arrive}{o.arrivePlusDay?'+1':''}</span>
-    <span className="fo-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>
-    <span className="fo-price">${o.price.toFixed(2)}</span>
-    <span className="fo-fare">{o.refundable==='yes'?'可退':'不可退'}·{o.changeable==='yes'?'可改':'改签未知'}{o.bags?`·托运${o.bags}`:''}</span>
-    {o.recommend&&<em className="fo-rec">推荐</em>}
-   </li>)}</ul>
-   {rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
+ const eco=leg.options??null;                 /* null/空 = 未查询；查过但无直飞用 queriedAt 区分 */
+ const biz=leg.businessOptions??null;         /* null = 未查询；[] = 查过但无商务舱直飞 */
+ const [cabin,setCabin]=useState<'eco'|'biz'>('eco');
+ const ecoState=!eco||!eco.length?(leg.queriedAt?'none':'pending'):'ok';
+ const bizState=!biz?'pending':(!biz.length?'none':'ok');
+ const opts=(cabin==='eco'?eco:biz)??[];
+ const sorted=[...opts].sort((a,b)=>depMinutes(a.depart)-depMinutes(b.depart));
+ const minOf=(os:FlightOption[])=>os.length?Math.round(Math.min(...os.map(o=>o.price))):null;
+ const ecoMin=eco&&eco.length?minOf(eco):null;
+ const bizMin=biz&&biz.length?minOf(biz):null;
+ const rec=sorted.find(o=>o.recommend);
+ const seen:string[]=[];const reps:string[]=[];
+ sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}`);}});
+ const unknown=[...new Set(sorted.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
+ const curState=cabin==='eco'?ecoState:bizState;
+ return <div className="flightoptions">
+  <p className={`flightstatus ${ecoState}`}>{ecoState==='ok'?`🟢 当天 ${eco!.length} 班直飞`:(ecoState==='none'?'⚪ 当天暂无直飞':'⏳ 航班待查询')}{ecoMin!=null?` · 经济舱 $${ecoMin} 起`:''}{bizMin!=null?` · 商务舱 $${bizMin} 起`:''}</p>
+  <div className="cabintabs" role="tablist" aria-label="舱位选择">
+   <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
+   <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);return <li key={oi} className={o.recommend?'rec':''}>
+    <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}</div>
+    <div className="ft-side"><b className="fo-price">${Math.round(o.price)}</b><span className="fo-fare">{o.refundable==='yes'?'可退':'不可退'}·{o.changeable==='yes'?'可改':'改签未知'}{o.bags?`·托运${o.bags}`:''}</span></div>
+   </li>;})}</ul>
+  :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
+  {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   <p className="flightreput"><b>航司靠谱程度</b><span>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</span></p>
- </Fragment>;
+  <p className="flightsrc">价格口径：{leg.priceBasis??'2成人总价'}（USD 整单） · Google Flights {leg.queriedAt?`实查于 ${leg.queriedAt}`:'待查询'}，非实时价，出票前重查</p>
+ </div>;
 }
 
 export function Flights({onBook}:{onBook?:OnBook}){
  const { segments } = usePlanScope();
- const [showHist,setShowHist]=useState(false);
  /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 18 段全量：去程西雅图→北京 1 段、亚洲段 8 段、回程三城三天 9 段）：
   * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
   * 与「预订行动」时间线、页顶每日动态横幅同一来源。
@@ -357,8 +360,9 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const midCount=legs.filter(l=>l.kind==='城际直飞').length;
  const countryLabel=countries.join('、');
  const legPager=usePaged(legs,5,'个航段');
- const sourceLine='航段与直飞选项由每日航班刷新维护（Duffel 实查，非实时价，出票前重查退改）；实时价格与推荐见「预订行动」时间线';
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订"</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{(()=>{const f=l.leg;return f.options&&f.options.length?<FlightLegOptions leg={f}/>:<p className="flightprice"><b>实查参考价</b><span>{f.queriedAt?`Duffel ${f.queriedAt} 实查：暂无直飞`:'国际段价格待核验'}</span></p>})()}<dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><section className="sectionblock"><div className="sectiontitle"><span>HISTORICAL RESEARCH</span><h2>历史实查参考</h2><p>2026-09-14/15 Duffel 实测（2成人直飞当前库存）· 旧8城行程版本 · 非实时价，仅供参考，不代替出票</p><button className="secondary" onClick={()=>setShowHist(!showHist)} aria-expanded={showHist}>{showHist?'收起 ▲':'展开 7 段旧行程实查 ▾'}</button></div>{showHist&&<Fragment><div className="transportlist">{HISTORICAL_FLIGHT_LEGS.map((h,i)=><article key={h.route}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{h.route} · {h.time}</h3><p><b>推荐航司：</b>{h.airlines}</p><p>{h.tip}</p><p><b>Duffel实测 {h.measured.date.slice(5).replace('-','/')}</b>：{h.measured.offers} 个结果，2人 ${h.measured.min.toFixed(2)}–${h.measured.max.toFixed(2)}（{h.measured.carriers}）{h.measured.fragile?' · ⚠ 当天仅1班，先锁这段':''} · 非实时价</p></div></article>)}</div><p style={{fontSize:12,color:'#61747d',marginTop:10}}>7段最低合计约 $1,520.60/2人（各段最低价相加；价格随库存变，Duffel未返回退改信息，出票前重查）</p></Fragment>}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ const sourceLine='航段与直飞选项由 Google Flights 每日实查维护（非实时价，出票前重查退改）；实时价格与推荐见「预订行动」时间线';
+ const checkedCount=legs.filter(l=>{const f=l.leg;return (f.options&&f.options.length)||f.queriedAt;}).length;
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{legs.length} 段（Google Flights 持续更新中）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p><FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 

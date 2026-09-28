@@ -427,3 +427,25 @@
 .guide-scope .fo-fare{font-size:11px;color:var(--dim);white-space:nowrap}
 .guide-scope .fo-rec{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:var(--accent);border-radius:3px;padding:2px 6px;white-space:nowrap}
 .guide-scope .flightgrid .forecwhy{font-size:12px;line-height:1.65;color:#17634d;background:#eef7f5;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
+/* 航班页改版：状态徽章 + 舱位 tab + 时间轴 */
+.guide-scope .flightstatus{font-size:13px;font-weight:800;padding:9px 12px;border-radius:6px;margin:12px 0 0;line-height:1.6}
+.guide-scope .flightstatus.ok{background:#e7f4ec;color:#17634d}
+.guide-scope .flightstatus.none{background:#f1f0ec;color:#6b6257}
+.guide-scope .flightstatus.pending{background:#fff4d6;color:#7a5c14}
+.guide-scope .cabintabs{display:flex;gap:8px;margin:10px 0 2px}
+.guide-scope .cabintabs button{flex:1;border:1px solid var(--border);background:#fff;border-radius:8px;padding:10px 6px;font-size:13px;font-weight:700;color:var(--dim);min-height:46px;cursor:pointer}
+.guide-scope .cabintabs button.active{border-color:var(--accent);color:var(--accent);background:#eef7f5}
+.guide-scope .flighttimeline{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.guide-scope .flighttimeline li{border:1px solid #e5eae8;border-radius:8px;padding:11px 13px;background:#fafcfc;display:grid;gap:7px}
+.guide-scope .flighttimeline li.rec{border-color:var(--accent);background:#eef7f5}
+.guide-scope .ft-times{display:flex;align-items:center;gap:10px}
+.guide-scope .ft-times b{font-size:17px;color:var(--text);font-variant-numeric:tabular-nums}
+.guide-scope .ft-line{flex:1;height:2px;background:#cfe3de;position:relative;border-radius:2px;min-width:36px}
+.guide-scope .ft-line i{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:var(--accent)}
+.guide-scope .ft-meta{display:flex;flex-wrap:wrap;gap:5px 10px;align-items:center;font-size:12px;color:#405862}
+.guide-scope .ft-dur{color:var(--dim);font-variant-numeric:tabular-nums}
+.guide-scope .ft-redeye{font-style:normal;font-size:10px;font-weight:800;color:#5b4a8a;background:#ece7f7;border-radius:3px;padding:2px 6px;white-space:nowrap}
+.guide-scope .ft-side{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:1px dashed #e5eae8;padding-top:7px}
+.guide-scope .ft-side .fo-price{font-size:17px}
+.guide-scope .flightempty{font-size:13px;color:var(--dim);background:#f4f6f5;border-radius:6px;padding:12px;margin:10px 0 0;line-height:1.7}
+.guide-scope .flightsrc{font-size:11px;color:var(--dim);margin:9px 0 0;line-height:1.6}
