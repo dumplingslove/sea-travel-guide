@@ -3,7 +3,7 @@
       <div>
         <p class="eyebrow">2026-11-28 → 2027-01-02 · 大行程</p>
         <h1>先定大行程，<br><em>再细排每一段</em></h1>
-        <p class="hero-copy">来回时间已定（11/28 西雅图→北京，1/2 北京→西雅图），中间每段几天你来定：北京陪父亲、新加坡亲子（岳父母西安飞来会合）、夫妻东南亚特种兵（普吉→清迈→曼谷）、夫妻一起回西安、你一人回北京。定好天数点保存，云端同步。</p>
+        <p class="hero-copy">11/28 西雅图→北京已定，中间每段几天你来定：北京陪父亲、新加坡亲子（岳父母西安飞来会合）、夫妻东南亚（城市和顺序你定）、夫妻一起回西安、你一人回北京，最后在回程城市集结飞西雅图（城市待定）。定好天数点保存，云端同步。</p>
       </div>
     </section>
 
@@ -22,11 +22,11 @@
 
     <section id="wizard" class="panel">
       <div class="section-head">
-        <div><p class="eyebrow">GUIDED PLANNER · 夫妻东南亚段</p><h2>三步定下夫妻东南亚</h2><p class="lede">只细分大行程「夫妻东南亚」段。先选城市，再定每城天数（每城附景点取舍标注，帮你判断几天够），然后在日期排期里定具体日期、查直飞与适宜度。保存后同步到首页、每日详情与地图；机票酒店去「预订」页落实。</p></div>
+        <div><p class="eyebrow">GUIDED PLANNER · 夫妻东南亚段</p><h2>两步定下夫妻东南亚</h2><p class="lede">只细分大行程「夫妻东南亚」段。先选城市，再定每城天数与顺序（每城附景点取舍标注，帮你判断几天够）。排完去「🔍 检查确认」看全行程日历、查直飞与适宜度；机票酒店去「预订」页落实。</p></div>
       </div>
       <ol class="wz-steps" id="wzSteps" aria-label="规划步骤">
         <li data-wzstep="1"><b>①</b><span>选城市</span></li>
-        <li data-wzstep="2"><b>②</b><span>定天数</span></li>
+        <li data-wzstep="2"><b>②</b><span>定天数与顺序</span></li>
       </ol>
       <div id="wzBody" aria-live="polite"></div>
     </section>
@@ -39,13 +39,4 @@
     </section>
 
 
-  <div class="day-modal" id="dayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <div class="modal-head"><div><p class="eyebrow">EDIT DAY</p><h3 id="modalTitle">调整这一天</h3></div><button class="icon-btn" id="closeModal" aria-label="关闭">×</button></div>
-      <div id="dayIntel" aria-live="polite"></div>
-      <label for="modalCity">城市</label><select id="modalCity"></select>
-      <label for="modalMode">模式</label><select id="modalMode"><option value="couple">双人快节奏 · 约4个点</option><option value="family">亲子慢节奏 · 1–2个点＋午休</option><option value="free">留白 / 休整</option></select>
-      <div class="modal-actions"><button class="ghost" id="removeDay">清空这天</button><button class="primary" id="saveDay">保存调整</button></div>
-    </div>
-  </div>
   <div class="toast" id="toast" role="status"></div>

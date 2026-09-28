@@ -535,7 +535,7 @@ function syncCalMode(){
 }
 function renderCalendar(){
   const grid=elOpt("calendarGrid");
-  if(!grid) return; /* 日历只在向导 Step 3 里渲染，其它步骤直接跳过 */
+  if(!grid) return; /* 日历只在 🔍 检查确认 tab 里渲染 */
   const mc=monthCells(),dates=mc.cells;grid.innerHTML="";
   S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
@@ -593,22 +593,21 @@ function toast(msg: string, warning = false){const t=el("toast");t.textContent=m
 function updateAll(){renderCalendar();renderTrip();cachePlannerLocal()}
 
 
-/* ================= 🗺️ 大行程总览（11/28 去程＋中间各段＋1/2 回程；回北京之后暂不规划） ================= */
+/* ================= 🗺️ 大行程总览（11/28 去程＋中间各段；回程城市三选一待定） ================= */
 interface TripSegDef { id: string; label: string; sub: string; mode: string; note: string; cta?: boolean }
 const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
 const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
 const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
-  { id:"couple", label:"夫妻东南亚", sub:"普吉→清迈→曼谷（两人）", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩直飞普吉", cta:true },
+  { id:"couple", label:"夫妻东南亚", sub:"", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩继续东南亚", cta:true },
   { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
   { id:"beijing3", label:"北京", sub:"用户一人回北京陪父亲", mode:"🏠 家庭", note:"西安待几天后你一人飞回北京；最后大家在回程城市集结，一起飞西雅图" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
-/* 夫妻东南亚段城市顺序（用户可调）；最后一段飞西安的航班跟着末城动态变 */
-let coupleOrder: string[] = ["普吉","清迈","曼谷"];
+/* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
 const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
-function coupleLastCity(){ return coupleOrder[coupleOrder.length-1] || "曼谷"; }
+function coupleLastCity(){ const a=wz.order.filter(c=>wz.cities.includes(c)); return a[a.length-1] || "曼谷"; }
 function thailandToXianLeg(){
   const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
   return { code: `${code}-XIY`, label: `${last}→西安` };
@@ -733,14 +732,13 @@ function renderTrip(){
   const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
     /* 北京（你一人）是独立的一段，永远按原样显示；回程集结城市是它之后单独的卡片，不许把这段改名成上海/重庆 */
-    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : s.sub;
-    const coupleOrderBtns = s.id==="couple" ? `<div class="trip-order-btns" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="micro">城市顺序：</span>${coupleOrder.map((c,i)=>`<span class="micro" style="display:inline-flex;align-items:center;gap:2px;"><b>${c}</b>${i>0?`<button class="ghost" data-coupleup="${i}" aria-label="${c}上移" style="padding:2px 6px;">↑</button>`:""}${i<coupleOrder.length-1?`<button class="ghost" data-coupledown="${i}" aria-label="${c}下移" style="padding:2px 6px;">↓</button>`:""}</span>`).join('<span class="micro"> → </span>')}</div>` : "";
+    const wzCities = wz.order.filter(c=>wz.cities.includes(c));
+    const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
         <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
-        ${coupleOrderBtns}
         ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「东南亚城市规划」定这 ${d} 天的城市 →</button></div>`:""}
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -805,16 +803,7 @@ function renderTrip(){
     syncWzStart(); /* 大行程天数一变，向导日期锚点立即跟上，不许两处各选一次 */
     renderTrip(); wzRender(); cachePlannerLocal();
   });
-  body.querySelectorAll("[data-coupleup]").forEach(b=>(b as HTMLElement).onclick=()=>{
-    const i=Number((b as HTMLElement).dataset.coupleup);
-    if(i>0){ const c=coupleOrder[i]; coupleOrder[i]=coupleOrder[i-1]; coupleOrder[i-1]=c; }
-    renderTrip(); cachePlannerLocal();
-  });
-  body.querySelectorAll("[data-coupledown]").forEach(b=>(b as HTMLElement).onclick=()=>{
-    const i=Number((b as HTMLElement).dataset.coupledown);
-    if(i<coupleOrder.length-1){ const c=coupleOrder[i]; coupleOrder[i]=coupleOrder[i+1]; coupleOrder[i+1]=c; }
-    renderTrip(); cachePlannerLocal();
-  });
+  /* coupleOrder 已统一为 wz.order，大行程不再提供顺序调整 */
   const tw=body.querySelector("#tripToWizard") as HTMLElement|null;
   if(tw) tw.onclick=()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); };
   const sv=body.querySelector("#tripSave") as HTMLButtonElement|null;
@@ -895,14 +884,13 @@ function wzSetStep(n: number){
   wz.step=n; wzRender();
   (el("wizard") as HTMLElement).scrollIntoView({behavior:"smooth",block:"start"});
 }
-/* 跳转到 📅 定顺序 tab */
+/* 跳转到 🔍 检查确认 tab */
 function wzGoOrder(){
   if(!wz.order.filter(c=>wz.cities.includes(c)).length){ toast("先选城市",true); return }
   if(!wzBudgetOk()) return;
   (S.querySelector('[data-tab="order"]') as HTMLElement).click();
 }
-/* Step 3 日历与向导选择的同步指纹：指纹变化（城市／天数／顺序／起止）时才按向导重排日历，
-   Step 3 里的逐日手工微调不会被反复渲染覆盖；点「🔄 按向导重排日历」可强制同步。 */
+/* 向导选择的同步指纹：用于判断是否需要重排日历 */
 let wzLastCalSig="";
 function wzCalSig(){
   const cities=wz.order.filter(c=>wz.cities.includes(c));
@@ -929,7 +917,7 @@ function wzStep1(){
       ${wzCovPreview(city)}
     </article>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 1/3</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。这里只细分大行程「夫妻东南亚」段（${tripDays["couple"]||0} 天）：7 城都在东南亚，新加坡已在大行程里单独安排亲子游，不在这里重复选。</p></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 1/2</p><h2>先选城市</h2><p class="lede">点卡片选中／取消。展开每城的「精华景点」可直接看景点详细信息（关键信息、游览重点、怎么安排），结合景点再决定去不去。这里只细分大行程「夫妻东南亚」段（${tripDays["couple"]||0} 天）：7 城都在东南亚，新加坡已在大行程里单独安排亲子游，不在这里重复选。</p></div>
     <div class="wz-quick"><button class="ghost" id="wzAll">7城全选</button><button class="ghost" id="wzClear">清空</button></div></div>
     <div class="wz-city-grid">${cards}</div>
     <div class="wz-nav"><span class="micro">已选 <b>${wz.cities.length}</b> 城</span><button class="primary" id="wzNext1">下一步：定天数 →</button></div>`;
@@ -1000,7 +988,7 @@ function wzStep2(){
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天"${atCap?" disabled title=\"已达大行程天数上限\"":""}>＋</button></div></div>`;
   }).join("");
   return `<div class="section-head"><div><p class="eyebrow">STEP 2/2</p><h2>定天数与顺序</h2><p class="lede">1–6 天可调，用 ↑ ↓ 定城市顺序；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
-    <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定顺序）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
+    <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能去检查确认）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
     <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：检查确认 →</button></div>`;
 }
@@ -1008,7 +996,7 @@ function wzStep2(){
    2026-09-28 用户要求：从向导 Step 3 升级为独立 tab，一上来就显示日历；
    点日期看详情（modal），排雷报告移除（山寨感）；
    大行程结构性改动回「🗺️ 大行程」做，这里只给跳转。 */
-/* 全行程统一日历 + 日期问题（含严重级别），供 📅 定顺序 tab 用 */
+/* 全行程统一日历 + 日期问题（含严重级别），供 🔍 检查确认 tab 用 */
 function wzUnifiedCalendar(){
   const ranges=tripRanges();
   const seaRows=wzRanges();
@@ -1189,7 +1177,7 @@ function wzApplySchedule(){
   syncStartDateInput();
   renderCalendar();
 }
-/* 向导最后一步的保存：向导选择变化时先把排期写入日历（Step 3 里的逐日手工微调予以保留），再走云端保存（未登录则本机缓存） */
+/* 向导/检查确认的保存：先同步排期再走云端保存（未登录则本机缓存） */
 function wzSaveNote(t: string){ const n=S.getElementById("wzSaveNote")||S.getElementById("ordSaveNote"); if(n) n.textContent=t; }
 async function wzSavePlan(){
   if(!wzBudgetOk()) return; /* 天数对不上时不许保存 */
@@ -1293,7 +1281,6 @@ function serializePlan(): PlannerPlan{
     hotelSelections:{},
     flightSelections:{},
     trip:{...tripDays},
-    coupleOrder:[...coupleOrder],
     returnCity,
     tripFlightDay:{...tripFlightDay},
   };
@@ -1308,7 +1295,6 @@ function applyLoadedPlan(p: PlannerPlan){
     if(Array.isArray(p.wz.order)&&p.wz.order.length) wz.order=p.wz.order.filter(c=>c!=="新加坡"&&WZ_ORDER.includes(c));
     if(p.wz.modes&&typeof p.wz.modes==="object"){ const m={...p.wz.modes}; delete m["新加坡"]; wz.modes=m; }
   }
-  if(Array.isArray(p.coupleOrder)&&p.coupleOrder.length) coupleOrder=[...p.coupleOrder];
   if(p.returnCity==="PEK"||p.returnCity==="PVG"||p.returnCity==="CKG") returnCity=p.returnCity;
   if(p.tripFlightDay&&typeof p.tripFlightDay==="object"){
     for(const [k,v] of Object.entries(p.tripFlightDay)){ if(v==="last"||v==="next") tripFlightDay[k]=v; }
@@ -1361,7 +1347,7 @@ let alive=true;
     wzRender();
   }else{
     buildDefaultScheduleFromWizard();
-    setSyncNote("☁️ 未找到云端规划，已按向导默认排期；去「🧭 东南亚城市规划」第三步点「保存规划」同步到全站。");
+    setSyncNote("☁️ 未找到云端规划，已按向导默认排期；去「🧭 东南亚城市规划」点「保存规划」同步到全站。");
   }
   updateAll();
 })();
