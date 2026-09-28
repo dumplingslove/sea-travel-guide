@@ -606,11 +606,17 @@ const TRIP_SEGS: TripSegDef[] = [
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
 /* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
-const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
+const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
 function coupleLastCity(){ const a=wz.order.filter(c=>wz.cities.includes(c)); return a[a.length-1] || "曼谷"; }
 function thailandToXianLeg(){
   const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
   return { code: `${code}-XIY`, label: `${last}→西安` };
+}
+function singaporeToFirstCityLeg(){
+  const a = wz.order.filter(c=>wz.cities.includes(c));
+  const first = a[0] || "普吉";
+  const code = CITY_AIRPORT[first] || "HKT";
+  return { code: `SIN-${code}`, label: `新加坡→${first}` };
 }
 /* 回西雅图出发城市（未定）：北京首都 / 上海浦东 / 重庆江北三选一，用户在大行程里定 */
 type ReturnCityCode = "" | "PEK" | "PVG" | "CKG";
@@ -661,8 +667,8 @@ interface TripTransition { after: string; before: string; title: string; legs: {
 const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"beijing1", before:"singapore", title:"北京→新加坡（2大1小）＋ 西安→新加坡（岳父母2人）",
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
-  { after:"singapore", before:"couple", title:"新加坡→普吉（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
-    legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
+  { after:"singapore", before:"couple", title:"__SIN_FIRST__（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
+    legs:[{code:"__SIN_FIRST_CODE__",label:"__SIN_FIRST_LABEL__"},{code:"SIN-XIY",label:"新加坡→西安"}] },
   { after:"couple", before:"xian", title:"__COUPLE_XIY__",
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
   /* 用户 2026-09-28：西安→北京不坐飞机了，删掉这张机票卡；航班库也不再查 XIY-PEK */
@@ -754,10 +760,13 @@ function renderTrip(){
       const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
       const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
-      const title = t.title.replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`);
+      const sinLeg = singaporeToFirstCityLeg();
+      const title = t.title
+        .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
+        .replace("__SIN_FIRST__", `${sinLeg.label}`);
       const legs = t.legs.map(l=>({
-        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
-        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
+        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code),
+        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label),
       }));
       const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
       const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
