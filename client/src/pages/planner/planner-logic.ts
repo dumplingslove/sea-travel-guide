@@ -728,9 +728,9 @@ function renderTrip(){
     ${gatherRow}
     ${renderReturnCard(ranges)}
     <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
-    ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天必须全部分配完才能保存，用上面各段的 ＋ / － 调整。</p>`}
+    ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
-    <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
+    <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
     const [id,dd]=((b as HTMLElement).dataset.tripday||"").split("|");
     tripDays[id]=Math.min(20,Math.max(1,(tripDays[id]||1)+Number(dd)));
@@ -750,7 +750,7 @@ function renderTrip(){
   const tw=body.querySelector("#tripToWizard") as HTMLElement|null;
   if(tw) tw.onclick=()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); };
   const sv=body.querySelector("#tripSave") as HTMLButtonElement|null;
-  if(sv) sv.onclick=async ()=>{ sv.disabled=true; try{ await persistPlanToCloud(t=>{ el("tripSaveNote").textContent=t; }); }finally{ sv.disabled=!ok; } };
+  if(sv) sv.onclick=async ()=>{ sv.disabled=true; try{ await persistPlanToCloud(t=>{ el("tripSaveNote").textContent=t; }); }finally{ sv.disabled=false; } };
   body.querySelectorAll("[data-flyday]").forEach(b=>(b as HTMLElement).onclick=()=>{
     const [key,val]=((b as HTMLElement).dataset.flyday||"").split("|");
     tripFlightDay[key]=val==="next"?"next":"last";
