@@ -650,7 +650,7 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
   }
 }
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
-interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[] }
+interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean }
 const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"beijing1", before:"singapore", title:"北京→新加坡（2大1小）＋ 西安→新加坡（岳父母2人）",
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
@@ -658,8 +658,10 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
   { after:"couple", before:"xian", title:"__COUPLE_XIY__",
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
-  { after:"xian", before:"beijing3", title:"西安→北京（用户一人）",
-    legs:[{code:"XIY-PEK",label:"西安→北京"}] },
+  /* 用户 2026-09-28：西安→北京不坐飞机了，删掉这张机票卡；航班库也不再查 XIY-PEK */
+  { after:"xian", before:"beijing3", title:"西安→北京（用户一人）", noFlight:true,
+    note:"你不坐飞机去北京，这段的航班信息不再查询。",
+    legs:[] },
 ];
 /* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落 */
 function tripFlightCard(key: string, label: string){
@@ -742,12 +744,14 @@ function renderTrip(){
         label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
       }));
       const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
-      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    <div class="micro trip-flydays">起飞日：
-      <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} 飞</button>
-      <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} 飞</button>
+      const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
+      parts.push(`<div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
+    ${t.note?`<p class="micro">${t.note}</p>`:""}
+    <div class="micro trip-flydays">${dayWord}：
+      <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} ${goWord}</button>
+      <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} ${goWord}</button>
     </div>
-    <div class="trip-flightinfo">${cards}</div>`);
+    ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}`);
     }
   }
   /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
