@@ -438,18 +438,22 @@ export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments
  <div className="transportlist">{rideApps.map((a,i)=><article key={a.name}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{a.name}</h3><p>{a.desc}</p></div></article>)}</div></section>
  <section className="darkpanel"><h2>交通底线</h2><div><article><h3>海岛出行</h3><p>船班受海况影响，贵重物品放防水袋，不把次日早班机排得过紧。选船看人：大船稳、长尾船慢有味道、快艇快但颠；易晕船提前吃药选大船。</p></article><article><h3>机场衔接</h3><p>跨国航班与托运行李需要更长缓冲；出票后再固化当天时间线。廉航多在廉价航站楼（曼谷DMK、吉隆坡KLIA2），提前查好别跑错。</p></article><article><h3>网约车</h3><p>按 App 显示车牌核对，机场与码头上车点提前确认。深夜/偏远地点提前叫车，别现等。</p></article><article><h3>步行日</h3><p>热带正午把室外长距离拆开，以室内馆、咖啡或酒店休息降温。带娃时推车+电梯路线提前查。</p></article></div></section></div>}
 
-function AttractionGuide({onBook,standalone}:{onBook?:OnBook;standalone?:boolean}){
- const [expanded,setExpanded]=useState<string|null>(null);const [city,setCity]=useState(cities[0]!);
+function AttractionGuide({onBook,standalone,initialCity}:{onBook?:OnBook;standalone?:boolean;initialCity?:string}){
+ const [expanded,setExpanded]=useState<string|null>(null);const [city,setCity]=useState(initialCity||cities[0]!);
  const shown=attractions.filter(x=>x.city===city);
  const attrPager=usePaged(shown,6,'个景点');
  return <div className="page">{standalone&&<PageHero eyebrow="ATTRACTION GUIDE" title="景点指南" summary="八城景点完整攻略：按城市筛选，点击卡片展开查看游览重点、实用信息与小红书实读口碑。" image={chiangmaiImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>八城景点指南</h2><p>按城市筛选，点击展开查看完整攻略</p></div><CityTabs city={city} setCity={setCity} label="景点城市筛选"/><InfographicPanel city={city}/><div className="catalog rich attractions">{attrPager.visible.map((it,i)=>{const akey=it.city+it.name;const aopen=expanded===akey;return <Fragment key={akey}><article className="itemcard"><ItemMedia item={it} kind="景点" index={i}/><div><span className="citytag">{it.city} · 景点</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么安排</b><span>{it.best}</span></div><XhsMini item={it}/><button className="solid" onClick={()=>setExpanded(aopen?null:akey)}>{aopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button className="solid" onClick={()=>onBook({bkind:'attraction',name:it.name,city:it.city})}>预订门票</button>}<FavButton name={it.name} city={it.city} type='attraction'/></div></article>{aopen&&<InlineDetail item={it} kind="景点" onBook={onBook} onCollapse={()=>setExpanded(null)}/>}</Fragment>})}</div>{attrPager.toggle}</section></div>
 }
 
-/** 旅行研究：纯参考资料库。酒店/美食/景点三个子分类，复用完整目录（含城市筛选），不带预订入口。 */
+/** 旅行研究：纯参考资料库。酒店/美食/景点三个子分类，复用完整目录（含城市筛选），不带预订入口。
+ * 2026-09-28 支持 URL 参数：?kind=景点|美食|酒店 &city=城市名（从行程规划跳过来时预选）。 */
 function TravelResearch(){
- const [kind,setKind]=useState<'景点'|'美食'|'酒店'>('景点');
+ const params=new URLSearchParams(typeof window!=="undefined"?window.location.search:"");
+ const initKind=(params.get("kind")==="美食"||params.get("kind")==="酒店")?params.get("kind") as '美食'|'酒店':'景点';
+ const initCity=cities.includes(params.get("city")||"")?params.get("city")!:cities[0]!;
+ const [kind,setKind]=useState<'景点'|'美食'|'酒店'>(initKind);
  const kinds:{key:'景点'|'美食'|'酒店';label:string}[]=[{key:'景点',label:'🏛️ 景点'},{key:'美食',label:'🍽️ 美食'},{key:'酒店',label:'🏨 酒店'}];
- return <div className="page"><PageHero eyebrow="TRAVEL RESEARCH" title="旅行研究" summary="出行前的参考资料库：八城酒店、美食、景点完整研究，按城市筛选、点击展开看完整攻略。这里只做参考——定好城市和日期后，去「预订」下单。" image={chiangmaiImg}/><div className="viewtoggle" role="tablist" aria-label="研究分类">{kinds.map(k=><button key={k.key} className={kind===k.key?'active':''} aria-selected={kind===k.key} onClick={()=>setKind(k.key)}>{k.label}</button>)}</div>{kind==='酒店'?<HotelCatalog bare/>:kind==='美食'?<RestaurantCatalog bare/>:<AttractionGuide/>}<ResearchStatus/></div>;
+ return <div className="page"><PageHero eyebrow="TRAVEL RESEARCH" title="旅行研究" summary="出行前的参考资料库：八城酒店、美食、景点完整研究，按城市筛选、点击展开看完整攻略。这里只做参考——定好城市和日期后，去「预订」下单。" image={chiangmaiImg}/><div className="viewtoggle" role="tablist" aria-label="研究分类">{kinds.map(k=><button key={k.key} className={kind===k.key?'active':''} aria-selected={kind===k.key} onClick={()=>setKind(k.key)}>{k.label}</button>)}</div>{kind==='酒店'?<HotelCatalog bare/>:kind==='美食'?<RestaurantCatalog bare/>:<AttractionGuide initialCity={initCity}/>}<ResearchStatus/></div>;
 }
 
 function CountryAdvice(){ return <div className="countryadvice">{Object.entries(countryShoppingAdvice).map(([k,c])=><div key={k} className="countrycard"><h5>{c.title}</h5>{c.lines.map((l,i)=><p key={i}>{l}</p>)}</div>)}</div>;

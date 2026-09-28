@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useSearchParams, Link } from "react-router-dom";
 import { GuideApp, type GuideTab } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 
@@ -13,8 +14,31 @@ import "@/guide/theme-scoped.css";
  */
 export default function GuidePage({ tab }: { tab: GuideTab }) {
   const [client] = useState(() => new QueryClient());
+  const [searchParams] = useSearchParams();
+  /* 2026-09-28 从行程规划跳过来时（?from=planner），顶部给一个返回按钮，
+     同 tab 内跳转、手机上不会重新开 app。 */
+  const fromPlanner = searchParams.get("from") === "planner";
   return (
     <div className="guide-scope">
+      {fromPlanner && (
+        <div style={{ padding: "12px 16px 0" }}>
+          <Link
+            to="/planner"
+            style={{
+              display: "inline-block",
+              padding: "8px 14px",
+              border: "1px solid var(--line)",
+              borderRadius: "999px",
+              fontSize: "14px",
+              textDecoration: "none",
+              color: "var(--ink)",
+              background: "var(--surface)",
+            }}
+          >
+            ← 返回行程规划
+          </Link>
+        </div>
+      )}
       <QueryClientProvider client={client}>
         <GuideApp key={tab} initialTab={tab} hideChrome />
       </QueryClientProvider>

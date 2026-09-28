@@ -952,7 +952,7 @@ function wzStep2(){
     const meta=WZ_META[city];
     /* 2026-09-28 用户要求：推荐天数基于研究数据明示，一键应用；自动生成的逐日详细 tour 换成城市景点列表链接 */
     const recLine=meta?`<div class="micro wz-rec">💡 推荐 <b>${meta.recDays} 天</b>：${esc(meta.recReason)}${d!==meta.recDays?` <button class="link-btn" data-wzrec="${city}">一键设为 ${meta.recDays} 天</button>`:` <span class="micro">✓ 已是推荐天数</span>`}</div>`:"";
-    const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
+    const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research?from=planner&kind=景点&city=${encodeURIComponent(city)}">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
     return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
       ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
