@@ -462,7 +462,7 @@ const MUST_GO_CLOSURES: Record<string, MustGoClosure[]> = {
   ],
 };
 type DaySeverity = "ok" | "warn" | "critical";
-interface DayIssue { severity: DaySeverity; text: string; why?: string }
+interface DayIssue { severity: DaySeverity; text: string; why?: string; link?: string; linkText?: string }
 /** 某天某城市的闭馆问题：返回带严重级别的问题列表 */
 function dayClosureIssues(city: string, date: string): DayIssue[] {
   const dow = new Date(date + "T12:00:00Z").getUTCDay();
@@ -483,13 +483,13 @@ function citySuitability(date: string): CitySuit[] {
   const dow = new Date(date + "T12:00:00Z").getUTCDay(), weekend = dow === 0 || dow === 6;
   const holiday = publicHolidays[date], markers = specialDateMarkers[date] || [];
   return decisionCityList.map(city => {
-    const reasons: string[] = []; let level: SuitLevel = "ok";
-    const warn = (r: string) => { if (level === "ok") level = "warn"; reasons.push(r); };
-    const block = (r: string) => { level = "blocked"; reasons.push(r); };
+    const reasons: {text: string; link?: string; linkText?: string}[] = []; let level: SuitLevel = "ok";
+    const warn = (r: string, link?: string, linkText?: string) => { if (level === "ok") level = "warn"; reasons.push({text: r, link, linkText}); };
+    const block = (r: string, link?: string, linkText?: string) => { level = "blocked"; reasons.push({text: r, link, linkText}); };
     if (holiday && holiday.countries.includes(cityCountry[city])) warn(`撞上${holiday.name}，人多、酒店贵`);
     if (date >= "2026-12-24" && date <= "2026-12-31") warn("圣诞/跨年旺季，人多价高，奢华酒店可能有 minimum stay");
     markers.filter(m => m.city === city).forEach(m => warn(`${m.title}：${m.body}`));
-    if (city === "曼谷" && !weekend) warn("恰图恰周末市场今日不开");
+    if (city === "曼谷" && !weekend) warn("恰图恰周末市场今日不开", "/sea-travel-guide/travel-research?from=planner&spot=恰图恰周末市场", "查看恰图恰详情 →");
     if (city === "清迈") { if (dow !== 6) warn("周六步行街今日不开"); if (dow !== 0) warn("周日步行街今日不开"); }
     if (city === "普吉") { if (dow !== 0) warn("Lard Yai 周日步行街今日不开"); if (dow === 2) warn("Siam Niramit 每周二休演"); }
     if (cityCountry[city] === "TH" && dow === 1) warn("泰国周一博物馆闭馆风险，需逐馆核对");
@@ -752,7 +752,7 @@ function renderTrip(){
   };
   const parts: string[] = [];
   for(const s of TRIP_SEGS){
-    parts.push(segCard(s));
+    const segHtml = segCard(s);
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
       /* 起飞日二选一：本段最后一天飞（默认）或次日飞，日期明确写出来，不许含糊 */
@@ -770,13 +770,17 @@ function renderTrip(){
       }));
       const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
       const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
-      parts.push(`<div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
+      /* 视觉分组：段卡片+它的转场包在同一个容器里，左边一条竖线连起来，一眼看出按钮归谁 */
+      parts.push(`<div class="trip-seg-group">${segHtml}
+      <div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
     ${t.note?`<p class="micro">${t.note}</p>`:""}
     <div class="micro trip-flydays">${dayWord}：
       <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} ${goWord}</button>
       <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} ${goWord}</button>
     </div>
-    ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}`);
+    ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
+    }else{
+      parts.push(`<div class="trip-seg-group">${segHtml}</div>`);
     }
   }
   /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
@@ -1092,7 +1096,7 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
   out.push(...tripTransitionFlightIssues(date));
   out.push(...dayClosureIssues(city, date));
   const suits=citySuitability(date).filter(x=>x.city===city&&x.level!=="ok");
-  suits.forEach(s=>out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${s.reasons.join("；")}` }));
+  suits.forEach(s=>s.reasons.forEach(r=>out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${r.text}`, link:r.link, linkText:r.linkText })));
   const hd=publicHolidays[date];
   if(hd&&hd.countries.includes(cityCountry[city])) out.push({ severity:"warn", text:`${hd.short}（${hd.name}）人多价高` });
   if(legLabel){
@@ -1124,6 +1128,7 @@ function renderOrderTab(){
     </div>
     <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <div id="ordDayDetail"></div>
+    ${buildAvoidList()}
     <div class="card" style="margin-top:16px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」）</div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="ghost" id="ordToTrip">🗺️ 去大行程调整天数 →</button>
@@ -1132,6 +1137,51 @@ function renderOrderTab(){
     <p class="micro" id="ordSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
     <div class="wz-nav"><button class="primary" id="ordSave">💾 保存规划</button></div>`;
   wireOrderTab();
+}
+/* 检查确认底部：全行程避雷清单（2026-09-28 用户：把所有需要避雷的点列出来供参考） */
+function buildAvoidList(): string {
+  const ranges = tripRanges();
+  const rows = wzRanges();
+  const legs = wzLegs();
+  const allIssues: {date: string; city: string; severity: DaySeverity; text: string; link?: string; linkText?: string}[] = [];
+  
+  /* 遍历所有日期，收集问题 */
+  const start = "2026-11-28", end = "2027-01-02";
+  let d = start;
+  while(d <= end){
+    let city = "", segLabel = "";
+    for(const s of TRIP_SEGS){
+      const r = ranges[s.id];
+      if(r && d>=r.from && d<=r.to){ segLabel=s.label; city=s.id==="couple"?"":s.label; break; }
+    }
+    if(!city){
+      for(const r of rows){ if(d>=r.from&&d<=r.to){ city=r.city; segLabel="东南亚"; break; } }
+    }
+    if(city||segLabel){
+      const leg = legs.find(l=>l.date===d);
+      const issues = wzDayIssues(d, city||segLabel, leg?`${leg.from}→${leg.to}`:undefined);
+      for(const issue of issues){
+        /* 只收录 critical 和 warn，不收录 info */
+        if(issue.severity==="critical" || issue.severity==="warn"){
+          allIssues.push({date: d, city: city||segLabel, severity: issue.severity, text: issue.text, link: issue.link, linkText: issue.linkText});
+        }
+      }
+    }
+    d = addDays(d, 1);
+  }
+  
+  if(!allIssues.length){
+    return `<div class="card" style="margin-top:16px"><h3>🛡️ 全行程避雷清单</h3><p class="micro">✅ 全程无严重问题，放心出行。</p></div>`;
+  }
+  
+  const crit = allIssues.filter(x=>x.severity==="critical");
+  const warn = allIssues.filter(x=>x.severity==="warn");
+  
+  return `<div class="card" style="margin-top:16px">
+    <h3>🛡️ 全行程避雷清单 <span class="micro">（共 ${allIssues.length} 项，供参考）</span></h3>
+    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 <b>${x.date.slice(5).replace("-","/")}</b> ${esc(x.city)}：${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}</p>`).join("")}</div>`:""}
+    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ <b>${x.date.slice(5).replace("-","/")}</b> ${esc(x.city)}：${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}</p>`).join("")}</div>`:""}
+  </div>`;
 }
 function wireOrderTab(){
   const S2 = el("orderBody");
@@ -1143,6 +1193,47 @@ function wireOrderTab(){
   on("ordSave", wzSavePlan);
   /* 点日期 → 在日历下方原地展开详情（不弹窗，纯信息展示） */
   qa("[data-ordday]").forEach(b=>b.onclick=()=>toggleOrdDay(b.dataset.ordday!));
+}
+/* 检查确认日期详情：转场日的航班 availability 卡（2026-09-28 用户：要看到所有转场的航班，不只是 critical） */
+function dayFlightCards(d: string): string {
+  const ranges = tripRanges();
+  const cards: string[] = [];
+  /* 大行程转场：北京→新加坡 / 新加坡→首城 / 末城→西安 */
+  for(const t of TRIP_TRANSITIONS){
+    if(t.noFlight) continue;
+    const choice = tripFlyChoice(t.after);
+    const date = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(date !== d) continue;
+    const xiyLeg = thailandToXianLeg();
+    const sinLeg = singaporeToFirstCityLeg();
+    for(const l of t.legs){
+      const code = l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code);
+      const label = l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label);
+      cards.push(tripFlightCard(`${code}|${d}`, label));
+    }
+  }
+  /* 东南亚城市间转场：普吉→清迈 等（wzLegs） */
+  const legs = wzLegs();
+  for(const leg of legs){
+    if(leg.date !== d) continue;
+    const fromCode = CITY_AIRPORT[leg.from], toCode = CITY_AIRPORT[leg.to];
+    if(fromCode && toCode){
+      cards.push(tripFlightCard(`${fromCode}-${toCode}|${d}`, `${leg.from}→${leg.to}`));
+    }
+  }
+  /* 回西雅图：beijing3 最后一天 */
+  const beijing3 = ranges["beijing3"];
+  if(beijing3){
+    const choice = tripFlyChoice("return");
+    const flyDate = choice==="last" ? beijing3.to : addDays(beijing3.to, 1);
+    if(flyDate === d){
+      for(const code of ["PEK-SEA", "PVG-SEA", "CKG-SEA"]){
+        const label = code==="PEK-SEA" ? "北京→西雅图" : code==="PVG-SEA" ? "上海→西雅图" : "重庆→西雅图";
+        cards.push(tripFlightCard(`${code}|${d}`, label));
+      }
+    }
+  }
+  return cards.length ? `<div class="trip-flightinfo" style="margin-top:12px">${cards.join("")}</div>` : "";
 }
 /* 点日期 → 在日历下方原地展开详情卡（含原因说明+跳转链接）；再点一次收起 */
 function toggleOrdDay(d: string){
@@ -1165,6 +1256,7 @@ function toggleOrdDay(d: string){
   const crit = issues.filter(x=>x.severity==="critical");
   const warn = issues.filter(x=>x.severity!=="critical");
   const cityLink = city ? `<a href="/sea-travel-guide/travel-research?from=planner&kind=景点&city=${encodeURIComponent(city)}">🏛 查看${esc(city)}景点 →</a>` : "";
+  const flightCards = dayFlightCards(d);
   detail.innerHTML = `
   <div class="card ord-daydetail" style="margin:12px 0;border-left:4px solid ${crit.length?"#ef4444":warn.length?"#f59e0b":"#22c55e"}">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -1172,9 +1264,10 @@ function toggleOrdDay(d: string){
       <button class="icon-btn" id="ordDayClose" aria-label="收起">×</button>
     </div>
     ${leg?`<p><b>✈️ 转场：</b>${leg.from} → ${leg.to}</p>`:""}
-    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 ${esc(x.text)}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
-    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ ${esc(x.text)}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
-    ${!issues.length?`<p class="micro">✅ 当天无问题，放心玩。</p>`:""}
+    ${flightCards?`<div><h4 style="margin:8px 0 4px">✈️ 航班 availability</h4>${flightCards}</div>`:""}
+    ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
+    ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
+    ${!issues.length&&!flightCards?`<p class="micro">✅ 当天无问题，放心玩。</p>`:""}
     ${cityLink?`<p style="margin-top:8px">${cityLink}</p>`:""}
   </div>`;
   el("ordDayClose").onclick = ()=>{ ordExpandedDay = null; detail.innerHTML = ""; };

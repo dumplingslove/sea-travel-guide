@@ -89,6 +89,12 @@ h4{font-size:16px;margin:0;font-weight:700}
 
 /* ============ 🗺️ 大行程段卡片（视觉层级重做） ============ */
 .trip-seg{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+/* 大行程视觉分组：每段卡片+它的转场包在一起，左竖线+底色，一眼看出按钮归谁（2026-09-28 用户：太乱，分不清按钮归属） */
+.trip-seg-group{border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:12px;padding:14px 14px 10px;margin-bottom:16px;background:var(--surface)}
+.trip-seg-group .trip-seg{margin-bottom:8px;border:none;background:transparent;padding:0}
+.trip-seg-group .trip-flight{margin:8px 0 4px;padding:10px 12px;background:var(--bg-soft);border-radius:8px}
+.trip-seg-group .trip-flydays{margin:8px 0}
+.trip-seg-group .trip-flightinfo{margin-top:8px}
 .trip-seg-head{flex:1;min-width:0}
 .trip-seg-title{font-size:18px;font-weight:700;color:var(--ink)}
 .trip-seg-title .trip-seg-sub{font-size:14px;font-weight:400;color:var(--muted)}
