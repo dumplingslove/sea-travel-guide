@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T20:51:53+00:00",
+ "updated_at": "2026-09-28T22:08:58+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3797,6 +3797,530 @@
      ],
      "nonstop_count": 10,
      "business_queried_at": "2026-09-28T20:51:53+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-21": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 495,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR644",
+       "dep": "12:00",
+       "arr": "13:05",
+       "duration": "2h5m",
+       "price_usd": 495
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 495
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 780
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 629
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 780
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 936
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 1231
+      }
+     ],
+     "nonstop_count": 7,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-22": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 346,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 346
+      },
+      {
+       "airline": "Thai Lion Air",
+       "flight": "SL103",
+       "dep": "15:30",
+       "arr": "16:20",
+       "duration": "1h50m",
+       "price_usd": 365
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR644",
+       "dep": "12:00",
+       "arr": "13:05",
+       "duration": "2h5m",
+       "price_usd": 408
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 658
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 495
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 658
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1h55m",
+       "price_usd": 936
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 936
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 975
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h5m",
+       "price_usd": 1231
+      }
+     ],
+     "nonstop_count": 10,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-23": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 408,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 408
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 629
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1h55m",
+       "price_usd": 658
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR664",
+       "dep": "12:00",
+       "arr": "13:05",
+       "duration": "2h5m",
+       "price_usd": 895
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 999
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h5m",
+       "price_usd": 1025
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 1044
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 1069
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 1231
+      }
+     ],
+     "nonstop_count": 9,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-24": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 412,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai Lion Air",
+       "flight": "SL103",
+       "dep": "15:30",
+       "arr": "16:20",
+       "duration": "1h50m",
+       "price_usd": 412
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR644",
+       "dep": "11:15",
+       "arr": "12:20",
+       "duration": "2h5m",
+       "price_usd": 495
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 495
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 780
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 629
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1h55m",
+       "price_usd": 914
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h5m",
+       "price_usd": 914
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 914
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 914
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 1005
+      }
+     ],
+     "nonstop_count": 10,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-25": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 286,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 286
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 398
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 414
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR664",
+       "dep": "12:00",
+       "arr": "13:05",
+       "duration": "2h5m",
+       "price_usd": 481
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 607
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1h55m",
+       "price_usd": 721
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 791
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h5m",
+       "price_usd": 821
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 851
+      }
+     ],
+     "nonstop_count": 9,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-26": {
+     "economy_queried_at": "2026-09-28T22:08:58+00:00",
+     "economy_usd": 269,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai Lion Air",
+       "flight": "SL103",
+       "dep": "15:30",
+       "arr": "16:20",
+       "duration": "1h50m",
+       "price_usd": 269
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2h5m",
+       "price_usd": 286
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2h",
+       "price_usd": 578
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2h",
+       "price_usd": 779
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1h55m",
+       "price_usd": 477
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR644",
+       "dep": "12:55",
+       "arr": "14:00",
+       "duration": "2h5m",
+       "price_usd": 526
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2h",
+       "price_usd": 578
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 733
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2h5m",
+       "price_usd": 796
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h5m",
+       "price_usd": 873
+      }
+     ],
+     "nonstop_count": 10,
+     "business_queried_at": "2026-09-28T22:08:58+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
