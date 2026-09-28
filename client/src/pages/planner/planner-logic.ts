@@ -1133,18 +1133,6 @@ function renderOrderTab(){
         <button class="ghost" id="ordToWizard">🧭 去改东南亚城市顺序 →</button>
       </div></div>
     <p class="micro" id="ordSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
-    <div class="wz-nav"><button class="primary" id="ordSave">💾 保存规划</button></div>
-    <div class="wz-unical-legend">
-      <span><i class="wz-segdot" style="background:#3b82f6"></i>北京</span>
-      <span><i class="wz-segdot" style="background:#22c55e"></i>新加坡</span>
-      <span><i class="wz-segdot" style="background:#f59e0b"></i>东南亚段</span>
-      <span><i class="wz-segdot" style="background:#8b5cf6"></i>西安</span>
-      <span class="wz-legbadge">✈️ 转场</span>
-      <span class="wz-legbadge">⚠️ 提醒</span>
-      <span class="wz-legbadge">🚫 必去闭馆</span>
-    </div>
-    <div class="wz-unical">${wzUnifiedCalendar()}</div>
-    <p class="micro" id="ordSaveNote" role="status" aria-live="polite" style="margin:14px 0 0"></p>
     <div class="wz-nav"><button class="primary" id="ordSave">💾 保存规划</button></div>`;
   wireOrderTab();
 }
