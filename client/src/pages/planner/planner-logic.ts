@@ -630,7 +630,7 @@ interface FlightDbDay {
   economy_queried_at?: string; business_queried_at?: string;
   nonstop_flights?: FlightDbFlight[];
 }
-interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string}[] }
+interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string;duration:string}[] }
 /* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
    库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
 const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
@@ -645,7 +645,7 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
       carriers: [...new Set(nf.map(f=>f.airline))],
       direct: nf.length>0,
       queriedAt: (d.economy_queried_at || d.business_queried_at || "").slice(0,10),
-      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr})),
+      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||""})),
     };
   }
 }
@@ -661,21 +661,25 @@ const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"xian", before:"beijing3", title:"西安→北京（用户一人）",
     legs:[{code:"XIY-PEK",label:"西安→北京"}] },
 ];
-function tripFlightNote(key: string, label: string){
+/* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落 */
+function tripFlightCard(key: string, label: string){
   const d=TRIP_FLIGHTS[key];
-  if(!d) return `${label}：航班待查询（Google Flights 库填充中）`;
-  if(!d.direct) return `${label}：暂无直飞${d.queriedAt?`（${d.queriedAt} Google Flights 实查）`:""}`;
-  const segs: string[]=[];
-  if(d.eco!=null) segs.push(`经济 $${d.eco}`);
-  if(d.biz!=null) segs.push(`商务 $${d.biz}`);
-  const price=segs.length ? segs.join(" / ")+(d.basis?`（${d.basis}）`:"") : "价格待查";
-  return `${label}：${d.results}班直飞 · ${price} · ${d.carriers.join(" / ")}`;
-}
-/* 班次时间：帮定日期用（某天只有红眼航班之类，一眼能看到） */
-function tripFlightDetail(key: string, label: string){
-  const d=TRIP_FLIGHTS[key];
-  if(!d||!d.direct||!d.flights.length) return "";
-  return `${label}：${d.flights.map(f=>`${f.flight} ${f.dep}→${f.arr}`).join(" · ")}`;
+  const head=(status:string,cls:string)=>`<div class="tfi-head"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></div>`;
+  if(!d) return `<div class="tfi-leg">${head("⏳ 航班待查询","pending")}<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p></div>`;
+  if(!d.direct) return `<div class="tfi-leg">${head("⚪ 暂无直飞","none")}<p class="tfi-note">Google Flights 实查确认当天无直飞${d.queriedAt?`（${d.queriedAt}）`:""}。</p></div>`;
+  const prices: string[]=[];
+  if(d.eco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.eco}</b></span>`);
+  if(d.biz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.biz}</b></span>`);
+  const rows=d.flights.map(f=>{
+    const dh=Number(f.dep.slice(0,2));
+    const redeye=!isNaN(dh)&&dh<6;
+    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}</li>`;
+  }).join("");
+  return `<div class="tfi-leg">${head(`🟢 ${d.results}班直飞`,"ok")}
+    <div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
+    ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.join(" / ")}</div>`:""}
+    <ul class="tfi-flights">${rows}</ul>
+    ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}</div>`;
 }
 /* 回西雅图卡片：出发城市三选一（未定）＋起飞日二选一，全部在大行程里定清楚 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
@@ -734,15 +738,13 @@ function renderTrip(){
         code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
         label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
       }));
-      const notes=legs.map(l=>`<span class="trip-note">${tripFlightNote(`${l.code}|${date}`,l.label)}</span>`).join('<span class="trip-note-sep"> · </span>');
-      const details=legs.map(l=>tripFlightDetail(`${l.code}|${date}`,l.label)).filter(Boolean).join("<br>");
+      const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
       parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
     <div class="micro trip-flydays">起飞日：
       <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} 飞</button>
       <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} 飞</button>
     </div>
-    <p class="micro">${notes}</p>
-    ${details?`<p class="micro">🕐 ${details}</p>`:""}`);
+    <div class="trip-flightinfo">${cards}</div>`);
     }
   }
   /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
@@ -756,10 +758,10 @@ function renderTrip(){
       : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你一人）`}];
     const title=returnCity==="PEK" ? "国内集结（北京）" : `北京→${m.city}（国内集结）`;
     const others=returnCity==="PEK" ? "你已在北京" : "";
-    const notes=legs.map(l=>`<span class="trip-note">${tripFlightNote(`${l.code}|${date}`,l.label)}</span>`).join('<span class="trip-note-sep"> · </span>');
+    const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
     return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
     <p class="micro">${others?others+"；":""}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
-    ${notes?`<p class="micro">${notes}</p>`:""}`;
+    ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}`;
   })();
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
