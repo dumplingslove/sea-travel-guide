@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T03:40:01+00:00",
+ "updated_at": "2026-09-28T04:19:42+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -340,6 +340,68 @@
      "business_queried_at": "2026-09-28T03:40:01+00:00",
      "business_usd": 3034,
      "business_price_basis": "2 adults + 1 child total"
+    },
+    "2026-12-06": {
+     "economy_queried_at": "2026-09-28T04:19:42+00:00",
+     "economy_usd": 512.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "Cheapest tab 'From' prices (3-passenger totals, USD); the Best tab briefly showed $536/$577/$1162 for the same flights before a price refresh.",
+     "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "arr": "06:45",
+       "dep": "00:10",
+       "duration": "6h35m",
+       "flight": "SQ801",
+       "price_usd": 519.0
+      },
+      {
+       "airline": "Air China",
+       "arr": "06:50",
+       "dep": "00:15",
+       "duration": "6h35m",
+       "flight": "CA975",
+       "price_usd": 512.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "15:20",
+       "dep": "08:45",
+       "duration": "6h35m",
+       "flight": "SQ805",
+       "price_usd": 519.0
+      },
+      {
+       "airline": "Air China",
+       "arr": "16:15",
+       "dep": "09:45",
+       "duration": "6h30m",
+       "flight": "CA889",
+       "price_usd": 514.0
+      },
+      {
+       "airline": "Air China",
+       "arr": "21:55",
+       "dep": "15:45",
+       "duration": "6h10m",
+       "flight": "CA969",
+       "price_usd": 512.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "22:55",
+       "dep": "16:40",
+       "duration": "6h15m",
+       "flight": "SQ807",
+       "price_usd": 1097.0
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_usd": 3142.0,
+     "business_price_basis": "2大1小总价"
     }
    }
   },
@@ -349,7 +411,39 @@
    "adults": 2,
    "child_ages": [],
    "label": "西安→新加坡（2成人）",
-   "days": {}
+   "days": {
+    "2026-12-06": {
+     "economy_queried_at": "2026-09-28T04:19:42+00:00",
+     "economy_usd": 373.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "economy_note": "Prices refreshed during viewing (Scoot $383-> $373, China Eastern $421-> $418).",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "arr": "07:50",
+       "dep": "01:55",
+       "duration": "5h55m",
+       "flight": "TR135",
+       "price_usd": 373.0
+      },
+      {
+       "airline": "China Eastern",
+       "arr": "12:55",
+       "dep": "07:20",
+       "duration": "5h35m",
+       "flight": "MU2069",
+       "price_usd": 418.0
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_usd": 1384.0,
+     "business_price_basis": "2成人总价",
+     "business_note": "Only nonstop flight with a business cabin; the other nonstop (Scoot TR135) has no business class."
+    }
+   }
   },
   "SIN-XIY": {
    "origin": "SIN",
@@ -359,7 +453,31 @@
     2
    ],
    "label": "新加坡→西安（2大1小，岳父母带Dylan回西安）",
-   "days": {}
+   "days": {
+    "2026-12-10": {
+     "economy_queried_at": "2026-09-28T04:19:42+00:00",
+     "economy_usd": 1124.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "Best tab showed $1154 before prices refreshed to $1124 on the Cheapest tab.",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "arr": "00:45+1",
+       "dep": "19:15",
+       "duration": "5h30m",
+       "flight": "TR134",
+       "price_usd": 1124.0
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    }
+   }
   },
   "SIN-HKT": {
    "origin": "SIN",
@@ -367,7 +485,95 @@
    "adults": 2,
    "child_ages": [],
    "label": "新加坡→普吉（2成人）",
-   "days": {}
+   "days": {
+    "2026-12-10": {
+     "economy_queried_at": "2026-09-28T04:19:42+00:00",
+     "economy_usd": 286.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "economy_note": "Cheapest tab 'From' prices (2-passenger totals, USD); the Best tab briefly showed $292/$346/$358/$455/$383/$408/$455/$455/$545 before a price refresh.",
+     "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "arr": "07:50",
+       "dep": "06:55",
+       "duration": "1h55m",
+       "flight": "SQ724",
+       "price_usd": 335.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "09:15",
+       "dep": "08:15",
+       "duration": "2h",
+       "flight": "SQ726",
+       "price_usd": 386.0
+      },
+      {
+       "airline": "Scoot",
+       "arr": "09:40",
+       "dep": "08:40",
+       "duration": "2h",
+       "flight": "TR678",
+       "price_usd": 398.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "10:05",
+       "dep": "09:00",
+       "duration": "2h5m",
+       "flight": "SQ728",
+       "price_usd": 400.0
+      },
+      {
+       "airline": "Scoot",
+       "arr": "12:20",
+       "dep": "11:15",
+       "duration": "2h5m",
+       "flight": "TR644",
+       "price_usd": 315.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "13:55",
+       "dep": "12:50",
+       "duration": "2h5m",
+       "flight": "SQ732",
+       "price_usd": 400.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "17:10",
+       "dep": "16:10",
+       "duration": "2h",
+       "flight": "SQ736",
+       "price_usd": 374.0
+      },
+      {
+       "airline": "Scoot",
+       "arr": "19:20",
+       "dep": "18:15",
+       "duration": "2h5m",
+       "flight": "TR652",
+       "price_usd": 286.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "arr": "19:35",
+       "dep": "18:35",
+       "duration": "2h",
+       "flight": "SQ740",
+       "price_usd": 320.0
+      }
+     ],
+     "nonstop_count": 9,
+     "business_queried_at": "2026-09-28T04:19:42+00:00",
+     "business_usd": 1422.0,
+     "business_price_basis": "2成人总价",
+     "business_note": "Cheapest tab 'From' prices; the Best tab briefly showed $1809/$2122/$2435/$4125 before a price refresh. Scoot flights have no business class."
+    }
+   }
   },
   "HKT-CNX": {
    "origin": "HKT",
