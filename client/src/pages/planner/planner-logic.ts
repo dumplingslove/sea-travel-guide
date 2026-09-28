@@ -985,13 +985,17 @@ function wzStep2(){
     /* 2026-09-28 用户要求：推荐天数基于研究数据明示，一键应用；自动生成的逐日详细 tour 换成城市景点列表链接 */
     const recLine=meta?`<div class="micro wz-rec">💡 推荐 <b>${meta.recDays} 天</b>：${esc(meta.recReason)}${d!==meta.recDays?` <button class="link-btn" data-wzrec="${city}">一键设为 ${meta.recDays} 天</button>`:` <span class="micro">✓ 已是推荐天数</span>`}</div>`:"";
     const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research?from=planner&kind=景点&city=${encodeURIComponent(city)}">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
-    return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
+    const idx = wz.order.filter(c=>wz.cities.includes(c)).indexOf(city);
+    const cnt = wz.order.filter(c=>wz.cities.includes(c)).length;
+    const upBtn = idx>0 ? `<button class="icon-btn" data-wzordup="${idx}" aria-label="${city}前移">↑</button>` : `<span class="wz-ph"></span>`;
+    const dnBtn = idx<cnt-1 ? `<button class="icon-btn" data-wzorddn="${idx}" aria-label="${city}后移">↓</button>` : `<span class="wz-ph"></span>`;
+    return `<div class="card wz-dayrow"><div class="wz-move">${upBtn}${dnBtn}</div><div><b>${idx+1}. ${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
       ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
       ${attrLink}</div>
       <div class="stepper" aria-label="${city}天数"><button data-wzday="${city}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-wzday="${city}|1" aria-label="增加一天"${atCap?" disabled title=\"已达大行程天数上限\"":""}>＋</button></div></div>`;
   }).join("");
-  return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
+  return `<div class="section-head"><div><p class="eyebrow">STEP 2/2</p><h2>定天数与顺序</h2><p class="lede">1–6 天可调，用 ↑ ↓ 定城市顺序；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定顺序）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
     <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定顺序 →</button></div>`;
@@ -1068,17 +1072,8 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
 }
 function renderOrderTab(){
   const body = el("orderBody");
-  const rows = wzRanges();
-  const orderRows = rows.map((r,i)=>{
-    const up = i>0 ? `<button class="icon-btn" data-ordup="${i}" aria-label="${r.city}前移">↑</button>` : "<span class='wz-ph'></span>";
-    const down = i<rows.length-1 ? `<button class="icon-btn" data-orddown="${i}" aria-label="${r.city}后移">↓</button>` : "<span class='wz-ph'></span>";
-    return `<div class="card wz-orderrow"><div class="wz-move">${up}${down}</div>
-      <div><b>${i+1}. ${r.city}</b><div class="micro">${r.from.slice(5).replace("-","/")} – ${r.to.slice(5).replace("-","/")} · ${wz.days[r.city]}天</div></div></div>`;
-  }).join("");
   body.innerHTML = `
-    <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」） <button class="ghost" id="ordToTrip">去大行程调整 →</button></div></div>
-    <h3 class="sec-title">🔀 东南亚城市顺序</h3>
-    ${orderRows || '<p class="micro">先去「🧭 东南亚城市规划」选城市。</p>'}
+    <div class="card" style="margin-bottom:12px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」） <button class="ghost" id="ordToTrip">去大行程调整 →</button> <button class="ghost" id="ordToWizard">去改城市顺序 →</button></div></div>
     <h3 class="sec-title">🗓️ 全行程日历 <span class="micro">点任意一天看详情</span></h3>
     <div class="wz-unical-legend">
       <span><i class="wz-segdot" style="background:#3b82f6"></i>北京</span>
@@ -1100,9 +1095,8 @@ function wireOrderTab(){
   const qa = (s: string) => [...S2.querySelectorAll(s)] as HTMLElement[];
   const on = (id: string, fn: () => void) => { const b = q("#"+id); if(b) b.onclick = fn; };
   on("ordToTrip", ()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); });
+  on("ordToWizard", ()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); wzSetStep(2); });
   on("ordSave", wzSavePlan);
-  qa("[data-ordup]").forEach(b=>b.onclick=()=>{ const i=Number(b.dataset.ordup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const city=arr[i]; arr[i]=arr[i-1]; arr[i-1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } cachePlannerLocal(); renderOrderTab(); });
-  qa("[data-orddown]").forEach(b=>b.onclick=()=>{ const i=Number(b.dataset.orddown), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const city=arr[i]; arr[i]=arr[i+1]; arr[i+1]=city; wz.order=[...WZ_ORDER.filter(c=>!wz.cities.includes(c)),...arr]; } cachePlannerLocal(); renderOrderTab(); });
   /* 点日期 → modal 详情（替代 toast，更正式） */
   qa("[data-ordday]").forEach(b=>b.onclick=()=>showDayModal(b.dataset.ordday!));
 }
@@ -1190,6 +1184,8 @@ function wzWire(){
   on("wzAll",()=>{ wz.cities=[...WZ_ORDER]; wz.order=[...WZ_ORDER]; Object.assign(wz.days,baselineNights); wzRender() });
   on("wzClear",()=>{ wz.cities=[]; wzRender() });
   on("wzNext1",()=>wzSetStep(2)); on("wzBack2",()=>wzSetStep(1)); on("wzNext2",wzGoOrder);
+  S.querySelectorAll("[data-wzordup]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzordup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const c=arr[i]; arr[i]=arr[i-1]; arr[i-1]=c; wz.order=[...WZ_ORDER.filter(x=>!wz.cities.includes(x)),...arr]; } cachePlannerLocal(); wzRender(); });
+  S.querySelectorAll("[data-wzorddn]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzorddn), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const c=arr[i]; arr[i]=arr[i+1]; arr[i+1]=c; wz.order=[...WZ_ORDER.filter(x=>!wz.cities.includes(x)),...arr]; } cachePlannerLocal(); wzRender(); });
   S.querySelectorAll("[data-wzday]").forEach(b=>{
     (b as HTMLElement).onclick=()=>{
       const d=(b as HTMLElement).dataset.wzday!;
