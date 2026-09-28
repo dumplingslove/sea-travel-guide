@@ -50,6 +50,10 @@ export interface PlannerPlan {
   trip?: Record<string, number>;
   /** 大行程总览：夫妻东南亚段城市顺序，可选以兼容旧保存 */
   coupleOrder?: string[];
+  /** 大行程总览：回西雅图出发城市（""=待定），可选以兼容旧保存 */
+  returnCity?: "" | "PEK" | "PVG" | "CKG";
+  /** 大行程总览：每段转场起飞日（transition.after -> "last"|"next"；回程 key 为 "return"），可选以兼容旧保存 */
+  tripFlightDay?: Record<string, "last"|"next">;
 }
 
 export interface LoadedPlan {

@@ -601,6 +601,24 @@ function thailandToXianLeg(){
   const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
   return { code: `${code}-XIY`, label: `${last}→西安` };
 }
+/* 回西雅图出发城市（未定）：北京首都 / 上海浦东 / 重庆江北三选一，用户在大行程里定 */
+type ReturnCityCode = "" | "PEK" | "PVG" | "CKG";
+let returnCity: ReturnCityCode = "";
+const RETURN_CITY_META: Record<Exclude<ReturnCityCode,"">,{city:string;airport:string}> = {
+  PEK:{city:"北京",airport:"北京首都"},
+  PVG:{city:"上海",airport:"上海浦东"},
+  CKG:{city:"重庆",airport:"重庆江北"},
+};
+/* 每段转场的起飞日：key = transition.after（回程用 "return"）；
+   "last" = 本段最后一天飞（默认：最后一天要算上坐飞机的时间），"next" = 次日飞 */
+let tripFlightDay: Record<string,"last"|"next"> = {};
+function tripFlyChoice(key: string): "last"|"next"{ return tripFlightDay[key]==="next" ? "next" : "last"; }
+/* 西安→回程城市的国内集结段（1人），跟着回程城市变量动态变 */
+function xianToReturnLeg(){
+  if(!returnCity) return { code:"", label:"西安→？", title:"西安→回程城市（1人，城市待定）" };
+  const m=RETURN_CITY_META[returnCity];
+  return { code:`XIY-${returnCity}`, label:`西安→${m.city}`, title:`西安→${m.city}（1人）` };
+}
 
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
@@ -608,9 +626,9 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-interface TripDuffelLeg { results: number; min: number; max: number; carriers: string[]; direct: boolean }
-/* 大行程新增航段 Duffel 实测（只看直飞；2026-09-27 主 agent 重查后填入） */
-const TRIP_DUFFEL: Record<string, TripDuffelLeg> = {};
+interface TripFlightLeg { results: number; min: number; max: number; carriers: string[]; direct: boolean }
+/* 大行程转场航班实查（只看直飞；待 Google Flights 航班库填充后接入，当前为空即显示"待查询"） */
+const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
 interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[] }
 const TRIP_TRANSITIONS: TripTransition[] = [
@@ -620,25 +638,51 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"SIN-HKT",label:"新加坡→普吉"},{code:"SIN-XIY",label:"新加坡→西安"}] },
   { after:"couple", before:"xian", title:"__COUPLE_XIY__",
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
-  { after:"xian", before:"beijing3", title:"西安→北京（1人）",
-    legs:[{code:"XIY-PEK",label:"西安→北京"}] },
+  { after:"xian", before:"beijing3", title:"__XIY_RETURN__",
+    legs:[{code:"__XIY_RETURN_CODE__",label:"__XIY_RETURN_LABEL__"}] },
 ];
-function tripDuffelNote(key: string, label: string){
-  const d=TRIP_DUFFEL[key];
-  if(!d) return `${label}：航班价格待重查`;
+function tripFlightNote(key: string, label: string){
+  const d=TRIP_FLIGHTS[key];
+  if(!d) return `${label}：航班待查询（Google Flights 库填充中）`;
   if(!d.direct) return `${label}：暂无直飞`;
   return `${label}：${d.results}个结果，$${d.min}–$${d.max}，${d.carriers.join(" / ")}`;
+}
+/* 回西雅图卡片：出发城市三选一（未定）＋起飞日二选一，全部在大行程里定清楚 */
+function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
+  const lastDay=ranges["beijing3"].to, nextDay=addDays(lastDay,1);
+  const choice=tripFlyChoice("return");
+  const flyDate=choice==="last"?lastDay:nextDay;
+  const cityBtns=[`<button class="${returnCity===""?"primary":"ghost"}" data-returncity="">待定</button>`]
+    .concat((Object.keys(RETURN_CITY_META) as Exclude<ReturnCityCode,"">[])
+      .map(c=>`<button class="${returnCity===c?"primary":"ghost"}" data-returncity="${c}">${RETURN_CITY_META[c].airport}</button>`))
+    .join(" ");
+  const dest=returnCity?`${RETURN_CITY_META[returnCity].city} → 西雅图`:`？ → 西雅图（出发城市待定）`;
+  return `<div class="card trip-seg">
+    <div class="trip-seg-head">
+      <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
+      <div class="micro">出发城市：${cityBtns}</div>
+      <div class="micro">起飞日：
+        <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">集结最后一天 ${dateLabel(lastDay)} 飞</button>
+        <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
+      </div>
+      <p class="micro">北京 / 上海 / 重庆三地回西雅图的国际票价、国内集结成本、总耗时、前一晚机场住宿、带娃难度待比较，先不定；起飞日定清楚，查价才不会错位。</p>
+    </div>
+  </div>`;
 }
 function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
   const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
-    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : s.sub;
+    /* 末段是"回程集结"段：城市跟着回西雅图出发城市变量走，没定就明确写待定 */
+    const isReturnSeg = s.id==="beijing3";
+    const segLabel = isReturnSeg ? (returnCity?`回${RETURN_CITY_META[returnCity].city}`:"回程集结（城市待定）") : s.label;
+    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : (isReturnSeg ? "用户一人前往回程城市" : s.sub);
+    const segNote = isReturnSeg ? "下方定回西雅图出发城市（北京 / 上海 / 重庆三选一）" : s.note;
     const coupleOrderBtns = s.id==="couple" ? `<div class="trip-order-btns" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="micro">城市顺序：</span>${coupleOrder.map((c,i)=>`<span class="micro" style="display:inline-flex;align-items:center;gap:2px;"><b>${c}</b>${i>0?`<button class="ghost" data-coupleup="${i}" aria-label="${c}上移" style="padding:2px 6px;">↑</button>`:""}${i<coupleOrder.length-1?`<button class="ghost" data-coupledown="${i}" aria-label="${c}下移" style="padding:2px 6px;">↓</button>`:""}</span>`).join('<span class="micro"> → </span>')}</div>` : "";
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
-        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${coupleSub}</span></div>
-        <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
+        <div class="trip-seg-title">${segLabel} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-meta">${s.mode} · ${segNote}</div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
         ${coupleOrderBtns}
         ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「分步规划」定这 ${d} 天的城市 →</button></div>`:""}
@@ -651,23 +695,33 @@ function renderTrip(){
     parts.push(segCard(s));
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
-      const date=ranges[t.before].from, md=date.slice(5).replace("-","/");
+      /* 起飞日二选一：本段最后一天飞（默认）或次日飞，日期明确写出来，不许含糊 */
+      const choice=tripFlyChoice(t.after);
+      const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
+      const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
-      const title = t.title.replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`);
+      const xr = xianToReturnLeg();
+      const title = t.title
+        .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
+        .replace("__XIY_RETURN__", xr.title);
       const legs = t.legs.map(l=>({
-        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
-        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
+        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__XIY_RETURN_CODE__", xr.code),
+        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__XIY_RETURN_LABEL__", xr.label),
       }));
-      const notes=legs.map(l=>tripDuffelNote(`${l.code}|${date}`,l.label)).join(" · ");
-      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${md} ${title}</strong><span>转场</span></div>
+      const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
+      parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
+    <div class="micro">起飞日：
+      <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} 飞</button>
+      <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} 飞</button>
+    </div>
     <p class="micro">${notes}</p>`);
     }
   }
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${parts.join("\n    ")}
-    <div class="trip-flight"><span>✈️</span><strong>1/2（周六）北京 → 西雅图</strong><span>回程（时间已定）</span></div>
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> 天（北京→新加坡→东南亚→西安→北京；回北京之后暂不规划）</p>
+    ${renderReturnCard(ranges)}
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> 天（北京→新加坡→东南亚→西安→${returnCity?RETURN_CITY_META[returnCity].city:"回程集结"}；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave"${ok?"":" disabled"}>💾 保存大行程</button></div>`;
   body.querySelectorAll("[data-tripday]").forEach(b=>(b as HTMLElement).onclick=()=>{
@@ -690,6 +744,16 @@ function renderTrip(){
   if(tw) tw.onclick=()=>{ (S.querySelector('[data-tab="wizard"]') as HTMLElement).click(); };
   const sv=body.querySelector("#tripSave") as HTMLButtonElement|null;
   if(sv) sv.onclick=async ()=>{ sv.disabled=true; try{ await persistPlanToCloud(t=>{ el("tripSaveNote").textContent=t; }); }finally{ sv.disabled=!ok; } };
+  body.querySelectorAll("[data-flyday]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const [key,val]=((b as HTMLElement).dataset.flyday||"").split("|");
+    tripFlightDay[key]=val==="next"?"next":"last";
+    renderTrip(); cachePlannerLocal();
+  });
+  body.querySelectorAll("[data-returncity]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const v=((b as HTMLElement).dataset.returncity||"") as ReturnCityCode;
+    returnCity=(v==="PEK"||v==="PVG"||v==="CKG")?v:"";
+    renderTrip(); cachePlannerLocal();
+  });
 }
 
 /* ================= 🧭 分步规划向导 ================= */
@@ -705,17 +769,10 @@ const WZ_META: Record<string, WzCityMeta> = {
  "胡志明市":{tagline:"经典推荐：再加古芝地道",decNote:"12月无全国性公共假日；古芝地道与湄公河三角洲不要塞在同一天",stayArea:"第一郡（独立宫旁，步行可达各景点）",staySource:"路线帖共识"},
  "富国岛":{tagline:"经典推荐：海、陆、夜市齐",decNote:"风浪可能导致出海取消，建议留1天机动；Park Hyatt 2027-03才开业，本次不可选",stayArea:"中央西岸长滩/阳东镇（Dinh Cau日落＋夜市近）",staySource:"路线帖（信息较弱）"}
 };
-interface DuffelLeg { offers: number; min: number; max: number; carriers: string; fragile?: boolean }
-const DUFFEL_NOTE = "Duffel实测 · 2026-09-14/15 · 2成人直飞当前库存；价格会变，Duffel未返回退改信息，出票前重查";
-const DUFFEL_MEASURED: Record<string, DuffelLeg> = {
- "BKK-CNX|2026-12-15":{offers:28,min:169.80,max:277.80,carriers:"泰航 / 曼谷航空"},
- "CNX-HKT|2026-12-17":{offers:1,min:391.80,max:471.80,carriers:"曼谷航空 PG0248 14:35–16:40",fragile:true},
- "HKT-PEN|2026-12-20":{offers:1,min:205.80,max:205.80,carriers:"马航 MH5455 14:35–16:35",fragile:true},
- "PEN-KUL|2026-12-22":{offers:28,min:67.00,max:421.20,carriers:"马航 / Malindo"},
- "KUL-SGN|2026-12-24":{offers:12,min:222.20,max:557.80,carriers:"越捷 / 越航 / 马航等"},
- "SGN-PQC|2026-12-26":{offers:22,min:130.00,max:249.00,carriers:"越捷 / 越航等"},
- "PQC-SIN|2026-12-29":{offers:3,min:334.00,max:674.00,carriers:"越捷 / Scoot（Scoot由Hahn Air出票）"}
-};
+/* 2026-09-27 用户明确：查机票一律用 Google Flights，不再使用 Duffel。
+   此处 2026-09-14/15 的 7 条 Duffel 历史直飞/价格已删除；精确日期的实查数据改由
+   Google Flights 航班库（hidden_files/flight-db/december-2026.json）提供，
+   库里还没有的日期显示"待查询"，不沿用旧价、也不写成"无直飞"。 */
 interface WzState { step: number; cities: string[]; days: Record<string, number>; order: string[]; start: string; modes: Record<string, string> }
 const wz: WzState = { step:1, cities:[...WZ_ORDER], days:{...baselineNights}, order:[...WZ_ORDER], start:"2026-12-12", modes:{} };
 /* 向导日期锚点：永远等于大行程「夫妻东南亚」段起始日，不可单独编辑；大行程天数/云端加载后都要重同步 */
@@ -750,12 +807,11 @@ function wzBudgetOk(){
   return true;
 }
 function wzLegCheck(from: string, to: string, date: string){
-  const dm=DUFFEL_MEASURED[`${cityAirportCodes[from]}-${cityAirportCodes[to]}|${date}`], route=routeForCities(from,to), a=routeAssessment(route,date);
-  if(dm) return {level:dm.fragile?"warn":"pass", html:`<b>✓ Duffel实测 ${date.slice(5).replace("-","/")} 有直飞</b>：${dm.offers} 个结果，两人 $${dm.min.toFixed(2)}–$${dm.max.toFixed(2)}（${esc(dm.carriers)}）${dm.fragile?'<br>⚠ <b>当天仅1班，先锁这段</b>':""}<br><span class="micro">${DUFFEL_NOTE}</span>`};
+  const route=routeForCities(from,to), a=routeAssessment(route,date);
   if(a.kind==="direct"){ const partial=route&&route.verification_status.includes("部分待核验"); return {level:"pass", html:`<b>✓ 当天有直飞</b>（按星期查矩阵）：${a.airlines.map(x=>esc(`${x.code} ${x.name}`)).join(" / ")}${partial?'<br>⚠ 排班模式已核验，精确日期时刻待核验，出票前重查':""}`} }
   if(a.kind==="no-service") return {level:"blocked", html:`<b>⛔ ${dateLabel(date)}无直飞</b>：${esc((route?.calendar_warnings||[]).join(" ")||"请改期或看中转/铁路方案。")}`};
   if(a.kind==="no-direct") return {level:"blocked", html:`<b>⛔ 已确认无直飞</b>：${esc(route?.notes||"请改走中转。")}`};
-  return {level:"warn", html:`<b>⚠ 精确日期待核验</b>：排班模式已核验，精确日期时刻待核验；不能据此推断当天无直飞。`};
+  return {level:"warn", html:`<b>⚠ 精确日期待查询</b>：Google Flights 航班库正在逐日填充，当前日期暂无实查数据；不能据此推断当天无直飞，出票前以实查为准。`};
 }
 function wzSetStep(n: number){
   if(n===2&&wz.cities.length<2){ toast("至少选 2 个城市才能继续",true); return }
@@ -954,6 +1010,8 @@ function serializePlan(): PlannerPlan{
     flightSelections:{},
     trip:{...tripDays},
     coupleOrder:[...coupleOrder],
+    returnCity,
+    tripFlightDay:{...tripFlightDay},
   };
 }
 function applyLoadedPlan(p: PlannerPlan){
@@ -967,6 +1025,10 @@ function applyLoadedPlan(p: PlannerPlan){
     if(p.wz.modes&&typeof p.wz.modes==="object"){ const m={...p.wz.modes}; delete m["新加坡"]; wz.modes=m; }
   }
   if(Array.isArray(p.coupleOrder)&&p.coupleOrder.length) coupleOrder=[...p.coupleOrder];
+  if(p.returnCity==="PEK"||p.returnCity==="PVG"||p.returnCity==="CKG") returnCity=p.returnCity;
+  if(p.tripFlightDay&&typeof p.tripFlightDay==="object"){
+    for(const [k,v] of Object.entries(p.tripFlightDay)){ if(v==="last"||v==="next") tripFlightDay[k]=v; }
+  }
   if(p.trip&&typeof p.trip==="object"){
     for(const s of TRIP_SEGS){ const v=(p.trip as Record<string,unknown>)[s.id]; if(typeof v==="number"&&v>=1&&v<=20) tripDays[s.id]=v; }
   }
