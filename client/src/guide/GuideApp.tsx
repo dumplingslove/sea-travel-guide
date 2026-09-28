@@ -332,7 +332,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
 export function Flights({onBook}:{onBook?:OnBook}){
  const { segments } = usePlanScope();
  const [showHist,setShowHist]=useState(false);
- /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 8 段全量）：
+ /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 18 段全量：去程西雅图→北京 1 段、亚洲段 8 段、回程三城三天 9 段）：
   * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
   * 与「预订行动」时间线、页顶每日动态横幅同一来源。
   * 旧逻辑按行程规划的城市对推导航段，硬编码了旧 13 天行程的 6 段结构

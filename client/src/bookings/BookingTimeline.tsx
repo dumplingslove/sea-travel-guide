@@ -363,6 +363,7 @@ export default function BookingTimeline({
       <Group id="now" count={FLIGHT_LEGS.length}>
         {FLIGHT_LEGS.map((f) => {
           const isIntl = f.kind === "intl";
+          const directCount = (f.options ?? []).filter((o) => (o.stops ?? 0) === 0).length;
           const headline = isIntl ? (
             <span className="text-amber-700">待定：尚未比价选定</span>
           ) : f.priceNote ? (
@@ -390,7 +391,9 @@ export default function BookingTimeline({
               sub={f.note}
               expandLabel={
                 f.options && f.options.length > 0
-                  ? `看 ${f.options.length} 个直飞选项`
+                  ? directCount === f.options.length
+                    ? `看 ${f.options.length} 个直飞选项`
+                    : `看 ${f.options.length} 个选项（${directCount}个直飞）`
                   : undefined
               }
               expandContent={
@@ -435,6 +438,10 @@ export default function BookingTimeline({
                             <div className="text-xs text-gray-500 mt-0.5">
                               {o.depart} → {o.arrive}
                               {o.arrivePlusDay ? "+1" : ""} ·{" "}
+                              {(o.stops ?? 0) === 0
+                                ? "直飞"
+                                : `${o.stops}停${o.via ? `经${o.via}` : ""}`}{" "}
+                              ·{" "}
                               <b className="text-teal-700">${o.price}</b>
                               {f.priceBasis ? `（${f.priceBasis}）` : ""}
                               {o.bags ? ` · 托运${o.bags}` : ""} ·{" "}
