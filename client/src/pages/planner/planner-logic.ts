@@ -693,7 +693,7 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
       <div class="micro">🧑‍🤝‍🧑 集结：${gather}</div>
       <div class="micro">出发城市：${cityBtns}</div>
-      <div class="micro">起飞日：
+      <div class="micro trip-flydays">起飞日：
         <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">集结最后一天 ${dateLabel(lastDay)} 飞</button>
         <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
       </div>
@@ -734,10 +734,10 @@ function renderTrip(){
         code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code),
         label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label),
       }));
-      const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
+      const notes=legs.map(l=>`<span class="trip-note">${tripFlightNote(`${l.code}|${date}`,l.label)}</span>`).join('<span class="trip-note-sep"> · </span>');
       const details=legs.map(l=>tripFlightDetail(`${l.code}|${date}`,l.label)).filter(Boolean).join("<br>");
       parts.push(`<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    <div class="micro">起飞日：
+    <div class="micro trip-flydays">起飞日：
       <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} 飞</button>
       <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} 飞</button>
     </div>
@@ -756,7 +756,7 @@ function renderTrip(){
       : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你一人）`}];
     const title=returnCity==="PEK" ? "国内集结（北京）" : `北京→${m.city}（国内集结）`;
     const others=returnCity==="PEK" ? "你已在北京" : "";
-    const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
+    const notes=legs.map(l=>`<span class="trip-note">${tripFlightNote(`${l.code}|${date}`,l.label)}</span>`).join('<span class="trip-note-sep"> · </span>');
     return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
     <p class="micro">${others?others+"；":""}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
     ${notes?`<p class="micro">${notes}</p>`:""}`;

@@ -101,6 +101,8 @@ h4{font-size:16px;margin:0;font-weight:700}
 /* 首尾航班：轻量时间线样式 */
 .trip-flight{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:12px 18px;border:1px dashed var(--line);border-radius:var(--r-card);background:transparent;font-size:13px;color:var(--muted)}
 .trip-flight strong{color:var(--ink);font-size:14px}
+.trip-note-sep{color:var(--muted)}
+.trip-flydays button{margin:6px 8px 0 0;min-height:40px}
 .trip-summary{margin:12px 0}
 .trip-summary .mismatch{color:var(--danger);font-weight:700}
 
@@ -490,6 +492,15 @@ h4{font-size:16px;margin:0;font-weight:700}
   .wz-dayrow{display:block}
   .wz-dayrow .stepper{margin-top:10px}
   .wz-orderrow{flex-wrap:wrap}
+  /* 大行程转场行：手机上徽章独占一行、路线换行、每段备注各占一行 */
+  .trip-flight{flex-wrap:wrap;row-gap:6px;padding:12px 14px;align-items:flex-start}
+  .trip-flight>span:first-child{display:none}
+  .trip-flight>span:last-child{order:-1;flex:none;background:var(--teal-faint);border:1px solid var(--teal-line);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;color:var(--teal-dark)}
+  .trip-flight strong{flex:1 1 100%;line-height:1.65}
+  .trip-note{display:block;margin-top:3px}
+  .trip-note-sep{display:none}
+  .trip-flydays{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .trip-flydays button{flex:1 1 100%;margin:0;min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 
