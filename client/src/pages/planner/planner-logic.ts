@@ -756,14 +756,16 @@ function renderTrip(){
     if(!returnCity) return "";
     const m=RETURN_CITY_META[returnCity];
     const date=ranges["beijing3"].to;
-    const legs=returnCity==="PEK"
+    /* 用户 2026-09-28：去上海坐高铁，删掉北京→上海（你一人）这张机票卡；只保留转场行文字 */
+    const legs=(returnCity==="PEK"||returnCity==="PVG")
       ? []
       : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你一人）`}];
     const title=returnCity==="PEK" ? "国内集结（北京）" : `北京→${m.city}（国内集结）`;
     const others=returnCity==="PEK" ? "你已在北京" : "";
+    const rail=returnCity==="PVG" ? "你坐高铁去上海，不需要机票；" : "";
     const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
     return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    <p class="micro">${others?others+"；":""}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
+    <p class="micro">${others?others+"；":""}${rail}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}`;
   })();
   body.innerHTML=`
