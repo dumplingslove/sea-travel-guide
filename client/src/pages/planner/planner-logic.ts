@@ -44,7 +44,6 @@ import {
 /* ---------------- 类型 ---------------- */
 interface ClassicSource { title: string; url: string; author?: string; date?: string; excerpt?: string; commentExcerpt?: string; verdict?: string; readNote?: string }
 interface ClassicRoute { verdicts: string[]; days: [string, string][]; sources: ClassicSource[]; xhsEvidence?: { status: string; note?: string } }
-interface SpotDetail { name: string; address: string; hours: string; lastEntry: string; price: string; transit: string; must: string; reason: string; avoid: string; sources: [string, string][] }
 interface PublicHoliday { countries: string[]; short: string; name: string; sources: [string, string][] }
 interface SpecialMarker { city: string; short: string; title: string; body: string }
 interface PlannerState { start: string; schedule: Record<string, { city: string; mode: string }>; edited: boolean; calMode: "decision" | "schedule" }
@@ -312,17 +311,6 @@ const cityAirportLabels: Record<string, string> = {"曼谷":"BKK / DMK","清迈"
 const weekdayCodes=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const weekdayZh: Record<string, string> = {Sun:"周日",Mon:"周一",Tue:"周二",Wed:"周三",Thu:"周四",Fri:"周五",Sat:"周六"};
 const safetyRank: Record<string, number> = {"推荐":0,"可用":1,"谨慎":2,"待核验":3};
-const bangkokSpotDetails: SpotDetail[] = [
- {name:"大皇宫/玉佛寺/卧佛寺",address:"大皇宫：Na Phra Lan Road, Phra Borom Maha Ratchawang, Phra Nakhon, Bangkok 10200；卧佛寺：Sanam Chai Road / Maharaj Road，紧邻大皇宫南侧；常用邮政地址“2 Sanam Chai Rd, Bangkok 10200”待核验",hours:"大皇宫／玉佛寺每日 08:30–15:30（售票处）；卧佛寺每日 08:00–19:30",lastEntry:"大皇宫 15:30 停止售票与入场，园内约 16:30 清场；卧佛寺最后入场时间待核验，建议不晚于 18:30",price:"大皇宫＋玉佛寺外国游客 500 THB，身高 120cm 以下儿童免费；卧佛寺 300 THB，身高 120cm 以下儿童免费；寺内泰式按摩 30/60/120 分钟为 340/520/1,040 THB",transit:"大皇宫：湄南河快船至 Tha Chang 码头步行约 5 分钟，或 MRT Sanam Chai 站步行约 15 分钟；卧佛寺：MRT Sanam Chai 站步行约 5 分钟，或至 Tha Tien 码头",must:"玉佛寺翡翠玉佛、节基王殿、拉玛坚壁画长廊；卧佛寺 46 米贴金卧佛、佛足 108 吉祥纹、108 只铜钵、四世王塔群与泰式按摩学校",reason:"王室建筑、佛教艺术与曼谷老城最具代表性的核心组合，步行衔接效率高。",avoid:"大皇宫可能因王室仪式临时关闭，出发前查官网；着装需遮肩及过膝；建议 08:30 到场避开团队。",sources:[["大皇宫官网","https://royalgrandpalace.th/en/home"],["TripAdvisor 大皇宫页面","https://www.Tripadvisor.Co.nz/Attraction_Review-g293916-d317603-Reviews-The_Grand_Palace-Bangkok.html"],["卧佛寺官网参观信息","https://watpho.com/en/contact/plan"],["Trip.com 大皇宫交通","https://www.trip.com/blog/top-12-reasons-to-visit-grand-palace-bangkok"]]},
- {name:"郑王庙+湄南河游船 Wat Arun",address:"郑王庙：158 Thanon Wang Doem, Wat Arun, Bangkok Yai, Bangkok 10600；旅游船以 Sathorn 中央码头为枢纽，往返 Phra Arthit 并停靠 ICONSIAM、Ratchawongse、Wat Arun、Tha Chang 等码头",hours:"郑王庙每日 08:00–18:00；Blue Flag 旅游船 Sathorn 09:00–19:15、Phra Arthit 08:30–19:00；普通快船工作日约 06:00–21:30、周末及节假日约 06:00–18:40",lastEntry:"郑王庙最后入场时间待核验，建议不晚于 17:00；Blue Flag 旅游船 12 月班次待核验，以码头公示为准",price:"郑王庙外国人 200 THB；Blue Flag 一日票 150 THB、单程 40 THB；橙旗 18 THB、黄旗 23 THB、绿黄旗按距离 16/23/35 THB、红旗 32 THB，票价可能随油价调整",transit:"从 Tha Tien 码头乘约 4.5 THB 摆渡船过河到郑王庙；Blue Flag 旅游船可从 BTS Saphan Taksin 站 2 号出口旁的 Sathorn 码头登船",must:"郑王庙中央大佛塔与瓷片镶嵌、登塔河景、Tha Tien 对岸日落剪影；用一日船票串联大皇宫、卧佛寺、郑王庙、唐人街和 ICONSIAM",reason:"把老城寺庙与湄南河交通合成一条顺路动线，白天看建筑、傍晚看河岸灯光。",avoid:"郑王庙法事或王室活动可能临时调整；旅游船票价与班次会随季节和油价变化，出发前看官方账号及码头公示。",sources:[["郑王庙官方 Facebook","https://web.facebook.com/watarunofficial/"],["Tusk Travel 郑王庙 2026 指南","https://www.tusktravel.com/blog/wat-arun-bangkok-travel-guide/"],["Chao Phraya Express Boat 路线与票价","https://thailandboat.com/bangkok/chao-phraya-express-boat"],["Traveloka 旅游船班次","https://www.traveloka.com/en-au/activities/thailand/product/chao-phraya-hop-on-hop-off-tourist-boat-tour-2000717244350?funnel_id=flight.DES-BKK.internalLink&funnel_source=backlink"]]},
- {name:"恰图恰周末市场 Chatuchak",address:"Kamphaeng Phet Road, Lat Yao, Chatuchak, Bangkok 10900",hours:"主市场周六、周日 09:00–18:00；周三、周四 07:00–18:00 仅植物区；周五 18:00–24:00 为批发场",lastEntry:"开放式市场无统一最后入场；建议 16:00 前到达，主市场按 18:00 收市",price:"免费入场；购物与餐饮自付，可适度议价",transit:"BTS Mo Chit 站 1 号出口；MRT Chatuchak Park 站 1 号出口，或 Kamphaeng Phet 站进入植物区",must:"26 个分区的服装、手工艺、古董、二手与植物；周末集中逛吃、砍价与泰式按摩",reason:"曼谷最具代表性的周末市集，适合用半日至一日集中采购和体验街头饮食。",avoid:"主市场只在周末全开；12 月周末游客多，建议 09:00 到达并先锁定分区，注意防晒、防盗和补水。",sources:[["TripAdvisor 恰图恰页面","https://www.tripadvisor.ca/Attraction_Review-g293916-d450971-Reviews-or50-Chatuchak_Weekend_Market-Bangkok.html"],["Agoda 恰图恰开放时间指南","https://www.agoda.com/travel-guides/thailand/bangkok/chatuchak-weekend-market-timings-your-guide-to-bangkoks-best/"],["Traveloka 恰图恰交通","https://www.traveloka.com/en-ph/explore/tips/things-to-know-before-visiting-chatuchak-weekend-market-in-bangkok-trp/334192"]]},
- {name:"四面佛+暹罗商圈+Jim Thompson House",address:"四面佛：494 Ratchadamri Road, Lumphini, Pathum Wan, Bangkok 10330；暹罗商圈：Rama I Road、BTS Siam 周边；Jim Thompson House：6 Soi Kasemsan 2, Rama 1 Road, Wang Mai, Pathum Wan, Bangkok 10330",hours:"四面佛每日 06:00–22:00；暹罗商圈各商场营业时间待核验；Jim Thompson House 每日 10:00–17:00",lastEntry:"四面佛与商场无统一最后入场；Jim Thompson House 最后一场导览 17:00",price:"四面佛及商场免费入场；Jim Thompson House 成人 250 THB、10–21 岁 150 THB、10 岁以下儿童免费，仅现场售票",transit:"BTS Chit Lom 站到四面佛；BTS Siam 站直达商圈；BTS National Stadium 站 1 号出口步行约 5–6 分钟到 Jim Thompson House，也可乘运河船至 Hua Chang 码头",must:"四面梵天与还愿舞、Siam Paragon 美食与 SEA LIFE、Jim Thompson House 的 6 栋榫卯柚木老屋、东南亚艺术收藏和丝绸店",reason:"祈福、购物与泰式住宅文化可沿 BTS 一线串联，雨天也容易调整。",avoid:"Jim Thompson House 主屋必须跟导览进入，约 35–45 分钟；12 月圣诞季商圈人流大，活动与营业时间出发前查各商场官网。",sources:[["Jim Thompson House 官网","https://jimthompsonhouse.org/"],["Jim Thompson House 参观信息","https://jimthompsonhouse.org/visitor-information/"],["Phuket101 四面佛指南","https://www.phuket101.net/erawan-shrine/"],["Trip.com 四面佛与暹罗交通","https://ph.trip.com/travel-guide/attraction/bangkok/thao-maha-brahma-77017/?curr=IDR&locale=en-PH"]]},
- {name:"金山寺 Wat Saket",address:"344 Thanon Chakkraphatdi Phong, Ban Bat, Pom Prap Sattru Phai, Bangkok 10100",hours:"每日 07:00–19:00；个别来源写 09:00 开门，以 07:00–19:00 为主",lastEntry:"最后入场时间待核验；按 19:00 闭园计，建议不晚于 18:00 开始登山",price:"门票待核验：Trip.com 与 The Bear Travel 为外国人 50 THB，Bangkokian 为 100 THB；原官网域名已被赌博网站占用，请现场确认",transit:"MRT Sam Yot 站步行约 15–20 分钟；或乘 Khlong Saen Saep 运河船至 Panfa Leelard 码头，再步行 5–10 分钟",must:"344 级台阶、山顶金塔与印度佛舍利、360° 曼谷老城全景，日落时段最佳",reason:"老城少见的制高点，能在寺庙密集的一天中补足城市全景。",avoid:"台阶多且正午暴晒；票价和最后入场存在多源分歧，不要按旧官网域名购票。",sources:[["The Bear Travel 金山寺","https://thebear.travel/th/188/Wat-Saket:-The-Temple-of-the-Golden-Mount-in-Bangkok"],["Trip.com 金山寺","https://www.trip.com/travel-guide/attraction/bangkok/wat-sa-ket-ratchaworamahawihan-77023"],["Bangkokian 金山寺","https://bangkokian.com/wat-saket-the-golden-mount-bangkok/"]]},
- {name:"Mahanakhon SkyWalk",address:"114 Naradhiwat Rajanagarindra Road, Si Lom, Bang Rak, Bangkok 10500",hours:"SkyWalk 每日 10:00–19:00；SkyVerse 10:00–21:00；Sky Beach 10:00–24:00，最后上楼 23:00",lastEntry:"日间场 15:30；日落场 18:30；19:00 后观景台仅对 Sky Beach 客人开放",price:"门票价格待核验：官方未公示固定价；2026 年 8–9 月第三方渠道约成人 1,050 THB（74/78 楼＋屋顶）、儿童及 60 岁以上约 450 THB，仅 74 楼约 850 THB",transit:"BTS Silom 线 Chong Nonsi 站，步行不到 10 分钟",must:"74 楼室内 360° 全景、78 楼露天玻璃栈道、约 50 秒高速电梯与 16:00–19:00 日落场",reason:"曼谷最完整的现代城市高空视角，与老城寺庙形成强烈反差。",avoid:"雨天或暴风时 78 楼露天观景台可能关闭且不退款；恐高者慎走玻璃栈道，日落票建议提前购买。",sources:[["King Power Mahanakhon 官网","https://kingpowermahanakhon.co.th/mahanakhon-skyverse/"],["The Standard Sky Beach","https://www.standardhotels.com/bangkok/features/skybeach-rooftopbar-bkk"],["Viator 日落场入场时间","https://www.viator.com/tours/Bangkok/King-Power-MahaNakhon-SkyWalk-at-Bangkok-Admission-Ticket/d343-103612P176"],["Readme 2026-09 价格参考","https://en.readme.me/p/58339"]]},
- {name:"ICONSIAM",address:"299 Charoen Nakhon Road, Khlong Ton Sai, Khlong San, Bangkok 10600",hours:"每日 10:00–22:00",lastEntry:"商场无统一最后入场；建议 21:00 前到达，餐厅、展览与接驳船各自收班",price:"免费入场；餐饮、购物与展览自付",transit:"BTS Gold Line Charoen Nakhon 站与商场直连；或从 BTS Saphan Taksin 站 2 号出口旁 Sathorn 码头乘接驳船，约每 10 分钟一班，参考时段 08:00–23:30",must:"G 层 SookSiam 室内水上市场式美食区、River Park 河岸、顶层观景与 12 月圣诞季灯饰",reason:"雨天友好，能把河岸交通、集中餐饮、购物和夜景合并在同一站。",avoid:"12 月活动季及周末人流大；接驳船班次和末班时间可能调整，当日确认。",sources:[["ICONSIAM 官网","https://www.iconsiam.com/"],["Klook ICONSIAM 指南","https://www.klook.com/en-AU/blog/iconsiam-guide-bangkok/"],["Phuket101 ICONSIAM 指南","https://www.phuket101.net/bangkok/iconsiam-bangkok/"]]},
- {name:"唐人街耀华力路 Chinatown",address:"Yaowarat Road, Samphanthawong, Bangkok 10100",hours:"街区无统一营业时间，日间店铺约 09:00–18:00、夜市小吃摊约 16:00–24:00，具体时段待核验",lastEntry:"开放街区无统一最后入场",price:"免费；餐饮与购物按店消费",transit:"MRT Wat Mangkon 站 1/2 号出口；或湄南河快船至 Ratchawong 码头 N5，再步行约 5–10 分钟",must:"18:00–22:00 的耀华力路街边小吃与霓虹街景、金店街、龙莲寺 Wat Mangkon Kamalawat",reason:"曼谷夜间烟火气最强的街区之一，适合老城行程后的晚餐与夜游。",avoid:"白天部分摊位未开，夜间非常拥挤；热门店先确认营业日与价格，注意保管财物。",sources:[["TripAdvisor 曼谷唐人街","https://www.tripadvisor.ca/Attraction_Review-g293916-d447272-Reviews-or30-Chinatown_Bangkok-Bangkok.html"],["Indochina Voyages 唐人街 2026 指南","https://www.indochinavoyages.com/travel-blog/china-town-in-bangkok-thailand"],["Trip.com 唐人街交通","https://us.trip.com/moments/detail/chinatown-2035757-132044348/"]]},
- {name:"伦披尼公园 Lumphini",address:"Rama IV Road, Wang Mai, Pathum Wan, Bangkok 10330",hours:"每日 04:30–22:00；园内骑行仅 10:00–15:00",lastEntry:"22:00 闭园；免费公园无单独售票截止",price:"免费",transit:"MRT Silom 站 1 号出口或 Lumphini 站 3 号出口；BTS Sala Daeng 站 5 号出口或 Ratchadamri 站 4 号出口",must:"湖上鸭子船与皮划艇、巨蜥、拉玛六世王纪念像、黄昏有氧操及季节性 Music in the Park",reason:"高密度行程中的低强度恢复点，适合清晨运动或傍晚散步。",avoid:"中午暴晒；园内巨蜥较多，应保持距离且不要投喂；禁飞无人机、禁烟酒。",sources:[["曼谷市政府 Greener Bangkok 官方页","https://greener.bangkok.go.th/park/suan-lumpini/"],["Trip.com 伦披尼公园","https://www.trip.com/moments/detail/bangkok-191-136721636/"],["Hotels.com 伦披尼交通","https://www.hotels.com/go/thailand/lumpini-park?intlid=gglist|listitem"]]}
-];
 let state: PlannerState = {start:"2026-12-12",schedule:{},edited:false,calMode:"decision"};
 let modalDate: string | null = null;
 
@@ -546,34 +534,17 @@ function renderCalendar(){
 }
 /* 景点取舍已并入向导 Step 2（定天数）：每城行内直接标注"优先排 / 有余力再去 / 建议舍去"，
    不再有独立 tab；旧的 coverageGrid 卡片渲染与 cityDayCounts 已删除。 */
-// 景点详情字段：目前仅曼谷 9 项完成 8 字段研究；其余 7 城研究资料尚未整理为详情字段，
-// 结构预留按城接入，数据就绪后直接填入对应数组即可，不拿占位文案冒充完成。
-const spotDetails: Record<string, SpotDetail[]> = {"曼谷":bangkokSpotDetails};
-const detailCityOrder=["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡"];
-function spotDetailCard(s: SpotDetail, open: boolean){
-  return `<details class="spot-detail" ${open?"open":""}><summary>${esc(s.name)}<span>${open?"完整示例":"详情字段"}</span></summary><div class="spot-detail-body"><div class="spot-fields"><div class="spot-field"><b>地址</b><span class="${s.address.includes("待")?"pending-text":""}">${esc(s.address)}</span></div><div class="spot-field"><b>营业时间</b><span class="${s.hours.includes("待")?"pending-text":""}">${esc(s.hours)}</span></div><div class="spot-field"><b>最后入场</b><span class="${s.lastEntry.includes("待")?"pending-text":""}">${esc(s.lastEntry)}</span></div><div class="spot-field"><b>门票／价格</b><span class="${s.price.includes("待")?"pending-text":""}">${esc(s.price)}</span></div><div class="spot-field"><b>交通</b><span class="${s.transit.includes("待")?"pending-text":""}">${esc(s.transit)}</span></div><div class="spot-field"><b>必看／必做</b>${esc(s.must)}</div></div><p><strong>推荐原因：</strong>${esc(s.reason)}</p><p><strong>避坑：</strong><span class="${s.avoid.includes("待")?"pending-text":""}">${esc(s.avoid)}</span></p>${(s.sources||[]).length?`<p class="safety-note"><strong>资料来源：</strong> ${(s.sources||[]).map(sourceLink).join(" · ")}</p>`:""}</div></details>`;
-}
-function renderSpotDetails(){
-  const listEl=elOpt("spotDetailList");
-  if(!listEl) return;
-
-  listEl.innerHTML=detailCityOrder.map(city=>{
-    const details=spotDetails[city];
-    if(details&&details.length)return `<h3 class="sec-title">📍 ${esc(city)} · ${details.length} 项已展开</h3>`+details.map((s,i)=>spotDetailCard(s,city==="曼谷"&&i===0)).join("");
-    return `<article class="card card-slim"><h3>📍 ${esc(city)}</h3><p class="route-note">⚠ <strong>详情整理中：</strong>${esc(city)}的景点详情字段（地址／营业时间／最后入场／票价／交通／必看／避坑）研究资料尚未整理完成，暂不展示。数据就绪后接入，不拿占位文案冒充完成。</p></article>`;
-  }).join("");
-}
 function openDay(date: string){modalDate=date;const plan=state.schedule[date];el("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;renderDayIntel(date);(el("modalCity") as HTMLSelectElement).value=plan?.city||"曼谷";(el("modalMode") as HTMLSelectElement).value=plan?.mode||"couple";el("dayModal").classList.add("open")}
 function closeModal(){el("dayModal").classList.remove("open")}
 function saveDay(){
   if(!modalDate)return;
   const mode=inputVal("modalMode");
   if(mode==="free")delete state.schedule[modalDate];else state.schedule[modalDate]={city:inputVal("modalCity"),mode};
-  state.edited=true;closeModal();renderCalendar();renderSpotDetails();
+  state.edited=true;closeModal();renderCalendar();
   const nextDate=addDays(modalDate,1),blocked=scheduleTransitions().filter(r=>r.assessment.kind!=="direct"&&(r.date===modalDate||r.date===nextDate));
   if(blocked.length){const r=blocked[0],label=r.assessment.kind==="no-direct"?"已确认无直飞":r.assessment.kind==="no-service"?"当天无直飞":"精确日期待核验";toast(`${r.date.slice(5)} ${r.from}→${r.to}：${label}。请查看中转、铁路或改期方案。`,true)}else toast("这一天已调整");
 }
-function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();renderSpotDetails();toast("这一天已留白")}
+function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();toast("这一天已留白")}
 function planText(){
   const lines=["2026年12月东南亚行程",""];
   Object.keys(state.schedule).sort().forEach(date=>{const p=state.schedule[date];lines.push(`${date}｜${p.city}｜${p.mode==="family"?"亲子 2大1小（1–2个点＋午休）":p.mode==="free"?"留白 / 休整":"双人"}`)});
@@ -582,7 +553,7 @@ function planText(){
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
 function toast(msg: string, warning = false){const t=el("toast");t.textContent=msg;t.classList.toggle("warning",warning);t.classList.add("show");const tt=t as unknown as { _timer?: ReturnType<typeof setTimeout> };clearTimeout(tt._timer);tt._timer=setTimeout(()=>{t.classList.remove("show");t.classList.remove("warning")},warning?5000:2200)}
-function updateAll(){renderCalendar();renderSpotDetails();renderTrip();cachePlannerLocal()}
+function updateAll(){renderCalendar();renderTrip();cachePlannerLocal()}
 
 
 /* ================= 🗺️ 大行程总览（11/28 去程＋中间各段＋1/2 回程；回北京之后暂不规划） ================= */
@@ -903,8 +874,7 @@ function wzRender(){
   else if(wz.step===2) body.innerHTML=wzStep2();
   else body.innerHTML=wzStep3();
   wzWire();
-  if(wz.step===2) renderSpotDetails();
-  else if(wz.step===3){
+  if(wz.step===3){
     const sig=wzCalSig();
     if(sig!==wzLastCalSig){ wzApplySchedule(); wzLastCalSig=sig; }
     syncStartDateInput(); syncCalMode(); renderCalendar();
@@ -982,7 +952,7 @@ function wzStep2(){
     const meta=WZ_META[city];
     /* 2026-09-28 用户要求：推荐天数基于研究数据明示，一键应用；自动生成的逐日详细 tour 换成城市景点列表链接 */
     const recLine=meta?`<div class="micro wz-rec">💡 推荐 <b>${meta.recDays} 天</b>：${esc(meta.recReason)}${d!==meta.recDays?` <button class="link-btn" data-wzrec="${city}">一键设为 ${meta.recDays} 天</button>`:` <span class="micro">✓ 已是推荐天数</span>`}</div>`:"";
-    const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research" target="_blank" rel="noopener">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
+    const attrLink=`<div class="micro wz-attrlink"><a href="/sea-travel-guide/travel-research">🏛 查看${esc(city)}景点列表，自己挑 →</a><span class="micro">（不再自动生成逐日 tour，景点你自己定）</span></div>`;
     return `<div class="card wz-dayrow"><div><b>${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
       ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
@@ -992,8 +962,7 @@ function wzStep2(){
   return `<div class="section-head"><div><p class="eyebrow">STEP 2/3</p><h2>定每城天数</h2><p class="lede">1–6 天可调；每城下方直接标注"优先排 / 有余力再去 / 建议舍去"——这是按当前天数算出的取舍优先级（不是景点评分），帮你判断几天够。各城天数之和必须等于大行程「夫妻东南亚」的天数，到上限后 ＋ 会自动锁死。</p></div></div>
     <div class="card" style="margin-bottom:12px"><div class="micro">🗺️ 大行程「夫妻东南亚」段共 <b>${seaBudget}</b> 天；下面已分配 <b>${total}</b> 天${budgetDiff===0?" ✓ 刚好":budgetDiff>0?`，还剩 <b>${budgetDiff}</b> 天没分配（加满才能定日期）`:`，<span class="mismatch">⚠️ 超出 <b>${-budgetDiff}</b> 天（先减天数）</span>`}（天数去「🗺️ 大行程」调整）</div></div>
     ${rows}
-    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>
-    <details class="spot-details-fold"><summary>📋 景点详情字段（研究资料：曼谷已完成，其余整理中）</summary><div class="spot-detail-list" id="spotDetailList"></div></details>`;
+    <div class="wz-nav"><button class="ghost" id="wzBack2">← 上一步</button><span class="micro">总计 <b>${total}</b> 天</span><button class="primary" id="wzNext2">下一步：定日期 →</button></div>`;
 }
 function wzStep3(){
   const rows=wzRanges();
@@ -1048,7 +1017,7 @@ function wzApplySchedule(){
   const m=buildMergedSchedule();
   state.schedule=m.schedule; state.edited=true; state.start=m.start;
   syncStartDateInput();
-  renderCalendar(); renderSpotDetails();
+  renderCalendar();
 }
 /* 向导最后一步的保存：向导选择变化时先把排期写入日历（Step 3 里的逐日手工微调予以保留），再走云端保存（未登录则本机缓存） */
 function wzSaveNote(t: string){ const n=S.getElementById("wzSaveNote"); if(n) n.textContent=t; }
