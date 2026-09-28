@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T04:36:30+00:00",
+ "updated_at": "2026-09-28T05:33:01+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -355,7 +355,8 @@
        "dep": "00:10",
        "duration": "6h35m",
        "flight": "SQ801",
-       "price_usd": 519.0
+       "price_usd": 519.0,
+       "business_price_usd": 3346.0
       },
       {
        "airline": "Air China",
@@ -363,7 +364,8 @@
        "dep": "00:15",
        "duration": "6h35m",
        "flight": "CA975",
-       "price_usd": 512.0
+       "price_usd": 512.0,
+       "business_price_usd": 3034.0
       },
       {
        "airline": "Singapore Airlines",
@@ -371,7 +373,8 @@
        "dep": "08:45",
        "duration": "6h35m",
        "flight": "SQ805",
-       "price_usd": 519.0
+       "price_usd": 519.0,
+       "business_price_usd": 3346.0
       },
       {
        "airline": "Air China",
@@ -379,7 +382,8 @@
        "dep": "09:45",
        "duration": "6h30m",
        "flight": "CA889",
-       "price_usd": 514.0
+       "price_usd": 514.0,
+       "business_price_usd": 3034.0
       },
       {
        "airline": "Air China",
@@ -387,7 +391,8 @@
        "dep": "15:45",
        "duration": "6h10m",
        "flight": "CA969",
-       "price_usd": 512.0
+       "price_usd": 512.0,
+       "business_price_usd": 3034.0
       },
       {
        "airline": "Singapore Airlines",
@@ -395,13 +400,15 @@
        "dep": "16:40",
        "duration": "6h15m",
        "flight": "SQ807",
-       "price_usd": 1097.0
+       "price_usd": 1097.0,
+       "business_price_usd": 4450.0
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T04:19:42+00:00",
-     "business_usd": 3142.0,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-09-28T05:33:01+00:00",
+     "business_usd": 3034.0,
+     "business_price_basis": "2大1小总价",
+     "business_note": "列表页1个新航代码共享行(SQ5285)价格照实抄录，合并时按航班号匹配、无匹配不新增"
     },
     "2026-12-14": {
      "economy_queried_at": "2026-09-28T04:36:30+00:00",
@@ -573,6 +580,142 @@
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child."
+    },
+    "2026-12-04": {
+     "economy_queried_at": "2026-09-28T05:33:01+00:00",
+     "economy_usd": 512.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h30m",
+       "price_usd": 514.0,
+       "business_price_usd": 3034.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:45",
+       "arr": "21:55",
+       "duration": "6h10m",
+       "price_usd": 559.0,
+       "business_price_usd": 3034.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h35m",
+       "price_usd": 601.0,
+       "business_price_usd": 3346.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h35m",
+       "price_usd": 512.0,
+       "business_price_usd": 3034.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h35m",
+       "price_usd": 601.0,
+       "business_price_usd": 3346.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h15m",
+       "price_usd": 1097.0,
+       "business_price_usd": 4450.0
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T05:33:01+00:00",
+     "business_usd": 3034.0,
+     "business_price_basis": "2大1小总价",
+     "business_note": "列表页3个新航代码共享行(SQ5285/SQ5281/SQ5283)价格照实抄录，合并时按航班号匹配、无匹配不新增"
+    },
+    "2026-12-05": {
+     "economy_queried_at": "2026-09-28T05:33:01+00:00",
+     "economy_usd": 512.0,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h30m",
+       "price_usd": 514.0,
+       "business_price_usd": 3229.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h35m",
+       "price_usd": 519.0,
+       "business_price_usd": 3346.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:45",
+       "arr": "21:55",
+       "duration": "6h10m",
+       "price_usd": 560.0,
+       "business_price_usd": 3229.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h35m",
+       "price_usd": 512.0,
+       "business_price_usd": 3229.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h35m",
+       "price_usd": 519.0,
+       "business_price_usd": 4450.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h15m",
+       "price_usd": 1097.0,
+       "business_price_usd": 5370.0
+      }
+     ],
+     "nonstop_count": 6,
+     "business_queried_at": "2026-09-28T05:33:01+00:00",
+     "business_usd": 3229.0,
+     "business_price_basis": "2大1小总价",
+     "business_note": "列表页1个新航代码共享行(SQ5281)价格照实抄录，合并时按航班号匹配、无匹配不新增"
     }
    }
   },
@@ -613,6 +756,59 @@
      "business_usd": 1384.0,
      "business_price_basis": "2成人总价",
      "business_note": "Only nonstop flight with a business cabin; the other nonstop (Scoot TR135) has no business class."
+    },
+    "2026-12-04": {
+     "economy_queried_at": "2026-09-28T05:33:01+00:00",
+     "economy_usd": 324.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h55m",
+       "price_usd": 324.0
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU2069",
+       "dep": "07:20",
+       "arr": "12:55",
+       "duration": "5h35m",
+       "price_usd": 418.0,
+       "business_price_usd": 1384.0
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-28T05:33:01+00:00",
+     "business_usd": 1384.0,
+     "business_price_basis": "2成人总价",
+     "business_note": "Scoot TR135 无商务舱"
+    },
+    "2026-12-05": {
+     "economy_queried_at": "2026-09-28T05:33:01+00:00",
+     "economy_usd": 324.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h55m",
+       "price_usd": 324.0
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-28T05:33:01+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "Google Flights 实查：12/05 XIY-SIN 直飞无商务舱（MU2069 当天无班/无商务，Scoot 无商务舱）"
     }
    }
   },
