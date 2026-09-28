@@ -697,6 +697,13 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
     .join(" ");
   const dest=returnCity?`${RETURN_CITY_META[returnCity].city} → 西雅图`:`？ → 西雅图（出发城市待定）`;
   const gather=returnCity?`你${returnCity==="PEK"?"已在北京":"从北京出发"}；其他家人前往${RETURN_CITY_META[returnCity].city}的路线待定；会合后一起飞西雅图`:`回程城市待定：你从北京出发，其他家人前往集合城市的路线待定；会合后一起飞西雅图`;
+  /* 回西雅图三城直飞对比：从 Google Flights 航班库按起飞日读取；库里没该日期=待查询 */
+  const returnLegs=[
+    {code:"PEK-SEA",label:`北京 → 西雅图${returnCity==="PEK"?" ✅ 已选":""}`},
+    {code:"PVG-SEA",label:`上海 → 西雅图${returnCity==="PVG"?" ✅ 已选":""}`},
+    {code:"CKG-SEA",label:`重庆 → 西雅图${returnCity==="CKG"?" ✅ 已选":""}`},
+  ];
+  const returnCards=returnLegs.map(l=>tripFlightCard(`${l.code}|${flyDate}`,l.label)).join("");
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
@@ -707,6 +714,9 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
         <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
       </div>
       <p class="micro">北京 / 上海 / 重庆三地回西雅图的国际票价、国内集结成本、总耗时、前一晚机场住宿、带娃难度待比较，先不定；起飞日定清楚，查价才不会错位。</p>
+      <div class="micro" style="margin-top:10px"><b>✈️ 三城直飞对比</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
+      <div class="trip-flightinfo">${returnCards}</div>
+      <p class="micro">航班库正在查 12-31 / 01-01 / 01-02 三个候选日的三城直飞；上面天数凑满 34 天、起飞日落到候选日后，这里会自动出价对比。</p>
     </div>
   </div>`;
 }

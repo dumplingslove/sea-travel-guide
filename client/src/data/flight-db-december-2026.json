@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T06:15:03+00:00",
+ "updated_at": "2026-09-28T06:38:50+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -1373,6 +1373,36 @@
    "adults": 2,
    "child_ages": [],
    "label": "曼谷→西安（2成人）",
+   "days": {}
+  },
+  "PEK-SEA": {
+   "origin": "PEK",
+   "destination": "SEA",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "北京→西雅图（2大1小）",
+   "days": {}
+  },
+  "PVG-SEA": {
+   "origin": "PVG",
+   "destination": "SEA",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "上海→西雅图（2大1小）",
+   "days": {}
+  },
+  "CKG-SEA": {
+   "origin": "CKG",
+   "destination": "SEA",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "重庆→西雅图（2大1小）",
    "days": {}
   }
  }
