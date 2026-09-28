@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T06:12:12+00:00",
+ "updated_at": "2026-09-28T06:15:03+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -718,7 +718,7 @@
      "business_note": "列表页1个新航代码共享行(SQ5281)价格照实抄录，合并时按航班号匹配、无匹配不新增"
     },
     "2026-12-17": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 604,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -730,7 +730,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 604
+       "price_usd": 604,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -738,7 +739,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 699
+       "price_usd": 699,
+       "business_price_usd": 3346
       },
       {
        "airline": "Singapore Airlines",
@@ -746,7 +748,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 699
+       "price_usd": 699,
+       "business_price_usd": 4450
       },
       {
        "airline": "Air China",
@@ -754,7 +757,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 991
+       "price_usd": 991,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -762,7 +766,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 1181
+       "price_usd": 1181,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -770,16 +775,17 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1323
+       "price_usd": 1323,
+       "business_price_usd": 4450
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3034,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-18": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 635,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -791,7 +797,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 635
+       "price_usd": 635,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -799,7 +806,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 699
+       "price_usd": 699,
+       "business_price_usd": 4450
       },
       {
        "airline": "Singapore Airlines",
@@ -807,7 +815,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 699
+       "price_usd": 699,
+       "business_price_usd": 4604
       },
       {
        "airline": "Air China",
@@ -815,7 +824,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 813
+       "price_usd": 813,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -823,7 +833,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -831,16 +842,17 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1323
+       "price_usd": 1323,
+       "business_price_usd": 4450
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3034,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-19": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 779,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -852,7 +864,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3229
       },
       {
        "airline": "Singapore Airlines",
@@ -860,7 +873,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 1097
+       "price_usd": 1097,
+       "business_price_usd": 5925
       },
       {
        "airline": "Singapore Airlines",
@@ -868,7 +882,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 779
+       "price_usd": 779,
+       "business_price_usd": 5925
       },
       {
        "airline": "Air China",
@@ -876,7 +891,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 1001
+       "price_usd": 1001,
+       "business_price_usd": 3229
       },
       {
        "airline": "Air China",
@@ -884,7 +900,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 1133
+       "price_usd": 1133,
+       "business_price_usd": 4343
       },
       {
        "airline": "Singapore Airlines",
@@ -892,16 +909,17 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1716
+       "price_usd": 1716,
+       "business_price_usd": 5925
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3229,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-20": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 868,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -913,7 +931,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -921,7 +940,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 1097
+       "price_usd": 1097,
+       "business_price_usd": 4616
       },
       {
        "airline": "Singapore Airlines",
@@ -929,7 +949,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 868
+       "price_usd": 868,
+       "business_price_usd": 4616
       },
       {
        "airline": "Air China",
@@ -937,7 +958,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 1001
+       "price_usd": 1001,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -945,7 +967,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 1133
+       "price_usd": 1133,
+       "business_price_usd": 4142
       },
       {
        "airline": "Singapore Airlines",
@@ -953,16 +976,17 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1284
+       "price_usd": 1284,
+       "business_price_usd": 4450
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3034,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-21": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 949,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -974,7 +998,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -982,7 +1007,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 956
+       "price_usd": 956,
+       "business_price_usd": 4743
       },
       {
        "airline": "Air China",
@@ -990,7 +1016,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 1001
+       "price_usd": 1001,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -998,7 +1025,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Singapore Airlines",
@@ -1006,7 +1034,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 1097
+       "price_usd": 1097,
+       "business_price_usd": 4450
       },
       {
        "airline": "Singapore Airlines",
@@ -1014,16 +1043,17 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1323
+       "price_usd": 1323,
+       "business_price_usd": 4450
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3034,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-22": {
-     "economy_queried_at": "2026-09-28T06:12:12+00:00",
+     "economy_queried_at": "2026-09-28T06:15:03+00:00",
      "economy_usd": 786,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -1035,7 +1065,8 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 786
+       "price_usd": 786,
+       "business_price_usd": 4450
       },
       {
        "airline": "Singapore Airlines",
@@ -1043,7 +1074,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
-       "price_usd": 868
+       "price_usd": 868,
+       "business_price_usd": 4782
       },
       {
        "airline": "Air China",
@@ -1051,7 +1083,8 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -1059,7 +1092,8 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 949
+       "price_usd": 949,
+       "business_price_usd": 3034
       },
       {
        "airline": "Air China",
@@ -1067,7 +1101,8 @@
        "dep": "15:45",
        "arr": "21:55",
        "duration": "6h 10m",
-       "price_usd": 1133
+       "price_usd": 1133,
+       "business_price_usd": 4142
       },
       {
        "airline": "Singapore Airlines",
@@ -1075,11 +1110,12 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1323
+       "price_usd": 1323,
+       "business_price_usd": 4450
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T06:12:12+00:00",
+     "business_queried_at": "2026-09-28T06:15:03+00:00",
      "business_usd": 3034,
      "business_price_basis": "2大1小总价"
     }
