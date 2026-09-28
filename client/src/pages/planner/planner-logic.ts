@@ -669,16 +669,13 @@ function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
   const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
-    /* 末段是"回程集结"段：城市跟着回西雅图出发城市变量走，没定就明确写待定 */
-    const isReturnSeg = s.id==="beijing3";
-    const segLabel = isReturnSeg ? (returnCity?`回${RETURN_CITY_META[returnCity].city}`:"回程集结（城市待定）") : s.label;
-    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : (isReturnSeg ? "用户一人前往回程城市" : s.sub);
-    const segNote = isReturnSeg ? "下方定回西雅图出发城市（北京 / 上海 / 重庆三选一）" : s.note;
+    /* 北京（你一人）是独立的一段，永远按原样显示；回程集结城市是它之后单独的卡片，不许把这段改名成上海/重庆 */
+    const coupleSub = s.id==="couple" ? coupleOrder.join("→")+"（两人）" : s.sub;
     const coupleOrderBtns = s.id==="couple" ? `<div class="trip-order-btns" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="micro">城市顺序：</span>${coupleOrder.map((c,i)=>`<span class="micro" style="display:inline-flex;align-items:center;gap:2px;"><b>${c}</b>${i>0?`<button class="ghost" data-coupleup="${i}" aria-label="${c}上移" style="padding:2px 6px;">↑</button>`:""}${i<coupleOrder.length-1?`<button class="ghost" data-coupledown="${i}" aria-label="${c}下移" style="padding:2px 6px;">↓</button>`:""}</span>`).join('<span class="micro"> → </span>')}</div>` : "";
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
-        <div class="trip-seg-title">${segLabel} <span class="trip-seg-sub">· ${coupleSub}</span></div>
-        <div class="trip-seg-meta">${s.mode} · ${segNote}</div>
+        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
         ${coupleOrderBtns}
         ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「东南亚城市规划」定这 ${d} 天的城市 →</button></div>`:""}
@@ -710,9 +707,25 @@ function renderTrip(){
     <p class="micro">${notes}</p>`);
     }
   }
+  /* 国内集结段：回程城市一定下来，你（北京）＋ 妻（西安）分别飞往集结城市会合；
+     北京集结则只需妻从西安过来。这是北京独自停留之后、国际航班之前单独的一步，不许并入北京那段。 */
+  const gatherRow=(()=>{
+    if(!returnCity) return "";
+    const m=RETURN_CITY_META[returnCity];
+    const date=ranges["beijing3"].to;
+    const legs=returnCity==="PEK"
+      ? [{code:"XIY-PEK",label:"西安→北京（妻前来会合）"}]
+      : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你）`},{code:`XIY-${returnCity}`,label:`西安→${m.city}（妻）`}];
+    const title=returnCity==="PEK" ? "西安→北京（妻前来会合）" : `北京→${m.city}（国内集结）`;
+    const notes=legs.map(l=>tripFlightNote(`${l.code}|${date}`,l.label)).join(" · ");
+    return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
+    <p class="micro">需在国际航班起飞前到达${m.city}。</p>
+    <p class="micro">${notes}</p>`;
+  })();
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${parts.join("\n    ")}
+    ${gatherRow}
     ${renderReturnCard(ranges)}
     <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天必须全部分配完才能保存，用上面各段的 ＋ / － 调整。</p>`}
