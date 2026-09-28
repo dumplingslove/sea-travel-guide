@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 22,
+   "complete": 27,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -29,10 +29,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-27 00:08Z轮（主代理只读）：关键词'曼谷安缦纳莱特'翻3页，深读2篇。新增严格达标1篇：小李有点饿《泰国最贵酒店测评》2025-08-19（编辑于2025-08-18），4318赞/646收藏/242评论，中性偏负（停电事故），5条实质评论（房价/赔偿讨论）；视频帖无图片画廊。另1篇KFC在逃蛋挞07-09（无年份）1335赞，14图逐张翻验完毕，但19条评论全为泛互动、无一条实质体验评论，不计入达标，仅记正文详实特例。原记2篇为旧口径留存、无证据明细，不与新帖混算；按严格标准已验明1/3，仍差2篇，继续partial。证据见xhs-coverage-bangkok.md（2026-09-27 00:08Z节）。",
-       "posts": 2,
-       "status": "partial",
-       "target": 10
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第10轮2026-09-28 06:28Z审计——UU_raymond《Nai Lert Aman✨》(2358赞/18评论/20图逐张翻验)/羊妮Persephone《🇹🇭曼谷安缦｜我花3万买了别人三天的注意力》(731赞/12评论)/jaychrist《Aman Nai Lert Bangkok》(660赞/25评论，详细住客评测：JMG设计、日式元素、19楼铁板烧)，均为高流量专帖，正文+实质评论；旧口径基线2帖（无证据明细）不计入新标准计数。人像机位候选：酒店户外躺椅/泳池区人像（弱依据，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。"
       }
      },
      "type": "酒店"
@@ -62,10 +62,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13浏览器实读轮：基线2+新增3=5篇（倾向偏避雷/调低期待）；还差5篇。记录见 redo-strict/bangkok-2026-09-13.md Capella节",
-       "posts": 5,
        "status": "partial",
-       "target": 10
+       "posts": 2,
+       "target": 3,
+       "note": "新标准：第10轮2026-09-28 06:28Z审计——艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/268评论，避雷向视频，评论区为主要信息源)/RKDooooo《曼谷嘉佩乐 Stella🦚》(417赞/19评论)达标；急速菜菜(66赞/1评论)未达标。旧口径基线5帖流量未知不计入新标准。还差1篇高流量帖，已回队列待补。人像机位候选：Stella白孔雀酒吧（正文明确\"适合女生去打卡拍照\"，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。"
       }
      },
      "type": "酒店"
@@ -96,10 +96,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
-       "target": 10
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第11轮2026-09-28 06:42Z深读3帖，均为关键词结果页头部专帖——熊小默《四季酒店毛巾上甚至绣了我的名字缩写？》(257赞/18评论/9图逐张翻验)/静静《曼谷 Four Seasons room tour》(160赞/6评论/视频帖如实标注)/四百击《泰国人是你能用钱买到的最好的服务者》(126赞/8评论/11图逐张翻验)；正文+评论区可见滚动实读。旧口径基线2帖不计入新标准计数。机位候选：无（未发现正文/评论明确提及机位/出片点）。证据：xhs-coverage-bangkok.md 第11轮记录。"
       }
      },
      "type": "酒店"
@@ -129,10 +129,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
-       "status": "partial",
-       "target": 10
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "新标准：第11轮2026-09-28 06:42Z深读3帖，均为高流量专帖——将和也ken《曼谷｜文华东方，好的酒店是旅行的目的地》(1062赞/32评论/15图逐张翻验)/kuno《曼谷文华东方让人不禁感慨有钱真好》(1044赞/141评论/16图逐张翻验，150周年/住3付2/房间老化争议)/白菜《每当我对文华东方失去耐心之后……》(283赞/85评论/18图逐张翻验)；正文+实质评论+图片逐张翻验。旧口径基线2帖不计入新标准计数。人像机位候选1：将和也ken帖（湄南河景房小阳台日落/Authors' Lounge玻璃穹顶下午茶/河畔露台用餐；第8/15张人像），URL https://www.xiaohongshu.com/explore/6a2b871c0000000017028328 ，图片文件待下载归档。证据：xhs-coverage-bangkok.md 第11轮记录。"
       }
      },
      "type": "酒店"
@@ -505,10 +505,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增2/8（周半半/祛魅避雷、themaxxtl/踩雷），2基线+2新增=4篇；2026-09-14 00:57Z轮3篇实读均因无实质评论/水评按严格标准排除；2026-09-26 23:12Z轮2篇深读均未达严格标准（戴踏踏帖页面日期无年份仅06-17、评论多为泛互动、13图仅翻验4张；好运桦桦来帖仅08-12、12赞、2条非实质评论），新增达标0篇，23:12Z轮曾误记为5/10，2026-09-26已纠正回4/10 partial。证据见xhs-coverage-bangkok.md",
-       "posts": 4,
        "status": "partial",
-       "target": 10
+       "posts": 1,
+       "target": 3,
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第11轮2026-09-28 06:42Z审计——仅戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》(114赞/12评论/13图本轮逐张翻验补完)达相对高流量（该话题XHS专帖最高）；FoodieLouis(10赞/2评论)、走路带风的王同学(2赞/2评论，负向heritage套餐9886.8泰铢实测)流量不足，未计入达标但记入证据。旧口径4帖中另3帖（周半半/祛魅避雷、themaxxtl/踩雷、1基线）按旧实质评论标准计入，流量均低，不计入新标准。结论：话题流量封顶（专帖除戴踏踏外均≤12赞），3帖高流量标准在此话题下不可达，建议后续轮次不再重复投入。证据：xhs-coverage-bangkok.md 第11轮记录。"
       }
      },
      "type": "餐厅"
@@ -607,10 +607,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增3/8（bee/凡妮莎/Yan兒），Debby黛比帖404疑删除需替代；2基线+3新增=5篇；还差5篇",
-       "posts": 5,
        "status": "partial",
-       "target": 10
+       "posts": 1,
+       "target": 3,
+       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第12轮2026-09-28 06:56Z——红豆菠萝包《打卡了曼谷唐人街超🔥的 T&K seafood》(72赞/3评论，话题最高流量，正文+5图翻验)达标；Smaller(3赞)/潘潘(2赞)流量过低不计入。旧口径基线5帖无流量明细不计入新标准。话题专帖流量封顶（最高72赞），3帖标准不可达，已移队列队尾低优先级。证据：xhs-coverage-bangkok.md 第12轮记录。"
       }
      },
      "type": "餐厅"
@@ -675,10 +675,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "新标准：第12轮2026-09-28 06:56Z——永不屈服《曼谷一日游｜玉佛寺→大皇宫→卧佛寺→郑王庙》(1585赞/37评论，攻略向)/美好的辣🌱《关于大皇宫里面的一些骗局提示》(141赞/49评论，防骗)/zhazhahong《曼谷大皇宫》(125赞/10评论，指南向)，正文+实质评论+图片逐张翻验。人像机位候选：郑王庙主塔（正文明确\"很出片\"，已登记）。上站结论：三地联票500泰铢/08:30避团/着装硬门槛/玉佛殿内禁拍/导游600泰铢带证/冰沙船票骗局/免费摆渡车。证据：xhs-coverage-bangkok.md 第12轮记录。"
       }
      },
      "type": "景点"
@@ -913,10 +913,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 严格重做：试5个候选0篇合格（正文无/评论不可见），基线帖6a10606a、6a799365被重做记录标为避开；「耀华力」关键词混杂香港耀华力泰餐厅结果，暂停留待低频回补",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "新标准：第12轮2026-09-28 06:56Z——悦游CNTraveler《@王彦桐 曼谷第一站》(1590赞/159评论，杂志街拍)/谁动了我的雪球啊~《夜色中的曼谷唐人街》(675赞/39评论，美食+拍照点位)达标；泰好吃啦(937赞视频帖，无静态图可翻验)未达图片标准。还差1篇，已回队列。人像机位候选3组：西瓜美乐蒂4机位（招牌路口/灯笼长廊/小吃摊/天桥俯拍）、悦游骑楼饼铺红门、雪球主街霓虹夜景（均已登记，图片待下载）。证据：xhs-coverage-bangkok.md 第12轮记录。"
       }
      },
      "type": "景点"
@@ -1099,9 +1099,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16新增；本轮任务不碰小红书，由主 agent 安排",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28第13轮深读3/3（放宽标准）：风先森2025-10-16推荐68赞（12图机位候选7张）、Miles 2025-04-24推荐39赞（10图机位候选2张）、Ecstasy避雷3赞11评（7条实质）；评论get_text+截图实读（部分证据已标注）；3418赞通用视频帖排除（非专帖）。证据：xhs-portrait-spots/bangkok/athenee-2026-09-28.md",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4279,7 +4279,7 @@ export const initialResearchStatus = {
    "total": 24
   },
   "phuket": {
-   "complete": 4,
+   "complete": 8,
    "items": [
     {
      "name": "Amanpuri",
@@ -4473,9 +4473,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "放款口径：3篇高流量专帖已实读（2026-09-28 05:22Z轮次），证据见 hidden_files/xhs-coverage-phuket.md 第5轮",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4507,9 +4507,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 05:22Z一轮pass：无高流量专帖（PRU最高105赞/Jampa最高9赞），专帖候选池枯竭→阶段二；证据见 hidden_files/xhs-coverage-phuket.md 第5轮",
        "posts": 0,
-       "status": "pending",
+       "status": "partial",
        "target": 10
       }
      },
@@ -4541,9 +4541,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 05:22Z一轮pass：无高流量专帖（PRU最高105赞/Jampa最高9赞），专帖候选池枯竭→阶段二；证据见 hidden_files/xhs-coverage-phuket.md 第5轮",
        "posts": 0,
-       "status": "pending",
+       "status": "partial",
        "target": 10
       }
      },
@@ -4575,9 +4575,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 老窗口单次pass（翻2–3页）：深读2篇达标专帖——soooozzi0237《普吉岛很好 不会再来了》(06-26，188赞/28收藏/10评论)；Sarina有点困Kun《🇹🇭普吉岛蓝象｜皇家菜！秒杀国内所有泰料》(2025-08-13，65赞/78收藏/9评论)。3篇放款口径下 2/3 未达标→partial。其余专帖过低（查理不理40赞、阿U老师18赞、MissFlyholic.hk12赞）；高流量帖多非蓝象专帖（Rock330赞合集、粉kkkkkkk1153赞排名、茄子米米440赞避雷帖）。阶段二换关键词再补。",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4609,9 +4609,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Raya餐厅」翻2–3页，Raya专帖互动极低——最高桑德拉在旅途《来普吉不吃Raya=白来》22赞、DD日记14赞、澤光12赞、叫我珍妮花11赞、Warmme在家10赞；momo《皇帝岛上的餐厅之Raya father》47赞经深读确认为皇帝岛（Racha Island）另一家Raya，非普吉Raya餐厅。高流量帖（乌鸦先生在普吉1191赞TOP10、话唠虎妹676赞doodee、Rock330赞合集）均非Raya专帖。专帖候选池枯竭→阶段二，不死磕。",
        "posts": 0,
-       "status": "pending",
+       "status": "partial",
        "target": 10
       }
      },
@@ -4643,9 +4643,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Tu Kab Khao餐厅」翻2–3页，深读2篇——乘法口诀《🇹🇭普吉米其林餐厅Tu kab khao》(87赞/107收藏/5评论，正向·地道泰餐，2人1495泰铢，咖喱蟹肉不推荐；评论：绿豆粥01-13提醒夜市只有周日晚上）https://www.xiaohongshu.com/explore/69648152000000002203bd88；烟波江客《🇹🇭普吉老街米其林Tu Kab Khao》(41赞/52收藏/1评论，评论1条服务费负面：账单已含服务费服务员另要700泰铢）https://www.xiaohongshu.com/explore/6997a9e9000000000e03ecaf。其余专帖互动更低（番茄32赞、灰灰14赞）；高流量帖（话唠虎妹676赞doodee、Rock330赞合集）均非专帖。2/3未达标→阶段二补搜。",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4677,7 +4677,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Mom Tri's Kitchen」翻2–3页，专帖互动极低——茶艺不精的小哪吒《Mom tris kitchen环境好》2赞、阳猫-预约助手《普吉岛私人海景餐厅Mom's kitchen代订》18赞（代订）、「普吉岛Mom Tri's Kitchen餐厅攻略」赞数未显示；高流量帖（Oops356赞日落餐厅、野猪少女271赞等）均非专帖。不死磕→阶段二。",
        "posts": 0,
        "status": "pending",
        "target": 10
@@ -4711,7 +4711,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Suay餐厅」翻2–3页，专帖互动极低——Gerrard35赞、Norman《suay @phuket霆锋推荐》18赞、亮亮爵士大叔《普吉岛最好米其林餐厅Suay（谢霆锋最爱)》17赞、Anson陪你虚度时光《普吉SUAY》12赞；高流量帖（Pinkkkkkkk1153赞排名、话唠虎妹676赞doodee、晚晚不可哎563赞）均非专帖。不死磕→阶段二。",
        "posts": 0,
        "status": "pending",
        "target": 10
@@ -4745,7 +4745,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Acqua餐厅」翻2–3页，未见普吉Acqua专帖高流量；ACQUA Restaurant Phi Phi(1赞)为皮皮岛店非普吉；疑似相关帖互动极低且标题未明确指向Acqua；高流量帖均非专帖。不死磕→阶段二。",
        "posts": 0,
        "status": "pending",
        "target": 10
@@ -4780,9 +4780,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 老窗口单次pass：深读1篇——-1-1《啊！🇹🇭回来了还在怀念的餐厅》(2025-08-16，241赞/332收藏/27评论，正向·Kan Eang第一名：查龙码头海鲜，两人不到2000泰铢，分量足）https://www.xiaohongshu.com/explore/68a0baa9000000001c00c06e；其余专帖互动过低（7赞以下）；高流量帖均非专帖。1/3→阶段二补搜。",
+       "posts": 1,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4814,9 +4814,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 老窗口单次pass：深读2篇——胡不归Ray《普吉镇老街的周日夜市哪些美食小吃是必吃的》(2025-04-27，168赞/138收藏/15评论，正向·老街夜市必吃，4分17秒视频；评论：现金或泰国网银支付，到普吉镇Thalang路）https://www.xiaohongshu.com/explore/680e3e310000000009039c47；jiujiu _1208《普吉镇老街隐藏美味｜โรตีแถวนํ้า(Roti Taew》(2025-12-15，20赞/19收藏/0评论，正向·米其林级路边早餐，薄饼配牛肉咖喱）https://www.xiaohongshu.com/explore/693f7690000000001e0079b5。一只伊利434赞香蕉饼帖经深读为班赞夜市非本项。2/3→阶段二补搜。",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4848,9 +4848,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 老窗口单次pass：深读2篇——番薯条条《攀牙湾给到一个夯！不愧是bkpp严选》(04-12，173赞/40收藏/8评论，正向·007岛风景超美、皮划艇体验超绝）https://www.xiaohongshu.com/explore/69db7b7d000000002302694b；卷卷环游记《攀牙湾体验溶洞探险，经历海上暴风雨》(2025-09-08，140赞/115收藏/31评论，中性·vlog询问值不值；评论：落日星光号人均约500R全包酒店接送、无隐形消费）https://www.xiaohongshu.com/explore/68bead2f000000001d01a99d。其余专帖更低。2/3→阶段二补搜。",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4986,7 +4986,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 老窗口单次pass：深读2篇——包包出走世界《吹爆普吉岛落日｜观赏指南》(01-10，55赞/35收藏/18评论，正向·日落观赏指南：神仙半岛最经典、卡塔观景台俯瞰三湾；蓝调时刻日落后10-25分钟更出片）https://www.xiaohongshu.com/explore/69629162000000000e03e6a0；不插电的超人《普吉岛流水账第6️⃣天：悬崖咖啡-神仙半岛》(09-16，35赞/27收藏/2评论，正向·Laem Sai Cup Cafe悬崖咖啡厅低消100泰铢很出片，步行20分钟边走边拍）https://www.xiaohongshu.com/explore/698b4937000000000a02da2f。人像机位候选已登记 xhs-portrait-spots/phuket/神仙半岛。2/3→阶段二补搜。",
        "posts": 2,
        "status": "partial",
        "target": 10
@@ -5020,8 +5020,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
+       "note": "2026-09-28 老窗口单次pass：深读1篇——纸鱼oo0《Phuket Elephant Sanctuary🐘大象庇护所》(2025-08-03，71赞/83收藏/7评论，正向·首家人道主义亚洲象庇护所：Khao Prae Teao国家公园30英亩，救助20多头、现住14头母象；1.5h套餐小吃饮品、3.5h含素食正餐，官网phuketelephantsanctuary.org可订）https://www.xiaohongshu.com/explore/688ef8e10000000023036f9e；其他高流量帖均非Phuket Elephant Sanctuary。1/3→阶段二补搜。",
+       "posts": 1,
        "status": "partial",
        "target": 10
       }
@@ -5054,10 +5054,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 2,
        "status": "partial",
-       "target": 10
+       "posts": 2,
+       "target": 3,
+       "note": "新标准：第10轮2026-09-28 06:28Z审计——叫我Grace姐姐《啊啊啊！普吉岛好漂亮的宝藏泰式小村子》(149赞/21评论)/北京陪读妈妈在普吉《我心目中普吉岛的沉浸式体验泰国文化的NO.1》(78赞/24评论)达标（该话题专帖最高149赞，相对高流量）；flyfly_yan(3赞/1评论)未达标。旧口径基线2帖流量未知不计入新标准。还差1篇，已回队列待补。人像机位候选：泰式古村落泰服出片（已登记）。证据：xhs-coverage-phuket.md 第10轮记录。"
       }
      },
      "type": "景点"
@@ -6854,17 +6854,17 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 65,
+ "complete_items": 74,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 23,
+   "xhs_done": 28,
    "ph": 32,
    "de": 32,
-   "all_done": 22
+   "all_done": 27
   },
   "chiangmai": {
    "total": 20,
@@ -6911,10 +6911,10 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 5,
+   "xhs_done": 9,
    "ph": 24,
    "de": 24,
-   "all_done": 4
+   "all_done": 8
   },
   "phuquoc": {
    "total": 22,
@@ -6936,8 +6936,8 @@ export const initialResearchStatus = {
    "de": 28,
    "all_done": 24
   },
-  "xhs_done": 67,
-  "all_done": 63
+  "xhs_done": 79,
+  "all_done": 74
  },
  "targets": {
   "chinese_sites": "done",
@@ -6948,5 +6948,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-28T05:13Z"
+ "updated_at": "2026-09-28T10:48Z"
 };
