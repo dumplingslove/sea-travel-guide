@@ -623,14 +623,14 @@ function tripRanges(){
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string; price_usd?: number|null }
+interface FlightDbFlight { airline: string; flight: string; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null }
 interface FlightDbDay {
   economy_usd?: number|null; business_usd?: number|null;
   economy_price_basis?: string; business_price_basis?: string;
   economy_queried_at?: string; business_queried_at?: string;
   nonstop_flights?: FlightDbFlight[];
 }
-interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string;duration:string;price:number|null}[] }
+interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null}[] }
 /* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
    库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
 const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
@@ -645,7 +645,7 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
       carriers: [...new Set(nf.map(f=>f.airline))],
       direct: nf.length>0,
       queriedAt: (d.economy_queried_at || d.business_queried_at || "").slice(0,10),
-      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null})),
+      flights: nf.map(f=>({flight:f.flight, dep:f.dep, arr:f.arr, duration:f.duration||"", price:(f.price_usd??null) as number|null, bizPrice:(f.business_price_usd??null) as number|null})),
     };
   }
 }
@@ -673,13 +673,14 @@ function tripFlightCard(key: string, label: string){
   const rows=d.flights.map(f=>{
     const dh=Number(f.dep.slice(0,2));
     const redeye=!isNaN(dh)&&dh<6;
-    const p=f.price!=null?`<span class="tfi-fprice">$${f.price}</span>`:`<span class="tfi-fprice na">—</span>`;
-    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}${p}</li>`;
+    const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
+    const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
+    return `<li><span class="tfi-no">${f.flight}</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${f.duration?`<span class="tfi-dur">${f.duration}</span>`:""}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
   }).join("");
   return `<div class="tfi-leg">${head(`🟢 ${d.results}班直飞`,"ok")}
     <div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
     ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.join(" / ")}</div>`:""}
-    <div class="tfi-flcap">各航班经济舱整单价</div>
+    <div class="tfi-flcap">各航班整单价（经济 / 商务）</div>
     <ul class="tfi-flights">${rows}</ul>
     ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}</div>`;
 }
