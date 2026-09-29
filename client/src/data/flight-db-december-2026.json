@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-29T07:33:17+00:00",
+ "updated_at": "2026-09-29T07:54:10+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -14416,18 +14416,18 @@
    "label": "北京→西雅图（2大1小）",
    "days": {
     "2026-12-31": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_queried_at": "2026-09-29T07:54:03+00:00",
      "economy_usd": null,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "",
      "source": "google-flights",
      "economy_note": "当天无直飞",
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_queried_at": "2026-09-29T07:54:03+00:00",
      "business_usd": null,
-     "business_price_basis": "2大1小总价",
+     "business_price_basis": "",
      "business_note": "当天无直飞",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 2258,
@@ -14514,18 +14514,18 @@
      "onestop_business_note": "Filter '1 stop or fewer' applied; no nonstop options appeared. Prices include taxes and fees for 3 passengers. All times local."
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
+     "economy_queried_at": "2026-09-29T07:54:03+00:00",
      "economy_usd": null,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "",
      "source": "google-flights",
      "economy_note": "当天无直飞",
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
+     "business_queried_at": "2026-09-29T07:54:03+00:00",
      "business_usd": null,
-     "business_price_basis": "2大1小总价",
+     "business_price_basis": "",
      "business_note": "当天无直飞",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 3102,
@@ -14612,25 +14612,25 @@
      "onestop_business_note": "Filter '1 stop or fewer' applied; no nonstop options appeared. Prices include taxes and fees for 3 passengers. JAL flight has a change-of-airport transfer in Tokyo (Haneda to Narita). All times local."
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-09-29T07:54:10+00:00",
+     "economy_usd": 7140,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "当天无直飞",
      "nonstop_flights": [
       {
-       "airline": "Hainan",
+       "airline": "Hainan Airlines",
        "flight": "HU495",
-       "dep": "1:40 PM",
-       "arr": "8:20 AM",
-       "duration": "10 hr 40 min",
-       "business_price_usd": 22392
+       "dep": "13:40",
+       "arr": "08:20",
+       "duration": "10h40m",
+       "price_usd": 7140,
+       "business_price_usd": 22402
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
-     "business_usd": 22392,
+     "business_queried_at": "2026-09-29T07:54:10+00:00",
+     "business_usd": 22402,
      "business_price_basis": "2大1小总价",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 4249,
@@ -14728,25 +14728,24 @@
    "label": "上海→西雅图（2大1小）",
    "days": {
     "2026-12-31": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
-     "economy_usd": 3658,
+     "economy_queried_at": "2026-09-29T07:54:03+00:00",
+     "economy_usd": 3660,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Delta",
+       "airline": "Delta Air Lines",
        "flight": "DL280",
-       "dep": "5:25 PM",
-       "arr": "12:05 PM",
-       "duration": "10 hr 40 min",
-       "price_usd": 3658,
+       "dep": "17:25",
+       "arr": "12:05",
+       "duration": "10h40m",
        "business_price_usd": 20951
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
-     "business_usd": 20951,
+     "business_queried_at": "2026-09-29T07:54:03+00:00",
+     "business_usd": 20960,
      "business_price_basis": "2大1小总价",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 2907,
@@ -14833,25 +14832,25 @@
      "onestop_business_note": "Filter '1 stop or fewer' applied; Delta nonstop flight ($20951) appeared and was excluded per instructions. Prices include taxes and fees for 3 passengers. All times local."
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
-     "economy_usd": 4909,
+     "economy_queried_at": "2026-09-29T07:54:03+00:00",
+     "economy_usd": 4912,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Delta",
+       "airline": "Delta Air Lines",
        "flight": "DL280",
-       "dep": "5:25 PM",
-       "arr": "12:04 PM",
-       "duration": "10 hr 39 min",
-       "price_usd": 4909,
+       "dep": "17:25",
+       "arr": "12:04",
+       "duration": "10h39m",
+       "price_usd": 4912,
        "business_price_usd": 21817
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
-     "business_usd": 21817,
+     "business_queried_at": "2026-09-29T07:54:03+00:00",
+     "business_usd": 21827,
      "business_price_basis": "2大1小总价",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 3731,
@@ -14938,25 +14937,25 @@
      "onestop_business_note": "Filter '1 stop or fewer' applied; Delta nonstop flight ($21818) appeared and was excluded per instructions. Prices include taxes and fees for 3 passengers. Self-transfer itineraries are flagged by Google as including tickets from multiple airlines. All times local."
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-09-28T07:08:29+00:00",
-     "economy_usd": 5531,
+     "economy_queried_at": "2026-09-29T07:54:03+00:00",
+     "economy_usd": 5533,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Delta",
+       "airline": "Delta Air Lines",
        "flight": "DL280",
-       "dep": "5:25 PM",
-       "arr": "12:04 PM",
-       "duration": "10 hr 39 min",
-       "price_usd": 5531,
+       "dep": "17:25",
+       "arr": "12:04",
+       "duration": "10h39m",
+       "price_usd": 5533,
        "business_price_usd": 21817
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T07:08:29+00:00",
-     "business_usd": 21817,
+     "business_queried_at": "2026-09-29T07:54:03+00:00",
+     "business_usd": 21827,
      "business_price_basis": "2大1小总价",
      "onestop_economy_queried_at": "2026-09-28T17:02:39+00:00",
      "onestop_economy_usd": 3956,
