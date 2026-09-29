@@ -6865,7 +6865,9 @@ export const initialResearchStatus = {
      "note": "【景点】朝鲜王朝正宫，韩服体验+守门将换岗仪式（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "partial",
+       "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
+       "note": "景福宫：4.6/5(5286则),首尔特别市钟路区社稷路161,地铁3号线景福宫站5号出口,评价原话3条(Shahin Alom - RU 5/5 等)；缺带日期的评价原话，待补"
       },
       "details": {
        "status": "pending"
@@ -6886,14 +6888,17 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "北村韩屋村 Bukchon",
      "note": "【景点】韩屋群落+首尔塔同框机位，带娃推车注意坡道（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "partial",
+       "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
+       "note": "北村韩屋村：4.7/5,热度7.2,5412条,钟路区桂洞街37,安国站4号出口,评价原话3条；缺带日期的评价原话，待补"
       },
       "details": {
        "status": "pending"
@@ -6914,14 +6919,17 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "仁寺洞 Insadong",
      "note": "【景点】传统工艺+茶馆街，适合买手信（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "partial",
+       "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
+       "note": "仁寺洞：4.7/5(1321条),Jongno District Seoul,建议1-3小时,电话+82-2-7340222；缺带日期的评价原话，待补"
       },
       "details": {
        "status": "pending"
@@ -6942,7 +6950,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "三清洞 Samcheong-dong",
@@ -6970,7 +6979,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "益善洞 Ikseon-dong",
@@ -6998,7 +7008,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "明洞 Myeongdong",
@@ -7026,7 +7037,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "南山首尔塔 N Seoul Tower",
@@ -7054,7 +7066,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "东大门设计广场 DDP",
@@ -7082,7 +7095,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "弘大 Hongdae",
@@ -7110,7 +7124,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "圣水洞 Seongsu-dong",
@@ -7138,7 +7153,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "汝矣岛汉江公园 Yeouido Hangang Park",
@@ -7166,7 +7182,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "广藏市场 Gwangjang Market",
@@ -7194,7 +7211,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "梨泰院 Itaewon",
@@ -7222,7 +7240,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "星空图书馆 Starfield Library",
@@ -7250,7 +7269,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "乐天世界 Lotte World",
@@ -7278,7 +7298,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "景点"
     },
     {
      "name": "明洞饺子 Myeongdong Kyoja",
@@ -7306,7 +7327,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "土俗村参鸡汤 Tosokchon",
@@ -7334,7 +7356,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "陈玉华一只鸡 Jinokhwa",
@@ -7362,7 +7385,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "神仙雪浓汤 Sinseon",
@@ -7390,7 +7414,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "王妃家烤肉 Wangbijib",
@@ -7418,7 +7443,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "桥村炸鸡 Kyochon",
@@ -7446,7 +7472,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "餐厅"
     },
     {
      "name": "乐天酒店首尔 Lotte Hotel Seoul",
@@ -7474,7 +7501,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "酒店"
     },
     {
      "name": "威斯汀朝鲜首尔 The Westin Josun",
@@ -7502,7 +7530,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "酒店"
     },
     {
      "name": "首尔四季酒店 Four Seasons Seoul",
@@ -7530,7 +7559,8 @@ export const initialResearchStatus = {
        "posts": 0,
        "target": 3
       }
-     }
+     },
+     "type": "酒店"
     }
    ]
   }
@@ -7684,5 +7714,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-29T16:48Z"
+ "updated_at": "2026-09-29T22:48Z"
 };
