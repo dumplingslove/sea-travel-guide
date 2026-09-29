@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-29T00:54:16+00:00",
+ "updated_at": "2026-09-29T01:09:02+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3342,10 +3342,10 @@
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-16": {
      "economy_queried_at": "2026-09-28T20:51:53+00:00",
@@ -3428,10 +3428,10 @@
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-17": {
      "economy_queried_at": "2026-09-28T20:51:53+00:00",
@@ -3522,10 +3522,10 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-18": {
      "economy_queried_at": "2026-09-28T20:51:53+00:00",
@@ -3608,10 +3608,10 @@
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-19": {
      "economy_queried_at": "2026-09-28T20:51:53+00:00",
@@ -3702,10 +3702,10 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-20": {
      "economy_queried_at": "2026-09-28T20:51:53+00:00",
@@ -3796,10 +3796,10 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": null,
+     "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "强制重查：12/15–12/26连续记\"无直飞\"但12/27起有商务价（$2427+），疑为误记，2026-09-28作废"
+     "business_note": "当天无直飞"
     },
     "2026-12-21": {
      "economy_queried_at": "2026-09-28T22:08:58+00:00",
