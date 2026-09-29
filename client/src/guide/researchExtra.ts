@@ -7,13 +7,14 @@ export const extraXhsEvidence:Record<string,EvidenceLink[]>={
 '137 Pillars House':[E('清迈🇹🇭｜137柱子酒店','https://www.xiaohongshu.com/explore/68dbf3a50000000004017db0','2025-09-30 · 正文与评论区可见滚动复核'),E('清迈隐世天花板丨137根柚木撑起的百年传奇','https://www.xiaohongshu.com/explore/6a9a8fe20000000011035b28','正文摘录：由19世纪末柚木官邸修缮而来的“可入住博物馆”')],
 'Four Seasons Resort Chiang Mai':[E('住进清迈的“秘密花园”！被稻田包围的四季','https://www.xiaohongshu.com/explore/6981f86e000000000d00805c','正文摘录：最出名的是“活的水稻梯田”'),E('清迈四季酒店｜住进稻田里的4天3晚','https://www.xiaohongshu.com/explore/6a83f04c0000000025005dc0','正文与评论区可见滚动复核')],
 'Raya Heritage':[E('清迈Raya heritage盛名之下 其实难副','https://www.xiaohongshu.com/explore/6a86d35100000000320339ca','正文摘录：“性价比太低了”；评论涉及迷你吧收费'),E('无踩雷！清迈的拉雅古迹Raya Heritage酒店','https://www.xiaohongshu.com/explore/69e1dee9000000002301e4bf','评论摘录：房价高、蚊虫多、位置偏')],
+'Shangri-La Chiang Mai 清迈香格里拉':[E('清迈香格里拉｜一生拉黑💣携程也骗我','https://www.xiaohongshu.com/explore/68dd79ff000000000302debc','Turbo_xin · 2025-10-01 · 6赞/8评 · 强避雷：霉味/床单潮湿/设施老旧/早餐难吃/1200元一晚')],
 'Khao Soi Khun Yai':[E('清迈本地人都在经常排队的米其林咖喱面','https://www.xiaohongshu.com/explore/6881cd32000000002001b2e4','2025-10-04 · 正文与评论区可见滚动复核'),E('考索伊·坤艾 Khao Soi Khun Yai','https://www.xiaohongshu.com/explore/6aa263d90000000014011f41','标签：清迈必吃、咖喱面')],
-'Kiti Panit':[E('Kiti Panit｜清迈最不喜欢的店','https://www.xiaohongshu.com/explore/66c9b0c3000000001d01a174','2024-08-24 · 踩雷样本'),E('清迈最有人文气息的餐厅Kiti Panit','https://www.xiaohongshu.com/explore/673e2c96000000000202a40e','正文摘录：老宅风貌保留；评论提示应提前预约')],
+'Kiti Panit':[E('Kiti Panit｜清迈最不喜欢的店','https://www.xiaohongshu.com/explore/66c9b0c3000000001d01a174','2024-08-24 · 踩雷样本'),E('清迈最有人文气息的餐厅Kiti Panit','https://www.xiaohongshu.com/explore/673e2c96000000000202a40e','正文摘录：老宅风貌保留；评论提示应提前预约'),E('清迈米其林 尝尝泰北料理kiti panit','https://www.xiaohongshu.com/explore/684ad2600000000003039922','Celia · 2025-06-12 · 28赞/21藏 · 正文khao soi椰奶味偏甜；评论区2条实质避雷：难吃+10%消费税7%服务费/烤鸡肉串不如夜市100铢'),E('米其林推荐餐厅清迈kiti panit中肯评价','https://www.xiaohongshu.com/explore/6a9ff3a1000000002802990c','是付小草同学呀 · 2026-09-08 · 1888年华人移民百年老宅/清迈第一家购物商场旧址/人均五六百铢+10%服务费'),E('kiti panit｜含糖量超标的泰餐','https://www.xiaohongshu.com/explore/68de5c590000000004004035','好食成雙 · 2025-10-02 · 古城百年建筑里的米其林推荐餐厅')],
 'Huen Phen':[E('避雷清迈五星好评泰式餐厅！','https://www.xiaohongshu.com/explore/69a91a54000000000e00f8ec','负面体验样本'),E('清迈｜古城里必来的“博物馆餐厅”','https://www.xiaohongshu.com/explore/6a7c54ec00000000220110f8','正文摘录：像小型泰北民俗博物馆')],
 'Khao Kha Moo Chang Phueak':[E('飞机一落地我就直奔猪脚饭','https://www.xiaohongshu.com/explore/69074d9a000000000301ef2e','2025-11-02 · 推荐样本'),E('去清迈千万别去这家吃猪脚饭！！！','https://www.xiaohongshu.com/explore/663da3c8000000001e019092','2024-05-10 · 避雷样本'),E('统治泰北夜市猪脚饭的女人：凤飞飞','https://www.xiaohongshu.com/explore/6975c452000000000b00a958','鸭宝看世界 · 2026-09-28深读 · 173赞 · 60-80铢/甜口/第五种境界'),E('避雷凤飞飞猪脚饭！！！','https://www.xiaohongshu.com/explore/699ef6fa000000001a02d007','野草吹不尽 · 2026-09-28深读 · 100铢甜口/中国街随便一家秒杀'),E('北门夜市两大网红实测','https://www.xiaohongshu.com/explore/6a3cc3f90000000007011de','安野独行 · 2026-09-28深读 · 中立/正常猪脚饭不用排队')],
 'Tong Tem Toh':[E('清迈｜比米其林推荐好吃太多的泰北菜','https://www.xiaohongshu.com/explore/6751a99a000000000702b298','2024-12-05 · 推荐样本'),E('避雷清迈风很大的tongtemtoh','https://www.xiaohongshu.com/explore/67a7017c000000002902b90b','正文摘录：“又咸又辣，吃不惯”')],
 'Ginger Farm Kitchen':[E('清迈Ginger Farm Kitchen避大雷','https://www.xiaohongshu.com/explore/68e13dd60000000004022879','正文提到拼桌、上菜慢和烤鱼未去鳞')],
-'Dash! Restaurant':[E('避雷！清迈Dash teak house','https://www.xiaohongshu.com/explore/68e8a264000000000703088a','正文摘录：红咖喱炸鱼用冻鱼、烤鸡用冻鸡腿'),E('清迈｜这家餐厅真的惊艳到我了','https://www.xiaohongshu.com/explore/68b03f3c000000001b031582','2025-09-08 · 推荐样本')],
+'Dash! Restaurant':[E('避雷！清迈Dash teak house','https://www.xiaohongshu.com/explore/68e8a264000000000703088a','正文摘录：红咖喱炸鱼用冻鱼、烤鸡用冻鸡腿'),E('清迈｜这家餐厅真的惊艳到我了','https://www.xiaohongshu.com/explore/68b03f3c000000001b031582','2025-09-08 · 推荐样本'),E('来清迈必吃的几家米其林餐厅‼️','https://www.xiaohongshu.com/explore/6885f468000000001d00e808','柯柯酱子 · 2025-08-25 · 1046赞 · Dash专节5星推荐/古城木质阁楼/人均约RMB80/需提前预约/老板中文极好北京口音'),E('清迈必吃餐 美食认证 Dash Teak House','https://www.xiaohongshu.com/explore/6aa434f6000000002803410a','Tina💎天姐在香港 · 2026-09-11 · spa店右边小巷子难找/价格不贵')],
 '大象自然公园':[E('清迈大象自然公园半日游','https://www.xiaohongshu.com/explore/6a9e6be0000000002803172b','正文与评论区可见滚动复核'),E('无表演 不骑大象 不喂食 我们只观察大象','https://www.xiaohongshu.com/explore/6a7a7550000000002c000b0a','正文摘录：园内泥泞，会更换雨靴'),E('清迈ENP：让大象们做自己！不强迫互动洗澡','https://www.xiaohongshu.com/explore/694965720000000019026b36','砍砍砍蒂丝 · 2026-09-28深读 · 1514赞 · 官网预订/门票包接送'),E('清迈最值得来的地方！没有之一！','https://www.xiaohongshu.com/explore/68adbc52000000001d026b36','Ashely lau · 2026-09-28深读 · 207赞 · 116头大象/半天约2500铢')],
 '周日步行街':[E('清迈周日夜市天花板｜塔佩门逛吃全攻略','https://www.xiaohongshu.com/explore/6a663d71000000000f0055b9','正文与评论区可见滚动复核'),E('清迈｜听劝，古城一定要留在周日逛','https://www.xiaohongshu.com/explore/69a68f17000000002202023e','正文摘录：古城历史、寺庙、老建筑与小店集中')],
 '双龙寺':[E('来清迈｜一定不能错过山顶双龙寺','https://www.xiaohongshu.com/explore/6aa0378100000000110339dd','正文与评论区可见滚动复核'),E('清迈双龙寺值不值得去？美是真的，烫脚丫也是','https://www.xiaohongshu.com/explore/6a0dc8580000000035030e36','实用提醒：寺内脱鞋，地面可能烫脚')],
@@ -37,6 +38,8 @@ export const extraXhsEvidence:Record<string,EvidenceLink[]>={
 'Suay':[E('普吉岛米其林推荐餐厅','https://www.xiaohongshu.com/explore/686d55fe00000000150234c0','Rock · 2026-09-28深读 · 331赞 · 人均800-1200铢/查龙+普吉镇分店'),E('和谢霆锋，Jimmy吃了同一间米其林','https://www.xiaohongshu.com/explore/68ea7158000000000503aa0c','就就就酱子 · 2026-09-28深读 · 115赞 · 3人5400铢/鹅肝Taco火焰冰淇淋'),E('Suay Cherngtalay｜普吉岛fine dining','https://www.xiaohongshu.com/explore/6a81e2630000000005029a95','土狗琪琪 · 2026-09-28深读 · 强推荐/金枪鱼塔塔蟹肉taco')],
 '攀牙湾':[E('普吉岛-攀牙湾出海一日游！真比皮皮岛好玩','https://www.xiaohongshu.com/explore/6887862f0000000025010a8b','Melody小雨酱 · 2026-09-28深读 · 101赞 · 星光日落号约570/12:00登船20:30返')],
 '皮皮岛':[E('普吉岛-攀牙湾出海一日游！真比皮皮岛好玩','https://www.xiaohongshu.com/explore/6887862f0000000025010a8b','Melody小雨酱 · 2026-09-28深读 · 对比帖倾向攀牙湾/皮皮岛旺季人挤人')],
+'ArtScience Museum':[E('🇸🇬亲子游-艺术科学馆 最新避坑指南','https://www.xiaohongshu.com/explore/6a1d5de30000000008003ea0','KKEE的人生盲盒 · 2026-06-26 · 18张图逐张核验 · 正文"不买票在门口拍照也很出片"')],
+'Amoy Street Food Centre':[E('🇸🇬新加坡10大食阁，给你整理好了','https://www.xiaohongshu.com/explore/6a292bc0000000003501de78','新加坡安家小助手 · 2026-06-10 · 1892赞/3066藏/65评论 · "7. 阿摩街熟食中心 Amoy Street（CBD）📍7 Maxwell Rd, 069111"'),E('Amoy Street食阁有啥推荐的不🥲选择困难','https://www.xiaohongshu.com/explore/69d8af7a0000000021038953','IVY在坡坡 · 2026-04-12 · 112赞/59评论 · 6条实质评论实读：二楼96 Batang Fish/越南米粉沙拉/spicy wife nasi lemak/rayyan\'s鸡/Simply G.Ken')],
 
 };
 
@@ -45,12 +48,12 @@ export const extraXhsAssessments:Record<string,XhsAssessment>={
 'Four Seasons Resort Chiang Mai':S('推荐',2,0,0,'稻田景观与完整度假体验。','离古城远、价格高，适合专门宅酒店。'),
 'Raya Heritage':S('谨慎选择',0,1,1,'获奖建筑与侘寂设计适合建筑爱好者。','房间小、偏僻、蚊虫与价格虚高反馈集中。'),
 'Khao Soi Khun Yai':S('推荐',2,0,0,'本地人排队、咖喱面辨识度高。','街边环境简朴且易售罄。'),
-'Kiti Panit':S('谨慎选择',1,0,1,'百年华人老宅与泰北料理有文化感。','口味两极，walk-in可能只能坐户外。'),
+'Kiti Panit':S('谨慎选择',1,1,2,'百年华人老宅（1888年华人移民建、清迈第一家购物商场旧址）与泰北料理有文化感；2026-09-28第51轮：人均五六百铢+10%服务费。','评论区避雷集中：难吃、10%消费税+7%服务费、烤鸡肉串不如夜市100铢；walk-in可能只能坐户外。研究更新：2026-09-28。'),
 'Huen Phen':S('谨慎选择',1,0,1,'老宅与泰北民俗氛围。','出品与服务稳定性有争议。'),
 'Khao Kha Moo Chang Phueak':S('谨慎选择',1,0,1,'传奇夜市摊与软糯猪脚。','环境与品质下滑反馈并存。'),
 'Tong Tem Toh':S('谨慎选择',1,0,1,'宁曼路方便、泰北菜够味。','又咸又辣、无空调和排队。'),
 'Ginger Farm Kitchen':S('不推荐',0,0,1,'One Nimman内位置便利。','拼桌、上菜慢和鱼未去鳞等强烈负评。'),
-'Dash! Restaurant':S('谨慎选择',1,0,1,'柚木宅环境有辨识度。','冻鱼、冻鸡腿与价格落差投诉。'),
+'Dash! Restaurant':S('谨慎选择',2,0,1,'柚木宅环境有辨识度；2026-09-28第51轮：1046赞合集帖Dash专节5星推荐（古城木质阁楼、人均约RMB80、需提前预约），老板中文极好（北京口音）。','冻鱼、冻鸡腿与价格落差投诉（红咖喱炸鱼420铢）；位置难找（spa店右边小巷子）。研究更新：2026-09-28。'),
 '大象自然公园':S('推荐',2,0,0,'无表演、无骑乘，以观察救援象为核心。','园内泥泞，需换雨靴。'),
 '周日步行街':S('推荐',2,0,0,'古城、寺庙与市集串成一条线。','人挤人，注意防盗。'),
 '双龙寺':S('推荐',2,0,0,'山顶兰纳圣寺与清迈城景。','脱鞋后地面可能烫脚，山路易晕车。'),
@@ -70,7 +73,10 @@ export const extraXhsAssessments:Record<string,XhsAssessment>={
 'Siam Niramit':S('推荐',1,1,0,'制作规模与泰国文化展示。','娱乐性评价分化，自助餐也非一致好评。'),
 '芭东 Bangla 路':S('谨慎选择',1,0,1,'浓缩夜生活氛围。','阴阳菜单、推销和女性独行风险提醒。'),
 '大城府 Ayutthaya 古城遗迹':S('推荐',9,1,0,'UNESCO世界遗产三大王牌寺庙；多篇帖子交叉验证票价与路线；曼谷出发火车仅15–20铢。','车站有假扮工作人员推销2500铢包车（绿牌tourist assistant，须认红色胸牌）；进寺不能露胳膊露大腿；柴瓦塔那兰寺部分区域修缮有脚手架。'),
-'丹嫩沙多水上市场+美功铁道':S('谨慎选择',2,4,4,'美功铁道火车贴身而过的独特体验；丹嫩沙多水上市场出片；两景点距曼谷约70公里可打包一日。','黑码头私人码头开价4000铢/人；船夫关发动机逼购；水脏有异味、商品贵且重复；多位评论推荐更本地的空叻玛荣。')
+'丹嫩沙多水上市场+美功铁道':S('谨慎选择',2,4,4,'美功铁道火车贴身而过的独特体验；丹嫩沙多水上市场出片；两景点距曼谷约70公里可打包一日。','黑码头私人码头开价4000铢/人；船夫关发动机逼购；水脏有异味、商品贵且重复；多位评论推荐更本地的空叻玛荣。'),
+'Shangri-La Chiang Mai 清迈香格里拉':S('谨慎选择',0,0,1,'长康路夜市步行可达、离古城几公里，位置是明确优点。','2026-09-28第52轮唯一达标帖为强避雷：房间浓烈霉味、床单潮湿、设施老旧（携程标2025装修但"老干部风"）、早餐难吃、自助餐另收饮料费；1200元/晚"性价比极低"。研究更新：2026-09-28。'),
+'ArtScience Museum':S('推荐',2,1,0,'2026-09-28第16轮：新加坡旅游局官方帖"眼睛根本看不过来"、狮城探险家"运动森林/太空长廊必出片"；KKEE亲子避坑指南"不买票在门口拍照也很出片"。滨海湾片区雨天保险，全室内。','特展轮换，出发前查官网；KKEE避坑指南提示提前规划。研究更新：2026-09-28。'),
+'Amoy Street Food Centre':S('推荐',2,1,0,'2026-09-28第16轮：1892赞合集帖收录（7 Maxwell Rd, CBD）+ Jemmie"米其林推荐必吃榜"双层美食地图实测10家摊位；评论区二楼越南米粉沙拉/96 Batang Fish鱼汤/spicy wife nasi lemak/rayyan\'s鸡/Simply G.Ken均有实名推荐。CBD打工人饭堂。','人多、天热，怕热可打包；先锁定二楼目标摊位再排队。研究更新：2026-09-28。')
 };
 
 export type SecondaryEvidence={group:'Tripadvisor'|'中文旅游网站'|'官方与专业来源';title:string;url:string;note:string};
