@@ -6781,7 +6781,7 @@ export const initialResearchStatus = {
     },
     {
      "name": "牛车水/小印度/甘榜格南",
-     "note": "三大族群区（佛牙寺、Tekka、哈芝巷+苏丹清真寺）",
+     "note": "三大族群区（佛牙寺、Tekka、哈芝巷+苏丹清真寺）。第65轮新增1篇（Miss靓《甘榜格南半日游》09-17推荐，评论待补暂不计达标）。新标准核验（2026-09-29主agent）：旧证据见 ~/workspace/research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/singapore-xhs.md §27，9/14实读6篇达标、9/15用户裁决10篇实读=partial（逐图复核pending）。9/22放款标准要求3篇高流量帖（万赞/数千赞优先），旧证据未记录互动量，无法核验\"高流量\" → 不转done，保持partial。转done条件：①补3篇高流量帖互动量核验 ②逐图复核。",
      "sources": {
       "chinese_sites": {
        "note": "2026-09-14 中文站补齐：牛车水Trip.com 4.7分＋马蜂窝1951条、小印度Trip.com 4.6分＋马蜂窝1793条、甘榜格南马蜂窝184条；共6条带日期原话；证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/cn-fill-2026-09-14.md",
@@ -6812,7 +6812,9 @@ export const initialResearchStatus = {
        "target": 10
       }
      },
-     "type": "景点"
+     "type": "景点",
+     "status": "partial",
+     "posts": 11
     },
     {
      "name": "Sentosa圣淘沙+Skyline Luge",
@@ -6852,6 +6854,685 @@ export const initialResearchStatus = {
    ],
    "name": "新加坡",
    "total": 28
+  },
+  "seoul": {
+   "name": "首尔",
+   "total": 24,
+   "complete": 0,
+   "items": [
+    {
+     "name": "景福宫 Gyeongbokgung",
+     "note": "【景点】朝鲜王朝正宫，韩服体验+守门将换岗仪式（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "北村韩屋村 Bukchon",
+     "note": "【景点】韩屋群落+首尔塔同框机位，带娃推车注意坡道（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "仁寺洞 Insadong",
+     "note": "【景点】传统工艺+茶馆街，适合买手信（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "三清洞 Samcheong-dong",
+     "note": "【景点】韩屋咖啡馆街，景福宫步行可达（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "益善洞 Ikseon-dong",
+     "note": "【景点】老韩屋改造的文艺小店街，年轻人聚集（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "明洞 Myeongdong",
+     "note": "【景点】购物+街头小吃，酒店多集中于此（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "南山首尔塔 N Seoul Tower",
+     "note": "【景点】登高看全城夜景，缆车上山（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "东大门设计广场 DDP",
+     "note": "【景点】扎哈地标建筑，夜景+设计展（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "弘大 Hongdae",
+     "note": "【景点】街头表演+潮店，年轻人夜生活（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "圣水洞 Seongsu-dong",
+     "note": "【景点】首尔布鲁克林，咖啡馆+快闪店（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "汝矣岛汉江公园 Yeouido Hangang Park",
+     "note": "【景点】汉江野餐+夜景，带娃放风（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "广藏市场 Gwangjang Market",
+     "note": "【景点】百年传统市场，生牛肉拌饭+绿豆煎饼（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "梨泰院 Itaewon",
+     "note": "【景点】异国风情街区，多国料理（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "星空图书馆 Starfield Library",
+     "note": "【景点】COEX巨型书架，人像机位（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "乐天世界 Lotte World",
+     "note": "【景点】室内主题乐园，带娃雨天备选（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "明洞饺子 Myeongdong Kyoja",
+     "note": "【餐厅】米其林必比登，刀削面+蒸饺（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "土俗村参鸡汤 Tosokchon",
+     "note": "【餐厅】景福宫旁老字号参鸡汤（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "陈玉华一只鸡 Jinokhwa",
+     "note": "【餐厅】东大门一只鸡，蒜香鸡汤（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "神仙雪浓汤 Sinseon",
+     "note": "【餐厅】24小时雪浓汤，明洞店方便（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "王妃家烤肉 Wangbijib",
+     "note": "【餐厅】明洞韩牛烤肉老字号（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "桥村炸鸡 Kyochon",
+     "note": "【餐厅】韩式炸鸡代表，蜂蜜蒜香（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "乐天酒店首尔 Lotte Hotel Seoul",
+     "note": "【酒店】明洞/乙支路，行政酒廊+免税店（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "威斯汀朝鲜首尔 The Westin Josun",
+     "note": "【酒店】明洞，1924年开业老牌奢华（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    },
+    {
+     "name": "首尔四季酒店 Four Seasons Seoul",
+     "note": "【酒店】光化门，顶奢，带娃服务好（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
+     "sources": {
+      "chinese_sites": {
+       "status": "pending"
+      },
+      "details": {
+       "status": "pending"
+      },
+      "google_maps": {
+       "status": "pending"
+      },
+      "photos": {
+       "status": "pending",
+       "target": 5,
+       "verified": 0
+      },
+      "tripadvisor": {
+       "status": "pending"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "posts": 0,
+       "target": 3
+      }
+     }
+    }
+   ]
   }
  },
  "complete_items": 88,
@@ -6977,7 +7658,22 @@ export const initialResearchStatus = {
    "details": 28
   },
   "xhs_done": 93,
-  "all_done": 88
+  "all_done": 88,
+  "seoul": {
+   "total": 24,
+   "ta": 0,
+   "gm": 0,
+   "cs": 0,
+   "xhs_done": 0,
+   "ph": 0,
+   "de": 0,
+   "all_done": 0,
+   "tripadvisor": 0,
+   "google_maps": 0,
+   "chinese_sites": 0,
+   "photos": 0,
+   "details": 0
+  }
  },
  "targets": {
   "chinese_sites": "done",
@@ -6987,6 +7683,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 195,
- "updated_at": "2026-09-29T10:47Z"
+ "total_locations": 219,
+ "updated_at": "2026-09-29T16:48Z"
 };
