@@ -1305,16 +1305,14 @@ function dayFlightCards(d: string): string {
       cards.push(tripFlightCard(`${fromCode}-${toCode}|${d}`, `${leg.from}→${leg.to}`));
     }
   }
-  /* 回西雅图：beijing3 最后一天 */
-  const beijing3 = ranges["beijing3"];
-  if(beijing3){
+  /* 回西雅图：2026-09-29 改经首尔中转 —— 首尔最后一天（或次日）显示首尔→西雅图航班卡；
+     XX→首尔段已在上面的 TRIP_TRANSITIONS 转场循环里按回程城市动态渲染 */
+  const seoul = ranges["seoul"];
+  if(seoul){
     const choice = tripFlyChoice("return");
-    const flyDate = choice==="last" ? beijing3.to : addDays(beijing3.to, 1);
+    const flyDate = choice==="last" ? seoul.to : addDays(seoul.to, 1);
     if(flyDate === d){
-      for(const code of ["PEK-SEA", "PVG-SEA", "CKG-SEA"]){
-        const label = code==="PEK-SEA" ? "北京→西雅图" : code==="PVG-SEA" ? "上海→西雅图" : "重庆→西雅图";
-        cards.push(tripFlightCard(`${code}|${d}`, label));
-      }
+      cards.push(tripFlightCard(`ICN-SEA|${d}`, `首尔 → 西雅图（2大1小）`));
     }
   }
   return cards.length ? `<div class="trip-flightinfo" style="margin-top:12px">${cards.join("")}</div>` : "";

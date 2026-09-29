@@ -19712,6 +19712,46 @@
      "onestop_business_note": "除海南/新航外其余为分开出票自行转机(Self transfer)"
     }
    }
+  },
+  "PEK-ICN": {
+   "origin": "PEK",
+   "destination": "ICN",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "北京→首尔（2大1小）",
+   "days": {}
+  },
+  "PVG-ICN": {
+   "origin": "PVG",
+   "destination": "ICN",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "上海→首尔（2大1小）",
+   "days": {}
+  },
+  "CKG-ICN": {
+   "origin": "CKG",
+   "destination": "ICN",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "重庆→首尔（2大1小）",
+   "days": {}
+  },
+  "ICN-SEA": {
+   "origin": "ICN",
+   "destination": "SEA",
+   "adults": 2,
+   "child_ages": [
+    2
+   ],
+   "label": "首尔→西雅图（2大1小）",
+   "days": {}
   }
  }
 }
