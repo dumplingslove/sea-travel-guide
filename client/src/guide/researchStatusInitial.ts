@@ -1,7 +1,7 @@
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 27,
+   "complete": 31,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -62,10 +62,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 4,
+       "status": "done",
+       "posts": 6,
        "target": 3,
-       "note": "新标准：第10轮2026-09-28 06:28Z审计——艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/268评论，避雷向视频，评论区为主要信息源)/RKDooooo《曼谷嘉佩乐 Stella🦚》(417赞/19评论)达标；急速菜菜(66赞/1评论)未达标。旧口径基线5帖流量未知不计入新标准。还差1篇高流量帖，已回队列待补。人像机位候选：Stella白孔雀酒吧（正文明确\"适合女生去打卡拍照\"，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。 | 2026-09-28 第17轮+2篇（419赞推荐/1746赞避雷视频），第3篇候选打不开，不死磕"
+       "note": "新标准：第10轮2026-09-28 06:28Z审计——艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/268评论，避雷向视频，评论区为主要信息源)/RKDooooo《曼谷嘉佩乐 Stella🦚》(417赞/19评论)达标；急速菜菜(66赞/1评论)未达标。旧口径基线5帖流量未知不计入新标准。还差1篇高流量帖，已回队列待补。人像机位候选：Stella白孔雀酒吧（正文明确\"适合女生去打卡拍照\"，已登记）。证据：xhs-coverage-bangkok.md 第10轮记录。 | 2026-09-28 第17轮+2篇（419赞推荐/1746赞避雷视频），第3篇候选打不开，不死磕 | 2026-09-28 第49轮老窗口：艾维奇Vic《为了探究它凭什么是全球排名第一的酒店？》(1746赞/455藏/268评，避雷向视频，评论区普遍质疑“全球第一”含金量与服务水准)/Kristen V《曼谷嘉佩乐是我体验过态度最差的酒店！！！》(16赞/53评，避雷：勿扰模式下前台电话吵醒+早餐芒果烂头)，2帖达标；原有partial 4帖，合计6帖转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round49-bangkok-capella-DONE-2026-09-28.md"
       }
      },
      "type": "酒店"
@@ -199,7 +199,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。",
-       "posts": 0,
+       "posts": 3,
        "status": "done",
        "target": 10
       }
@@ -234,7 +234,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。",
-       "posts": 0,
+       "posts": 3,
        "status": "done",
        "target": 10
       }
@@ -505,10 +505,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 4,
+       "status": "done",
+       "posts": 5,
        "target": 3,
-       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第11轮2026-09-28 06:42Z审计——仅戴踏踏《曼谷｜连续九年的米其林一星泰餐值得吃吗？》(114赞/12评论/13图本轮逐张翻验补完)达相对高流量（该话题XHS专帖最高）；FoodieLouis(10赞/2评论)、走路带风的王同学(2赞/2评论，负向heritage套餐9886.8泰铢实测)流量不足，未计入达标但记入证据。旧口径4帖中另3帖（周半半/祛魅避雷、themaxxtl/踩雷、1基线）按旧实质评论标准计入，流量均低，不计入新标准。结论：话题流量封顶（专帖除戴踏踏外均≤12赞），3帖高流量标准在此话题下不可达，建议后续轮次不再重复投入。证据：xhs-coverage-bangkok.md 第11轮记录。 | 2026-09-28 第18轮+3篇（114赞推荐/2篇避雷）"
+       "note": "2026-09-28 第49轮老窗口：FoodieLouis《曼谷米其林一星泰餐厅 Nahm》(强推荐，硬核传统派，性价比高)。戴踏踏114赞冬阴功汤帖评论泛泛未达标，王同学避雷帖(3900泰铢/人套餐，汤咸如海水)评论未达标。合计5帖转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round49-bangkok-nahm-DONE-2026-09-28.md"
       }
      },
      "type": "餐厅"
@@ -607,10 +607,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 3,
+       "status": "done",
+       "posts": 5,
        "target": 3,
-       "note": "新标准（2026-09-22用户放宽：3篇高流量帖子）：第12轮2026-09-28 06:56Z——红豆菠萝包《打卡了曼谷唐人街超🔥的 T&K seafood》(72赞/3评论，话题最高流量，正文+5图翻验)达标；Smaller(3赞)/潘潘(2赞)流量过低不计入。旧口径基线5帖无流量明细不计入新标准。话题专帖流量封顶（最高72赞），3帖标准不可达，已移队列队尾低优先级。证据：xhs-coverage-bangkok.md 第12轮记录。 | 2026-09-28 第19轮+2篇（73赞推荐/避雷），第3篇候选打不开"
+       "note": "2026-09-28 第49轮老窗口：红豆菠萝包《打卡了曼谷唐人街超🔥的 T&K seafood》(73赞，5点半到店/6点后等位，冬阴功汤必点)/花花花花哥儿《3家亲测曼谷平价干净海鲜大排档推荐》(221赞/279藏/18评，16点开门，烤大虾/面包糠炸虾，三人1560b)。合计5帖转done；潘潘反馈报告0评论未达标。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round49-bangkok-tk-seafood-DONE-2026-09-28.md"
       }
      },
      "type": "餐厅"
@@ -913,10 +913,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 5,
+       "status": "done",
+       "posts": 6,
        "target": 3,
-       "note": "新标准：第12轮2026-09-28 06:56Z——悦游CNTraveler《@王彦桐 曼谷第一站》(1590赞/159评论，杂志街拍)/谁动了我的雪球啊~《夜色中的曼谷唐人街》(675赞/39评论，美食+拍照点位)达标；泰好吃啦(937赞视频帖，无静态图可翻验)未达图片标准。还差1篇，已回队列。人像机位候选3组：西瓜美乐蒂4机位（招牌路口/灯笼长廊/小吃摊/天桥俯拍）、悦游骑楼饼铺红门、雪球主街霓虹夜景（均已登记，图片待下载）。证据：xhs-coverage-bangkok.md 第12轮记录。 | 2026-09-28 第18轮+3篇（1590赞/937赞/675赞，均为高流量推荐）"
+       "note": "2026-09-28 第50轮老窗口：江小丫吖《来曼谷记住这个老爷爷吃到报恩榴莲！》(310赞/250藏/73评，唐人街路边榴莲车380🐷/盒现场开果)/哈妮雪雪《曼谷唐人街｜逛吃拍照一条龙》(扫街机位推荐+七彩芒果糯米饭超上镜，og:image已登记未落盘)/芸朵朵《曼谷唐人街后悔没有早点去》(232赞，MRT龙莲寺站4号口，夜幕耀华力路赛博朋克美食天堂)。合计6帖转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round50-bangkok-chinatown-DONE-2026-09-28.md"
       }
      },
      "type": "景点"
@@ -1112,7 +1112,7 @@ export const initialResearchStatus = {
    "total": 32
   },
   "chiangmai": {
-   "complete": 11,
+   "complete": 16,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1250,9 +1250,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item04-shangrila-PARTIAL-2026-09-17.md",
-       "note": "2026-09-28 第16轮+3篇（105赞亲子推荐/6赞避雷/27赞洲际对比）",
-       "posts": 3,
-       "status": "partial",
+       "note": "2026-09-28 第52轮老窗口：Turbo_xin《清迈香格里拉｜一生拉黑💣携程也骗我》(6赞/8评，强避雷：浓烈霉味/床单潮湿/设施老旧/早餐难吃，1200元一宿)。合计4帖转done（避雷倾向为主）；momo帖正文未捕获未达标；JulianGe/Joshua帖搜索卡被遮挡停手。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round52-chiangmai-shangrila-DONE-2026-09-28.md",
+       "posts": 4,
+       "status": "done",
        "target": 3,
        "verified_at": "2026-09-23T00:52:00Z"
       }
@@ -1398,9 +1398,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item08-kitipanit-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:00Z）：partial 2/10，缺8篇；本轮详情页实读7帖，最后3候选全部剔除（热浪帖图片4-9技术阻塞暂不计入） ｜ 2026-09-28 第16轮+3篇（2赞中立/28赞中立/2赞偏负）；专帖整体低赞，最高28赞",
-       "posts": 5,
-       "status": "partial",
+       "note": "2026-09-28 第51轮老窗口：Celia《清迈米其林 尝尝泰北料理kiti panit》(28赞,评论区2条实质避雷：难吃+10%消费税7%服务费)。合计6帖转done。结论：1888年华人移民百年老宅(清迈第一家购物商场旧址),人均五六百株+10%服务费；评论区避雷集中(烤鸡肉串不如夜市100🐖)。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round51-chiangmai-kiti-panit-DONE-2026-09-28.md",
+       "posts": 6,
+       "status": "done",
        "target": 10
       }
      },
@@ -1433,7 +1433,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item09-huenphen-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:09Z）：partial 3/10，缺7篇；新关键词组合未发现新候选，本轮浏览约30+搜索卡片、详情页实读5帖，新增可计入0篇；2026-09-26 16:12 PDT轮：关键词\"清迈 Huen Phen餐厅\"翻3页，0篇达标——头部216赞专帖（iibexc）正文核验为另一家餐厅HEUANNAOW已排除，其余专属帖≤106赞且相关性不足；候选池枯竭，维持3/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+3篇（107赞合集/6赞专帖/10赞视频）；专帖候选池枯竭，217赞系Baan Landai已排除",
+       "note": "2026-09-28 第51轮老窗口：候选池枯竭(全站低互动,第2页枯竭)。天下无敌最强の喆《博物馆餐厅》(35赞,0评论)/游探-Mars《邓丽君同款》(10赞,0评论)/王鹿汐啊3星评价(冬阴功250🐷涨到350🐷,评论泛泛),均未达标。原有6帖保持partial 6/3。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round51-chiangmai-huen-phen-PARTIAL-2026-09-28.md",
        "posts": 6,
        "status": "partial",
        "target": 10
@@ -1468,9 +1468,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item10-khaokhamoo-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:19Z）：partial 8/10，缺2篇；可计入8篇（正文全文+实质评论+图片逐张翻完+明确年份）；特例2/2已满；详情页完整实读约25+帖、搜索卡片约200+ ｜ 2026-09-28 第15轮+3篇（173赞专帖/5赞避雷/6赞推荐）；英文搜索词无结果，中文\"凤飞飞猪脚饭\"有效",
-       "posts": 11,
-       "status": "partial",
+       "note": "2026-09-28 第50轮老窗口：鸭宝看世界《统治泰北夜市猪脚饭的女人：凤飞飞》(173赞/156藏/74评，60-80铢，甜口辣味\"第五种境界\")/野草吹不尽《避雷凤飞飞猪脚饭！！！》(避雷，100🐷甜口，中国街随便一家秒杀)/安野独行《北门夜市两大网红实测》(中立，正常猪脚饭不用排队)。合计14帖转done。结论：甜口，南方人慎试；价格从50🐷涨到100🐷，旁边炒米粉/椰子甜汤被多条评论认为更好吃。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round50-chiangmai-phuangphet-porkrice-DONE-2026-09-28.md",
+       "posts": 14,
+       "status": "done",
        "target": 10
       }
      },
@@ -1539,9 +1539,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验（截至2026-09-16T05:18Z）：3/10 partial，缺7篇，特例1/2。第3篇万事开水(2024-09-13,66e463720000000027003178)推荐：正文详实、9图全审(1/9 LIVE静态帧)，评论仅预约问答无实质体验评论，按\"正文详实但无实质评论\"计特例1/2；浏览器\"新增2篇\"系重复计算皇额娘帖已纠正。证据：redo-strict/chiangmai-item12-dash-PARTIAL-2026-09-15.md 2026-09-16T09:25Z用户裁决：按3/10 partial收尾（\"Dash! 清迈\"关键词已枯竭：明确提Dash的多为2017–2019旧帖，有年份新帖均为其他主题/合集；不再换关键词开新轮）。；2026-09-27 00:08Z轮（主代理只读）：关键词'Dash! 清迈'未换，翻3页无2026-09-16后新帖、未发现漏掉的高流量专属帖，本轮无新增，继续partial。 | 2026-09-28 第17轮+3篇（6赞避雷/推荐/11赞推荐）；专帖整体低赞，最高11赞",
-       "posts": 6,
-       "status": "partial",
+       "note": "2026-09-28 第51轮老窗口：柯柯酱子《来清迈必吃的几家米其林餐厅》(1046赞,Dash专节5星推荐,古城木质阁楼,人均约RMB80需提前预约,评论区确认老板中文极好/北京口音+预约建议)。合计7帖转done；避雷帖(红咖喱炸鱼420🐷冻鱼)与Tina推荐帖均无实质评论未达标。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round51-chiangmai-dash-DONE-2026-09-28.md",
+       "posts": 7,
+       "status": "done",
        "target": 10
       }
      },
@@ -1574,9 +1574,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item13-elephantnaturepark-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 用户裁决收尾（2026-09-16）：6/10 partial。\"Elephant Nature Park\"英文关键词候选枯竭，4条线索均卡在无年份要求；不再换关键词开新轮 | 2026-09-28 第17轮+3篇（1868赞高流量/122赞/285赞），均为推荐",
-       "posts": 9,
-       "status": "partial",
+       "note": "2026-09-28 第50轮老窗口：砍砍砍蒂丝《清迈ENP：让大象们做自己！不强迫互动洗澡》(1514赞/1593藏/51评)/Ashely lau《清迈最值得来的地方！没有之一！》(207赞/66评，116头大象，盲象残疾象孤儿象)。合计11帖转done。结论：伦理型庇护所，官网预订(定金线上+余款现场现金)，门票包酒店接送(距市区约1h)，旺季提前订，半天约2500株。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round50-chiangmai-elephant-nature-park-DONE-2026-09-28.md",
+       "posts": 11,
+       "status": "done",
        "target": 10
       }
      },
@@ -1869,7 +1869,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
-       "posts": 0,
+       "posts": 2,
        "status": "done",
        "target": 10
       }
@@ -1904,7 +1904,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
-       "posts": 0,
+       "posts": 2,
        "status": "done",
        "target": 10
       }
@@ -1939,7 +1939,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：2 篇达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-hcmc.md 2026-09-27 07:40Z 轮次记录。",
-       "posts": 0,
+       "posts": 2,
        "status": "done",
        "target": 10
       }
@@ -1973,9 +1973,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第52轮老窗口首搜：一言天成《Vlog|又来住 Caravelle Saigon Hotel》(33赞，视频帖无正文)/一言天成《西贡卡拉威尔酒店第四次入住体验记》(第四次入住，胡志明市第一郡歌剧院旁)，评论均无实质未达标；是咩咩鱼测评帖404未打开。pending→partial（正文达标2帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round52-hcmc-caravelle-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2008,9 +2008,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第52轮老窗口首搜：克里斯先生在越南《胡志明 西貢美憬閣藝術酒店》(38赞/38藏，三郡邊邊，顶楼泳池酒吧+玻璃天桥，泳池9点前/4点后)/momo《胡志明美憬阁酒店｜无边泳池》(无边泳池不错，位置步行15分钟到中心)，评论均未达标；屋顶bar视频帖无正文未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round52-hcmc-hotel-des-arts-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2043,9 +2043,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第53轮老窗口首搜：五金公主ALB《胡志明入门级米其林一星》(273赞/25评，菜市场藏得很深)/大熊硬糖《亚洲top50唯一的越南餐厅-ǎnǎn》(259赞，2026亚洲50最佳越南餐厅)/死咪咪《你一定会为了这米一pho跑到越南》(98赞，现代越南菜，主厨Peter Cuong Franklin)，各帖评论仅1-2条实质未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round53-hcmc-anan-saigon-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2113,7 +2113,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "2026-09-28 第53轮老窗口首搜：搜索词\"西贡 砖屋 餐厅\"翻3页全是香港西贡帖，无专帖，候选池枯竭；下轮换英文\"Cuc Gach Quan\"补搜。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round53-hcmc-cuc-gach-quan-PENDING-2026-09-28.md",
        "posts": 0,
        "status": "pending",
        "target": 10
@@ -2148,9 +2148,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第54轮老窗口首搜：西西莉亚《胡志明河畔餐厅》(498赞/699藏，二郡Thao Dien西贡河畔，38 Nguyen U Di，提前预约好位置，人均约150)/好好吃饭Vivi《胡志明很Chill的河畔餐厅》(露台看日落)/在东南亚吃喝拉撒《越南胡志明｜二郡The Deck Saigon》(加拿大生蚝/虾肉卷不错，出品不算顶尖)，评论均未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round54-hcmc-the-deck-saigon-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2183,9 +2183,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第54轮老窗口首搜（组合项）：高冷抹茶拿铁《🇻🇳 | Phở Hòa Pasteur》(96赞，巴斯德街260C三郡，汤底浓郁)/小宝在越南生活《西贡最赞的烤鸡腿饭-Cơm tấm Ba Ghiền》(61赞，连续三年米其林推荐，几乎天天爆满)，评论均未达标。pending→partial（正文达标2帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round54-hcmc-pho-hoa-ba-ghien-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2218,9 +2218,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第54轮老窗口首搜：佩泥在路上《西贡排队王！胡志明NO.1法棍》(808赞/1177藏，73k/个，肉量三倍，避开晚饭高峰期，Grab可外卖)/大胖的小鱼旰《胡志明美食 Bánh Mì Huynh Hoa》(酱料特殊有人觉得苦)/深山大道《越南胡志明市最火的Banh mi》(女友觉得腻)，评论均未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round54-hcmc-huynh-hoa-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2253,9 +2253,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第55轮老窗口首搜：隐山烧烧的PP《胡志明亚洲排名第三，世界排名第五十的咖啡》(281赞)/崔崔小菠萝《胡志明|值得去的咖啡馆》(137赞，27 Ngo Duc Ke旧楼三楼，salted iced coffee)/黑八八个八《The WORKSHOP|越南最权威咖啡店没喝明白》(中立偏质疑，排名说法评论有质疑)，评论均未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round55-hcmc-the-workshop-coffee-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2288,9 +2288,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第55轮老窗口首搜：杨威利喝红茶《胡志明越共咖啡，越战废土风》(363赞，斑驳红砖装修，椰子系列饮料)/愛麗絲的可愛日子《越南胡志明｜共咖啡》(机位帖，粉红教堂斜对面，楼上打卡点；机位图已登记、图未到)，评论均未达标。pending→partial（正文达标2帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round55-hcmc-cong-ca-phe-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2323,9 +2323,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第55轮老窗口首搜（组合项）：啊哦mm《超好拍没几个人知道》(584赞/798藏，机位帖：粉红教堂对面GS25便利店三楼免费俯拍机位；机位图已登记、图未到)/-3C《西贡中央邮局📮写一张明信片寄给自己 攻略》(138赞)，评论均未达标。pending→partial（正文达标2帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round55-hcmc-church-postoffice-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2358,9 +2358,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第56轮老窗口首搜：鱼儿的行走《胡志明战争遗迹博物馆｜读懂真实的历史重量》/梦吟是湘婷米森的妈吖《胡志明战争遗迹博物馆》(馆外飞机坦克直升机，馆内照片为主)/爱溜达的语文老师《越南旅行｜胡志明战争遗迹博物馆》(37赞，和统一宫步行5-8分钟)，评论均未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round56-hcmc-war-remnants-museum-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2393,9 +2393,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第56轮老窗口首搜：一个人的莎士比亚《越南统一宫，处处都是中国\"马脚\"》(5798赞，政治历史评论非游记)/Quinn《胡志明统一宫｜有些设计，真的不需要追流行》(60年代建筑，遮阳立面+家具细节)/嘉陵芽芽《胡志明统一宫最出片的角度不是喷泉》(机位帖，机位图已登记、图未到)，评论均未达标。pending→partial（正文达标3帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round56-hcmc-reunification-palace-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -2428,9 +2428,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第56轮老窗口首搜：媚媚快跑《🇻🇳胡志明｜超独特体验｜Cuchi地道半日游》(545赞，距市区70km车程2h+，门票125,000盾约50RMB含讲解)/荒野小膘客《在古芝地道试射M60》(142赞，评论达标)/边走爱边看《胡志明古芝地道游》(1949赞，评论达标)。pending→partial（正文达标3帖，评论达标2帖）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round56-hcmc-cu-chi-tunnels-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4279,7 +4279,7 @@ export const initialResearchStatus = {
    "total": 24
   },
   "phuket": {
-   "complete": 8,
+   "complete": 13,
    "items": [
     {
      "name": "Amanpuri",
@@ -6854,17 +6854,17 @@ export const initialResearchStatus = {
    "total": 28
   }
  },
- "complete_items": 74,
+ "complete_items": 88,
  "summary": {
   "bangkok": {
    "total": 32,
    "ta": 32,
    "gm": 32,
    "cs": 31,
-   "xhs_done": 28,
+   "xhs_done": 32,
    "ph": 32,
    "de": 32,
-   "all_done": 27,
+   "all_done": 31,
    "tripadvisor": 32,
    "google_maps": 32,
    "chinese_sites": 31,
@@ -6876,10 +6876,10 @@ export const initialResearchStatus = {
    "ta": 19,
    "gm": 20,
    "cs": 20,
-   "xhs_done": 12,
+   "xhs_done": 17,
    "ph": 20,
    "de": 20,
-   "all_done": 11,
+   "all_done": 16,
    "tripadvisor": 19,
    "google_maps": 20,
    "chinese_sites": 20,
@@ -6936,10 +6936,10 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 9,
+   "xhs_done": 14,
    "ph": 24,
    "de": 24,
-   "all_done": 8,
+   "all_done": 13,
    "tripadvisor": 24,
    "google_maps": 23,
    "chinese_sites": 24,
@@ -6976,8 +6976,8 @@ export const initialResearchStatus = {
    "photos": 28,
    "details": 28
   },
-  "xhs_done": 79,
-  "all_done": 74
+  "xhs_done": 93,
+  "all_done": 88
  },
  "targets": {
   "chinese_sites": "done",
@@ -6988,5 +6988,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-29T05:12Z"
+ "updated_at": "2026-09-29T10:47Z"
 };
