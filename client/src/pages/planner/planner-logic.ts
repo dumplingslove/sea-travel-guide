@@ -598,17 +598,19 @@ function updateAll(){renderCalendar();renderTrip();cachePlannerLocal()}
 /* ================= 🗺️ 大行程总览（11/28 去程＋中间各段；回程城市三选一待定） ================= */
 interface TripSegDef { id: string; label: string; sub: string; mode: string; note: string; cta?: boolean }
 const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
-const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 */
+const TRIP_MIDDLE_DAYS = 36;        /* 11/29–1/3（2026-09-29 用户：回程加首尔停留2天） */
 const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
   { id:"couple", label:"夫妻东南亚", sub:"", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩继续东南亚", cta:true },
   { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
-  { id:"beijing3", label:"北京", sub:"用户一人回北京陪父亲", mode:"🏠 家庭", note:"西安待几天后你一人飞回北京；最后大家在回程城市集结，一起飞西雅图" },
+  { id:"beijing3", label:"北京", sub:"用户一人回北京陪父亲", mode:"🏠 家庭", note:"西安待几天后你一人飞回北京；最后大家在回程城市集结，经首尔一起飞西雅图" },
+  /* 2026-09-29 用户：回程北京经首尔转机，在首尔停留2天（2大1小） */
+  { id:"seoul", label:"首尔", sub:"回程中转停留2天（2大1小）", mode:"🏠 家庭", note:"北京飞首尔，玩2天后飞西雅图" },
 ];
-let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1 };
+let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1, seoul:2 };
 /* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
-const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY" };
+const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY", "首尔":"ICN" };
 function coupleLastCity(){ const a=wz.order.filter(c=>wz.cities.includes(c)); return a[a.length-1] || "曼谷"; }
 function thailandToXianLeg(){
   const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
@@ -620,9 +622,9 @@ function singaporeToFirstCityLeg(){
   const code = CITY_AIRPORT[first] || "HKT";
   return { code: `SIN-${code}`, label: `新加坡→${first}` };
 }
-/* 回西雅图出发城市（未定）：北京首都 / 上海浦东 / 重庆江北三选一，用户在大行程里定 */
+/* 回西雅图出发城市：2026-09-29 用户定为北京（经首尔中转停留2天），可在大行程里改 */
 type ReturnCityCode = "" | "PEK" | "PVG" | "CKG";
-let returnCity: ReturnCityCode = "";
+let returnCity: ReturnCityCode = "PEK";
 const RETURN_CITY_META: Record<Exclude<ReturnCityCode,"">,{city:string;airport:string}> = {
   PEK:{city:"北京",airport:"北京首都"},
   PVG:{city:"上海",airport:"上海浦东"},
@@ -690,6 +692,9 @@ const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"xian", before:"beijing3", title:"西安→北京（用户一人）", noFlight:true,
     note:"你坐高铁去北京，不需要机票。",
     legs:[] },
+  /* 2026-09-29 用户：回程经首尔中转，在首尔停留2天；航段代码随回程城市动态变 */
+  { after:"beijing3", before:"seoul", title:"__RETURN_SEOUL__（2大1小）",
+    legs:[{code:"__RETURN_ICN_CODE__",label:"__RETURN_ICN_LABEL__"}] },
 ];
 /* 航司英文名→中文名（2026-09-28 用户：回西雅图三段航班信息中文显示） */
 const AIRLINE_CN: Record<string,string> = {
@@ -705,8 +710,8 @@ const AIRLINE_CN: Record<string,string> = {
   "Juneyao Airlines": "吉祥航空", "Spring Airlines": "春秋航空",
   "Lucky Air": "祥鹏航空", "Tibet Airlines": "西藏航空",
 };
-/* 回西雅图三段的航段代码 */
-const RETURN_SEA_CODES = new Set(["PEK-SEA", "PVG-SEA", "CKG-SEA"]);
+/* 回西雅图航段代码（2026-09-29 用户：改经首尔中转停留2天）：XX→首尔 ＋ 首尔→西雅图 */
+const RETURN_SEA_CODES = new Set(["PEK-ICN", "PVG-ICN", "CKG-ICN", "ICN-SEA"]);
 /* 时长转中文：16h25m → 16小时25分 */
 function durationCn(d: string): string {
   if(!d) return "";
@@ -762,37 +767,35 @@ function tripFlightCard(key: string, label: string){
     <ul class="tfi-flights">${rows}</ul>
     ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}</div>`;
 }
-/* 回西雅图卡片：出发城市三选一（未定）＋起飞日二选一，全部在大行程里定清楚 */
+/* 回西雅图卡片：2026-09-29 用户定为北京经首尔中转、首尔停留2天（2大1小）；
+   出发城市仍可在大行程里改（北京 / 上海 / 重庆），中转首尔逻辑不变 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
-  const lastDay=ranges["beijing3"].to, nextDay=addDays(lastDay,1);
+  const lastDay=ranges["seoul"].to, nextDay=addDays(lastDay,1);
   const choice=tripFlyChoice("return");
   const flyDate=choice==="last"?lastDay:nextDay;
   const cityBtns=[`<button class="${returnCity===""?"primary":"ghost"}" data-returncity="">待定</button>`]
     .concat((Object.keys(RETURN_CITY_META) as Exclude<ReturnCityCode,"">[])
       .map(c=>`<button class="${returnCity===c?"primary":"ghost"}" data-returncity="${c}">${RETURN_CITY_META[c].airport}</button>`))
     .join(" ");
-  const dest=returnCity?`${RETURN_CITY_META[returnCity].city} → 西雅图`:`？ → 西雅图（出发城市待定）`;
-  const gather=returnCity?`你${returnCity==="PEK"?"已在北京":"从北京出发"}；其他家人前往${RETURN_CITY_META[returnCity].city}的路线待定；会合后一起飞西雅图`:`回程城市待定：你从北京出发，其他家人前往集合城市的路线待定；会合后一起飞西雅图`;
-  /* 回西雅图三城直飞对比：从 Google Flights 航班库按起飞日读取；库里没该日期=待查询 */
-  const returnLegs=[
-    {code:"PEK-SEA",label:`北京 → 西雅图${returnCity==="PEK"?" ✅ 已选":""}`},
-    {code:"PVG-SEA",label:`上海 → 西雅图${returnCity==="PVG"?" ✅ 已选":""}`},
-    {code:"CKG-SEA",label:`重庆 → 西雅图${returnCity==="CKG"?" ✅ 已选":""}`},
-  ];
-  const returnCards=returnLegs.map(l=>tripFlightCard(`${l.code}|${flyDate}`,l.label)).join("");
+  const rc=(returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+  const m=RETURN_CITY_META[rc];
+  const dest=`${m.city} → 首尔（停留2天） → 西雅图`;
+  const gather=`你${rc==="PEK"?"已在北京":"从北京出发"}；其他家人前往${m.city}的路线待定；首尔停留2天后一起飞西雅图`;
+  /* 首尔→西雅图航班卡：从 Google Flights 航班库按起飞日读取；库里没该日期=待查询 */
+  const returnCards=tripFlightCard(`ICN-SEA|${flyDate}`,`首尔 → 西雅图${returnCity==="PEK"?" ✅ 经首尔":""}`);
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
       <div class="micro">🧑‍🤝‍🧑 集结：${gather}</div>
       <div class="micro">出发城市：${cityBtns}</div>
       <div class="micro trip-flydays">起飞日：
-        <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">集结最后一天 ${dateLabel(lastDay)} 飞</button>
+        <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">首尔最后一天 ${dateLabel(lastDay)} 飞</button>
         <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
       </div>
-      <p class="micro">北京 / 上海 / 重庆三地回西雅图的国际票价、国内集结成本、总耗时、前一晚机场住宿、带娃难度待比较，先不定；起飞日定清楚，查价才不会错位。</p>
-      <div class="micro" style="margin-top:10px"><b>✈️ 三城航班对比</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查，直飞＋一次转机）</div>
+      <p class="micro">${m.city} → 首尔段的航班卡在上面的转场行里；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
+      <div class="micro" style="margin-top:10px"><b>✈️ 首尔 → 西雅图</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
       <div class="trip-flightinfo">${returnCards}</div>
-      <p class="micro">航班库正在查 12-31 / 01-01 / 01-02 三个候选日的三城直飞和一次转机；上面天数凑满 34 天、起飞日落到候选日后，这里会自动出价对比。</p>
+      <p class="micro">航班库正在按新行程查 ${m.city}→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
     </div>
   </div>`;
 }
@@ -825,12 +828,18 @@ function renderTrip(){
       const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
       const sinLeg = singaporeToFirstCityLeg();
+      /* 2026-09-29：回程经首尔中转，航段代码随回程城市动态变（默认北京） */
+      const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+      const rm = RETURN_CITY_META[rc];
       const title = t.title
         .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
-        .replace("__SIN_FIRST__", `${sinLeg.label}`);
+        .replace("__SIN_FIRST__", `${sinLeg.label}`)
+        .replace("__RETURN_SEOUL__", `${rm.city}→首尔`);
       const legs = t.legs.map(l=>({
-        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code),
-        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label),
+        code: l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code)
+          .replace("__RETURN_ICN_CODE__", `${rc}-ICN`),
+        label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label)
+          .replace("__RETURN_ICN_LABEL__", `${rm.city}→首尔`),
       }));
       const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
       const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
@@ -872,7 +881,7 @@ function renderTrip(){
     ${parts.join("\n    ")}
     ${gatherRow}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}出发`:"（出发城市待定：北京 / 上海 / 重庆）"}）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）→首尔（2天）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}经首尔出发`:"（出发城市待定：北京 / 上海 / 重庆，经首尔）"}）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
