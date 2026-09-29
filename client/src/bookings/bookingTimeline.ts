@@ -619,6 +619,16 @@ function applyFlightDb(): void {
       }
       continue;
     }
+    /* 新旧倒挂保护（2026-09-28 site-improve 口径②）：库里该 (航段,日期) 的实查时间若早于
+       本文件静态实查（flight-refresh-daily-b 写入的更新 Google Flights 数据），则不覆盖——
+       保留更新的静态数据（已在循环开头过滤中转），等 flight-db-gflights-fill 重查该日期后库自动接管。
+       比较口径：双方统一转 "YYYY-MM-DD HH:MM"（PDT）字符串比较。 */
+    const dbQueriedPdt = toPDT(day.economy_queried_at || day.business_queried_at || "").slice(0, 16);
+    const staticQueriedPdt = (leg.queriedAt || "").slice(0, 16);
+    if (dbQueriedPdt && staticQueriedPdt && staticQueriedPdt > dbQueriedPdt) {
+      leg.flightState = leg.options && leg.options.length > 0 ? "ok" : "pending";
+      continue;
+    }
     const nf = day.nonstop_flights || [];
     const queriedAt = toPDT(day.economy_queried_at || day.business_queried_at || "");
     const basis = day.economy_price_basis || day.business_price_basis || "";
