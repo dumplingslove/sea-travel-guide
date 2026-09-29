@@ -1363,7 +1363,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭",
+       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。；2026-09-24T02:18Z主会话定时轮xhs-continuous-search授权重试轮（19:49Z滑块硬熔断后、用户30分钟无回复按3.5步协议触发）干净完成无熔断：健康检查通过（18:53–18:56 PDT，菜小盒已登录、首页信息流正常）；滑块熔断解除，consecutive_fuse_count清零；全程只读。item07三组搜索pass（Khao Soi Khun Yai翻2页约50卡片/SP Chicken翻2页约30卡片/清迈米其林烤鸡翻1页约28卡片），8篇深读全剔除（hh bean Maesai陷阱/阿K哥68d4ebc1零评论/小肠儿泡奶Nimman陷阱/mika错主题/Sa💗697428c2 SP实锤零评论/清迈直人6a6f4c17 SP实锤零评论/半透明Translucent店名未实锤仅3条评论/Patrick错店）；新增计入0，累计新3帖标准仍0/3（高流量头部位被陷阱店/合集帖挤占，真货专帖均零评论）。【2026-09-24T08:52Z hourly更新】主会话xhs-continuous-search三轮结论：①09-23 19:36–19:49Z硬熔断终止（滑块验证码；登录态健康检查时正常，未确认丢失），item07本轮0计入（熙熙在迈村/强华两候选均缺实质评论证据，主agent 12:56 PDT裁决纠正worker原报2/3→0/3；特例额度已满不再新增特例）；②09-24 01:53–02:18Z授权重试轮（用户30分钟无回复触发，健康检查通过、熔断解除consecutive清零）干净完成，8深读全剔除（Maesai/Nimman陷阱店4、零评论3、主题不符1），0计入，仍0/3——原因：陷阱店挤占头部、Khun Yai/SP Chicken真货专帖池枯竭（实锤店名2篇均零评论；店名未实锤1篇仅3条评论）；③熔断机制新发现：不带xsec_token的直接URL粘贴会404（error_code=300031，token缺失非删帖），须经站内搜索点入。累计新3帖标准0/3，仍partial（posts=5为旧10帖口径存量，按Capella先例暂留，主agent逐项转换裁决）。 ｜ 2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -1398,7 +1398,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item08-kitipanit-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第16轮+3篇（2赞中立/28赞中立/2赞偏负）；专帖整体低赞，最高28赞",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:00Z）：partial 2/10，缺8篇；本轮详情页实读7帖，最后3候选全部剔除（热浪帖图片4-9技术阻塞暂不计入） ｜ 2026-09-28 第16轮+3篇（2赞中立/28赞中立/2赞偏负）；专帖整体低赞，最高28赞",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -1433,7 +1433,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item09-huenphen-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第15轮+3篇（107赞合集/6赞专帖/10赞视频）；专帖候选池枯竭，217赞系Baan Landai已排除",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:09Z）：partial 3/10，缺7篇；新关键词组合未发现新候选，本轮浏览约30+搜索卡片、详情页实读5帖，新增可计入0篇；2026-09-26 16:12 PDT轮：关键词\"清迈 Huen Phen餐厅\"翻3页，0篇达标——头部216赞专帖（iibexc）正文核验为另一家餐厅HEUANNAOW已排除，其余专属帖≤106赞且相关性不足；候选池枯竭，维持3/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+3篇（107赞合集/6赞专帖/10赞视频）；专帖候选池枯竭，217赞系Baan Landai已排除",
        "posts": 6,
        "status": "partial",
        "target": 10
@@ -1468,7 +1468,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item10-khaokhamoo-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第15轮+3篇（173赞专帖/5赞避雷/6赞推荐）；英文搜索词无结果，中文\"凤飞飞猪脚饭\"有效",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:19Z）：partial 8/10，缺2篇；可计入8篇（正文全文+实质评论+图片逐张翻完+明确年份）；特例2/2已满；详情页完整实读约25+帖、搜索卡片约200+ ｜ 2026-09-28 第15轮+3篇（173赞专帖/5赞避雷/6赞推荐）；英文搜索词无结果，中文\"凤飞飞猪脚饭\"有效",
        "posts": 11,
        "status": "partial",
        "target": 10
@@ -1504,7 +1504,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10",
        "posts": 7,
        "status": "partial",
        "target": 10
@@ -2680,10 +2680,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 | 2026-09-28 第19轮+3篇（581赞/347赞推荐/247赞偏负）",
+       "note": "3篇标准（2026-09-22放款；旧≥10帖口径作废） | 2026-09-28 第19轮+3篇（581赞/347赞推荐/247赞偏负）",
        "posts": 3,
        "status": "partial",
-       "target": 10
+       "target": 3
       }
      },
      "type": "酒店"
@@ -2715,10 +2715,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "3篇标准（2026-09-22放款；旧≥10帖口径作废） | 2026-09-28 第20轮+3篇（4654赞避雷/1777赞推荐/避雷）",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -2750,10 +2750,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "3篇标准（2026-09-22放款；旧≥10帖口径作废） | 2026-09-28 第20轮+3篇（推荐/中立/推荐）",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -2785,10 +2785,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "3篇标准（2026-09-22放款；旧≥10帖口径作废） | 2026-09-28 第20轮+3篇（推荐/偏负/避雷）",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -2820,10 +2820,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "2026-09-28 第21轮+2篇（344赞推荐/避雷专帖）；第3篇候选被AI头遮挡未打开"
       }
      },
      "type": "酒店"
@@ -2855,10 +2855,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第21轮+3篇（471赞推荐/米二避雷帖65评论/中立实吃帖）"
       }
      },
      "type": "餐厅"
@@ -2890,10 +2890,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第21轮+3篇（避雷-律师函争议/指南中立/一星体验推荐；2篇正文未完整提取需补强）"
       }
      },
      "type": "餐厅"
@@ -2925,10 +2925,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 1,
+       "target": 3,
+       "note": "2026-09-28 第22轮+1篇（184赞推荐）；第2、3篇候选被AI头遮挡未打开，不死磕"
       }
      },
      "type": "餐厅"
@@ -2960,10 +2960,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第22轮+3篇（均为推荐，四季酒店内斯里兰卡Fine Dining）"
       }
      },
      "type": "餐厅"
@@ -2995,10 +2995,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第22轮+3篇（2156赞/1275赞推荐椰浆饭+1篇中立偏负）"
       }
      },
      "type": "餐厅"
@@ -3030,10 +3030,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第23轮+3篇（289赞生日仪式感推荐/避雷帖/162赞推荐；地点待另行核实（证据存在柏悦/君悦冲突））"
       }
      },
      "type": "餐厅"
@@ -3065,10 +3065,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第23轮+3篇（均为推荐：1商业号+金莲记/颂记牛肉面/海南鸡饭）"
       }
      },
      "type": "餐厅"
@@ -3100,10 +3100,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "2026-09-28 第23轮+2篇（1326赞人像机位推荐帖+避雷帖；1062赞烧鸡翼帖被AI头遮挡未打开）"
       }
      },
      "type": "餐厅"
@@ -3135,10 +3135,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
        "status": "pending",
-       "target": 10
+       "posts": 0,
+       "target": 3,
+       "note": "2026-09-28 第24轮：候选池枯竭（无专帖，仅孟加拉账号GulaiNya.bd），不死磕，维持pending"
       }
      },
      "type": "餐厅"
@@ -3170,10 +3170,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第24轮+3篇（5260赞巨嘴纪念照教程/1198赞夜景拍摄点/1626赞姿势合集；3条机位线索已登记）"
       }
      },
      "type": "景点"
@@ -3205,10 +3205,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第24轮+3篇（1中立1避雷1推荐；彩虹阶梯机位线索已登记）"
       }
      },
      "type": "景点"
@@ -3240,10 +3240,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第25轮+3篇（3454赞18机位/623赞避雷/359赞内部视角；机位线索已登记）"
       }
      },
      "type": "景点"
@@ -3275,10 +3275,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第25轮+3篇（922赞求签/555赞48h/336赞古今同框机位；机位线索已登记）"
       }
      },
      "type": "景点"
@@ -3310,10 +3310,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-09-28 第25轮+3篇（2148赞15张/1794赞神级机位/十字路口机位；3条机位线索已登记）"
       }
      },
      "type": "景点"
@@ -3345,10 +3345,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第26轮+3篇（833赞纹样教程/79赞纹样实拍/08-18推荐帖）；帖子间未逐篇等待1–2分钟、多数未完整get_text/评论滚动/逐图核验，审计不足，维持partial。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round26-kualalumpur-islamic-arts-museum-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -3380,10 +3380,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第26轮+2篇（609赞免费景点/334赞低估景点），未达3篇（第3候选被AI头遮挡未打开）；审计不足，维持partial。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round26-kualalumpur-perdana-botanical-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -3461,10 +3461,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第26轮+3篇（696赞入住帖/1409赞黑塞笔下/36评避雷帖）；审计不足，维持partial。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round26-penang-eastern-oriental-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3496,10 +3496,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第27轮+1篇（207赞全系指南Artists.H）；搜索池混杂多万豪品牌、其余多为16-50赞低互动，不死磕；评论区已实读，逐图审计不足，维持partial。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round27-penang-marriott-PARTIAL-2026-09-28.md",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3531,10 +3531,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第27轮+3篇（442赞预约攻略/376赞建筑文化/68赞避雷）；评论区整页实读（每帖≥10条实质评论），逐图审计不足，维持partial。机位：蓝墙/天井/旋转楼梯/木雕彩窗已登记、图未到（og:image实为订票截图已弃）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round27-penang-cheongfatt-tze-mansion-PARTIAL-2026-09-28.md",
+       "posts": 3,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3566,10 +3566,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-28 第27轮+1篇（128赞最出片载酒Kiyo）；专帖池枯竭（其余无实质评论/正文未加载），不死磕；逐图审计不足，维持partial。机位图og:image连续403，图未到。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round27-penang-prestige-PARTIAL-2026-09-28.md",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3601,10 +3601,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
+       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用） 【2026-09-28第28轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round28-penang-seven-terraces-PARTIAL-2026-09-28.md（0篇，专帖池枯竭）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3636,10 +3636,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第28轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round28-penang-the-edison-PARTIAL-2026-09-28.md（1篇：148赞/8评《隐藏在乔治市的复古神级酒店！》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -3671,10 +3671,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第28轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round28-penang-siam-road-ckt-PARTIAL-2026-09-28.md（1篇：19赞/9评《槟城超人气米其林炒粿条，味道被排队毁掉了》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3706,10 +3706,10 @@ export const initialResearchStatus = {
        "status": "unavailable"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第29轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round29-penang-air-itam-laksa-PARTIAL-2026-09-28.md（1篇：168赞/15评《在槟城吃了几碗Laksa》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3741,10 +3741,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 替换项，待小红书严格重做覆盖",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "2026-09-13 替换项，待小红书严格重做覆盖 【2026-09-28第29轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round29-penang-888-hokkien-mee-PARTIAL-2026-09-28.md（1篇：68赞/153评《【避雷】槟城超多人推荐的888福建虾面》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3776,10 +3776,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第29轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round29-penang-teochew-chendul-PARTIAL-2026-09-28.md（1篇：140赞/167评《说是潮州煎蕊，但我在潮州没看到啊》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3811,10 +3811,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第30轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round30-penang-hameediyah-lineclear-PARTIAL-2026-09-28.md（0篇，候选池枯竭）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3846,10 +3846,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第30轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round30-penang-au-jardin-PARTIAL-2026-09-28.md（1篇：282赞/7评《槟城唯二米其林一星Restaurant au Jardin》）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3881,10 +3881,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第30轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round30-penang-auntie-gaik-lean-PARTIAL-2026-09-28.md（0篇，专帖点击被遮挡+泛合集占位）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3916,10 +3916,10 @@ export const initialResearchStatus = {
        "status": "unavailable"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第31轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round31-penang-green-house-prawn-mee-PARTIAL-2026-09-28.md（0篇，专帖互动枯竭）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3951,10 +3951,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第31轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round31-penang-eo-afternoon-tea-PARTIAL-2026-09-28.md（0篇，机位图1张已落盘+视觉审计通过）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -3986,10 +3986,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第31轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round31-penang-unesco-core-PARTIAL-2026-09-28.md（1篇：471赞《槟城街头艺术街区（附壁画位置）》；机位图2张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4021,10 +4021,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第32轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round32-penang-khoo-kongsi-PARTIAL-2026-09-28.md（2篇：914赞《闽南宗祠天花板》+361赞《目眩神迷的南洋建筑屋顶》；机位图1张+攻略图1张已落盘+视觉审计通过）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4056,10 +4056,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第32轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round32-penang-clan-jetties-PARTIAL-2026-09-28.md（1篇：284赞《南洋水上村落漫游指南》；机位图1张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4091,10 +4091,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读 【2026-09-28第32轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round32-penang-kek-lok-si-PARTIAL-2026-09-28.md（1篇：256赞避雷帖《穷游槟城*放弃极乐寺》；机位图pending：og:image三次下载0字节）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4126,10 +4126,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "【2026-09-28第33轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round33-penang-penang-hill-PARTIAL-2026-09-28.md（1篇：171赞《🇲🇾误入宫崎骏童话世界》；机位图1张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4161,10 +4161,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "【2026-09-28第33轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round33-penang-fort-cornwallis-PARTIAL-2026-09-28.md（1篇：179赞《🇲🇾槟城百年古堡 免费开放！》；机位图1张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4196,10 +4196,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "【2026-09-28第33轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round33-penang-pinang-peranakan-mansion-PARTIAL-2026-09-28.md（1篇：386赞《槟城｜娘惹博物馆参观超丝滑时间线》（含📸出片点6机位）；机位图1张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4231,10 +4231,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第34轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round34-penang-wat-chaiyamangalaram-PARTIAL-2026-09-28.md（深读0篇：93赞攻略帖无评论不计入；机位图1张已落盘+视觉审计通过）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4266,10 +4266,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第34轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round34-penang-little-india-PARTIAL-2026-09-28.md（深读0篇：635赞槟城18图通用机位指南主题弱相关不计入；机位图1张已落盘+视觉审计通过）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -4339,9 +4339,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口一轮pass实读3篇（八斤地瓜02-19亲子避雷8赞/3评论、Liora Qui.05-06日落11赞、小刘师傅04-14怀旧26赞/4评论），正文逐字+评论区可见滚动+逐图核验；Trisara专帖整体互动偏低、无万赞量级，不硬凑，partial 3/10。证据见 research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/phuket-trisara-2026-09-28.md。2026-09-28 05:1xZ 主agent裁决：专帖候选池枯竭/互动偏低记入阶段二候选，本轮不再重复pass，仍 partial 3/10。",
-       "posts": 3,
-       "status": "partial",
+       "note": "2026-09-28 第45轮老窗口：新增你猜我是谁《Trisara普吉岛特瑞萨拉》(21赞/14藏/13评，推荐，景色私密+珊瑚沙滩浮潜)/八斤地瓜《避雷普吉岛trisara》(8赞，避雷，服务细节配不上价格)。有效达标帖≥3，转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-trisara-PARTIAL-2026-09-28.md",
+       "posts": 5,
+       "status": "done",
        "target": 10
       }
      },
@@ -4507,8 +4507,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 05:22Z一轮pass：无高流量专帖（PRU最高105赞/Jampa最高9赞），专帖候选池枯竭→阶段二；证据见 hidden_files/xhs-coverage-phuket.md 第5轮",
-       "posts": 0,
+       "note": "2026-09-28 第45轮老窗口：新增Bob不冲浪《普吉岛米其林一星餐厅Pru详细体验》(23赞/17藏/8评，推荐，午餐4000泰铢/人晚餐需提前预订)/Chnee_《PRU | 普吉岛生日体验》(105赞/4评，推荐)；牙好美子老师避雷帖0评论未达标。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-pru-PARTIAL-2026-09-28.md",
+       "posts": 2,
        "status": "partial",
        "target": 10
       }
@@ -4541,8 +4541,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 05:22Z一轮pass：无高流量专帖（PRU最高105赞/Jampa最高9赞），专帖候选池枯竭→阶段二；证据见 hidden_files/xhs-coverage-phuket.md 第5轮",
-       "posts": 0,
+       "note": "2026-09-28 第45轮老窗口：新增LYT《普吉岛绿星餐厅Jampa-hideway隐藏餐厅》(12赞/6藏/6评，避雷倾向，咸口、750人均半饱、防蚊差)/正好好《普吉岛JAMPA米其林绿星漂亮饭》(9赞/3评，中立偏推荐)。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-jampa-PARTIAL-2026-09-28.md",
+       "posts": 2,
        "status": "partial",
        "target": 10
       }
@@ -4677,9 +4677,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Mom Tri's Kitchen」翻2–3页，专帖互动极低——茶艺不精的小哪吒《Mom tris kitchen环境好》2赞、阳猫-预约助手《普吉岛私人海景餐厅Mom's kitchen代订》18赞（代订）、「普吉岛Mom Tri's Kitchen餐厅攻略」赞数未显示；高流量帖（Oops356赞日落餐厅、野猪少女271赞等）均非专帖。不死磕→阶段二。",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第47轮老窗口：茶艺不精的小哪吒《Mom tris kitchen环境好》(2赞/2评，推荐，300人均主打气氛)/好青年耗子《普吉岛看日落的完美悬崖餐厅》(2评，推荐)；momomo《普吉岛海边约会餐厅》(14赞，\"长廊很好拍猛猛出片\"但帖直链404评论正文未加载，未达标，长廊机位未登记到og:image)。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-mom-tris-kitchen-PARTIAL-2026-09-28.md",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4711,9 +4711,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Suay餐厅」翻2–3页，专帖互动极低——Gerrard35赞、Norman《suay @phuket霆锋推荐》18赞、亮亮爵士大叔《普吉岛最好米其林餐厅Suay（谢霆锋最爱)》17赞、Anson陪你虚度时光《普吉SUAY》12赞；高流量帖（Pinkkkkkkk1153赞排名、话唠虎妹676赞doodee、晚晚不可哎563赞）均非专帖。不死磕→阶段二。",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第47轮老窗口：Rock《普吉岛米其林推荐餐厅》(331赞/554藏/21评，合集含Suay专节)/就就就酱子《和谢霆锋Jimmy吃了同一间米其林》(115赞/187藏/11评，5400🐷/3人)/土狗琪琪《Suay Cherngtalay fine dining》(强推荐)。3篇达标，转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-suay-DONE-2026-09-28.md",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4745,9 +4745,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Acqua餐厅」翻2–3页，未见普吉Acqua专帖高流量；ACQUA Restaurant Phi Phi(1赞)为皮皮岛店非普吉；疑似相关帖互动极低且标题未明确指向Acqua；高流量帖均非专帖。不死磕→阶段二。",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第47轮老窗口：仅song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正文达标但评论多为夸人像无实质讨论，未达标)；曼谷Acqua误混入、Cha Kang Raw误混入，候选池枯竭。1篇，还差2篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-acqua-PARTIAL-2026-09-28.md",
+       "posts": 1,
+       "status": "partial",
        "target": 10
       }
      },
@@ -4780,8 +4780,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：深读1篇——-1-1《啊！🇹🇭回来了还在怀念的餐厅》(2025-08-16，241赞/332收藏/27评论，正向·Kan Eang第一名：查龙码头海鲜，两人不到2000泰铢，分量足）https://www.xiaohongshu.com/explore/68a0baa9000000001c00c06e；其余专帖互动过低（7赞以下）；高流量帖均非专帖。1/3→阶段二补搜。",
-       "posts": 1,
+       "note": "2026-09-28 第48轮老窗口：-1-1《啊！回来了还在怀念的餐厅》(242赞/333藏/27评，查龙码头皇帝岛回程误入，不到2000🐷，食材新鲜)；小胖子BoBo《普吉岛自费N刷！两家海鲜餐厅》(50年老牌海景天花板，人均300)正文达标但仅1条评论未达标。合计2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round48-phuket-kan-eang-pier-PARTIAL-2026-09-28.md",
+       "posts": 2,
        "status": "partial",
        "target": 10
       }
@@ -4814,9 +4814,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：深读2篇——胡不归Ray《普吉镇老街的周日夜市哪些美食小吃是必吃的》(2025-04-27，168赞/138收藏/15评论，正向·老街夜市必吃，4分17秒视频；评论：现金或泰国网银支付，到普吉镇Thalang路）https://www.xiaohongshu.com/explore/680e3e310000000009039c47；jiujiu _1208《普吉镇老街隐藏美味｜โรตีแถวนํ้า(Roti Taew》(2025-12-15，20赞/19收藏/0评论，正向·米其林级路边早餐，薄饼配牛肉咖喱）https://www.xiaohongshu.com/explore/693f7690000000001e0079b5。一只伊利434赞香蕉饼帖经深读为班赞夜市非本项。2/3→阶段二补搜。",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 第48轮老窗口：Evenbaby《普吉镇周日夜市｜泰兰德烟火气天花板》(45赞，Thalang路周日16-22点，人均50r，夜市og:image已登记未落盘)/赛赛ss《普吉老镇周日夜市》(205赞/179藏/25评，bkpp元春堂打卡)。老街夜市合计4篇达标转done；Roti Taew Nam本次无专帖，记欠。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round48-phuket-lardyai-night-market-DONE-2026-09-28.md",
+       "posts": 4,
+       "status": "done",
        "target": 10
       }
      },
@@ -4848,9 +4848,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：深读2篇——番薯条条《攀牙湾给到一个夯！不愧是bkpp严选》(04-12，173赞/40收藏/8评论，正向·007岛风景超美、皮划艇体验超绝）https://www.xiaohongshu.com/explore/69db7b7d000000002302694b；卷卷环游记《攀牙湾体验溶洞探险，经历海上暴风雨》(2025-09-08，140赞/115收藏/31评论，中性·vlog询问值不值；评论：落日星光号人均约500R全包酒店接送、无隐形消费）https://www.xiaohongshu.com/explore/68bead2f000000001d01a99d。其余专帖更低。2/3→阶段二补搜。",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 第48轮老窗口：Melody小雨酱《普吉岛-攀牙湾出海一日游！真比皮皮岛好玩》(101赞/124藏/61评，星光日落号570/人，中午12点登船晚8:30返，酒店接)/番薯条条《攀牙湾给到一个夯！不愧是bkpp严选》(173赞，正文达标评论未达标，人像机位og:image已登记未落盘)。合计3篇转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round48-phangnga-phiphi-DONE-2026-09-28.md",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -5020,8 +5020,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：深读1篇——纸鱼oo0《Phuket Elephant Sanctuary🐘大象庇护所》(2025-08-03，71赞/83收藏/7评论，正向·首家人道主义亚洲象庇护所：Khao Prae Teao国家公园30英亩，救助20多头、现住14头母象；1.5h套餐小吃饮品、3.5h含素食正餐，官网phuketelephantsanctuary.org可订）https://www.xiaohongshu.com/explore/688ef8e10000000023036f9e；其他高流量帖均非Phuket Elephant Sanctuary。1/3→阶段二补搜。",
-       "posts": 1,
+       "note": "2026-09-28 第44轮老窗口：新增Lisihan《普吉岛｜真正大象友好的三个大象营🐘》(248赞/310藏/15评，达标)；纸鱼oo0《Phuket Elephant Sanctuary》(71赞/83藏/7评，旧证据已有，不重复计数)。去重后2篇，还差1篇。机位登记pending：500米森林步道俯瞰机位（og:image已登记未下载）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round44-phuket-elephant-sanctuary-PARTIAL-2026-09-28.md",
+       "posts": 2,
        "status": "partial",
        "target": 10
       }
@@ -5054,10 +5054,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 4,
+       "status": "done",
+       "posts": 6,
        "target": 3,
-       "note": "新标准：第10轮2026-09-28 06:28Z审计——叫我Grace姐姐《啊啊啊！普吉岛好漂亮的宝藏泰式小村子》(149赞/21评论)/北京陪读妈妈在普吉《我心目中普吉岛的沉浸式体验泰国文化的NO.1》(78赞/24评论)达标（该话题专帖最高149赞，相对高流量）；flyfly_yan(3赞/1评论)未达标。旧口径基线2帖流量未知不计入新标准。还差1篇，已回队列待补。人像机位候选：泰式古村落泰服出片（已登记）。证据：xhs-coverage-phuket.md 第10轮记录。 | 2026-09-28 第18轮+2篇（767赞高流量/41赞），第3篇候选打不开"
+       "note": "2026-09-28 第44轮老窗口：新增拉布布《普吉岛被严重低估的秀》(1037赞/899藏/63评，达标)/叶儿绿《不愧是普吉岛文旅天花板》(41赞/26藏/8评，达标)；旧4帖中2帖有效。有效达标帖≥3，转done。机位登记pending：泰服拍照+小船机位（og:image已登记未下载）。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round44-phuket-siam-niramit-PARTIAL-2026-09-28.md"
       }
      },
      "type": "景点"
@@ -5130,10 +5130,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第34轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round34-phuquoc-jw-marriott-PARTIAL-2026-09-28.md（深读1篇：2081赞沈奕铭《奔赴山海，邂逅全球顶奢JW秘境🏝️》推荐+8条实质评论；另登记899赞好拍帖、298赞负面帖；机位图1张已落盘+视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5165,10 +5165,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第35轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round35-phuquoc-regent-PARTIAL-2026-09-28.md（深读1篇：345赞Kimber 艺然《富国岛丽晶，你真的把我养很好》推荐+8条实质评论；另登记780/353/204赞帖、65赞负面帖；封面图已落盘（客房静物，非机位））",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5200,10 +5200,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-16 酒店替换上架；小红书逐帖研究待补（原条目XHS证据归属被替换的旧酒店，不沿用）",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第35轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round35-phuquoc-la-festa-PARTIAL-2026-09-28.md（深读0篇：1090赞烟花餐厅帖仅2条实质评论不计入；机位图1张已落盘+视觉审计通过：阳台位烟花晚餐机位）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5235,10 +5235,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第35轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round35-phuquoc-new-world-PARTIAL-2026-09-28.md（深读0篇：最高赞5赞帖无评论；登记201赞负面帖；无机位图）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5270,10 +5270,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第36轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round36-phuquoc-intercontinental-PARTIAL-2026-09-28.md（深读1篇：151赞努力成为小飞侠《住遍越南|IHG奢华度假酒店测评》推荐+5条实质评论；登记2篇负面帖避雷；无机位图）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5305,10 +5305,10 @@ export const initialResearchStatus = {
        "status": "missing"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第36轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round36-phuquoc-fusion-PARTIAL-2026-09-28.md（深读0篇：搜索词富国岛Fusion结果多为fusion菜系餐厅/岘港富森，无Fusion Resort专帖；无机位图）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "酒店"
@@ -5340,10 +5340,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第36轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round36-phuquoc-pink-pearl-PARTIAL-2026-09-28.md（深读0篇：75赞专帖及另1专帖点击均被顶部搜索框遮挡，按不死磕放弃；登记90赞价格咨询帖；无机位图）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -5375,10 +5375,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第37轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round37-phuquoc-tempus-fugit-PARTIAL-2026-09-28.md（深读1篇：10赞木白《富国岛JW万豪Tempus Fugit｜午餐实测+避坑》中性偏推荐+2条实质评论；海景靠窗机位图已落盘 xhs-portrait-spots/phuquoc/tempus-fugit/tempus-fugit-698d55eb.webp，视觉审计通过）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -5410,10 +5410,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第37轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round37-phuquoc-crab-house-PARTIAL-2026-09-28.md（深读0篇：富国岛Crab House专帖极少；13赞韩式酱蟹帖为洛杉矶误检；登记532赞唐朝《二刷富国岛（中部、北部）餐厅分享》为弱相关未计入+10条实质评论；无机位图）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -5445,10 +5445,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第37轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round37-phuquoc-xin-chao-PARTIAL-2026-09-28.md（深读2篇：23赞吃黄瓜的胡萝卜《越南｜富国岛海鲜餐厅Xin Chao》中性偏推荐+8条实质评论；92赞小慕在台湾《富国岛吃到最好吃的海鲜餐厅｜Xin Chao》强推荐+5条实质评论；靠海机位图已落盘 xhs-portrait-spots/phuquoc/xin-chao-seafood/xin-chao-67018560.webp，视觉审计通过，带小水印）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -5585,10 +5585,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第39轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round39-phuquoc-ocean-club-PARTIAL-2026-09-28.md（深读2篇：29赞一块小饼干《富国岛丽晶ocean club的日落无敌》推荐+4条实质评论；177赞Bingo《🇻🇳富国岛日落餐厅唯一推荐|On the rock》强推荐+15条实质评论；Ocean Club海景池饮品机位图已落盘 xhs-portrait-spots/phuquoc/ocean-club/ocean-club-6a6a91b3.webp，视觉审计通过；On the Rock og:image为订位聊天截图，已否决）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "餐厅"
@@ -5620,10 +5620,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第39轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round39-phuquoc-sun-world-cable-car-PARTIAL-2026-09-28.md（深读2篇：282赞郭嘻嘻《🆓太阳富国航空缆车免费领取攻略！！》推荐+14条实质评论；471赞JUNOWOO《富国岛｜跨海缆车最值得去的地方🚠》强推荐+14条实质评论；8格拼图人像机位图已落盘 xhs-portrait-spots/phuquoc/sun-world-cable-car/cable-car-68bbe146.webp，视觉审计通过）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5655,10 +5655,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第39轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round39-phuquoc-sao-beach-PARTIAL-2026-09-28.md（深读2篇：44赞趴趴是我小名《富国岛海星沙滩防套路指南！！》推荐+17条实质评论；1129赞Jimmy汪沐林《海星沙滩🏖️不花钱攻略（不用钻狗洞）》推荐，评论区未加载如实记录；无机位图）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5690,10 +5690,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第40轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round40-phuquoc-khem-beach-PARTIAL-2026-09-28.md（深读1篇：130赞蒜香包《富国岛khem beach米米嘟》推荐，实读6条评论未达10条；次候选6968d95f正文读取失败未计入；无机位图）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5725,10 +5725,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第40轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round40-phuquoc-an-thoi-snorkel-PARTIAL-2026-09-28.md（深读1篇：261赞一只狸去哪玩《富国岛浮潜🤿这也太清晰了吧！！》强推荐，实读20条评论；An Thoi归属未被正文确认，仅列为三岛浮潜帖；候选og:image为飞猪行程截图，视觉审计否决未用）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5760,10 +5760,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第43轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round43-phuquoc-vinwonders-safari-PARTIAL-2026-09-28.md（达标1篇：46赞美惠子《富国岛🦒Safari宝藏攻略！5件事一定要做！》强推荐，实读16条评论；记录1篇21赞视频帖；不达标1篇；机位图1张亲验通过vinwonders-6a9e9fef.webp）",
+       "posts": 2,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5795,10 +5795,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第43轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round43-phuquoc-dinh-cau-PARTIAL-2026-09-28.md（0篇达标：最相关候选首位舅舅廟卡片href实际指向广告帖，详情页无法打开，按不死磕放弃；其余为美食/泛攻略。留待阶段二换关键词）",
        "posts": 0,
-       "status": "pending",
-       "target": 10
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5830,10 +5830,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
-       "target": 10
+       "note": "现行标准：每项3篇热门帖（正文+评论区浏览器可见滚动实读） 【2026-09-28第43轮】research_notes/sea-guide-2026/xiaohongshu/xhs-round43-phuquoc-ho-quoc-PARTIAL-2026-09-28.md（达标1篇：61赞Ben Kwan《富国岛「护国寺」，免门票的「神仙海景寺庙」》强推荐，0评论如实记录；机位依据充分：29米观音像+观景台15-16点黄金时间）",
+       "posts": 1,
+       "status": "partial",
+       "target": 3
       }
      },
      "type": "景点"
@@ -5865,9 +5865,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "新标准：每项≥10篇2024-2026帖子，正文+评论区浏览器可见滚动实读",
-       "posts": 0,
-       "status": "pending",
+       "note": "2026-09-28 第44轮老窗口：浪人妖精《富国岛|监狱博物馆》(320赞/187藏/1评，正文达标但仅1条评论未达标)/小灵浪啊浪《惨绝人寰的越南富国岛监狱！》(210赞/78藏/14评，达标，正文+实读10条评论)。鱼露工厂/胡椒园仍待补。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round44-phuquoc-prison-fishsauce-pepper-PARTIAL-2026-09-28.md",
+       "posts": 1,
+       "status": "partial",
        "target": 10
       }
      },
@@ -6864,7 +6864,12 @@ export const initialResearchStatus = {
    "xhs_done": 28,
    "ph": 32,
    "de": 32,
-   "all_done": 27
+   "all_done": 27,
+   "tripadvisor": 32,
+   "google_maps": 32,
+   "chinese_sites": 31,
+   "photos": 32,
+   "details": 32
   },
   "chiangmai": {
    "total": 20,
@@ -6874,7 +6879,12 @@ export const initialResearchStatus = {
    "xhs_done": 12,
    "ph": 20,
    "de": 20,
-   "all_done": 11
+   "all_done": 11,
+   "tripadvisor": 19,
+   "google_maps": 20,
+   "chinese_sites": 20,
+   "photos": 20,
+   "details": 20
   },
   "hcmc": {
    "total": 23,
@@ -6884,7 +6894,12 @@ export const initialResearchStatus = {
    "xhs_done": 3,
    "ph": 23,
    "de": 23,
-   "all_done": 3
+   "all_done": 3,
+   "tripadvisor": 23,
+   "google_maps": 23,
+   "chinese_sites": 22,
+   "photos": 23,
+   "details": 23
   },
   "kualalumpur": {
    "total": 22,
@@ -6894,7 +6909,12 @@ export const initialResearchStatus = {
    "xhs_done": 1,
    "ph": 22,
    "de": 22,
-   "all_done": 1
+   "all_done": 1,
+   "tripadvisor": 22,
+   "google_maps": 21,
+   "chinese_sites": 22,
+   "photos": 22,
+   "details": 22
   },
   "penang": {
    "total": 24,
@@ -6904,7 +6924,12 @@ export const initialResearchStatus = {
    "xhs_done": 0,
    "ph": 24,
    "de": 23,
-   "all_done": 0
+   "all_done": 0,
+   "tripadvisor": 22,
+   "google_maps": 24,
+   "chinese_sites": 23,
+   "photos": 24,
+   "details": 23
   },
   "phuket": {
    "total": 24,
@@ -6914,7 +6939,12 @@ export const initialResearchStatus = {
    "xhs_done": 9,
    "ph": 24,
    "de": 24,
-   "all_done": 8
+   "all_done": 8,
+   "tripadvisor": 24,
+   "google_maps": 23,
+   "chinese_sites": 24,
+   "photos": 24,
+   "details": 24
   },
   "phuquoc": {
    "total": 22,
@@ -6924,7 +6954,12 @@ export const initialResearchStatus = {
    "xhs_done": 0,
    "ph": 22,
    "de": 22,
-   "all_done": 0
+   "all_done": 0,
+   "tripadvisor": 21,
+   "google_maps": 22,
+   "chinese_sites": 21,
+   "photos": 22,
+   "details": 22
   },
   "singapore": {
    "total": 28,
@@ -6934,7 +6969,12 @@ export const initialResearchStatus = {
    "xhs_done": 26,
    "ph": 28,
    "de": 28,
-   "all_done": 24
+   "all_done": 24,
+   "tripadvisor": 28,
+   "google_maps": 27,
+   "chinese_sites": 26,
+   "photos": 28,
+   "details": 28
   },
   "xhs_done": 79,
   "all_done": 74
@@ -6948,5 +6988,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 195,
- "updated_at": "2026-09-28T23:08Z"
+ "updated_at": "2026-09-29T05:12Z"
 };
