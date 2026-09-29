@@ -155,7 +155,41 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
  'Keemala':[
   L('普吉岛, 基了个马拉','https://www.xiaohongshu.com/explore/69bf76bc000000001e00dc92','103赞 · 中性偏负 · 正文「米其林二星钥…连住两晚第二天就腻…木屋顶暴雨如交响乐…Spa买一送一…一晚足矣」'),
   L('我们找到了蘑菇屋🍄','https://www.xiaohongshu.com/explore/688c9b660000000025011046','2025-08 · 303赞 · 情侣树屋打卡 · 鸟巢别墅经典机位'),
-  L('普吉岛的树屋酒店, 纯纯部落酋长的家！','https://www.xiaohongshu.com/explore/68f743070000000004028159','2025-10 · 视频 · 89赞 · 评论：不适合小孩子/希尔顿系交通不便/私泳池不干净/没海')]
+  L('普吉岛的树屋酒店, 纯纯部落酋长的家！','https://www.xiaohongshu.com/explore/68f743070000000004028159','2025-10 · 视频 · 89赞 · 评论：不适合小孩子/希尔顿系交通不便/私泳池不干净/没海')],
+ /* singapore/1–3：2026-09-14 主代理裁决新标准实读（10篇独立专帖，正文实读+评论区真实打开可见滚动实读），2026-09-29 证据登记补漏 */
+ 'Raffles Singapore':[
+  L('名副其实的品牌旗舰｜新加坡莱佛士酒店','https://www.xiaohongshu.com/explore/69bb9d1e000000001a02eaff','2026-03-18 · Toby W. · 推荐 · 「淡季价格合适，来新加坡首选莱佛士绝对没问题」· 评论区7715/晚实测'),
+  L('Raffles，一个人名如何焊死一座城市的基因','https://www.xiaohongshu.com/explore/6a758a830000000022033533','2026-08-08 · 一枚特立独行的石榴 · 中立（历史科普）· 1887年Sarkies四兄弟命名起源'),
+  L('新加坡莱佛士，住进1887年的传奇🏰','https://www.xiaohongshu.com/explore/699d7d7c000000000d0091d0','2026-02-24 · 唐家有个熊猫崽 · 推荐 · 「住进了新加坡的国家古迹」'),
+  L('位列全球酒店第五？新加坡莱佛士到底多尊！','https://www.xiaohongshu.com/explore/69f9e1000000000035022d86','2026-05-05 · 有李酒店说 · 中立（视频测评，偏推荐）· 世界50佳酒店第5'),
+  L('🇸🇬不得不说莱佛士在新加坡还是Top1','https://www.xiaohongshu.com/explore/6a43826500000000060237e8','2026-06-30 · 小坡岛瑞恩 · 推荐（但指出性价比低）· 「预算充足，莱佛士还是新加坡酒店的首选」'),
+  L('住新加坡最夯酒店是什么体验？','https://www.xiaohongshu.com/explore/69770f3a000000002103e455','2026-01-25 · 秋兰趴趴造 · 中立 · 「花一万块住一晚…体验一次足矣」'),
+  L('新加坡花的最不值的一笔','https://www.xiaohongshu.com/explore/6a4f31e10000000006032913','2026-09-01 · 无事不登麦当劳 · 不推荐 · 非住客拍照被服务员持POS机要求点单'),
+  L('神中神｜世界No.5酒店 新加坡Raffles','https://www.xiaohongshu.com/explore/69e35e1f000000000b010147','2026-04-19 · oh · 推荐 · 「不只是一个luxury酒店，更像是一种符号」'),
+  L('去新加坡终于住了莱佛士，老钱经典，太美了','https://www.xiaohongshu.com/explore/68fcb17d0000000003021149','2025-10-25 · 张朴好时光 · 推荐 · 住三晚完成人生清单'),
+  L('Raffles🇸🇬住进一场南洋旧梦里','https://www.xiaohongshu.com/explore/69b7befc000000001d01c39f','2026-03-17 · 無述NoneArt · 推荐 · 「一场关于Old Money的审美巡礼」')],
+ 'Capella Singapore':[
+  L('新加坡嘉佩乐到底是不是岛上No1？','https://www.xiaohongshu.com/explore/698ecb21000000000e00c442','2026-02-13 · 橘子皮 · 中立 · 「没有一家酒店是完美的」'),
+  L('🇸🇬Singapore Capella新加坡嘉佩乐','https://www.xiaohongshu.com/explore/693c1fba000000001e00d9dc','2026-09-12 · 吃太饱 · 中立（Spa差评/早餐好评混合）'),
+  L('7k多的酒店厕所仅占200','https://www.xiaohongshu.com/explore/68da6d61000000001300cab4','2025-09-29 · 欧皇王中王 · 中立（吐槽mini马桶，整体好评）'),
+  L('新加坡嘉佩乐','https://www.xiaohongshu.com/explore/6a6420fb0000000001003007','2026-07-24 · 本质冷脸萌 · 推荐 · 「住了这么多四位数酒店里最喜欢的一个」已二刷'),
+  L('新加坡嘉佩乐—-不会二刷的酒店','https://www.xiaohongshu.com/explore/699b3ce4000000001b01e2dc','2026-02-23 · 🌺Ꮥamsara · 不推荐 · 早餐等位+经理道歉敷衍'),
+  L('新加坡嘉佩乐酒店Capella入住体验分享','https://www.xiaohongshu.com/explore/6a6f3888000000003300e018','2026-08-02 · 圆小DUM · 推荐 · 「服务天花板…挑不出毛病」'),
+  L('Capella Singapore🇸🇬','https://www.xiaohongshu.com/explore/6a788ddc0000000002003c00','2026-08-09 · 猪猪侠Jackson · 推荐 · 送小蛋糕香槟/上门用餐'),
+  L('新加坡嘉佩乐小住日记🇸🇬','https://www.xiaohongshu.com/explore/692aa226000000001f00c898','2026-06-11 · 怡宝 · 推荐 · 蜜月布置+香槟甜点'),
+  L('这里原本是一栋房子，只是后来变成了嘉佩乐','https://www.xiaohongshu.com/explore/6a538ec80000000011017665','2026-07-12 · JAGER · 推荐 · 1880年Tanah Merah殖民建筑新旧融合'),
+  L('新加坡嘉佩乐是不会再住了💢','https://www.xiaohongshu.com/explore/6819c22d000000002001c81d','2025-05-06 · GraceSS · 不推荐 · checkout当天全酒店停电')],
+ 'Mandarin Oriental Singapore 文华东方':[
+  L('新加坡top酒店测评系列1️⃣（文华东方）','https://www.xiaohongshu.com/explore/6a510616000000001702a8d2','2026-07-15 · 江晨晨 · 推荐 · 公区最满意的一家；中餐馆意外好吃'),
+  L('新加坡文华东方一镜到底👾','https://www.xiaohongshu.com/explore/6996c701000000001d0119f3','2026-02-19 · 布叽岛 · 推荐 · 「很贵，但风景很好房间装修很舒服」'),
+  L('🇸🇬文华东方入住体验','https://www.xiaohongshu.com/explore/6a1f0a180000000007024a82','2026-06-03 · 蔡德里安 · 推荐 · 「总体体验不错，还会再订」'),
+  L('避大雷！！！新加坡文华东方！！','https://www.xiaohongshu.com/explore/69933c14000000000c0342ea','2026-02-16 · lulululuna · 不推荐 · 区别对待不同房型客人'),
+  L('人超级多的 新加坡文华东方','https://www.xiaohongshu.com/explore/6a9d83ee00000000260166d6','2026-09-06 · 懒得喷。。。 · 中立 · 3点到排队check in等到5点多才有房'),
+  L('新加坡文华东方入住小记','https://www.xiaohongshu.com/explore/696dda74000000002200a2c0','2026-01-19 · 哇哈哈哈哈哈 · 中立（过程有瑕疵但售后充分）· offer了free lunch'),
+  L('新加坡 | 文华东方酒店 | 2026.6','https://www.xiaohongshu.com/explore/6a2cb32c0000000008025802','2026-06-12 · 是J还是K · 不推荐 · 「失望…再也不会住新加坡文华了」'),
+  L('🇸🇬新加坡文华东方','https://www.xiaohongshu.com/explore/693c773c000000001d03dc83','2026-04-22 · ：）Jlen · 推荐 · HAUS65房型「无疑是新加坡最好的选择」'),
+  L('新加坡文华东方','https://www.xiaohongshu.com/explore/6a7f38070000000025013b8d','2026-08-15 · 小白今天出去玩了吗 · 中立 · 5k+/晚含早；早餐每天翻新30%'),
+  L('新加坡文华东方/东方韵味+南洋色彩','https://www.xiaohongshu.com/explore/699534cd000000001b014b45','2026-03-02 · ZZQ · 推荐 · 刚翻新完不久，设计精致高级')]
 };
 
 const overrides:Record<string,Partial<GuideFacts>>={
@@ -417,7 +451,11 @@ export const xhsAssessments:Record<string,XhsAssessment>={
  'The Surin Phuket':S('推荐',2,1,0,'与Amanpuri共享Pansea私密沙滩，109栋独立小木屋私密性佳；餐饮获赞（打抛猪要"local spicy"、mango chia bowl必点）。','阶梯多坡陡、住山坡房务必叫buggy；六边形泳池1.2米浅游不畅快；人均约1000+人民币/晚。研究更新：2026-09-28。'),
  'Keemala':S('谨慎选择',1,1,1,'凯悦系、米其林星钥二星，鸟巢别墅旋转楼梯经典机位，猎奇感足。','连住两晚会腻（一晚足矣）、木屋顶暴雨夜如交响乐；无海、交通不便、私泳池卫生争议；凯悦会员无待遇；约5000元/晚。不带娃、不待酒店纯躺才建议。研究更新：2026-09-28。'),
  /* bangkok：第 13 轮（2026-09-28，老窗口只读，3 篇专帖深读 →done），结论已搬上站 */
- 'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店':S('谨慎选择',2,0,1,'服务细节与性价比获推荐：BTS步行5分钟、STARS住三付二约1300-1400/晚、行政酒廊全天候点心+调酒、芒果糯米饭推荐。','另有无法按时入住、前台补房卡傲慢与卫生差的避雷帖；泳池铺塑料草坪；服务稳定性存疑。研究更新：2026-09-28。')
+ 'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店':S('谨慎选择',2,0,1,'服务细节与性价比获推荐：BTS步行5分钟、STARS住三付二约1300-1400/晚、行政酒廊全天候点心+调酒、芒果糯米饭推荐。','另有无法按时入住、前台补房卡傲慢与卫生差的避雷帖；泳池铺塑料草坪；服务稳定性存疑。研究更新：2026-09-28。'),
+ /* singapore/1–3：2026-09-14 主代理裁决新标准实读（10篇独立专帖），2026-09-29 证据登记补漏 */
+ 'Raffles Singapore':S('推荐',7,2,1,'1887年开业的新加坡国家古迹级地标、米其林酒店之钥3 Keys全岛唯一；7/10推荐：「住进了新加坡的国家古迹」「一场南洋旧梦的老钱审美」；淡季约7715元/晚实测，价格合适时可作首选。研究更新：2026-09-29（证据登记；实读2026-09-14）。','1篇不推荐：非住客进店拍照时服务员持POS机上前要求点单，打断体验；多篇提到"花一万住一晚体验一次足矣"，价格敏感者等淡季。'),
+ 'Capella Singapore':S('谨慎选择',5,3,2,'圣淘沙30多英亩热带雨林中的度假酒店，两栋1880年Tanah Merah殖民建筑新旧融合；5/10推荐：「住了这么多四位数酒店里最喜欢的一个」（二刷）、「服务天花板挑不出毛病」；Living Room免费下午茶、管家免费洗衣熨衣。研究更新：2026-09-29（证据登记；实读2026-09-14）。','2篇不推荐：checkout当天全酒店停电；早餐等位+经理道歉敷衍（评论区建议直接写邮件给总部维权）；Spa被催、mini马桶、清晨鸟叫大；离市中心远、进城依赖车辆或接驳。'),
+ 'Mandarin Oriental Singapore 文华东方':S('谨慎选择',5,3,2,'2023年翻新后硬件新，滨海湾景观好；5/10推荐：「只要入住HAUS65的房型，这无疑是新加坡最好的选择」；馆内中餐馆意外好吃（食客称比广州MO米二的Jiang还好）；馆内樱桃园餐厅2026年新获米其林一星。研究更新：2026-09-29（证据登记；实读2026-09-14）。','2篇不推荐：集中在"区别对待不同房型客人"（滨海湾房有小瓶diptyque、海景房没有）；高入住率时早餐9–10点排队、check-in排队久；周边有工地、泳池一般。')
 };
 
 Object.assign(xhsEvidence,extraXhsEvidence);
