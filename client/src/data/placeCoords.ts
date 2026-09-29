@@ -1,5 +1,6 @@
 /**
- * 酒店 / 餐厅 / 商场坐标数据（2026-09-26 人工核验；商场 2026-09-27 Nominatim 地理编码）
+ * 酒店 / 餐厅 / 商场坐标数据（2026-09-26 人工核验；商场 2026-09-27 Nominatim 地理编码；
+ * 2026-09-29 补齐 Amoy Street Food Centre（新加坡）/ 新峰肉骨茶（吉隆坡）2 家此前缺席的餐厅坐标）
  *
  * 来源：Nominatim OSM + map.geocode 交叉核验，每条都核对过 display_name。
  * 精度标注：
@@ -53,6 +54,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "328 Katong Laksa", lat: 1.3073571, lng: 103.907346, precision: "exact" },
       { name: "Ya Kun Kaya Toast", lat: 1.2813622, lng: 103.8448952, precision: "chain", note: "连锁，牛车水 Erskine Road 店为代表" },
       { name: "Lau Pa Sat", lat: 1.2806167, lng: 103.8504802, precision: "exact" },
+      { name: "Amoy Street Food Centre", lat: 1.2793019, lng: 103.8466566, precision: "exact", note: "7 Maxwell Rd, 069111（2026-09-29 新增：Nominatim display_name 全地址匹配 + map.geocode FULL_ADDRESS relevance 100 交叉核验）" },
     ],
     malls: [
       { name: "乌节路 ION Orchard", lat: 1.3039479, lng: 103.8319051, precision: "exact" },
@@ -202,6 +204,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Gulainya", lat: 3.149261, lng: 101.653724, precision: "exact", note: "44-G Jalan Medan Setia 2" },
       { name: "Village Park", lat: 3.1377593, lng: 101.6233892, precision: "exact" },
       { name: "THIRTY8", lat: 3.1536113, lng: 101.7121373, precision: "building", note: "Grand Hyatt Kuala Lumpur 38 层" },
+      { name: "新峰肉骨茶 Sun Fong Bak Kut Teh（吉隆坡肉骨茶代表店）", lat: 3.14442, lng: 101.71498, precision: "street", note: "35 Medan Imbi（2026-09-29 新增：卡片记35a-41a；map.geocode FULL_ADDRESS 匹配35 Medan Imbi，返回名 Sun Hong 疑为同音异译，故标街道级）" },
     ],
     malls: [
       { name: "Pavilion（武吉免登）", lat: 3.1491540, lng: 101.7129531, precision: "exact" },
