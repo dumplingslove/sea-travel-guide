@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-28T23:57:00+00:00",
+ "updated_at": "2026-09-29T00:29:23+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -5391,6 +5391,186 @@
      "business_usd": 1312,
      "business_price_basis": "2成人总价",
      "business_note": "Scoot 无商务舱，不在商务舱结果中显示"
+    },
+    "2027-01-01": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 247,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR664",
+       "dep": "12:00",
+       "arr": "13:05",
+       "duration": "2 hr 5 min",
+       "price_usd": 247
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 247
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2 hr",
+       "price_usd": 358
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2 hr",
+       "price_usd": 247
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1 hr 55 min",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2 hr",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2 hr 5 min",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2 hr",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2 hr 5 min",
+       "price_usd": 455
+      }
+     ],
+     "nonstop_count": 9,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "商务舱航班价格不可用（页面显示 Price unavailable）"
+    },
+    "2027-01-02": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 163,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": "TR652",
+       "dep": "18:15",
+       "arr": "19:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 163
+      },
+      {
+       "airline": "Thai Lion Air",
+       "flight": "SL103",
+       "dep": "15:30",
+       "arr": "16:20",
+       "duration": "1 hr 50 min",
+       "price_usd": 182
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR644",
+       "dep": "12:55",
+       "arr": "14:00",
+       "duration": "2 hr 5 min",
+       "price_usd": 200
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR678",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2 hr",
+       "price_usd": 292
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ724",
+       "dep": "06:55",
+       "arr": "07:50",
+       "duration": "1 hr 55 min",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ726",
+       "dep": "08:15",
+       "arr": "09:15",
+       "duration": "2 hr",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2 hr 5 min",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ740",
+       "dep": "18:35",
+       "arr": "19:35",
+       "duration": "2 hr",
+       "price_usd": 358
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ736",
+       "dep": "16:10",
+       "arr": "17:10",
+       "duration": "2 hr",
+       "price_usd": 383
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ732",
+       "dep": "12:50",
+       "arr": "13:55",
+       "duration": "2 hr 5 min",
+       "price_usd": 545
+      }
+     ],
+     "nonstop_count": 10,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "商务舱航班价格不可用（页面显示 Price unavailable）"
     }
    }
   },
@@ -5400,7 +5580,224 @@
    "adults": 2,
    "child_ages": [],
    "label": "普吉→清迈（2成人）",
-   "days": {}
+   "days": {
+    "2026-12-08": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 203,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3167",
+       "dep": "18:55",
+       "arr": "20:55",
+       "duration": "2 hr",
+       "price_usd": 203
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ415",
+       "dep": "08:15",
+       "arr": "10:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 219
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 245
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3159",
+       "dep": "09:00",
+       "arr": "11:00",
+       "duration": "2 hr",
+       "price_usd": 254
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 254
+      }
+     ],
+     "nonstop_count": 5,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-09": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 243,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3159",
+       "dep": "09:00",
+       "arr": "11:00",
+       "duration": "2 hr",
+       "price_usd": 243
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3167",
+       "dep": "18:55",
+       "arr": "20:55",
+       "duration": "2 hr",
+       "price_usd": 243
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ415",
+       "dep": "08:15",
+       "arr": "10:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 245
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 277
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 278
+      }
+     ],
+     "nonstop_count": 5,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-10": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 243,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3159",
+       "dep": "09:00",
+       "arr": "11:00",
+       "duration": "2 hr",
+       "price_usd": 243
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3167",
+       "dep": "18:55",
+       "arr": "20:55",
+       "duration": "2 hr",
+       "price_usd": 243
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 245
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ415",
+       "dep": "08:15",
+       "arr": "10:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 245
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 278
+      }
+     ],
+     "nonstop_count": 5,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-11": {
+     "economy_queried_at": "2026-09-29T00:29:23+00:00",
+     "economy_usd": 203,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3159",
+       "dep": "09:00",
+       "arr": "11:00",
+       "duration": "2 hr",
+       "price_usd": 203
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 218
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ415",
+       "dep": "08:15",
+       "arr": "10:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 218
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3167",
+       "dep": "18:55",
+       "arr": "20:55",
+       "duration": "2 hr",
+       "price_usd": 243
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 278
+      }
+     ],
+     "nonstop_count": 5,
+     "business_queried_at": "2026-09-29T00:29:23+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "当天无直飞"
+    }
+   }
   },
   "CNX-BKK": {
    "origin": "CNX",
