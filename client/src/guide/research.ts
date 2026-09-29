@@ -77,7 +77,9 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('曼谷必吃炒河粉！Thipsamai','https://www.xiaohongshu.com/explore/6667c5b3000000000d00f31e','2024-06-11 · 干虾蛋包炒粉锅气足，Cash Only')],
  '耀华力夜市 / T&K':[
   L('打卡曼谷唐人街T&K SEAFOOD','https://www.xiaohongshu.com/explore/6a9a66b5000000002601950f','打卡样本'),
-  L('踩雷 踩雷','https://www.xiaohongshu.com/explore/69481f75000000001e020021','2025-12-22 · 菜品负面样本')],
+  L('踩雷 踩雷','https://www.xiaohongshu.com/explore/69481f75000000001e020021','2025-12-22 · 菜品负面样本'),
+  L('打卡了曼谷唐人街超的T&K seafood','https://www.xiaohongshu.com/explore/69b18844000000001d010799','红豆菠萝包 · 2026-09-28深读 · 17:30前到店/18点后等位 · 冬阴功汤250铢必点'),
+  L('3家亲测曼谷平价干净海鲜大排档推荐','https://www.xiaohongshu.com/explore/68bf9bd4000000001c0051e','花花花花哥儿 · 221赞/279藏/18评 · 16:00开门 · 烤大虾/三人1560铢')],
  'Or Tor Kor Market':[
   L('曼谷OrTorKor Market，凭什么挤进世界前十','https://www.xiaohongshu.com/explore/69b3d9fa000000002302473f','市场定位与环境核对'),
   L('曼谷乍都乍市集案','https://www.xiaohongshu.com/explore/68878001000000002500db30','2025-07-28安全事件记录')],
@@ -117,7 +119,8 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('曼谷ICONSIAM，室内如何造水上市场？','https://www.xiaohongshu.com/explore/69a5586900000000150380d5','SookSiam体验帖')],
  '唐人街耀华力路':[
   L('泰国曼谷的唐人街攻略','https://www.xiaohongshu.com/explore/6a10606a000000000f03ac00','街区历史与位置核对'),
-  L('泰国夜景没白来｜被曼谷这条街硬控了','https://www.xiaohongshu.com/explore/6a799365000000002c005bef','MRT出口与夜景时段')],
+  L('泰国夜景没白来｜被曼谷这条街硬控了','https://www.xiaohongshu.com/explore/6a799365000000002c005bef','MRT出口与夜景时段'),
+  L('来曼谷记住这个老爷爷吃到报恩榴莲！','https://www.xiaohongshu.com/explore/69e96629000000001f003157','江小丫吖 · 2026-09-28深读 · 310赞/73评 · 榴莲车380铢/盒现场开果')],
  '伦披尼公园':[
   L('曼谷·伦披尼公园｜偶遇巨蜥大战','https://www.xiaohongshu.com/explore/69dd34d10000000022025e99','正文与258条评论区已复核；第二篇受UI遮挡未纳入链接')],
  /* singapore/28 Sentosa圣淘沙+Skyline Luge：2026-09-26 补 3 篇高流量专帖（正文实读+评论区真实滚动实读）。
