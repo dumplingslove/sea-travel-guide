@@ -719,3 +719,19 @@ export function getGuideFacts(item:Item,_kind:GuideKind):GuideFacts{
 }
 
 export const strictResearchLinkCount=new Set(Object.values(xhsEvidence).flat().map(link=>link.url)).size;
+
+xhsEvidence['Singapore Oceanarium'] = [
+  {"title":"新加坡海洋馆终极攻略+ 避坑指南✨","author":"尚哥的逛吃日记","date":"2026-03-31","url":"https://www.xiaohongshu.com/explore/69c0e273000000001f002e3a","tone":"推荐","note":"保姆级一日路线 + 避坑，带娃 / 赶时间直接抄作业👇 🗺️ 一日最优路线（2.5-3 小时）","comment":"新加坡海洋生态馆门票在客路买的，当时有折扣活动，叠了银行优惠，省了 100 多，挺值的。（小红薯6AA71376）"},
+  {"title":"🇸🇬圣淘沙海洋馆遛娃封神！人少凉快不费妈！","author":"Ivy不上班","date":"2026-03-17","url":"https://www.xiaohongshu.com/explore/69b80f26000000001b0016a3","tone":"推荐","note":"来新加坡圣淘沙，别只冲环球影城！这个藏在深海里的浪漫，大人小孩都能被治愈💙升级后的海洋生态馆比之前要大足足三倍","comment":"KLOOK买海洋生态馆门票26SG800打八折！那个深海区有超大的螃蟹和蜘蛛蟹看得人起鸡皮疙瘩（一朵朵）"},
+  {"title":"新加坡海洋馆真实体验","author":"Scarlett🐱","date":"2026-04-10","url":"https://www.xiaohongshu.com/explore/69d8cfe1000000001f0063cc","tone":"中立","note":"▫️36米长的巨型观景窗，感觉像拥有了整片海底星空 ▫️生态区设计很用心，不是普通鱼缸堆砌","comment":"海洋生态馆太美了，门票记得客路买用26SG800打八折。（大树）"},
+  {"title":"新加坡海洋馆太夯了","author":"Z.","date":"2026-03-30","url":"https://www.xiaohongshu.com/explore/69ca7c360000000021039ca3","tone":"推荐","note":"不愧是亚洲最大海洋馆啊 太震撼了……美哭…… 眼前一亮又一亮，本来以为转个弯要结束了，没想到一个比一个震撼","comment":"我水肺是在海洋馆那个大鱼缸了学的 最深12m 可以体验海洋巨物坚硬的皮肤从你身边划过 还可以被外面的游客围观 很神奇的经历（biubiubiu～）"}
+];
+xhsAssessments['Singapore Oceanarium'] = {rec:3, neu:1, neg:0, verdict:"推荐"};
+
+xhsEvidence['Singapore Oceanarium'] = [
+  L('新加坡海洋馆终极攻略+ 避坑指南✨','https://www.xiaohongshu.com/explore/69c0e273000000001f002e3a','2026-03-31 尚哥的逛吃日记 · 保姆级一日路线'),
+  L('🇸🇬圣淘沙海洋馆遛娃封神！人少凉快不费妈！','https://www.xiaohongshu.com/explore/69b80f26000000001b0016a3','2026-03-17 Ivy不上班 · 升级后面积扩三倍'),
+  L('新加坡海洋馆真实体验','https://www.xiaohongshu.com/explore/69d8cfe1000000001f0063cc','2026-04-10 Scarlett🐱 · 36米巨型观景窗'),
+  L('新加坡海洋馆太夯了','https://www.xiaohongshu.com/explore/69ca7c360000000021039ca3','2026-03-30 Z. · 亚洲最大海洋馆震撼')
+];
+xhsAssessments['Singapore Oceanarium'] = {verdict:'推荐',recommend:3,caution:1,avoid:0,why:'亚洲最大海洋馆；全室内雨备亲子友好','avoidNote':'高峰可能分时入场需提前买票'};
