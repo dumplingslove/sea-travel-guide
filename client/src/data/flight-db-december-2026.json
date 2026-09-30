@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T05:32:52+00:00",
+ "updated_at": "2026-09-30T06:02:33+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3011,8 +3011,8 @@
    "label": "新加坡→西安（2大1小，岳父母带Dylan回西安）",
    "days": {
     "2026-12-10": {
-     "economy_queried_at": "2026-09-29T04:54:53+00:00",
-     "economy_usd": 1153,
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 1154,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -3021,9 +3021,9 @@
        "airline": "Scoot",
        "flight": "TR134",
        "dep": "7:15 PM",
-       "arr": "12:45 AM+1",
+       "arr": "12:45 AM +1",
        "duration": "5h 30m",
-       "price_usd": 1153
+       "price_usd": 1154
       }
      ],
      "nonstop_count": 1,
@@ -27438,6 +27438,122 @@
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "仅1班直飞CA439，2大1小时总价未显示（Price unavailable）"
+    },
+    "2026-12-11": {
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "价格有波动，首次加载曾显示530 USD，后稳定为507 USD，取最低价",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1270
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:02:33+00:00",
+     "business_usd": 1270,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-12": {
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "价格有波动，Best标签曾显示534 USD，Cheapest标签稳定为507 USD，取最低价",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1546
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:02:33+00:00",
+     "business_usd": 1546,
+     "business_price_basis": "2大1小总价",
+     "business_note": "价格有波动，Best标签曾显示1647 USD，Cheapest标签稳定为1546 USD，取最低价"
+    },
+    "2026-12-13": {
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:02:33+00:00",
+     "business_usd": 1186,
+     "business_price_basis": "2大1小总价",
+     "business_note": "价格有波动，曾显示1270/1205 USD，最终稳定为1186 USD，取最低价"
+    },
+    "2026-12-14": {
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:02:33+00:00",
+     "business_usd": 1186,
+     "business_price_basis": "2大1小总价",
+     "business_note": "价格有波动，曾显示1244 USD，最终稳定为1186 USD，取最低价"
+    },
+    "2026-12-15": {
+     "economy_queried_at": "2026-09-30T06:02:33+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:02:33+00:00",
+     "business_usd": 1186,
+     "business_price_basis": "2大1小总价",
+     "business_note": "价格有波动，曾显示1270 USD，最终稳定为1186 USD，取最低价"
     }
    }
   },
