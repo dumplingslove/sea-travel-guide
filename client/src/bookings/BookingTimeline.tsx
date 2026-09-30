@@ -228,7 +228,7 @@ function PickState({
   ) : null;
 }
 
-/** 城市停留日期标签，如"新加坡 · 12/12–12/16 · D1–D5"（按 HOTEL_STAYS 推导） */
+/** 城市停留日期标签，如"新加坡 · 12/6–12/10 · D1–D5"（按 HOTEL_STAYS 推导） */
 function cityStayLabel(city: string): string {
   const s = HOTEL_STAYS.find((x) => x.city === city);
   if (!s) return city;

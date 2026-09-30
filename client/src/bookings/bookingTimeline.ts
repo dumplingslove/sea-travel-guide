@@ -1,6 +1,8 @@
 /**
- * /bookings 预订行动时间线：13 天行程（2026-12-12 ～ 12-24）
- * 新加坡 D1-5 → 普吉 D6-8 → 曼谷 D9-11 → 清迈 D12-13。
+ * /bookings 预订行动时间线：13 天行程（2026-12-06 ～ 12-18）
+ * 新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13。
+ * （2026-09-30 site-improve：HOTEL_STAYS 曾写旧行程 12-12～12-24 与旧城市顺序曼谷→清迈，
+ *  与云端规划/航班转场段/酒店实时价格日期全部错位，已按当前行程修正。）
  *
  * 组织原则（对标 Google Travel / Booking.com / Trip.com）：
  * 按"最晚行动时间"排，不是按"酒店/餐厅/景点"分类堆。
@@ -707,12 +709,13 @@ function applyFlightDb(): void {
 }
 applyFlightDb();
 
-/** 每城住宿段：时间线只列"选 1 家"的行动，候选明细在城市参考区。 */
+/** 每城住宿段：时间线只列"选 1 家"的行动，候选明细在城市参考区。
+ * 日期与城市顺序须与当前云端行程一致（2026-12-06 ～ 12-18：新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13）。 */
 export const HOTEL_STAYS = [
-  { city: "新加坡", checkInLabel: "12-12", nights: 5, daysLabel: "D1–D5" },
-  { city: "普吉", checkInLabel: "12-17", nights: 3, daysLabel: "D6–D8" },
-  { city: "曼谷", checkInLabel: "12-20", nights: 3, daysLabel: "D9–D11" },
-  { city: "清迈", checkInLabel: "12-23", nights: 2, daysLabel: "D12–D13" },
+  { city: "新加坡", checkInLabel: "12-06", nights: 5, daysLabel: "D1–D5" },
+  { city: "普吉", checkInLabel: "12-11", nights: 3, daysLabel: "D6–D8" },
+  { city: "清迈", checkInLabel: "12-14", nights: 2, daysLabel: "D9–D10" },
+  { city: "曼谷", checkInLabel: "12-16", nights: 3, daysLabel: "D11–D13" },
 ];
 
 /** 需提前购票的景点（研究结论驱动；空 = 尚无研究结论支撑的项目，不编造）。 */
