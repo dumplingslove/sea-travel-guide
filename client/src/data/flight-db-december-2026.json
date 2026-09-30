@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T07:14:16+00:00",
+ "updated_at": "2026-09-30T07:41:55+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3027,7 +3027,7 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-29T06:56:58+00:00",
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
@@ -27950,6 +27950,116 @@
      "nonstop_count": 1,
      "business_queried_at": "2026-09-30T07:14:16+00:00",
      "business_usd": 1186.0,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-03": {
+     "economy_queried_at": "2026-09-30T07:41:55+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "08:30",
+       "arr": "13:00",
+       "duration": "3h 30m",
+       "price_usd": 507
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天直飞价格不可用"
+    },
+    "2026-12-04": {
+     "economy_queried_at": "2026-09-30T07:41:55+00:00",
+     "economy_usd": 586,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "08:30",
+       "arr": "13:00",
+       "duration": "3h 30m",
+       "price_usd": 586,
+       "business_price_usd": 2293
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
+     "business_usd": 2293,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-05": {
+     "economy_queried_at": "2026-09-30T07:41:55+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "08:30",
+       "arr": "13:00",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
+     "business_usd": 1186,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-06": {
+     "economy_queried_at": "2026-09-30T07:41:55+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "08:30",
+       "arr": "13:00",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
+     "business_usd": 1186,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-07": {
+     "economy_queried_at": "2026-09-30T07:41:55+00:00",
+     "economy_usd": 507,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA439",
+       "dep": "08:30",
+       "arr": "13:00",
+       "duration": "3h 30m",
+       "price_usd": 507,
+       "business_price_usd": 1186
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T07:41:55+00:00",
+     "business_usd": 1186,
      "business_price_basis": "2大1小总价"
     }
    }
