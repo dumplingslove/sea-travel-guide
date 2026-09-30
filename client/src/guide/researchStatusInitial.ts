@@ -1,3 +1,5 @@
+// 研究状态静态快照（由 research-snapshot-refresh 生成）
+// updated_at: 2026-09-30T07:42Z UTC
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -6981,10 +6983,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "done",
+       "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "第68轮3/3：喜C维拉2026-07-30(1731赞,景福宫-青瓦台-三清洞-北村半天串联)/日立方2025-11-28(416赞,买手店一条街)/별이&달이2026-09-21(13赞,Object文创店)",
+       "note": "2026-09-30 诚实复核改partial：第68轮3篇证据中仅第1篇(1731赞/63评论)为明确高流量，第2篇416赞/5评论边缘、第3篇13赞0评论非高流量，不满足\"3篇高流量帖\"标准。明洞保留done。",
        "evidence": "xhs-coverage-seoul.md"
       }
      },
@@ -7012,10 +7014,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "done",
+       "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "第68轮3/3：浪花爱好者2026-08-23(652赞,韩屋巷弄慢逛)/Rania 2026-05-20(54赞,白天比夜晚更出片)/心心心2026-06-18(26赞,夜晚韩屋咖啡馆)；诚实备注：专帖池子弱，无千赞级",
+       "note": "2026-09-30 诚实复核改partial：第68轮3篇证据中仅第1篇(652赞/21评论)为本池最高可计高流量，第2篇54赞0评论、第3篇26赞2评论非高流量，不满足\"3篇高流量帖\"标准。明洞保留done。",
        "evidence": "xhs-coverage-seoul.md"
       }
      },
@@ -7699,14 +7701,14 @@ export const initialResearchStatus = {
    "photos": 28,
    "details": 28
   },
-  "xhs_done": 98,
+  "xhs_done": 96,
   "all_done": 88,
   "seoul": {
    "total": 24,
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 5,
+   "xhs_done": 3,
    "ph": 0,
    "de": 0,
    "all_done": 0,
@@ -7726,5 +7728,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-30T04:50Z"
+ "updated_at": "2026-09-30T07:42Z UTC"
 };
