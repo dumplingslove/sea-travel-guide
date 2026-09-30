@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T02:12:30+00:00",
+ "updated_at": "2026-09-30T03:57:14+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -25269,6 +25269,806 @@
      "nonstop_count": 17,
      "business_queried_at": "2026-09-30T02:12:30+00:00",
      "business_usd": 751,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-26": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 394,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 394
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 415
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 415
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 436
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 464
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 464
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 512
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 536
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 1299
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 15,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-27": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 373,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 373
+      },
+      {
+       "airline": "Spring Airlines",
+       "flight": "9C8559",
+       "dep": "1:50 PM",
+       "arr": "4:40 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 412
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 436
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 472
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 476
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 640
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 839
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 1381
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5061",
+       "dep": "10:25 AM",
+       "arr": "1:30 PM",
+       "duration": "2 hr 5 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 17,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-28": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 373,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 373
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 415
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 415
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 476
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 545
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 839
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 1299
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 15,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-29": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 373,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 373
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 394
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 394
+      },
+      {
+       "airline": "Spring Airlines",
+       "flight": "9C8559",
+       "dep": "1:50 PM",
+       "arr": "4:40 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 412
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 472
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 476
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 536
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 1381
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 16,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-30": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 394,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 394
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 422
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 476
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 536
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 640
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 741
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5061",
+       "dep": "10:25 AM",
+       "arr": "1:30 PM",
+       "duration": "2 hr 5 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 16,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-31": {
+     "economy_queried_at": "2026-09-30T03:57:14+00:00",
+     "economy_usd": 457,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Spring Airlines",
+       "flight": "9C8559",
+       "dep": "1:50 PM",
+       "arr": "4:40 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 457
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE882",
+       "dep": "11:20 AM",
+       "arr": "2:25 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 472
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE888",
+       "dep": "2:00 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 640
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ313",
+       "dep": "8:00 AM",
+       "arr": "11:00 AM",
+       "duration": "2 hr",
+       "price_usd": 839
+      },
+      {
+       "airline": "China Southern",
+       "flight": "CZ369",
+       "dep": "4:50 PM",
+       "arr": "7:55 PM",
+       "duration": "2 hr 5 min",
+       "price_usd": 839
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE892",
+       "dep": "8:50 AM",
+       "arr": "12:00 PM",
+       "duration": "2 hr 10 min",
+       "price_usd": 906
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ368",
+       "dep": "1:30 AM",
+       "arr": "4:30 AM",
+       "duration": "2 hr",
+       "price_usd": 919
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ362",
+       "dep": "11:35 AM",
+       "arr": "2:30 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ364",
+       "dep": "1:10 PM",
+       "arr": "4:00 PM",
+       "duration": "1 hr 50 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "Asiana",
+       "flight": "OZ366",
+       "dep": "4:25 PM",
+       "arr": "7:20 PM",
+       "duration": "1 hr 55 min",
+       "price_usd": 919
+      },
+      {
+       "airline": "EASTAR JET",
+       "flight": "ZE872",
+       "dep": "2:50 AM",
+       "arr": "5:50 AM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5041",
+       "dep": "8:40 AM",
+       "arr": "11:55 AM",
+       "duration": "2 hr 15 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5011",
+       "dep": "11:55 AM",
+       "arr": "3:05 PM",
+       "duration": "2 hr 10 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5033",
+       "dep": "12:20 PM",
+       "arr": "3:20 PM",
+       "duration": "2 hr"
+      },
+      {
+       "airline": "Shanghai Airlines",
+       "flight": "FM827",
+       "dep": "2:05 PM",
+       "arr": "5:25 PM",
+       "duration": "2 hr 20 min"
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU5051",
+       "dep": "5:45 PM",
+       "arr": "8:45 PM",
+       "duration": "2 hr"
+      }
+     ],
+     "nonstop_count": 16,
+     "business_queried_at": "2026-09-30T03:57:14+00:00",
+     "business_usd": 1030,
      "business_price_basis": "2大1小总价"
     }
    }
