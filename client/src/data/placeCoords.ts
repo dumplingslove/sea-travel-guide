@@ -3,6 +3,8 @@
  * 2026-09-29 补齐 Amoy Street Food Centre（新加坡）/ 新峰肉骨茶（吉隆坡）2 家此前缺席的餐厅坐标）
  *
  * 来源：Nominatim OSM + map.geocode 交叉核验，每条都核对过 display_name。
+ * 2026-09-29 新增 seoul 区块：回程经首尔中转加入行程；3 家酒店坐标 Nominatim 精确命中
+ *（map.geocode 对韩国地址覆盖弱：1 条 CITY 级低相关 + 2 条空返回，故以 Nominatim 为准，不编造）。
  * 精度标注：
  *  - "exact"    精确到建筑/店面
  *  - "building" 同建筑内（如酒店内的餐厅，用酒店坐标）
@@ -260,6 +262,15 @@ export const cityPlaces: Record<string, CityPlaces> = {
     malls: [
       { name: "阳东镇正规商店", lat: 10.1825958, lng: 103.9722233, precision: "area" },
     ],
+  },
+  seoul: {
+    hotels: [
+      { name: "乐天酒店首尔 Lotte Hotel Seoul", lat: 37.5652278, lng: 126.9806285, precision: "exact", note: "30 Eulji-ro, Jung-gu（2026-09-29 新增：Nominatim display_name 롯데호텔서울 全地址匹配 hotel/tourism）" },
+      { name: "威斯汀朝鲜首尔 The Westin Josun Seoul", lat: 37.5641594, lng: 126.9794846, precision: "exact", note: "106 Sogong-ro, Jung-gu（2026-09-29 新增：Nominatim 웨스틴 조선호텔 全地址匹配）" },
+      { name: "首尔四季酒店 Four Seasons Hotel Seoul", lat: 37.5706548, lng: 126.9753742, precision: "exact", note: "97 Saemunan-ro, Jongno-gu（2026-09-29 新增：Nominatim 포시즌스호텔 서울 全地址匹配）" },
+    ],
+    restaurants: [],
+    malls: [],
   },
 };
 
