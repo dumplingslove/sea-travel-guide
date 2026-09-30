@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-09-30T07:42Z UTC
+// updated_at: 2026-09-30T08:42Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7076,9 +7076,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第69轮 3/3 高流量专帖（1468/803/663赞），证据见 xhs-coverage-seoul.md 条目G",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7105,9 +7107,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "第69轮 2/3 达标（1031/547赞）；第3帖为批发市场内容不计入，证据见 xhs-coverage-seoul.md 条目H",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7134,9 +7138,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第69轮 3/3 高流量专帖（2.1万/6936/1850赞），证据见 xhs-coverage-seoul.md 条目I",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7593,6 +7599,7 @@ export const initialResearchStatus = {
    "tripadvisor": 32,
    "google_maps": 32,
    "chinese_sites": 31,
+   "xiaohongshu": 32,
    "photos": 32,
    "details": 32
   },
@@ -7608,6 +7615,7 @@ export const initialResearchStatus = {
    "tripadvisor": 19,
    "google_maps": 20,
    "chinese_sites": 20,
+   "xiaohongshu": 17,
    "photos": 20,
    "details": 20
   },
@@ -7623,6 +7631,7 @@ export const initialResearchStatus = {
    "tripadvisor": 23,
    "google_maps": 23,
    "chinese_sites": 22,
+   "xiaohongshu": 3,
    "photos": 23,
    "details": 23
   },
@@ -7638,6 +7647,7 @@ export const initialResearchStatus = {
    "tripadvisor": 22,
    "google_maps": 21,
    "chinese_sites": 22,
+   "xiaohongshu": 1,
    "photos": 22,
    "details": 22
   },
@@ -7653,6 +7663,7 @@ export const initialResearchStatus = {
    "tripadvisor": 22,
    "google_maps": 24,
    "chinese_sites": 23,
+   "xiaohongshu": 0,
    "photos": 24,
    "details": 23
   },
@@ -7668,6 +7679,7 @@ export const initialResearchStatus = {
    "tripadvisor": 24,
    "google_maps": 23,
    "chinese_sites": 24,
+   "xiaohongshu": 14,
    "photos": 24,
    "details": 24
   },
@@ -7683,6 +7695,7 @@ export const initialResearchStatus = {
    "tripadvisor": 21,
    "google_maps": 22,
    "chinese_sites": 21,
+   "xiaohongshu": 0,
    "photos": 22,
    "details": 22
   },
@@ -7698,26 +7711,28 @@ export const initialResearchStatus = {
    "tripadvisor": 28,
    "google_maps": 27,
    "chinese_sites": 26,
+   "xiaohongshu": 26,
    "photos": 28,
    "details": 28
   },
-  "xhs_done": 96,
-  "all_done": 88,
   "seoul": {
    "total": 24,
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 3,
+   "xhs_done": 5,
    "ph": 0,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
    "chinese_sites": 3,
+   "xiaohongshu": 5,
    "photos": 0,
    "details": 0
-  }
+  },
+  "xhs_done": 98,
+  "all_done": 88
  },
  "targets": {
   "chinese_sites": "done",
@@ -7728,5 +7743,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-30T07:42Z UTC"
+ "updated_at": "2026-09-30T08:42Z"
 };
