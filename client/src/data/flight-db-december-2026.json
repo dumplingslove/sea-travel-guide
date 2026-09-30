@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T08:30:54+00:00",
+ "updated_at": "2026-09-30T12:03:23+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15323,8 +15323,8 @@
      ]
     },
     "2026-12-26": {
-     "economy_queried_at": "2026-09-29T10:56:59+00:00",
-     "economy_usd": 403,
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 416,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -15332,14 +15332,14 @@
       {
        "airline": "Spring Airlines",
        "flight": "9C6294",
-       "dep": "14:35",
-       "arr": "19:30",
-       "duration": "3h55m",
-       "price_usd": 403
+       "dep": "2:35 PM",
+       "arr": "7:30 PM",
+       "duration": "3 hr 55 min",
+       "price_usd": 416
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-29T10:56:59+00:00",
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -28947,6 +28947,559 @@
      "onestop_count": 4,
      "onestop_business_queried_at": "2026-09-30T08:30:54+00:00",
      "onestop_business_usd": 6883,
+     "onestop_business_price_basis": "2大1小总价"
+    },
+    "2026-12-12": {
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 2593,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Alaska",
+       "flight": "AS120",
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2593,
+       "business_price_usd": 7762
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2660,
+       "business_price_usd": 7802
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10 hr 11 min",
+       "price_usd": 2660,
+       "business_price_usd": 7802
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_usd": 7762,
+     "business_price_basis": "2大1小总价",
+     "onestop_economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_economy_usd": 1729,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "China Airlines",
+       "flight": "CI163 + CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14 hr 55 min",
+       "via": "台北",
+       "price_usd": 1729,
+       "business_price_usd": 8164
+      },
+      {
+       "airline": "Philippine Airlines",
+       "flight": "PR403 + PR124",
+       "dep": "8:30 PM",
+       "arr": "6:45 PM+1",
+       "duration": "39 hr 15 min",
+       "via": "马尼拉",
+       "price_usd": 1954,
+       "business_price_usd": 6986
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159 + BR24",
+       "dep": "7:45 PM",
+       "arr": "5:30 PM",
+       "duration": "14 hr 45 min",
+       "via": "台北",
+       "price_usd": 2054,
+       "business_price_usd": 6815
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ202 + AS482",
+       "dep": "12:30 PM",
+       "arr": "12:02 PM",
+       "duration": "16 hr 32 min",
+       "via": "洛杉矶",
+       "price_usd": 2538
+      },
+      {
+       "airline": "United",
+       "flight": "UA806 + UA745",
+       "dep": "12:45 PM",
+       "arr": "10:24 AM",
+       "duration": "14 hr 39 min",
+       "via": "旧金山",
+       "price_usd": 2538
+      },
+      {
+       "airline": "United",
+       "flight": "UA892 + UA433",
+       "dep": "6:00 PM",
+       "arr": "4:23 PM",
+       "duration": "15 hr 23 min",
+       "via": "旧金山",
+       "price_usd": 2538
+      }
+     ],
+     "onestop_count": 6,
+     "onestop_business_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_business_usd": 6815,
+     "onestop_business_price_basis": "2大1小总价"
+    },
+    "2026-12-13": {
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 2593,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Alaska",
+       "flight": "AS120",
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2593,
+       "business_price_usd": 7762
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2660,
+       "business_price_usd": 7802
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10 hr 11 min",
+       "price_usd": 2660,
+       "business_price_usd": 7802
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE47",
+       "dep": "9:20 PM",
+       "arr": "2:10 PM",
+       "duration": "9 hr 50 min",
+       "price_usd": 2660,
+       "business_price_usd": 7802
+      }
+     ],
+     "nonstop_count": 4,
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_usd": 7762,
+     "business_price_basis": "2大1小总价",
+     "onestop_economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_economy_usd": 1729,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "China Airlines",
+       "flight": "CI163 + CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14 hr 55 min",
+       "via": "台北",
+       "price_usd": 1729,
+       "business_price_usd": 6159
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159 + BR26",
+       "dep": "7:45 PM",
+       "arr": "6:10 PM",
+       "duration": "15 hr 25 min",
+       "via": "台北",
+       "price_usd": 2054,
+       "business_price_usd": 6815
+      },
+      {
+       "airline": "Philippine Airlines",
+       "flight": "PR401 + PR124",
+       "dep": "7:30 AM",
+       "arr": "6:45 PM",
+       "duration": "28 hr 15 min",
+       "via": "马尼拉",
+       "price_usd": 2086,
+       "business_price_usd": 6377
+      },
+      {
+       "airline": "United",
+       "flight": "UA806 + UA2192",
+       "dep": "12:45 PM",
+       "arr": "12:20 PM",
+       "duration": "16 hr 35 min",
+       "via": "旧金山",
+       "price_usd": 2538,
+       "business_price_usd": 7708
+      },
+      {
+       "airline": "United",
+       "flight": "UA892 + UA433",
+       "dep": "6:00 PM",
+       "arr": "4:22 PM",
+       "duration": "15 hr 22 min",
+       "via": "旧金山",
+       "price_usd": 2538,
+       "business_price_usd": 7708
+      }
+     ],
+     "onestop_count": 5,
+     "onestop_business_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_business_usd": 6159,
+     "onestop_business_price_basis": "2大1小总价"
+    },
+    "2026-12-14": {
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 2410,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Alaska",
+       "flight": "AS120",
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2410,
+       "business_price_usd": 7397
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10 hr 11 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE47",
+       "dep": "9:20 PM",
+       "arr": "2:10 PM",
+       "duration": "9 hr 50 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      }
+     ],
+     "nonstop_count": 4,
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_usd": 7397,
+     "business_price_basis": "2大1小总价",
+     "onestop_economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_economy_usd": 1729,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "China Airlines",
+       "flight": "CI161 + CI22",
+       "dep": "12:30 PM",
+       "arr": "6:10 PM",
+       "duration": "22 hr 40 min",
+       "via": "台北",
+       "price_usd": 1729
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159 + BR26",
+       "dep": "7:45 PM",
+       "arr": "6:10 PM",
+       "duration": "15 hr 25 min",
+       "via": "台北",
+       "price_usd": 2054,
+       "business_price_usd": 6815
+      },
+      {
+       "airline": "China Airlines",
+       "flight": "CI163 + CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14 hr 55 min",
+       "via": "台北",
+       "price_usd": 2132,
+       "business_price_usd": 6159
+      },
+      {
+       "airline": "Philippine Airlines",
+       "flight": "PR401 + PR124",
+       "dep": "7:30 AM",
+       "arr": "6:45 PM",
+       "duration": "28 hr 15 min",
+       "via": "马尼拉",
+       "price_usd": 2284,
+       "business_price_usd": 6377
+      },
+      {
+       "airline": "United",
+       "flight": "UA806 + UA2192",
+       "dep": "12:45 PM",
+       "arr": "12:18 PM",
+       "duration": "16 hr 33 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      },
+      {
+       "airline": "United",
+       "flight": "UA892 + UA433",
+       "dep": "6:00 PM",
+       "arr": "4:22 PM",
+       "duration": "15 hr 22 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      }
+     ],
+     "onestop_count": 6,
+     "onestop_business_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_business_usd": 6159,
+     "onestop_business_price_basis": "2大1小总价"
+    },
+    "2026-12-15": {
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 2417,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10 hr 11 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE47",
+       "dep": "9:20 PM",
+       "arr": "2:10 PM",
+       "duration": "9 hr 50 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_usd": 7404,
+     "business_price_basis": "2大1小总价",
+     "onestop_economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_economy_usd": 1729,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "China Airlines",
+       "flight": "CI163 + CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14 hr 55 min",
+       "via": "台北",
+       "price_usd": 1729
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159 + BR24",
+       "dep": "7:45 PM",
+       "arr": "5:30 PM",
+       "duration": "14 hr 45 min",
+       "via": "台北",
+       "price_usd": 2054,
+       "business_price_usd": 6815
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ202 + AS482",
+       "dep": "12:30 PM",
+       "arr": "12:02 PM",
+       "duration": "16 hr 32 min",
+       "via": "洛杉矶",
+       "price_usd": 2356
+      },
+      {
+       "airline": "United",
+       "flight": "UA806 + UA2192",
+       "dep": "12:45 PM",
+       "arr": "12:18 PM",
+       "duration": "16 hr 33 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      },
+      {
+       "airline": "United",
+       "flight": "UA892 + UA433",
+       "dep": "6:00 PM",
+       "arr": "4:22 PM",
+       "duration": "15 hr 22 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ212 + AS620",
+       "dep": "9:00 PM",
+       "arr": "8:04 PM",
+       "duration": "16 hr 4 min",
+       "via": "旧金山",
+       "price_usd": 2356
+      },
+      {
+       "airline": "Air Canada",
+       "flight": "AC64 + AC8804",
+       "dep": "6:55 PM",
+       "arr": "2:37 PM",
+       "duration": "12 hr 42 min",
+       "via": "温哥华",
+       "price_usd": 2626,
+       "business_price_usd": 8125
+      }
+     ],
+     "onestop_count": 7,
+     "onestop_business_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_business_usd": 6159,
+     "onestop_business_price_basis": "2大1小总价"
+    },
+    "2026-12-16": {
+     "economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "economy_usd": 2417,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9 hr 55 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10 hr 11 min",
+       "price_usd": 2417,
+       "business_price_usd": 7404
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_usd": 7404,
+     "business_price_basis": "2大1小总价",
+     "onestop_economy_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_economy_usd": 1954,
+     "onestop_economy_price_basis": "2大1小总价",
+     "onestop_flights": [
+      {
+       "airline": "Philippine Airlines",
+       "flight": "PR403 + PR124",
+       "dep": "8:30 PM",
+       "arr": "6:45 PM+1",
+       "duration": "39 hr 15 min",
+       "via": "马尼拉",
+       "price_usd": 1954
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159 + BR26",
+       "dep": "7:45 PM",
+       "arr": "6:10 PM",
+       "duration": "15 hr 25 min",
+       "via": "台北",
+       "price_usd": 2054,
+       "business_price_usd": 6815
+      },
+      {
+       "airline": "United",
+       "flight": "UA806 + UA2192",
+       "dep": "12:45 PM",
+       "arr": "12:20 PM",
+       "duration": "16 hr 35 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      },
+      {
+       "airline": "United",
+       "flight": "UA892 + UA433",
+       "dep": "6:00 PM",
+       "arr": "4:22 PM",
+       "duration": "15 hr 22 min",
+       "via": "旧金山",
+       "price_usd": 2356,
+       "business_price_usd": 7342
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE51 + DL359",
+       "dep": "10:20 PM",
+       "arr": "10:00 PM",
+       "duration": "16 hr 40 min",
+       "via": "檀香山",
+       "price_usd": 2374
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE11 + DL2640",
+       "dep": "7:40 PM",
+       "arr": "8:19 PM",
+       "duration": "17 hr 39 min",
+       "via": "洛杉矶"
+      },
+      {
+       "airline": "Air Canada",
+       "flight": "AC64 + AC8804",
+       "dep": "6:55 PM",
+       "arr": "2:37 PM",
+       "duration": "12 hr 42 min",
+       "via": "温哥华",
+       "price_usd": 2626,
+       "business_price_usd": 8125
+      }
+     ],
+     "onestop_count": 7,
+     "onestop_business_queried_at": "2026-09-30T12:03:23+00:00",
+     "onestop_business_usd": 6815,
      "onestop_business_price_basis": "2大1小总价"
     }
    }
