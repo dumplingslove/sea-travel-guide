@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T06:02:33+00:00",
+ "updated_at": "2026-09-30T06:17:08+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -27554,6 +27554,138 @@
      "business_usd": 1186,
      "business_price_basis": "2大1小总价",
      "business_note": "价格有波动，曾显示1270 USD，最终稳定为1186 USD，取最低价"
+    },
+    "2026-12-16": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m"
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "直飞存在但价格不可用"
+    },
+    "2026-12-17": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "business_price_usd": 1244
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": 1244,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-18": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m"
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "直飞存在但价格不可用"
+    },
+    "2026-12-19": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "business_price_usd": 1205
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": 1205,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-20": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m"
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "直飞存在但价格不可用"
+    },
+    "2026-12-21": {
+     "economy_queried_at": "2026-09-30T06:17:08+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "直飞存在但价格不可用",
+     "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA 439",
+       "dep": "8:30 AM",
+       "arr": "1:00 PM",
+       "duration": "3h 30m",
+       "business_price_usd": 1244
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-09-30T06:17:08+00:00",
+     "business_usd": 1244,
+     "business_price_basis": "2大1小总价"
     }
    }
   },
