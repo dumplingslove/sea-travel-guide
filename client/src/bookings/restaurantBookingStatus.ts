@@ -75,6 +75,8 @@ const POLICY: Record<string, { policy: BookingPolicy; reason: string }> = {
   'Potong': { policy: 'must_book', reason: '米其林一星，唐人街 heritage shophouse 餐厅' },
   'Raya': { policy: 'walkup_or_queue', reason: '米其林推荐老字号，现场排队' },
   'Roti Taew Nam': { policy: 'walkup_or_queue', reason: '普吉老街小吃，现场购买' },
+  '鲁通船面 Ruathong Noodle': { policy: 'walkup_or_queue', reason: '胜利纪念碑船面老店，现场排队；中午11:00–12:00到，晚了要排队' },
+  '通思密 Thong Smith': { policy: 'walkup_or_queue', reason: '商场精致船面，周末高峰拿号排队（曾排50分钟）' },
   'SP Chicken': { policy: 'walkup_or_queue', reason: '咖喱面街边老店，现场排队' },
   'Siam Road Char Kway Teow': { policy: 'walkup_or_queue', reason: '街头小吃名店，现场排队' },
   'Song Fa': { policy: 'walkup_or_queue', reason: '肉骨茶/咖椰吐司名店，现场排队' },
