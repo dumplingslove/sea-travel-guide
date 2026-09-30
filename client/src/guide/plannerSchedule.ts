@@ -254,6 +254,12 @@ interface CityMeta {
 const CITY_META: CityMeta[] = citiesJson as CityMeta[];
 const META_BY_ZH = new Map(CITY_META.map((c) => [c.zh, c]));
 
+/**
+ * 韩国行程包含的城市（中文名）。行程页按此拆成"东南亚行程"/"韩国行程"两个页面；
+ * 新增韩国城市时把中文名加进这个集合即可，两边自动归位。
+ */
+export const KOREA_CITY_ZH = new Set<string>(["首尔"]);
+
 const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 
 function fmtMD(iso: string): string {

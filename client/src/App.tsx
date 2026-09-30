@@ -7,6 +7,7 @@ import Login from "@/pages/Login";
 import Placeholder from "@/pages/Placeholder";
 import GuidePage from "@/pages/GuidePage";
 import Planner from "@/pages/Planner";
+import KoreaItinerary from "@/pages/KoreaItinerary";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
 import { usePlanItinerary } from "@/guide/plannerSchedule";
@@ -20,7 +21,8 @@ import {
 } from "@/pages/PlaceDetail";
 
 const NAV = [
-  { to: "/", label: "行程" },
+  { to: "/", label: "东南亚行程" },
+  { to: "/korea", label: "韩国行程" },
   { to: "/planner", label: "行程规划" },
   { to: "/bookings", label: "预订" },
   { to: "/travel-research", label: "旅行研究" },
@@ -123,6 +125,7 @@ function AppRouter() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
+            <Route path="/korea" element={<RecordsProvider><KoreaItinerary /></RecordsProvider>} />
             <Route path="/day/:n" element={<RecordsProvider><DayDetail /></RecordsProvider>} />
             <Route path="/attraction/:slug" element={<AttractionDetailPage />} />
             <Route path="/restaurant/:slug" element={<RestaurantDetailPage />} />

@@ -6,37 +6,18 @@ import {
 } from "@/components/ItineraryDayCard";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
-import { usePlanItinerary, type PlanDay } from "@/guide/plannerSchedule";
+import { usePlanItinerary, KOREA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
 
 type Day = PlanDay;
 
-/** 行程页滚动位置的 session 级存取键 */
-const HOME_SCROLL_KEY = "sea-home-scroll-y-v1";
+/** 行程页滚动位置的 session 级存取键（东南亚/韩国两个页面各用各的） */
+const SEA_SCROLL_KEY = "sea-home-scroll-y-v1";
+const KOREA_SCROLL_KEY = "sea-korea-scroll-y-v1";
 
 export default function Home() {
-  // 从详情页返回时恢复离开时的滚动位置，不再跳回页面顶部。
-  // 位置在卸载时写入 sessionStorage，恢复后立即清除，避免刷新页面时误恢复。
-  useLayoutEffect(() => {
-    let saved: string | null = null;
-    try {
-      saved = sessionStorage.getItem(HOME_SCROLL_KEY);
-      sessionStorage.removeItem(HOME_SCROLL_KEY);
-    } catch {
-      /* 忽略存储异常 */
-    }
-    const y = saved ? parseInt(saved, 10) : 0;
-    if (y > 0) window.scrollTo(0, y);
-    return () => {
-      try {
-        sessionStorage.setItem(HOME_SCROLL_KEY, String(window.scrollY));
-      } catch {
-        /* 忽略存储异常 */
-      }
-    };
-  }, []);
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
-      <ItineraryTab />
+      <ItineraryTab koreaOnly={false} />
     </div>
   );
 }
@@ -121,9 +102,35 @@ function FavoriteItineraryCheck({
   );
 }
 
-function ItineraryTab() {
+export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   const plan = usePlanItinerary();
-  const days: Day[] = plan.days;
+  // 顶部导航拆成"东南亚行程"/"韩国行程"两个页面：按 KOREA_CITY_ZH 过滤天数，
+  // 天编号（D1、D2…）保持原行程不变，预订/笔记按天关联不受影响。
+  const allDays: Day[] = plan.days;
+  const days: Day[] = koreaOnly
+    ? allDays.filter((d) => KOREA_CITY_ZH.has(d.city_zh))
+    : allDays.filter((d) => !KOREA_CITY_ZH.has(d.city_zh));
+  const scrollKey = koreaOnly ? KOREA_SCROLL_KEY : SEA_SCROLL_KEY;
+  // 从详情页返回时恢复离开时的滚动位置，不再跳回页面顶部。
+  // 位置在卸载时写入 sessionStorage，恢复后立即清除，避免刷新页面时误恢复。
+  useLayoutEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem(scrollKey);
+      sessionStorage.removeItem(scrollKey);
+    } catch {
+      /* 忽略存储异常 */
+    }
+    const y = saved ? parseInt(saved, 10) : 0;
+    if (y > 0) window.scrollTo(0, y);
+    return () => {
+      try {
+        sessionStorage.setItem(scrollKey, String(window.scrollY));
+      } catch {
+        /* 忽略存储异常 */
+      }
+    };
+  }, [scrollKey]);
   const dateNavRef = useRef<HTMLDivElement>(null);
   // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
   useLayoutEffect(() => {
@@ -208,7 +215,16 @@ function ItineraryTab() {
       <FavoriteItineraryCheck cityScheduled={cityScheduled} />
 
       {/* 每日完整行程卡（意大利站逻辑：一天一卡，信息全在卡里） */}
-      <h2 className="text-xl font-bold mb-4">{plan.totalDays} 天详细行程</h2>
+      <h2 className="text-xl font-bold mb-4">
+        {koreaOnly ? `韩国 ${days.length} 天详细行程` : `东南亚 ${days.length} 天详细行程`}
+      </h2>
+      {days.length === 0 && (
+        <p className="text-sm text-gray-500 mb-8">
+          {koreaOnly
+            ? "韩国行程的天数还没排进来，先去「行程规划」把首尔段日期定下来。"
+            : "东南亚行程的天数还没排进来，先去「行程规划」确认日期。"}
+        </p>
+      )}
       <div className="space-y-8 mb-12">
         {days.map((d, i) => (
           <ItineraryDayCard
