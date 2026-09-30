@@ -6865,9 +6865,9 @@ export const initialResearchStatus = {
      "note": "【景点】朝鲜王朝正宫，韩服体验+守门将换岗仪式（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "partial",
+       "status": "done",
        "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
-       "note": "景福宫：4.6/5(5286则),首尔特别市钟路区社稷路161,地铁3号线景福宫站5号出口,评价原话3条(Shahin Alom - RU 5/5 等)；缺带日期的评价原话，待补"
+       "note": "2026-09-29补全：2条带日期中文评价(KarenCCY 2024-08-30 5/5 穿韩服免费入场/里面宫殿人少好拍；可乐的小黑猫 2025-04-09 5/5 历史文化氛围厚重)，评价页去追踪参数已收录"
       },
       "details": {
        "status": "pending"
@@ -6884,9 +6884,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第67轮3/3：玩梗瓜妹2026-05-21(1.8万赞,负向)/毒疽茉茉2026-06-05(2512赞,中性偏负)/阿王教授2026-08-07(450赞,中性)；口碑两极，'小'+1995年后复建是核心槽点，韩服体验+换岗仪式是正向价值"
       }
      },
      "type": "景点"
@@ -6896,9 +6898,9 @@ export const initialResearchStatus = {
      "note": "【景点】韩屋群落+首尔塔同框机位，带娃推车注意坡道（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "partial",
+       "status": "done",
        "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
-       "note": "北村韩屋村：4.7/5,热度7.2,5412条,钟路区桂洞街37,安国站4号出口,评价原话3条；缺带日期的评价原话，待补"
+       "note": "2026-09-29补全：2条带日期中文评价(Bekie 2024-12-30 5/5 韩屋群+博物馆工艺品店/周末人多；乐享旅行推荐官 2025-04-30 5/5 近青瓦台景福宫/韩服打卡/景区不大0.6km巷子)，已排除App评价与英文评价冒充"
       },
       "details": {
        "status": "pending"
@@ -6915,9 +6917,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第67轮3/3全正向：骏飞同学2025-07-29(2078赞,14机位合集)/麻辣🐰头2026-06-29(621赞,经典机位Noseuteljieo Hillojae)/ff：）2026-03-22(1947赞,北村六景Photo Spot #6)；机位图3处已登记、图未到"
       }
      },
      "type": "景点"
@@ -6927,9 +6931,9 @@ export const initialResearchStatus = {
      "note": "【景点】传统工艺+茶馆街，适合买手信（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "partial",
+       "status": "done",
        "evidence": "research-evidence/seoul-chinese-sites-2026-09-29.md",
-       "note": "仁寺洞：4.7/5(1321条),Jongno District Seoul,建议1-3小时,电话+82-2-7340222；缺带日期的评价原话，待补"
+       "note": "2026-09-29补全：2条带日期中文评价(学校 2025-08-02 5/5 百年茶屋五味子茶/避开周一工坊闭店；旅行侠 2024-11-26 5/5 手工艺品发饰/食物偏甜冬天寒冷)，评价页去追踪参数已收录"
       },
       "details": {
        "status": "pending"
@@ -6946,9 +6950,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第67轮2/3专帖低互动(红红2026-06-24 12赞/来来韩国2026-07-22 13赞,均0评论)+1/3首尔泛锐评(荣学长2026-05-28 2301赞,非专帖)；专帖池弱，待补高互动专帖后转done"
       }
      },
      "type": "景点"
@@ -6975,9 +6981,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第68轮3/3：喜C维拉2026-07-30(1731赞,景福宫-青瓦台-三清洞-北村半天串联)/日立方2025-11-28(416赞,买手店一条街)/별이&달이2026-09-21(13赞,Object文创店)",
+       "evidence": "xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7004,9 +7012,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第68轮3/3：浪花爱好者2026-08-23(652赞,韩屋巷弄慢逛)/Rania 2026-05-20(54赞,白天比夜晚更出片)/心心心2026-06-18(26赞,夜晚韩屋咖啡馆)；诚实备注：专帖池子弱，无千赞级",
+       "evidence": "xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7033,9 +7043,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第68轮3/3：只只2026-06-14(5974赞,明洞一天高效路线+Sindonggung脊骨土豆汤)/小小静2026-04-17(5740赞,三万步保姆级攻略)/Kaiis奎亿2026-03-09(1680赞,2026新店更新)",
+       "evidence": "xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7687,20 +7699,20 @@ export const initialResearchStatus = {
    "photos": 28,
    "details": 28
   },
-  "xhs_done": 93,
+  "xhs_done": 98,
   "all_done": 88,
   "seoul": {
    "total": 24,
    "ta": 0,
    "gm": 0,
-   "cs": 0,
-   "xhs_done": 0,
+   "cs": 3,
+   "xhs_done": 5,
    "ph": 0,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
-   "chinese_sites": 0,
+   "chinese_sites": 3,
    "photos": 0,
    "details": 0
   }
@@ -7714,5 +7726,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-29T22:48Z"
+ "updated_at": "2026-09-30T04:50Z"
 };
