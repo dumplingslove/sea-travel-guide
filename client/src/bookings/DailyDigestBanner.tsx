@@ -3,7 +3,7 @@
  *
  * 把三个每日自动任务的最新结果汇总成四行，一眼看清，不用逐项翻：
  * - 🏨 酒店：client/src/guide/hotelLivePrices.ts（hotel-price-watch 每日更新）
- * - ✈️ 航班：FLIGHT_LEGS（flight-refresh-daily 每日更新）
+ * - ✈️ 航班：FLIGHT_LEGS（flight-refresh-daily 每日更新；stale 旧方案段不计入最低价/直飞段数）
  * - 🍽️ 餐厅 / 🎡 景点：Supabase public.sea_availability（availability-watch 每日更新）
  *
  * 横幅直接读各任务写回的数据源：任务更新了网站，横幅显示自动就是新的，
@@ -63,22 +63,25 @@ export default function DailyDigestBanner({
   }, [list.join("|")]);
 
   const flightLine = useMemo(() => {
+    // 2026-09-30 site-improve 口径②：stale 旧方案段不计入最低价/直飞段数/更新时间
     const legs = FLIGHT_LEGS;
+    const staleCount = legs.filter((l) => l.stale).length;
+    const active = legs.filter((l) => !l.stale);
     if (!legs.length) return "暂无航班数据";
     const minPrice = (kind: "intl" | "intercity") => {
-      const ps = legs
+      const ps = active
         .filter((l) => l.kind === kind)
         .flatMap((l) => l.options ?? [])
         .map((o) => o.price)
         .filter((p) => Number.isFinite(p));
       return ps.length ? Math.min(...ps) : null;
     };
-    const directLegs = legs.filter((l) =>
+    const directLegs = active.filter((l) =>
       (l.options ?? []).some((o) => (o.stops ?? 0) === 0)
     ).length;
     const minIntl = minPrice("intl");
     const minInter = minPrice("intercity");
-    const latest = legs
+    const latest = active
       .map((l) => l.queriedAt)
       .filter(Boolean)
       .sort()
@@ -89,6 +92,7 @@ export default function DailyDigestBanner({
       minIntl != null ? `国际段 $${minIntl}/人起` : null,
       minInter != null ? `城际段 $${minInter}/2人起` : null,
       `更新于 ${shortT(latest as string) ?? "—"}`,
+      staleCount > 0 ? `（旧方案${staleCount}段已停更，未计入）` : null,
     ].filter(Boolean);
     return parts.join(" · ");
   }, []);

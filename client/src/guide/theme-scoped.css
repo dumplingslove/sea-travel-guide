@@ -428,6 +428,7 @@
 .guide-scope .fo-fare{font-size:11px;color:var(--dim);white-space:nowrap}
 .guide-scope .fo-rec{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:var(--accent);border-radius:3px;padding:2px 6px;white-space:nowrap}
 .guide-scope .flightgrid .forecwhy{font-size:12px;line-height:1.65;color:#17634d;background:#eef7f5;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
+.guide-scope .flightgrid .stalewhy{font-size:12px;line-height:1.65;color:#9f1239;background:#fff1f2;border:1px solid #fecdd3;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
 /* 航班页改版：状态徽章 + 舱位 tab + 时间轴 */
 .guide-scope .flightstatus{font-size:13px;font-weight:800;padding:9px 12px;border-radius:6px;margin:12px 0 0;line-height:1.6}
 .guide-scope .flightstatus.ok{background:#e7f4ec;color:#17634d}

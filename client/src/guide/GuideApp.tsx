@@ -338,7 +338,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   <p className="flightreput"><b>航司靠谱程度</b><span>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</span></p>
-  <p className="flightsrc">价格口径：{leg.priceBasis??'2成人总价'}（USD 整单） · Google Flights {leg.queriedAt?`实查于 ${leg.queriedAt}`:'待查询'}，非实时价，出票前重查</p>
+  <p className="flightsrc">价格口径：{leg.priceBasis??'2成人总价'}（USD 整单） · Google Flights {leg.queriedAt?`实查于 ${leg.queriedAt}`:'待查询'}{leg.stale?' · ⚠️旧方案已停更，不再刷新':', 非实时价，出票前重查'}</p>
  </div>;
 }
 
@@ -349,7 +349,9 @@ export function Flights({onBook}:{onBook?:OnBook}){
   * 与「预订行动」时间线、页顶每日动态横幅同一来源。
   * 旧逻辑按行程规划的城市对推导航段，硬编码了旧 13 天行程的 6 段结构
   * （西安→新加坡出境 + 城市对城际 + 清迈→北京/西安回程、日期写死 last.end），
-  * 丢了北京→新加坡与新加坡→西安（TR0134）两段家庭分流航段——这就是横幅写 8 段、列表只显示 6 段的原因。 */
+  * 丢了北京→新加坡与新加坡→西安（TR0134）两段家庭分流航段——这就是横幅写 8 段、列表只显示 6 段的原因。
+  * 2026-09-29 用户裁决：回程改为北京→首尔（停留2天）→西雅图；回程 9 段（PEK/PVG/CKG-SEA
+  * 三城三天旧候选）标记 stale，不再刷新、诚实标注，不计入"已实查"与最低价统计。 */
  const legs:{id:string;title:string;kind:string;desc:string;date:string;day:number;leg:FlightLegInfo}[]=useMemo(
    ()=>FLIGHT_LEGS.map(f=>({id:f.id,title:f.route,kind:f.kind==='intl'?'国际航班':'城际直飞',desc:f.note,date:f.date,day:f.day,leg:f})),
    []
@@ -362,8 +364,10 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const countryLabel=countries.join('、');
  const legPager=usePaged(legs,5,'个航段');
  const sourceLine='航段与直飞选项由 Google Flights 每日实查维护（非实时价，出票前重查退改）；实时价格与推荐见「预订行动」时间线';
- const checkedCount=legs.filter(l=>{const f=l.leg;return (f.options&&f.options.length)||f.queriedAt;}).length;
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{legs.length} 段（Google Flights 持续更新中）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>待预订</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p><FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
+ const staleCount=legs.filter(l=>l.leg.stale).length;
+ const activeCount=legs.length-staleCount;
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：自 2026-09-29 起回程改为北京→首尔（停留2天）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 

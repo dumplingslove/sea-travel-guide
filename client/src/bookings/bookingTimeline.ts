@@ -24,6 +24,10 @@ export interface FlightLegInfo {
   note: string;
   /** 航班库航段代码（如 "PEK-SIN"）；有则 applyFlightDb() 用库数据覆盖 options */
   dbSeg?: string;
+  /** 旧方案停更标记（2026-09-29 用户裁决：回程改为北京→首尔（停留2天）→西雅图，
+   *  PEK/PVG/CKG-SEA 三段数据保留但不再刷新；完整改写（首尔链条目）等用户点头。
+   *  标记后渲染层显示诚实提示，价格横幅不再计入其最低价。 */
+  stale?: boolean;
   /** 写进 note 的固定上下文（不受库刷新影响的部分） */
   ctx?: string;
   /** ok=有直飞 / none=实查确认无直飞 / pending=待查询；由 applyFlightDb() 维护 */
@@ -319,6 +323,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pek-sea-1231",
+    stale: true,
     dbSeg: "PEK-SEA",
     ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
@@ -341,6 +346,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pek-sea-0101",
+    stale: true,
     dbSeg: "PEK-SEA",
     ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
@@ -363,6 +369,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pek-sea-0102",
+    stale: true,
     dbSeg: "PEK-SEA",
     ctx: "回程国际段候选（北京出发，2大1小）；国内集结：你已在北京，其他家人前往集合城市的路线待定",
     route: "北京 → 西雅图",
@@ -386,6 +393,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pvg-sea-1231",
+    stale: true,
     dbSeg: "PVG-SEA",
     ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
@@ -409,6 +417,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pvg-sea-0101",
+    stale: true,
     dbSeg: "PVG-SEA",
     ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
@@ -432,6 +441,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "pvg-sea-0102",
+    stale: true,
     dbSeg: "PVG-SEA",
     ctx: "回程国际段候选（上海出发，2大1小）；国内集结：北京→上海（你一人），其他家人前往集合城市的路线待定",
     route: "上海 → 西雅图",
@@ -455,6 +465,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "ckg-sea-1231",
+    stale: true,
     dbSeg: "CKG-SEA",
     ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",
@@ -478,6 +489,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "ckg-sea-0101",
+    stale: true,
     dbSeg: "CKG-SEA",
     ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",
@@ -500,6 +512,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   },
   {
     id: "ckg-sea-0102",
+    stale: true,
     dbSeg: "CKG-SEA",
     ctx: "回程国际段候选（重庆出发，2大1小）；国内集结：北京→重庆（你一人），其他家人前往集合城市的路线待定",
     route: "重庆 → 西雅图",

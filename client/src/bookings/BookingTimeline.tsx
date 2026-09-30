@@ -369,7 +369,18 @@ export default function BookingTimeline({
               ✈️ 直飞
             </span>
           ) : null;
-          const headline = f.flightState === "none" ? (
+          const staleBadge = f.stale ? (
+            <span
+              title="自 2026-09-29 起回程方案改为北京→首尔（停留2天）→西雅图；本候选为旧方案，价格不再刷新，仅供参考"
+              className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-600 text-white align-middle"
+            >
+              ⚠️ 旧方案 · 已停更
+            </span>
+          ) : null;
+          const headline = (
+            <>
+              {staleBadge}
+              {f.flightState === "none" ? (
             <span className="text-gray-500">
               暂无直飞{f.queriedAt ? `（${f.queriedAt}实查）` : ""}
             </span>
@@ -393,6 +404,8 @@ export default function BookingTimeline({
             </span>
           ) : (
             <span className="text-gray-400">价格核验中…</span>
+          )}
+            </>
           );
           return (
             <Row
@@ -401,7 +414,11 @@ export default function BookingTimeline({
               name={f.route}
               meta={`${f.dateLabel} · D${f.day}转场`}
               headline={headline}
-              sub={f.note}
+              sub={
+                f.stale
+                  ? `${f.note}（旧方案已停更：自 2026-09-29 起回程改为北京→首尔停留2天，本候选价格不再刷新，仅供参考）`
+                  : f.note
+              }
               expandLabel={
                 f.options && f.options.length > 0
                   ? directCount === f.options.length
@@ -481,7 +498,9 @@ export default function BookingTimeline({
                     })}
                     <div className="text-[11px] text-gray-400 pt-0.5">
                       Google Flights 实查{f.queriedAt ? ` ${f.queriedAt}` : ""}
-                      ；价格动态，出票前重查退改
+                      {f.stale
+                        ? "；本候选为旧方案已停更，价格不再刷新，仅供参考"
+                        : "；价格动态，出票前重查退改"}
                     </div>
                     {f.businessOptions && f.businessOptions.length > 0 && (
                       <div className="pt-2">
