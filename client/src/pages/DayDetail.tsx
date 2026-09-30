@@ -3,15 +3,11 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-r
 import { days as detailDays, attractions, restaurants } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
-import { matchItem } from "@/components/ItineraryDayCard";
+import { matchItem, detailForPlanDay } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { cloudStopsForTimeline } from "@/data/stopCoords";
-import {
-  usePlanItinerary,
-  detailDayForPlanDay,
-  type PlanDay,
-} from "@/guide/plannerSchedule";
+import { usePlanItinerary, type PlanDay } from "@/guide/plannerSchedule";
 
 type Day = PlanDay;
 
@@ -22,17 +18,33 @@ export default function DayDetail() {
   const days: Day[] = plan.days;
   const day = days.find((d) => d.day === dayNum);
   const year = plan.dateRangeLong.slice(0, 4);
-  // 攻略正文：云端规划改了城市顺序时，按“该城市在规划中的第 N 天”映射原版攻略
-  const { detail, shifted, ordinalInCity } = detailDayForPlanDay(
-    plan.source === "cloud" ? plan.days : null,
-    dayNum,
-    detailDays
-  );
+  const isCloud = plan.source === "cloud";
+  // 攻略正文：与主页（Home.tsx）/ ItineraryDayCard 用同一套 detailForPlanDay 映射
+  // （首日=抵达、末日=离境、中间=弹性池轮转），否则 /day/N 与主页内容对不上。
+  // 2026-09-30 实测 bug：旧的 detailDayForPlanDay 用 ordinal 回退（?? sameCityDetail[0]），
+  // 云端 D3/D4/D5（新加坡 5 天、静态只有 3 天内容）在 /day/N 显示错天内容——
+  // D4 显示抵达日《飞新加坡 · 滨海湾》且"富国岛飞新加坡"幽灵站点未被 case1 改名（转场标签也被污染），
+  // D3 显示离境日《返程》内容、D5 的 case5 改名全部落空，与主页的弹性日/离境日完全不一致。
+  const cityDayList = day ? days.filter((d) => d.city_zh === day.city_zh) : [];
+  const idxInCity = day
+    ? cityDayList.findIndex((d) => d.day === dayNum)
+    : -1;
+  const detail =
+    day && idxInCity >= 0
+      ? detailForPlanDay(day, idxInCity, cityDayList.length)
+      : undefined;
   const prevDay = days.find((d) => d.day === dayNum - 1) || null;
   // 主页（Home.tsx）对云端天叠加了 cloudDayOverrides 修正；/day/N 必须用同一套，
   // 否则单独页面与主页内容对不上（2026-09-26 验收：/day/10 还在显示恰图恰）。
-  const isCloud = plan.source === "cloud";
   const guided = isCloud ? applyCloudDayOverride(dayNum, detail) : detail;
+  // 横幅口径：云端天的内容若来自非本天号的原版/弹性日，如实说明来源
+  const shifted = isCloud && !!guided && guided.day !== dayNum;
+  const ordinalInCity =
+    guided && guided.day !== 0
+      ? detailDays
+          .filter((d) => d.city === guided.city)
+          .findIndex((d) => d.day === guided.day) + 1
+      : 0;
   // 转场航段名称：取当天行程里带“飞”字的站点（如“普吉飞槟城”）
   const transferLabel = guided?.stops.find((s) => s.name.includes("飞"))?.name;
   // 云端天地图站点：与 ItineraryDayCard 同一算法，保证两处地图一致
@@ -81,7 +93,16 @@ export default function DayDetail() {
         </p>
         {shifted && guided && (
           <p className="text-xs text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 mt-3">
-            ☁️ 本日城市已按你的云端规划调整为{day.city_zh}；以下攻略取自{day.city_zh}第 {ordinalInCity} 天的原版安排。
+            {guided.day === 0 ? (
+              <>
+                ☁️ 本日为云端规划的弹性日（{guided.title}）：原版行程无对应天数，内容按研究结论补充。
+              </>
+            ) : (
+              <>
+                ☁️ 本日城市已按你的云端规划调整为{day.city_zh}；以下攻略取自
+                {day.city_zh}第 {ordinalInCity} 天的原版安排。
+              </>
+            )}
           </p>
         )}
       </div>
