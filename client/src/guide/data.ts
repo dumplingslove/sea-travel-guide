@@ -80,10 +80,11 @@ export const hotelCityChecks:HotelCityCheck[]=[
    详细评价/推荐理由/避雷点待研究完成后更新，此处不编造口碑。 */
 const SEOUL_PENDING='🔍 研究进行中（2026-09-29 加入行程）：小红书 / OTA / 地图口碑正在收集中，详细评价、推荐理由与避雷点待研究完成后更新。';
 const SP=(name:string,meta:string):Item=>({name,city:'首尔',meta,detail:SEOUL_PENDING,best:'研究完成后更新游玩建议。',source:checked});
+const SA=(name:string,meta:string,detail:string,best:string):Item=>({name,city:'首尔',meta,detail,best,source:checked});
 const SEOUL_ATTRACTIONS:Item[]=[
-SP('景福宫 Gyeongbokgung','钟路区 · 朝鲜王朝正宫'),
-SP('北村韩屋村 Bukchon','钟路区 · 韩屋群落'),
-SP('仁寺洞 Insadong','钟路区 · 传统工艺街'),
+SA('景福宫 Gyeongbokgung','钟路区 · 朝鲜王朝正宫','中国游客口碑两极、吐槽声量大——小红书第67轮3篇专帖深读（2026-09-30，正文+评论区实读，证据 hidden_files/xhs-coverage-seoul.md）：核心槽点是"小"——黄土地面一走路冒烟、1995年后钢筋水泥复建（"比横店建成还晚"）、"撑死郡王规格"；1.8万赞帖直接劝"看过故宫就没必要去"。正向价值在韩服体验（穿韩服免费入场是多方共识，夏天裙撑里反而凉快）与守门将换岗仪式。中文站 Trip.com 4.6/5（5286则）。建议：放低"大皇宫"预期，当韩服外拍基地+历史课堂玩；带娃可看换岗仪式。','韩服体验优先；预期管理：别拿故宫标准衡量，吐槽派占上风如实告知。'),
+SA('北村韩屋村 Bukchon','钟路区 · 韩屋群落','出片圣地共识强——小红书第67轮3篇全正向深读（2026-09-30，证据 hidden_files/xhs-coverage-seoul.md）：经典机位 Noseuteljieo Hillojae（naver map直接导航）、北村六景 Photo Spot #6 북촌6경（登高俯瞰韩屋顶）、14机位合集帖。交通安国站2号口出北行800米（搜Gyedong-gil），免门票、10:00-17:00；1-2小时可速通；中午12点半是小高峰，拍照要排队等位；有原住民居住，门口勿大声喧哗；可与景福宫、青瓦台串半天。中文站 4.7/5。机位图已登记、图未到（搜索后端空白页阻塞下载）。','上午早去或临近17:00人少；带娃注意全程上坡、推车吃力。'),
+SA('仁寺洞 Insadong','钟路区 · 传统工艺街','小红书第67轮诚实记录（2026-09-30，证据 hidden_files/xhs-coverage-seoul.md）：专帖池弱——2篇专帖均为低互动（红红2026-06-24 12赞、来来 韩国2026-07-22 13赞，均0评论），另1篇为首尔泛锐评（荣学长2301赞，非仁寺洞专帖，不冒充）。专帖共识：复古街巷+字画店出片、韩屋茶馆（大枣茶/五味子茶/双花茶）、京仁美术馆/木仁博物馆/美丽的茶博物馆、森吉街可串；周末有街头表演。中文站 4.7/5（1321条）。口碑不夸大：暂无高互动专帖背书，本项小红书记 partial，待补。','茶馆体验+手信采购；与北村/三清洞同属钟路区可串线。'),
 SP('三清洞 Samcheong-dong','钟路区 · 韩屋咖啡馆街'),
 SP('益善洞 Ikseon-dong','钟路区 · 老韩屋文艺街区'),
 SP('明洞 Myeongdong','中区 · 购物与街头小吃'),
