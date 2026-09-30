@@ -252,7 +252,17 @@ interface CityMeta {
 }
 
 const CITY_META: CityMeta[] = citiesJson as CityMeta[];
-const META_BY_ZH = new Map(CITY_META.map((c) => [c.zh, c]));
+/**
+ * 首尔的行程元信息：cities.json 只有 8 城（静态 20 天回退保持 8 城不变）。
+ * 但 KOREA_CITY_ZH 明确预期"首尔"会出现在云端规划的 schedule 里；若 META_BY_ZH
+ * 缺了它，planToItinerary 会对整份云端规划返回 null，全站静默回退到过时的
+ * 静态 20 天行程（比报错更糟——看起来一切正常但数据是旧的）。
+ */
+const SEOUL_META: CityMeta = { id: "seoul", zh: "首尔", en: "Seoul", country_zh: "韩国" };
+const META_BY_ZH = new Map<string, CityMeta>([
+  ...CITY_META.map((c) => [c.zh, c] as [string, CityMeta]),
+  ["首尔", SEOUL_META],
+]);
 
 /**
  * 韩国行程包含的城市（中文名）。行程页按此拆成"东南亚行程"/"韩国行程"两个页面；
