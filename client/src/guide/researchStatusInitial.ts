@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-09-30T16:48Z
+// updated_at: 2026-09-30T22:47Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7169,9 +7169,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第70轮 3/3 高流量专帖（3576/2376/1943赞），证据见 xhs-coverage-seoul.md 条目J",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7198,9 +7200,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第71轮 3/3（1541/478/179赞，樱花+渡口专帖+烟花避雷帖），证据见 xhs-coverage-seoul.md 条目K；机位2条已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7227,9 +7231,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第71轮 3/3（1605/144/246赞，中立+避雷+推荐各1），证据见 xhs-coverage-seoul.md 条目L；帖3明确\"不好拍照\"，无机位可登记",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7720,18 +7726,18 @@ export const initialResearchStatus = {
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 5,
+   "xhs_done": 8,
    "ph": 0,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
    "chinese_sites": 3,
-   "xiaohongshu": 5,
+   "xiaohongshu": 8,
    "photos": 0,
    "details": 0
   },
-  "xhs_done": 98,
+  "xhs_done": 101,
   "all_done": 88
  },
  "targets": {
@@ -7743,5 +7749,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-30T16:48Z"
+ "updated_at": "2026-09-30T22:47Z"
 };
