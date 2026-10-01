@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-01T22:48Z
+// updated_at: 2026-10-01T23:41Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7535,9 +7535,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第74轮3/3：Junshare全球顶奢私藏2026-08-06(1赞)/乌啦啦个啦2026-03-28(11赞)/喵喵爱吃鱼鱼2026-07-14(3赞)；专帖池极弱、0实质评论；正向（旗舰双塔观景、行政楼新装修、6701巴士直达、Amex FHR两晚600刀）"
       }
      },
      "type": "酒店"
@@ -7564,9 +7566,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第74轮3/3：悟空国际旅行PLANET 2026-07-03(1赞)/LAUCL.2026-07-14(90赞,10实质评论)/Tetryl 2026-07-26(10赞)；正向（1914百年酒店、顶楼圜丘坛景观房看南山塔、白金升级、日常2000+/会员1600人民币）；避雷：房间年代感、酒廊晚餐无主食"
       }
      },
      "type": "酒店"
@@ -7593,9 +7597,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 3,
+       "target": 3,
+       "evidence": "xhs-coverage-seoul.md",
+       "note": "第74轮3/3：酒神G 2025-12-01(1429赞,14实质评论)/Nono 2025-11-08(50赞)/jj瑛2026-09-07(14赞)；正向（老钱美学房间如艺术展、家外之家服务、app管家、美食好评）；避雷：check-in高峰排队"
       }
      },
      "type": "酒店"
@@ -7761,5 +7767,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-01T22:48Z"
+ "updated_at": "2026-10-01T23:41Z"
 };
