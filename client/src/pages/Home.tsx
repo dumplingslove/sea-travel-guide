@@ -215,9 +215,14 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
       <FavoriteItineraryCheck cityScheduled={cityScheduled} />
 
       {/* 每日完整行程卡（意大利站逻辑：一天一卡，信息全在卡里） */}
-      <h2 className="text-xl font-bold mb-4">
-        {koreaOnly ? `韩国 ${days.length} 天详细行程` : `东南亚 ${days.length} 天详细行程`}
-      </h2>
+      {/* 空状态（days.length===0）时不渲染"X 0 天详细行程"标题，
+          避免 /korea 首尔日期未定时出现"韩国 0 天详细行程"这种别扭文案，
+          只保留下面的诚实空状态说明 */}
+      {days.length > 0 && (
+        <h2 className="text-xl font-bold mb-4">
+          {koreaOnly ? `韩国 ${days.length} 天详细行程` : `东南亚 ${days.length} 天详细行程`}
+        </h2>
+      )}
       {days.length === 0 && (
         <p className="text-sm text-gray-500 mb-8">
           {koreaOnly
