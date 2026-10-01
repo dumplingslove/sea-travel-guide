@@ -119,13 +119,17 @@ const cityImages:Record<string,string>={'曼谷':bangkokImg,'清迈':chiangmaiIm
 const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','2天','12/15–16'],['普吉','3天','12/17–19'],['槟城','2天','12/20–21'],['吉隆坡','2天','12/22–23'],['胡志明市','2天','12/24–25'],['富国岛','3天','12/26–28'],['新加坡','3天','12/29–31']];
 /** 预订入口回调：各 tab 的卡片/详情弹窗点“预订”时打开 BookingDialog */
 type OnBook=(p:BookingPreset)=>void;
-/** 当前行程（13天4城）各城入住/退房日期：预订弹窗预填优先用这张表 */
+/** 当前行程（13天4城）各城入住/退房日期：预订弹窗预填优先用这张表
+ * 与云端规划一致（2026-12-06～12-18：新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13，
+ * 曼谷 12/19 退房；planner 口径 tripFlightDay.couple="next" 次日飞） */
 const currentStayRanges:Record<string,[string,string]>={
- '新加坡':['2026-12-12','2026-12-17'],
- '普吉':['2026-12-17','2026-12-20'],
- '曼谷':['2026-12-20','2026-12-23'],
- '清迈':['2026-12-23','2026-12-25'],
+ '新加坡':['2026-12-06','2026-12-11'],
+ '普吉':['2026-12-11','2026-12-14'],
+ '清迈':['2026-12-14','2026-12-16'],
+ '曼谷':['2026-12-16','2026-12-19'],
 };
+/** 行程城市住宿日期短标签（云端现行程优先，旧20天 route 表仅作非行程城市回退） */
+const currentStayLabel=(city:string)=>{const r=currentStayRanges[city];if(!r)return undefined;const f=(s:string)=>s.slice(5).replace('-','/');return `${f(r[0])}–${f(r[1])}`;};
 /** 按城市推算建议入住/退房日期，预填进酒店预订表单 */
 function cityStayRange(city:string):{date?:string;dateEnd?:string}{
  const cur=currentStayRanges[city];
@@ -137,8 +141,6 @@ function cityStayRange(city:string):{date?:string;dateEnd?:string}{
  const mo=p(m[1]);
  return {date:`2026-${mo}-${p(m[2])}`,dateEnd:`2026-${mo}-${p(Number(m[3])+1)}`};
 }
-/** 9 个航段对应的建议出发日期与行程天数 */
-const legDateDay:[string,number][]=[['',1],['2026-12-17',6],['2026-12-20',9],['2026-12-23',12],['',13]];
 const mapLink=(name:string,city:string)=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${city}`)}`;
 
 const navPaths:Record<Tab,React.ReactNode>={
@@ -289,7 +291,7 @@ export function HotelCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnB
  const list=useMemo(()=>scopeCities&&scopeCities.length?scopeCities:cities,[scopeCities]);
  const [city,setCity]=useState(list[0]!);
  useEffect(()=>{ if(!list.includes(city)) setCity(list[0]!); },[list,city]);
- const [expandedKey,setExpandedKey]=useState<string|null>(null);const [listExpanded,setListExpanded]=useState(false);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=stayDates?.[city] ?? route.find(x=>x[0]===city)?.[2];
+ const [expandedKey,setExpandedKey]=useState<string|null>(null);const [listExpanded,setListExpanded]=useState(false);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=stayDates?.[city] ?? currentStayLabel(city) ?? route.find(x=>x[0]===city)?.[2];
  const toggle=(it:Item)=>setCompare(x=>x.some(y=>y.name===it.name)?x.filter(y=>y.name!==it.name):x.length<3?[...x,it]:x);
  const visibleHotels=listExpanded?shown:shown.slice(0,4);const listToggle=shown.length>4?<div className="showmore"><button type="button" className="secondary" onClick={()=>setListExpanded(v=>!v)} aria-expanded={listExpanded}>{listExpanded?'收起':'展开全部'} · {visibleHotels.length}/{shown.length} 家酒店</button></div>:null;const pickCity=(c:string)=>{setCity(c);setExpandedKey(null);setListExpanded(false)};const openHotelDetail=(it:Item)=>{const key=it.city+it.name;if(!visibleHotels.some(x=>x.city+x.name===key))setListExpanded(true);setExpandedKey(prev=>prev===key?null:key)};
  return <div className="page">{!bare&&<PageHero eyebrow="STAY COLLECTION" title="酒店推荐" summary={list.length!==cities.length?`按行程规划的${list.length}个城市比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`:`沿${cities.length}城路线比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`} image={singaporeImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>按城市浏览</h2><p>{hotels.length} 家候选 · 最多选择 3 家并排比较 · 🏆 标记为该城 Marriott / Hyatt 顶级选择</p></div><CityTabs city={city} setCity={pickCity} label="酒店城市筛选" list={list}/><div className="citycover"><img src={cityImages[city]} alt={`${city}城市实景`}/><div><span>建议住宿日期 {dates}</span><h3>{city}</h3><p>{shown.length} 家酒店候选</p></div></div>{compare.length>0&&<section className="comparepanel"><header><h3>酒店对比 <span>{compare.length}/3</span></h3><button onClick={()=>setCompare([])}>清空</button></header><div>{compare.map(x=><article key={x.name}><HotelBadges chain={chainFor(x)} tier={tierFor(x)} topPick={topPickGroupOf(x)}/><b>{x.name}</b><span>{x.meta}</span><p>{x.best}</p><button onClick={()=>openHotelDetail(x)}>查看详情</button></article>)}</div></section>}<div className="catalog rich">{visibleHotels.map((it,i)=>{const hkey=it.city+it.name;const hopen=expandedKey===hkey;return <Fragment key={hkey}><article className="itemcard"><ItemMedia item={it} kind="酒店" index={i}/><div><HotelBadges chain={chainFor(it)} tier={tierFor(it)} topPick={topPickGroupOf(it)}/><span className="citytag">{it.city} · 住宿</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么选</b><span>{it.best}</span></div><div className="decision"><b>💰 预订参考</b>{(()=>{const p=getLiveHotelPrice(it.name);if(p&&!p.unavailable&&p.base)return <span>${p.base.perNightUSD}/晚起 · {p.source}实查 {p.checkedAt}{isNonItineraryPriceCity(it.city)?'（参考房价）':`（${p.nights}晚行程）`}{p.dateMismatch&&<b title="行程日期有调整：此价格查询日期可能与你当前行程日期不一致，仅供参考"> ⚠️</b>}</span>;if(p&&p.unavailable)return <span title={p.unavailable}>⚠️ 该日期暂无可订房</span>;return <span>暂无实时价</span>})()}</div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>setExpandedKey(hopen?null:hkey)}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)}/>}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
