@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-01T20:30:44+00:00",
+ "updated_at": "2026-10-01T20:31:02+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -19723,7 +19723,7 @@
    "label": "北京→首尔（2大1小）",
    "days": {
     "2026-12-31": {
-     "economy_queried_at": "2026-10-01T20:30:44+00:00",
+     "economy_queried_at": "2026-10-01T20:31:02+00:00",
      "economy_usd": 444,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -19776,12 +19776,12 @@
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-10-01T20:30:44+00:00",
+     "business_queried_at": "2026-10-01T20:31:02+00:00",
      "business_usd": 1279,
      "business_price_basis": "2大1小总价"
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-10-01T20:30:44+00:00",
+     "economy_queried_at": "2026-10-01T20:31:02+00:00",
      "economy_usd": 444,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -19834,12 +19834,12 @@
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-10-01T20:30:44+00:00",
+     "business_queried_at": "2026-10-01T20:31:02+00:00",
      "business_usd": 1293,
      "business_price_basis": "2大1小总价"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-10-01T20:30:44+00:00",
+     "economy_queried_at": "2026-10-01T20:31:02+00:00",
      "economy_usd": 427,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -19892,7 +19892,7 @@
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-10-01T20:30:44+00:00",
+     "business_queried_at": "2026-10-01T20:31:02+00:00",
      "business_usd": 1310,
      "business_price_basis": "2大1小总价"
     },
@@ -28033,7 +28033,7 @@
    "label": "首尔→西雅图（2大1小）",
    "days": {
     "2027-01-02": {
-     "economy_queried_at": "2026-10-01T20:30:44+00:00",
+     "economy_queried_at": "2026-10-01T20:31:02+00:00",
      "economy_usd": 1543,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -28050,7 +28050,7 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-01T20:30:44+00:00",
+     "business_queried_at": "2026-10-01T20:31:02+00:00",
      "business_usd": 10572,
      "business_price_basis": "2大1小总价",
      "onestop_economy_queried_at": "2026-09-30T19:03:07+00:00",
@@ -28138,7 +28138,7 @@
      "onestop_business_note": "部分行程为混合舱位"
     },
     "2027-01-03": {
-     "economy_queried_at": "2026-10-01T20:30:44+00:00",
+     "economy_queried_at": "2026-10-01T20:31:02+00:00",
      "economy_usd": 1543,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
