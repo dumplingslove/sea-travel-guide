@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-09-30T22:47Z
+// updated_at: 2026-10-01T00:47:33Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7262,9 +7262,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第72轮重试 3/3（2184/186/118赞，饮品合集+夜生活搭讪体验+蓝调时刻机位），证据见 xhs-coverage-seoul.md 条目M；机位2条已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7291,9 +7293,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第72轮重试 3/3（470/467/34赞，出片指南神仙机位+COEX懒人包+打卡机位帖；第3篇34赞2实质评论已如实标注），证据见 xhs-coverage-seoul.md 条目N；机位3条已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7320,9 +7324,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第72轮重试 3/3（982/460/389赞，校服出片正向+避雷负向+逛吃正向，两极），证据见 xhs-coverage-seoul.md 条目O；机位2条已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "景点"
@@ -7749,5 +7755,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-09-30T22:47Z"
+ "updated_at": "2026-10-01T00:47:33Z"
 };

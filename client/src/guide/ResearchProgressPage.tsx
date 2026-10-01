@@ -89,7 +89,7 @@ function normalizeStatus(input:unknown):ResearchStatusData{
 }
 function itemSourceState(item:ResearchItem,key:SourceKey):RawState{
  const source=item.sources[key];
- if(key==='xiaohongshu')return (source.posts||0)>=(source.target||10)?'done':(source.posts||0)>0?'partial':safeState(source.status);
+ if(key==='xiaohongshu')return safeState(source.status);
  if(key==='photos')return (source.verified||0)>=(source.target||5)?'done':(source.verified||0)>0?'partial':safeState(source.status);
  return safeState(source.status);
 }
