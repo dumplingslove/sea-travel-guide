@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-01T10:31Z
+// updated_at: 2026-10-01T10:50Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7749,7 +7749,7 @@ export const initialResearchStatus = {
    "photos": 0,
    "details": 0
   },
-  "xhs_done": 104,
+  "xhs_done": 105,
   "all_done": 88
  },
  "targets": {
@@ -7761,5 +7761,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-01T10:31:43.237040+00:00"
+ "updated_at": "2026-10-01T10:50Z"
 };
