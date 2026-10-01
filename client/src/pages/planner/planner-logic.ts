@@ -782,7 +782,7 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   const dest=`${m.city} → 首尔（停留2天） → 西雅图`;
   const gather=`你${rc==="PEK"?"已在北京":"从北京出发"}；其他家人前往${m.city}的路线待定；首尔停留2天后一起飞西雅图`;
   /* 首尔→西雅图航班卡：从 Google Flights 航班库按起飞日读取；库里没该日期=待查询 */
-  const returnCards=tripFlightCard(`ICN-SEA|${flyDate}`,`首尔 → 西雅图${returnCity==="PEK"?" ✅ 经首尔":""}`);
+  const returnCards=tripFlightCard(`ICN-SEA|${flyDate}`,`首尔 → 西雅图`);
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
