@@ -338,8 +338,10 @@ export function ItineraryDayCard({
     ? cloudStopsForTimeline(stops)
     : undefined;
 
-  // 跨城航段匹配（静态 legs；云端路线匹配不上时走通用清单）
+  // 跨城航段匹配（静态 legs 只服务静态 20 天；云端一律走通用清单，
+  // 避免旧 8 城航段建议泄漏进云端转场卡——向导 7 城任意重排都可能撞上旧城市对）
   const matchedLeg = (() => {
+    if (isCloud) return null;
     if (!prevDay || prevDay.city_zh === day.city_zh) return null;
     for (const l of legs) {
       const m = l[0].match(/(.+?)\s*→\s*(.+)/);
