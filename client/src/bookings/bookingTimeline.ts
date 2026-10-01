@@ -286,7 +286,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     route: "曼谷 → 西安",
     date: "2026-12-17",
     dateLabel: "12-17",
-    day: 19,
+    day: 12,
     kind: "intl",
     note: "回程：用户夫妻一起回西安（2成人）；曼谷 12/17 离开；在西安待3-4天；Google Flights 实查 2026-09-29 12:21 PDT（2成人，当天唯一真直飞：春秋航空 9C6294，2人总价 $221；上一轮 12/19 查询 $256）",
     carrier: "Spring Airlines 9C6294",
