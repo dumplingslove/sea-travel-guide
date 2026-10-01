@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-01T04:48Z
+// updated_at: 2026-10-01T10:31Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7442,9 +7442,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "第73轮 2/3 partial（明洞网红雪浓汤推荐帖2025-04-23 10赞/韩国必吃18件套合集2025-12-25 9484赞；专帖池弱最高仅38赞，不死磕），证据见 xhs-coverage-seoul.md 条目P；菜品/环境图已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "餐厅"
@@ -7471,9 +7473,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "第73轮 3/3 done（明洞必吃2026-07-27/明洞王妃家打卡2025-10-15 69赞/明洞店韩牛2025-11-16，韩牛里脊+黄金肋排招牌、全程代烤、南瓜泥惊艳、可刷卡，傍晚6点多满座），证据见 xhs-coverage-seoul.md 条目Q；菜品实拍图已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "餐厅"
@@ -7500,9 +7504,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "posts": 0,
-       "target": 3
+       "status": "partial",
+       "posts": 2,
+       "target": 3,
+       "note": "第73轮 2/3 partial（梨泰院笔房2026-05-14 1赞/桥村vsBBQ 2026-03-08 4赞；专帖池极弱、搜索被\"校村\"主导，不死磕），证据见 xhs-coverage-seoul.md 条目R；炸鸡/环境图已登记、图未到",
+       "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
      "type": "餐厅"
@@ -7732,14 +7738,14 @@ export const initialResearchStatus = {
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 11,
+   "xhs_done": 12,
    "ph": 0,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
    "chinese_sites": 3,
-   "xiaohongshu": 11,
+   "xiaohongshu": 12,
    "photos": 0,
    "details": 0
   },
@@ -7755,5 +7761,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-01T04:48Z"
+ "updated_at": "2026-10-01T10:31:43.237040+00:00"
 };
