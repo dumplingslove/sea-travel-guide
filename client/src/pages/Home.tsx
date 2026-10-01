@@ -226,17 +226,24 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
         </p>
       )}
       <div className="space-y-8 mb-12">
-        {days.map((d, i) => (
-          <ItineraryDayCard
-            key={d.day}
-            day={d}
-            prevDay={i > 0 ? days[i - 1] : undefined}
-            detail={details[i]}
-            bookings={bookingsByDay.get(d.day) || []}
-            isCloud={isCloudPlan}
-            cityScheduledNames={cityScheduled.get(d.city_zh)}
-          />
-        ))}
+        {days.map((d, i) => {
+          // 跨 tab 转场不丢：prevDay 取全行程（allDays）中的真实前一天，
+          // 而不是 KOREA_CITY_ZH 过滤后的前一天。否则 /korea 里首尔首日的
+          // “北京飞首尔”转场卡会凭空消失（两个 tab 都看不到这段转场）。
+          const gi = allDays.findIndex((x) => x.day === d.day);
+          const prevDay = gi > 0 ? allDays[gi - 1] : undefined;
+          return (
+            <ItineraryDayCard
+              key={d.day}
+              day={d}
+              prevDay={prevDay}
+              detail={details[i]}
+              bookings={bookingsByDay.get(d.day) || []}
+              isCloud={isCloudPlan}
+              cityScheduledNames={cityScheduled.get(d.city_zh)}
+            />
+          );
+        })}
       </div>
     </>
   );
