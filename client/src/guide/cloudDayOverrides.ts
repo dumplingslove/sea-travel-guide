@@ -20,7 +20,7 @@ base: Day | undefined,
 if (!base) return base;
 switch (dayNum) {
 case 1: {
-// D1 12-12 周六 新加坡：国际直飞抵达（旧文案是富国岛飞新加坡，且误链动物园详情）
+// D1 12-06 周日 新加坡：国际直飞抵达（旧文案是富国岛飞新加坡，且误链动物园详情）
 return {
 ...base,
 title: "抵达新加坡 · 滨海湾",
@@ -37,7 +37,7 @@ detail:
 };
 }
 case 5: {
-// D5 12-16 周三 新加坡：转场前日（D6 一早飞普吉），不是"返程"当天离境
+// D5 12-10 周四 新加坡：转场前日（D6 一早飞普吉），不是"返程"当天离境
 const stops = base.stops.map((s) => {
 if (s.name === "回酒店收行李")
 return {
