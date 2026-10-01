@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-01T08:30:23+00:00",
+ "updated_at": "2026-10-01T12:33:55+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15323,8 +15323,8 @@
      ]
     },
     "2026-12-26": {
-     "economy_queried_at": "2026-09-30T12:03:23+00:00",
-     "economy_usd": 416,
+     "economy_queried_at": "2026-10-01T12:33:55+00:00",
+     "economy_usd": 414,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -15332,14 +15332,14 @@
       {
        "airline": "Spring Airlines",
        "flight": "9C6294",
-       "dep": "2:35 PM",
-       "arr": "7:30 PM",
+       "dep": "14:35",
+       "arr": "19:30",
        "duration": "3 hr 55 min",
-       "price_usd": 416
+       "price_usd": 414
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-30T12:03:23+00:00",
+     "business_queried_at": "2026-10-01T12:33:55+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
