@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T19:03:07+00:00",
+ "updated_at": "2026-10-01T06:51:57+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3011,8 +3011,8 @@
    "label": "新加坡→西安（2大1小，岳父母带Dylan回西安）",
    "days": {
     "2026-12-10": {
-     "economy_queried_at": "2026-09-30T06:02:33+00:00",
-     "economy_usd": 1154,
+     "economy_queried_at": "2026-10-01T06:51:57+00:00",
+     "economy_usd": 1129,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -3023,7 +3023,7 @@
        "dep": "7:15 PM",
        "arr": "12:45 AM +1",
        "duration": "5h 30m",
-       "price_usd": 1154
+       "price_usd": 1129
       }
      ],
      "nonstop_count": 1,
