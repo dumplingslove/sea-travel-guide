@@ -412,7 +412,7 @@ export default function BookingTimeline({
               key={f.id}
               kind="flight"
               name={f.route}
-              meta={`${f.dateLabel} · D${f.day}转场`}
+              meta={f.stale ? `${f.dateLabel} · 旧方案候选` : `${f.dateLabel} · D${f.day}转场`}
               headline={headline}
               sub={
                 f.stale
