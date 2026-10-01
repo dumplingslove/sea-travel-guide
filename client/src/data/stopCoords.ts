@@ -323,7 +323,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       note: "船游到访",
     },
   ],
-  // D9 曼谷《抵达 · 休整缓冲》
+  // D9（旧行程：曼谷抵达日口径，现行程 D11 为曼谷抵达日）《抵达 · 休整缓冲》——云端天按站点名全局命中，key/注释仅记来源
   909: [
     {
       name: "湄南河畔晚餐",
@@ -333,7 +333,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       note: "湄南河畔（图示 Asiatique 一带）",
     },
   ],
-  // D10 曼谷（cloudDayOverrides：周一，恰图恰→四面佛＋暹罗商圈）
+  // D10（旧行程：曼谷，现行程 D12 周四为四面佛＋暹罗商圈日）——云端天按站点名全局命中，key/注释仅记来源
   910: [
     {
       name: "四面佛＋暹罗商圈",
@@ -343,7 +343,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       note: "图示四面佛",
     },
   ],
-  // D12 清迈《飞清迈 · 兰纳古城》
+  // D12（旧行程：清迈抵达日口径，现行程 D9 为清迈抵达日）《飞清迈 · 兰纳古城》——云端天按站点名全局命中，key/注释仅记来源
   912: [
     { name: "帕辛寺", time: "13:30", lat: 18.7882068, lng: 98.9813773 },
     { name: "契迪龙寺", time: "15:00", lat: 18.787142, lng: 98.986784 },
