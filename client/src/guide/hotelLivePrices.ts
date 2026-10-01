@@ -211,11 +211,10 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-10-01 16:25 UTC',
  },
 'Four Seasons Bangkok': {
-  checkIn: '2026-12-14', checkOut: '2026-12-17', nights: 3,
-  base: { room: 'Deluxe Room - King', perNightUSD: 693, totalUSD: 2210, totalInclTax: true, cancel: 'Free cancellation before 3:00 PM, Dec 13', breakfast: 'Not included (optional $47.37)', note: '\'Our last 1!\'; instant confirmation; prepay online（同价另有 Deluxe Palm Court Room - King/Twin、Deluxe Room - Twin）' },
-  suite: null, suiteNote: 'Trip.com 未显示该日期的可订套房房型（展开后共8种房型，仅 Deluxe / Premier Riverview 标准房）',
-  source: 'Trip.com', checkedAt: '2026-09-29 13:46 UTC',
-  dateMismatch: true,
+  checkIn: '2026-12-16', checkOut: '2026-12-19', nights: 3,
+  base: { room: 'Deluxe Room - King', perNightUSD: 745, totalUSD: 2376, totalInclTax: true, cancel: 'Free Cancellation before 3:00 PM, Dec 15', breakfast: 'Not included (optional $47.21)', note: '\'Our last 1!\'' },
+  suite: null, suiteNote: '该日期无 Suite 命名房型（展开后共8种房型，仅 Deluxe / Palm Court / Riverview / Premier Riverview 标准房）',
+  source: 'Trip.com', checkedAt: '2026-10-01 16:25 UTC',
  },
  'The Siam': {
   checkIn: '2026-12-16', checkOut: '2026-12-19', nights: 3,
