@@ -35,10 +35,10 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "唐人街耀华力路": [
     { name:"耀华力路牌楼夜景", where:"牌楼（Chinatown Gate，又称 Odean Gate）立在耀华力路南端、靠近 Charoen Krung 路口处，是唐人街入口的标志性拱门。注意牌楼位于环岛中央，过马路小心车流。", how:"晚上牌楼亮灯后最有味道；日落前赶到还能拍到牌楼红金细节在暮色暖光里。工作日来人少、周末最挤。", sampleIndex:0, sampleCaption:"Odean牌楼白天视角（夜景灯牌楼待补）" },
-    { name:"T&K 海鲜大排档前", where:"T&K Seafood 是耀华力路上最出名的大排档之一，以新鲜海鲜闻名。日落后店前人声鼎沸，招牌、食客同框。", how:"日落后到夜里是整条街最热闹的时段。注意来往的突突车和车流，站在人行道上拍。", sampleIndex:7, sampleCaption:"T&K海鲜大排档：夜晚店前招牌与忙碌的店员食客" },
+    { name:"T&K 海鲜大排档前", where:"T&K Seafood 是耀华力路上最出名的大排档之一，以新鲜海鲜闻名。日落后店前人声鼎沸，招牌、食客同框。", how:"日落后到夜里是整条街最热闹的时段。注意来往的突突车和车流，站在人行道上拍。", sampleIndex:99, sampleCaption:"T&K海鲜大排档：夜晚店前招牌与忙碌的店员食客" },
     { name:"金行一条街", where:"耀华力路上金店密集，配上中泰文霓虹招牌，是唐人街最有辨识度的街景之一。", how:"蓝调时刻或入夜后拍最好；傍晚早些到，人没那么挤。", sampleIndex:1, sampleCaption:"耀华力路金行街：中泰文招牌、突突车与车流" },
     { name:"耀华力路霓虹街景", where:"整条耀华力路本身就是视觉盛宴：霓虹灯招牌、街头小吃摊、来往人群和突突车。入夜后整条街被霓虹点亮，是曼谷街头美食场景的精髓。", how:"晚上是拍霓虹和市井氛围的最佳时间；拍摊贩备餐、上菜的动作镜头最有烟火气。", sampleIndex:3, sampleCaption:"耀华力路夜景：中泰文霓虹招牌与街头车流" },
-    { name:"Wat Mangkon Kamalawat 龙莲寺", where:"曼谷最重要的中国寺庙之一，建筑精美、装饰色彩丰富，是唐人街受欢迎的拍照点。", how:"白天前往，拍寺庙精美的建筑和装饰细节。", sampleIndex:6, sampleCaption:"龙莲寺正殿：中式庙宇门楼与龙饰屋脊" },
+    { name:"Wat Mangkon Kamalawat 龙莲寺", where:"曼谷最重要的中国寺庙之一，建筑精美、装饰色彩丰富，是唐人街受欢迎的拍照点。", how:"白天前往，拍寺庙精美的建筑和装饰细节。", sampleIndex:99, sampleCaption:"龙莲寺正殿：中式庙宇门楼与龙饰屋脊" },
     { name:"霓虹招牌路口夜景（人像机位·小红书实拍）", where:"耀华力路霓虹招牌路口一带（大金行、中国城牌楼方向）。研究台账登记原帖#6霓虹招牌路口人像、#11泰式亭阁前人像（台账 bangkok/yaowarat-spots）；样片为同机位 image-search 实拍夜景（非原帖图），原帖图待补。", how:"入夜后霓虹全开，雨后路面有倒影更出片；原帖#6的人像站位见来源原帖。", sampleIndex:5, sampleCaption:"耀华力路霓虹招牌夜景（image-search实拍样片）" },
     { name:"老骑楼街角（人像机位·小红书实拍）", where:"耀华力路一带老骑楼街角。研究台账登记原帖#6骑楼饼铺前杂志人像、#12红门前杂志人像（台账 bangkok/yaowarat-magazine）；样片为同机位 image-search 实拍（图片带来源水印，非原帖图），原帖图待补。", how:"白天拍骑楼建筑线条；杂志风人像站位见来源原帖。", sampleIndex:6, sampleCaption:"耀华力路老骑楼街角（image-search实拍样片，带水印）" },
     { name:"耀华力路霓虹夜景（机位样片）", where:"耀华力路霓虹夜景。研究台账登记原帖#18图（台账 bangkok/yaowarat-neon）；样片为 Tripoto 实拍 image-search fallback（非原帖图）。", how:"入夜后整条街霓虹点亮，拍街景与车流；机位证据见来源原帖。", sampleIndex:7, sampleCaption:"耀华力路霓虹夜景（Tripoto实拍fallback样片）" },
