@@ -36,7 +36,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"楼梯雕花仰拍", where:"中庭旁的雕花木楼梯通向二层。", how:"站在楼梯下方仰拍，拍木雕细节。", sampleIndex:3, sampleCaption:"中庭看雕花木楼梯：楼梯通向二层，金饰栏杆与余仁生牌匾同框" },
   ],
   "卧佛寺与缅寺": [
-    { name:"卧佛殿内全身", where:"大殿内 33 米长的卧佛，是整座寺最值得拍的主体。", how:"殿内允许拍照但别用闪光灯；一早去避开人群，早晚光线也更柔和。", sampleIndex:99, sampleCaption:"卧佛殿内 33 米卧佛全身：金身卧姿、红花枕" },
+    { name:"卧佛殿内全身", where:"大殿内 33 米长的卧佛，是整座寺最值得拍的主体。", how:"殿内允许拍照但别用闪光灯；一早去避开人群，早晚光线也更柔和。", sampleIndex:6, sampleCaption:"卧佛殿内 33 米卧佛全身：金身卧姿、红花枕" },
     { name:"缅寺金色佛塔仰拍", where:"卧佛寺正对面的缅寺，四层金色佛塔钟楼；开放时间为 5:00–18:00。", how:"登上三层看乔治市全景；8 点前去避开旅行团；进殿要脱鞋。", sampleIndex:0, sampleCaption:"缅寺金色佛塔仰拍：缅式尖顶配蓝天" },
     { name:"大殿入口龙雕与守门像", where:"卧佛寺大殿入口处，两条龙与两尊泰式守门像分列两旁。", how:"以龙雕和守门像做前景，拍大殿正面。", sampleIndex:1, sampleCaption:"双龙雕塑做前景，大殿与金塔在背景" },
     { name:"泰式彩塑与屋顶机位（小红书实拍）", where:"槟城卧佛寺。研究台账（93赞攻略帖，话题#槟城摄影）实拍：金翅鸟/夜叉彩塑与泰式屋顶（台账 penang/wat-chaiyamangalaram）。", how:"仰拍彩塑与屋顶线条；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"金翅鸟/夜叉彩塑与泰式屋顶（小红书实拍样片）" },
