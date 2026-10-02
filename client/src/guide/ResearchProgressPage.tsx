@@ -31,7 +31,10 @@ function safeSource(value:unknown,base:SourceValue,key:SourceKey):SourceValue{
   next.posts=safeNumber(row.posts,base.posts||0);
   next.target=Math.max(1,safeNumber(row.target,base.target||10));
   next.storedStatus=safeState(row.status,base.storedStatus||base.status);
-  next.status=(next.posts||0)>=(next.target||10)?'done':(next.posts||0)>0?'partial':next.status;
+  // 单项展示状态以管线 storedStatus 为准（5d523d8 未竟：原 posts/target 派生会把
+  // done@target=10 显示成进行中、partial@posts=target 显示成已完成，与严格口径 105 矛盾）。
+  // posts/target 仍保留用于徽章计数 "N/M" 与顶部覆盖口径进度条。
+  next.status=next.storedStatus;
  }
  if(key==='photos'){
   next.verified=safeNumber(row.verified,base.verified||0);
