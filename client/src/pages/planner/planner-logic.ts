@@ -773,29 +773,20 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   const lastDay=ranges["seoul"].to, nextDay=addDays(lastDay,1);
   const choice=tripFlyChoice("return");
   const flyDate=choice==="last"?lastDay:nextDay;
-  const cityBtns=[`<button class="${returnCity===""?"primary":"ghost"}" data-returncity="">待定</button>`]
-    .concat((Object.keys(RETURN_CITY_META) as Exclude<ReturnCityCode,"">[])
-      .map(c=>`<button class="${returnCity===c?"primary":"ghost"}" data-returncity="${c}">${RETURN_CITY_META[c].airport}</button>`))
-    .join(" ");
-  const rc=(returnCity || "PEK") as Exclude<ReturnCityCode,"">;
-  const m=RETURN_CITY_META[rc];
-  const dest=`${m.city} → 首尔（停留2天） → 西雅图`;
-  const gather=`你${rc==="PEK"?"已在北京":"从北京出发"}；其他家人前往${m.city}的路线待定；首尔停留2天后一起飞西雅图`;
-  /* 首尔→西雅图航班卡：从 Google Flights 航班库按起飞日读取；库里没该日期=待查询 */
+  /* 2026-10-02 用户定：回程已定为北京→首尔→西雅图，卡片只讲首尔→西雅图；
+     北京→首尔段在上面的转场行里，不在这里重复；集结行和城市按钮已删 */
   const returnCards=tripFlightCard(`ICN-SEA|${flyDate}`,`首尔 → 西雅图`);
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
-      <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} ${dest}</span></div>
-      <div class="micro">🧑‍🤝‍🧑 集结：${gather}</div>
-      <div class="micro">出发城市：${cityBtns}</div>
+      <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} 首尔 → 西雅图</span></div>
       <div class="micro trip-flydays">起飞日：
         <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">首尔最后一天 ${dateLabel(lastDay)} 飞</button>
         <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
       </div>
-      <p class="micro">${m.city} → 首尔段的航班卡在上面的转场行里；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
+      <p class="micro">北京 → 首尔段的航班卡在上面的转场行里；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
       <div class="micro" style="margin-top:10px"><b>✈️ 首尔 → 西雅图</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
       <div class="trip-flightinfo">${returnCards}</div>
-      <p class="micro">航班库正在按新行程查 ${m.city}→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
+      <p class="micro">航班库正在按新行程查北京→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
     </div>
   </div>`;
 }
@@ -858,30 +849,11 @@ function renderTrip(){
       parts.push(`<div class="trip-seg-group">${segHtml}</div>`);
     }
   }
-  /* 国内集结段：回程城市定下来后单独的一步，排在北京独自停留之后、国际航班之前，不许并入北京那段。
-     只写你本人的路线（你从北京出发）；其他家人前往集合城市的具体路线不编造，统一写"路线待定"。 */
-  const gatherRow=(()=>{
-    if(!returnCity) return "";
-    const m=RETURN_CITY_META[returnCity];
-    const date=ranges["beijing3"].to;
-    /* 用户 2026-09-28：去上海坐高铁，删掉北京→上海（你一人）这张机票卡；只保留转场行文字 */
-    const legs=(returnCity==="PEK"||returnCity==="PVG")
-      ? []
-      : [{code:`PEK-${returnCity}`,label:`北京→${m.city}（你一人）`}];
-    const title=returnCity==="PEK" ? "国内集结（北京）" : `北京→${m.city}（国内集结）`;
-    const others=returnCity==="PEK" ? "你已在北京" : "";
-    const rail=returnCity==="PVG" ? "你坐高铁去上海，不需要机票；" : "";
-    const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
-    return `<div class="trip-flight"><span>✈️</span><strong>✈ ${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    <p class="micro">${others?others+"；":""}${rail}其他家人前往${m.city}的路线待定，需在国际航班起飞前到达。</p>
-    ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}`;
-  })();
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
     ${parts.join("\n    ")}
-    ${gatherRow}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）→首尔（2天）；回西雅图${returnCity?`从${RETURN_CITY_META[returnCity].airport}经首尔出发`:"（出发城市待定：北京 / 上海 / 重庆，经首尔）"}）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）→首尔（2天）→西雅图）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
@@ -899,11 +871,6 @@ function renderTrip(){
   body.querySelectorAll("[data-flyday]").forEach(b=>(b as HTMLElement).onclick=()=>{
     const [key,val]=((b as HTMLElement).dataset.flyday||"").split("|");
     tripFlightDay[key]=val==="next"?"next":"last";
-    renderTrip(); cachePlannerLocal();
-  });
-  body.querySelectorAll("[data-returncity]").forEach(b=>(b as HTMLElement).onclick=()=>{
-    const v=((b as HTMLElement).dataset.returncity||"") as ReturnCityCode;
-    returnCity=(v==="PEK"||v==="PVG"||v==="CKG")?v:"";
     renderTrip(); cachePlannerLocal();
   });
 }
