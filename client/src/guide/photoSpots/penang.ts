@@ -1,10 +1,10 @@
 export const spots: Record<string, Array<{name:string;where:string;how:string;sampleIndex?:number;sampleCaption?:string}>> = {
   "乔治市世遗核心区": [
-    { name:"姐弟共骑壁画", where:"壁画在 Lebuh Armenian（本头公巷，Cheah Kongsi 附近）的店屋山墙上。站在壁画前，模仿骑车姿势和画中的小姐弟互动合影——这是槟城的标志性壁画，游客多时需要排队等候拍摄。", how:"这幅壁画最经典的拍法就是模拟骑车姿势，摆出和画中人一起骑行的样子。节假日排队人多，预留一点排队时间。", sampleIndex:99, sampleCaption:"姐弟共骑壁画实拍：墙上小姐弟与真实自行车同框" },
-    { name:"追风少年壁画", where:"壁画在 Ah Quee Street（阿贵街）的墙面上，立体摩托车和涂鸦少年是它的标志。站在壁画前，摆一个酷酷的骑车动作合影。", how:"和姐弟共骑一样，这幅也是互动型壁画：摆出骑摩托的姿势，瞬间就有大片感。", sampleIndex:99, sampleCaption:"追风少年壁画：红木门前涂鸦少年与真实摩托车同框" },
-    { name:"姓周桥老人肖像壁画", where:"壁画在 Chew Jetty（姓周桥）一带，画的是一位老人的肖像，文艺感很强。站在壁画前拍，简单构图就很有味道。", how:"这幅不靠互动姿势取胜，和肖像同框拍一张干净的照片就好。", sampleIndex:7, sampleCaption:"姓周桥木屋山墙上的老人肖像壁画：笑脸阿嬷与孩童、飞鸟" },
-    { name:"牛干冬街夜景机位（小红书实拍）", where:"乔治市牛干冬街（Lebuh Chulia）。研究台账《活着的古迹》帖实拍：老骑楼+霓虹招牌夜景（台账 penang/unesco-living-monument）。", how:"入夜后骑楼霓虹亮起再拍；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"牛干冬街夜景：老骑楼+霓虹招牌（小红书实拍样片）" },
-    { name:"壁画街涂鸦壁画机位（小红书实拍）", where:"乔治市壁画街。研究台账：墙面飞翔人脸鸟涂鸦壁画实拍；原帖正文提到\"还能帮你拍照\"（台账 penang/unesco-mural-street）。", how:"白天光线好时拍壁画细节；可请同行人入镜当参照。", sampleIndex:6, sampleCaption:"飞翔人脸鸟涂鸦壁画（小红书实拍样片）" },
+    { name:"姐弟共骑壁画", where:"壁画在 Lebuh Armenian（本头公巷，Cheah Kongsi 附近）的店屋山墙上。站在壁画前，模仿骑车姿势和画中的小姐弟互动合影——这是槟城的标志性壁画，游客多时需要排队等候拍摄。", how:"这幅壁画最经典的拍法就是模拟骑车姿势，摆出和画中人一起骑行的样子。节假日排队人多，预留一点排队时间。", sampleIndex:5, sampleCaption:"姐弟共骑壁画实拍：墙上小姐弟与真实自行车同框" },
+    { name:"追风少年壁画", where:"壁画在 Ah Quee Street（阿贵街）的墙面上，立体摩托车和涂鸦少年是它的标志。站在壁画前，摆一个酷酷的骑车动作合影。", how:"和姐弟共骑一样，这幅也是互动型壁画：摆出骑摩托的姿势，瞬间就有大片感。", sampleIndex:6, sampleCaption:"追风少年壁画：红木门前涂鸦少年与真实摩托车同框" },
+    { name:"姓周桥老人肖像壁画", where:"壁画在 Chew Jetty（姓周桥）一带，画的是一位老人的肖像，文艺感很强。站在壁画前拍，简单构图就很有味道。", how:"这幅不靠互动姿势取胜，和肖像同框拍一张干净的照片就好。", sampleIndex:99, sampleCaption:"姓周桥木屋山墙上的老人肖像壁画：笑脸阿嬷与孩童、飞鸟" },
+    { name:"牛干冬街夜景机位（小红书实拍）", where:"乔治市牛干冬街（Lebuh Chulia）。研究台账《活着的古迹》帖实拍：老骑楼+霓虹招牌夜景（台账 penang/unesco-living-monument）。", how:"入夜后骑楼霓虹亮起再拍；机位证据见来源原帖。", sampleIndex:7, sampleCaption:"牛干冬街夜景：老骑楼+霓虹招牌（小红书实拍样片）" },
+    { name:"壁画街涂鸦壁画机位（小红书实拍）", where:"乔治市壁画街。研究台账：墙面飞翔人脸鸟涂鸦壁画实拍；原帖正文提到\"还能帮你拍照\"（台账 penang/unesco-mural-street）。", how:"白天光线好时拍壁画细节；可请同行人入镜当参照。", sampleIndex:8, sampleCaption:"飞翔人脸鸟涂鸦壁画（小红书实拍样片）" },
   ],
   "Khoo Kongsi": [
     { name:"庭院正对大殿", where:"进邱公司后站在豁亮的庭院里，面向大殿。庭院和寺庙建筑相映成趣，是邱公司最经典的取景背景。", how:"傍晚时分这里有时会有文化艺术表演，可以把看表演和拍照安排在一起。", sampleIndex:0, sampleCaption:"站在庭院石狮之间，正对大殿：剪瓷雕屋顶、石狮与石铺庭院同框" },
@@ -45,7 +45,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"迎宾牌坊正面", where:"Beach Street 上的小印度彩色牌坊，是街区的地标。", how:"傍晚亮灯时最热闹，带相机拍彩色建筑与街景。", sampleIndex:5, sampleCaption:"小印度迎宾牌坊正面：金色牌坊横跨马路" },
     { name:"街区骑楼街景", where:"小印度街区（Queen Street 一带）的彩色骑楼与店铺。", how:"沿街漫步，拍彩色骑楼、店铺与街景。", sampleIndex:4, sampleCaption:"小印度街区：骑楼、彩色招牌与街景" },
     { name:"香料店色彩", where:"小印度的香料店、珠宝店与布料店，摊位色彩浓烈。", how:"贴近拍香料摊的色彩堆叠。" },
-    { name:"小印度街头人像机位（小红书实拍）", where:"槟城小印度街头。研究台账（635赞机位指南帖）实拍：石板街+棕榈树+印度商铺招牌（CHANDNIS/RAAJI SILK PALACE），人物居中机位（台账 penang/little-india）。", how:"人物居中站位，招牌与棕榈树入镜；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"小印度街头人像：石板街棕榈树商铺招牌（小红书实拍样片）" },
+    { name:"小印度街头人像机位（小红书实拍）", where:"槟城小印度街头。研究台账（635赞机位指南帖）实拍：石板街+棕榈树+印度商铺招牌（CHANDNIS/RAAJI SILK PALACE），人物居中机位（台账 penang/little-india）。", how:"人物居中站位，招牌与棕榈树入镜；机位证据见来源原帖。", sampleIndex:6, sampleCaption:"小印度街头人像：石板街棕榈树商铺招牌（小红书实拍样片）" },
   ],
   "和谐街": [
     { name:"观音亭正面", where:"街上的观音亭，站在庙前的大前院看大殿，屋顶有精美雕塑。", how:"殿内常年香火烟雾缭绕，拍大殿适合站在前院取景；前院偶尔会有戏曲或木偶戏演出。", sampleIndex:3, sampleCaption:"前院看观音亭大殿：屋顶剪瓷雕、香火烟雾与粉红大香前景" },
