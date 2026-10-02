@@ -16,7 +16,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "极乐寺": [
     { name:"万佛宝塔外观广场", where:"站在万佛宝塔前的广场上，面向宝塔。七层宝塔融合了中国、泰国、缅甸三种建筑风格，是极乐寺最具代表性的画面。", how:"早上去，避开人潮和炎热。农历新年期间寺院灯饰全亮、最热闹，但人也最多，亚依淡会水泄不通。", sampleIndex:3, sampleCaption:"广场上看万佛宝塔：红灯笼前景同框" },
-    { name:"万佛宝塔顶360全景", where:"付 RM2 进入万佛宝塔，爬 300 多级台阶到塔顶。这里有 360 度的全景，从塔顶还能看到山顶的观音像，是俯瞰极乐寺和城市的最高机位。", how:"早上去，避开人潮和炎热；台阶多，穿好走的鞋，带上 RM2。", sampleIndex:99, sampleCaption:"从万佛宝塔高处俯瞰：极乐寺殿宇群与远处市区" },
+    { name:"万佛宝塔顶360全景", where:"付 RM2 进入万佛宝塔，爬 300 多级台阶到塔顶。这里有 360 度的全景，从塔顶还能看到山顶的观音像，是俯瞰极乐寺和城市的最高机位。", how:"早上去，避开人潮和炎热；台阶多，穿好走的鞋，带上 RM2。", sampleIndex:6, sampleCaption:"从万佛宝塔高处俯瞰：极乐寺殿宇群与远处市区" },
     { name:"灯会夜景机位（实拍样片）", where:"极乐寺。研究台账登记原帖明确\"拍照很出片\"的灯会夜景；原帖图三次下载0字节未到（台账 penang/kek-lok-si-night），样片为 Trip.com 实拍 image-search fallback（非原帖图）。", how:"灯会期间入夜后前往；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"极乐寺灯会夜景（Trip.com实拍fallback样片）" },
   ],
   "升旗山": [
