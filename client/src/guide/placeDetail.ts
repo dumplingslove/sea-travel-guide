@@ -21,6 +21,7 @@ const CITY_CODE: Record<string, string> = {
   胡志明市: "hochiminh",
   富国岛: "phuquoc",
   新加坡: "singapore",
+  首尔: "seoul",
 };
 
 export function slugify(s: string): string {
