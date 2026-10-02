@@ -28252,11 +28252,11 @@
        "price_usd": 4794
       },
       {
-       "airline": "Korean Air + Alaska",
+       "airline": "Korean Air + Delta",
        "flight": "KE17+DL1045",
        "dep": "14:30",
-       "arr": "14:27",
-       "duration": "16h57m",
+       "arr": "15:51",
+       "duration": "18h21m",
        "via": "洛杉矶",
        "price_usd": 4794
       }
