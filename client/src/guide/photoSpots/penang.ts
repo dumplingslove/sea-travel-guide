@@ -42,7 +42,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"泰式彩塑与屋顶机位（小红书实拍）", where:"槟城卧佛寺。研究台账（93赞攻略帖，话题#槟城摄影）实拍：金翅鸟/夜叉彩塑与泰式屋顶（台账 penang/wat-chaiyamangalaram）。", how:"仰拍彩塑与屋顶线条；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"金翅鸟/夜叉彩塑与泰式屋顶（小红书实拍样片）" },
   ],
   "小印度": [
-    { name:"迎宾牌坊正面", where:"Beach Street 上的小印度彩色牌坊，是街区的地标。", how:"傍晚亮灯时最热闹，带相机拍彩色建筑与街景。", sampleIndex:99, sampleCaption:"小印度迎宾牌坊正面：金色牌坊横跨马路" },
+    { name:"迎宾牌坊正面", where:"Beach Street 上的小印度彩色牌坊，是街区的地标。", how:"傍晚亮灯时最热闹，带相机拍彩色建筑与街景。", sampleIndex:5, sampleCaption:"小印度迎宾牌坊正面：金色牌坊横跨马路" },
     { name:"街区骑楼街景", where:"小印度街区（Queen Street 一带）的彩色骑楼与店铺。", how:"沿街漫步，拍彩色骑楼、店铺与街景。", sampleIndex:4, sampleCaption:"小印度街区：骑楼、彩色招牌与街景" },
     { name:"香料店色彩", where:"小印度的香料店、珠宝店与布料店，摊位色彩浓烈。", how:"贴近拍香料摊的色彩堆叠。" },
     { name:"小印度街头人像机位（小红书实拍）", where:"槟城小印度街头。研究台账（635赞机位指南帖）实拍：石板街+棕榈树+印度商铺招牌（CHANDNIS/RAAJI SILK PALACE），人物居中机位（台账 penang/little-india）。", how:"人物居中站位，招牌与棕榈树入镜；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"小印度街头人像：石板街棕榈树商铺招牌（小红书实拍样片）" },
