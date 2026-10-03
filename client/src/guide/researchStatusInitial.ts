@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-02T23:05Z
+// updated_at: 2026-10-03T04:48Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -2927,10 +2927,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 1,
+       "status": "done",
+       "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第22轮+1篇（184赞推荐）；第2、3篇候选被AI头遮挡未打开，不死磕"
+       "note": "2026-09-28 第22轮+1篇（184赞推荐）；第2、3篇候选被AI头遮挡未打开，不死磕；2026-10-02 第80轮：新增kaxikaki《吉隆坡 DC by Darren Chin》(20赞，2025-06-24，https://www.xiaohongshu.com/explore/685a5d5100000000120176fa)/囡囡戒不了糖《Fine dine 初体验｜DC by Darren Chin ✨》(12赞，2025-05-24，https://www.xiaohongshu.com/explore/6831e4e0000000000c038913)；低互动但为KL专帖池头部，华盛顿DC污染已排除。3篇达标转 done。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round80-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -2965,7 +2965,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第22轮+3篇（均为推荐，四季酒店内斯里兰卡Fine Dining）"
+       "note": "2026-09-28 第22轮+3篇（均为推荐，四季酒店内斯里兰卡Fine Dining）；2026-10-02 第80轮：1/3核验通过（莉莉不正经日记帖URL吻合）；另2篇（欣欣籽/Kinchun）本轮未按URL打开，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round80-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3000,7 +3000,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第22轮+3篇（2156赞/1275赞推荐椰浆饭+1篇中立偏负）"
+       "note": "2026-09-28 第22轮+3篇（2156赞/1275赞推荐椰浆饭+1篇中立偏负）；2026-10-02 第80轮：1/3核验通过（楊霓中立偏负帖URL吻合）；另2篇（初九小静2156赞/艺天1275赞）本轮未按URL打开，搜索页未见对应赞数，待下轮定点核验。仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round80-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3035,7 +3035,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第23轮+3篇（289赞生日仪式感推荐/避雷帖/162赞推荐；地点待另行核实（证据存在柏悦/君悦冲突））"
+       "note": "2026-09-28 第23轮+3篇（289赞生日仪式感推荐/避雷帖/162赞推荐；地点待另行核实（证据存在柏悦/君悦冲突））；2026-10-02 第81轮：1/3核验通过（melody帖URL吻合）；另2篇（momo避雷/豆沙软软）本轮未按URL打开，仍 partial。**地点争议已解决**：melody帖正文误写'柏悦38楼'，官方君悦酒店账号+豆沙软软作者回复确认 THIRTY8 在吉隆坡君悦酒店（Grand Hyatt）38楼（地址 12, Jalan Pinang）。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round81-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3070,7 +3070,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第23轮+3篇（均为推荐：1商业号+金莲记/颂记牛肉面/海南鸡饭）"
+       "note": "2026-09-28 第23轮+3篇（均为推荐：1商业号+金莲记/颂记牛肉面/海南鸡饭）；2026-10-02 第81轮：2/3核验通过（猪猪女孩/阿竹在路上帖URL吻合）；商业号帖（Dorsett）本轮未按URL打开，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round81-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3102,10 +3102,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 2,
+       "status": "done",
+       "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第23轮+2篇（1326赞人像机位推荐帖+避雷帖；1062赞烧鸡翼帖被AI头遮挡未打开）"
+       "note": "2026-09-28 第23轮+2篇（1326赞人像机位推荐帖+避雷帖；1062赞烧鸡翼帖被AI头遮挡未打开）；2026-10-02 第81轮：新增猜情寻《陈奕迅同款烧鸡翼打卡指南》(1079赞，2026-04-02，https://www.xiaohongshu.com/explore/69ce31ef0000000023014e9a)，即记录中的1062赞烧鸡翼帖。3篇达标转 done。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round81-kl-restaurants-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3140,7 +3140,7 @@ export const initialResearchStatus = {
        "status": "pending",
        "posts": 0,
        "target": 3,
-       "note": "2026-09-28 第24轮：候选池枯竭（无专帖，仅孟加拉账号GulaiNya.bd），不死磕，维持pending"
+       "note": "2026-09-28 第24轮：候选池枯竭（无专帖，仅孟加拉账号GulaiNya.bd），不死磕，维持pending；2026-10-02 第82轮：三关键词（Gulainya/Gulai KL/吉隆坡 Gulai）各一次pass，仅官方号+泛内容，无顾客专帖。**专帖池枯竭，不再重复搜索**。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round82-kl-2026-10-02.md"
       }
      },
      "type": "餐厅"
@@ -3175,7 +3175,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第24轮+3篇（5260赞巨嘴纪念照教程/1198赞夜景拍摄点/1626赞姿势合集；3条机位线索已登记）"
+       "note": "2026-09-28 第24轮+3篇（5260赞巨嘴纪念照教程/1198赞夜景拍摄点/1626赞姿势合集；3条机位线索已登记）；2026-10-02 第82轮：打开的3篇均为新帖，未对上记录（深港玛尼尼/zz/梨子成长日记）；0/3核验，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round82-kl-2026-10-02.md"
       }
      },
      "type": "景点"
@@ -3210,7 +3210,7 @@ export const initialResearchStatus = {
        "status": "partial",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第24轮+3篇（1中立1避雷1推荐；彩虹阶梯机位线索已登记）"
+       "note": "2026-09-28 第24轮+3篇（1中立1避雷1推荐；彩虹阶梯机位线索已登记）；2026-10-02 第82轮：打开的3篇均为新帖，未对上记录（Vita的相册/Sunper/喳喳）；0/3核验，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round82-kl-2026-10-02.md"
       }
      },
      "type": "景点"
@@ -3242,10 +3242,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第25轮+3篇（3454赞18机位/623赞避雷/359赞内部视角；机位线索已登记）"
+       "note": "2026-09-28 第25轮+3篇（3454赞18机位/623赞避雷/359赞内部视角；机位线索已登记）；2026-10-02 第83轮：3/3按URL逐帖核验通过（赞数与记录吻合，URL全部匹配），转 done。机位已登记、图未到。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round83-kl-2026-10-02.md"
       }
      },
      "type": "景点"
@@ -3277,10 +3277,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第25轮+3篇（922赞求签/555赞48h/336赞古今同框机位；机位线索已登记）"
+       "note": "2026-09-28 第25轮+3篇（922赞求签/555赞48h/336赞古今同框机位；机位线索已登记）；2026-10-02 第83轮：3/3按URL逐帖核验通过（赞数与记录吻合，URL全部匹配），转 done。机位已登记、图未到。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round83-kl-2026-10-02.md"
       }
      },
      "type": "景点"
@@ -3312,10 +3312,10 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-28 第25轮+3篇（2148赞15张/1794赞神级机位/十字路口机位；3条机位线索已登记）"
+       "note": "2026-09-28 第25轮+3篇（2148赞15张/1794赞神级机位/十字路口机位；3条机位线索已登记）；2026-10-02 第83轮：3/3按URL逐帖核验通过（赞数与记录吻合，URL全部匹配），转 done。机位已登记、图未到。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round83-kl-2026-10-02.md"
       }
      },
      "type": "景点"
@@ -7609,7 +7609,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 93,
+ "complete_items": 102,
  "summary": {
   "bangkok": {
    "total": 32,
@@ -7664,14 +7664,14 @@ export const initialResearchStatus = {
    "ta": 22,
    "gm": 21,
    "cs": 22,
-   "xhs_done": 2,
+   "xhs_done": 12,
    "ph": 22,
    "de": 22,
-   "all_done": 2,
+   "all_done": 11,
    "tripadvisor": 22,
    "google_maps": 21,
    "chinese_sites": 22,
-   "xiaohongshu": 2,
+   "xiaohongshu": 12,
    "photos": 22,
    "details": 22
   },
@@ -7755,8 +7755,8 @@ export const initialResearchStatus = {
    "photos": 0,
    "details": 0
   },
-  "xhs_done": 110,
-  "all_done": 93
+  "xhs_done": 120,
+  "all_done": 102
  },
  "targets": {
   "chinese_sites": "done",
@@ -7767,5 +7767,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-02T23:05Z"
+ "updated_at": "2026-10-03T04:48Z"
 };
