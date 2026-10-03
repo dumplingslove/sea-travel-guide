@@ -78,6 +78,27 @@ export interface FlightOption {
  * 用户要求：全站只看直飞（options 仅保留 stops=0；库里确认无直飞的段 options 为空并标"暂无直飞"，库里没查到的标"待查询"）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
+    id: "sea-pek",
+    route: "西雅图 → 北京",
+    date: "2026-11-28",
+    dateLabel: "11-28",
+    day: 0,
+    kind: "intl",
+    note: "去程国际段（一家三口）；Duffel 实查 2026-09-27 18:35 PDT（2大1小，当天仅1班直飞）",
+    carrier: "Hainan Airlines HU496",
+    schedule: "10:20→15:50+1",
+    priceNote: "3人 $1,913.50 起",
+    businessPriceNote: null,
+    direct: true,
+    fragile: true,
+    queriedAt: "2026-09-27 18:35 PDT",
+    priceBasis: "2大1小总价",
+    options: [
+      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "2件", price: 1913.50, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "当天唯一去程直飞；13h30m，白天出发、当地傍晚到；2件托运；可退改（有罚金），出票前重查退改" },
+    ],
+    businessOptions: null,
+  },
+  {
     id: "intl-out-bj",
     dbSeg: "PEK-SIN",
     ctx: "去程国际段（用户一家三口）",
@@ -139,7 +160,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
       { carrier: "China Eastern", flight: "MU2069", depart: "07:20", arrive: "12:55", stops: 0, price: 1383.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "东航白天班商务舱，岳父母飞得舒服；本轮价格被隐藏，沿用 10-01 真实总价（2人整单）" },
     ],
   },
-    {
+  {
     id: "sin-hkt",
     dbSeg: "SIN-HKT",
     ctx: "D6 转场：新加坡段结束、普吉段开始",
@@ -200,7 +221,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
       { carrier: "China Eastern", flight: "MU2070", depart: "13:55", arrive: "19:20", stops: 0, price: 3519.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "东航傍晚到商务舱，带娃不折腾；本轮价格被隐藏，沿用 10-01 真实总价（3人整单）" },
     ],
   },
-    {
+  {
     id: "hkt-cnx",
     dbSeg: "HKT-CNX",
     ctx: "D9 转场：普吉段结束、清迈段开始",
@@ -226,7 +247,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     ],
     businessOptions: [],
   },
-    {
+  {
     id: "cnx-bkk",
     dbSeg: "CNX-BKK",
     ctx: "D11 转场：清迈段结束、曼谷段开始",
@@ -307,27 +328,6 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
       { carrier: "Spring Airlines", flight: "9C6294", depart: "14:35", arrive: "19:30", stops: 0, price: 258.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一真直飞，3小时55分；下午出发、晚上到西安，时间友好" },
     ],
     businessOptions: [],
-  },
-  {
-    id: "sea-pek",
-    route: "西雅图 → 北京",
-    date: "2026-11-28",
-    dateLabel: "11-28",
-    day: 0,
-    kind: "intl",
-    note: "去程国际段（一家三口）；Duffel 实查 2026-09-27 18:35 PDT（2大1小，当天仅1班直飞）",
-    carrier: "Hainan Airlines HU496",
-    schedule: "10:20→15:50+1",
-    priceNote: "3人 $1,913.50 起",
-    businessPriceNote: null,
-    direct: true,
-    fragile: true,
-    queriedAt: "2026-09-27 18:35 PDT",
-    priceBasis: "2大1小总价",
-    options: [
-      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "2件", price: 1913.50, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "当天唯一去程直飞；13h30m，白天出发、当地傍晚到；2件托运；可退改（有罚金），出票前重查退改" },
-    ],
-    businessOptions: null,
   },
   {
     id: "pek-icn",
