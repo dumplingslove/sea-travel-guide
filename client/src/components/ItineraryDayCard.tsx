@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   days as staticDays,
@@ -26,7 +26,7 @@ import {
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
-import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, refreshLegFromDb, type FlightLegInfo } from "@/bookings/bookingTimeline";
 
 /* ============ 每日行程 enrichment：预订/收藏/酒店（2026-10-03 用户模型） ============
  * 行程页是出行时每天看的：每天要显示当天的酒店、航班、餐厅（收藏的和已订的），
@@ -456,7 +456,15 @@ export function DayBookingsSection({ bookings }: { bookings: DayBooking[] }) {
 
 /* ---------------- 转场日实际航班（2026-10-03：不再只显示通用核对清单） ---------------- */
 function TransferFlightInfo({ route, date, favFlights }: { route: string; date: string; favFlights: ParsedFavorite[] }) {
-  const leg = FLIGHT_LEGS.find((l) => l.route === route);
+  /* 2026-10-03 修：按转场实际日期从航班库重查，不读静态日期价格；
+   * 深拷贝再查，不污染共享 FLIGHT_LEGS（与预订页航班列表同一做法） */
+  const leg = useMemo(() => {
+    const f = FLIGHT_LEGS.find((l) => l.route === route);
+    if (!f) return null;
+    const copy = JSON.parse(JSON.stringify(f)) as FlightLegInfo;
+    if (date) refreshLegFromDb(copy, date);
+    return copy;
+  }, [route, date]);
   const opts = leg?.options ?? [];
   const prices = opts.map((o) => o.price ?? Infinity).filter((p) => p !== Infinity);
   const min = prices.length ? Math.min(...prices) : null;
@@ -473,8 +481,14 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
       ))}
       {leg && (
         <p className="text-xs text-sky-700 mt-1">
-          当天 {opts.length} 班直飞{min != null && <> · ${min} 起</>}{leg.queriedAt && <> · 实查 {leg.queriedAt}</>}
-          {!favFlights.length && "（去预订页收藏具体航班）"}
+          {leg.flightState === "pending" ? (
+            <>航班信息待查询（库里还没有 {isoShort(date)} 的实查数据）</>
+          ) : leg.flightState === "none" ? (
+            <>当天实查无直飞</>
+          ) : (
+            <>当天 {opts.length} 班直飞{min != null && <> · ${min} 起</>}{leg.queriedAt && <> · 实查 {leg.queriedAt}</>}</>
+          )}
+          {!favFlights.length && leg.flightState !== "pending" && "（去预订页收藏具体航班）"}
         </p>
       )}
     </div>
