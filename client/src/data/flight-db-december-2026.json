@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-03T07:34:39+00:00",
+ "updated_at": "2026-10-03T07:55:06+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3011,7 +3011,7 @@
    "label": "新加坡→西安（2大1小，岳父母带Dylan回西安）",
    "days": {
     "2026-12-10": {
-     "economy_queried_at": "2026-10-02T07:31:50+00:00",
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
      "economy_usd": 1153,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -32668,6 +32668,183 @@
      ],
      "nonstop_count": 2,
      "business_queried_at": "2026-10-03T07:34:39+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大1小总价"
+    },
+    "2026-12-10": {
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
+     "economy_usd": 351,
+     "currency": "USD",
+     "economy_price_basis": "1大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 351,
+       "business_price_usd": 949
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ348",
+       "dep": "1:25 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 45 min",
+       "price_usd": 353
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min"
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-10-03T07:55:06+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大1小总价"
+    },
+    "2026-12-11": {
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
+     "economy_usd": 353,
+     "currency": "USD",
+     "economy_price_basis": "1大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ348",
+       "dep": "1:25 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 45 min",
+       "price_usd": 353
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 475,
+       "business_price_usd": 949
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min"
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-10-03T07:55:06+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大1小总价"
+    },
+    "2026-12-12": {
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
+     "economy_usd": 396,
+     "currency": "USD",
+     "economy_price_basis": "1大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 396,
+       "business_price_usd": 949
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min"
+      }
+     ],
+     "nonstop_count": 2,
+     "business_queried_at": "2026-10-03T07:55:06+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大1小总价"
+    },
+    "2026-12-13": {
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
+     "economy_usd": 353,
+     "currency": "USD",
+     "economy_price_basis": "1大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ348",
+       "dep": "1:25 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 45 min",
+       "price_usd": 353
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 396,
+       "business_price_usd": 949
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min"
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-10-03T07:55:06+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大1小总价"
+    },
+    "2026-12-14": {
+     "economy_queried_at": "2026-10-03T07:55:06+00:00",
+     "economy_usd": 353,
+     "currency": "USD",
+     "economy_price_basis": "1大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ348",
+       "dep": "1:25 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 45 min",
+       "price_usd": 353
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 396,
+       "business_price_usd": 949
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min"
+      }
+     ],
+     "nonstop_count": 3,
+     "business_queried_at": "2026-10-03T07:55:06+00:00",
      "business_usd": 949,
      "business_price_basis": "1大1小总价"
     }
