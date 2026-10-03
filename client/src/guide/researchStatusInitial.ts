@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-03T10:48Z
+// updated_at: 2026-10-03T16:49Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -2653,7 +2653,7 @@ export const initialResearchStatus = {
    "total": 23
   },
   "kualalumpur": {
-   "complete": 1,
+   "complete": 11,
    "items": [
     {
      "name": "Park Hyatt Kuala Lumpur",
@@ -4281,7 +4281,7 @@ export const initialResearchStatus = {
    "total": 24
   },
   "phuket": {
-   "complete": 13,
+   "complete": 17,
    "items": [
     {
      "name": "Amanpuri",
@@ -7767,5 +7767,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-03T10:48Z"
+ "updated_at": "2026-10-03T16:49Z"
 };
