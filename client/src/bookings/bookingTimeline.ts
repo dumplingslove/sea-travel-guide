@@ -28,13 +28,13 @@ export function flightDateFromPlan(route: string, segments: PlanSegment[]): stri
   const byCity = (city: string) => segments.find((s) => s.city === city);
   /* 航线 → (段ID, 取start还是end) 显式映射 */
   const ROUTE_DATE_MAP: Record<string, [string, "start" | "end"]> = {
-    "北京 → 新加坡": ["beijing1", "end"],    /* 用户在北京待到最后一天飞 */
-    "西安 → 新加坡": ["singapore", "start"], /* 岳父母飞来新加坡会合（行程首日） */
+    /* 2026-10-03 用户原则：只用云端保存的日程（schedule），不许用天数推导北京/西安/首尔段。
+     * 日程里没有的段，一律用静态计划日期，不猜。 */
+    "西安 → 新加坡": ["singapore", "start"], /* 岳父母飞来新加坡会合（行程首日，日程里有新加坡） */
     "新加坡 → 西安": ["singapore", "end"],    /* 岳父母带娃回西安 */
     "曼谷 → 西安": ["曼谷", "end"],          /* 夫妻从曼谷飞西安 */
-    /* 2026-10-03 用户纠正：回程三段（北京→首尔、西安→首尔、首尔→西雅图）不推导，
-     * 首尔→西雅图是已出票的 AS120（2027-01-01），回程日期以实际出票/计划为准，
-     * 不许用段天数机械推导覆盖。 */
+    /* 北京→新加坡、回程三段用静态日期（日程里没有北京/首尔段，不推导；
+     * 首尔→西雅图是已出票的 AS120（2027-01-01），以实际出票为准） */
   };
   const mapped = ROUTE_DATE_MAP[route];
   if (mapped) {
