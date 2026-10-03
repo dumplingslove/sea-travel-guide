@@ -18,7 +18,6 @@ import {
   AuthorTag,
 } from "./shared";
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
-import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
@@ -348,6 +347,18 @@ function FavoriteActionList({
                               ✅ 已出票
                             </span>
                           )}
+                          {/* 2026-10-03 用户：已预订的酒店在行动安排里标已预订（1359213 曾误加入已下线的 BookingTimeline，本轮移到 BookingsPage） */}
+                          {f.type === "hotel" && (() => {
+                            const st = stayOf(itemCity(f));
+                            return st?.booked ? (
+                              <span
+                                title={st.confirmationCode ? `确认号 ${st.confirmationCode}` : "已预订"}
+                                className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
+                              >
+                                ✅ 已预订{st.bookedHotelName ? ` · ${st.bookedHotelName}` : ""}
+                              </span>
+                            ) : null;
+                          })()}
                           {/* 2026-10-03 用户：时间线日期徽标 */}
                           {(() => {
                             const d = itemTimelineDate(f);
