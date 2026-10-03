@@ -434,7 +434,7 @@ function BookingsInner() {
       )}
 
       {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通 */}
-      <div className="flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
+      <div className="booking-tabs flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
         {menus.map((m) => (
           <button
             key={m.key}
