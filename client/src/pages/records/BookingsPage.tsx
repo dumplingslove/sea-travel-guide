@@ -312,6 +312,15 @@ function FavoriteActionList({
                           {f.type === "flight" && f.flight?.route && (
                             <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
                           )}
+                          {/* 2026-10-03 用户：已出票的航班在行动安排里标已购买 */}
+                          {f.type === "flight" && flightLeg?.ticketed && (
+                            <span
+                              title={flightLeg.note}
+                              className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
+                            >
+                              ✅ 已出票
+                            </span>
+                          )}
                           {/* 2026-10-03 用户：时间线日期徽标 */}
                           {(() => {
                             const d = itemTimelineDate(f);

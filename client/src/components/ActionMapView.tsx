@@ -144,12 +144,38 @@ export default function ActionMapView({
     for (const it of visible) {
       const ll = LL(it.lat, it.lng);
       latlngs.push(ll);
-      L.marker(ll, { icon: iconFor(it.kind) })
+      const marker = L.marker(ll, { icon: iconFor(it.kind) })
         .bindPopup(
           `<b>${it.name}</b><br/>${KIND_LABEL[it.kind]} · ${it.city}${it.note ? `<br/><span style="color:#6b7280;font-size:12px">${it.note}</span>` : ""}`
         )
         .addTo(map);
+      // 2026-10-03 用户：zoom in 到一定程度后直接显示名字，不用点
+      marker.bindTooltip(it.name, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -18],
+        className: "sea-actionmap-label",
+        opacity: 0, // 默认隐藏，靠 zoom 控制
+      });
     }
+    // 根据 zoom 级别显示/隐藏标签：>=14 显示名字
+    const updateLabels = () => {
+      const z = map.getZoom();
+      const show = z >= 14;
+      map.eachLayer((layer: unknown) => {
+        const m = layer as L.Marker;
+        if (m.getTooltip) {
+          const tip = m.getTooltip();
+          if (tip) {
+            const el = tip.getElement();
+            if (el) el.style.opacity = show ? "1" : "0";
+          }
+        }
+      });
+    };
+    map.on("zoomend", updateLabels);
+    // 初始化时也跑一次
+    setTimeout(updateLabels, 300);
     if (latlngs.length === 1) map.setView(latlngs[0], 14);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
     else map.setView(LL(1.3521, 103.8198), 11);
