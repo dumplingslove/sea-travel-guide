@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-03T06:50:30+00:00",
+ "updated_at": "2026-10-03T07:13:45+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -33058,6 +33058,101 @@
      "business_usd": 16345,
      "business_price_basis": "2大1小总价",
      "business_note": "Best标签页显示 $17,786，Cheapest标签页显示 $16,345，取页面最低实价"
+    },
+    "2026-12-30": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-31": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-01": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": 1549,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Hainan Airlines",
+       "flight": "HU496",
+       "dep": "10:20",
+       "arr": "15:50+1",
+       "duration": "13 hr 30 min",
+       "price_usd": 1549,
+       "business_price_usd": 12451
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": 12451,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-02": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
+    },
+    "2026-12-03": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价"
+    },
+    "2026-12-04": {
+     "economy_queried_at": "2026-10-03T07:13:45+00:00",
+     "economy_usd": null,
+     "currency": "USD",
+     "economy_price_basis": "2大1小总价",
+     "source": "google-flights",
+     "economy_note": "当天无直飞",
+     "nonstop_flights": [],
+     "nonstop_count": 0,
+     "note": "当天无直飞",
+     "business_queried_at": "2026-10-03T07:13:45+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "当天无直飞"
     }
    }
   }
