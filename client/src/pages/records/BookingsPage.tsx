@@ -22,6 +22,7 @@ import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
+import { hotels, attractions } from "@/guide/data";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy, bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -176,6 +177,15 @@ function FavoriteActionList({
   }
 
   const decided = favs.filter((f) => f.row.done).length;
+  /* 2026-10-03 用户：行动安排的 item 要能展开看详情，方便对比 */
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  /** 按名称找攻略详情（酒店/餐厅/景点） */
+  const findDetail = (name: string, type: string) => {
+    if (type === "hotel") return hotels.find((h) => h.name === name);
+    if (type === "restaurant") return restaurants.find((r) => r.name === name);
+    if (type === "attraction") return attractions.find((a) => a.name === name);
+    return undefined;
+  };
 
   return (
     <div className="mb-6">
@@ -227,13 +237,17 @@ function FavoriteActionList({
                   {typeLabel(t)} · {items.length} 项
                 </div>
                 <div className="space-y-2">
-                  {items.map((f) => (
+                  {items.map((f) => {
+                    const isOpen = expandedId === f.row.id;
+                    const detail = f.type !== "flight" ? findDetail(f.row.title, f.type) : undefined;
+                    return (
                     <div
                       key={f.row.id}
-                      className={`flex items-start justify-between gap-2 bg-white rounded-lg border px-3 py-2.5 ${
+                      className={`bg-white rounded-lg border px-3 py-2.5 ${
                         f.row.done ? "border-green-200 bg-green-50/50" : "border-gray-200"
                       }`}
                     >
+                      <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <div className="text-sm font-medium text-gray-900">
                           {f.row.title}
@@ -248,6 +262,16 @@ function FavoriteActionList({
                         />
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
+                        {/* 2026-10-03 用户：item 要能展开看详情，方便对比 */}
+                        {detail && (
+                          <button
+                            onClick={() => setExpandedId(isOpen ? null : f.row.id)}
+                            className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
+                            aria-expanded={isOpen}
+                          >
+                            {isOpen ? "▴ 收起" : "▾ 详情"}
+                          </button>
+                        )}
                         {!f.row.done ? (
                           <button
                             onClick={() => save.mutate({
@@ -277,8 +301,22 @@ function FavoriteActionList({
                           ✕
                         </button>
                       </div>
+                      </div>
+                      {/* 展开详情：攻略原文，方便对比 */}
+                      {isOpen && detail && (
+                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
+                          {detail.meta && <p><span className="font-medium text-gray-500">📍 </span>{detail.meta}</p>}
+                          {detail.detail && <p className="leading-relaxed">{detail.detail}</p>}
+                          {detail.best && (
+                            <p><span className="font-medium text-teal-700">💡 怎么选：</span>{detail.best}</p>
+                          )}
+                          {detail.hotelAcclaim && <p className="text-amber-700">🏆 {detail.hotelAcclaim}</p>}
+                          {detail.michelin && <p>⭐ {detail.michelin}</p>}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );
