@@ -91,7 +91,7 @@ function FavoriteActionList({
 }: {
   onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
 }) {
-  const { rows, del } = useRecordsData(["favorite"]);
+  const { rows, del, save } = useRecordsData(["favorite"]);
   const favs = rows
     .map((r) => {
       try {
@@ -149,7 +149,7 @@ function FavoriteActionList({
         </span>
       </div>
       <p className="text-xs text-gray-500 mb-3">
-        在酒店/飞机/餐厅/景点页点了「＋ 收藏」的都在这里，带实时价格追踪，确认要订就转入预订记录
+        在酒店/飞机/餐厅/景点页点了「＋ 收藏」的都在这里展示，带实时价格追踪。看好价格后点「✓ 确定」锁定最终选择，再点「加入预订」走正式预订流程
       </p>
       <div className="space-y-2">
         {favs.map((f) => (
@@ -169,6 +169,28 @@ function FavoriteActionList({
               <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} />
             </div>
             <div className="flex gap-2 shrink-0">
+              {/* 2026-10-02 用户：行动安排是展示+确定，不是再选。点了"确定"就是最终选择 */}
+              {!f.row.done ? (
+                <button
+                  onClick={() =>
+                    save.mutate({
+                      id: f.row.id,
+                      kind: f.row.kind,
+                      title: f.row.title,
+                      body: f.row.body,
+                      day: f.row.day,
+                      done: true,
+                    })
+                  }
+                  className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700"
+                >
+                  ✓ 确定
+                </button>
+              ) : (
+                <span className="px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-medium">
+                  ✓ 已确定
+                </span>
+              )}
               <button
                 onClick={() =>
                   onAddFavorite(
