@@ -133,7 +133,7 @@ function FavoriteActionList({
     return () => clearTimeout(t);
   }, []);
   const stayOf = (city: string) => stays.find((s) => s.city === city);
-  const favs = rows
+  const manualFavs = rows
     .map((r) => {
       try {
         const d = JSON.parse(r.body) as {
@@ -144,12 +144,38 @@ function FavoriteActionList({
             date?: string; priceBasis?: string; queriedAt?: string;
           };
         };
-        return { row: r, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
+        return { row: r, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight, auto: false as boolean };
       } catch {
-        return { row: r, city: "", type: "attraction", flight: undefined };
+        return { row: r, city: "", type: "attraction", flight: undefined, auto: false as boolean };
       }
     })
     .filter((f) => ["hotel", "flight", "restaurant", "attraction"].includes(f.type));
+
+  /* 2026-10-03 用户：已出票的航班自动进出现在行动安排，不用手动收藏 */
+  const autoTicketed = FLIGHT_LEGS.filter((l) => l.ticketed).filter((l) => {
+    // 已在手动收藏里的不重复加
+    return !manualFavs.some((f) => f.type === "flight" && f.flight?.route === l.route);
+  }).map((l) => ({
+    row: { id: `auto-ticketed-${l.id}`, title: `${l.route} ${l.carrier || ""} ${l.schedule || ""}`.trim(), done: true } as unknown as (typeof rows)[number],
+    city: "",
+    type: "flight" as string,
+    flight: {
+      carrier: l.carrier || undefined,
+      flight: l.schedule?.split(" ")[0],
+      depart: undefined as string | undefined,
+      arrive: undefined as string | undefined,
+      arrivePlusDay: undefined as boolean | undefined,
+      price: undefined as number | undefined,
+      cabin: undefined as string | undefined,
+      route: l.route,
+      date: l.date,
+      priceBasis: l.priceBasis || undefined,
+      queriedAt: undefined as string | undefined,
+    },
+    auto: true as boolean,
+  }));
+
+  const favs = [...autoTicketed, ...manualFavs];
 
   if (!favs.length) {
     return (
