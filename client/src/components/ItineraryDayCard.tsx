@@ -24,6 +24,7 @@ import {
   getRestaurantBookingPolicy,
 } from "@/bookings/restaurantBookingStatus";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
+import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
 import { FLIGHT_LEGS, refreshLegFromDb, type FlightLegInfo } from "@/bookings/bookingTimeline";
@@ -538,12 +539,14 @@ function StopBlock({
           );
         })()}
         {item && kindZh && (
-          <Link
+          <DetailLink
             to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
+            pageKey="itinerary-day"
+            cardId={`stop-${stop.time}-${item.name}`}
             className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
           >
             查看详情
-          </Link>
+          </DetailLink>
         )}
       </div>
       <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
@@ -582,6 +585,7 @@ export function ItineraryDayCard({
   /** 本城住宿区间（入住/退房），"今晚住哪"用 */
   stay?: { checkIn: string; checkOut: string } | null;
 }) {
+  useDetailReturn("itinerary-day");
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
   const prevCityId =
     prevDay && prevDay.city_zh !== day.city_zh
@@ -872,12 +876,14 @@ export function ItineraryDayCard({
                           {a.meta}
                         </p>
                       )}
-                      <Link
+                      <DetailLink
                         to={placeDetailPath("attraction", a.city, a.name)}
+                        pageKey="itinerary-day"
+                        cardId={`day-${day.day}-attraction-${a.name}`}
                         className="text-xs font-medium text-teal-700 underline"
                       >
                         查看详情 →
-                      </Link>
+                      </DetailLink>
                     </div>
                   </div>
                 );
@@ -911,12 +917,14 @@ export function ItineraryDayCard({
                           <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
                             {b.text}
                           </span>
-                          <Link
+                          <DetailLink
                             to={placeDetailPath("restaurant", f.city, f.name)}
+                            pageKey="itinerary-day"
+                            cardId={`day-${day.day}-restaurant-${f.name}`}
                             className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
                           >
                             查看详情
-                          </Link>
+                          </DetailLink>
                         </div>
                       </div>
                     );
@@ -956,12 +964,14 @@ export function ItineraryDayCard({
                             </span>
                           );
                         })()}
-                        <Link
+                        <DetailLink
                           to={placeDetailPath("restaurant", r.city, r.name)}
+                          pageKey="itinerary-day"
+                          cardId={`day-${day.day}-restaurant-${r.name}`}
                           className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
                         >
                           查看详情
-                        </Link>
+                        </DetailLink>
                       </div>
                     </div>
                   );

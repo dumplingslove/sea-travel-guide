@@ -10,7 +10,6 @@
  * - 景点：余票徽章（有研究数据才显示）；无数据时按是否需要提前订票显示"建议提前订票"/"无需提前订票"
  */
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { hotels, restaurants, attractions } from "@/guide/data";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@/components/DayPlaceDetails";
 import { bookingPolicyBadge } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
+import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 
 /** 预订页未传 scopeCities（无保存行程）时的回退：全部 8 城 */
 const ALL_CITIES = ["新加坡", "普吉", "曼谷", "清迈", "槟城", "吉隆坡", "胡志明市", "富国岛"];
@@ -89,12 +89,14 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                       key={h.name}
                       className="flex items-center justify-between gap-2 text-sm"
                     >
-                      <Link
+                      <DetailLink
                         to={placeDetailPath("hotel", h.city, h.name)}
+                        pageKey="booking-summary"
+                        cardId={`summary-${cityZh}-hotel-${h.name}`}
                         className="text-teal-700 hover:underline truncate"
                       >
                         {h.name}
-                      </Link>
+                      </DetailLink>
                       {p && !p.unavailable && p.base ? (
                         <span className="text-xs text-gray-500 shrink-0">
                           <b className="text-teal-700">
@@ -127,12 +129,14 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                       key={r.name}
                       className="flex items-center justify-between gap-2 text-sm"
                     >
-                      <Link
+                      <DetailLink
                         to={placeDetailPath("restaurant", r.city, r.name)}
+                        pageKey="booking-summary"
+                        cardId={`summary-${cityZh}-restaurant-${r.name}`}
                         className="text-teal-700 hover:underline truncate"
                       >
                         {r.name}
-                      </Link>
+                      </DetailLink>
                       {row ? (
                         <span className="flex items-center gap-1.5 shrink-0">
                           <AvBadge status={row.status} kind="r" />
@@ -171,12 +175,14 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                       key={a.name}
                       className="flex items-center justify-between gap-2 text-sm"
                     >
-                      <Link
+                      <DetailLink
                         to={placeDetailPath("attraction", a.city, a.name)}
+                        pageKey="booking-summary"
+                        cardId={`summary-${cityZh}-attraction-${a.name}`}
                         className="text-teal-700 hover:underline truncate"
                       >
                         {a.name}
-                      </Link>
+                      </DetailLink>
                       {row ? (
                         <span className="flex items-center gap-1.5 shrink-0">
                           <AvBadge status={row.status} kind="a" />
@@ -206,6 +212,7 @@ function CityBlock({ cityZh }: { cityZh: string }) {
 }
 
 export default function BookingStatusSummary({ scopeCities }: { scopeCities?: string[] }) {
+  useDetailReturn("booking-summary");
   const [open, setOpen] = useState(true);
   const av = useAvailability();
   /** 有保存行程时只看行程城市；无保存行程时回退全部城市。不写死，跟行程规划走。 */

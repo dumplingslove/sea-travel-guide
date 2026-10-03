@@ -10,6 +10,7 @@ import {
   placeSlug,
   findPlace,
 } from "@/guide/placeDetail";
+import { useDetailReturn, saveDetailReturn } from "@/components/DetailReturn";
 import { mallAnchorId } from "@/guide/data";
 
 interface DayMapProps {
@@ -120,6 +121,15 @@ export default function DayMap({
   isCloud,
   cloudStops,
 }: DayMapProps) {
+  useDetailReturn("day-map");
+  // Leaflet 弹窗是原生 HTML <a>，用全局函数在跳转前存返回位置
+  useEffect(() => {
+    (window as unknown as { __saveMapDetailReturn?: (cardId: string) => void }).__saveMapDetailReturn =
+      (cardId: string) => saveDetailReturn("day-map", cardId);
+    return () => {
+      delete (window as unknown as { __saveMapDetailReturn?: unknown }).__saveMapDetailReturn;
+    };
+  }, []);
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   /** 全屏切换后重算视野：effect 内赋值，toggle 里调用 */
@@ -224,7 +234,7 @@ export default function DayMap({
           // 详情链接：只有 slug 能在站内找到对应条目时才给，避免 404
           const stopSlug = placeSlug(cityId, s.name);
           const stopLink = findPlace("attraction", stopSlug)
-            ? `<br><a href="${base}${placeDetailPath("attraction", cityId, s.name)}" style="color:#0f766e;font-weight:700;font-size:12px">查看详情 →</a>`
+            ? `<br><a href="${base}${placeDetailPath("attraction", cityId, s.name)}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('day-${dayNum}-map-${s.name}')" style="color:#0f766e;font-weight:700;font-size:12px">查看详情 →</a>`
             : "";
           L.marker(pts[i], { icon: numIcon(i + 1) })
             .bindPopup(
@@ -268,7 +278,7 @@ export default function DayMap({
       const pt = LL(h.lat, h.lng);
       placeBoundsPts.push(pt);
       const hLink = findPlace("hotel", placeSlug(cityId, h.name))
-        ? `<br><a href="${base}${placeDetailPath("hotel", cityId, h.name)}" style="color:#1d4ed8;font-weight:700;font-size:12px">查看酒店详情 →</a>`
+        ? `<br><a href="${base}${placeDetailPath("hotel", cityId, h.name)}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('day-${dayNum}-map-hotel-${h.name}')" style="color:#1d4ed8;font-weight:700;font-size:12px">查看酒店详情 →</a>`
         : "";
       L.marker(pt, { icon: hotelIcon(!!h.booked) })
         .bindPopup(
@@ -282,7 +292,7 @@ export default function DayMap({
       const pt = LL(r.lat, r.lng);
       placeBoundsPts.push(pt);
       const rLink = findPlace("restaurant", placeSlug(cityId, r.name))
-        ? `<br><a href="${base}${placeDetailPath("restaurant", cityId, r.name)}" style="color:#c2410c;font-weight:700;font-size:12px">查看餐厅详情 →</a>`
+        ? `<br><a href="${base}${placeDetailPath("restaurant", cityId, r.name)}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('day-${dayNum}-map-restaurant-${r.name}')" style="color:#c2410c;font-weight:700;font-size:12px">查看餐厅详情 →</a>`
         : "";
       L.marker(pt, { icon: restaurantIcon() })
         .bindPopup(

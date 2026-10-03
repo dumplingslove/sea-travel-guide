@@ -5,6 +5,7 @@ import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
 import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, buildDayByDate, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
+import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { cloudStopsForTimeline } from "@/data/stopCoords";
 import { usePlanItinerary, type PlanDay } from "@/guide/plannerSchedule";
@@ -15,6 +16,7 @@ import { useMemo } from "react";
 type Day = PlanDay;
 
 export default function DayDetail() {
+  useDetailReturn("day-detail");
   const { n } = useParams<{ n: string }>();
   const dayNum = Number(n);
   const plan = usePlanItinerary();
@@ -179,12 +181,14 @@ export default function DayDetail() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-bold">{s.name}</h3>
                       {item && kindZh && (
-                        <Link
+                        <DetailLink
                           to={placeDetailPath(kindFromZh(kindZh), day.city_zh, item.name)}
+                          pageKey="day-detail"
+                          cardId={`day-${dayNum}-stop-${s.time}-${s.name}`}
                           className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
                         >
                           查看详情
-                        </Link>
+                        </DetailLink>
                       )}
                     </div>
                     <p className="text-sm text-gray-600 mt-1">{s.detail}</p>

@@ -3,7 +3,6 @@
  * 行动（本组件）/ 参考（BookingStatusSummary 城市明细）/ 记录（用户预订记录）三层分工。
  */
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { hotels, restaurants } from "@/guide/data";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 import { usePlanScope } from "@/guide/GuideApp";
@@ -12,6 +11,7 @@ import {
   bookingPolicyBadge,
 } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
+import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import type { ChecklistItem } from "./bookingTypes";
 import {
   FLIGHT_LEGS,
@@ -65,6 +65,7 @@ function Row({
   headline,
   sub,
   to,
+  detailCardId,
   onAdd,
   added,
   expandLabel,
@@ -76,6 +77,8 @@ function Row({
   headline: React.ReactNode;
   sub?: string;
   to?: string;
+  /** 详情返回定位用 cardId（to 存在时有效） */
+  detailCardId?: string;
   onAdd?: () => void;
   added?: TimelineMatch;
   /** 展开按钮文案，如"看 13 个直飞选项"；不传则无展开区 */
@@ -95,12 +98,14 @@ function Row({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           {to ? (
-            <Link
+            <DetailLink
               to={to}
+              pageKey="booking-timeline"
+              cardId={detailCardId || `timeline-${kind}-${name}`}
               className="font-medium text-gray-900 hover:text-teal-700 hover:underline truncate"
             >
               {name}
-            </Link>
+            </DetailLink>
           ) : (
             <span className="font-medium text-gray-900 truncate">{name}</span>
           )}
@@ -265,6 +270,7 @@ export default function BookingTimeline({
   /** 时间线条目 → 已加入的记录（原地转已确认用）；没有返回 undefined */
   matchRecord: (item: ChecklistItem) => TimelineMatch | undefined;
 }) {
+  useDetailReturn("booking-timeline");
   const mk = (
     id: string,
     bkind: ChecklistItem["bkind"],
@@ -375,6 +381,7 @@ export default function BookingTimeline({
         }
         sub={getRestaurantBookingPolicy(r.name)?.reason}
         to={placeDetailPath("restaurant", r.city, r.name)}
+        detailCardId={`timeline-restaurant-${r.city}-${r.name}`}
         expandLabel="看详情选这家"
         expandContent={
           <div className="text-xs text-gray-600 space-y-1.5">
@@ -385,12 +392,14 @@ export default function BookingTimeline({
               </div>
             )}
             <div className="flex items-center justify-between gap-2 pt-1">
-              <Link
+              <DetailLink
                 to={placeDetailPath("restaurant", r.city, r.name)}
+                pageKey="booking-timeline"
+                cardId={`timeline-restaurant-${r.city}-${r.name}`}
                 className="text-teal-700 underline underline-offset-2"
               >
                 完整详情页
-              </Link>
+              </DetailLink>
               <PickState action={act} pickLabel="就选这家" />
             </div>
           </div>
@@ -721,12 +730,14 @@ export default function BookingTimeline({
                         </div>
                         <div className="shrink-0 flex flex-col items-end gap-1">
                           <PickState action={act} pickLabel="选这家" />
-                          <Link
+                          <DetailLink
                             to={placeDetailPath("hotel", h.city, h.name)}
+                            pageKey="booking-timeline"
+                            cardId={`timeline-hotel-${h.city}-${h.name}`}
                             className="text-xs text-teal-700 underline underline-offset-2"
                           >
                             详情
-                          </Link>
+                          </DetailLink>
                         </div>
                       </div>
                     );
@@ -783,6 +794,7 @@ export default function BookingTimeline({
                     }
                     sub={a.reason}
                     to={placeDetailPath("attraction", a.city, a.name)}
+                    detailCardId={`timeline-attraction-${a.city}-${a.name}`}
                     expandLabel="查看选这个"
                     expandContent={
                       <div className="text-xs text-gray-600 space-y-1.5">
@@ -812,12 +824,14 @@ export default function BookingTimeline({
                                 官方购票 ↗
                               </a>
                             )}
-                            <Link
+                            <DetailLink
                               to={placeDetailPath("attraction", a.city, a.name)}
+                              pageKey="booking-timeline"
+                              cardId={`timeline-attraction-${a.city}-${a.name}`}
                               className="text-teal-700 underline underline-offset-2"
                             >
                               完整详情页
-                            </Link>
+                            </DetailLink>
                           </div>
                           <PickState action={act} pickLabel="就选这个" />
                         </div>
