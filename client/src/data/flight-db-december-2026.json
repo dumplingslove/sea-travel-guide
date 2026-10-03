@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-03T09:45:57+00:00",
+ "updated_at": "2026-10-03T19:34:45+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15305,8 +15305,8 @@
    "label": "曼谷→西安（2成人）",
    "days": {
     "2026-12-19": {
-     "economy_queried_at": "2026-10-02T18:37:58+00:00",
-     "economy_usd": 269,
+     "economy_queried_at": "2026-10-03T19:34:45+00:00",
+     "economy_usd": 270,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -15317,11 +15317,11 @@
        "dep": "14:35",
        "arr": "19:30",
        "duration": "3 hr 55 min",
-       "price_usd": 269
+       "price_usd": 270
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-02T18:37:58+00:00",
+     "business_queried_at": "2026-10-03T19:34:45+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞",
