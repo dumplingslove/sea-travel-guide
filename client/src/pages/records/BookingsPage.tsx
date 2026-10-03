@@ -86,12 +86,13 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
  * - 每项带实时价格追踪（航班走 Google Flights 实查价，酒店走实查房价）
  * - 一键转入预订记录
  * 用户原话："你现在的那些酒店的收藏我都不知道你收藏到什么地方去了，完全没有用" */
+/** 2026-10-03 用户重设计：行动安排按城市+时间线分组（取代按类型的分组）。
+ * 每个城市一块，时间线顺序排列；城内再分航班/酒店/餐厅/景点；实时价格+涨跌摆出来好比较。 */
 function FavoriteActionList({
   onAddFavorite,
   stays,
 }: {
   onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
-  /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），由调用方按行程推导后传入 */
   stays: HotelStay[];
 }) {
   const { rows, del, save } = useRecordsData(["favorite"]);
@@ -105,21 +106,11 @@ function FavoriteActionList({
     .map((r) => {
       try {
         const d = JSON.parse(r.body) as {
-          city?: string;
-          note?: string;
-          type?: string;
+          city?: string; note?: string; type?: string;
           flight?: {
-            carrier?: string;
-            flight?: string;
-            depart?: string;
-            arrive?: string;
-            arrivePlusDay?: boolean;
-            price?: number;
-            cabin?: string;
-            route?: string;
-            date?: string;
-            priceBasis?: string;
-            queriedAt?: string;
+            carrier?: string; flight?: string; depart?: string; arrive?: string;
+            arrivePlusDay?: boolean; price?: number; cabin?: string; route?: string;
+            date?: string; priceBasis?: string; queriedAt?: string;
           };
         };
         return { row: r, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
@@ -127,17 +118,14 @@ function FavoriteActionList({
         return { row: r, city: "", type: "attraction", flight: undefined };
       }
     })
-    // 2026-10-02：四类全收，不再只收酒店/餐厅
     .filter((f) => ["hotel", "flight", "restaurant", "attraction"].includes(f.type));
 
   if (!favs.length) {
     return (
       <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
-        <p className="text-sm text-gray-500">
-          📋 行动安排是空的
-        </p>
+        <p className="text-sm text-gray-500">📋 行动安排是空的</p>
         <p className="text-xs text-gray-400 mt-1">
-          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，候选会按四类分组出现在这里，带实时价格追踪
+          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，候选会按城市+时间线出现在这里，带实时价格追踪
         </p>
       </div>
     );
@@ -148,124 +136,159 @@ function FavoriteActionList({
     type === "flight" ? "✈️ 航班" :
     type === "restaurant" ? "🍽️ 餐厅" : "🏛️ 景点";
 
-  const timingTip = (type: string) =>
-    type === "hotel"
-      ? "12月是旺季，建议现在就订（提前2-3个月），好房型先到先得"
-      : type === "flight"
-      ? "机票价格波动大，看到合适就下手；出票前重查退改政策"
-      : type === "restaurant"
-      ? "热门餐厅提前1-2周订位；米其林/必订餐厅现在可查档期"
-      : "热门景点提前查门票/预约政策，避开人流高峰";
-
   const bkindFor = (type: string): BookingKind =>
     type === "hotel" ? "hotel" :
     type === "flight" ? "transport" :
     type === "restaurant" ? "restaurant" : "attraction";
 
-  /* 2026-10-03 用户：行动安排按酒店/航班/餐厅/景点分组，不再平铺 */
-  const groups = [
-    { type: "hotel", label: "🏨 酒店", hint: "12月旺季，先定酒店再排别的" },
-    { type: "flight", label: "✈️ 航班", hint: "价格波动大，看到合适就下手" },
-    { type: "restaurant", label: "🍽️ 餐厅", hint: "热门餐厅提前1-2周订位" },
-    { type: "attraction", label: "🏛️ 景点", hint: "需提前订票/报团的才值得现在锁定" },
-  ]
-    .map((g) => ({ ...g, items: favs.filter((f) => f.type === g.type) }))
-    .filter((g) => g.items.length > 0);
+  /** 航班归属城市：取路线目的地（如"北京 → 新加坡"→"新加坡"）；取不到用收藏时的 city */
+  const flightCity = (f: (typeof favs)[number]) => {
+    const route = f.flight?.route ?? "";
+    const dest = route.split("→").pop()?.trim();
+    if (dest) return dest;
+    return f.city;
+  };
+  const itemCity = (f: (typeof favs)[number]) =>
+    f.type === "flight" ? flightCity(f) : f.city;
+
+  /** 按时间线城市分组；不在行程里的城市收到"其他" */
+  const cityOrder = segs.map((s) => s.city);
+  const grouped = new Map<string, typeof favs>();
+  const other: typeof favs = [];
+  for (const f of favs) {
+    const c = itemCity(f);
+    if (c && cityOrder.includes(c)) {
+      if (!grouped.has(c)) grouped.set(c, []);
+      grouped.get(c)!.push(f);
+    } else {
+      other.push(f);
+    }
+  }
+  const citySections = cityOrder
+    .filter((c) => grouped.has(c))
+    .map((c) => ({
+      city: c,
+      seg: segs.find((s) => s.city === c)!,
+      items: grouped.get(c)!,
+    }));
+  if (other.length) {
+    citySections.push({ city: "其他", seg: null as unknown as PlanSegment, items: other });
+  }
+
+  const decided = favs.filter((f) => f.row.done).length;
 
   return (
-    <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-6">
-      <div className="flex items-center justify-between mb-1">
-        <h3 className="font-bold text-gray-900">📋 行动安排</h3>
-        <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
-          {favs.length} 项待决策
-        </span>
+    <div className="mb-6">
+      <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-4">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-bold text-gray-900">📋 行动安排</h3>
+          <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
+            {favs.length} 项候选 · {decided} 已确定
+          </span>
+        </div>
+        <p className="text-xs text-gray-500">
+          按行程时间线分城市排列，每个城市的航班/酒店/餐厅/景点都在一块，实时价格直接比较。看好点「✓ 确定」锁定，再「加入预订」走正式流程
+        </p>
       </div>
-      <p className="text-xs text-gray-500 mb-3">
-        你在酒店/飞机/餐厅/景点页收藏的候选都在这里，按四类分组、价格实时追踪。看好后点「✓ 确定」锁定最终选择，再点「加入预订」走正式预订流程
-      </p>
-      {groups.map((g) => (
-        <div key={g.type} className="mb-4 last:mb-0">
-          <div className="flex items-baseline gap-2 mb-1.5">
-            <h4 className="text-sm font-bold text-gray-800">{g.label}</h4>
-            <span className="text-xs text-gray-400">{g.items.length} 项 · {g.hint}</span>
-          </div>
-          <div className="space-y-2">
-            {g.items.map((f) => (
-          <div
-            key={f.row.id}
-            className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
-          >
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-medium text-gray-900 truncate">
-                {f.row.title}
-                <span className="ml-2 text-xs font-normal text-gray-400">
-                  {f.city && `${f.city} · `}{typeLabel(f.type)}
-                </span>
-              </div>
-              {/* 酒店：显示入住/退房（与航班模型一致：入住=到达当天，退房=转场航班当天） */}
-              {f.type === "hotel" && (() => {
-                const st = stayOf(f.city);
-                return st ? (
-                  <div className="text-xs text-gray-500">🛏️ 入住 {planDateShort(st.checkIn)} · 退房 {planDateShort(st.checkOut)} · {st.nights} 晚</div>
-                ) : (
-                  <div className="text-xs text-gray-400">🛏️ 住宿日期待定（行程规划里定好该城市日期后显示）</div>
-                );
-              })()}
-              <div className="text-xs text-amber-700">{timingTip(f.type)}</div>
-              {/* 实时价格追踪：航班查航班库最新实查价，酒店查实查房价，餐厅/景点显示预订政策 */}
-              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} flight={f.flight} segs={segs} />
+
+      {citySections.map((sec, si) => (
+        <div key={sec.city} className="mb-5">
+          {/* 城市头：时间线节点 */}
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex flex-col items-center">
+              <div className="w-3 h-3 rounded-full bg-teal-600 shrink-0" />
+              {si < citySections.length - 1 && <div className="w-0.5 h-4 bg-teal-200" />}
             </div>
-            <div className="flex gap-2 shrink-0">
-              {/* 2026-10-02 用户：行动安排是展示+确定，不是再选。点了"确定"就是最终选择 */}
-              {!f.row.done ? (
-                <button
-                  onClick={() =>
-                    save.mutate({
-                      id: f.row.id,
-                      kind: f.row.kind,
-                      title: f.row.title,
-                      body: f.row.body,
-                      day: f.row.day,
-                      done: true,
-                    })
-                  }
-                  className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700"
-                >
-                  ✓ 确定
-                </button>
-              ) : (
-                <span className="px-3 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-medium">
-                  ✓ 已确定
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h4 className="text-base font-bold text-gray-900">{sec.city}</h4>
+              {sec.seg && (
+                <span className="text-xs text-gray-500">
+                  {planDateShort(sec.seg.start)} → {planDateShort(sec.seg.end)} · {sec.seg.days} 天
                 </span>
               )}
-              <button
-                onClick={() =>
-                  onAddFavorite(
-                    f.row.title,
-                    f.city,
-                    bkindFor(f.type),
-                  )
-                }
-                className="px-3 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-medium hover:bg-teal-800"
-              >
-                加入预订
-              </button>
-              <button
-                onClick={() => del.mutate({ id: f.row.id })}
-                className="px-2 py-1.5 rounded-lg text-gray-400 text-xs hover:text-gray-600"
-                aria-label={`移除收藏${f.row.title}`}
-              >
-                ✕
-              </button>
+              {(() => {
+                const st = stayOf(sec.city);
+                return st ? (
+                  <span className="text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">
+                    🛏️ {planDateShort(st.checkIn)} 入住 · {planDateShort(st.checkOut)} 退房 · {st.nights} 晚
+                  </span>
+                ) : null;
+              })()}
             </div>
           </div>
-            ))}
-          </div>
+
+          {/* 城内按类型分组 */}
+          {(["flight", "hotel", "restaurant", "attraction"] as const).map((t) => {
+            const items = sec.items.filter((f) => f.type === t);
+            if (!items.length) return null;
+            return (
+              <div key={t} className="ml-6 mb-3">
+                <div className="text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
+                  {typeLabel(t)} · {items.length} 项
+                </div>
+                <div className="space-y-2">
+                  {items.map((f) => (
+                    <div
+                      key={f.row.id}
+                      className={`flex items-start justify-between gap-2 bg-white rounded-lg border px-3 py-2.5 ${
+                        f.row.done ? "border-green-200 bg-green-50/50" : "border-gray-200"
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium text-gray-900">
+                          {f.row.title}
+                          {f.type === "flight" && f.flight?.route && (
+                            <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
+                          )}
+                        </div>
+                        {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策 */}
+                        <FavoritePriceLine
+                          name={f.row.title} type={f.type} city={f.city}
+                          flight={f.flight} segs={segs}
+                        />
+                      </div>
+                      <div className="flex gap-1.5 shrink-0 pt-0.5">
+                        {!f.row.done ? (
+                          <button
+                            onClick={() => save.mutate({
+                              id: f.row.id, kind: f.row.kind, title: f.row.title,
+                              body: f.row.body, day: f.row.day, done: true,
+                            })}
+                            className="px-2.5 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700"
+                          >
+                            ✓ 确定
+                          </button>
+                        ) : (
+                          <span className="px-2.5 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-medium">
+                            ✓ 已确定
+                          </span>
+                        )}
+                        <button
+                          onClick={() => onAddFavorite(f.row.title, itemCity(f), bkindFor(f.type))}
+                          className="px-2.5 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-medium hover:bg-teal-800"
+                        >
+                          加入预订
+                        </button>
+                        <button
+                          onClick={() => del.mutate({ id: f.row.id })}
+                          className="px-1.5 py-1.5 rounded-lg text-gray-400 text-xs hover:text-gray-600"
+                          aria-label={`移除收藏${f.row.title}`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>
   );
 }
+
 
 /** 收藏项的实时价格行：航班查航班库最新实查价（带涨跌），酒店查实查房价，餐厅/景点显示预订政策 */
 function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; type: string; city: string; segs: PlanSegment[]; flight?: {
