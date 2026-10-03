@@ -2,7 +2,7 @@
  * 独立地点详情页（对标意大利站 /attraction/:id）。
  * 三个路由共用：/attraction/:slug /restaurant/:slug /hotel/:slug
  */
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useLayoutEffect } from "react";
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import { attractionGuides } from "@/guide/attractionGuides";
@@ -59,6 +59,7 @@ function Section({
 
 export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const item = slug ? findPlace(kind, slug) : undefined;
   const kindZh = KIND_ZH[kind];
 
@@ -67,6 +68,8 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
+
+  /* 2026-10-03 用户：详情页要能跳回原始位置（行动安排） */
 
   if (!item) return <NotFound kind={kind} />;
 
@@ -99,12 +102,13 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-end">
           <div className="max-w-4xl mx-auto px-4 pb-8 w-full">
-            <Link
-              to="/"
+            {/* 2026-10-03 用户：详情页返回要回到原始位置（行动安排），不是首页 */}
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex items-center gap-1 text-white/90 hover:text-white text-sm mb-3"
             >
-              ← 返回行程
-            </Link>
+              ← 返回
+            </button>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs font-bold text-white bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1">
                 {kindZh}

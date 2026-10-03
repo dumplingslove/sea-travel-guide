@@ -325,6 +325,26 @@ function FavoriteActionList({
                           <p className="font-medium text-gray-500 mb-1.5">
                             ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"} 当天所有直飞（{flightLeg.options?.length ?? 0} 班）
                           </p>
+                          {/* 2026-10-03 用户：机票要有价格变动时间线 */}
+                          {f.flight?.price != null && (
+                            <div className="mb-2 px-2 py-1.5 bg-blue-50 rounded">
+                              <p className="font-medium text-blue-900">📈 价格时间线</p>
+                              <p className="text-blue-800">
+                                收藏时 ${f.flight.price}
+                                {" → "}
+                                现在 ${(() => {
+                                  const route = f.flight!.route || "";
+                                  const leg = FLIGHT_LEGS.find((l) => l.route === route);
+                                  const planDate = route ? flightDateFromPlan(route, segs) : null;
+                                  const qDate = planDate || f.flight!.date || "";
+                                  const flightNo = f.flight!.flight || "";
+                                  const live = leg?.dbSeg && qDate && flightNo ? liveFlightQuote(leg.dbSeg, qDate, flightNo) : null;
+                                  const lp = live ? (f.flight!.cabin === "biz" ? live.bizPrice : live.price) : null;
+                                  return lp != null ? Math.round(lp) : "待查";
+                                })()}
+                              </p>
+                            </div>
+                          )}
                           {(flightLeg.options ?? []).length ? (
                             <div className="space-y-1">
                               {[...(flightLeg.options ?? [])]
