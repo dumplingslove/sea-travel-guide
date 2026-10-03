@@ -14,6 +14,43 @@
  */
 import flightDbJson from "../data/flight-db-december-2026.json";
 
+/** 行程规划的城市分段（与 guide/GuideApp.tsx 的 PlanCityScope 同形，避免循环引用） */
+export interface PlanSegment { city: string; start: string; end: string; days: number; }
+
+function addDaysIso(iso: string, n: number): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(y!, m! - 1, d!);
+  dt.setDate(dt.getDate() + n);
+  const p = (x: number) => String(x).padStart(2, "0");
+  return `${dt.getFullYear()}-${p(dt.getMonth() + 1)}-${p(dt.getDate())}`;
+}
+
+/**
+ * 城际转场航班的出发日期 = 出发城市在行程里的最后一天。
+ * 2026-10-03 用户：改了大行程后航班日期要跟着变，不许写死。
+ * route 如 "新加坡 → 普吉"，取"新加坡"段的 end。
+ * 找不到对应段时返回 null，调用方保留静态日期兜底。
+ */
+export function flightDateFromPlan(route: string, segments: PlanSegment[]): string | null {
+  const origin = route.split("→")[0]?.trim();
+  if (!origin) return null;
+  const seg = segments.find((s) => s.city === origin);
+  return seg ? seg.end : null;
+}
+
+/**
+ * 某城市的酒店入住区间：入住 = 该段 start，退房 = 下一段的 start（最后一段则为 end+1 天）。
+ * 2026-10-03 用户：改了大行程后酒店日期要跟着变，不许写死。
+ */
+export function hotelStayFromPlan(city: string, segments: PlanSegment[]): [string, string] | null {
+  const idx = segments.findIndex((s) => s.city === city);
+  if (idx < 0) return null;
+  const seg = segments[idx]!;
+  const next = segments[idx + 1];
+  const checkout = next ? next.start : addDaysIso(seg.end, 1);
+  return [seg.start, checkout];
+}
+
 export type BookByGroup = "now" | "d60" | "d30" | "d14" | "local";
 
 export interface FlightLegInfo {
@@ -461,17 +498,26 @@ function dbFlightOption(f: FlightDbFlight, cabin: "eco" | "biz"): FlightOption |
   };
 }
 
-function applyFlightDb(): void {
-  for (const leg of FLIGHT_LEGS) {
+/**
+ * 按指定日期（或 leg 自带日期）把航班库数据灌进一条 leg。
+ * 2026-10-03 新增 dateOverride：预订页按行程规划算出转场日期后，用正确的日期重查库，
+ * 解决"行程改了但航班日期/价格还停留在旧写死日期"的问题。
+ */
+export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): void {
     // 先删中转：只保留 stops===0（全站铁律）
     if (leg.options) leg.options = leg.options.filter((o) => (o.stops ?? 0) === 0);
     if (leg.businessOptions) leg.businessOptions = leg.businessOptions.filter((o) => (o.stops ?? 0) === 0);
 
-    const seg = leg.dbSeg, date = leg.date;
+    const seg = leg.dbSeg;
+    const date = dateOverride ?? leg.date;
+    if (dateOverride && dateOverride !== leg.date) {
+      leg.date = dateOverride;
+      leg.dateLabel = dateOverride.slice(5).replace("-", "-");
+    }
     if (!seg || !date) {
       // 不在库覆盖范围（如去程 SEA-PEK）：静态直飞即全部
       leg.flightState = leg.options && leg.options.length > 0 ? "ok" : "pending";
-      continue;
+      return;
     }
     const day = flightDbDay(seg, date);
     if (!day) {
@@ -489,7 +535,7 @@ function applyFlightDb(): void {
         leg.options = null;
         leg.businessOptions = null;
       }
-      continue;
+      return;
     }
     /* 新旧倒挂保护（2026-09-28 site-improve 口径②）：库里该 (航段,日期) 的实查时间若早于
        本文件静态实查（flight-refresh-daily-b 写入的更新 Google Flights 数据），则不覆盖——
@@ -499,7 +545,7 @@ function applyFlightDb(): void {
     const staticQueriedPdt = (leg.queriedAt || "").slice(0, 16);
     if (dbQueriedPdt && staticQueriedPdt && staticQueriedPdt > dbQueriedPdt) {
       leg.flightState = leg.options && leg.options.length > 0 ? "ok" : "pending";
-      continue;
+      return;
     }
     const nf = day.nonstop_flights || [];
     const queriedAt = toPDT(day.economy_queried_at || day.business_queried_at || "");
@@ -520,7 +566,7 @@ function applyFlightDb(): void {
       leg.queriedAt = queriedAt || null;
       leg.priceBasis = basis || null;
       leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}确认当天无直飞${basis ? `（${basis}）` : ""}。`;
-      continue;
+      return;
     }
 
     const ecoOpts = nf.map((f) => dbFlightOption(f, "eco")).filter((o): o is FlightOption => !!o);
@@ -561,7 +607,10 @@ function applyFlightDb(): void {
       leg.schedule = null;
     }
     leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}（${basis}，当天${nf.length}班直飞：${carrierSummary}）。`;
-  }
+}
+
+function applyFlightDb(): void {
+  for (const leg of FLIGHT_LEGS) refreshLegFromDb(leg);
 }
 applyFlightDb();
 

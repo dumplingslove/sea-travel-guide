@@ -21,7 +21,7 @@ import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
 import { bookingPolicyBadge } from '../bookings/restaurantBookingStatus';
-import { FLIGHT_LEGS, type FlightLegInfo, type FlightOption } from '../bookings/bookingTimeline';
+import { FLIGHT_LEGS, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -130,8 +130,33 @@ const currentStayRanges:Record<string,[string,string]>={
 };
 /** 行程城市住宿日期短标签（云端现行程优先，旧20天 route 表仅作非行程城市回退） */
 const currentStayLabel=(city:string)=>{const r=currentStayRanges[city];if(!r)return undefined;const f=(s:string)=>s.slice(5).replace('-','/');return `${f(r[0])}–${f(r[1])}`;};
-/** 按城市推算建议入住/退房日期，预填进酒店预订表单 */
-function cityStayRange(city:string):{date?:string;dateEnd?:string}{
+/** 按城市推算建议入住/退房日期，预填进酒店预订表单
+ * 2026-10-03 用户：改了大行程后酒店日期要跟着变。优先用行程规划的段算出
+ * （传 segments 或读本地 planner 缓存同步拿），拿不到才回退到写死表。 */
+function cityStayRange(city:string, segments?: PlanSegment[]):{date?:string;dateEnd?:string}{
+ let segs = segments;
+ if (!segs || segs.length===0) {
+   // 同步读 planner 本地缓存（usePlanScope 首屏也是用它），点击时拿最新值
+   try {
+     const cached = readPlannerCache();
+     const sched = cached?.plan?.schedule;
+     if (sched) {
+       const dates = Object.keys(sched).sort();
+       const built: PlanSegment[] = [];
+       for (const d of dates) {
+         const c = (sched as Record<string,{city:string}>)[d]!.city;
+         const last = built[built.length-1];
+         if (last && last.city===c) { last.end=d; last.days+=1; }
+         else built.push({city:c,start:d,end:d,days:1});
+       }
+       segs = built;
+     }
+   } catch { /* 忽略，走兜底 */ }
+ }
+ if (segs && segs.length>0) {
+   const stay = hotelStayFromPlan(city, segs);
+   if (stay) return {date: stay[0], dateEnd: stay[1]};
+ }
  const cur=currentStayRanges[city];
  if(cur)return {date:cur[0],dateEnd:cur[1]};
  const r=route.find(x=>x[0]===city)?.[2];
@@ -364,8 +389,32 @@ export function Flights({onBook}:{onBook?:OnBook}){
   * 2026-09-29 用户裁决：回程改为北京→首尔（停留2天）→西雅图；回程 9 段（PEK/PVG/CKG-SEA
   * 三城三天旧候选）标记 stale，不再刷新、诚实标注，不计入"已实查"与最低价统计。 */
  const legs:{id:string;title:string;kind:string;desc:string;date:string;day:number;leg:FlightLegInfo}[]=useMemo(
-   ()=>FLIGHT_LEGS.map(f=>({id:f.id,title:f.route,kind:f.kind==='intl'?'国际航班':'城际直飞',desc:f.note,date:f.date,day:f.day,leg:f})),
-   []
+   ()=>{
+     /* 2026-10-03 用户：改了大行程后航班日期要跟着变。城际段日期按行程规划推导
+      * （出发城市最后一天），并用该日期重查航班库拿价格；planner 没加载出来时用静态兜底。 */
+     const segs: PlanSegment[] = segments.map(s=>({city:s.city,start:s.start,end:s.end,days:s.days}));
+     const firstStart = segs[0]?.start;
+     return FLIGHT_LEGS.map(f=>{
+       let leg = f;
+       let date = f.date;
+       if (f.kind==='intercity' && segs.length>0) {
+         const planDate = flightDateFromPlan(f.route, segs);
+         if (planDate && planDate!==f.date) {
+           // 深拷贝一条再按正确日期重查库，不污染静态 FLIGHT_LEGS
+           leg = JSON.parse(JSON.stringify(f)) as FlightLegInfo;
+           refreshLegFromDb(leg, planDate);
+           date = planDate;
+         }
+       }
+       let day = f.day;
+       if (firstStart && date) {
+         const d = Math.round((new Date(date).getTime()-new Date(firstStart).getTime())/86400000)+1;
+         if (d>=1) day = d;
+       }
+       return {id:f.id,title:f.route,kind:f.kind==='intl'?'国际航班':'城际直飞',desc:leg.note,date,day,leg};
+     });
+   },
+   [segments]
  );
  const countries=useMemo(()=>{
    const s=[...new Set(segments.map(x=>countryOf(x.city)).filter(Boolean))];
