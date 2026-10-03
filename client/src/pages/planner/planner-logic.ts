@@ -541,6 +541,7 @@ function renderCalendar(){
   const mc=monthCells(),dates=mc.cells;grid.innerHTML="";
   S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
+  const bigFlights=bigTripFlightDates(); /* 2026-10-02 用户：大行程航班日也要标出来 */
   dates.forEach(date=>{
     const plan=state.schedule[date],d=new Date(date+"T12:00:00Z"),inMonth=date>=state.start&&date<=mc.lastScheduled;
     const wd=["周日","周一","周二","周三","周四","周五","周六"][d.getUTCDay()];
@@ -549,7 +550,8 @@ function renderCalendar(){
     const specials=(specialDateMarkers[date]||[]).filter(marker=>!plan||marker.city===plan.city);
     const dayMarker=[holiday,...specials.map(marker=>marker.short)].filter(Boolean).join(" · ");
     const transition=transferByDate[date],transfer=Boolean(transition),assessment=transition?.assessment;
-    const transferCopy=transfer?(assessment.kind==="direct"?`✈ 当天 ${assessment.airlines.length} 家直飞`:assessment.kind==="no-service"?"⚠ 当天无直飞":assessment.kind==="no-direct"?"⚠ 已确认无直飞":"⚠ 精确日期待核验"):"";
+    /* 2026-10-02 用户：日历上只显示航班有没有，不显示详细信息（详情在预订页看过了） */
+    const transferCopy=transfer?(assessment.kind==="direct"?`✈ 有直飞`:assessment.kind==="no-service"?"⚠ 无直飞":assessment.kind==="no-direct"?"⚠ 无直飞":"⚠ 待核验"):"";
     const paceCap=4; /* 双人节奏固定为特种兵默认（约4个点/天），节奏选择器已随智能推荐页移除 */
     const decision=state.calMode==="decision";
     const suits=decision?citySuitability(date):null, fs=decision?dayFlightSummary(date):null;
@@ -558,8 +560,8 @@ function renderCalendar(){
       ${suits.some(x=>x.level!=="ok")?`<span class="city-why">${suits.filter(x=>x.level!=="ok").map(x=>`<span class="${x.level}">${x.city}：${esc(x.reasons[0]||"")}</span>`).join("")}</span>`:""}
       <span class="flight-line">✈ 当日直飞 <b>${fs.direct}/56</b> 方向</span>
       ${fs.noService?`<span class="no-service-line" role="alert"><b>⚠ 今日无直飞</b>：${esc(fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、"))}</span>`:""}`:"";
-    const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""}`;
-    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
+    const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""} ${bigFlights.has(date)?"flight-day":""}`;
+    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${bigFlights.has(date)?`<span class="flight-label">✈️ 航班日</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
     const suitNote=decision&&suits?`；适宜度：${suits.map(x=>`${x.city}${suitDot(x.level)}`).join(" ")}`:"";
     const noSvcNote=decision&&fs&&fs.noService?`；今日无直飞：${fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、")}`:"";
     b.setAttribute("aria-label",`${date} ${wd}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${noSvcNote}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
@@ -639,6 +641,16 @@ function tripRanges(){
   const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
+}
+/* 大行程航班日（2026-10-02 用户：日历上标出坐飞机的那几天）：去程11/28 + 各段最后一天（转场飞） */
+function bigTripFlightDates(): Set<string>{
+  const ranges=tripRanges(), dates=new Set<string>();
+  dates.add("2026-11-28"); /* 去程：西雅图→北京 */
+  for(const segId of ["beijing1","singapore","couple","beijing3","seoul"]){
+    if(ranges[segId]) dates.add(ranges[segId].to);
+  }
+  /* xian段后坐高铁，不加 */
+  return dates;
 }
 interface FlightDbFlight { airline: string; flight: string|null; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
 interface FlightDbDay {
