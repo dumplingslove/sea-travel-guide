@@ -364,29 +364,16 @@ function FavoriteActionList({
                         />
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
-                        {/* 2026-10-03 用户：详情要跳到有照片有评论的完整详情页；
-                         * 酒店/餐厅/景点 → 详情页链接；航班 → 就地展开看当天所有选项（无独立详情页） */}
-                        {detail && f.type !== "flight" && (() => {
-                          const kind: PlaceKind = f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction";
-                          return (
-                            <Link
-                              to={placeDetailPath(kind, f.city, f.row.title)}
-                              onClick={() => {
-                                /* 2026-10-03 用户：详情页返回要回到原卡片位置 */
-                                try {
-                                  sessionStorage.setItem("bookingReturnScroll", JSON.stringify({
-                                    cardId: f.row.id,
-                                    scrollY: window.scrollY,
-                                    at: Date.now(),
-                                  }));
-                                } catch { /* ignore */ }
-                              }}
-                              className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
-                            >
-                              详情 →
-                            </Link>
-                          );
-                        })()}
+                        {/* 2026-10-03 用户：行动安排里所有类型都就地展开看详情，不跳详情页（返回位置修不好就别跳） */}
+                        {detail && f.type !== "flight" && (
+                          <button
+                            onClick={() => setExpandedId(isOpen ? null : f.row.id)}
+                            className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
+                            aria-expanded={isOpen}
+                          >
+                            {isOpen ? "▴ 收起" : "▾ 详情"}
+                          </button>
+                        )}
                         {f.type === "flight" && flightLeg && (
                           <button
                             onClick={() => setExpandedId(isOpen ? null : f.row.id)}
@@ -483,6 +470,63 @@ function FavoriteActionList({
                           {flightLeg.queriedAt && (
                             <p className="text-gray-400 mt-1">Google Flights 实查 · {flightLeg.queriedAt}</p>
                           )}
+                        </div>
+                      )}
+                      {/* 2026-10-03 用户：酒店/餐厅/景点也在行动安排里就地展开看详情，不跳页 */}
+                      {isOpen && f.type !== "flight" && detail && (
+                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
+                          {f.type === "hotel" && (() => {
+                            const h = detail as { description?: string; rating?: number; priceRange?: string; amenities?: string[]; address?: string };
+                            return (<>
+                              {h.description && <p>{h.description}</p>}
+                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
+                                {h.rating != null && <span>⭐ {h.rating}</span>}
+                                {h.priceRange && <span>💰 {h.priceRange}</span>}
+                                {h.address && <span>📍 {h.address}</span>}
+                              </div>
+                              {h.amenities && h.amenities.length > 0 && (
+                                <p className="text-gray-500">设施：{h.amenities.slice(0, 8).join(" · ")}</p>
+                              )}
+                            </>);
+                          })()}
+                          {f.type === "restaurant" && (() => {
+                            const r = detail as { description?: string; cuisine?: string; priceRange?: string; rating?: number; address?: string; mustTry?: string[] };
+                            return (<>
+                              {r.description && <p>{r.description}</p>}
+                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
+                                {r.cuisine && <span>🍽️ {r.cuisine}</span>}
+                                {r.priceRange && <span>💰 {r.priceRange}</span>}
+                                {r.rating != null && <span>⭐ {r.rating}</span>}
+                                {r.address && <span>📍 {r.address}</span>}
+                              </div>
+                              {r.mustTry && r.mustTry.length > 0 && (
+                                <p className="text-gray-500">必点：{r.mustTry.slice(0, 5).join(" · ")}</p>
+                              )}
+                            </>);
+                          })()}
+                          {f.type === "attraction" && (() => {
+                            const a = detail as { description?: string; ticketInfo?: string; openingHours?: string; address?: string; rating?: number };
+                            return (<>
+                              {a.description && <p>{a.description}</p>}
+                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
+                                {a.ticketInfo && <span>🎫 {a.ticketInfo}</span>}
+                                {a.openingHours && <span>🕐 {a.openingHours}</span>}
+                                {a.rating != null && <span>⭐ {a.rating}</span>}
+                                {a.address && <span>📍 {a.address}</span>}
+                              </div>
+                            </>);
+                          })()}
+                          <p className="text-gray-400">
+                            <Link
+                              to={placeDetailPath(
+                                f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction",
+                                f.city, f.row.title
+                              )}
+                              className="text-teal-700 hover:underline"
+                            >
+                              看完整详情页（含照片/评论）→
+                            </Link>
+                          </p>
                         </div>
                       )}
                     </div>
