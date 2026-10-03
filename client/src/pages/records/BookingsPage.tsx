@@ -23,6 +23,7 @@ import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
 import { hotels, attractions } from "@/guide/data";
+import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy, bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -266,8 +267,20 @@ function FavoriteActionList({
                         />
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
-                        {/* 2026-10-03 用户：item 要能展开看详情，方便对比（航班也放进来） */}
-                        {(detail || flightLeg) && (
+                        {/* 2026-10-03 用户：详情要跳到有照片有评论的完整详情页；
+                         * 酒店/餐厅/景点 → 详情页链接；航班 → 就地展开看当天所有选项（无独立详情页） */}
+                        {detail && f.type !== "flight" && (() => {
+                          const kind: PlaceKind = f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction";
+                          return (
+                            <Link
+                              to={placeDetailPath(kind, f.city, f.row.title)}
+                              className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
+                            >
+                              详情 →
+                            </Link>
+                          );
+                        })()}
+                        {f.type === "flight" && flightLeg && (
                           <button
                             onClick={() => setExpandedId(isOpen ? null : f.row.id)}
                             className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
@@ -306,18 +319,7 @@ function FavoriteActionList({
                         </button>
                       </div>
                       </div>
-                      {/* 展开详情：攻略原文（酒店/餐厅/景点）或当天所有航班选项（航班），方便对比 */}
-                      {isOpen && detail && (
-                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
-                          {detail.meta && <p><span className="font-medium text-gray-500">📍 </span>{detail.meta}</p>}
-                          {detail.detail && <p className="leading-relaxed">{detail.detail}</p>}
-                          {detail.best && (
-                            <p><span className="font-medium text-teal-700">💡 怎么选：</span>{detail.best}</p>
-                          )}
-                          {detail.hotelAcclaim && <p className="text-amber-700">🏆 {detail.hotelAcclaim}</p>}
-                          {detail.michelin && <p>⭐ {detail.michelin}</p>}
-                        </div>
-                      )}
+                      {/* 展开：航班看当天所有选项（酒店/餐厅/景点走详情页，此处不再内联展开） */}
                       {isOpen && f.type === "flight" && flightLeg && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
