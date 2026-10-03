@@ -34,14 +34,12 @@ export function flightDateFromPlan(route: string, segments: PlanSegment[]): stri
     "西安 → 首尔": ["beijing3", "end"],      /* 老婆带娃跟用户同一天飞首尔会合（不是xian.end） */
     "首尔 → 西雅图": ["seoul", "end"],
     "新加坡 → 西安": ["singapore", "end"],    /* 岳父母带娃回西安 */
-    "曼谷 → 西安": ["bangkok", "end"],       /* 夫妻从曼谷飞西安（bangkok是曼谷段ID） */
+    "曼谷 → 西安": ["曼谷", "end"],          /* 夫妻从曼谷飞西安 */
   };
   const mapped = ROUTE_DATE_MAP[route];
   if (mapped) {
     const seg = byId(mapped[0]) || byCity(mapped[0]);
-    /* bangkok段ID在schedule里是城市名，fallback到城市匹配 */
-    const seg2 = seg || (mapped[0] === "bangkok" ? byCity("曼谷") : null);
-    if (seg2) return mapped[1] === "start" ? seg2.start : seg2.end;
+    if (seg) return mapped[1] === "start" ? seg.start : seg.end;
     return null;
   }
   /* 其他城际段：出发城市最后一天 */

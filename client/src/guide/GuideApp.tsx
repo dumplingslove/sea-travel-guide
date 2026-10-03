@@ -416,7 +416,7 @@ export function Flights({onBook}:{onBook?:OnBook}){
    ()=>{
      /* 2026-10-03 用户：改了大行程后航班日期要跟着变。城际段日期按行程规划推导
       * （出发城市最后一天），并用该日期重查航班库拿价格；planner 没加载出来时用静态兜底。 */
-     const segs: PlanSegment[] = segments.map(s=>({city:s.city,start:s.start,end:s.end,days:s.days}));
+     const segs: PlanSegment[] = segments.map(s=>({city:s.city,start:s.start,end:s.end,days:s.days,segId:(s as PlanSegment).segId}));
      const firstStart = segs[0]?.start;
      return FLIGHT_LEGS.map(f=>{
        let leg = f;
