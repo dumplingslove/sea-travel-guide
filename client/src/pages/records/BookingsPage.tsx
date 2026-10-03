@@ -406,7 +406,7 @@ function BookingsInner() {
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
-          <AttractionCatalog scopeCities={scoped ? planCities : undefined} />
+          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} />
         </div>
       ) : menu === "action" ? (
         <>
