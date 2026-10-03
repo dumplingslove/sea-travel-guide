@@ -21,7 +21,7 @@ import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
 import { bookingPolicyBadge } from '../bookings/restaurantBookingStatus';
-import { FLIGHT_LEGS, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
+import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -96,6 +96,29 @@ export function usePlanScope(): { segments: PlanCityScope[]; source: 'cloud'|'ca
     return segs;
   }, [loaded]);
   return { segments, source: loaded?.source ?? null };
+}
+
+/**
+ * 完整大行程时间线（2026-10-03 用户：改了大行程后航班日期要跟着变）。
+ * 在 usePlanScope 的东南亚段基础上，把北京1/西安/北京3/首尔段链上，
+ * 仅供航班日期推导使用；酒店/餐厅/景点城市范围仍用 usePlanScope（不含国内城市）。
+ */
+export function useFullTripSegments(): PlanSegment[] {
+  const { segments } = usePlanScope();
+  const [tripDays, setTripDays] = useState<Record<string, number> | null>(null);
+  useEffect(() => {
+    let live = true;
+    const cached = readPlannerCache();
+    if (cached?.plan?.trip) setTripDays(cached.plan.trip as Record<string, number>);
+    loadPlannerPlan().then((p) => {
+      if (live && p?.plan?.trip) setTripDays(p.plan.trip as Record<string, number>);
+    }).catch(() => {});
+    return () => { live = false; };
+  }, []);
+  return useMemo(() => {
+    if (!tripDays) return segments as PlanSegment[];
+    return buildFullTripSegments(segments as PlanSegment[], tripDays);
+  }, [segments, tripDays]);
 }
 
 /** 署名：显示这条记录是谁添加的（家庭共享时区分），数据复用 sea_profiles。 */
@@ -380,7 +403,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
 }
 
 export function Flights({onBook}:{onBook?:OnBook}){
- const { segments } = usePlanScope();
+ const segments = useFullTripSegments();
  /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 18 段全量：去程西雅图→北京 1 段、亚洲段 8 段、回程三城三天 9 段）：
   * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
   * 与「预订行动」时间线、页顶每日动态横幅同一来源。

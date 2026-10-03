@@ -15,18 +15,39 @@
 import flightDbJson from "../data/flight-db-december-2026.json";
 
 /** 行程规划的城市分段（与 guide/GuideApp.tsx 的 PlanCityScope 同形，避免循环引用） */
-export interface PlanSegment { city: string; start: string; end: string; days: number; }
+export interface PlanSegment { city: string; start: string; end: string; days: number; segId?: string; }
 
 /**
- * 城际转场航班的出发日期 = 出发城市在行程里的最后一天。
+ * 城际转场航班的出发日期。
  * 2026-10-03 用户：改了大行程后航班日期要跟着变，不许写死。
- * route 如 "新加坡 → 普吉"，取"新加坡"段的 end。
- * 找不到对应段时返回 null，调用方保留静态日期兜底。
+ * 2026-10-03 修：大行程有北京两段（beijing1/beijing3）、西安两用（去新加坡会合/去首尔），
+ * 不能只按城市名匹配——按航线显式映射到段ID+日期类型。
  */
 export function flightDateFromPlan(route: string, segments: PlanSegment[]): string | null {
+  const byId = (id: string) => segments.find((s) => s.segId === id);
+  const byCity = (city: string) => segments.find((s) => s.city === city);
+  /* 航线 → (段ID, 取start还是end) 显式映射 */
+  const ROUTE_DATE_MAP: Record<string, [string, "start" | "end"]> = {
+    "北京 → 新加坡": ["beijing1", "end"],    /* 用户在北京待到最后一天飞 */
+    "西安 → 新加坡": ["singapore", "start"], /* 岳父母飞来新加坡会合（行程首日） */
+    "北京 → 首尔": ["beijing3", "end"],      /* 用户从北京飞首尔 */
+    "西安 → 首尔": ["beijing3", "end"],      /* 老婆带娃跟用户同一天飞首尔会合（不是xian.end） */
+    "首尔 → 西雅图": ["seoul", "end"],
+    "新加坡 → 西安": ["singapore", "end"],    /* 岳父母带娃回西安 */
+    "曼谷 → 西安": ["bangkok", "end"],       /* 夫妻从曼谷飞西安（bangkok是曼谷段ID） */
+  };
+  const mapped = ROUTE_DATE_MAP[route];
+  if (mapped) {
+    const seg = byId(mapped[0]) || byCity(mapped[0]);
+    /* bangkok段ID在schedule里是城市名，fallback到城市匹配 */
+    const seg2 = seg || (mapped[0] === "bangkok" ? byCity("曼谷") : null);
+    if (seg2) return mapped[1] === "start" ? seg2.start : seg2.end;
+    return null;
+  }
+  /* 其他城际段：出发城市最后一天 */
   const origin = route.split("→")[0]?.trim();
   if (!origin) return null;
-  const seg = segments.find((s) => s.city === origin);
+  const seg = byCity(origin);
   return seg ? seg.end : null;
 }
 
@@ -80,6 +101,60 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
       nights: Math.max(0, days(checkIn, seg.end)),
     };
   });
+}
+
+/**
+ * 完整大行程时间线（2026-10-03 用户：改了大行程后航班日期要跟着变）。
+ * 输入：东南亚城市段（来自云端 schedule，已含新加坡+向导城市精确日期）、
+ * 大行程各段天数（云端 plan.trip）。
+ * 输出：北京1 → 新加坡 → 东南亚城市 → 西安 → 北京3 → 首尔 全链条。
+ * 链条逻辑：beijing1 紧贴新加坡之前；西安紧贴东南亚最后城市之后；
+ * beijing3 紧贴西安之后；首尔紧贴北京3之后。
+ */
+export function buildFullTripSegments(
+  seaSegments: PlanSegment[],
+  tripDays: Record<string, number>,
+): PlanSegment[] {
+  if (!seaSegments.length) return seaSegments;
+  const addDays = (d: string, n: number) => {
+    const dt = new Date(d + "T00:00:00");
+    dt.setDate(dt.getDate() + n);
+    return dt.toISOString().slice(0, 10);
+  };
+  const sg = seaSegments.find((s) => s.city === "新加坡");
+  const lastSea = seaSegments[seaSegments.length - 1]!;
+  const out: PlanSegment[] = [];
+
+  /* 北京1段：新加坡开始前一天结束 */
+  if (sg && tripDays.beijing1) {
+    const end = addDays(sg.start, -1);
+    const start = addDays(end, -(tripDays.beijing1 - 1));
+    out.push({ segId: "beijing1", city: "北京", start, end, days: tripDays.beijing1 });
+  }
+  /* 新加坡 + 东南亚城市（带 segId） */
+  for (const s of seaSegments) {
+    const segId = s.city === "新加坡" ? "singapore" : undefined;
+    out.push(segId ? { ...s, segId } : s);
+  }
+  /* 西安段：东南亚最后城市后一天开始 */
+  if (tripDays.xian) {
+    const start = addDays(lastSea.end, 1);
+    const end = addDays(start, tripDays.xian - 1);
+    out.push({ segId: "xian", city: "西安", start, end, days: tripDays.xian });
+    /* 北京3段：西安后一天开始（用户一人回北京） */
+    if (tripDays.beijing3) {
+      const b3start = addDays(end, 1);
+      const b3end = addDays(b3start, tripDays.beijing3 - 1);
+      out.push({ segId: "beijing3", city: "北京", start: b3start, end: b3end, days: tripDays.beijing3 });
+      /* 首尔段：北京3后一天开始 */
+      if (tripDays.seoul) {
+        const seStart = addDays(b3end, 1);
+        const seEnd = addDays(seStart, tripDays.seoul - 1);
+        out.push({ segId: "seoul", city: "首尔", start: seStart, end: seEnd, days: tripDays.seoul });
+      }
+    }
+  }
+  return out;
 }
 
 export type BookByGroup = "now" | "d60" | "d30" | "d14" | "local";
