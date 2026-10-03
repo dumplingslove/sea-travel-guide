@@ -846,6 +846,8 @@ function renderTrip(){
   }
   body.innerHTML=`
     <div class="trip-flight"><span>✈️</span><strong>11/28（周六）西雅图 → 北京</strong><span>去程（时间已定）</span></div>
+    <div class="micro" style="margin-top:10px"><b>✈️ 西雅图 → 北京</b> · 11/28 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
+    <div class="trip-flightinfo">${tripFlightCard("SEA-PEK|2026-11-28","西雅图 → 北京")}</div>
     ${parts.join("\n    ")}
     ${renderReturnCard(ranges)}
     <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→西安→北京（你一人）→首尔（2天）→西雅图）</p>
