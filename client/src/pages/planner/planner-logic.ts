@@ -1470,7 +1470,8 @@ function applyLoadedPlan(p: PlannerPlan){
     if(Array.isArray(p.wz.order)&&p.wz.order.length) wz.order=p.wz.order.filter(c=>c!=="新加坡"&&WZ_ORDER.includes(c));
     if(p.wz.modes&&typeof p.wz.modes==="object"){ const m={...p.wz.modes}; delete m["新加坡"]; wz.modes=m; }
   }
-  if(p.returnCity==="PEK"||p.returnCity==="PVG"||p.returnCity==="CKG") returnCity=p.returnCity;
+  /* 2026-10-02 用户：回程城市定死北京，不再读云端旧值（旧规划里可能是上海/重庆） */
+  returnCity = "PEK";
   if(p.tripFlightDay&&typeof p.tripFlightDay==="object"){
     for(const [k,v] of Object.entries(p.tripFlightDay)){ if(v==="last"||v==="next") tripFlightDay[k]=v; }
   }
