@@ -365,19 +365,24 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
-  /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换 */
+  /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换；
+   * 城市 tab 也吸顶，top = 顶栏高度 + 二级菜单高度，经 CSS 变量 --citytabs-top 传入（挂在 documentElement 上全局继承） */
   const menuNavRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const nav = menuNavRef.current;
     if (!nav) return;
     const sync = () => {
       const header = document.querySelector("header.sticky");
-      if (header) nav.style.top = `${Math.round(header.getBoundingClientRect().height)}px`;
+      const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
+      if (header) nav.style.top = `${headerH}px`;
+      const navH = Math.round(nav.getBoundingClientRect().height);
+      document.documentElement.style.setProperty("--citytabs-top", `${headerH + navH}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
     const header = document.querySelector("header.sticky");
     if (header) ro.observe(header);
+    ro.observe(nav);
     window.addEventListener("resize", sync);
     return () => {
       ro.disconnect();
@@ -399,6 +404,11 @@ function BookingsInner() {
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "hotels";
   });
+  /* 2026-10-03 用户：切换二级菜单时回到顶端，滚动位置不在不同 tab 间继承 */
+  const switchMenu = (m: MenuKey) => {
+    setMenu(m);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  };
   /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
   const { segments } = usePlanScope();
   /* 2026-10-03 用户：国内城市（北京/西安）不用管，预订页只看国外城市。大行程固定国外城市：新加坡/首尔 + 向导里的东南亚城市 */
@@ -545,7 +555,7 @@ function BookingsInner() {
               key={m.key}
               role="tab"
               aria-selected={menu === m.key}
-              onClick={() => setMenu(m.key)}
+              onClick={() => switchMenu(m.key)}
               className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors whitespace-nowrap ${
                 menu === m.key
                   ? "bg-teal-700 text-white border-teal-700"
