@@ -278,7 +278,7 @@ function classicCoverage(city: string, days: number){
   const n=seen.size,total=list.length;
   return {n,total,pct:total?Math.round(n/total*100):0,estimated};
 }
-const countries: Record<string, { name: string; flag: string; cities: string[] }> = {TH:{name:"泰国",flag:"🇹🇭",cities:["曼谷","清迈","普吉"]},MY:{name:"马来西亚",flag:"🇲🇾",cities:["槟城","吉隆坡"]},VN:{name:"越南",flag:"🇻🇳",cities:["胡志明市","富国岛"]},SG:{name:"新加坡",flag:"🇸🇬",cities:["新加坡"]}};
+const countries: Record<string, { name: string; flag: string; cities: string[] }> = {TH:{name:"泰国",flag:"🇹🇭",cities:["曼谷","清迈","普吉"]},MY:{name:"马来西亚",flag:"🇲🇾",cities:["槟城","吉隆坡"]},VN:{name:"越南",flag:"🇻🇳",cities:["胡志明市","富国岛"]},SG:{name:"新加坡",flag:"🇸🇬",cities:["新加坡"]},KR:{name:"韩国",flag:"🇰🇷",cities:["首尔"]}};
 const cityCountry: Record<string, string> = {};Object.entries(countries).forEach(([k,v])=>v.cities.forEach(c=>cityCountry[c]=k));
 const hotels: Record<string, string> = {"曼谷":"The Ritz-Carlton, Bangkok / Park Hyatt Bangkok","清迈":"Chiang Mai Marriott Hotel","普吉":"JW Marriott Phuket Resort & Spa","槟城":"Penang Marriott Hotel","吉隆坡":"待定","胡志明市":"JW Marriott Hotel & Suites Saigon","富国岛":"Park Hyatt 预计 2027-03 开业；候选 New World / Regent","新加坡":"Grand Hyatt Singapore"};
 const baselineNights: Record<string, number> = {"曼谷":3,"清迈":2,"普吉":3,"槟城":2,"吉隆坡":2,"胡志明市":2,"富国岛":3}; /* 向导默认天数（新加坡不在向导城市池里） */
@@ -287,7 +287,9 @@ const publicHolidays: Record<string, PublicHoliday> = {
  "2026-12-07":{countries:["TH"],short:"泰国补假",name:"国王诞辰／国庆日／父亲节补假",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
  "2026-12-10":{countries:["TH"],short:"泰国宪法日",name:"宪法日",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
  "2026-12-25":{countries:["MY","SG"],short:"马／新圣诞节",name:"圣诞节",sources:[["马来西亚 2026 年 12 月假日表","https://www.traveloka.com/en-my/explore/tips/december-public-holiday/1003282"],["新加坡人力部公布日历的报道","https://www.hcamag.com/asia/specialisation/benefits/singapore-releases-public-holidays-for-2026/539279"]]},
- "2026-12-31":{countries:["TH"],short:"泰国除夕",name:"除夕（银行假日）",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]}
+ "2026-12-31":{countries:["TH"],short:"泰国除夕",name:"除夕（银行假日）",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]},
+ /* 2026-10-03 补：行程延续到 2027-01（首尔段），元旦多国放假 */
+ "2027-01-01":{countries:["TH","SG","MY","KR"],short:"元旦",name:"元旦（新年）",sources:[["泰国国家旅游局 2026 假日表","https://tourismthailand.com/blog/thailand-public-holidays.html"]]}
 };
 const specialDateMarkers: Record<string, SpecialMarker[]> = {
  "2026-12-01":[{city:"新加坡",short:"USS 私人活动",title:"环球影城私人活动日",body:"购票前按实际日期再次确认开放时段。"}],
@@ -569,7 +571,7 @@ function renderCalendar(){
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
   const paceName="特种兵";
   const note=elOpt("calendarNote");
-  if(note) note.textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
+  if(note) note.textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，元旦 1/1，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
   renderTransferAlerts();
   renderHardConstraints();
 }
@@ -589,7 +591,7 @@ function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state
 function planText(){
   const lines=["2026年12月东南亚行程",""];
   Object.keys(state.schedule).sort().forEach(date=>{const p=state.schedule[date];lines.push(`${date}｜${p.city}｜${p.mode==="family"?"亲子 2大1小（1–2个点＋午休）":p.mode==="free"?"留白 / 休整":"双人"}`)});
-  lines.push("","硬约束提醒：泰国公共假日 12/5、12/7补假、12/10、12/31；马来西亚／新加坡圣诞节 12/25；另查 12/1、12/9、12/11、12/12 特殊开放。周末限定市场、闭馆日、航线核验、酒店 minimum stay 与 gala dinner 请按页面检查。航班资料核查于 2026-09-14，预订前仍需按实际日期重查。")
+  lines.push("","硬约束提醒：泰国公共假日 12/5、12/7补假、12/10、12/31；马来西亚／新加坡圣诞节 12/25；元旦 1/1；另查 12/1、12/9、12/11、12/12 特殊开放。周末限定市场、闭馆日、航线核验、酒店 minimum stay 与 gala dinner 请按页面检查。航班资料核查于 2026-09-14，预订前仍需按实际日期重查。")
   return lines.join("\n")
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
@@ -649,7 +651,8 @@ function bigTripFlightDates(): Set<string>{
   for(const segId of ["beijing1","singapore","couple","beijing3","seoul"]){
     if(ranges[segId]) dates.add(ranges[segId].to);
   }
-  /* xian段后坐高铁，不加 */
+  /* 2026-10-03 注：西安→首尔（老婆带娃）与北京→首尔同一天飞（预订页两段同为 12/31），
+   * 已由 beijing3 段末日标记覆盖；回程各段精确日期待完整大行程模型验证后统一推导，不在此处猜 */
   return dates;
 }
 interface FlightDbFlight { airline: string; flight: string|null; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
@@ -916,6 +919,10 @@ function buildMergedSchedule(){
   const sg=tripRanges().singapore;
   if(sg){ for(let d=sg.from; d<=sg.to; d=addDays(d,1)){ schedule[d]={city:"新加坡",mode:"family"}; } }
   for(const r of wzRanges()){ for(let d=r.from; d<=r.to; d=addDays(d,1)){ schedule[d]={city:r.city,mode:r.mode}; } }
+  /* 2026-10-03：回程首尔段（国外城市）也要上日历，否则航班日标了也落在网格外看不见；
+   * 国内城市（北京/西安）按用户要求不管，不上日历 */
+  const sl=tripRanges().seoul;
+  if(sl){ for(let d=sl.from; d<=sl.to; d=addDays(d,1)){ schedule[d]={city:"首尔",mode:"family"}; } }
   return {schedule, start: sg?sg.from:wz.start};
 }
 function syncStartDateInput(){ const sd=S.getElementById("startDate") as HTMLInputElement|null; if(sd) sd.value=state.start; }

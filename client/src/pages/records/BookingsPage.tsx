@@ -21,9 +21,9 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
-import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
+import { getRestaurantBookingPolicy, bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
 import {
   presetFromChecklist,
@@ -37,7 +37,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 
 const kindBadge: Record<BookingKind, string> = {
@@ -88,10 +88,19 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
  * 用户原话："你现在的那些酒店的收藏我都不知道你收藏到什么地方去了，完全没有用" */
 function FavoriteActionList({
   onAddFavorite,
+  stays,
 }: {
   onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
+  /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），由调用方按行程推导后传入 */
+  stays: HotelStay[];
 }) {
   const { rows, del, save } = useRecordsData(["favorite"]);
+  const { segments } = usePlanScope();
+  const segs: PlanSegment[] = useMemo(
+    () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
+    [segments]
+  );
+  const stayOf = (city: string) => stays.find((s) => s.city === city);
   const favs = rows
     .map((r) => {
       try {
@@ -125,10 +134,10 @@ function FavoriteActionList({
     return (
       <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
         <p className="text-sm text-gray-500">
-          ⭐ 你还没有收藏任何酒店/航班/餐厅/景点
+          📋 行动安排是空的
         </p>
         <p className="text-xs text-gray-400 mt-1">
-          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，它们会出现在这里，带实时价格追踪
+          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，候选会按四类分组出现在这里，带实时价格追踪
         </p>
       </div>
     );
@@ -153,19 +162,35 @@ function FavoriteActionList({
     type === "flight" ? "transport" :
     type === "restaurant" ? "restaurant" : "attraction";
 
+  /* 2026-10-03 用户：行动安排按酒店/航班/餐厅/景点分组，不再平铺 */
+  const groups = [
+    { type: "hotel", label: "🏨 酒店", hint: "12月旺季，先定酒店再排别的" },
+    { type: "flight", label: "✈️ 航班", hint: "价格波动大，看到合适就下手" },
+    { type: "restaurant", label: "🍽️ 餐厅", hint: "热门餐厅提前1-2周订位" },
+    { type: "attraction", label: "🏛️ 景点", hint: "需提前订票/报团的才值得现在锁定" },
+  ]
+    .map((g) => ({ ...g, items: favs.filter((f) => f.type === g.type) }))
+    .filter((g) => g.items.length > 0);
+
   return (
     <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-6">
       <div className="flex items-center justify-between mb-1">
-        <h3 className="font-bold text-gray-900">⭐ 我的收藏 · 待预订清单</h3>
+        <h3 className="font-bold text-gray-900">📋 行动安排</h3>
         <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
-          {favs.length} 项
+          {favs.length} 项待决策
         </span>
       </div>
       <p className="text-xs text-gray-500 mb-3">
-        在酒店/飞机/餐厅/景点页点了「＋ 收藏」的都在这里展示，带实时价格追踪。看好价格后点「✓ 确定」锁定最终选择，再点「加入预订」走正式预订流程
+        你在酒店/飞机/餐厅/景点页收藏的候选都在这里，按四类分组、价格实时追踪。看好后点「✓ 确定」锁定最终选择，再点「加入预订」走正式预订流程
       </p>
-      <div className="space-y-2">
-        {favs.map((f) => (
+      {groups.map((g) => (
+        <div key={g.type} className="mb-4 last:mb-0">
+          <div className="flex items-baseline gap-2 mb-1.5">
+            <h4 className="text-sm font-bold text-gray-800">{g.label}</h4>
+            <span className="text-xs text-gray-400">{g.items.length} 项 · {g.hint}</span>
+          </div>
+          <div className="space-y-2">
+            {g.items.map((f) => (
           <div
             key={f.row.id}
             className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
@@ -177,9 +202,18 @@ function FavoriteActionList({
                   {f.city && `${f.city} · `}{typeLabel(f.type)}
                 </span>
               </div>
+              {/* 酒店：显示入住/退房（与航班模型一致：入住=到达当天，退房=转场航班当天） */}
+              {f.type === "hotel" && (() => {
+                const st = stayOf(f.city);
+                return st ? (
+                  <div className="text-xs text-gray-500">🛏️ 入住 {planDateShort(st.checkIn)} · 退房 {planDateShort(st.checkOut)} · {st.nights} 晚</div>
+                ) : (
+                  <div className="text-xs text-gray-400">🛏️ 住宿日期待定（行程规划里定好该城市日期后显示）</div>
+                );
+              })()}
               <div className="text-xs text-amber-700">{timingTip(f.type)}</div>
-              {/* 实时价格追踪：航班/酒店显示最新实查价 */}
-              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} flight={f.flight} />
+              {/* 实时价格追踪：航班查航班库最新实查价，酒店查实查房价，餐厅/景点显示预订政策 */}
+              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} flight={f.flight} segs={segs} />
             </div>
             <div className="flex gap-2 shrink-0">
               {/* 2026-10-02 用户：行动安排是展示+确定，不是再选。点了"确定"就是最终选择 */}
@@ -225,28 +259,53 @@ function FavoriteActionList({
               </button>
             </div>
           </div>
-        ))}
-      </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
-/** 收藏项的实时价格行：航班查 Google Flights 实查价，酒店查实查房价 */
-function FavoritePriceLine({ name, type, city, flight }: { name: string; type: string; city: string; flight?: {
+/** 收藏项的实时价格行：航班查航班库最新实查价（带涨跌），酒店查实查房价，餐厅/景点显示预订政策 */
+function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; type: string; city: string; segs: PlanSegment[]; flight?: {
   carrier?: string; flight?: string; depart?: string; arrive?: string; arrivePlusDay?: boolean;
   price?: number; cabin?: string; route?: string; date?: string; priceBasis?: string; queriedAt?: string;
 } }) {
   if (type === "flight") {
-    // 2026-10-02：具体航班收藏（带 flight 详情）直接显示，不再按路线匹配
+    // 2026-10-03：具体航班收藏从航班库实时重查，不再只显示收藏快照
     if (flight && flight.flight) {
+      const leg = flight.route ? FLIGHT_LEGS.find((l) => l.route === flight.route) : undefined;
+      const planDate = flight.route ? flightDateFromPlan(flight.route, segs) : null;
+      const qDate = planDate || flight.date || "";
+      const live = leg?.dbSeg && qDate ? liveFlightQuote(leg.dbSeg, qDate, flight.flight) : null;
+      const dateMoved = !!(planDate && flight.date && planDate !== flight.date);
+      const snapPrice = flight.price;
+      const livePrice = live ? (flight.cabin === "biz" ? live.bizPrice : live.price) : null;
+      const delta = livePrice != null && snapPrice != null ? Math.round(livePrice - snapPrice) : null;
       return (
         <div className="text-xs text-gray-600 mt-1">
           ✈️ <span className="font-semibold">{flight.carrier} {flight.flight}</span>
           <span className="text-gray-500"> {flight.depart}→{flight.arrive}{flight.arrivePlusDay?'+1':''}</span>
-          {flight.price != null && <span> · <span className="font-semibold text-teal-700">${flight.price}</span><span className="text-gray-400"> {flight.cabin==='biz'?'商务':'经济'} · {flight.priceBasis||''}</span></span>}
-          {flight.date && <span className="text-gray-400"> · {flight.date}</span>}
-          <span className="text-gray-400"> · Google Flights 实查</span>
-          {flight.queriedAt && <span className="text-gray-400"> · {flight.queriedAt}</span>}
+          {livePrice != null && live ? (
+            <span> · <span className="font-semibold text-teal-700">${Math.round(livePrice)}</span>
+              <span className="text-gray-400"> {flight.cabin==='biz'?'商务':'经济'} · 最新实查 {live.queriedAt}</span>
+              {delta != null && delta !== 0 && snapPrice != null && (
+                <span className={delta > 0 ? "text-red-600 font-medium" : "text-green-700 font-medium"}>
+                  {" "}{delta > 0 ? "▲涨" : "▼降"}${Math.abs(delta)}（收藏时${snapPrice}）
+                </span>
+              )}
+              {delta === 0 && <span className="text-gray-400"> · 与收藏时持平</span>}
+            </span>
+          ) : (
+            <span>
+              {snapPrice != null && <span> · <span className="font-semibold text-teal-700">${snapPrice}</span><span className="text-gray-400"> 收藏时价格</span></span>}
+              {flight.queriedAt && <span className="text-gray-400"> · {flight.queriedAt}</span>}
+            </span>
+          )}
+          {qDate && <span className="text-gray-400"> · {qDate}</span>}
+          {dateMoved && <span className="text-amber-600"> · 行程已调，按新日期重查</span>}
+          <span className="text-gray-400"> · Google Flights</span>
         </div>
       );
     }
@@ -278,7 +337,28 @@ function FavoritePriceLine({ name, type, city, flight }: { name: string; type: s
     if (p && p.unavailable) return <div className="text-xs text-gray-400 mt-1">💰 该日期暂无可订房</div>;
     return <div className="text-xs text-gray-400 mt-1">💰 价格：暂无实时价</div>;
   }
-  // 餐厅/景点：暂无结构化价格数据，显示提示
+  if (type === "restaurant") {
+    // 餐厅：显示已研究的订位政策（必须明确区分"没查过"和"不需要预订"）
+    const b = bookingPolicyBadge(name);
+    return (
+      <div className="text-xs text-gray-600 mt-1">
+        📅 <span title={b.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>{b.text}</span>
+      </div>
+    );
+  }
+  if (type === "attraction") {
+    // 景点：需提前订票/报团的给明确提示
+    if (MUST_BOOK_ATTRACTIONS.includes(name)) {
+      const reason = MUST_BOOK_ATTRACTION_REASONS[name];
+      return (
+        <div className="text-xs text-gray-600 mt-1">
+          🎫 <span className="font-medium text-amber-700">需提前订票/报团</span>
+          {reason && <span className="text-gray-400"> · {reason}</span>}
+        </div>
+      );
+    }
+    return <div className="text-xs text-gray-400 mt-1">🎫 现场买票即可，不用提前订</div>;
+  }
   return null;
 }
 
@@ -302,10 +382,10 @@ function BookingsInner() {
   });
   /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
   const { segments } = usePlanScope();
-  /* 2026-10-02 用户：预订页只显示大行程里的城市。大行程固定城市：北京/新加坡/西安/首尔 + 向导里的东南亚城市 */
+  /* 2026-10-03 用户：国内城市（北京/西安）不用管，预订页只看国外城市。大行程固定国外城市：新加坡/首尔 + 向导里的东南亚城市 */
   const planCities = useMemo(() => {
     const wizardCities = segments.map((s) => s.city);
-    const bigTripCities = ["北京", "新加坡", "西安", "首尔"];
+    const bigTripCities = ["新加坡", "首尔"];
     const all = [...bigTripCities];
     for (const c of wizardCities) {
       if (!all.includes(c)) all.push(c);
@@ -320,6 +400,11 @@ function BookingsInner() {
     return m;
   }, [segments]);
   const scoped = segments.length > 0;
+  /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），行动安排页酒店收藏展示用 */
+  const stays = useMemo(
+    () => hotelStaysFromPlan(segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
+    [segments]
+  );
   /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
   const onBookPreset = (p: BookingPreset) => {
     setPreset(p);
@@ -471,7 +556,7 @@ function BookingsInner() {
       ) : menu === "action" ? (
         <>
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
-      <FavoriteActionList onAddFavorite={addFavoriteToBooking} />
+      <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
         </>
       ) : (
         <div className="guide-scope">

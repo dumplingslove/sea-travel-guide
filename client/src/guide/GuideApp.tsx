@@ -431,7 +431,7 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：自 2026-09-29 起回程改为北京→首尔（停留2天）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button><FavButton name={l.title} city="" type="flight"/></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：自 2026-09-29 起回程改为北京→首尔（停留2天）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 
@@ -528,8 +528,29 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "Vinpearl Safari",        // 富国岛：建议提前买票
 ];
 
+/** 需提前订票景点 → 原因（行动安排页展示用） */
+export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
+  "大象自然公园": "官网预订，旺季提前订",
+  "Phuket Elephant Sanctuary": "每天仅接待200名，预约提前规划",
+  "Siam Niramit": "演出票，建议提前订",
+  "夜间动物园": "热门场次售罄，买票后还要预约时段",
+  "环球影城": "建议提前买票",
+  "Singapore Oceanarium": "建议提前买票",
+  "滨海湾花园": "双温室票建议官网提前买",
+  "双子塔": "需提前预订，限流",
+  "吉姆·汤普森之家": "按导览场次参观",
+  "攀牙湾": "一日游建议提前报团",
+  "皮皮岛": "一日游建议提前报团",
+  "因他农国家公园": "一日团建议提前报",
+  "VinWonders": "主题乐园建议提前买票",
+  "Vinpearl Safari": "建议提前买票",
+};
+
 export function AttractionCatalog({onBook, scopeCities, bookingOnly}:{onBook?:OnBook;scopeCities?:string[];bookingOnly?:boolean}){
-  const initialCity = scopeCities && scopeCities.length ? scopeCities[0] : undefined;
+  /* 2026-10-03 修：初始城市必须取过滤后的首个行程城市，不能直接取 scopeCities[0]
+   *（曾取到"北京"绕过 cities 过滤，tab 初次打开是空列表） */
+  const list = scopeCities && scopeCities.length ? scopeCities.filter(c=>cities.includes(c)) : undefined;
+  const initialCity = list && list.length ? list[0] : undefined;
   return <AttractionGuide onBook={onBook} standalone={false} initialCity={initialCity} bookingOnly={bookingOnly} scopeCities={scopeCities} />;
 }
 

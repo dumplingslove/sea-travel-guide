@@ -426,6 +426,36 @@ function flightDbDay(seg: string, date: string): FlightDbDay | null {
   return segs?.[seg]?.days?.[date] ?? null;
 }
 
+/**
+ * 行动安排页：收藏航班的实时价格重查（2026-10-03 用户：收藏后价格涨跌要能追踪，什么时候该买）。
+ * 按（航段代码，日期，航班号）在 Google Flights 航班库里找最新实查价；
+ * 找不到精确匹配返回 null，调用方回退显示收藏快照。
+ */
+export interface LiveFlightQuote {
+  price: number | null;
+  bizPrice: number | null;
+  queriedAt: string; // "YYYY-MM-DD HH:MM PDT"
+  carrier: string;
+  depart: string;
+  arrive: string;
+}
+export function liveFlightQuote(dbSeg: string, date: string, flightNo: string): LiveFlightQuote | null {
+  if (!dbSeg || !date || !flightNo) return null;
+  const day = flightDbDay(dbSeg, date);
+  if (!day) return null;
+  const f = (day.nonstop_flights || []).find((x) => (x.flight ?? "").trim() === flightNo.trim());
+  if (!f) return null;
+  const arrRaw = String(f.arr || "");
+  return {
+    price: f.price_usd ?? null,
+    bizPrice: f.business_price_usd ?? null,
+    queriedAt: toPDT(day.economy_queried_at || day.business_queried_at || ""),
+    carrier: fullCarrier(f.airline || ""),
+    depart: f.dep || "",
+    arrive: arrRaw.replace("+1", "").trim(),
+  };
+}
+
 /** ISO UTC → "YYYY-MM-DD HH:MM PDT" */
 function toPDT(iso: string): string {
   const d = new Date(iso);

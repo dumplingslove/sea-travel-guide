@@ -1,12 +1,18 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import {
   ItineraryDayCard,
   detailForPlanDay,
+  buildDayByDate,
+  cityStayRanges,
+  parseFavoriteRow,
+  toISODate,
   type DayBooking,
+  type ParsedFavorite,
 } from "@/components/ItineraryDayCard";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
 import { usePlanItinerary, KOREA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
+import { parseBookingBody } from "@/bookings/bookingTypes";
 
 type Day = PlanDay;
 
@@ -151,6 +157,17 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
     };
   }, []);
   const { rows } = useRecordsData(["booking"]);
+  const { rows: favRows } = useRecordsData(["favorite"]);
+  // 2026-10-03：预订没填天号时按日期自动挂天（不再丢弃）；收藏按城市进每天卡片
+  const dayByDate = useMemo(() => buildDayByDate(allDays), [allDays]);
+  const stays = useMemo(() => cityStayRanges(allDays), [allDays]);
+  const favorites: ParsedFavorite[] = useMemo(
+    () =>
+      favRows
+        .map((r) => parseFavoriteRow({ title: r.title, body: r.body || "" }))
+        .filter((f) => ["hotel", "restaurant", "flight"].includes(f.type)),
+    [favRows]
+  );
   // 每城第几天（用于匹配静态内容：首日=抵达内容，末日=离境内容）
   const idxInCity = new Map<number, number>();
   const cityCounts = new Map<string, number>();
@@ -162,10 +179,21 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   });
   const bookingsByDay = new Map<number, DayBooking[]>();
   rows.forEach((r) => {
-    if (r.day == null) return;
-    const list = bookingsByDay.get(r.day) || [];
-    list.push({ day: r.day, title: r.title, body: r.body || "", done: !!r.done });
-    bookingsByDay.set(r.day, list);
+    // 2026-10-03：day 没手填时按预订日期自动推导天号；手填的优先
+    let dayNum: number | null = r.day;
+    if (dayNum == null) {
+      try {
+        const bd = parseBookingBody(r.body || "");
+        const iso = bd.date ? toISODate(bd.date) : null;
+        dayNum = iso ? dayByDate.get(iso) ?? null : null;
+      } catch {
+        dayNum = null;
+      }
+    }
+    if (dayNum == null) return;
+    const list = bookingsByDay.get(dayNum) || [];
+    list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
+    bookingsByDay.set(dayNum, list);
   });
   // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池；云端13天再叠加逐日修正）
   const isCloud = plan.source === "cloud";
@@ -246,6 +274,8 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
               bookings={bookingsByDay.get(d.day) || []}
               isCloud={isCloudPlan}
               cityScheduledNames={cityScheduled.get(d.city_zh)}
+              favorites={favorites}
+              stay={stays.get(d.city_zh) ?? null}
             />
           );
         })}

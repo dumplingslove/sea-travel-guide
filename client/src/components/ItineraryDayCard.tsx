@@ -26,6 +26,115 @@ import {
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
+import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
+
+/* ============ 每日行程 enrichment：预订/收藏/酒店（2026-10-03 用户模型） ============
+ * 行程页是出行时每天看的：每天要显示当天的酒店、航班、餐厅（收藏的和已订的），
+ * 真订了的信息也要落在对应日期上。以下 helpers 供 Home（列表页）与 DayDetail（单日页）共用。
+ */
+
+/** "12月6日"/"12/06"/"2026-12-06" → "2026-12-06"（行程 2026-11～2027-01：10-12月归2026，1-9月归2027） */
+export function toISODate(s: string): string | null {
+  if (!s) return null;
+  let m = s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+  m = s.match(/(\d{1,2})月(\d{1,2})日/);
+  if (m) {
+    const mo = Number(m[1]);
+    const yr = mo >= 10 ? 2026 : 2027;
+    return `${yr}-${String(mo).padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+  }
+  m = s.match(/(\d{1,2})\/(\d{1,2})/);
+  if (m) {
+    const mo = Number(m[1]);
+    const yr = mo >= 10 ? 2026 : 2027;
+    return `${yr}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+  }
+  return null;
+}
+
+/** 日期（ISO）→ 天号：预订只填了日期没填天号时自动挂天 */
+export function buildDayByDate(days: PlanDay[]): Map<string, number> {
+  const m = new Map<string, number>();
+  days.forEach((d) => {
+    const iso = toISODate(d.date);
+    if (iso && !m.has(iso)) m.set(iso, d.day);
+  });
+  return m;
+}
+
+function addOneDay(iso: string): string {
+  const d = new Date(`${iso}T12:00:00`);
+  d.setDate(d.getDate() + 1);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+/**
+ * 每城住宿区间（与航班模型一致：入住=到达当天=本城首日，退房=转场航班当天=下一城首日；
+ * 末城退房=本城末日+1）。国内城市不管，只算行程里的城市。
+ */
+export function cityStayRanges(days: PlanDay[]): Map<string, { checkIn: string; checkOut: string }> {
+  const first = new Map<string, string>();
+  const last = new Map<string, string>();
+  const order: string[] = [];
+  days.forEach((d) => {
+    const iso = toISODate(d.date);
+    if (!iso) return;
+    if (!first.has(d.city_zh)) {
+      first.set(d.city_zh, iso);
+      order.push(d.city_zh);
+    }
+    last.set(d.city_zh, iso);
+  });
+  const out = new Map<string, { checkIn: string; checkOut: string }>();
+  order.forEach((c, i) => {
+    const next = order[i + 1];
+    out.set(c, {
+      checkIn: first.get(c)!,
+      checkOut: next ? first.get(next)! : addOneDay(last.get(c)!),
+    });
+  });
+  return out;
+}
+
+export interface ParsedFavorite {
+  name: string;
+  city: string;
+  type: string;
+  flight?: {
+    carrier?: string;
+    flight?: string;
+    depart?: string;
+    arrive?: string;
+    arrivePlusDay?: boolean;
+    price?: number;
+    cabin?: string;
+    route?: string;
+    date?: string;
+    queriedAt?: string;
+  };
+}
+
+/** 解析收藏记录（与 BookingsPage 的 FavoriteActionList 同构） */
+export function parseFavoriteRow(r: { title: string; body: string }): ParsedFavorite {
+  try {
+    const d = JSON.parse(r.body || "{}") as {
+      city?: string;
+      type?: string;
+      flight?: ParsedFavorite["flight"];
+    };
+    return { name: r.title, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
+  } catch {
+    return { name: r.title, city: "", type: "attraction" };
+  }
+}
+
+/** ISO → "M/D" 短日期 */
+export function isoShort(iso: string): string {
+  const p = iso.split("-");
+  return p.length === 3 ? `${Number(p[1])}/${Number(p[2])}` : iso;
+}
 
 /**
  * 意大利南法站行程页 1:1 逻辑复刻：
@@ -230,6 +339,148 @@ function Collapsible({
   );
 }
 
+/* ---------------- 今晚住哪（2026-10-03 用户模型：每天显示当天的酒店，收藏的和已订的都要有） ---------------- */
+export function DayHotelSection({
+  city,
+  stay,
+  favHotels,
+  hotelBookings,
+}: {
+  city: string;
+  stay: { checkIn: string; checkOut: string } | null;
+  favHotels: ParsedFavorite[];
+  hotelBookings: DayBooking[];
+}) {
+  const nights = stay
+    ? Math.max(0, Math.round((new Date(stay.checkOut).getTime() - new Date(stay.checkIn).getTime()) / 86400000))
+    : 0;
+  const stayLine = stay ? (
+    <p className="text-xs text-gray-500 mb-2">🛏️ {isoShort(stay.checkIn)} 入住 · {isoShort(stay.checkOut)} 退房 · {nights} 晚</p>
+  ) : null;
+  if (!favHotels.length && !hotelBookings.length) {
+    return (
+      <section className="mb-6 pt-6 border-t border-gray-100">
+        <h4 className="text-lg font-bold mb-2 text-teal-800">🛏️ 今晚住哪</h4>
+        <p className="text-sm text-gray-500">
+          {city}的酒店还没收藏。
+          <Link to="/bookings?menu=hotels" className="text-teal-700 underline font-medium">去预订页挑酒店 →</Link>
+        </p>
+        {stayLine}
+      </section>
+    );
+  }
+  const bookedNames = new Set(hotelBookings.map((b) => b.title.trim().toLowerCase()));
+  const onlyFav = favHotels.filter((f) => !bookedNames.has(f.name.trim().toLowerCase()));
+  return (
+    <section className="mb-6 pt-6 border-t border-gray-100">
+      <h4 className="text-lg font-bold mb-3 text-teal-800">🛏️ 今晚住哪</h4>
+      {stayLine}
+      <div className="space-y-2">
+        {hotelBookings.map((b, i) => {
+          const bd = parseBookingBody(b.body);
+          const summary = bookingSummary(bd);
+          return (
+            <div key={`hb-${i}`} className="bg-teal-50 border border-teal-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-semibold">{b.title}</span>
+                {b.done
+                  ? <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
+                  : <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>}
+              </div>
+              {summary && <p className="text-xs text-gray-600 mt-1">{summary}</p>}
+              {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+            </div>
+          );
+        })}
+        {onlyFav.map((f) => (
+          <div key={f.name} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-semibold">{f.name}</span>
+              <span className="text-xs text-gray-400">⭐ 已收藏</span>
+              <Link to="/bookings?menu=hotels" className="text-xs text-teal-700 underline">去预订 →</Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- 本日预订（Home 列表页与 DayDetail 单日页共用） ---------------- */
+export function DayBookingsSection({ bookings }: { bookings: DayBooking[] }) {
+  if (!bookings.length) return null;
+  return (
+    <section className="mb-6 pt-6 border-t border-gray-100">
+      <h4 className="text-lg font-bold mb-3 text-green-700">
+        ✅ 本日预订
+      </h4>
+      <div className="space-y-2">
+        {bookings.map((b, i) => {
+          const bd = parseBookingBody(b.body);
+          const summary = bookingSummary(bd);
+          return (
+            <div
+              key={i}
+              className="bg-green-50 border border-green-200 rounded-lg p-3"
+            >
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
+                  {BOOKING_KIND_LABEL[bd.bkind] || "预订"}
+                </span>
+                <p className="font-semibold text-sm">{b.title}</p>
+                {b.done && (
+                  <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+                    已确认
+                  </span>
+                )}
+              </div>
+              {summary && (
+                <p className="text-xs text-gray-700">{summary}</p>
+              )}
+              {bd.note && (
+                <p className="text-xs text-gray-500 mt-1">{bd.note}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <Link
+        to="/bookings"
+        className="inline-block mt-2 text-sm font-medium text-green-700 underline"
+      >
+        去我的预订管理 →
+      </Link>
+    </section>
+  );
+}
+
+/* ---------------- 转场日实际航班（2026-10-03：不再只显示通用核对清单） ---------------- */
+function TransferFlightInfo({ route, date, favFlights }: { route: string; date: string; favFlights: ParsedFavorite[] }) {
+  const leg = FLIGHT_LEGS.find((l) => l.route === route);
+  const opts = leg?.options ?? [];
+  const prices = opts.map((o) => o.price ?? Infinity).filter((p) => p !== Infinity);
+  const min = prices.length ? Math.min(...prices) : null;
+  if (!leg && !favFlights.length) return null;
+  return (
+    <div className="mb-3 pb-3 border-b border-sky-200">
+      <p className="text-sm font-semibold text-sky-900">✈️ {route}{date ? ` · ${isoShort(date)}` : ""}</p>
+      {favFlights.map((f) => (
+        <p key={f.name} className="text-sm text-sky-800 mt-1">
+          ⭐ {f.flight?.carrier} {f.flight?.flight} {f.flight?.depart}→{f.flight?.arrive}{f.flight?.arrivePlusDay ? "+1" : ""}
+          {f.flight?.price != null && <span> · ${f.flight.price}</span>}
+          <span className="text-xs text-sky-600">（你收藏的）</span>
+        </p>
+      ))}
+      {leg && (
+        <p className="text-xs text-sky-700 mt-1">
+          当天 {opts.length} 班直飞{min != null && <> · ${min} 起</>}{leg.queriedAt && <> · 实查 {leg.queriedAt}</>}
+          {!favFlights.length && "（去预订页收藏具体航班）"}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- 时间线上的单个站点 ---------------- */
 function StopBlock({
   stop,
@@ -301,6 +552,8 @@ export function ItineraryDayCard({
   bookings,
   isCloud,
   cityScheduledNames,
+  favorites,
+  stay,
 }: {
   day: PlanDay;
   prevDay: PlanDay | undefined;
@@ -310,6 +563,10 @@ export function ItineraryDayCard({
   isCloud?: boolean;
   /** 该城市段所有天已排的站点名（算本城备选用） */
   cityScheduledNames?: Set<string>;
+  /** 用户收藏（酒店/餐厅/航班）：每天卡片里展示当天城市的收藏 */
+  favorites?: ParsedFavorite[];
+  /** 本城住宿区间（入住/退房），"今晚住哪"用 */
+  stay?: { checkIn: string; checkOut: string } | null;
 }) {
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
   const prevCityId =
@@ -378,6 +635,26 @@ export function ItineraryDayCard({
     })
     .slice(0, 4);
 
+  /* 2026-10-03 用户模型：每天卡片展示当天城市的收藏（酒店/餐厅）与转场航班收藏 */
+  const favs = favorites ?? [];
+  const favHotels = favs.filter((f) => f.type === "hotel" && f.city === day.city_zh);
+  const favRests = favs.filter((f) => f.type === "restaurant" && f.city === day.city_zh);
+  const transferRoute =
+    prevDay && prevDay.city_zh !== day.city_zh
+      ? `${prevDay.city_zh} → ${day.city_zh}`
+      : null;
+  const transferDate = toISODate(day.date) ?? "";
+  const favFlights = transferRoute
+    ? favs.filter((f) => f.type === "flight" && f.flight?.route === transferRoute)
+    : [];
+  const hotelBookings = bookings.filter((b) => {
+    try {
+      return parseBookingBody(b.body).bkind === "hotel";
+    } catch {
+      return false;
+    }
+  });
+
   return (
     <article
       id={`day-${day.day}`}
@@ -426,6 +703,10 @@ export function ItineraryDayCard({
             }
           >
             <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
+              {/* 2026-10-03：转场日显示实际航班（收藏的+当天直飞），不再只给通用清单 */}
+              {transferRoute && (
+                <TransferFlightInfo route={transferRoute} date={transferDate} favFlights={favFlights} />
+              )}
               {matchedLeg ? (
                 <>
                   <p className="font-semibold text-sky-900">{matchedLeg[0]}</p>
@@ -492,6 +773,14 @@ export function ItineraryDayCard({
             </div>
           </Collapsible>
         )}
+
+        {/* 今晚住哪（2026-10-03 用户模型：每天都要能看到住哪，收藏的和已订的） */}
+        <DayHotelSection
+          city={day.city_zh}
+          stay={stay ?? null}
+          favHotels={favHotels}
+          hotelBookings={hotelBookings}
+        />
 
         {/* 上午 / 下午 / 晚上 */}
         {morning.length > 0 && (
@@ -584,7 +873,7 @@ export function ItineraryDayCard({
         )}
 
         {/* 餐饮安排 */}
-        {(detail?.food || restPicks.length > 0) && (
+        {(detail?.food || restPicks.length > 0 || favRests.length > 0) && (
           <section className="mb-6 pt-6 border-t border-gray-100">
             <h4 className="text-lg font-bold mb-3 text-orange-700">
               🍽️ 餐饮安排
@@ -593,6 +882,33 @@ export function ItineraryDayCard({
               <p className="text-sm text-gray-700 leading-relaxed mb-3">
                 {detail.food}
               </p>
+            )}
+            {/* 2026-10-03：你收藏的餐厅优先显示，不再只给静态推荐 */}
+            {favRests.length > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-bold text-orange-700 mb-1.5">⭐ 你收藏的餐厅</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {favRests.map((f) => {
+                    const b = bookingPolicyBadge(f.name);
+                    return (
+                      <div key={f.name} className="bg-orange-100 border border-orange-300 rounded-lg p-3">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-semibold flex-1">{f.name}</span>
+                          <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
+                            {b.text}
+                          </span>
+                          <Link
+                            to={placeDetailPath("restaurant", f.city, f.name)}
+                            className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
+                          >
+                            查看详情
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
             {restPicks.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -686,50 +1002,8 @@ export function ItineraryDayCard({
           </Collapsible>
         )}
 
-        {/* 本日预订 */}
-        {bookings.length > 0 && (
-          <section className="mb-6 pt-6 border-t border-gray-100">
-            <h4 className="text-lg font-bold mb-3 text-green-700">
-              ✅ 本日预订
-            </h4>
-            <div className="space-y-2">
-              {bookings.map((b, i) => {
-                const bd = parseBookingBody(b.body);
-                const summary = bookingSummary(bd);
-                return (
-                  <div
-                    key={i}
-                    className="bg-green-50 border border-green-200 rounded-lg p-3"
-                  >
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
-                        {BOOKING_KIND_LABEL[bd.bkind] || "预订"}
-                      </span>
-                      <p className="font-semibold text-sm">{b.title}</p>
-                      {b.done && (
-                        <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
-                          已确认
-                        </span>
-                      )}
-                    </div>
-                    {summary && (
-                      <p className="text-xs text-gray-700">{summary}</p>
-                    )}
-                    {bd.note && (
-                      <p className="text-xs text-gray-500 mt-1">{bd.note}</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <Link
-              to="/bookings"
-              className="inline-block mt-2 text-sm font-medium text-green-700 underline"
-            >
-              去我的预订管理 →
-            </Link>
-          </section>
-        )}
+        {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天） */}
+        <DayBookingsSection bookings={bookings} />
 
         {/* 当日路线图 */}
         <section className="mb-6">
