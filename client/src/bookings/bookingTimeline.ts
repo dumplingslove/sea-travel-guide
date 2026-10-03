@@ -71,6 +71,12 @@ export interface HotelStay {
   /** 退房 YYYY-MM-DD（离境航班当天） */
   checkOut: string;
   nights: number;
+  /** 已预订（2026-10-03 用户要求）：以酒店确认邮件为准，特殊标注 */
+  booked?: boolean;
+  /** 预订确认号 */
+  confirmationCode?: string;
+  /** 已预订的酒店名 */
+  bookedHotelName?: string;
 }
 
 /** planner 读不到时的酒店住宿兜底（与当前行程一致；planner 能读到时一律按 planner 推导，不许写死覆盖） */

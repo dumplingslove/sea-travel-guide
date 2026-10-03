@@ -436,9 +436,18 @@ export default function BookingTimeline({
               ⚠️ 旧方案 · 已停更
             </span>
           ) : null;
+          const ticketedBadge = f.ticketed ? (
+            <span
+              title={f.note || "已出票，以出票邮件为准"}
+              className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
+            >
+              ✅ 已出票
+            </span>
+          ) : null;
           const headline = (
             <>
               {staleBadge}
+              {ticketedBadge}
               {f.flightState === "none" ? (
             <span className="text-gray-500">
               暂无直飞{f.queriedAt ? `（${f.queriedAt}实查）` : ""}
@@ -614,6 +623,14 @@ export default function BookingTimeline({
       <Group id="d60" count={stays.length}>
         {stays.map((s) => {
           const checkInLabel = s.checkIn.slice(5);
+          const bookedBadge = s.booked ? (
+            <span
+              title={s.confirmationCode ? `确认号 ${s.confirmationCode}` : "已预订"}
+              className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
+            >
+              ✅ 已预订{s.bookedHotelName ? ` · ${s.bookedHotelName}` : ""}
+            </span>
+          ) : null;
           const cands = hotels
             .filter((h) => h.city === s.city)
             .map((h) => ({ h, p: getLiveHotelPrice(h.name) }))
@@ -633,15 +650,16 @@ export default function BookingTimeline({
             <Row
               key={s.city}
               kind="hotel"
-              name={`${s.city} · 选 1 家`}
-              meta={`${checkInLabel}入住 ${s.nights}晚 · ${stayDaysLabel(s, firstStart)}`}
+              name={`${s.city} · ${s.booked ? "已定" : "选 1 家"}`}
+              meta={`${checkInLabel}入住 ${s.nights}晚 · ${stayDaysLabel(s, firstStart)}${s.confirmationCode ? ` · 确认号 ${s.confirmationCode}` : ""}`}
               headline={
                 min ? (
                   <span>
+                    {bookedBadge}
                     {cands.length} 家候选 · <b className="text-teal-700">{min}</b>
                   </span>
                 ) : (
-                  <span className="text-gray-400">{cands.length} 家候选 · 暂无实时价</span>
+                  <span className="text-gray-400">{bookedBadge}{cands.length} 家候选 · 暂无实时价</span>
                 )
               }
               sub="点「看候选」直接对比选定；价格按行程日期查询，仅供参考"
