@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// updated_at: 2026-10-03T16:49Z
+// updated_at: 2026-10-03T22:48Z
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -6808,8 +6808,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §27/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。 【2026-09-27 21:24-21:30 PDT 老窗口续接轮】6篇图片审查完成 5/6：#5 momo🥔《新加坡小印度有感》(09-01)6张无机位标记、无写真式人像；#6 RachelGUO🍒《苏丹回➕哈芝巷Citywalk》(07-30)18张——黄裙女子多机位写真，正文明确机位（苏丹回教堂拱门/Muscat Street/Bussorah Street/Drunken Balloon/Vintagewknd蓝店）→人像机位候选双达标；#4琬君表姐2轮搜索未找到暂缓。证据见 redo-strict/singapore-xhs.md 本轮轮次记录。",
-       "posts": 10,
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §27/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。 【2026-09-27 21:24-21:30 PDT 老窗口续接轮】6篇图片审查完成 5/6：#5 momo🥔《新加坡小印度有感》(09-01)6张无机位标记、无写真式人像；#6 RachelGUO🍒《苏丹回➕哈芝巷Citywalk》(07-30)18张——黄裙女子多机位写真，正文明确机位（苏丹回教堂拱门/Muscat Street/Bussorah Street/Drunken Balloon/Vintagewknd蓝店）→人像机位候选双达标；#4琬君表姐2轮搜索未找到暂缓。证据见 redo-strict/singapore-xhs.md 本轮轮次记录。\n\n【2026-10-03 14:34 PDT 老窗口实搜补3篇高流量帖】用户接管证实搜索正常后，主agent用老窗口搜索\"新加坡牛车水\"正常渲染，补3篇：\n1. 我可是脆脆鲨《购物分享｜新加坡牛车水一千块买Dior》(06-01) 3709赞/77评 https://www.xiaohongshu.com/explore/69b656e7000000001f003cc4 —— et vous vintage中古店(41 Temple St 02-01)，dior约1k rmb；评论：月野彩子\"涨价了吗图1现在要655新了\"、Winter.\"昨天去了但是空无一人\"\n2. 糯米就是Nommy《新加坡吃完会一生怀念的》(05-30) 1340赞/75评 https://www.xiaohongshu.com/explore/6a199d39000000003700f5d2 —— 元气椰林椰子鸡；评论：WDXHS\"在牛车水找了好久…一个月之前已经关门了\"(9赞)\n3. Cheyenne《被J人男友做的新加坡旅游攻略惊艳到了》(2025-12-01) 1440赞/13评 https://www.xiaohongshu.com/explore/692e8690000000001e029e4c —— 四日游第二天牛车水→佛牙寺→小印度→哈芝巷\n3篇均≥1300赞，满足\"高流量帖\"口径。posts 11→14。",
+       "posts": 14,
        "status": "partial",
        "target": 10
       }
@@ -7767,5 +7767,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-03T16:49Z"
+ "updated_at": "2026-10-03T22:48Z"
 };
