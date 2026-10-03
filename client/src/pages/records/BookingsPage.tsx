@@ -99,10 +99,23 @@ function FavoriteActionList({
           city?: string;
           note?: string;
           type?: string;
+          flight?: {
+            carrier?: string;
+            flight?: string;
+            depart?: string;
+            arrive?: string;
+            arrivePlusDay?: boolean;
+            price?: number;
+            cabin?: string;
+            route?: string;
+            date?: string;
+            priceBasis?: string;
+            queriedAt?: string;
+          };
         };
-        return { row: r, city: d.city ?? "", type: d.type ?? "attraction" };
+        return { row: r, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
       } catch {
-        return { row: r, city: "", type: "attraction" };
+        return { row: r, city: "", type: "attraction", flight: undefined };
       }
     })
     // 2026-10-02：四类全收，不再只收酒店/餐厅
@@ -166,7 +179,7 @@ function FavoriteActionList({
               </div>
               <div className="text-xs text-amber-700">{timingTip(f.type)}</div>
               {/* 实时价格追踪：航班/酒店显示最新实查价 */}
-              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} />
+              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} flight={f.flight} />
             </div>
             <div className="flex gap-2 shrink-0">
               {/* 2026-10-02 用户：行动安排是展示+确定，不是再选。点了"确定"就是最终选择 */}
@@ -219,9 +232,25 @@ function FavoriteActionList({
 }
 
 /** 收藏项的实时价格行：航班查 Google Flights 实查价，酒店查实查房价 */
-function FavoritePriceLine({ name, type, city }: { name: string; type: string; city: string }) {
+function FavoritePriceLine({ name, type, city, flight }: { name: string; type: string; city: string; flight?: {
+  carrier?: string; flight?: string; depart?: string; arrive?: string; arrivePlusDay?: boolean;
+  price?: number; cabin?: string; route?: string; date?: string; priceBasis?: string; queriedAt?: string;
+} }) {
   if (type === "flight") {
-    // 航班：从 FLIGHT_LEGS 找对应航段的最新实查价
+    // 2026-10-02：具体航班收藏（带 flight 详情）直接显示，不再按路线匹配
+    if (flight && flight.flight) {
+      return (
+        <div className="text-xs text-gray-600 mt-1">
+          ✈️ <span className="font-semibold">{flight.carrier} {flight.flight}</span>
+          <span className="text-gray-500"> {flight.depart}→{flight.arrive}{flight.arrivePlusDay?'+1':''}</span>
+          {flight.price != null && <span> · <span className="font-semibold text-teal-700">${flight.price}</span><span className="text-gray-400"> {flight.cabin==='biz'?'商务':'经济'} · {flight.priceBasis||''}</span></span>}
+          {flight.date && <span className="text-gray-400"> · {flight.date}</span>}
+          <span className="text-gray-400"> · Google Flights 实查</span>
+          {flight.queriedAt && <span className="text-gray-400"> · {flight.queriedAt}</span>}
+        </div>
+      );
+    }
+    // 旧版：整条航段收藏，按路线匹配（兼容旧数据）
     const leg = FLIGHT_LEGS.find((l) => l.route === name || name.includes(l.route) || l.route.includes(name));
     if (!leg) return <div className="text-xs text-gray-400 mt-1">💰 价格：航段信息待匹配</div>;
     const opts = leg.options ?? [];
