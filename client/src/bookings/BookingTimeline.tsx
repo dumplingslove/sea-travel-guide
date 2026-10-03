@@ -15,6 +15,7 @@ import { placeDetailPath } from "@/guide/placeDetail";
 import type { ChecklistItem } from "./bookingTypes";
 import {
   FLIGHT_LEGS,
+  FALLBACK_STAYS,
   ADVANCE_TICKETS,
   GROUP_META,
   flightDateFromPlan,
@@ -289,7 +290,7 @@ export default function BookingTimeline({
     end: s.end,
     days: s.days,
   }));
-  const firstStart = segs[0]?.start;
+  const firstStart = segs[0]?.start ?? FALLBACK_STAYS[0]!.checkIn;
   const legs: FlightLegInfo[] = useMemo(
     () =>
       FLIGHT_LEGS.map((f) => {
@@ -314,7 +315,10 @@ export default function BookingTimeline({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [segments],
   );
-  const stays: HotelStay[] = useMemo(() => hotelStaysFromPlan(segs), [segments]);
+  const stays: HotelStay[] = useMemo(
+    () => (segs.length > 0 ? hotelStaysFromPlan(segs) : FALLBACK_STAYS),
+    [segments],
+  );
   const stayLabel = (city: string) => cityStayLabel(city, stays, firstStart);
 
   // ---- 酒店：每城最低参考价 ----
