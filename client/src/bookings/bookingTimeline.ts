@@ -30,11 +30,11 @@ export function flightDateFromPlan(route: string, segments: PlanSegment[]): stri
   const ROUTE_DATE_MAP: Record<string, [string, "start" | "end"]> = {
     "北京 → 新加坡": ["beijing1", "end"],    /* 用户在北京待到最后一天飞 */
     "西安 → 新加坡": ["singapore", "start"], /* 岳父母飞来新加坡会合（行程首日） */
-    "北京 → 首尔": ["beijing3", "end"],      /* 用户从北京飞首尔 */
-    "西安 → 首尔": ["beijing3", "end"],      /* 老婆带娃跟用户同一天飞首尔会合（不是xian.end） */
-    "首尔 → 西雅图": ["seoul", "end"],
     "新加坡 → 西安": ["singapore", "end"],    /* 岳父母带娃回西安 */
     "曼谷 → 西安": ["曼谷", "end"],          /* 夫妻从曼谷飞西安 */
+    /* 2026-10-03 用户纠正：回程三段（北京→首尔、西安→首尔、首尔→西雅图）不推导，
+     * 首尔→西雅图是已出票的 AS120（2027-01-01），回程日期以实际出票/计划为准，
+     * 不许用段天数机械推导覆盖。 */
   };
   const mapped = ROUTE_DATE_MAP[route];
   if (mapped) {
