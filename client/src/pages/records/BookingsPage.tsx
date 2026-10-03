@@ -201,8 +201,9 @@ function FavoriteActionList({
   /** 航班归属城市：取路线目的地（如"北京 → 新加坡"→"新加坡"）；取不到用收藏时的 city */
   const flightCity = (f: (typeof favs)[number]) => {
     const route = f.flight?.route ?? "";
-    const dest = route.split("→").pop()?.trim();
-    if (dest) return dest;
+    /* 2026-10-03 用户：航班按出发城市归类（首尔→西雅图归首尔），不是按到达城市 */
+    const origin = route.split("→")[0]?.trim();
+    if (origin) return origin;
     return f.city;
   };
   const itemCity = (f: (typeof favs)[number]) =>
@@ -475,45 +476,12 @@ function FavoriteActionList({
                       {/* 2026-10-03 用户：酒店/餐厅/景点也在行动安排里就地展开看详情，不跳页 */}
                       {isOpen && f.type !== "flight" && detail && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
-                          {f.type === "hotel" && (() => {
-                            const h = detail as { description?: string; rating?: number; priceRange?: string; amenities?: string[]; address?: string };
+                          {(() => {
+                            const d = detail as { meta?: string; detail?: string; best?: string };
                             return (<>
-                              {h.description && <p>{h.description}</p>}
-                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
-                                {h.rating != null && <span>⭐ {h.rating}</span>}
-                                {h.priceRange && <span>💰 {h.priceRange}</span>}
-                                {h.address && <span>📍 {h.address}</span>}
-                              </div>
-                              {h.amenities && h.amenities.length > 0 && (
-                                <p className="text-gray-500">设施：{h.amenities.slice(0, 8).join(" · ")}</p>
-                              )}
-                            </>);
-                          })()}
-                          {f.type === "restaurant" && (() => {
-                            const r = detail as { description?: string; cuisine?: string; priceRange?: string; rating?: number; address?: string; mustTry?: string[] };
-                            return (<>
-                              {r.description && <p>{r.description}</p>}
-                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
-                                {r.cuisine && <span>🍽️ {r.cuisine}</span>}
-                                {r.priceRange && <span>💰 {r.priceRange}</span>}
-                                {r.rating != null && <span>⭐ {r.rating}</span>}
-                                {r.address && <span>📍 {r.address}</span>}
-                              </div>
-                              {r.mustTry && r.mustTry.length > 0 && (
-                                <p className="text-gray-500">必点：{r.mustTry.slice(0, 5).join(" · ")}</p>
-                              )}
-                            </>);
-                          })()}
-                          {f.type === "attraction" && (() => {
-                            const a = detail as { description?: string; ticketInfo?: string; openingHours?: string; address?: string; rating?: number };
-                            return (<>
-                              {a.description && <p>{a.description}</p>}
-                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-gray-500">
-                                {a.ticketInfo && <span>🎫 {a.ticketInfo}</span>}
-                                {a.openingHours && <span>🕐 {a.openingHours}</span>}
-                                {a.rating != null && <span>⭐ {a.rating}</span>}
-                                {a.address && <span>📍 {a.address}</span>}
-                              </div>
+                              {d.detail && <p>{d.detail}</p>}
+                              {d.meta && <p className="text-gray-500">{d.meta}</p>}
+                              {d.best && <p className="text-teal-700">💡 {d.best}</p>}
                             </>);
                           })()}
                           <p className="text-gray-400">
