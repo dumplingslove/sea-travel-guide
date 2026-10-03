@@ -2,10 +2,11 @@
  * /bookings 预订行动时间线：按"最晚行动时间"分组，不是按类目堆砌。
  * 行动（本组件）/ 参考（BookingStatusSummary 城市明细）/ 记录（用户预订记录）三层分工。
  */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { hotels, restaurants } from "@/guide/data";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { usePlanScope } from "@/guide/GuideApp";
 import {
   getRestaurantBookingPolicy,
   bookingPolicyBadge,
@@ -14,10 +15,15 @@ import { placeDetailPath } from "@/guide/placeDetail";
 import type { ChecklistItem } from "./bookingTypes";
 import {
   FLIGHT_LEGS,
-  HOTEL_STAYS,
   ADVANCE_TICKETS,
   GROUP_META,
+  flightDateFromPlan,
+  hotelStaysFromPlan,
+  refreshLegFromDb,
   type BookByGroup,
+  type FlightLegInfo,
+  type HotelStay,
+  type PlanSegment,
 } from "./bookingTimeline";
 
 const KIND_BADGE: Record<string, string> = {
@@ -228,15 +234,26 @@ function PickState({
   ) : null;
 }
 
-/** 城市停留日期标签，如"新加坡 · 12/6–12/10 · D1–D5"（按 HOTEL_STAYS 推导） */
-function cityStayLabel(city: string): string {
-  const s = HOTEL_STAYS.find((x) => x.city === city);
+/** ISO 日期 → "12/6" 短标签 */
+function shortMd(iso: string): string {
+  const [, m, d] = iso.split("-").map(Number);
+  return `${m}/${d}`;
+}
+
+/** 住宿段的 D 天数标签，如 "D1–D5"（行程首日为 D1） */
+function stayDaysLabel(s: HotelStay, firstStart?: string): string {
+  if (!firstStart) return "";
+  const n = (iso: string) =>
+    Math.round((new Date(iso).getTime() - new Date(firstStart).getTime()) / 86400000) + 1;
+  return `D${n(s.checkIn)}–D${n(s.checkOut)}`;
+}
+
+/** 城市停留日期标签，如"新加坡 · 12/6–12/10 · D1–D5"（按行程规划推导的住宿段） */
+function cityStayLabel(city: string, stays: HotelStay[], firstStart?: string): string {
+  const s = stays.find((x) => x.city === city);
   if (!s) return city;
-  const [m, d] = s.checkInLabel.split("-").map(Number);
-  const start = new Date(2026, m - 1, d);
-  const end = new Date(start.getTime() + (s.nights - 1) * 86400000);
-  const f = (dt: Date) => `${dt.getMonth() + 1}/${dt.getDate()}`;
-  return `${city} · ${f(start)}–${f(end)} · ${s.daysLabel}`;
+  const days = stayDaysLabel(s, firstStart);
+  return `${city} · ${shortMd(s.checkIn)}–${shortMd(s.checkOut)}${days ? ` · ${days}` : ""}`;
 }
 
 export default function BookingTimeline({
@@ -261,6 +278,44 @@ export default function BookingTimeline({
     if (added) return { added };
     return { onAdd: () => onAdd(item) };
   };
+
+  /* 2026-10-03 用户：改了大行程后航班/酒店日期要跟着变。
+   * 预订页此前直接渲染 FLIGHT_LEGS / HOTEL_STAYS 的写死日期（航班 12-11 等、酒店入住 12-06/12-11/12-14/12-16），
+   * 与行程规划错位。这里按云端行程规划推导，与攻略页航班 tab 同口径。 */
+  const { segments } = usePlanScope();
+  const segs: PlanSegment[] = segments.map((s) => ({
+    city: s.city,
+    start: s.start,
+    end: s.end,
+    days: s.days,
+  }));
+  const firstStart = segs[0]?.start;
+  const legs: FlightLegInfo[] = useMemo(
+    () =>
+      FLIGHT_LEGS.map((f) => {
+        if (!f.stale && segs.length > 0) {
+          const planDate = flightDateFromPlan(f.route, segs);
+          if (planDate && planDate !== f.date) {
+            // 深拷贝一条再按正确日期重查库，不污染静态 FLIGHT_LEGS
+            const leg: FlightLegInfo = JSON.parse(JSON.stringify(f));
+            refreshLegFromDb(leg, planDate);
+            if (firstStart) {
+              const d =
+                Math.round(
+                  (new Date(leg.date).getTime() - new Date(firstStart).getTime()) / 86400000,
+                ) + 1;
+              if (d >= 1) leg.day = d;
+            }
+            return leg;
+          }
+        }
+        return f;
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [segments],
+  );
+  const stays: HotelStay[] = useMemo(() => hotelStaysFromPlan(segs), [segments]);
+  const stayLabel = (city: string) => cityStayLabel(city, stays, firstStart);
 
   // ---- 酒店：每城最低参考价 ----
   const cityMinPrice = (city: string): string | null => {
@@ -350,7 +405,7 @@ export default function BookingTimeline({
       return (
         <div key={city}>
           <div className="mt-3 mb-1 text-xs font-bold text-gray-700 bg-gray-100 rounded px-2 py-1">
-            {cityStayLabel(city)}
+            {stayLabel(city)}
           </div>
           {items.map(restRow)}
         </div>
@@ -360,8 +415,8 @@ export default function BookingTimeline({
   return (
     <div className="mb-8">
       {/* 现在就锁：机票 */}
-      <Group id="now" count={FLIGHT_LEGS.length}>
-        {FLIGHT_LEGS.map((f) => {
+      <Group id="now" count={legs.length}>
+        {legs.map((f) => {
           const isIntl = f.kind === "intl";
           const directCount = (f.options ?? []).filter((o) => (o.stops ?? 0) === 0).length;
           const nonstopBadge = f.flightState === "ok" ? (
@@ -552,8 +607,9 @@ export default function BookingTimeline({
       </Group>
 
       {/* 提前60天：酒店 */}
-      <Group id="d60" count={HOTEL_STAYS.length}>
-        {HOTEL_STAYS.map((s) => {
+      <Group id="d60" count={stays.length}>
+        {stays.map((s) => {
+          const checkInLabel = s.checkIn.slice(5);
           const cands = hotels
             .filter((h) => h.city === s.city)
             .map((h) => ({ h, p: getLiveHotelPrice(h.name) }))
@@ -574,7 +630,7 @@ export default function BookingTimeline({
               key={s.city}
               kind="hotel"
               name={`${s.city} · 选 1 家`}
-              meta={`${s.checkInLabel}入住 ${s.nights}晚 · ${s.daysLabel}`}
+              meta={`${checkInLabel}入住 ${s.nights}晚 · ${stayDaysLabel(s, firstStart)}`}
               headline={
                 min ? (
                   <span>
@@ -592,8 +648,8 @@ export default function BookingTimeline({
                   {cands.map(({ h, p }) => {
                     const act = actionFor(
                       mk(`tl-hotel-pick-${s.city}-${h.name}`, "hotel", h.name, s.city, {
-                        date: `2026-${s.checkInLabel}`,
-                        note: `${s.checkInLabel}入住 ${s.nights}晚${
+                        date: s.checkIn,
+                        note: `${checkInLabel}入住 ${s.nights}晚${
                           p && !p.unavailable && p.base
                             ? ` · $${p.base.perNightUSD}/晚`
                             : ""
@@ -657,7 +713,7 @@ export default function BookingTimeline({
               }
               {...actionFor(
                 mk(`tl-hotel-${s.city}`, "hotel", `${s.city}酒店（待选定）`, s.city, {
-                  date: `2026-${s.checkInLabel.replace("-", "-")}`,
+                  date: s.checkIn,
                   note: `${s.nights}晚 · ${cands.length}家候选`,
                 }),
               )}
@@ -680,7 +736,7 @@ export default function BookingTimeline({
           return (
             <div key={`attr-${city}`}>
               <div className="mt-3 mb-1 text-xs font-bold text-gray-700 bg-gray-100 rounded px-2 py-1">
-                {cityStayLabel(city)}
+                {stayLabel(city)}
               </div>
               {items.map((a) => {
                 const item = mk(`tl-attr-${a.name}`, "attraction", a.name, a.city, {

@@ -17,14 +17,6 @@ import flightDbJson from "../data/flight-db-december-2026.json";
 /** 行程规划的城市分段（与 guide/GuideApp.tsx 的 PlanCityScope 同形，避免循环引用） */
 export interface PlanSegment { city: string; start: string; end: string; days: number; }
 
-function addDaysIso(iso: string, n: number): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  const dt = new Date(y!, m! - 1, d!);
-  dt.setDate(dt.getDate() + n);
-  const p = (x: number) => String(x).padStart(2, "0");
-  return `${dt.getFullYear()}-${p(dt.getMonth() + 1)}-${p(dt.getDate())}`;
-}
-
 /**
  * 城际转场航班的出发日期 = 出发城市在行程里的最后一天。
  * 2026-10-03 用户：改了大行程后航班日期要跟着变，不许写死。
@@ -39,16 +31,47 @@ export function flightDateFromPlan(route: string, segments: PlanSegment[]): stri
 }
 
 /**
- * 某城市的酒店入住区间：入住 = 该段 start，退房 = 下一段的 start（最后一段则为 end+1 天）。
- * 2026-10-03 用户：改了大行程后酒店日期要跟着变，不许写死。
+ * 某城市的酒店入住区间（与航班模型严格一致）：
+ * 入住 = 到达当天（上一城市段的最后一天，即飞入本城的航班日；首城为行程首日），
+ * 退房 = 离开当天（本段最后一天，即飞离本城的航班日，当天退房、当天飞）。
+ * 2026-10-03 用户：改了大行程后酒店日期要跟着变，不许写死；"次日飞"口径已作废，
+ * 退房日必须与转场航班同一天（旧模型 checkout=下一段 start 会多占一晚、与航班错位）。
  */
 export function hotelStayFromPlan(city: string, segments: PlanSegment[]): [string, string] | null {
   const idx = segments.findIndex((s) => s.city === city);
   if (idx < 0) return null;
   const seg = segments[idx]!;
-  const next = segments[idx + 1];
-  const checkout = next ? next.start : addDaysIso(seg.end, 1);
-  return [seg.start, checkout];
+  const checkIn = idx === 0 ? seg.start : segments[idx - 1]!.end;
+  return [checkIn, seg.end];
+}
+
+export interface HotelStay {
+  city: string;
+  /** 入住 YYYY-MM-DD（到达当天） */
+  checkIn: string;
+  /** 退房 YYYY-MM-DD（离境航班当天） */
+  checkOut: string;
+  nights: number;
+}
+
+/**
+ * 全行程各城酒店住宿段（按 planner 城市段推导，供预订页酒店组使用）。
+ * 2026-10-03：预订页此前用写死的 HOTEL_STAYS（入住 12-06/12-11/12-14/12-16），
+ * 与航班（12-10/12-13/12-15/12-18 转场）错位一天——酒店退房日晚了、下一城入住日晚了，
+ * 中间各差出一晚没地方住。改为全部按行程推导。
+ */
+export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
+  const days = (a: string, b: string) =>
+    Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
+  return segments.map((seg, idx) => {
+    const checkIn = idx === 0 ? seg.start : segments[idx - 1]!.end;
+    return {
+      city: seg.city,
+      checkIn,
+      checkOut: seg.end,
+      nights: Math.max(0, days(checkIn, seg.end)),
+    };
+  });
 }
 
 export type BookByGroup = "now" | "d60" | "d30" | "d14" | "local";
@@ -613,15 +636,6 @@ function applyFlightDb(): void {
   for (const leg of FLIGHT_LEGS) refreshLegFromDb(leg);
 }
 applyFlightDb();
-
-/** 每城住宿段：时间线只列"选 1 家"的行动，候选明细在城市参考区。
- * 日期与城市顺序须与当前云端行程一致（2026-12-06 ～ 12-18：新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13）。 */
-export const HOTEL_STAYS = [
-  { city: "新加坡", checkInLabel: "12-06", nights: 5, daysLabel: "D1–D5" },
-  { city: "普吉", checkInLabel: "12-11", nights: 3, daysLabel: "D6–D8" },
-  { city: "清迈", checkInLabel: "12-14", nights: 2, daysLabel: "D9–D10" },
-  { city: "曼谷", checkInLabel: "12-16", nights: 3, daysLabel: "D11–D13" },
-];
 
 /** 需提前购票的景点（研究结论驱动；空 = 尚无研究结论支撑的项目，不编造）。 */
 export interface AdvanceTicket {
