@@ -1174,6 +1174,30 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
 /* 🔍 检查确认 tab：日历置顶纯展示，点日期原地展开看详情（含原因+跳转）；
    调整入口放日历下方；本 tab 不做任何编辑。 */
 let ordExpandedDay: string | null = null;
+/* 检查确认 tab 的回程摘要（2026-10-02 用户：检查确认里要有北京→首尔、首尔→西雅图的航班信息和日期） */
+function ordReturnSummary(): string {
+  const ranges = tripRanges();
+  const bj3 = ranges["beijing3"], seoul = ranges["seoul"];
+  if(!bj3 || !seoul) return "";
+  const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+  const rm = RETURN_CITY_META[rc];
+  /* 北京→首尔：起飞日二选一（beijing3最后一天 或 seoul第一天） */
+  const bjChoice = tripFlyChoice("beijing3");
+  const bjFlyDate = bjChoice==="last" ? bj3.to : seoul.from;
+  const bjCard = tripFlightCard(`${rc}-ICN|${bjFlyDate}`, `${rm.city}→首尔（2大1小）`);
+  /* 首尔→西雅图：起飞日二选一（seoul最后一天 或 次日） */
+  const seaChoice = tripFlyChoice("return");
+  const seaFlyDate = seaChoice==="last" ? seoul.to : addDays(seoul.to, 1);
+  const seaCard = tripFlightCard(`ICN-SEA|${seaFlyDate}`, `首尔 → 西雅图（2大1小）`);
+  return `<div class="card" style="margin:16px 0">
+    <div class="trip-seg-head"><div class="trip-seg-title">✈️ 回程：${rm.city} → 首尔 → 西雅图</div>
+    <div class="micro">首尔停留 2 天（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
+    <div style="margin:8px 0"><b>${rm.city} → 首尔</b> · 📅 ${dateLabel(bjFlyDate)} 起飞 · 2大1小
+      <div class="trip-flightinfo" style="margin-top:6px">${bjCard}</div></div>
+    <div style="margin:8px 0"><b>首尔 → 西雅图</b> · 📅 ${dateLabel(seaFlyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）
+      <div class="trip-flightinfo" style="margin-top:6px">${seaCard}</div></div>
+  </div>`;
+}
 function renderOrderTab(){
   const body = el("orderBody");
   body.innerHTML = `
@@ -1182,6 +1206,7 @@ function renderOrderTab(){
       <span><i class="wz-segdot" style="background:#22c55e"></i>新加坡</span>
       <span><i class="wz-segdot" style="background:#f59e0b"></i>东南亚段</span>
       <span><i class="wz-segdot" style="background:#8b5cf6"></i>西安</span>
+      <span><i class="wz-segdot" style="background:#ec4899"></i>首尔/回程</span>
       <span class="wz-legbadge">✈️ 转场</span>
       <span class="wz-legbadge">⚠️ 提醒</span>
       <span class="wz-legbadge">🚫 必去闭馆</span>
@@ -1189,6 +1214,7 @@ function renderOrderTab(){
     </div>
     <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <div id="ordDayDetail"></div>
+    ${ordReturnSummary()}
     ${buildCityTaboos()}
     <div class="card" style="margin-top:16px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」）</div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
@@ -1257,9 +1283,12 @@ function dayFlightCards(d: string): string {
     if(date !== d) continue;
     const xiyLeg = thailandToXianLeg();
     const sinLeg = singaporeToFirstCityLeg();
+    /* 2026-10-02 修：回程 XX→首尔段的占位符也要在这里替换，否则检查确认 tab 的北京→首尔卡片 label 显示原文、航班查不到 */
+    const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+    const rm = RETURN_CITY_META[rc];
     for(const l of t.legs){
-      const code = l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code);
-      const label = l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label);
+      const code = l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code).replace("__RETURN_ICN_CODE__", `${rc}-ICN`);
+      const label = l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label).replace("__RETURN_ICN_LABEL__", `${rm.city}→首尔`);
       cards.push(tripFlightCard(`${code}|${d}`, label));
     }
   }
