@@ -175,6 +175,9 @@ export interface FlightLegInfo {
   ctx?: string;
   /** ok=有直飞 / none=实查确认无直飞 / pending=待查询；由 applyFlightDb() 维护 */
   flightState?: "ok" | "none" | "pending";
+  /** 已出票（2026-10-03 用户铁律）：以出票邮件为准，日期/航班号/确认号绝不被
+   *  航班库实查覆盖；refreshLegFromDb() 直接跳过（只过滤中转）。 */
+  ticketed?: boolean;
   /** 以下为浏览器实查后填写；null = 待核验，不写成定论 */
   carrier?: string | null;
   schedule?: string | null;
@@ -459,6 +462,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     day: 19,
     kind: "intl",
     note: "✅ 已出票：Alaska Airlines AS120，确认号 CNESXC；2027-01-01 20:00 首尔仁川起飞 → 当天 12:55 到西雅图（2大1小）；以出票邮件为准，日期不许改",
+    ticketed: true,
     carrier: "Alaska Airlines",
     schedule: "AS120 20:00 → 12:55",
     priceNote: null,
@@ -579,6 +583,15 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
     // 先删中转：只保留 stops===0（全站铁律）
     if (leg.options) leg.options = leg.options.filter((o) => (o.stops ?? 0) === 0);
     if (leg.businessOptions) leg.businessOptions = leg.businessOptions.filter((o) => (o.stops ?? 0) === 0);
+
+    if (leg.ticketed) {
+      // 2026-10-03 site-improve 交叉核验发现并修复：已出票的腿（AS120 2027-01-01）
+      // 仍挂着 dbSeg，flight-db-gflights-fill 的 priority.json 已含 ICN-SEA 2027-01-01，
+      // 入库后本函数会把 note（确认号 CNESXC）/carrier/schedule 全部改写成泛搜索口径。
+      // 用户铁律：已出票航班以实际出票为准，绝不覆盖。直接跳过。
+      leg.flightState = "ok";
+      return;
+    }
 
     const seg = leg.dbSeg;
     const date = dateOverride ?? leg.date;
