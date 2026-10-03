@@ -512,8 +512,8 @@ h4{font-size:16px;margin:0;font-weight:700}
 
 /* ---------- 原生集成追加（Shadow DOM 内挂载） ---------- */
 .planner-scope{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
-/* 在应用页内嵌时取消 tabs 吸顶：避免盖住站点 sticky 导航 */
-.tabs{position:static}
+/* 在应用页内嵌时 tabs 吸顶：top 由宿主 JS 测量顶栏高度后经 --planner-tabs-top 传入，避免盖住站点 sticky 导航（2026-10-03 用户要求吸顶） */
+.tabs{position:sticky;top:var(--planner-tabs-top,64px);z-index:20}
 /* 向导 Step 2 行内景点取舍标注：三组 chip 之间的间距 */
 .wz-annot{margin-top:8px}
 /* 向导 Step 2 底部的景点详情字段折叠区：默认收起，不把长详情堆回页面 */

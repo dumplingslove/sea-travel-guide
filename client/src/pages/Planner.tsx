@@ -21,6 +21,25 @@ export default function Planner() {
     return cleanup;
   }, [showMap]);
 
+  /* 2026-10-03 用户：planner 三个 tab（大行程/东南亚城市规划/检查确认）吸顶；top 经 CSS 变量传入 Shadow DOM */
+  useEffect(() => {
+    if (showMap || !hostRef.current) return;
+    const host = hostRef.current;
+    const sync = () => {
+      const header = document.querySelector("header.sticky");
+      if (header) host.style.setProperty("--planner-tabs-top", `${Math.round(header.getBoundingClientRect().height)}px`);
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    const header = document.querySelector("header.sticky");
+    if (header) ro.observe(header);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, [showMap]);
+
   if (showMap) {
     return <MapPage />;
   }
