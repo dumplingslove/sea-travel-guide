@@ -240,6 +240,10 @@ function FavoriteActionList({
                   {items.map((f) => {
                     const isOpen = expandedId === f.row.id;
                     const detail = f.type !== "flight" ? findDetail(f.row.title, f.type) : undefined;
+                    /* 2026-10-03 用户：航班也要能展开，看当天所有选项好对比 */
+                    const flightLeg = f.type === "flight" && f.flight?.route
+                      ? FLIGHT_LEGS.find((l) => l.route === f.flight!.route)
+                      : undefined;
                     return (
                     <div
                       key={f.row.id}
@@ -262,8 +266,8 @@ function FavoriteActionList({
                         />
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
-                        {/* 2026-10-03 用户：item 要能展开看详情，方便对比 */}
-                        {detail && (
+                        {/* 2026-10-03 用户：item 要能展开看详情，方便对比（航班也放进来） */}
+                        {(detail || flightLeg) && (
                           <button
                             onClick={() => setExpandedId(isOpen ? null : f.row.id)}
                             className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
@@ -302,7 +306,7 @@ function FavoriteActionList({
                         </button>
                       </div>
                       </div>
-                      {/* 展开详情：攻略原文，方便对比 */}
+                      {/* 展开详情：攻略原文（酒店/餐厅/景点）或当天所有航班选项（航班），方便对比 */}
                       {isOpen && detail && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
                           {detail.meta && <p><span className="font-medium text-gray-500">📍 </span>{detail.meta}</p>}
@@ -312,6 +316,39 @@ function FavoriteActionList({
                           )}
                           {detail.hotelAcclaim && <p className="text-amber-700">🏆 {detail.hotelAcclaim}</p>}
                           {detail.michelin && <p>⭐ {detail.michelin}</p>}
+                        </div>
+                      )}
+                      {isOpen && f.type === "flight" && flightLeg && (
+                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
+                          <p className="font-medium text-gray-500 mb-1.5">
+                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"} 当天所有直飞（{flightLeg.options?.length ?? 0} 班）
+                          </p>
+                          {(flightLeg.options ?? []).length ? (
+                            <div className="space-y-1">
+                              {[...(flightLeg.options ?? [])]
+                                .sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))
+                                .map((o, i) => {
+                                  const isFav = f.flight?.flight === o.flight;
+                                  return (
+                                    <div key={i} className={`flex items-center justify-between gap-2 px-2 py-1.5 rounded ${isFav ? "bg-amber-50 border border-amber-200" : "bg-gray-50"}`}>
+                                      <span className="min-w-0">
+                                        <span className="font-medium">{o.carrier} {o.flight}</span>
+                                        <span className="text-gray-500 ml-2">{o.depart}→{o.arrive}{o.arrivePlusDay ? "+1" : ""}</span>
+                                        {isFav && <span className="ml-2 text-amber-700 font-medium">← 你收藏的</span>}
+                                      </span>
+                                      <span className="font-semibold text-teal-700 shrink-0">
+                                        {o.price != null ? `$${o.price}` : "待查"}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          ) : (
+                            <p className="text-gray-400">暂无直飞数据（待实查）</p>
+                          )}
+                          {flightLeg.queriedAt && (
+                            <p className="text-gray-400 mt-1">Google Flights 实查 · {flightLeg.queriedAt}</p>
+                          )}
                         </div>
                       )}
                     </div>
@@ -385,13 +422,17 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
     );
   }
   if (type === "hotel") {
-    // 酒店：用 getLiveHotelPrice 查实查房价
+    // 酒店：用 getLiveHotelPrice 查实查房价；2026-10-03 用户要价格趋势：显示每晚+总价+实查时间
     const p = getLiveHotelPrice(name);
     if (p && !p.unavailable && p.base) {
       return (
         <div className="text-xs text-gray-600 mt-1">
-          💰 <span className="font-semibold text-teal-700">${p.base.perNightUSD}/晚</span>
-          <span className="text-gray-400"> 起 · {p.source}实查 {p.checkedAt}</span>
+          💰 <span className="font-semibold text-teal-700 text-sm">${p.base.perNightUSD}/晚</span>
+          {p.base.totalUSD != null && (
+            <span className="text-gray-600"> · 共 <span className="font-semibold">${Math.round(p.base.totalUSD)}</span>{p.nights ? `/${p.nights}晚` : ""}</span>
+          )}
+          <span className="text-gray-400"> · {p.source}实查 {p.checkedAt}</span>
+          {p.dateMismatch && <span className="text-amber-600"> ⚠️日期待重查</span>}
         </div>
       );
     }
