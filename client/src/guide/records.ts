@@ -9,8 +9,8 @@
  * sea_profiles 的 display_name 标注每条记录是谁添加的。
  *
  * - 已登录：读写 Supabase 云端（家庭共享范围）。
- * - 未登录 / 未配置：降级为本机内存模式，并在界面如实标注
- *   "所有改动只在本次打开期间有效"（与行程规划器同口径）。
+ * - 未登录 / 未配置：降级为本机 localStorage 模式：改动保存在这台设备
+ *   的浏览器里，刷新不丢；换设备或清除浏览器数据会消失，登录后可云端同步。
  */
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { initialResearchStatus } from "./researchStatusInitial";
@@ -42,9 +42,36 @@ export const FAMILY_EMAILS = [
   "nckuang123@gmail.com",
 ] as const;
 
-/** 本机内存兜底（未登录时），与规划器同口径：只在本次打开期间有效。 */
-const localStore: GuideRecord[] = [];
-let localSeq = -1;
+/** 本机兜底（未登录时）：localStorage 持久化，刷新不丢；换设备/清浏览器数据才消失。
+ * 2026-10-03 修：之前是纯内存数组，刷新页面收藏就丢（用户实测抓包）。 */
+const LS_KEY = "sea_guide_records_local_v1";
+function loadLocalStore(): GuideRecord[] {
+  try {
+    const raw =
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem(LS_KEY)
+        : null;
+    if (raw) {
+      const arr = JSON.parse(raw) as GuideRecord[];
+      if (Array.isArray(arr)) return arr;
+    }
+  } catch {
+    /* 无痕/禁用 storage 时退回纯内存 */
+  }
+  return [];
+}
+const localStore: GuideRecord[] = loadLocalStore();
+function persistLocalStore() {
+  try {
+    if (typeof localStorage !== "undefined")
+      localStorage.setItem(LS_KEY, JSON.stringify(localStore));
+  } catch {
+    /* 写失败就当纯内存用，不打断流程 */
+  }
+}
+let localSeq =
+  Math.min(0, ...localStore.map((r) => (typeof r.id === "number" ? r.id : 0))) -
+  1;
 
 async function currentUserId(): Promise<string | null> {
   if (!supabaseConfigured || !supabase) return null;
@@ -163,7 +190,7 @@ export async function saveRecord(args: {
     if (error) throw error;
     return { id: data.id as number };
   }
-  // 本地模式：内存保存
+  // 本地模式：localStorage 持久化保存（2026-10-03 修：刷新不丢）
   if (args.id && args.id < 0) {
     const idx = localStore.findIndex((r) => r.id === args.id);
     if (idx >= 0) {
@@ -176,6 +203,7 @@ export async function saveRecord(args: {
         done: args.done,
         userId: null,
       };
+      persistLocalStore();
       return { id: args.id };
     }
   }
@@ -189,6 +217,7 @@ export async function saveRecord(args: {
     done: args.done,
     userId: null,
   });
+  persistLocalStore();
   return { id };
 }
 
@@ -205,7 +234,10 @@ export async function deleteRecord(args: { id: number }): Promise<{ ok: true }> 
     return { ok: true };
   }
   const idx = localStore.findIndex((r) => r.id === args.id);
-  if (idx >= 0) localStore.splice(idx, 1);
+  if (idx >= 0) {
+    localStore.splice(idx, 1);
+    persistLocalStore();
+  }
   return { ok: true };
 }
 

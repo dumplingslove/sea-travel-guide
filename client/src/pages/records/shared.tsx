@@ -10,8 +10,7 @@
  * 读写同一批记录（RLS family_shared_*），每条记录用 AuthorTag
  * 标注是谁添加的。
  *
- * 未登录/未配置时降级为本机内存模式，界面如实标注
- * “所有改动只在本次打开期间有效”（与攻略站/规划器同口径）。
+ * 未登录/未配置时降级为本机 localStorage 模式（刷新不丢，换设备/清数据才消失）。
  */
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -89,7 +88,7 @@ export function SyncBanner({
         className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800"
       >
         ⚠️
-        未登录本地模式：所有改动只在本次打开期间有效；登录后可云端同步。
+        未登录本地模式：改动只保存在这台设备的浏览器里（刷新不丢）；登录后可云端同步、多设备共享。
       </p>
     );
   if (mode === "cloud")
