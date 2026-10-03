@@ -397,7 +397,10 @@ export function Flights({onBook}:{onBook?:OnBook}){
      return FLIGHT_LEGS.map(f=>{
        let leg = f;
        let date = f.date;
-       if (f.kind==='intercity' && segs.length>0) {
+       /* 2026-10-03 修：不只限 intercity——sin-xiy（新加坡→西安，intl）这类
+        * 以 planner 城市为出发地的段也要跟行程走；出发地不在行程里的段
+        * （如西雅图→北京）flightDateFromPlan 返回 null，自动保留静态日期。 */
+       if (!f.stale && segs.length>0) {
          const planDate = flightDateFromPlan(f.route, segs);
          if (planDate && planDate!==f.date) {
            // 深拷贝一条再按正确日期重查库，不污染静态 FLIGHT_LEGS
