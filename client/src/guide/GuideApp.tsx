@@ -676,20 +676,21 @@ function ShopGuide({city,openMall}:{city:string;openMall?:string}){
  * 景点收藏→行程优先排入；酒店/餐厅/航班收藏→预订行动清单。
  * 2026-10-02 用户：浏览航班时也要有收藏按钮 */
 export function FavButton({name,city,type,extra}:{name:string;city:string;type:'attraction'|'hotel'|'restaurant'|'flight';extra?:Record<string,any>}){
-  const [st,setSt]=useState<'idle'|'saving'|'done'>('idle');
+  const [saving,setSaving]=useState(false);
+  const [errMsg,setErrMsg]=useState<string|null>(null);
   const qc=useQueryClient();
+  /* 2026-10-03 修：订阅 records 缓存，页面加载时自动显示已收藏状态（之前只在点击时查一次，刷新后按钮变回"＋ 收藏"） */
+  const { data } = useQuery({ queryKey: ["records"], queryFn: listRecords });
+  const done = (data?.records ?? []).some(r=>r.kind==='favorite'&&r.title===name);
   const onClick=async()=>{
-    if(st!=='idle')return;setSt('saving');
+    if(saving||done)return;setSaving(true);setErrMsg(null);
     try{
-      const {records}=await listRecords();
-      if(!records.some(r=>r.kind==='favorite'&&r.title===name))
-        await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+      await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
       /* 2026-10-02 修：收藏后立即刷新 records 缓存，否则行动安排页看不到新收藏 */
       qc.invalidateQueries({queryKey:["records"]});
-      setSt('done');
-    }catch{setSt('idle');}
+    }catch(e){setErrMsg(e instanceof Error?e.message:'保存失败，请重试');}finally{setSaving(false);}
   };
-  return <button className={st==='done'?'selected':''} onClick={onClick} disabled={st!=='idle'} aria-label={`收藏${name}`}>{st==='done'?'✓ 已收藏':st==='saving'?'保存中…':'＋ 收藏'}</button>;
+  return <span style={{display:'inline-flex',flexDirection:'column',gap:4}}><button className={done?'selected':''} onClick={onClick} disabled={saving||done} aria-label={`收藏${name}`}>{done?'✓ 已收藏':saving?'保存中…':'＋ 收藏'}</button>{errMsg&&<span style={{fontSize:12,color:'#b91c1c'}}>{errMsg}</span>}</span>;
 }
 
 function RecordsPage({kind,title,summary,image}:{kind:RecordKind;title:string;summary:string;image:string}){
