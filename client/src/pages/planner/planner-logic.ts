@@ -630,10 +630,10 @@ const RETURN_CITY_META: Record<Exclude<ReturnCityCode,"">,{city:string;airport:s
   PVG:{city:"上海",airport:"上海浦东"},
   CKG:{city:"重庆",airport:"重庆江北"},
 };
-/* 每段转场的起飞日：key = transition.after（回程用 "return"）；
-   "last" = 本段最后一天飞（默认：最后一天要算上坐飞机的时间），"next" = 次日飞 */
+/* 每段转场的起飞日：2026-10-02 用户明确不要二选一，直接按排定日期走；
+   key = transition.after（回程用 "return"）；统一用本段最后一天（ranges[after].to） */
 let tripFlightDay: Record<string,"last"|"next"> = {};
-function tripFlyChoice(key: string): "last"|"next"{ return tripFlightDay[key]==="next" ? "next" : "last"; }
+function tripFlyChoice(key: string): "last"|"next"{ return "last"; }
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
   const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
@@ -779,9 +779,7 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} 首尔 → 西雅图</span></div>
-      <div class="micro trip-flydays">起飞日：
-        <button class="${choice==="last"?"primary":"ghost"}" data-flyday="return|last">首尔最后一天 ${dateLabel(lastDay)} 飞</button>
-        <button class="${choice==="next"?"primary":"ghost"}" data-flyday="return|next">次日 ${dateLabel(nextDay)} 飞</button>
+      <div class="micro trip-flydays">起飞日：${dateLabel(lastDay)}（按排定日期）
       </div>
       <p class="micro">北京 → 首尔段的航班卡在上面的转场行里；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
       <div class="micro" style="margin-top:10px"><b>✈️ 首尔 → 西雅图</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
@@ -812,7 +810,7 @@ function renderTrip(){
     const segHtml = segCard(s);
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
-      /* 起飞日二选一：本段最后一天飞（默认）或次日飞，日期明确写出来，不许含糊；
+      /* 2026-10-02 用户：不要二选一，直接按排定日期（本段最后一天）走；
          用户 2026-09-28：西安→北京坐高铁，灵活不需要选出发日，只标日期 */
       const choice=t.noFlight ? "last" : tripFlyChoice(t.after);
       const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
@@ -840,10 +838,7 @@ function renderTrip(){
     ${t.note?`<p class="micro">${t.note}</p>`:""}
     ${t.noFlight
       ? `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}</div>`
-      : `<div class="micro trip-flydays">${dayWord}：
-      <button class="${choice==="last"?"primary":"ghost"}" data-flyday="${t.after}|last">本段最后一天 ${dateLabel(lastD)} ${goWord}</button>
-      <button class="${choice==="next"?"primary":"ghost"}" data-flyday="${t.after}|next">次日 ${dateLabel(nextD)} ${goWord}</button>
-    </div>`}
+      : `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>`}
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
       parts.push(`<div class="trip-seg-group">${segHtml}</div>`);
