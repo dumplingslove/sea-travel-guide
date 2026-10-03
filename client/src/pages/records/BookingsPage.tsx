@@ -302,7 +302,16 @@ function BookingsInner() {
   });
   /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
   const { segments } = usePlanScope();
-  const planCities = useMemo(() => segments.map((s) => s.city), [segments]);
+  /* 2026-10-02 用户：预订页只显示大行程里的城市。大行程固定城市：北京/新加坡/西安/首尔 + 向导里的东南亚城市 */
+  const planCities = useMemo(() => {
+    const wizardCities = segments.map((s) => s.city);
+    const bigTripCities = ["北京", "新加坡", "西安", "首尔"];
+    const all = [...bigTripCities];
+    for (const c of wizardCities) {
+      if (!all.includes(c)) all.push(c);
+    }
+    return all;
+  }, [segments]);
   const stayDates = useMemo(() => {
     const m: Record<string, string> = {};
     segments.forEach((s) => {

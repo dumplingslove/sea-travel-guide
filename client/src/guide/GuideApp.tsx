@@ -288,8 +288,8 @@ function CityTabs({city,setCity,label,list}:{city:string;setCity:(x:string)=>voi
 
 export function HotelCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnBook;scopeCities?:string[];stayDates?:Record<string,string>;bare?:boolean}){
  const hotelEntries=useHotelEntries();const chainFor=(item:Item)=>findHotelChain(hotelEntries,item.name,item.city);const tierFor=(item:Item)=>findHotelTier(hotelEntries,item.name,item.city);
- /** 2026-10-02 用户：预订页要能看到首尔。规划城市在前、其他城市（含首尔）在后，不再只显示规划城市 */
- const list=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));const rest=cities.filter(c=>!s.includes(c));return [...s,...rest];}return cities;},[scopeCities]);
+ /** 2026-10-02 用户：预订页只显示大行程里的城市，不去的城市不显示 */
+ const list=useMemo(()=>{if(scopeCities&&scopeCities.length){return scopeCities.filter(c=>cities.includes(c));}return cities;},[scopeCities]);
  const [city,setCity]=useState(list[0]!);
  useEffect(()=>{ if(!list.includes(city)) setCity(list[0]!); },[list,city]);
  const [expandedKey,setExpandedKey]=useState<string|null>(null);const [listExpanded,setListExpanded]=useState(false);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=stayDates?.[city] ?? currentStayLabel(city) ?? route.find(x=>x[0]===city)?.[2];
@@ -299,8 +299,8 @@ export function HotelCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnB
 }
 
 export function RestaurantCatalog({onBook, scopeCities, stayDates, bare}:{onBook?:OnBook;scopeCities?:string[];stayDates?:Record<string,string>;bare?:boolean}){
- /** 2026-10-02 用户：预订页要能看到首尔。规划城市在前、其他城市（含首尔）在后 */
- const list=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));const rest=cities.filter(c=>!s.includes(c));return [...s,...rest];}return cities;},[scopeCities]);
+ /** 2026-10-02 用户：预订页只显示大行程里的城市 */
+ const list=useMemo(()=>{if(scopeCities&&scopeCities.length){return scopeCities.filter(c=>cities.includes(c));}return cities;},[scopeCities]);
  const [city,setCity]=useState(list[0]!);
  useEffect(()=>{ if(!list.includes(city)) setCity(list[0]!); },[list,city]);
  const [expandedKey,setExpandedKey]=useState<string|null>(null);const shown=restaurants.filter(x=>x.city===city);const pickCity=(c:string)=>{setCity(c);setExpandedKey(null)};const cityDays=days.filter(d=>d.city===city);
@@ -477,10 +477,10 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
 
 export function AttractionCatalog({onBook, scopeCities, bookingOnly}:{onBook?:OnBook;scopeCities?:string[];bookingOnly?:boolean}){
   const initialCity = scopeCities && scopeCities.length ? scopeCities[0] : undefined;
-  return <AttractionGuide onBook={onBook} standalone={false} initialCity={initialCity} bookingOnly={bookingOnly} />;
+  return <AttractionGuide onBook={onBook} standalone={false} initialCity={initialCity} bookingOnly={bookingOnly} scopeCities={scopeCities} />;
 }
 
-function AttractionGuide({onBook,standalone,initialCity,initialSpot,bookingOnly}:{onBook?:OnBook;standalone?:boolean;initialCity?:string;initialSpot?:string;bookingOnly?:boolean}){
+function AttractionGuide({onBook,standalone,initialCity,initialSpot,bookingOnly,scopeCities}:{onBook?:OnBook;standalone?:boolean;initialCity?:string;initialSpot?:string;bookingOnly?:boolean;scopeCities?:string[]}){
  const [expanded,setExpanded]=useState<string|null>(()=>initialSpot?initialSpot:null);
  const [city,setCity]=useState(initialCity||cities[0]!);
  /* 从 planner 跳过来的 spot 参数：自动定位到该景点并展开 */
@@ -505,7 +505,7 @@ function AttractionGuide({onBook,standalone,initialCity,initialSpot,bookingOnly}
    return base;
  },[city,bookingOnly]);
  const attrPager=usePaged(shown,6,'个景点');
- return <div className="page">{standalone&&<PageHero eyebrow="ATTRACTION GUIDE" title="景点指南" summary={`${cities.length}城景点完整攻略：按城市筛选，点击卡片展开查看游览重点、实用信息与小红书实读口碑。`} image={chiangmaiImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>{bookingOnly?"需要提前订票的景点":""+cities.length+"城景点指南"}</h2><p>{bookingOnly?"只显示需要提前预订门票/报团的景点，现场买票的寺庙、夜市、公园不在这里":"按城市筛选，点击展开查看完整攻略"}</p></div><CityTabs city={city} setCity={setCity} label="景点城市筛选"/><InfographicPanel city={city}/><div className="catalog rich attractions">{attrPager.visible.map((it,i)=>{const akey=it.city+it.name;const aopen=expanded===akey;return <Fragment key={akey}><article className="itemcard" data-spot={it.name}><ItemMedia item={it} kind="景点" index={i}/><div><span className="citytag">{it.city} · 景点</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么安排</b><span>{it.best}</span></div><XhsMini item={it}/><button className="solid" onClick={()=>setExpanded(aopen?null:akey)}>{aopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button className="solid" onClick={()=>onBook({bkind:'attraction',name:it.name,city:it.city})}>预订门票</button>}<FavButton name={it.name} city={it.city} type='attraction'/></div></article>{aopen&&<InlineDetail item={it} kind="景点" onBook={onBook} onCollapse={()=>setExpanded(null)}/>}</Fragment>})}</div>{attrPager.toggle}</section></div>
+ return <div className="page">{standalone&&<PageHero eyebrow="ATTRACTION GUIDE" title="景点指南" summary={`${cities.length}城景点完整攻略：按城市筛选，点击卡片展开查看游览重点、实用信息与小红书实读口碑。`} image={chiangmaiImg}/>}<section className="sectionblock"><div className="sectiontitle"><h2>{bookingOnly?"需要提前订票的景点":""+cities.length+"城景点指南"}</h2><p>{bookingOnly?"只显示需要提前预订门票/报团的景点，现场买票的寺庙、夜市、公园不在这里":"按城市筛选，点击展开查看完整攻略"}</p></div><CityTabs city={city} setCity={setCity} label="景点城市筛选" list={scopeCities&&scopeCities.length?scopeCities.filter(c=>cities.includes(c)):undefined}/><InfographicPanel city={city}/><div className="catalog rich attractions">{attrPager.visible.map((it,i)=>{const akey=it.city+it.name;const aopen=expanded===akey;return <Fragment key={akey}><article className="itemcard" data-spot={it.name}><ItemMedia item={it} kind="景点" index={i}/><div><span className="citytag">{it.city} · 景点</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>怎么安排</b><span>{it.best}</span></div><XhsMini item={it}/><button className="solid" onClick={()=>setExpanded(aopen?null:akey)}>{aopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button className="solid" onClick={()=>onBook({bkind:'attraction',name:it.name,city:it.city})}>预订门票</button>}<FavButton name={it.name} city={it.city} type='attraction'/></div></article>{aopen&&<InlineDetail item={it} kind="景点" onBook={onBook} onCollapse={()=>setExpanded(null)}/>}</Fragment>})}</div>{attrPager.toggle}</section></div>
 }
 
 /** 旅行研究：纯参考资料库。酒店/美食/景点三个子分类，复用完整目录（含城市筛选），不带预订入口。
@@ -677,12 +677,15 @@ function ShopGuide({city,openMall}:{city:string;openMall?:string}){
  * 2026-10-02 用户：浏览航班时也要有收藏按钮 */
 export function FavButton({name,city,type,extra}:{name:string;city:string;type:'attraction'|'hotel'|'restaurant'|'flight';extra?:Record<string,any>}){
   const [st,setSt]=useState<'idle'|'saving'|'done'>('idle');
+  const qc=useQueryClient();
   const onClick=async()=>{
     if(st!=='idle')return;setSt('saving');
     try{
       const {records}=await listRecords();
       if(!records.some(r=>r.kind==='favorite'&&r.title===name))
         await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+      /* 2026-10-02 修：收藏后立即刷新 records 缓存，否则行动安排页看不到新收藏 */
+      qc.invalidateQueries({queryKey:["records"]});
       setSt('done');
     }catch{setSt('idle');}
   };
