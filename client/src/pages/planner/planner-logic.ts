@@ -605,8 +605,8 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"couple", label:"夫妻东南亚", sub:"", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩继续东南亚", cta:true },
   { id:"xian", label:"西安", sub:"夫妻一起回西安（3-4天）", mode:"🏠 家庭", note:"泰国结束后两人一起飞西安" },
   { id:"beijing3", label:"北京", sub:"用户一人回北京陪父亲", mode:"🏠 家庭", note:"西安待几天后你一人飞回北京；最后大家在回程城市集结，经首尔一起飞西雅图" },
-  /* 2026-09-29 用户：回程北京经首尔转机，在首尔停留2天（2大1小） */
-  { id:"seoul", label:"首尔", sub:"回程中转停留2天（2大1小）", mode:"🏠 家庭", note:"北京飞首尔，玩2天后飞西雅图" },
+  /* 2026-10-02 用户：回程分两路在首尔会合——用户一人北京→首尔，老婆带娃西安→首尔；首尔停留2天后三人一起飞西雅图 */
+  { id:"seoul", label:"首尔", sub:"回程中转停留2天（会合）", mode:"🏠 家庭", note:"你一人北京→首尔，老婆带娃西安→首尔；会合玩2天后三人一起飞西雅图" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, xian:4, beijing3:1, seoul:2 };
 /* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
@@ -692,9 +692,9 @@ const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"xian", before:"beijing3", title:"西安→北京（用户一人）", noFlight:true,
     note:"你坐高铁去北京，不需要机票。",
     legs:[] },
-  /* 2026-09-29 用户：回程经首尔中转，在首尔停留2天；航段代码随回程城市动态变 */
-  { after:"beijing3", before:"seoul", title:"__RETURN_SEOUL__（2大1小）",
-    legs:[{code:"__RETURN_ICN_CODE__",label:"__RETURN_ICN_LABEL__"}] },
+  /* 2026-10-02 用户：回程分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔；航段代码随回程城市动态变 */
+  { after:"beijing3", before:"seoul", title:"__RETURN_SEOUL__（分两路会合）",
+    legs:[{code:"__RETURN_ICN_CODE__",label:"__RETURN_ICN_LABEL__（你一人）"},{code:"XIY-ICN",label:"西安→首尔（老婆带娃）"}] },
 ];
 /* 航司英文名→中文名（2026-09-28 用户：回西雅图三段航班信息中文显示） */
 const AIRLINE_CN: Record<string,string> = {
@@ -767,7 +767,7 @@ function tripFlightCard(key: string, label: string){
     <ul class="tfi-flights">${rows}</ul>
     ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}</div>`;
 }
-/* 回西雅图卡片：2026-09-29 用户定为北京经首尔中转、首尔停留2天（2大1小）；
+/* 回西雅图卡片：2026-10-02 用户定为分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔，首尔停留2天后三人一起飞西雅图；
    出发城市仍可在大行程里改（北京 / 上海 / 重庆），中转首尔逻辑不变 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   const lastDay=ranges["seoul"].to, nextDay=addDays(lastDay,1);
