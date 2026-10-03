@@ -6,7 +6,7 @@
  * - title = 预订名称，body = BookingData JSON，done = 已确认，day = 关联天数。
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
@@ -365,6 +365,25 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
+  /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换 */
+  const menuNavRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const nav = menuNavRef.current;
+    if (!nav) return;
+    const sync = () => {
+      const header = document.querySelector("header.sticky");
+      if (header) nav.style.top = `${Math.round(header.getBoundingClientRect().height)}px`;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    const header = document.querySelector("header.sticky");
+    if (header) ro.observe(header);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [preset, setPreset] = useState<BookingPreset | null>(null);
@@ -518,23 +537,25 @@ function BookingsInner() {
         </div>
       )}
 
-      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通 */}
-      <div className="booking-tabs flex gap-2 mb-6" role="tablist" aria-label="预订二级菜单">
-        {menus.map((m) => (
-          <button
-            key={m.key}
-            role="tab"
-            aria-selected={menu === m.key}
-            onClick={() => setMenu(m.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-              menu === m.key
-                ? "bg-teal-700 text-white border-teal-700"
-                : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
-            }`}
-          >
-            {m.label}
-          </button>
-        ))}
+      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换） */}
+      <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
+        <div className="booking-tabs flex gap-2 overflow-x-auto">
+          {menus.map((m) => (
+            <button
+              key={m.key}
+              role="tab"
+              aria-selected={menu === m.key}
+              onClick={() => setMenu(m.key)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors whitespace-nowrap ${
+                menu === m.key
+                  ? "bg-teal-700 text-white border-teal-700"
+                  : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {menu === "hotels" ? (
