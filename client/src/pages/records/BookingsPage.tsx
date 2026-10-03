@@ -42,6 +42,7 @@ import {
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import ActionMapView from "@/components/ActionMapView";
 
 const kindBadge: Record<BookingKind, string> = {
   hotel: "bg-teal-700 text-white",
@@ -245,6 +246,11 @@ function FavoriteActionList({
           按行程时间线分城市排列，每个城市的航班/酒店/餐厅/景点都在一块，实时价格直接比较。看好点「✓ 确定」锁定，再「加入预订」走正式流程
         </p>
       </div>
+
+      {/* 2026-10-03 用户：行动安排加地图视图——收藏的酒店/餐厅/景点 + 行程全部景点，看位置合不合适、离酒店远近 */}
+      <ActionMapView
+        favorites={favs.map((f) => ({ name: f.row.title, city: itemCity(f), type: f.type }))}
+      />
 
       {citySections.map((sec, si) => (
         <div key={sec.city} className="mb-5">
