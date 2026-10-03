@@ -6,7 +6,7 @@
  * - title = 预订名称，body = BookingData JSON，done = 已确认，day = 关联天数。
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
@@ -21,6 +21,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
+import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -103,6 +104,33 @@ function FavoriteActionList({
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
     [segments]
   );
+  /* 2026-10-03 用户：详情页返回要恢复到原卡片滚动位置 */
+  useLayoutEffect(() => {
+    let saved: { cardId?: string; scrollY?: number; at?: number } | null = null;
+    try {
+      const raw = sessionStorage.getItem("bookingReturnScroll");
+      if (raw) saved = JSON.parse(raw);
+    } catch { /* ignore */ }
+    if (!saved) return;
+    /* 只处理 10 分钟内的返回，避免旧数据误触 */
+    if (saved.at && Date.now() - saved.at > 10 * 60 * 1000) {
+      try { sessionStorage.removeItem("bookingReturnScroll"); } catch { /* ignore */ }
+      return;
+    }
+    try { sessionStorage.removeItem("bookingReturnScroll"); } catch { /* ignore */ }
+    /* 等列表渲染完再滚动 */
+    const t = setTimeout(() => {
+      if (saved!.cardId) {
+        const el = document.getElementById(`booking-card-${saved!.cardId}`);
+        if (el) {
+          el.scrollIntoView({ block: "center" });
+          return;
+        }
+      }
+      if (typeof saved!.scrollY === "number") window.scrollTo(0, saved!.scrollY);
+    }, 150);
+    return () => clearTimeout(t);
+  }, []);
   const stayOf = (city: string) => stays.find((s) => s.city === city);
   const favs = rows
     .map((r) => {
@@ -152,6 +180,22 @@ function FavoriteActionList({
   };
   const itemCity = (f: (typeof favs)[number]) =>
     f.type === "flight" ? flightCity(f) : f.city;
+
+  /** 2026-10-03 用户：每个预订项的时间线日期——航班用航班日期，酒店用入住日期 */
+  const itemTimelineDate = (f: (typeof favs)[number]): string => {
+    if (f.type === "flight" && f.flight) {
+      const route = f.flight.route || "";
+      const planDate = route ? flightDateFromPlan(route, segs) : null;
+      return planDate || f.flight.date || "";
+    }
+    if (f.type === "hotel") {
+      const st = stayOf(itemCity(f));
+      return st ? st.checkIn : "";
+    }
+    /* 餐厅/景点：用所在城市段的开始日期 */
+    const seg = segs.find((s) => s.city === itemCity(f));
+    return seg ? seg.start : "";
+  };
 
   /** 按时间线城市分组；不在行程里的城市收到"其他" */
   const cityOrder = segs.map((s) => s.city);
@@ -228,9 +272,11 @@ function FavoriteActionList({
             </div>
           </div>
 
-          {/* 城内按类型分组 */}
+          {/* 城内按类型分组，组内按时间线日期排序 */}
           {(["flight", "hotel", "restaurant", "attraction"] as const).map((t) => {
-            const items = sec.items.filter((f) => f.type === t);
+            const items = sec.items
+              .filter((f) => f.type === t)
+              .sort((a, b) => itemTimelineDate(a).localeCompare(itemTimelineDate(b)));
             if (!items.length) return null;
             return (
               <div key={t} className="ml-6 mb-3">
@@ -248,6 +294,7 @@ function FavoriteActionList({
                     return (
                     <div
                       key={f.row.id}
+                      id={`booking-card-${f.row.id}`}
                       className={`bg-white rounded-lg border px-3 py-2.5 ${
                         f.row.done ? "border-green-200 bg-green-50/50" : "border-gray-200"
                       }`}
@@ -259,6 +306,15 @@ function FavoriteActionList({
                           {f.type === "flight" && f.flight?.route && (
                             <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
                           )}
+                          {/* 2026-10-03 用户：时间线日期徽标 */}
+                          {(() => {
+                            const d = itemTimelineDate(f);
+                            return d ? (
+                              <span className="ml-2 text-[11px] font-normal text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded">
+                                📅 {planDateShort(d)}
+                              </span>
+                            ) : null;
+                          })()}
                         </div>
                         {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策 */}
                         <FavoritePriceLine
@@ -274,6 +330,16 @@ function FavoriteActionList({
                           return (
                             <Link
                               to={placeDetailPath(kind, f.city, f.row.title)}
+                              onClick={() => {
+                                /* 2026-10-03 用户：详情页返回要回到原卡片位置 */
+                                try {
+                                  sessionStorage.setItem("bookingReturnScroll", JSON.stringify({
+                                    cardId: f.row.id,
+                                    scrollY: window.scrollY,
+                                    at: Date.now(),
+                                  }));
+                                } catch { /* ignore */ }
+                              }}
                               className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
                             >
                               详情 →
@@ -325,25 +391,30 @@ function FavoriteActionList({
                           <p className="font-medium text-gray-500 mb-1.5">
                             ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"} 当天所有直飞（{flightLeg.options?.length ?? 0} 班）
                           </p>
-                          {/* 2026-10-03 用户：机票要有价格变动时间线 */}
+                          {/* 2026-10-03 用户：机票要有价格变动时间线（含每次涨跌的发生时间） */}
                           {f.flight?.price != null && (
-                            <div className="mb-2 px-2 py-1.5 bg-blue-50 rounded">
-                              <p className="font-medium text-blue-900">📈 价格时间线</p>
-                              <p className="text-blue-800">
-                                收藏时 ${f.flight.price}
-                                {" → "}
-                                现在 ${(() => {
-                                  const route = f.flight!.route || "";
-                                  const leg = FLIGHT_LEGS.find((l) => l.route === route);
-                                  const planDate = route ? flightDateFromPlan(route, segs) : null;
-                                  const qDate = planDate || f.flight!.date || "";
-                                  const flightNo = f.flight!.flight || "";
-                                  const live = leg?.dbSeg && qDate && flightNo ? liveFlightQuote(leg.dbSeg, qDate, flightNo) : null;
-                                  const lp = live ? (f.flight!.cabin === "biz" ? live.bizPrice : live.price) : null;
-                                  return lp != null ? Math.round(lp) : "待查";
-                                })()}
-                              </p>
-                            </div>
+                            <FlightPriceTimeline
+                              route={f.flight.route || ""}
+                              date={(() => {
+                                const route = f.flight!.route || "";
+                                const leg = FLIGHT_LEGS.find((l) => l.route === route);
+                                const planDate = route ? flightDateFromPlan(route, segs) : null;
+                                return planDate || f.flight!.date || "";
+                              })()}
+                              flightNo={f.flight.flight || ""}
+                              cabin={f.flight.cabin || "eco"}
+                              favPrice={f.flight.price}
+                              livePrice={(() => {
+                                const route = f.flight!.route || "";
+                                const leg = FLIGHT_LEGS.find((l) => l.route === route);
+                                const planDate = route ? flightDateFromPlan(route, segs) : null;
+                                const qDate = planDate || f.flight!.date || "";
+                                const flightNo = f.flight!.flight || "";
+                                const live = leg?.dbSeg && qDate && flightNo ? liveFlightQuote(leg.dbSeg, qDate, flightNo) : null;
+                                const lp = live ? (f.flight!.cabin === "biz" ? live.bizPrice : live.price) : null;
+                                return lp != null ? Math.round(lp) : null;
+                              })()}
+                            />
                           )}
                           {(flightLeg.options ?? []).length ? (
                             <div className="space-y-1">
@@ -382,6 +453,68 @@ function FavoriteActionList({
           })}
         </div>
       ))}
+    </div>
+  );
+}
+
+
+/** 2026-10-03 用户：机票价格变动时间线——显示每次价格变化的发生时间 */
+function FlightPriceTimeline({ route, date, flightNo, cabin, favPrice, livePrice }: {
+  route: string; date: string; flightNo: string; cabin: string;
+  favPrice: number; livePrice: number | null;
+}) {
+  const key = useMemo(
+    () => (route && date && flightNo ? priceHistoryKey(route, date, flightNo, cabin) : ""),
+    [route, date, flightNo, cabin]
+  );
+  const [history, setHistory] = useState<PriceSnapshot[]>([]);
+  /* 每次看到实时价就记一笔 */
+  useEffect(() => {
+    if (!key || livePrice == null) return;
+    setHistory(logPrice(key, livePrice));
+  }, [key, livePrice]);
+  /* 初次加载读历史 */
+  useEffect(() => {
+    if (key) setHistory(getHistory(key));
+  }, [key]);
+
+  if (!key) return null;
+  /* 合并：收藏价作为起点（如果历史为空） */
+  const points: { price: number; at: string; label: string }[] = [];
+  points.push({ price: Math.round(favPrice), at: "", label: "收藏时" });
+  history.forEach((s) => {
+    points.push({ price: s.price, at: s.at, label: fmtSnapshotTime(s.at) });
+  });
+  /* 去重连续相同价格（保留首尾） */
+  const dedup: typeof points = [];
+  points.forEach((p) => {
+    const last = dedup[dedup.length - 1];
+    if (!last || last.price !== p.price) dedup.push(p);
+  });
+
+  return (
+    <div className="mb-2 px-2 py-1.5 bg-blue-50 rounded">
+      <p className="font-medium text-blue-900 mb-1">📈 价格时间线</p>
+      <div className="space-y-0.5">
+        {dedup.map((p, i) => {
+          const prev = i > 0 ? dedup[i - 1] : null;
+          const diff = prev ? p.price - prev.price : 0;
+          const diffText = !prev ? "" : diff === 0 ? "" : diff > 0 ? ` (↑+$${diff})` : ` (↓-$${-diff})`;
+          const diffCls = diff > 0 ? "text-red-600" : diff < 0 ? "text-green-600" : "text-blue-800";
+          return (
+            <p key={i} className={`text-xs ${diffCls}`}>
+              <span className="text-gray-500">{p.label}</span>
+              {" "}${p.price}{diffText}
+            </p>
+          );
+        })}
+        {livePrice == null && (
+          <p className="text-xs text-gray-400">实时价待查</p>
+        )}
+      </div>
+      {dedup.length <= 1 && (
+        <p className="text-[11px] text-gray-400 mt-1">多看几次，价格变化会自动记在这里</p>
+      )}
     </div>
   );
 }
