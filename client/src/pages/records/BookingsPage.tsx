@@ -21,7 +21,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingTimeline from "@/bookings/BookingTimeline";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
-import { Flights, HotelCatalog, RestaurantCatalog, Transport, usePlanScope, planDateShort } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort } from "@/guide/GuideApp";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -37,6 +37,8 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
+import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
+import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
 
 const kindBadge: Record<BookingKind, string> = {
   hotel: "bg-teal-700 text-white",
@@ -79,7 +81,11 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
   );
 }
 
-/** 收藏的待预订：酒店/餐厅收藏后出现在这里，带"何时订"指导，一键转入预订 */
+/** 收藏的待预订清单（2026-10-02 用户重构）：
+ * - 酒店/航班/餐厅/景点四类收藏全部出现在这里，不再藏着
+ * - 每项带实时价格追踪（航班走 Google Flights 实查价，酒店走实查房价）
+ * - 一键转入预订记录
+ * 用户原话："你现在的那些酒店的收藏我都不知道你收藏到什么地方去了，完全没有用" */
 function FavoriteActionList({
   onAddFavorite,
 }: {
@@ -99,20 +105,51 @@ function FavoriteActionList({
         return { row: r, city: "", type: "attraction" };
       }
     })
-    .filter((f) => f.type === "hotel" || f.type === "restaurant");
+    // 2026-10-02：四类全收，不再只收酒店/餐厅
+    .filter((f) => ["hotel", "flight", "restaurant", "attraction"].includes(f.type));
 
-  if (!favs.length) return null;
+  if (!favs.length) {
+    return (
+      <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
+        <p className="text-sm text-gray-500">
+          ⭐ 你还没有收藏任何酒店/航班/餐厅/景点
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，它们会出现在这里，带实时价格追踪
+        </p>
+      </div>
+    );
+  }
+
+  const typeLabel = (type: string) =>
+    type === "hotel" ? "🏨 酒店" :
+    type === "flight" ? "✈️ 航班" :
+    type === "restaurant" ? "🍽️ 餐厅" : "🏛️ 景点";
 
   const timingTip = (type: string) =>
     type === "hotel"
       ? "12月是旺季，建议现在就订（提前2-3个月），好房型先到先得"
-      : "热门餐厅提前1-2周订位；米其林/必订餐厅现在可查档期";
+      : type === "flight"
+      ? "机票价格波动大，看到合适就下手；出票前重查退改政策"
+      : type === "restaurant"
+      ? "热门餐厅提前1-2周订位；米其林/必订餐厅现在可查档期"
+      : "热门景点提前查门票/预约政策，避开人流高峰";
+
+  const bkindFor = (type: string): BookingKind =>
+    type === "hotel" ? "hotel" :
+    type === "flight" ? "transport" :
+    type === "restaurant" ? "restaurant" : "attraction";
 
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-      <h3 className="font-bold text-gray-900 mb-1">⭐ 我的待预订收藏</h3>
+    <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-6">
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="font-bold text-gray-900">⭐ 我的收藏 · 待预订清单</h3>
+        <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
+          {favs.length} 项
+        </span>
+      </div>
       <p className="text-xs text-gray-500 mb-3">
-        在酒店/餐厅页点了收藏的会出现在这里，确认要订就转入预订记录
+        在酒店/飞机/餐厅/景点页点了「＋ 收藏」的都在这里，带实时价格追踪，确认要订就转入预订记录
       </p>
       <div className="space-y-2">
         {favs.map((f) => (
@@ -120,14 +157,16 @@ function FavoriteActionList({
             key={f.row.id}
             className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
           >
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="text-sm font-medium text-gray-900 truncate">
                 {f.row.title}
                 <span className="ml-2 text-xs font-normal text-gray-400">
-                  {f.city} · {f.type === "hotel" ? "酒店" : "餐厅"}
+                  {f.city && `${f.city} · `}{typeLabel(f.type)}
                 </span>
               </div>
               <div className="text-xs text-amber-700">{timingTip(f.type)}</div>
+              {/* 实时价格追踪：航班/酒店显示最新实查价 */}
+              <FavoritePriceLine name={f.row.title} type={f.type} city={f.city} />
             </div>
             <div className="flex gap-2 shrink-0">
               <button
@@ -135,7 +174,7 @@ function FavoriteActionList({
                   onAddFavorite(
                     f.row.title,
                     f.city,
-                    f.type === "hotel" ? "hotel" : "restaurant",
+                    bkindFor(f.type),
                   )
                 }
                 className="px-3 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-medium hover:bg-teal-800"
@@ -157,6 +196,41 @@ function FavoriteActionList({
   );
 }
 
+/** 收藏项的实时价格行：航班查 Google Flights 实查价，酒店查实查房价 */
+function FavoritePriceLine({ name, type, city }: { name: string; type: string; city: string }) {
+  if (type === "flight") {
+    // 航班：从 FLIGHT_LEGS 找对应航段的最新实查价
+    const leg = FLIGHT_LEGS.find((l) => l.route === name || name.includes(l.route) || l.route.includes(name));
+    if (!leg) return <div className="text-xs text-gray-400 mt-1">💰 价格：航段信息待匹配</div>;
+    const opts = leg.options ?? [];
+    if (!opts.length) return <div className="text-xs text-gray-400 mt-1">💰 价格：待实查（{leg.date || "日期待定"}）</div>;
+    const cheapest = opts.reduce((a, b) => (a.price ?? Infinity) < (b.price ?? Infinity) ? a : b);
+    return (
+      <div className="text-xs text-gray-600 mt-1">
+        💰 <span className="font-semibold text-teal-700">${cheapest.price}</span>
+        <span className="text-gray-400"> 起 · {cheapest.carrier || ""} · Google Flights 实查</span>
+        {leg.queriedAt && <span className="text-gray-400"> · {leg.queriedAt}</span>}
+      </div>
+    );
+  }
+  if (type === "hotel") {
+    // 酒店：用 getLiveHotelPrice 查实查房价
+    const p = getLiveHotelPrice(name);
+    if (p && !p.unavailable && p.base) {
+      return (
+        <div className="text-xs text-gray-600 mt-1">
+          💰 <span className="font-semibold text-teal-700">${p.base.perNightUSD}/晚</span>
+          <span className="text-gray-400"> 起 · {p.source}实查 {p.checkedAt}</span>
+        </div>
+      );
+    }
+    if (p && p.unavailable) return <div className="text-xs text-gray-400 mt-1">💰 该日期暂无可订房</div>;
+    return <div className="text-xs text-gray-400 mt-1">💰 价格：暂无实时价</div>;
+  }
+  // 餐厅/景点：暂无结构化价格数据，显示提示
+  return null;
+}
+
 function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
@@ -165,14 +239,15 @@ function BookingsInner() {
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  /** 二级菜单：预订行动 / 酒店 / 餐厅 / 航班 / 交通（支持 ?menu=action|hotels|restaurants|flights|transport 深链；旧 ?menu=details&view=hotels|restaurants 自动兼容） */
+  /** 二级菜单：酒店 / 航班 / 餐厅 / 景点 / 预订行动 / 交通（支持 ?menu=hotels|flights|restaurants|attractions|action|transport 深链；旧 ?menu=details&view=hotels|restaurants 自动兼容）
+      2026-10-02 用户：tab 顺序改为酒店→飞机→餐厅→景点→行动安排（行动最后）；加景点 tab */
   const [searchParams] = useSearchParams();
-  type MenuKey = "action" | "hotels" | "restaurants" | "flights" | "transport";
+  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "transport";
   const [menu, setMenu] = useState<MenuKey>(() => {
     const m = searchParams.get("menu");
-    if (m === "hotels" || m === "restaurants" || m === "flights" || m === "transport") return m;
+    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "transport") return m;
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
-    return "action";
+    return "hotels";
   });
   /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
   const { segments } = usePlanScope();
@@ -266,10 +341,11 @@ function BookingsInner() {
   ];
 
   const menus: { key: MenuKey; label: string }[] = [
-    { key: "action", label: "📋 预订行动" },
     { key: "hotels", label: "🏨 酒店" },
+    { key: "flights", label: "✈️ 飞机" },
     { key: "restaurants", label: "🍽️ 餐厅" },
-    { key: "flights", label: "✈️ 航班" },
+    { key: "attractions", label: "🏛️ 景点" },
+    { key: "action", label: "📋 行动安排" },
     { key: "transport", label: "🚋 交通" },
   ];
 
@@ -316,12 +392,28 @@ function BookingsInner() {
         ))}
       </div>
 
-      {menu === "action" ? (
+      {menu === "hotels" ? (
+        <div className="guide-scope">
+          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
+        </div>
+      ) : menu === "flights" ? (
+        <div className="guide-scope">
+          <Flights onBook={onBookPreset} />
+        </div>
+      ) : menu === "restaurants" ? (
+        <div className="guide-scope">
+          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
+        </div>
+      ) : menu === "attractions" ? (
+        <div className="guide-scope">
+          <AttractionCatalog scopeCities={scoped ? planCities : undefined} />
+        </div>
+      ) : menu === "action" ? (
         <>
       {/* 行动总览：现在要干什么，一眼看清 */}
       <ActionStrip confirmedCount={confirmedCount} />
 
-      {/* 收藏的待预订：酒店/餐厅页收藏后出现在这里 */}
+      {/* 收藏的待预订：酒店/航班/餐厅/景点页收藏后出现在这里，带实时价格追踪 */}
       <FavoriteActionList onAddFavorite={addFavoriteToBooking} />
 
       {/* 预订行动时间线：按最晚行动时间排，机票/酒店/餐厅/景点一体 */}
@@ -453,18 +545,6 @@ function BookingsInner() {
         </div>
       )}
         </>
-      ) : menu === "hotels" ? (
-        <div className="guide-scope">
-          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
-        </div>
-      ) : menu === "restaurants" ? (
-        <div className="guide-scope">
-          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
-        </div>
-      ) : menu === "flights" ? (
-        <div className="guide-scope">
-          <Flights onBook={onBookPreset} />
-        </div>
       ) : (
         <div className="guide-scope">
           <Transport scopeCities={scoped ? planCities : undefined} />

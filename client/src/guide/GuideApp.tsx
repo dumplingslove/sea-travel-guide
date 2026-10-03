@@ -376,7 +376,7 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：自 2026-09-29 起回程改为北京→首尔（停留2天）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：自 2026-09-29 起回程改为北京→首尔（停留2天）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button><FavButton name={l.title} city="" type="flight"/></div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 
@@ -451,6 +451,12 @@ export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments
  <section className="sectionblock"><div className="sectiontitle"><span>RIDE HAILING</span><h2>打车软件怎么选</h2><p>到了当地现装也来得及，但提前装好更从容</p></div>
  <div className="transportlist">{rideApps.map((a,i)=><article key={a.name}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{a.name}</h3><p>{a.desc}</p></div></article>)}</div></section>
  <section className="darkpanel"><h2>交通底线</h2><div><article><h3>海岛出行</h3><p>船班受海况影响，贵重物品放防水袋，不把次日早班机排得过紧。选船看人：大船稳、长尾船慢有味道、快艇快但颠；易晕船提前吃药选大船。</p></article><article><h3>机场衔接</h3><p>跨国航班与托运行李需要更长缓冲；出票后再固化当天时间线。廉航多在廉价航站楼（曼谷DMK、吉隆坡KLIA2），提前查好别跑错。</p></article><article><h3>网约车</h3><p>按 App 显示车牌核对，机场与码头上车点提前确认。深夜/偏远地点提前叫车，别现等。</p></article><article><h3>步行日</h3><p>热带正午把室外长距离拆开，以室内馆、咖啡或酒店休息降温。带娃时推车+电梯路线提前查。</p></article></div></section></div>}
+
+/** 景点目录（2026-10-02 用户：预订页加景点 tab）：AttractionGuide 的预订页包装，按行程城市筛选 */
+export function AttractionCatalog({onBook, scopeCities}:{onBook?:OnBook;scopeCities?:string[]}){
+  const initialCity = scopeCities && scopeCities.length ? scopeCities[0] : undefined;
+  return <AttractionGuide onBook={onBook} standalone={false} initialCity={initialCity} />;
+}
 
 function AttractionGuide({onBook,standalone,initialCity,initialSpot}:{onBook?:OnBook;standalone?:boolean;initialCity?:string;initialSpot?:string}){
  const [expanded,setExpanded]=useState<string|null>(()=>initialSpot?initialSpot:null);
@@ -639,9 +645,10 @@ function ShopGuide({city,openMall}:{city:string;openMall?:string}){
  <h4>最值得买的伴手礼</h4><ul>{g.souvenirs.map(s=><li key={s.name}>{s.star?'★ ':''}<b>{s.name}</b>——{s.note}</li>)}</ul>
  {g.tips.length>0 && <div className="shoptips"><h4>购物贴士</h4><ul>{g.tips.map(t=><li key={t}>{t}</li>)}</ul></div>}</div>;
 }
-/** 一键收藏：写入 sea_guide_records（kind="favorite"），type区分景点/酒店/餐厅。
- * 景点收藏→行程优先排入；酒店/餐厅收藏→预订行动清单。 */
-export function FavButton({name,city,type}:{name:string;city:string;type:'attraction'|'hotel'|'restaurant'}){
+/** 一键收藏：写入 sea_guide_records（kind="favorite"），type区分景点/酒店/餐厅/航班。
+ * 景点收藏→行程优先排入；酒店/餐厅/航班收藏→预订行动清单。
+ * 2026-10-02 用户：浏览航班时也要有收藏按钮 */
+export function FavButton({name,city,type}:{name:string;city:string;type:'attraction'|'hotel'|'restaurant'|'flight'}){
   const [st,setSt]=useState<'idle'|'saving'|'done'>('idle');
   const onClick=async()=>{
     if(st!=='idle')return;setSt('saving');
