@@ -847,12 +847,8 @@ export default function StickyMapBar({
       refreshLabelVisibility();
       return; // 未点选且无城市：全部显示，不飞
     }
-    if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
-    else if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
-    else {
-      const ap = airportForCity(activeCity);
-      if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
-    }
+    // 2026-10-04 修：未点选单项时不飞——markers effect 已用 fitBounds+minZoom 14 定位好，
+    // 此处再 flyTo 会覆盖掉（之前飞机场 zoom 11 是旧逻辑，已废弃）。
     refreshLabelVisibility();
   }, [activeCity, activeSig, itemMode, items, flightRoutes, activeDayRoute, mapReady, selectZoom]);
 
