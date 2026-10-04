@@ -47,12 +47,15 @@ const KIND_LABEL: Record<ActionMapItem["kind"], string> = {
 
 /**
  * @param favorites 收藏项 {name, city, type: hotel|restaurant|attraction}
+ * @param itineraryCities 行程实际城市列表（中文名）；提供时地图只显示这些城市的点，不相关的城市不显示（2026-10-03 用户：行动安排地图只显示大行程定下的城市）
  * 地图自动包含：收藏的酒店/餐厅/景点 + 详细行程(days)里全部景点
  */
 export default function ActionMapView({
   favorites,
+  itineraryCities,
 }: {
   favorites: { name: string; city: string; type: string }[];
+  itineraryCities?: string[];
 }) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -63,11 +66,14 @@ export default function ActionMapView({
   const items = useMemo<ActionMapItem[]>(() => {
     const out: ActionMapItem[] = [];
     const seen = new Set<string>();
+    /* 2026-10-03 用户：只显示行程实际城市的点 */
+    const allowedCities = itineraryCities ? new Set(itineraryCities) : null;
 
     /* 1. 收藏的酒店/餐厅：按城市查 placeCoords */
     const byCity = new Map<string, { name: string; type: string }[]>();
     for (const f of favorites) {
       if (!["hotel", "restaurant", "attraction"].includes(f.type)) continue;
+      if (allowedCities && !allowedCities.has(f.city)) continue;
       if (!byCity.has(f.city)) byCity.set(f.city, []);
       byCity.get(f.city)!.push({ name: f.name, type: f.type });
     }
@@ -104,6 +110,7 @@ export default function ActionMapView({
 
     /* 2. 详细行程里全部景点：days[].stops[] 按名查 stopCoords */
     for (const d of days) {
+      if (allowedCities && !allowedCities.has(d.city)) continue;
       for (const s of d.stops) {
         const key = `itinerary:${s.name}`;
         if (seen.has(key)) continue;
@@ -118,7 +125,7 @@ export default function ActionMapView({
       }
     }
     return out;
-  }, [favorites]);
+  }, [favorites, itineraryCities]);
 
   const cities = useMemo(() => {
     const s = new Set(items.map((i) => i.city));

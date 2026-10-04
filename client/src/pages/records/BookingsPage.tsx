@@ -287,8 +287,10 @@ function FavoriteActionList({
       </div>
 
       {/* 2026-10-03 用户：行动安排加地图视图——收藏的酒店/餐厅/景点 + 行程全部景点，看位置合不合适、离酒店远近 */}
+      {/* 2026-10-03 用户：地图只显示大行程定下的城市，不相关的不显示 */}
       <ActionMapView
         favorites={favs.map((f) => ({ name: f.row.title, city: itemCity(f), type: f.type }))}
+        itineraryCities={segs.map((s) => s.city)}
       />
 
       {citySections.map((sec, si) => (
