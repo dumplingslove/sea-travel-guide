@@ -380,7 +380,12 @@ export default function StickyMapBar({
     if (alwaysVisible) return; // 常显模式无折叠
     const nv = !collapsed;
     setCollapsed(nv);
-    if (!nv) setMapReady(true); // 首次展开：放行地图初始化
+    if (!nv) {
+      setMapReady(true); // 首次展开：放行地图初始化
+      requestAnimationFrame(() => {
+        mapRef.current?.invalidateSize();
+      });
+    }
     if (storageKey) {
       try {
         localStorage.setItem(storageKey, nv ? "1" : "0");
@@ -398,6 +403,10 @@ export default function StickyMapBar({
       lastExpandSigRef.current = expandSignal;
       setCollapsed(false);
       setMapReady(true);
+      // 2026-10-04 修：从 display:none 恢复后 Leaflet 需 invalidateSize，否则白屏
+      requestAnimationFrame(() => {
+        mapRef.current?.invalidateSize();
+      });
     }
   }, [expandSignal, alwaysVisible]);
 
