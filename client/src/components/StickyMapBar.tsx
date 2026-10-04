@@ -381,10 +381,11 @@ export default function StickyMapBar({
       if (m.getTooltip) {
         const tip = m.getTooltip();
         const el = tip && tip.getElement();
-        // tooltip 是独立 DOM（不在 marker 元素内），marker 被隐藏（display:none，如非当日站点）
-        // 时其标签也必须隐藏，否则开关打开后全图标签乱飘（2026-10-04 真站发现）
+        // tooltip 是独立 DOM（不在 marker 元素内）；setVis 用 opacity:0 藏 marker
+        // （2026-10-04 从 display:none 改为淡入淡出），这里必须按同一口径判断，
+        // 否则当日模式/点选模式下被隐藏标记的标签会飘在地图上。
         const markerEl = m.getElement && m.getElement();
-        const markerVisible = !markerEl || (markerEl as HTMLElement).style.display !== "none";
+        const markerVisible = !markerEl || (markerEl as HTMLElement).style.opacity !== "0";
         if (el) (el as HTMLElement).style.opacity = show && markerVisible ? "1" : "0";
       }
     });
@@ -645,6 +646,7 @@ export default function StickyMapBar({
         if (all.length === 1) map.flyTo(all[0], 14, { duration: 0.8 });
         else if (all.length > 1) map.flyToBounds(L.latLngBounds(all).pad(0.3), { duration: 0.8 });
       }
+      refreshLabelVisibility(); // 显隐变化后同步标签（当日模式隐藏了底图标记）
       return;
     }
 
@@ -689,19 +691,27 @@ export default function StickyMapBar({
       rl.lines.forEach((line) => line.setStyle({ opacity: 0.9 }));
     }
     if (itemMode) {
-      if (!pts.length) return; // 选中的 key 对不上任何点时不动地图，避免乱飞
+      if (!pts.length) {
+        refreshLabelVisibility();
+        return; // 选中的 key 对不上任何点时不动地图，避免乱飞
+      }
       // 2026-10-04 用户：切换景点只平移、不放大（保持当前 zoom，被选景点收入视野中央）
       if (pts.length === 1) map.panTo(pts[0], { animate: true, duration: 0.8 });
       else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
+      refreshLabelVisibility();
       return;
     }
-    if (!activeCity) return; // 未点选且无城市：全部显示，不飞
+    if (!activeCity) {
+      refreshLabelVisibility();
+      return; // 未点选且无城市：全部显示，不飞
+    }
     if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
     else if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
     else {
       const ap = airportForCity(activeCity);
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
+    refreshLabelVisibility();
   }, [activeCity, activeSig, itemMode, items, flightRoutes, activeDayRoute, mapReady]);
 
   const counts = useMemo(() => {
