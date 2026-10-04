@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-04T05:49:29+00:00",
+ "updated_at": "2026-10-04T06:37:29+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15351,8 +15351,8 @@
      "economy_price_usd": 416
     },
     "2026-12-18": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
-     "economy_usd": 270,
+     "economy_queried_at": "2026-10-04T06:37:29+00:00",
+     "economy_usd": 270.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -15362,15 +15362,15 @@
        "flight": "9C6294",
        "dep": "14:05",
        "arr": "19:00",
-       "duration": "3 hr 55 min",
-       "price_usd": 270
+       "duration": "3h 55m",
+       "price_usd": 270.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
+     "business_queried_at": "2026-10-04T06:37:29+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无商务舱直飞",
+     "business_note": "当天无直飞",
      "economy_price_usd": 270
     }
    }
@@ -33737,25 +33737,25 @@
    "label": "西雅图→北京",
    "days": {
     "2026-11-28": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
-     "economy_usd": 1631,
+     "economy_queried_at": "2026-10-04T06:37:29+00:00",
+     "economy_usd": 1631.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Hainan Airlines",
+       "airline": "Hainan",
        "flight": "HU496",
        "dep": "10:20",
        "arr": "15:50+1",
-       "duration": "13 hr 30 min",
-       "price_usd": 1631,
-       "business_price_usd": 12534
+       "duration": "13h 30m",
+       "price_usd": 1631.0,
+       "business_price_usd": 12534.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
-     "business_usd": 12534,
+     "business_queried_at": "2026-10-04T06:37:29+00:00",
+     "business_usd": 12534.0,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-08": {
