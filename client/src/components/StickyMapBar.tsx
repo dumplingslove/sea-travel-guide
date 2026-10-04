@@ -220,6 +220,23 @@ export function buildItemsFromFavorites(
 }
 
 /**
+ * 需提前订票景点坐标兜底（2026-10-04 site-improve-hourly 补）。
+ * 背景：findStopCoord 只收录行程站点名（精确匹配），MUST_BOOK 里 9/11 项查不到，
+ * 导致预订页景点 tab / 行动安排页地图上备选景点大面积缺失（用户要求"备选景点要在地图上显示"）。
+ * 以下坐标 2026-10-04 经 map.geocode 实查，full_address 逐条核对为景点本体（非同名商铺/街道）；
+ * Siam Niramit、皮皮岛暂无可验证坐标，保持跳过（不编造），记入 backlog 待研究管线补坐标。
+ */
+const MUST_BOOK_COORDS: Record<string, { lat: number; lng: number }> = {
+  "大象自然公园": { lat: 19.2144, lng: 98.85888 }, // Elephant Nature Park 主园区，Mae Taeng, Chiang Mai
+  "Phuket Elephant Sanctuary": { lat: 8.02199, lng: 98.38852 }, // Paklok, Thalang, Phuket
+  "夜间动物园": { lat: 1.40197, lng: 103.78799 }, // Night Safari, Mandai, Singapore
+  "环球影城": { lat: 1.25407, lng: 103.82381 }, // Universal Studios Singapore, Sentosa
+  "滨海湾花园": { lat: 1.28213, lng: 103.86372 }, // Gardens by the Bay, 18 Marina Gardens Dr
+  "吉姆·汤普森之家": { lat: 13.74876, lng: 100.52848 }, // Jim Thompson House Museum, Pathum Wan, Bangkok
+  "因他农国家公园": { lat: 18.53569, lng: 98.52234 }, // Doi Inthanon NP（1009 公路园内实查点）
+};
+
+/**
  * 候选酒店/餐厅（2026-10-04 用户：预订页地图要看到全部候选，不只已收藏的）。
  * 返回指定城市（中文名）在 cityPlaces 里的全部酒店+餐厅，标 candidate:true。
  * 调用方负责与已收藏去重（同 key 的已收藏优先）。
@@ -232,6 +249,8 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     "槟城": "penang", "吉隆坡": "kualalumpur", "胡志明市": "hochiminh", "富国岛": "phuquoc",
   };
   // 需提前订票的景点（2026-10-04 用户：备选景点要在地图上显示）
+  // 名单 = GuideApp.MUST_BOOK_ATTRACTIONS 的行程城市子集（双子塔/VinWonders/Vinpearl Safari
+  // 非行程城市，tab 在 scopeCities 下同样过滤，故不收录）
   const MUST_BOOK: { name: string; city: string }[] = [
     { name: "大象自然公园", city: "清迈" },
     { name: "Phuket Elephant Sanctuary", city: "普吉" },
@@ -258,7 +277,7 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     // 需提前订票的景点（只收录行程城市的）
     for (const a of MUST_BOOK) {
       if (a.city !== zh) continue;
-      const coord = findStopCoord(a.name);
+      const coord = findStopCoord(a.name) ?? MUST_BOOK_COORDS[a.name];
       if (coord) {
         out.push({ name: a.name, city: zh, lat: coord.lat, lng: coord.lng, kind: "attraction", candidate: true, note: "需提前订票" });
       }
