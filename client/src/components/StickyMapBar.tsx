@@ -381,7 +381,11 @@ export default function StickyMapBar({
       if (m.getTooltip) {
         const tip = m.getTooltip();
         const el = tip && tip.getElement();
-        if (el) (el as HTMLElement).style.opacity = show ? "1" : "0";
+        // tooltip 是独立 DOM（不在 marker 元素内），marker 被隐藏（display:none，如非当日站点）
+        // 时其标签也必须隐藏，否则开关打开后全图标签乱飘（2026-10-04 真站发现）
+        const markerEl = m.getElement && m.getElement();
+        const markerVisible = !markerEl || (markerEl as HTMLElement).style.display !== "none";
+        if (el) (el as HTMLElement).style.opacity = show && markerVisible ? "1" : "0";
       }
     });
   };
