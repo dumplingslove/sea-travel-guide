@@ -382,16 +382,18 @@ export default function StickyMapBar({
     setCollapsed(nv);
     if (!nv) {
       setMapReady(true); // 首次展开：放行地图初始化
-      // 2026-10-04 修：双重 rAF 确保 DOM 更新完再 invalidate，否则白屏
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          try {
+      // 2026-10-04 修：延迟确保 DOM 可见后再 invalidate，否则白屏
+      setTimeout(() => {
+        try {
+          const el = mapEl.current;
+          // 只有容器可见时才 invalidate
+          if (el && el.offsetParent !== null) {
             mapRef.current?.invalidateSize();
-          } catch (e) {
-            console.warn("map invalidateSize failed", e);
           }
-        });
-      });
+        } catch (e) {
+          console.warn("map invalidateSize failed", e);
+        }
+      }, 100);
     }
     if (storageKey) {
       try {
