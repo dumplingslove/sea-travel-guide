@@ -353,6 +353,12 @@ interface StickyMapBarProps {
    * 点某张卡只高亮它，不许把地图缩放到只剩一个点。传 false 关闭缩放。
    */
   selectZoom?: boolean;
+  /**
+   * 点选模式下是否保留自动添加的机场标记（默认 false）。
+   * 2026-10-04 修：预订页酒店/餐厅地图的机场是距离参考，点卡时不许消失；
+   * 行动安排页走航线层，点选时自动机场仍隐藏（原逻辑）。
+   */
+  keepAirportsInSelect?: boolean;
 }
 
 export default function StickyMapBar({
@@ -370,6 +376,7 @@ export default function StickyMapBar({
   alwaysVisible = false,
   stickyTop,
   selectZoom = true,
+  keepAirportsInSelect = false,
 }: StickyMapBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
@@ -595,8 +602,9 @@ export default function StickyMapBar({
     // 2026-10-04：点选模式（行动安排页）下自动加的机场标记只会添乱，航班走航线层；
     // 城市级模式（行程页）保持原行为。用 itemMode（非空选择）而非 activeItemKeys!==null，
     // 空数组 = 未点选 = 全部显示，不触发项目级逻辑。
+    // 2026-10-04 修：keepAirportsInSelect=true（预订页）时点选也保留机场——点卡不许掉标记。
     const itemModeInit = itemMode;
-    if (!itemModeInit) {
+    if (!itemModeInit || keepAirportsInSelect) {
       const cities = new Set(items.map((i) => i.city));
       for (const c of cities) {
         const ap = airportForCity(c);
@@ -615,7 +623,9 @@ export default function StickyMapBar({
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
     refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, mapReady, activeItemKeys]);
+  }, [items, mapReady, keepAirportsInSelect]);
+  // 2026-10-04 修：点选（activeItemKeys）变化不许重建 markers——高亮 effect 已负责更新图标，
+  // 重建会导致闪烁和时序错乱（机场标记时有时无）。markers 只随 items/mapReady 重建。
 
   // 航班航线层（2026-10-04 点选重构）：
   // - 每个机场按 IATA code 全站唯一标记，位置取规范经度（太平洋世界副本），DOM 重复从根子上消失
@@ -880,14 +890,12 @@ export default function StickyMapBar({
     c.candidate = items.filter((i) => i.candidate).length;
     return c;
   }, [items]);
-  // 标题副文案：点选模式下 📍 显示被选中的卡片名（activeLabel），不再有"在看 N 项"；
-  // 未点选显示全部点数/航线数
+  // 标题副文案：点选模式下 📍 显示被选中的卡片名（activeLabel）；
+  // 2026-10-04 修：点选时也不许把" N 个点"藏起来——用户会以为地图空了。计数一直显示。
   const dayScope = activeDayRoute != null;
   const titleSub = dayScope
     ? `${activeDayRoute!.stops.length}个站点`
-    : itemMode
-      ? ""
-      : `${items.length}个点${counts.candidate ? `（含${counts.candidate}个灰标候选）` : ""}${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
+    : `${items.length}个点${counts.candidate ? `（含${counts.candidate}个灰标候选）` : ""}${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
 
   // 标题栏"名称"开关（2026-10-04 用户：景点名称默认不显示，加开关控制）
   const labelToggle = (
