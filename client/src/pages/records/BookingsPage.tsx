@@ -42,7 +42,8 @@ import {
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
-import StickyMapBar, { buildItemsFromFavorites } from "@/components/StickyMapBar";
+import StickyMapBar, { buildItemsFromFavorites, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
+import { airportForCity } from "@/data/airportCoords";
 
 const kindBadge: Record<BookingKind, string> = {
   hotel: "bg-teal-700 text-white",
@@ -210,9 +211,14 @@ function FavoriteActionList({
     f.type === "flight" ? flightCity(f) : f.city;
 
   // 2026-10-03 用户：吸顶可折叠地图 + 滚动联动高亮（地图点 = 收藏 + 行程景点，只收行程城市）
-  const [mapActiveCity, setMapActiveCity] = useState<string | null>(null);
+  // 2026-10-04 用户：只高亮当前屏幕里的具体项目（酒店/餐厅/景点卡片），航班显示两机场+连线
+  /** 预订卡片 ↔ 地图点的关联 key（与 StickyMapBar 内 marker key 同算法） */
+  const bookingItemKey = (f: (typeof favs)[number]) =>
+    stickyItemKey(f.type, itemCity(f), f.row.title);
+  const [mapActiveItemKeys, setMapActiveItemKeys] = useState<string[]>([]);
+  const visibleKeysRef = useRef(new Set<string>());
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
-  const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}`).join("|");
+  const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
   const segSig = segs.map((s) => s.city).join(",");
   const bookingMapItems = useMemo(
     () =>
@@ -223,23 +229,63 @@ function FavoriteActionList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [favSig, segSig],
   );
-  // 滚动联动：屏幕中央的城市 section 触发地图高亮 + 飞过去
+  // 航班航线：每张航班卡片一条（出发/到达机场 + 连线），key 与卡片同键
+  const bookingFlightRoutes = useMemo<FlightRoute[]>(() => {
+    const out: FlightRoute[] = [];
+    const seen = new Set<string>();
+    for (const f of favs) {
+      if (f.type !== "flight" || !f.flight?.route) continue;
+      const parts = f.flight.route.split("→").map((s) => s.trim());
+      const fromCity = parts[0] || "";
+      const toCity = parts[1] || "";
+      if (!fromCity || !toCity) continue;
+      if (!airportForCity(fromCity) || !airportForCity(toCity)) continue;
+      const key = bookingItemKey(f);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ key, name: f.row.title, fromCity, toCity });
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [favSig]);
+  // 滚动联动：IntersectionObserver 观察每张预订卡片，收集屏幕中央可见的 item key，
+  // 地图只显示/高亮这些卡片对应的点（航班卡片对应两机场+连线）
   const sectionKey = useMemo(() => segSig + "|" + favSig, [segSig, favSig]);
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-city-section]"));
-    if (!els.length) return;
+    visibleKeysRef.current.clear();
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-booking-item]"));
+    if (!els.length) {
+      setMapActiveItemKeys([]);
+      return;
+    }
     const io = new IntersectionObserver(
       (entries) => {
-        const vis = entries.filter((e) => e.isIntersecting);
-        if (!vis.length) return;
-        vis.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        setMapActiveCity((vis[0].target as HTMLElement).dataset.citySection || null);
+        let changed = false;
+        for (const e of entries) {
+          const k = (e.target as HTMLElement).dataset.bookingItem || "";
+          if (!k) continue;
+          const has = visibleKeysRef.current.has(k);
+          if (e.isIntersecting && !has) {
+            visibleKeysRef.current.add(k);
+            changed = true;
+          } else if (!e.isIntersecting && has) {
+            visibleKeysRef.current.delete(k);
+            changed = true;
+          }
+        }
+        if (changed) setMapActiveItemKeys([...visibleKeysRef.current]);
       },
-      { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.2, 0.4, 0.6] },
+      { rootMargin: "-30% 0px -30% 0px", threshold: [0, 0.25, 0.5] },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [sectionKey]);
+  // 标题副文案：取在看卡片的第一个城市
+  const mapActiveLabel = useMemo(() => {
+    if (!mapActiveItemKeys.length) return undefined;
+    const city = mapActiveItemKeys[0].split(":")[1];
+    return city ? `📍 ${city}` : undefined;
+  }, [mapActiveItemKeys]);
 
   /** 2026-10-03 用户：每个预订项的时间线日期——航班用航班日期，酒店用入住日期 */
   const itemTimelineDate = (f: (typeof favs)[number]): string => {
@@ -319,11 +365,13 @@ function FavoriteActionList({
       </div>
 
       {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点 + 行程全部景点，看位置合不合适、离酒店远近；
-          只显示大行程定下的城市；滚动到哪个城市，地图就高亮飞过去 */}
+          只显示大行程定下的城市；2026-10-04 用户：只高亮当前屏幕里的具体项目，航班显示两机场+连线 */}
       <StickyMapBar
         items={bookingMapItems}
-        activeCity={mapActiveCity}
-        activeLabel={mapActiveCity ?? undefined}
+        activeCity={null}
+        activeLabel={mapActiveLabel}
+        activeItemKeys={mapActiveItemKeys}
+        flightRoutes={bookingFlightRoutes}
         title="🗺️ 行动安排地图"
         storageKey="sticky-map-bookings"
       />
@@ -377,6 +425,7 @@ function FavoriteActionList({
                     <div
                       key={f.row.id}
                       id={`booking-card-${f.row.id}`}
+                      data-booking-item={bookingItemKey(f)}
                       className={`bg-white rounded-lg border px-3 py-2.5 ${
                         f.row.done ? "border-green-200 bg-green-50/50" : "border-gray-200"
                       }`}

@@ -29,6 +29,23 @@ export interface StickyMapItem {
   note?: string;
 }
 
+/** 地图 marker 的稳定 key：`${kind}:${city}:${name}`（预订卡片用它与地图点关联） */
+export function stickyItemKey(kind: string, city: string, name: string): string {
+  return `${kind}:${city}:${name}`;
+}
+
+/** 航班航线：出发/到达两个机场 + 连线（行动安排页航班卡片用） */
+export interface FlightRoute {
+  /** 与卡片关联的唯一 key（建议用 stickyItemKey("flight", city, title)） */
+  key: string;
+  /** 显示名，如 "新加坡 → 普吉" */
+  name: string;
+  /** 出发城市中文名（airportForCity 可查到机场） */
+  fromCity: string;
+  /** 到达城市中文名 */
+  toCity: string;
+}
+
 const KIND_EMOJI: Record<StickyMapKind, string> = {
   hotel: "🏨",
   restaurant: "🍽️",
@@ -145,10 +162,20 @@ export function buildItemsFromFavorites(
 
 interface StickyMapBarProps {
   items: StickyMapItem[];
-  /** 当前屏幕中央的城市（中文名）：高亮该城的点并飞过去；null 时不动作 */
+  /** 当前屏幕中央的城市（中文名）：高亮该城的点并飞过去；null 时不动作。
+      activeItemKeys 非 null 时项目级高亮优先，此字段仅用于标题副文案 */
   activeCity: string | null;
   /** bar 上显示的副标题，如 "D9 · 新加坡" */
   activeLabel?: string;
+  /**
+   * 项目级高亮（2026-10-04 用户：行动安排地图只显示当前屏幕里的具体项目）：
+   * 当前可见卡片对应的地图 item key 集合（stickyItemKey 生成）。
+   * 传入非 null 数组时按 item 级显示/隐藏（城市级逻辑停用）；
+   * 不传（undefined）时保持旧的城市级行为（行程页用）。
+   */
+  activeItemKeys?: string[] | null;
+  /** 航班航线（出发/到达机场标记 + 紫色连线），key 与卡片关联 */
+  flightRoutes?: FlightRoute[];
   title?: string;
   defaultCollapsed?: boolean;
   /** localStorage key：记住折叠状态（alwaysVisible 时忽略） */
@@ -163,6 +190,8 @@ export default function StickyMapBar({
   items,
   activeCity,
   activeLabel,
+  activeItemKeys = null,
+  flightRoutes = [],
   title = "🗺️ 地图",
   defaultCollapsed = true,
   storageKey,
@@ -174,6 +203,9 @@ export default function StickyMapBar({
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
+  const routeLayersRef = useRef(new Map<string, { markers: L.Marker[]; line: L.Polyline }>());
+  // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免滚动时无意义重飞
+  const activeSig = activeItemKeys ? [...activeItemKeys].sort().join("|") : null;
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     // 常显模式：永不折叠，忽略 storageKey/defaultCollapsed
@@ -270,7 +302,7 @@ export default function StickyMapBar({
     const latlngs: L.LatLng[] = [];
     const seen = new Set<string>();
     const addMarker = (it: StickyMapItem) => {
-      const key = `${it.kind}:${it.city}:${it.name}`;
+      const key = stickyItemKey(it.kind, it.city, it.name);
       if (seen.has(key)) return;
       seen.add(key);
       const ll = LL(it.lat, it.lng);
@@ -308,28 +340,99 @@ export default function StickyMapBar({
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
   }, [items, mapReady]);
 
-  // 高亮 + 淡化 + 飞到 activeCity
-  // 2026-10-03 晚用户：地图不要所有点都一样突出，只高亮当前浏览城市的点，其他淡化
+  // 航班航线层：每条航线 = 出发机场标记 + 到达机场标记 + 紫色虚线连线
+  // （2026-10-04 用户：行动安排里航班卡片在地图上显示两个机场图标以及连线）
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    routeLayersRef.current.forEach((l) => {
+      l.markers.forEach((m) => m.remove());
+      l.line.remove();
+    });
+    routeLayersRef.current.clear();
+    if (!flightRoutes.length) return;
+    for (const r of flightRoutes) {
+      const from = airportForCity(r.fromCity);
+      const to = airportForCity(r.toCity);
+      if (!from || !to) continue; // 任一机场查不到坐标就不画这条线
+      const m1 = L.marker(LL(from.lat, from.lng), { icon: iconFor("airport") })
+        .bindPopup(`<b>${from.name}（${from.code}）</b><br/>🛫 出发 · ${r.name}`)
+        .addTo(map);
+      const m2 = L.marker(LL(to.lat, to.lng), { icon: iconFor("airport") })
+        .bindPopup(`<b>${to.name}（${to.code}）</b><br/>🛬 到达 · ${r.name}`)
+        .addTo(map);
+      const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, to.lng)], {
+        color: "#7c3aed",
+        weight: 3,
+        opacity: 0,
+        dashArray: "8 6",
+      }).addTo(map);
+      // 初始隐藏，等下方高亮 effect 按 activeItemKeys 决定显隐，避免首屏闪现全部航线
+      for (const m of [m1, m2]) {
+        const el = m.getElement();
+        if (el) el.style.opacity = "0";
+      }
+      routeLayersRef.current.set(r.key, { markers: [m1, m2], line });
+    }
+  }, [flightRoutes, mapReady]);
+
+  // 高亮
+  // - 项目级（activeItemKeys 非 null，行动安排页）：只显示当前屏幕里卡片对应的点，
+  //   其他全部隐藏；航班卡片显示两机场 + 连线；地图飞到可见点范围
+  // - 城市级（activeCity，行程页旧行为）：高亮该城市的点，其他城市隐藏并飞过去
+  // 2026-10-03 晚用户：地图不要所有点都一样突出，只高亮当前浏览城市的点
   // 2026-10-04 凌晨用户：非当前城市的点不要显示，只突出当前滚动到的景点/酒店/餐厅
+  // 2026-10-04 用户：行动安排地图只高亮当前屏幕里的具体项目；航班显示两机场+连线
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const pts: L.LatLng[] = [];
+    const itemMode = activeSig !== null;
+    const activeSet = itemMode ? new Set(activeSig.split("|").filter(Boolean)) : null;
     markersRef.current.forEach((m, key) => {
       const it = itemByKeyRef.current.get(key);
       if (!it) return;
-      const inActiveCity = !!activeCity && it.city === activeCity;
-      const on = inActiveCity && it.kind !== "airport";
+      let visible: boolean;
+      let on: boolean;
+      if (itemMode) {
+        // 项目级：只有"在看"的卡片对应的点才显示；自动加的机场标记一律隐藏（航班走航线层）
+        visible = activeSet!.has(key) && it.kind !== "airport";
+        on = visible;
+      } else {
+        const inActiveCity = !!activeCity && it.city === activeCity;
+        on = inActiveCity && it.kind !== "airport";
+        visible = !activeCity || inActiveCity;
+      }
       m.setIcon(iconFor(it.kind, on));
-      // 非当前城市的点直接隐藏（用户要求：只显示当前浏览的）
       const el = m.getElement();
       if (el) {
         el.style.transition = "opacity .3s";
-        el.style.opacity = activeCity ? (inActiveCity ? "1" : "0") : "1";
-        el.style.pointerEvents = activeCity && !inActiveCity ? "none" : "auto";
+        el.style.opacity = visible ? "1" : "0";
+        el.style.pointerEvents = visible ? "auto" : "none";
       }
       if (on) pts.push(LL(it.lat, it.lng));
     });
+    // 航线层显隐
+    routeLayersRef.current.forEach((layers, key) => {
+      const show = itemMode ? activeSet!.has(key) : true;
+      for (const mk of layers.markers) {
+        mk.setIcon(iconFor("airport", show));
+        const el = mk.getElement();
+        if (el) {
+          el.style.transition = "opacity .3s";
+          el.style.opacity = show ? "1" : "0";
+          el.style.pointerEvents = show ? "auto" : "none";
+        }
+        if (show) pts.push(mk.getLatLng());
+      }
+      layers.line.setStyle({ opacity: show ? 0.9 : 0 });
+    });
+    if (itemMode) {
+      if (!pts.length) return; // 屏幕中央暂无卡片时不动地图，避免乱飞
+      if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
+      else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
+      return;
+    }
     if (!activeCity) return;
     if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
     else if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
@@ -337,13 +440,16 @@ export default function StickyMapBar({
       const ap = airportForCity(activeCity);
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
-  }, [activeCity, items]);
+  }, [activeCity, activeSig, items, flightRoutes]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
     for (const i of items) c[i.kind] = (c[i.kind] || 0) + 1;
     return c;
   }, [items]);
+  // 项目级模式下标题显示"在看 N 项"，而不是全部点数
+  const itemMode = activeSig !== null;
+  const inViewCount = itemMode ? activeSig.split("|").filter(Boolean).length : 0;
 
   if (!items.length) return null;
 
@@ -363,8 +469,8 @@ export default function StickyMapBar({
               <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
             )}
             <span className="ml-2 text-xs font-normal text-gray-400">
-              {items.length}个点
-              {counts.airport ? ` · ✈️${counts.airport}` : ""}
+              {itemMode ? `在看 ${inViewCount} 项` : `${items.length}个点`}
+              {!itemMode && counts.airport ? ` · ✈️${counts.airport}` : ""}
             </span>
           </span>
         </div>
@@ -380,8 +486,8 @@ export default function StickyMapBar({
               <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
             )}
             <span className="ml-2 text-xs font-normal text-gray-400">
-              {items.length}个点
-              {counts.airport ? ` · ✈️${counts.airport}` : ""}
+              {itemMode ? `在看 ${inViewCount} 项` : `${items.length}个点`}
+              {!itemMode && counts.airport ? ` · ✈️${counts.airport}` : ""}
             </span>
           </span>
           <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
