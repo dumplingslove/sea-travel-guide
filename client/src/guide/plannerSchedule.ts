@@ -259,9 +259,15 @@ const CITY_META: CityMeta[] = citiesJson as CityMeta[];
  * 静态 20 天行程（比报错更糟——看起来一切正常但数据是旧的）。
  */
 const SEOUL_META: CityMeta = { id: "seoul", zh: "首尔", en: "Seoul", country_zh: "韩国" };
+/* 2026-10-03 用户：云端行程含北京/西安，无此二城则 planToItinerary 整单返回 null
+ * 全站静默回退到过时静态 20 天行程（注释原警告的实例化） */
+const BEIJING_META: CityMeta = { id: "beijing", zh: "北京", en: "Beijing", country_zh: "中国" };
+const XIAN_META: CityMeta = { id: "xian", zh: "西安", en: "Xi'an", country_zh: "中国" };
 const META_BY_ZH = new Map<string, CityMeta>([
   ...CITY_META.map((c) => [c.zh, c] as [string, CityMeta]),
   ["首尔", SEOUL_META],
+  ["北京", BEIJING_META],
+  ["西安", XIAN_META],
 ]);
 
 /**
