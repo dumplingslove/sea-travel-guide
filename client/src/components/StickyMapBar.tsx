@@ -14,7 +14,10 @@ import { days } from "@/guide/data";
  *   否则点 ▾/▴ 展开折叠，折叠时只占一条细 bar
  * - activeCity 变化时：该城市的点高亮（放大+红圈脉冲），其他城市点淡化；
  *   地图平滑飞到该城市
- * - zoom >= 14 时直接显示景点名称标签（与 ActionMapView 同口径）
+ * - 2026-10-04 用户：点选景点只平移（panTo，保持当前 zoom），不要放大效果；
+ *   被选中的景点平移到视野中央
+ * - 2026-10-04 用户：景点名称标签默认不显示，标题栏加"名称"开关控制
+ *   （替代旧的 zoom>=14 自动显示口径）
  * - 自动标注所涉城市的机场（✈️ 紫色图标）
  */
 
@@ -306,6 +309,16 @@ export default function StickyMapBar({
   // 地图懒初始化：折叠模式下首次展开时才创建 Leaflet（display:none 容器里初始化会导致首展视图错乱）；
   // 常显模式直接初始化（容器初始即有尺寸）
   const [mapReady, setMapReady] = useState(!collapsed);
+  // 景点名称标签开关（2026-10-04 用户：默认不显示，标题栏开关控制；状态持久化）
+  const labelStorageKey = storageKey ? `${storageKey}:labels` : "stickymap:labels";
+  const [showLabels, setShowLabels] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(labelStorageKey) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const showLabelsRef = useRef(showLabels);
   const [topPx, setTopPx] = useState(0);
 
   // sticky top：紧贴 header 底部（动态测量，避免硬编码）
@@ -355,13 +368,14 @@ export default function StickyMapBar({
     }
   }, [expandSignal, alwaysVisible]);
 
-  // zoom >= 14 显示名称标签（与 ActionMapView 同口径）。
+  // 名称标签显隐（2026-10-04 用户：默认不显示，标题栏"名称"开关控制；
+  // 替代旧的 zoom>=14 自动显示口径）。zoomend 监听只绑一次，用 ref 读最新开关值避免闭包过期。
   // 2026-10-04 真站：航线标记是 flightRoutes 异步到达后（重）建的，updateLabels 只在 zoomend/400ms 跑一次，
   // 重建后 tooltip 永远停在 opacity 0。改为组件级函数，markers/航线层每次（重）建后都调一次。
   const refreshLabelVisibility = () => {
     const map = mapRef.current;
     if (!map) return;
-    const show = map.getZoom() >= 14;
+    const show = showLabelsRef.current;
     map.eachLayer((layer: unknown) => {
       const m = layer as L.Marker;
       if (m.getTooltip) {
@@ -371,6 +385,18 @@ export default function StickyMapBar({
       }
     });
   };
+
+  // 名称开关变化：持久化 + 立即刷新标签显隐
+  useEffect(() => {
+    showLabelsRef.current = showLabels;
+    try {
+      localStorage.setItem(labelStorageKey, showLabels ? "1" : "0");
+    } catch {
+      /* 忽略 */
+    }
+    refreshLabelVisibility();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showLabels]);
 
   // 地图初始化（一次，懒：首次展开后容器有真实尺寸才创建，避免 display:none 里初始化）
   useEffect(() => {
@@ -606,8 +632,8 @@ export default function StickyMapBar({
         if (sel) pts.push(e.marker.getLatLng());
       });
       if (pts.length) {
-        // 点了具体卡片：飞到被选中的点
-        if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 14), { duration: 0.8 });
+        // 点了具体卡片：只平移过去，不放大（2026-10-04 用户：切换景点不要放大效果）
+        if (pts.length === 1) map.panTo(pts[0], { animate: true, duration: 0.8 });
         else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
         // 刚切到当日（还没点具体卡）：看当日全景
@@ -660,7 +686,8 @@ export default function StickyMapBar({
     }
     if (itemMode) {
       if (!pts.length) return; // 选中的 key 对不上任何点时不动地图，避免乱飞
-      if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
+      // 2026-10-04 用户：切换景点只平移、不放大（保持当前 zoom，被选景点收入视野中央）
+      if (pts.length === 1) map.panTo(pts[0], { animate: true, duration: 0.8 });
       else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       return;
     }
@@ -687,6 +714,31 @@ export default function StickyMapBar({
       ? ""
       : `${items.length}个收藏点${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
 
+  // 标题栏"名称"开关（2026-10-04 用户：景点名称默认不显示，加开关控制）
+  const labelToggle = (
+    <label
+      className="ml-2 flex items-center gap-1 text-xs font-normal text-gray-500 whitespace-nowrap cursor-pointer select-none"
+      title="显示/隐藏景点名称标签"
+    >
+      <input
+        type="checkbox"
+        checked={showLabels}
+        onChange={(e) => setShowLabels(e.target.checked)}
+        className="accent-teal-700 w-3.5 h-3.5"
+      />
+      名称
+    </label>
+  );
+  const titleInner = (
+    <span className="truncate">
+      {title}
+      {activeLabel && (
+        <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
+      )}
+      <span className="ml-2 text-xs font-normal text-gray-400">{titleSub}</span>
+    </span>
+  );
+
   // items 为空但有航线/当日路线时地图仍要渲染；三者都空才返回 null
   if (!items.length && !flightRoutes.length && !(activeDayRoute && activeDayRoute.stops.length)) return null;
 
@@ -700,35 +752,21 @@ export default function StickyMapBar({
       {alwaysVisible ? (
         /* 常显模式：标题行不可点，无折叠按钮 */
         <div className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900">
-          <span className="truncate">
-            {title}
-            {activeLabel && (
-              <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
-            )}
-            <span className="ml-2 text-xs font-normal text-gray-400">
-              {titleSub}
-              
-            </span>
-          </span>
+          {titleInner}
+          {labelToggle}
         </div>
       ) : (
-        <button
-          onClick={toggle}
-          className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900"
-          aria-expanded={!collapsed}
-        >
-          <span className="truncate">
-            {title}
-            {activeLabel && (
-              <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
-            )}
-            <span className="ml-2 text-xs font-normal text-gray-400">
-              {titleSub}
-              
-            </span>
-          </span>
-          <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
-        </button>
+        <div className="w-full flex items-center justify-between py-2.5">
+          <button
+            onClick={toggle}
+            className="flex-1 min-w-0 flex items-center justify-between text-sm font-bold text-gray-900 text-left"
+            aria-expanded={!collapsed}
+          >
+            {titleInner}
+            <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
+          </button>
+          {labelToggle}
+        </div>
       )}
       {/* 地图容器 className 保持静态，全屏/折叠高矮走 style（Leaflet touch 修复口径） */}
       <div
