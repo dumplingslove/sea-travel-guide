@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useDetailReturn, saveDetailReturn } from "@/components/DetailReturn";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
@@ -76,6 +77,16 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
   const refitRef = useRef<(() => void) | null>(null);
   /** 点击展开全屏（2026-09-27 用户要求） */
   const [expanded, setExpanded] = useState(false);
+  /** 2026-10-03 用户：跳 /day 详情页回来要恢复原位置 */
+  useDetailReturn("home-map");
+  /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
+  useEffect(() => {
+    (window as unknown as { __saveMapDetailReturn?: (cardId: string) => void }).__saveMapDetailReturn =
+      (cardId: string) => saveDetailReturn("home-map", cardId);
+    return () => {
+      delete (window as unknown as { __saveMapDetailReturn?: unknown }).__saveMapDetailReturn;
+    };
+  }, []);
   const mapStops: TripStop[] =
     stops && stops.length ? stops : (cities as TripStop[]);
   const stopsKey = mapStops
@@ -136,7 +147,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
           `<div style="min-width:150px;font-family:inherit">
             <div style="font-weight:800;font-size:14px;color:#134e4a">${i + 1}. ${s.zh}</div>
             <div style="font-size:12px;color:#4b5563;margin:4px 0">Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>
-            <a href="${base}/day/${s.days[0]}" style="color:#0f766e;font-weight:700;font-size:12px">第 ${s.days[0]} 天行程 →</a>
+            <a href="${base}/day/${s.days[0]}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('home-map-city-${s.id}')" style="color:#0f766e;font-weight:700;font-size:12px">第 ${s.days[0]} 天行程 →</a>
           </div>`,
         )
         .bindTooltip(s.zh, {

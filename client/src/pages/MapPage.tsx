@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { DetailLink, useDetailReturn, saveDetailReturn } from "@/components/DetailReturn";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
@@ -200,6 +200,17 @@ function MapCanvas({
   const placesLayerRef = useRef<L.LayerGroup | null>(null);
   const [activeId, setActiveId] = useState<string>(stops[0].id);
 
+  /** 2026-10-03 用户：跳 /day 详情页回来要恢复原卡片位置 */
+  useDetailReturn("planner-map");
+  /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
+  useEffect(() => {
+    (window as unknown as { __saveMapDetailReturn?: (cardId: string) => void }).__saveMapDetailReturn =
+      (cardId: string) => saveDetailReturn("planner-map", cardId);
+    return () => {
+      delete (window as unknown as { __saveMapDetailReturn?: unknown }).__saveMapDetailReturn;
+    };
+  }, []);
+
   /** 在地图上叠加某城市的酒店/餐厅（只标位置，不连线） */
   const showCityPlaces = (cityId: string) => {
     const map = mapRef.current;
@@ -286,7 +297,7 @@ function MapCanvas({
           <div style="font-weight:800;font-size:15px;color:#134e4a">${i + 1}. ${s.zh} <span style="font-weight:400;color:#6b7280;font-size:12px">${s.en}</span></div>
           <div style="font-size:12px;color:#4b5563;margin:6px 0">Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>
           <div style="display:flex;gap:10px;font-size:12px">
-            <a href="${import.meta.env.BASE_URL.replace(/\/$/, "")}/day/${s.days[0]}" style="color:#0f766e;font-weight:700">第 ${s.days[0]} 天行程</a>
+            <a href="${import.meta.env.BASE_URL.replace(/\/$/, "")}/day/${s.days[0]}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('planner-map-city-${s.id}')" style="color:#0f766e;font-weight:700">第 ${s.days[0]} 天行程</a>
             <a href="${import.meta.env.BASE_URL.replace(/\/$/, "")}/practical" style="color:#0f766e;font-weight:700">看攻略</a>
           </div>
         </div>`,
@@ -380,7 +391,7 @@ function MapCanvas({
           <div>
             <ol className="bg-white rounded-2xl border border-teal-900/10 shadow-sm divide-y divide-gray-100 overflow-hidden">
               {stops.map((s, i) => (
-              <li key={s.id}>
+              <li key={s.id} id={`planner-map-city-${s.id}`}>
                 <button
                   onClick={() => focusCity(s.id)}
                   className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
@@ -407,13 +418,15 @@ function MapCanvas({
                       Day {s.days[0]}–{s.days[1]} · {s.dates}
                     </span>
                   </span>
-                  <Link
+                  <DetailLink
                     to={`/day/${s.days[0]}`}
+                    pageKey="planner-map"
+                    cardId={`planner-map-city-${s.id}`}
                     onClick={(e) => e.stopPropagation()}
                     className="ml-auto text-xs font-bold text-teal-700 hover:underline shrink-0"
                   >
                     行程 →
-                  </Link>
+                  </DetailLink>
                 </button>
               </li>
             ))}
