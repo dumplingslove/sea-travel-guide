@@ -461,6 +461,10 @@ export default function BookingTimeline({
             <span className="text-gray-500">
               暂无直飞{f.queriedAt ? `（${f.queriedAt}实查）` : ""}
             </span>
+          ) : f.flightState === "pending" ? (
+            <span className="text-gray-500">
+              ⏳ 航班待查询（航班库暂无该日期实查数据，不能据此推断无直飞）
+            </span>
           ) : isIntl ? (
             <span>
               <span className="text-amber-700">待定：尚未比价选定</span>

@@ -224,7 +224,8 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 3 段城际 + 15 段国际：去程西雅图→北京（2026-11-28）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、西安→北京）、回程北京/上海/重庆→西雅图（2026-12-31、2027-01-01、2027-01-02）9 段。
+/** 11 段：去程西雅图→北京（2026-11-28）1 段、亚洲段 7 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安）、回程 3 段（北京→首尔、西安→首尔、首尔→西雅图已出票）。
+ * 2026-10-02 回程定死经首尔后旧 9 段回程候选已移除；2026-10-04 起 11 段全量以本数组为准。
  * 用户要求：全站只看直飞（options 仅保留 stops=0；库里确认无直飞的段 options 为空并标"暂无直飞"，库里没查到的标"待查询"）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
@@ -679,6 +680,13 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
         leg.flightState = "pending";
         leg.options = null;
         leg.businessOptions = null;
+        // 2026-10-04 site-improve 口径：待查询状态不留任何静态价格/航司残留，
+        // 否则预订页标题栏会把旧价当现价展示（none 分支同口径）。库填入后本函数重跑自动接管。
+        leg.priceNote = null;
+        leg.businessPriceNote = null;
+        leg.carrier = null;
+        leg.schedule = null;
+        leg.queriedAt = null; // 为空时 GuideApp 派生 ecoState='pending'（有旧值会误判为'none'）
       }
       return;
     }
