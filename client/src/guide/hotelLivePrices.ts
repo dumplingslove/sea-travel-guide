@@ -174,7 +174,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   checkIn: '2026-12-13', checkOut: '2026-12-15', nights: 2,
   base: { room: 'Rajah Brooke Suite', perNightUSD: 607, totalUSD: 1301, totalInclTax: true, cancel: 'Free Cancellation before 1:00 AM, Nov 21', breakfast: 'Includes 2 great breakfasts', note: 'Our last 5!; Special Discount 8% off (orig $666/night on list page, $670 on detail page); Last booked 1 hr ago; Prepay online, instant confirmation. Total $1,301 shown on search results card (1 room x 2 nights incl. taxes & fees); detail page shows per-night price only.' },
   suite: { room: 'Rajah Brooke Suite', perNightUSD: 607, totalUSD: 1301, totalInclTax: true, cancel: 'Free Cancellation before 1:00 AM, Nov 21', breakfast: 'Includes 2 great breakfasts', note: 'All room types at this hotel are suites; cheapest suite is the same room as base.' },
-  baselineUSD: 609, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUSD: 513, baselineCheckedAt: '2026-10-04T18:48:39Z',
   baselineUrl: 'https://www.google.com/travel/hotels?q=137%20Pillars%20House%20Chiang%20Mai',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
