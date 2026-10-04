@@ -286,7 +286,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: mapHeight ?? 300 }}
         />
       </div>
-      {!expanded && (
+      {!expanded && !collapsed && (
         <>
           <button
             onClick={toggleExpand}
@@ -296,31 +296,39 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           </button>
           {/* 2026-10-04 用户：点击收起/展开地图，不占屏幕空间 */}
           <button
-            onClick={() => {
-              const next = !collapsed;
-              setCollapsed(next);
-              if (!next) {
-                requestAnimationFrame(() => {
-                  const m = mapRef.current;
-                  if (m) {
-                    m.invalidateSize();
-                    refitRef.current?.();
-                  }
-                });
-              }
-            }}
+            onClick={() => setCollapsed(true)}
             className="absolute top-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
-            aria-expanded={!collapsed}
+            aria-expanded="true"
           >
-            {collapsed ? "▾ 展开地图" : "▴ 收起"}
+            ▴ 收起
           </button>
-          {!collapsed && (
-            <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-              {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
-              点标记查看天数
-            </p>
-          )}
+          <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
+            {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
+            点标记查看天数
+          </p>
         </>
+      )}
+      {/* 2026-10-04 修：收起后保留一条细栏放展开按钮（此前绝对定位按钮被 overflow-hidden 裁掉，点不开） */}
+      {!expanded && collapsed && (
+        <div className="flex items-center justify-between px-4 py-2 bg-gray-50">
+          <span className="text-xs text-gray-500">🗺️ {totalDays}天路线总览（已收起）</span>
+          <button
+            onClick={() => {
+              setCollapsed(false);
+              requestAnimationFrame(() => {
+                const m = mapRef.current;
+                if (m) {
+                  m.invalidateSize();
+                  refitRef.current?.();
+                }
+              });
+            }}
+            className="bg-white hover:bg-gray-100 text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+            aria-expanded="false"
+          >
+            ▾ 展开地图
+          </button>
+        </div>
       )}
     </div>
   );
