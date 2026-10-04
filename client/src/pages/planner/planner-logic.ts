@@ -24,6 +24,14 @@ import "../../planner-data/flight-matrix.js";
 /* 大行程转场航班库：Google Flights 实查（hidden_files/flight-db/december-2026.json
    的构建期同步副本，由 flight-db-gflights-fill 每轮填充后同步；只含直飞，价格为整单总价 USD） */
 import flightDbJson from "../../data/flight-db-december-2026.json";
+/* 2026-10-03 site-improve：已出票航班铁律——bookingTimeline.ts 的 ticketed 腿是单一事实源，
+   planner 的 tripFlightCard 直连航班库原始数据（88a81b9 起 ICN-SEA 2027-01-01 已有泛搜索结果），
+   此处先判 ticketed，命中则渲染出票信息卡、不再渲染"出票前重查"的泛搜索卡（用户：以实际出票为准，绝不覆盖）。 */
+import { FLIGHT_LEGS } from "../../bookings/bookingTimeline";
+const TICKETED_LEG_BY_KEY = (key: string) => {
+  const [code, date] = key.split("|");
+  return FLIGHT_LEGS.find((l) => l.ticketed && l.dbSeg === code && l.date === date);
+};
 import {
   PLANNER_CITY_SPOTS,
   RESEARCH_UPDATED_AT,
@@ -740,6 +748,15 @@ function tripFlightCard(key: string, label: string){
   const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
   const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
   const head=(status:string,cls:string)=>`<div class="tfi-head"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></div>`;
+  /* 已出票航班铁律（2026-10-03 site-improve 交叉核验发现并修复：88a81b9 把 ICN-SEA 2027-01-01 的
+     泛搜索结果入库后，此处曾渲染"4班直飞/出票前重查"，与已出票 AS120/CNESXC 矛盾）。
+     命中 ticketed 腿则只渲染出票信息卡，绝不读库覆盖。 */
+  const tk=TICKETED_LEG_BY_KEY(key);
+  if(tk){
+    return `<div class="tfi-leg">${head("✅ 已出票","ok")}
+      <div class="tfi-prices"><span class="tfi-price">${tk.carrier} <b>${tk.schedule}</b></span>${tk.priceBasis?`<span class="tfi-basis">（${tk.priceBasis}）</span>`:""}</div>
+      <p class="tfi-note">${tk.note}</p></div>`;
+  }
   if(!d) return `<div class="tfi-leg">${head("⏳ 航班待查询","pending")}<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p></div>`;
   /* 一次转机分区（有就显示） */
   const onestopHtml=(()=>{
