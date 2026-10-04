@@ -310,6 +310,7 @@ export default function StickyMapBar({
 
   // 高亮 + 淡化 + 飞到 activeCity
   // 2026-10-03 晚用户：地图不要所有点都一样突出，只高亮当前浏览城市的点，其他淡化
+  // 2026-10-04 凌晨用户：非当前城市的点不要显示，只突出当前滚动到的景点/酒店/餐厅
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -320,11 +321,12 @@ export default function StickyMapBar({
       const inActiveCity = !!activeCity && it.city === activeCity;
       const on = inActiveCity && it.kind !== "airport";
       m.setIcon(iconFor(it.kind, on));
-      // 非当前城市的点淡化（机场跟随所属城市一起淡化）
+      // 非当前城市的点直接隐藏（用户要求：只显示当前浏览的）
       const el = m.getElement();
       if (el) {
         el.style.transition = "opacity .3s";
-        el.style.opacity = activeCity ? (inActiveCity ? "1" : "0.22") : "1";
+        el.style.opacity = activeCity ? (inActiveCity ? "1" : "0") : "1";
+        el.style.pointerEvents = activeCity && !inActiveCity ? "none" : "auto";
       }
       if (on) pts.push(LL(it.lat, it.lng));
     });
