@@ -731,9 +731,13 @@ export default function StickyMapBar({
         }
       });
       if (pts.length) {
-        // 点了具体卡片：只平移，保持当前缩放（2026-10-04 用户：景点之间移动只要平移，不要缩放效果）
+        // 点了具体卡片：平移+缩放到位，但用 setView 直接过渡，不要 flyTo 的先拉远再推进效果
+        // （2026-10-04 用户：要平移缩放到合适大小，不要从头缩放的效果）
         if (pts.length === 1) {
-          map.panTo(pts[0], { animate: true, duration: 0.8 });
+          const kind = selKindRef.current;
+          const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
+          const z = Math.max(map.getZoom(), target);
+          map.setView(pts[0], z, { animate: true, duration: 0.8 });
         } else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
         // 刚切到当日（还没点具体卡）：看当日全景
@@ -794,9 +798,12 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
-      // 2026-10-04 用户：点选只平移，保持当前缩放，不要缩放效果
+      // 2026-10-04 用户：点选平移+缩放到位，用 setView 直接过渡，不要 flyTo 的先拉远再推进效果
       if (pts.length === 1) {
-        map.panTo(pts[0], { animate: true, duration: 0.8 });
+        const kind = selKindRef.current;
+        const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
+        const z = Math.max(map.getZoom(), target);
+        map.setView(pts[0], z, { animate: true, duration: 0.8 });
       } else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       refreshLabelVisibility();
       refreshCandidateVisibility();
