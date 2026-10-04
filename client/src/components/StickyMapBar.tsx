@@ -825,9 +825,15 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
-      // 2026-10-04 用户（预订页全景思维）：selectZoom=false 时点卡只高亮、不缩放，
-      // 地图保持显示该城全部酒店+全部景点，用户自己看距离。默认 true 保持旧行为。
+      // 2026-10-04 用户（预订页全景思维）：selectZoom=false 时点卡只平移居中、不改变缩放，
+      // 地图保持显示该城全部酒店+全部景点（用户自己看距离），被点的酒店移到视野中央。
+      // 2026-10-04 用户反馈：完全不动也不对，要移到我要的地方。
       if (!selectZoom) {
+        if (pts.length === 1) {
+          map.panTo(pts[0], { animate: true, duration: 0.8 });
+        } else if (pts.length > 1) {
+          map.panTo(L.latLngBounds(pts).getCenter(), { animate: true, duration: 0.8 });
+        }
         refreshLabelVisibility();
         refreshCandidateVisibility();
         return;
