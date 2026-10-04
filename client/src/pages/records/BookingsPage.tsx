@@ -972,15 +972,15 @@ function BookingsInner() {
       )}
 
       {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换） */}
-      <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
-        <div className="booking-tabs flex gap-2 overflow-x-auto">
+      <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-1 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
+        <div className="booking-tabs flex gap-1.5 overflow-x-auto">
           {menus.map((m) => (
             <button
               key={m.key}
               role="tab"
               aria-selected={menu === m.key}
               onClick={() => switchMenu(m.key)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium border transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
                 menu === m.key
                   ? "bg-teal-700 text-white border-teal-700"
                   : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
