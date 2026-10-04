@@ -171,6 +171,8 @@ export default function DayMap({
   const refitRef = useRef<(() => void) | null>(null);
   /** 点击展开全屏（2026-09-27 用户要求：看清每个地点的位置） */
   const [expanded, setExpanded] = useState(false);
+  /** 点击收起（2026-10-04 用户：所有地图都要能收起） */
+  const [collapsed, setCollapsed] = useState(false);
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const coord = CITY_COORDS[cityId];
@@ -525,17 +527,27 @@ export default function DayMap({
         地图收不到手势（加减按钮不受影响）。高矮差异走 style，不碰 className。
       */}
       <div
+        style={{ display: !expanded && collapsed ? "none" : "contents" }}
+      >
+      <div
         ref={mapEl}
         className="leaflet-container w-full z-0"
         style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: 280 }}
       />
-      {!expanded && (
+      </div>
+      {!expanded && !collapsed && (
         <>
           <button
             onClick={toggleExpand}
             className="absolute top-2 right-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
           >
             ⛶ 全屏
+          </button>
+          <button
+            onClick={() => setCollapsed(true)}
+            className="absolute top-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+          >
+            ▴ 收起
           </button>
           <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
             {showLeg
@@ -549,6 +561,23 @@ export default function DayMap({
             </span>
           </p>
         </>
+      )}
+      {!expanded && collapsed && (
+        <div className="flex items-center justify-between px-4 py-2 bg-gray-50">
+          <span className="text-xs text-gray-500">🗺️ Day {dayNum} · {cityZh}地图（已收起）</span>
+          <button
+            onClick={() => {
+              setCollapsed(false);
+              requestAnimationFrame(() => {
+                const m = mapRef.current;
+                if (m) m.invalidateSize();
+              });
+            }}
+            className="bg-white hover:bg-gray-100 text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+          >
+            ▾ 展开地图
+          </button>
+        </div>
       )}
     </div>
   );
