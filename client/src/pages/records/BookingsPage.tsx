@@ -1007,6 +1007,13 @@ function BookingsInner() {
 
       {menu === "hotels" ? (
         <div className="guide-scope">
+          {/* 2026-10-04 用户：浏览候选酒店时也要有地图 */}
+          <StickyMapBar
+            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel")}
+            activeCity={null}
+            title="🗺️ 候选酒店位置"
+            storageKey="sticky-map-booking-hotels"
+          />
           <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
         </div>
       ) : menu === "flights" ? (
@@ -1015,10 +1022,24 @@ function BookingsInner() {
         </div>
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
+          {/* 2026-10-04 用户：浏览候选餐厅时也要有地图 */}
+          <StickyMapBar
+            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant")}
+            activeCity={null}
+            title="🗺️ 候选餐厅位置"
+            storageKey="sticky-map-booking-restaurants"
+          />
           <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
+          {/* 2026-10-04 用户：浏览景点时也要有地图 */}
+          <StickyMapBar
+            items={buildItemsFromFavorites([], scoped ? planCities : [], true)}
+            activeCity={null}
+            title="🗺️ 景点位置"
+            storageKey="sticky-map-booking-attractions"
+          />
           <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} />
         </div>
       ) : menu === "action" ? (

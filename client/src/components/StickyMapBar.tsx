@@ -298,6 +298,7 @@ export default function StickyMapBar({
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
+  const selKindRef = useRef<string | null>(null);
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
   // 航线层：连线按航线 key 存；机场标记按 IATA code 全站唯一（规范经度已统一世界副本，
   // 同一机场不可能出现两次，2026-10-04 点选重构根治 DOM 重复）
@@ -404,6 +405,21 @@ export default function StickyMapBar({
   // 替代旧的 zoom>=14 自动显示口径）。zoomend 监听只绑一次，用 ref 读最新开关值避免闭包过期。
   // 2026-10-04 真站：航线标记是 flightRoutes 异步到达后（重）建的，updateLabels 只在 zoomend/400ms 跑一次，
   // 重建后 tooltip 永远停在 opacity 0。改为组件级函数，markers/航线层每次（重）建后都调一次。
+  /** 候选标按缩放显隐（2026-10-04 用户：总览时 130+ 候选糊成一片看不见；zoom>=10 才显示） */
+  const refreshCandidateVisibility = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const z = map.getZoom();
+    const show = z >= 10;
+    markersRef.current.forEach((m, key) => {
+      const it = itemByKeyRef.current.get(key);
+      if (!it?.candidate) return;
+      // 被选中的候选保持可见（选择优先于缩放阈值）
+      const el = m.getElement();
+      if (!el) return;
+      el.style.display = show ? "" : "none";
+    });
+  };
   const refreshLabelVisibility = () => {
     const map = mapRef.current;
     if (!map) return;
@@ -446,10 +462,12 @@ export default function StickyMapBar({
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapEl.current) ro.observe(mapEl.current);
     map.on("zoomend", refreshLabelVisibility);
-    const t = setTimeout(refreshLabelVisibility, 400);
+    map.on("zoomend", refreshCandidateVisibility);
+    const t = setTimeout(() => { refreshLabelVisibility(); refreshCandidateVisibility(); }, 400);
     return () => {
       clearTimeout(t);
       map.off("zoomend", refreshLabelVisibility);
+      map.off("zoomend", refreshCandidateVisibility);
       ro.disconnect();
       map.remove();
       mapRef.current = null;
@@ -510,6 +528,7 @@ export default function StickyMapBar({
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
+    refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, mapReady, activeItemKeys]);
 
@@ -666,15 +685,18 @@ export default function StickyMapBar({
         const sel = !!activeSet?.has(key);
         e.marker.setIcon(e.num > 0 ? numIcon(e.num, sel) : iconFor(e.kind, sel));
         setVis(e.marker, true);
-        if (sel) pts.push(e.marker.getLatLng());
+        if (sel) {
+          pts.push(e.marker.getLatLng());
+          if (pts.length === 1) selKindRef.current = e.kind;
+        }
       });
       if (pts.length) {
-        // 点了具体卡片：平移到被选景点。2026-10-04 用户 refined：
-        // 已在合理缩放（>=14）时只平移、不改变 zoom（不要放大效果）；
-        // 缩得太远时平移并缩放到合理大小（14），否则停在总览级别平移过去没意义。
+        // 点了具体卡片：平移+缩放到位（2026-10-04 用户：酒店/餐厅 16，景点 15）
         if (pts.length === 1) {
-          if (map.getZoom() >= 14) map.panTo(pts[0], { animate: true, duration: 0.8 });
-          else map.flyTo(pts[0], 14, { duration: 0.8 });
+          const kind = selKindRef.current;
+          const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
+          if (map.getZoom() >= target) map.panTo(pts[0], { animate: true, duration: 0.8 });
+          else map.flyTo(pts[0], target, { duration: 0.8 });
         } else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
         // 刚切到当日（还没点具体卡）：看当日全景
@@ -706,7 +728,10 @@ export default function StickyMapBar({
       }
       m.setIcon(iconFor(it.kind, on, !!it.candidate && !on));
       setVis(m, visible);
-      if (on) pts.push(LL(it.lat, it.lng));
+      if (on) {
+        pts.push(LL(it.lat, it.lng));
+        if (pts.length === 1) selKindRef.current = it.kind; // 记录被选类型，用于决定缩放级别
+      }
     });
     // 航线层：点选模式下选中航线全亮、其他变淡；机场标记全部显示、选中航线的跳动
     if (itemMode) {
@@ -731,10 +756,16 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
-      // 2026-10-04 用户：切换景点只平移、不放大（保持当前 zoom，被选景点收入视野中央）
-      if (pts.length === 1) map.panTo(pts[0], { animate: true, duration: 0.8 });
-      else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
+      // 2026-10-04 用户 refined：点选要缩放到位——按类型给目标级别
+      // （酒店/餐厅 16=建筑级，景点 15=街区级）；已在目标级别以上只平移
+      if (pts.length === 1) {
+        const kind = selKindRef.current;
+        const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
+        if (map.getZoom() >= target) map.panTo(pts[0], { animate: true, duration: 0.8 });
+        else map.flyTo(pts[0], target, { duration: 0.8 });
+      } else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       refreshLabelVisibility();
+      refreshCandidateVisibility();
       return;
     }
     if (!activeCity) {

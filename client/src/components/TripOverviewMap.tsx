@@ -79,6 +79,8 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
   const cityMarkersRef = useRef(new Map<string, L.Marker>());
   /** 点击展开全屏（2026-09-27 用户要求） */
   const [expanded, setExpanded] = useState(false);
+  /** 点击收起（2026-10-04 用户：规划页地图也要能收起，不占屏幕空间） */
+  const [collapsed, setCollapsed] = useState(false);
   /** 2026-10-03 用户：跳 /day 详情页回来要恢复原位置 */
   useDetailReturn("home-map");
   /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
@@ -276,18 +278,14 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           </button>
         </div>
       )}
-      {/*
-        地图容器 className 必须保持静态：Leaflet 初始化时会往容器上加
-        leaflet-touch-drag / leaflet-touch-zoom 等 class（决定 touch-action，
-        手机双指缩放靠它）。之前这里用 expanded 拼 className，点全屏那一下
-        React 重写 class 会把 Leaflet 的标记清掉，全屏后双指就被浏览器劫持、
-        地图收不到手势（加减按钮不受影响）。高矮差异走 style，不碰 className。
-      */}
-      <div
-        ref={mapEl}
-        className="leaflet-container w-full z-0"
-        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: mapHeight ?? 300 }}
-      />
+      {/* 地图容器：始终挂载（Leaflet 实例不销毁）；收起时用 display:none 藏，展开后 invalidateSize */}
+      <div style={{ display: !expanded && collapsed ? "none" : "contents" }}>
+        <div
+          ref={mapEl}
+          className="leaflet-container w-full z-0"
+          style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: mapHeight ?? 300 }}
+        />
+      </div>
       {!expanded && (
         <>
           <button
@@ -296,10 +294,32 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           >
             ⛶ 全屏
           </button>
-          <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-            {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
-            点标记查看天数
-          </p>
+          {/* 2026-10-04 用户：点击收起/展开地图，不占屏幕空间 */}
+          <button
+            onClick={() => {
+              const next = !collapsed;
+              setCollapsed(next);
+              if (!next) {
+                requestAnimationFrame(() => {
+                  const m = mapRef.current;
+                  if (m) {
+                    m.invalidateSize();
+                    refitRef.current?.();
+                  }
+                });
+              }
+            }}
+            className="absolute top-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+            aria-expanded={!collapsed}
+          >
+            {collapsed ? "▾ 展开地图" : "▴ 收起"}
+          </button>
+          {!collapsed && (
+            <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
+              {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
+              点标记查看天数
+            </p>
+          )}
         </>
       )}
     </div>
