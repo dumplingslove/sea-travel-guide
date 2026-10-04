@@ -1030,10 +1030,13 @@ function BookingsInner() {
       {menu === "hotels" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览候选酒店时也要有地图；点卡片/切城市时地图联动
-              2026-10-04 用户（全景思维）：酒店图 = 该城全部酒店 + 全部景点（看酒店离景点远近），
-              点卡只高亮不缩放；stickyTop 让地图吸在二级菜单下方，不盖住它 */}
+              2026-10-04 用户（全景思维）：酒店图 = 当前城市全部酒店 + 全部景点（看酒店离景点远近），
+              点卡只高亮不缩放；stickyTop 让地图吸在二级菜单下方，不盖住它
+              2026-10-04 修：只显示当前城市的点（不跨城），去灰标按种类配色（酒店蓝/景点绿） */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel" || i.kind === "attraction")}
+            items={buildCandidateItems(scoped ? planCities : [])
+              .filter((i) => (i.kind === "hotel" || i.kind === "attraction") && i.city === (hotelCity || planCities[0]))
+              .map((i) => ({ ...i, candidate: false }))}
             activeCity={hotelCity}
             activeItemKeys={hotelSel ? [hotelSel] : null}
             expandSignal={hotelExpandSig}
@@ -1052,9 +1055,12 @@ function BookingsInner() {
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览候选餐厅时也要有地图；点卡片/切城市时地图联动
-              2026-10-04 用户（全景思维）：餐厅图 = 该城全部餐厅 + 全部景点，点卡只高亮不缩放 */}
+              2026-10-04 用户（全景思维）：餐厅图 = 当前城市全部餐厅 + 全部景点，点卡只高亮不缩放
+              2026-10-04 修：只显示当前城市的点，去灰标按种类配色 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant" || i.kind === "attraction")}
+            items={buildCandidateItems(scoped ? planCities : [])
+              .filter((i) => (i.kind === "restaurant" || i.kind === "attraction") && i.city === (restCity || planCities[0]))
+              .map((i) => ({ ...i, candidate: false }))}
             activeCity={restCity}
             activeItemKeys={restSel ? [restSel] : null}
             expandSignal={restExpandSig}
@@ -1069,9 +1075,11 @@ function BookingsInner() {
       ) : menu === "attractions" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点
-              2026-10-04：点卡只高亮不缩放，保持全景 */}
+              2026-10-04：点卡只高亮不缩放，保持全景；只显示当前城市 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "attraction")}
+            items={buildCandidateItems(scoped ? planCities : [])
+              .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
+              .map((i) => ({ ...i, candidate: false }))}
             activeCity={attrCity}
             activeItemKeys={attrSel ? [attrSel] : null}
             expandSignal={attrExpandSig}
