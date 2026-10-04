@@ -13,7 +13,8 @@ import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
 import { usePlanItinerary, KOREA_CITY_ZH, SEA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
 import { parseBookingBody } from "@/bookings/bookingTypes";
-import StickyMapBar, { type StickyMapItem } from "@/components/StickyMapBar";
+import StickyMapBar, { stickyItemKey, type StickyMapItem } from "@/components/StickyMapBar";
+import type { DayStopSelection } from "@/components/ItineraryDayCard";
 import { findStopCoord } from "@/data/stopCoords";
 
 type Day = PlanDay;
@@ -142,10 +143,17 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
     };
   }, [scrollKey]);
   const dateNavRef = useRef<HTMLDivElement>(null);
-  // 2026-10-03 用户：吸顶可折叠地图 + 滚动联动高亮
-  const [activeDay, setActiveDay] = useState<number | null>(null);
-  // 2026-10-03 晚：行程页地图常显，初始高度按标题行(~44px)+地图(300px)+边距估算，ResizeObserver 会校准精确值
-  const [mapBarH, setMapBarH] = useState(352);
+  // 2026-10-04 用户：点选模式（废弃滚动联动）——点哪天卡片，顶栏地图就显示那一天的路线，被点的跳动高亮
+  const [mapSel, setMapSel] = useState<DayStopSelection | null>(null);
+  // 点卡片时自动展开地图的信号
+  const [mapExpandSig, setMapExpandSig] = useState(0);
+  // 折叠态初始高度按标题行估算，ResizeObserver 会校准精确值
+  const [mapBarH, setMapBarH] = useState(48);
+  const handleCardSelect = (sel: DayStopSelection | null) => {
+    setMapSel(sel);
+    if (sel) setMapExpandSig((x) => x + 1);
+  };
+  const selectedKey = mapSel ? stickyItemKey(mapSel.kind, mapSel.city, mapSel.name) : null;
   // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
   // 2026-10-03：吸顶地图条在日期导航之上，日期导航 top = header 高 + 地图条高
   useLayoutEffect(() => {
@@ -256,39 +264,18 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [daysSig]);
-  // 滚动联动：屏幕中央的 Day 卡触发高亮
-  useEffect(() => {
-    const els: HTMLElement[] = [];
-    days.forEach((d) => {
-      const el = document.getElementById(`day-${d.day}`);
-      if (el) els.push(el);
-    });
-    if (!els.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const vis = entries.filter((e) => e.isIntersecting);
-        if (!vis.length) return;
-        vis.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const id = (vis[0].target as HTMLElement).id;
-        const n = Number(id.replace("day-", ""));
-        if (Number.isFinite(n)) setActiveDay(n);
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.2, 0.4, 0.6] },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [daysSig]);
-  const activeDayObj = activeDay != null ? days.find((d) => d.day === activeDay) : undefined;
   return (
     <>
-      {/* 2026-10-03 晚用户：行程页地图常显（不用点展开），滚动时只高亮当前城市的点、其他淡化，地图跟随飞过去 */}
+      {/* 2026-10-04 用户：点选模式——不点显示全部景点；点某天卡片后只显示那一天的站点+连线，被点的跳动高亮，其他正常显示；面板可点击收起 */}
       <StickyMapBar
         items={mapItems}
-        activeCity={activeDayObj?.city_zh ?? null}
-        activeLabel={activeDayObj ? `D${activeDayObj.day} · ${activeDayObj.city_zh}` : undefined}
+        activeCity={null}
+        activeLabel={mapSel ? `D${mapSel.day} · ${mapSel.city}` : undefined}
+        activeItemKeys={selectedKey ? [selectedKey] : null}
+        activeDayRoute={mapSel?.route ?? null}
         title="🗺️ 行程地图"
-        alwaysVisible
+        storageKey="sticky-map-itinerary"
+        expandSignal={mapExpandSig}
         onHeightChange={setMapBarH}
       />
       {/* 悬浮日期导航（紧贴吸顶地图条底部，top 由 JS 动态测量 header 高度 + 地图条高设置） */}
@@ -347,6 +334,8 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
               cityScheduledNames={cityScheduled.get(d.city_zh)}
               favorites={favorites}
               stay={stays.get(d.city_zh) ?? null}
+              onSelectStop={handleCardSelect}
+              selectedKey={selectedKey}
             />
           );
         })}

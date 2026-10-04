@@ -46,6 +46,21 @@ export interface FlightRoute {
   toCity: string;
 }
 
+/** 当日路线站点（行程页点选模式：点某天卡片后顶栏地图只显示这一天） */
+export interface DayRouteStop {
+  name: string;
+  lat: number;
+  lng: number;
+  kind: "attraction" | "restaurant" | "hotel";
+}
+/** 当日路线：stops 按游览顺序排列，景点连线 */
+export interface DayRoute {
+  day: number;
+  city: string;
+  label: string;
+  stops: DayRouteStop[];
+}
+
 const KIND_EMOJI: Record<StickyMapKind, string> = {
   hotel: "🏨",
   restaurant: "🍽️",
@@ -63,6 +78,24 @@ const KIND_EMOJI: Record<StickyMapKind, string> = {
 const WORLD_CENTER_LNG = 150;
 function canonicalLng(lng: number, center: number = WORLD_CENTER_LNG): number {
   return lng + 360 * Math.round((center - lng) / 360);
+}
+
+/** 站点编号标记（当日模式：景点按游览顺序编号，与旧 DayMap 视觉一致） */
+function numIcon(n: number, active = false) {
+  const size = active ? 36 : 28;
+  return L.divIcon({
+    className: "sea-stickymap-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:${size}px;height:${size}px;border-radius:999px;
+      background:#0f766e;color:#ffffff;border:${active ? 4 : 2}px solid ${active ? "#dc2626" : "#ffffff"};
+      font-weight:800;font-size:${active ? 15 : 13}px;line-height:1;
+      box-shadow:0 2px 8px rgba(15,118,110,.4);
+      ${active ? "animation:sea-pin-pulse 1.2s ease-in-out infinite;" : ""}
+    ">${n}</span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2],
+  });
 }
 
 function iconFor(kind: StickyMapKind, active = false) {
@@ -192,6 +225,16 @@ interface StickyMapBarProps {
   activeItemKeys?: string[] | null;
   /** 航班航线（出发/到达机场标记 + 紫色连线），key 与卡片关联 */
   flightRoutes?: FlightRoute[];
+  /**
+   * 当日路线（2026-10-04 用户：行程页点某天卡片后，顶栏地图只显示这一天的站点+连线）。
+   * 非 null 时进入当日模式：概览 markers 与航线层隐藏，只显示当日的 stops + 按序连线。
+   */
+  activeDayRoute?: DayRoute | null;
+  /**
+   * 外部展开信号（2026-10-04 用户：点卡片时自动展开地图）：数字递增时若面板折叠则展开。
+   * 不传则无此行为。
+   */
+  expandSignal?: number;
   title?: string;
   defaultCollapsed?: boolean;
   /** localStorage key：记住折叠状态（alwaysVisible 时忽略） */
@@ -208,6 +251,8 @@ export default function StickyMapBar({
   activeLabel,
   activeItemKeys = null,
   flightRoutes = [],
+  activeDayRoute = null,
+  expandSignal,
   title = "🗺️ 地图",
   defaultCollapsed = true,
   storageKey,
@@ -234,6 +279,11 @@ export default function StickyMapBar({
   }>({ lines: new Map(), airports: new Map() });
   // show-all 下航线首次就绪时适配一次全景，之后不再打扰用户缩放/点选
   const routesFittedRef = useRef(false);
+  // 当日路线层：站点 markers（景点按序编号）+ 按序连线；进入当日模式时重建
+  const dayLayersRef = useRef<{
+    entries: Map<string, { marker: L.Marker; kind: StickyMapKind; num: number }>;
+    line: L.Polyline | null;
+  }>({ entries: new Map(), line: null });
   // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免无意义重飞
   const activeSig = activeItemKeys && activeItemKeys.length ? [...activeItemKeys].sort().join("|") : null;
   // 点选模式：非空选择 = 只显示被选中的；空/null = 全部显示
@@ -293,6 +343,17 @@ export default function StickyMapBar({
       }
     }
   };
+
+  // 外部展开信号：点卡片时自动展开地图面板（常显模式无折叠，直接忽略）
+  const lastExpandSigRef = useRef(0);
+  useEffect(() => {
+    if (alwaysVisible) return;
+    if (expandSignal != null && expandSignal > lastExpandSigRef.current) {
+      lastExpandSigRef.current = expandSignal;
+      setCollapsed(false);
+      setMapReady(true);
+    }
+  }, [expandSignal, alwaysVisible]);
 
   // zoom >= 14 显示名称标签（与 ActionMapView 同口径）。
   // 2026-10-04 真站：航线标记是 flightRoutes 异步到达后（重）建的，updateLabels 只在 zoomend/400ms 跑一次，
@@ -465,65 +526,135 @@ export default function StickyMapBar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flightRoutes, mapReady]);
 
-  // 高亮（2026-10-04 点选重构：废弃滚动侦测）
-  // - 点选模式（itemMode，行动安排页点卡片）：只显示被选中的点；
-  //   选中的是航班卡 → 该航线的两机场 + 连线；选中的是酒店/餐厅/景点卡 → 仅该点；地图飞过去
-  // - 未点选：全部显示，不乱飞（行程页旧的城市级行为保留：activeCity 非空时仍按城市高亮+飞过去）
+  // 当日路线层（2026-10-04 用户：行程页点某天卡片后顶栏地图只显示这一天）：
+  // 站点 markers（景点按游览顺序编号）+ 按序连线；activeDayRoute 变化时重建
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    const dl = dayLayersRef.current;
+    dl.entries.forEach((e) => e.marker.remove());
+    dl.entries.clear();
+    if (dl.line) {
+      dl.line.remove();
+      dl.line = null;
+    }
+    const route = activeDayRoute;
+    if (!route || !route.stops.length) return;
+    const pts: L.LatLng[] = [];
+    let n = 0;
+    for (const s of route.stops) {
+      const key = stickyItemKey(s.kind, route.city, s.name);
+      if (dl.entries.has(key)) continue;
+      const num = s.kind === "attraction" ? ++n : 0;
+      const ll = LL(s.lat, s.lng);
+      pts.push(ll);
+      const marker = L.marker(ll, {
+        icon: num > 0 ? numIcon(num, false) : iconFor(s.kind, false),
+      })
+        .bindPopup(`<b>${s.name}</b><br/>${KIND_EMOJI[s.kind]} ${route.city}`)
+        .addTo(map);
+      marker.bindTooltip(s.name, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -20],
+        className: "sea-stickymap-label",
+        opacity: 0,
+      });
+      dl.entries.set(key, { marker, kind: s.kind, num });
+    }
+    if (pts.length > 1) {
+      dl.line = L.polyline(pts, { color: "#0f766e", weight: 3, opacity: 0.85 }).addTo(map);
+    }
+    refreshLabelVisibility();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeDayRoute, mapReady]);
+
+  // 高亮（2026-10-04 点选重构 v2：废弃滚动侦测；点选后其他的正常显示、不隐藏）
+  // - 当日模式（activeDayRoute 非 null，行程页点某天卡片）：只显示当天的站点+连线，
+  //   概览 markers 与航线层隐藏；被选中的站点跳动，其他正常显示
+  // - 点选模式（itemMode，行动安排页点卡片）：全部显示，被选中的跳动
+  //   （2026-10-04 用户：其他的简单显示在地图上，不隐藏不跳动）；航班卡选中时其航线全亮、其他航线变淡
+  // - 概览：全部正常显示
+  // - 城市级（activeCity，旧行为保留）：高亮该城市的点并飞过去
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const setVis = (m: L.Marker, v: boolean) => {
+      const el = m.getElement();
+      if (el) {
+        el.style.transition = "opacity .3s";
+        el.style.opacity = v ? "1" : "0";
+        el.style.pointerEvents = v ? "auto" : "none";
+      }
+    };
     const pts: L.LatLng[] = [];
     const activeSet = itemMode ? new Set(activeSig!.split("|")) : null;
+    const dayScope = activeDayRoute != null;
+    const dl = dayLayersRef.current;
+    const rl = routeLayersRef.current;
+
+    if (dayScope) {
+      // 当日模式：概览层与航线层全部隐藏，只显示当日站点+连线
+      markersRef.current.forEach((m) => setVis(m, false));
+      rl.lines.forEach((l) => l.setStyle({ opacity: 0 }));
+      rl.airports.forEach((a) => setVis(a.marker, false));
+      if (dl.line) dl.line.setStyle({ opacity: 0.85 });
+      dl.entries.forEach((e, key) => {
+        const sel = !!activeSet?.has(key);
+        e.marker.setIcon(e.num > 0 ? numIcon(e.num, sel) : iconFor(e.kind, sel));
+        setVis(e.marker, true);
+        if (sel) pts.push(e.marker.getLatLng());
+      });
+      if (pts.length) {
+        // 点了具体卡片：飞到被选中的点
+        if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 14), { duration: 0.8 });
+        else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
+      } else {
+        // 刚切到当日（还没点具体卡）：看当日全景
+        const all = [...dl.entries.values()].map((e) => e.marker.getLatLng());
+        if (all.length === 1) map.flyTo(all[0], 14, { duration: 0.8 });
+        else if (all.length > 1) map.flyToBounds(L.latLngBounds(all).pad(0.3), { duration: 0.8 });
+      }
+      return;
+    }
+
+    // 非当日模式：当日层隐藏
+    dl.entries.forEach((e) => setVis(e.marker, false));
+    if (dl.line) dl.line.setStyle({ opacity: 0 });
+
+    // 概览 markers：点选模式下全部显示、被选中的跳动；城市模式按城市过滤
     markersRef.current.forEach((m, key) => {
       const it = itemByKeyRef.current.get(key);
       if (!it) return;
-      let visible: boolean;
-      let on: boolean;
+      let visible = true;
+      let on = false;
       if (itemMode) {
-        // 点选：只有被选中的卡片对应的点才显示；航班走航线层，这里的 airport 标记一律隐藏
-        visible = activeSet!.has(key) && it.kind !== "airport";
-        on = visible;
+        on = activeSet!.has(key);
+        visible = true; // 2026-10-04 用户：其他的简单显示，不隐藏
       } else {
         const inActiveCity = !!activeCity && it.city === activeCity;
         on = inActiveCity && it.kind !== "airport";
         visible = !activeCity || inActiveCity;
       }
       m.setIcon(iconFor(it.kind, on));
-      const el = m.getElement();
-      if (el) {
-        el.style.transition = "opacity .3s";
-        el.style.opacity = visible ? "1" : "0";
-        el.style.pointerEvents = visible ? "auto" : "none";
-      }
+      setVis(m, visible);
       if (on) pts.push(LL(it.lat, it.lng));
     });
-    // 航线层显隐
-    const rl = routeLayersRef.current;
+    // 航线层：点选模式下选中航线全亮、其他变淡；机场标记全部显示、选中航线的跳动
     if (itemMode) {
-      // 点选模式：只显示选中航线的两机场 + 连线（机场按"任一关联航线被选中"显隐）
       rl.airports.forEach((a) => {
         const show = [...a.roles.keys()].some((k) => activeSet!.has(k));
         a.marker.setIcon(iconFor("airport", show));
-        const el = a.marker.getElement();
-        if (el) {
-          el.style.transition = "opacity .3s";
-          el.style.opacity = show ? "1" : "0";
-          el.style.pointerEvents = show ? "auto" : "none";
-        }
+        setVis(a.marker, true);
         if (show) pts.push(a.latlng);
       });
       rl.lines.forEach((line, key) => {
-        line.setStyle({ opacity: activeSet!.has(key) ? 0.9 : 0 });
+        line.setStyle({ opacity: activeSet!.has(key) ? 0.9 : 0.2 });
       });
     } else {
-      // 未点选：航线全显
       rl.airports.forEach((a) => {
         a.marker.setIcon(iconFor("airport", false));
-        const el = a.marker.getElement();
-        if (el) {
-          el.style.opacity = "1";
-          el.style.pointerEvents = "auto";
-        }
+        setVis(a.marker, true);
       });
       rl.lines.forEach((line) => line.setStyle({ opacity: 0.9 }));
     }
@@ -533,14 +664,14 @@ export default function StickyMapBar({
       else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       return;
     }
-    if (!activeCity) return; // 行动安排页未点选：全部显示，不飞
+    if (!activeCity) return; // 未点选且无城市：全部显示，不飞
     if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
     else if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
     else {
       const ap = airportForCity(activeCity);
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
-  }, [activeCity, activeSig, itemMode, items, flightRoutes, mapReady]);
+  }, [activeCity, activeSig, itemMode, items, flightRoutes, activeDayRoute, mapReady]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -549,12 +680,15 @@ export default function StickyMapBar({
   }, [items]);
   // 标题副文案：点选模式下 📍 显示被选中的卡片名（activeLabel），不再有"在看 N 项"；
   // 未点选显示全部点数/航线数
-  const titleSub = itemMode
-    ? ""
-    : `${items.length}个收藏点${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
+  const dayScope = activeDayRoute != null;
+  const titleSub = dayScope
+    ? `${activeDayRoute!.stops.length}个站点`
+    : itemMode
+      ? ""
+      : `${items.length}个收藏点${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
 
-  // 2026-10-04 Bug 3：items 为空但有航线时地图仍要渲染（行动安排页只有航班卡）；两者都空才返回 null
-  if (!items.length && !flightRoutes.length) return null;
+  // items 为空但有航线/当日路线时地图仍要渲染；三者都空才返回 null
+  if (!items.length && !flightRoutes.length && !(activeDayRoute && activeDayRoute.stops.length)) return null;
 
   return (
     <div

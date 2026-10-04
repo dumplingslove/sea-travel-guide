@@ -17,8 +17,9 @@ import {
 } from "@/bookings/bookingTypes";
 type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
-import DayMap from "@/components/DayMap";
-import { cloudStopsForTimeline, type StopCoord } from "@/data/stopCoords";
+import { cloudStopsForTimeline, stopCoordsForDay, type StopCoord } from "@/data/stopCoords";
+import { placesForCity } from "@/data/placeCoords";
+import { stickyItemKey, type DayRoute, type DayRouteStop } from "@/components/StickyMapBar";
 import {
   bookingPolicyBadge,
   getRestaurantBookingPolicy,
@@ -346,11 +347,16 @@ export function DayHotelSection({
   stay,
   favHotels,
   hotelBookings,
+  onSelect,
+  selectedKey,
 }: {
   city: string;
   stay: { checkIn: string; checkOut: string } | null;
   favHotels: ParsedFavorite[];
   hotelBookings: DayBooking[];
+  /** 点选（2026-10-04）：只有已确认的酒店卡可点 */
+  onSelect?: (kind: "hotel", name: string) => void;
+  selectedKey?: string | null;
 }) {
   const nights = stay
     ? Math.max(0, Math.round((new Date(stay.checkOut).getTime() - new Date(stay.checkIn).getTime()) / 86400000))
@@ -380,8 +386,17 @@ export function DayHotelSection({
         {hotelBookings.map((b, i) => {
           const bd = parseBookingBody(b.body);
           const summary = bookingSummary(bd);
+          const clickable = b.done && onSelect;
+          const isSel = !!selectedKey && selectedKey === stickyItemKey("hotel", city, b.title);
           return (
-            <div key={`hb-${i}`} className="bg-teal-50 border border-teal-200 rounded-lg p-3">
+            <div
+              key={`hb-${i}`}
+              onClick={clickable ? (e) => {
+                if ((e.target as HTMLElement).closest("button, a")) return;
+                onSelect!("hotel", b.title);
+              } : undefined}
+              className={`bg-teal-50 border border-teal-200 rounded-lg p-3${clickable ? " cursor-pointer" : ""}${isSel ? " ring-2 ring-teal-600" : ""}`}
+            >
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-semibold">{b.title}</span>
                 {b.done
@@ -500,9 +515,13 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
 function StopBlock({
   stop,
   city,
+  onSelect,
+  selected,
 }: {
   stop: Stop;
   city: string;
+  onSelect?: () => void;
+  selected?: boolean;
 }) {
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
@@ -511,7 +530,13 @@ function StopBlock({
   const photo =
     item && kindZh === "景点" ? getPlaceGallery("景点", item)[0] : undefined;
   return (
-    <div className="border-l-2 border-teal-600/30 pl-4 py-3">
+    <div
+      onClick={onSelect ? (e) => {
+        if ((e.target as HTMLElement).closest("button, a")) return;
+        onSelect();
+      } : undefined}
+      className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
+    >
       {photo && (
         <div className="mb-3 overflow-hidden rounded-lg">
           <img
@@ -562,6 +587,19 @@ export interface DayBooking {
   done: boolean;
 }
 
+/**
+ * 行程卡片点选（2026-10-04 用户：点哪天的景点/餐厅/酒店，顶栏固定地图就显示那一天的路线，
+ * 被点的跳动高亮，其他正常显示；酒店只收当天已确认的那家）
+ */
+export interface DayStopSelection {
+  day: number;
+  kind: "attraction" | "restaurant" | "hotel";
+  name: string;
+  city: string;
+  /** 当天的地图数据（站点按游览顺序，含坐标） */
+  route: DayRoute;
+}
+
 export function ItineraryDayCard({
   day,
   prevDay,
@@ -571,6 +609,8 @@ export function ItineraryDayCard({
   cityScheduledNames,
   favorites,
   stay,
+  onSelectStop,
+  selectedKey,
 }: {
   day: PlanDay;
   prevDay: PlanDay | undefined;
@@ -584,6 +624,10 @@ export function ItineraryDayCard({
   favorites?: ParsedFavorite[];
   /** 本城住宿区间（入住/退房），"今晚住哪"用 */
   stay?: { checkIn: string; checkOut: string } | null;
+  /** 点选（2026-10-04 用户）：点卡片 → 顶栏固定地图显示这一天，被点的跳动 */
+  onSelectStop?: (sel: DayStopSelection | null) => void;
+  /** 当前被选中的卡片 key（stickyItemKey），用于卡片描边 */
+  selectedKey?: string | null;
 }) {
   useDetailReturn("itinerary-day");
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
@@ -672,6 +716,62 @@ export function ItineraryDayCard({
       return false;
     }
   });
+
+  /**
+   * 当天地图数据（2026-10-04 用户：点卡片后顶栏地图只显示这一天）：
+   * 景点按时间线顺序（有坐标才收）→ 餐厅（收藏+推荐，有坐标才收）→ 当天已确认的酒店（只收已确认的那家）
+   */
+  // memo 签名：收藏/推荐/预订变化时重算当天地图数据
+  const favSigCheck = favRests.map((f) => f.name).join("|");
+  const restSigCheck = restPicks.map((r) => r.name).join("|");
+  const hotelSigCheck = hotelBookings.map((b) => `${b.title}:${b.done}`).join("|");
+  const dayRoute: DayRoute = useMemo(() => {
+    const stops: DayRouteStop[] = [];
+    const seen = new Set<string>();
+    const push = (name: string, kind: DayRouteStop["kind"], lat: number, lng: number) => {
+      const k = `${kind}:${name}`;
+      if (seen.has(k)) return;
+      seen.add(k);
+      stops.push({ name, lat, lng, kind });
+    };
+    // 景点：时间线顺序；云端天用调用方查好的坐标，静态天用 stopCoordsForDay
+    const tl: { name: string; lat: number; lng: number }[] = isCloud
+      ? (cloudStops ?? []).map((x) => ({ name: x.name, lat: x.lat, lng: x.lng }))
+      : (stopCoordsForDay(day.day) ?? []).map((x) => ({ name: x.name, lat: x.lat, lng: x.lng }));
+    tl.forEach((t) => push(t.name, "attraction", t.lat, t.lng));
+    // 餐厅 / 酒店按名查坐标
+    const cityPlaces = placesForCity(cityId);
+    const restNames = [...favRests.map((f) => f.name), ...restPicks.map((r) => r.name)];
+    for (const n of restNames) {
+      const hit = cityPlaces.restaurants.find(
+        (r) => r.name === n || r.name.includes(n) || n.includes(r.name),
+      );
+      if (hit) push(n, "restaurant", hit.lat, hit.lng);
+    }
+    const confirmed = hotelBookings.find((b) => b.done);
+    if (confirmed) {
+      const t = confirmed.title;
+      const hit = cityPlaces.hotels.find(
+        (h) => h.name === t || h.name.includes(t) || t.includes(h.name),
+      );
+      if (hit) push(t, "hotel", hit.lat, hit.lng);
+    }
+    return { day: day.day, city: day.city_zh, label: `D${day.day} · ${day.city_zh}`, stops };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck]);
+
+  /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */
+  const handleSelect = (kind: "attraction" | "restaurant" | "hotel", name: string) => {
+    if (!onSelectStop) return;
+    const key = stickyItemKey(kind, day.city_zh, name);
+    onSelectStop(
+      selectedKey === key
+        ? null
+        : { day: day.day, kind, name, city: day.city_zh, route: dayRoute },
+    );
+  };
+  const isSel = (kind: string, name: string) =>
+    !!selectedKey && selectedKey === stickyItemKey(kind, day.city_zh, name);
 
   return (
     <article
@@ -798,6 +898,8 @@ export function ItineraryDayCard({
           stay={stay ?? null}
           favHotels={favHotels}
           hotelBookings={hotelBookings}
+          onSelect={onSelectStop ? (kind, name) => handleSelect(kind, name) : undefined}
+          selectedKey={selectedKey}
         />
 
         {/* 上午 / 下午 / 晚上 */}
@@ -806,7 +908,13 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">☀️ 上午</h4>
             <div className="space-y-2">
               {morning.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} />
+                <StopBlock
+                  key={i}
+                  stop={s}
+                  city={day.city_zh}
+                  onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
+                  selected={isSel("attraction", s.name)}
+                />
               ))}
             </div>
           </section>
@@ -816,7 +924,13 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌤 下午</h4>
             <div className="space-y-2">
               {afternoon.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} />
+                <StopBlock
+                  key={i}
+                  stop={s}
+                  city={day.city_zh}
+                  onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
+                  selected={isSel("attraction", s.name)}
+                />
               ))}
             </div>
           </section>
@@ -826,7 +940,13 @@ export function ItineraryDayCard({
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌙 晚上</h4>
             <div className="space-y-2">
               {evening.map((s, i) => (
-                <StopBlock key={i} stop={s} city={day.city_zh} />
+                <StopBlock
+                  key={i}
+                  stop={s}
+                  city={day.city_zh}
+                  onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
+                  selected={isSel("attraction", s.name)}
+                />
               ))}
             </div>
           </section>
@@ -910,8 +1030,16 @@ export function ItineraryDayCard({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {favRests.map((f) => {
                     const b = bookingPolicyBadge(f.name);
+                    const fSel = isSel("restaurant", f.name);
                     return (
-                      <div key={f.name} className="bg-orange-100 border border-orange-300 rounded-lg p-3">
+                      <div
+                        key={f.name}
+                        onClick={onSelectStop ? (e) => {
+                          if ((e.target as HTMLElement).closest("button, a")) return;
+                          handleSelect("restaurant", f.name);
+                        } : undefined}
+                        className={`bg-orange-100 border border-orange-300 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${fSel ? " ring-2 ring-orange-600" : ""}`}
+                      >
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-sm font-semibold flex-1">{f.name}</span>
                           <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
@@ -936,10 +1064,15 @@ export function ItineraryDayCard({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {restPicks.map((r) => {
                   const photo = getPlaceGallery("餐厅", r)[0];
+                  const rSel = isSel("restaurant", r.name);
                   return (
                     <div
                       key={r.name}
-                      className="bg-orange-50 border border-orange-200 rounded-lg p-3"
+                      onClick={onSelectStop ? (e) => {
+                        if ((e.target as HTMLElement).closest("button, a")) return;
+                        handleSelect("restaurant", r.name);
+                      } : undefined}
+                      className={`bg-orange-50 border border-orange-200 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${rSel ? " ring-2 ring-orange-600" : ""}`}
                     >
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         {photo && (
@@ -1029,21 +1162,6 @@ export function ItineraryDayCard({
         {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天） */}
         <DayBookingsSection bookings={bookings} />
 
-        {/* 当日路线图 */}
-        <section className="mb-6">
-          <h4 className="text-lg font-bold mb-3">🗺️ 当日路线</h4>
-          <DayMap
-            key={`daymap-${isCloud ? "cloud" : "static"}-${day.day}-${cityId}-${prevCityId ?? "none"}-${transferStop?.name ?? "notransfer"}-${(cloudStops ?? []).map((s) => s.name).join("~")}`}
-            dayNum={day.day}
-            cityId={cityId}
-            cityZh={day.city_zh}
-            prevCityId={prevCityId}
-            prevCityZh={prevDay?.city_zh ?? null}
-            transferLabel={transferStop?.name}
-            isCloud={isCloud}
-            cloudStops={cloudStops}
-          />
-        </section>
       </div>
     </article>
   );
