@@ -23,17 +23,20 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"山顶观景台俯瞰", where:"缆车到站后走到山顶观景台，居高临下：乔治市市区、槟威海峡铺在脚下，天气晴朗时甚至能看到浮罗交怡岛。", how:"在这里看夜景是很不错的体验。假期和周末人多、排长龙，可以考虑买速通票。", sampleIndex:4, sampleCaption:"缆车轨道与山顶俯瞰：乔治市市区与海峡" },
     { name:"缆车上山途中", where:"乘坐缆车（Funicular）从山下上山，在车厢里向窗外拍，市区和海景在窗外展开。", how:"假期和周末乘缆车的人多，赶时间可以买速通票，免排长龙。", sampleIndex:0, sampleCaption:"缆车轨道旁俯瞰：乔治市市区与槟威海峡在下方展开" },
     { name:"The Habitat 树顶步道", where:"缆车上山后跟着 The Habitat 的告示牌步行前往，登上 Curtis Crest 树顶步道——13 米高的观景台（海拔 820 米），360 度看乔治市、北海和浮罗交怡，是岛上最高的观景点之一。", how:"园区每天 9:30–18:00 开放。观景台有免费望远镜，可以看远处的景色。", sampleIndex:1, sampleCaption:"The Habitat 树顶步道航拍：环形 Curtis Crest 悬于雨林之上" },
+    { name:"缆车上行机位（小红书实拍）", where:"升旗山缆车（Funicular）上行途中。研究台账实拍：缆车轨道与山城远眺，原帖称\"手机随便拍都是壁纸\"（台账 penang/penang-hill）。", how:"坐在车厢里向窗外拍，轨道+市区+海景同框；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"升旗山缆车上行：轨道与山城远眺（小红书实拍样片）" },
   ],
   "Fort Cornwallis": [
     { name:"棱堡大炮", where:"西北棱堡上的 Seri Rambai 大炮（1871 年装上棱堡），炮身朝海，背后是红砖城墙与白色灯塔。", how:"站在城墙下，把大炮、红砖城墙和白色灯塔同框拍下。", sampleIndex:0, sampleCaption:"棱堡转角大炮：炮口、红砖墙与白色灯塔同框" },
     { name:"正门与铜像", where:"城堡正门上方立着 Captain Francis Light 的铜像。", how:"正面拍大门，把门上方的铜像也带进画面。", sampleIndex:1, sampleCaption:"城堡白色拱门正门：Fort Cornwallis 牌匾、红砖城墙与旗帜" },
     { name:"黄昏城墙大炮", where:"城墙上的大炮一字排开、炮口朝海；城堡开放到夜晚，日落后城墙与旗杆会亮灯。", how:"日落后去散步，拍亮灯的城墙、旗杆与一字排开的大炮。", sampleIndex:2, sampleCaption:"黄昏城墙：灯光亮起，一排大炮变剪影" },
     { name:"城墙大炮近景", where:"沿城墙一字排开、炮口朝海的大炮。", how:"贴近拍炮身，远处能带进一点海景。", sampleIndex:4, sampleCaption:"贴近大炮侧拍：炮身质感与远处海景" },
+    { name:"古堡四宫格（小红书实拍）", where:"康沃利斯堡（Fort Cornwallis）。研究台账实拍四宫格：古堡大炮/城门/护城河喷泉（台账 penang/fort-cornwallis）。", how:"按四宫格的四个角度走一圈：大炮+红花丛、白色拱门城门、城墙大门、护城河喷泉；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"康沃利斯堡四宫格：大炮/城门/护城河（小红书实拍样片）" },
   ],
   "娘惹博物馆": [
     { name:"薄荷绿外墙正面", where:"Church Street 上的娘惹博物馆，整栋是薄荷绿外墙配主木门。", how:"站在街对面，把整栋楼拍进画面。", sampleIndex:0, sampleCaption:"娘惹博物馆薄荷绿外墙：牌匾、灯笼与人力车" },
     { name:"内部中庭大厅", where:"进门就是中央露天中庭：木雕屏风、鎏金面板、铸铁柱栏，中庭有金红两色的陈设。", how:"站在中庭中央拍对称构图，把二层也带进来。", sampleIndex:1, sampleCaption:"馆内中庭大厅：黑木雕家具与金色屏风" },
     { name:"楼梯雕花仰拍", where:"中庭旁的雕花木楼梯通向二层。", how:"站在楼梯下方仰拍，拍木雕细节。", sampleIndex:3, sampleCaption:"中庭看雕花木楼梯：楼梯通向二层，金饰栏杆与余仁生牌匾同框" },
+    { name:"馆内旗袍人像机位（小红书实拍）", where:"娘惹博物馆馆内。研究台账实拍：穿旗袍坐在雕花木椅上，红地毯+瓷器+祖先画像同框；原帖正文含 6 个\"📸出片点\"（台账 penang/pinang-peranakan-mansion）。", how:"馆内光线偏暗，穿浅色旗袍更出片；按原帖 6 个出片点逐个打卡；机位证据见来源原帖。", sampleIndex:5, sampleCaption:"娘惹博物馆馆内旗袍人像：红地毯雕花椅瓷器（小红书实拍样片）" },
   ],
   "卧佛寺与缅寺": [
     { name:"卧佛殿内全身", where:"大殿内 33 米长的卧佛，是整座寺最值得拍的主体。", how:"殿内允许拍照但别用闪光灯；一早去避开人群，早晚光线也更柔和。", sampleIndex:6, sampleCaption:"卧佛殿内 33 米卧佛全身：金身卧姿、红花枕" },
