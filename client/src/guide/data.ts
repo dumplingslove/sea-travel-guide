@@ -22,7 +22,7 @@ export type Item={name:string;city:string;meta:string;detail:string;best?:string
 export type HotelGroupChoice={group:'Marriott'|'Hyatt';hotel:string|null;brand:string|null;loyaltyProgram:'Marriott Bonvoy'|'World of Hyatt';officialUrl:string;status:'verified'|'not-found'|'coming-soon';note:string};
 export type HotelCityCheck={city:string;dates:string;checked:string;choices:[HotelGroupChoice,HotelGroupChoice]};
 export type Day={day:number;date:string;city:string;title:string;stops:{time:string;name:string;detail:string}[];food:string;tip:string};
-export const cities=["曼谷","清迈","普吉","槟城","吉隆坡","胡志明市","富国岛","新加坡","首尔"];
+export const cities=["新加坡","普吉","清迈","曼谷","首尔","槟城","吉隆坡","胡志明市","富国岛"];
 export const days:Day[]=[
 {day:1,date:"12月12日 周六",city:"曼谷",title:"抵达 · 休整缓冲",stops:[{time:"13:00",name:"入住酒店",detail:"放下行李，留足跨洲飞行后的缓冲。小红书路线共识：住暹罗 Siam / Asok 素坤逸，BTS 方便、远离老城大堵车。"},{time:"15:30",name:"酒店周边轻走",detail:"只在酒店附近散步、做个按摩或找家咖啡馆坐下，倒时差为主；不排远点、不进需要赶时间的景点。"},{time:"17:30",name:"湄南河畔晚餐",detail:"从水面看寺庙与河岸灯火，轻松开启旅程；Asiatique 河滨夜市（4 篇路线帖）是晚餐后选项。"}],food:"首晚以河畔泰餐为主；朱拉隆功夜市是 5 篇路线帖的高频晚餐选择，若体力好可把晚餐挪过去。",tip:"抵达日只休整、不排寺庙与跨城项目——大皇宫、玉佛寺、卧佛寺统一放在曼谷段第3天（王城日）一次看完，抵达日别重复跑。曼谷交通差，机场往返务必至少提前 4 小时。"},
 {day:2,date:"12月13日 周日",city:"曼谷",title:"周末市集 · 黎明寺 · 唐人街",stops:[{time:"09:00",name:"恰图恰周末市集",detail:"周日限定，先逛家居、手工艺与古着区。4 篇路线帖覆盖；乍都乍只在周六日开放，本日正好。"},{time:"13:30",name:"Or Tor Kor Market",detail:"熟食与水果选择丰富，但价格高于普通市场，只买明码标价商品。"},{time:"16:00",name:"郑王庙",detail:"6 篇路线帖共同覆盖；搭摆渡船过河，傍晚拍白瓷佛塔。"},{time:"18:30",name:"耀华力路",detail:"沿唐人街边走边吃（4 篇路线帖覆盖）；胜利纪念碑船面一条街 RuaThong 是多篇推荐的白天选项。"}],food:"Jay Fai 仅作传奇打卡，性价比与咸度评价分化；正式晚餐优先 Potong，扫街以少量试吃为主。",tip:"市集范围巨大，提前标记目标区；餐厅订位与扫街二选一，别硬塞；打车用 Grab / Bolt 防宰。"},
