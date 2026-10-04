@@ -182,6 +182,8 @@ export default function StickyMapBar({
     }
     return defaultCollapsed;
   });
+  // 地图懒初始化：首次展开时才创建 Leaflet（display:none 容器里初始化会导致首展视图错乱）
+  const [mapReady, setMapReady] = useState(!collapsed);
   const [topPx, setTopPx] = useState(0);
 
   // sticky top：紧贴 header 底部（动态测量，避免硬编码）
@@ -207,22 +209,21 @@ export default function StickyMapBar({
   }, [onHeightChange]);
 
   const toggle = () => {
-    setCollapsed((v) => {
-      const nv = !v;
-      if (storageKey) {
-        try {
-          localStorage.setItem(storageKey, nv ? "1" : "0");
-        } catch {
-          /* 忽略 */
-        }
+    const nv = !collapsed;
+    setCollapsed(nv);
+    if (!nv) setMapReady(true); // 首次展开：放行地图初始化
+    if (storageKey) {
+      try {
+        localStorage.setItem(storageKey, nv ? "1" : "0");
+      } catch {
+        /* 忽略 */
       }
-      return nv;
-    });
+    }
   };
 
-  // 地图初始化（一次）
+  // 地图初始化（一次，懒：首次展开后容器有真实尺寸才创建，避免 display:none 里初始化）
   useEffect(() => {
-    if (!mapEl.current || mapRef.current) return;
+    if (!mapReady || !mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { zoomControl: true, scrollWheelZoom: false });
     mapRef.current = map;
     addAmapTiles(map);
@@ -248,7 +249,7 @@ export default function StickyMapBar({
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapReady]);
 
   // markers 重建（items 变化时）
   useEffect(() => {
@@ -296,7 +297,7 @@ export default function StickyMapBar({
     }
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
-  }, [items]);
+  }, [items, mapReady]);
 
   // 高亮 + 飞到 activeCity
   useEffect(() => {
