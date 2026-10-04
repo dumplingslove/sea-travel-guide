@@ -82,4 +82,21 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
     { name:"美功铁道中央站位（火车进站前）", where:"火车进站前的空档，站上铁轨中央（实测中导游会带游客在挂满国旗的铁轨中央合影）。", how:"美功最出片的“到此一游”机位：以整条铁轨和两侧市集为背景。听到哨音、看到摊贩收伞就立即退到白线后方等火车通过。", sampleIndex:6, sampleCaption:"铁轨中央站位：游客站在铁轨上与黄红列车合影" },
     { name:"丹嫩沙多核心水道“水上塞船”彩虹伞海", where:"挂着“ตลาดน้ำดำเนินสะดวก”（丹嫩莎朵水上市场）木牌楼的水道下方，数十艘船挤聚的核心水域。", how:"乘船经过时抓拍“水上塞船”：数十艘长尾船与手划木舟挤得密密麻麻，每艘撑着鲜艳的彩虹遮阳伞，船夫撑篙借力、岸边摊贩用长钩拉船叫卖，人声鼎沸。这是丹嫩沙多最经典的画面。", sampleIndex:1, sampleCaption:"水上市集：彩虹伞小船与摊贩（核心水道视角）" },
   ],
+  "曼谷文华东方": [
+    { name:"河景房小阳台日落（人像机位·image-search实拍）", where:"河景房的小阳台，面向湄南河。蓝调时刻对岸高楼亮灯、河面有船经过，阳台上的圆床与烛光可做前景。研究台账登记原帖#15机位（台账 bangkok/mandarin-oriental）。", how:"日落前约半小时上阳台占位；人像站在阳台栏杆内侧，把圆床烛光和河景一起框进画面。", sampleIndex:5, sampleCaption:"河景房小阳台日落：圆床+烛光前景+对岸高楼夜景（image-search实拍样片，非原帖图）" },
+    { name:"河畔露台用餐视角（人像机位·image-search实拍）", where:"酒店河畔露台餐厅，白色铁艺餐椅、烛光与中央喷泉，背景是湄南河夜景。研究台账登记原帖#8机位（台账 bangkok/mandarin-oriental）。", how:"晚餐时段选露台临河座位；拍人像时以烛光餐桌为前景、河景为背景，入夜灯光亮起后效果最好。", sampleIndex:6, sampleCaption:"河畔露台餐厅：烛光餐桌+喷泉+湄南河夜景（image-search实拍样片，非原帖图）" },
+  ],
+  "Capella Bangkok": [
+    { name:"Stella 餐厅白孔雀雕塑前（人像机位·image-search实拍）", where:"Stella 餐厅内的白色孔雀雕塑，头顶是枝形水晶吊灯，落地窗外是夜景。原帖正文明确“适合打卡拍照”（台账 bangkok/capella-stella）。", how:"站在雕塑侧前方，让孔雀全身与吊灯同框拍人像；餐厅光线偏暗，适合夜景人像模式。", sampleIndex:5, sampleCaption:"Stella餐厅白孔雀雕塑：雕塑+水晶吊灯同框（image-search实拍样片，非原帖图）" },
+  ],
+  "Aman Nai Lert Bangkok": [
+    { name:"庭院泳池大树+户外躺椅（人像机位·image-search实拍）", where:"庭院泳池区中央的大树与镜面泳池，池边有户外躺椅，木质格栅现代建筑为背景。研究台账登记原帖#1机位（台账 bangkok/aman-nailert，弱依据）。", how:"清晨或傍晚光线柔和时拍人像；以大树为视觉中心，躺椅上坐姿合影，镜面泳池倒影可入镜。", sampleIndex:5, sampleCaption:"庭院泳池：大树+镜面倒影+户外躺椅（image-search实拍样片，非原帖图）" },
+  ],
+  "The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店": [
+    { name:"泳池边坐姿（人像机位·image-search实拍）", where:"泻湖泳池边，泰式亭阁、躺椅与蓝色遮阳伞一带。对应原帖第3张机位（台账 bangkok/athenee-pool-1）。", how:"白天在池边躺椅区取坐姿拍人像，以泳池和泰式亭阁为背景。", sampleIndex:5, sampleCaption:"泳池边坐姿：泰式亭阁+躺椅+蓝伞（image-search实拍样片，非原帖图）" },
+    { name:"泻湖泳池中央圆形平台（人像机位·image-search实拍）", where:"泳池中央的圆形平台与曲水池，背景是曼谷城市天际线。对应原帖第8张机位（台账 bangkok/athenee-pool-2）。", how:"站在圆形平台上拍人像，以池水弧线为前景、天际线为背景。", sampleIndex:6, sampleCaption:"泻湖泳池中央圆形平台+城市天际线（image-search实拍样片，非原帖图）" },
+    { name:"大堂双曲旋转楼梯+水晶吊灯（人像机位·image-search实拍）", where:"大堂中央的双曲旋转楼梯，头顶巨型水晶吊灯，中央有花艺摆台。对应原帖第5/7张机位（台账 bangkok/athenee-lobby-1）。", how:"站在楼梯转折处或大堂中央拍人像，以吊灯为顶、楼梯弧线为引导线。", sampleIndex:7, sampleCaption:"大堂双曲楼梯+水晶吊灯+花艺（image-search实拍样片，非原帖图）" },
+    { name:"大堂高层视角（人像机位·image-search实拍）", where:"从大堂高层回廊俯拍，吊灯群、泰式装饰与落地窗外花园同框。对应原帖第3张机位（台账 bangkok/athenee-lobby-2）。", how:"上到二层回廊找居中位置，俯拍人像把吊灯阵列收进画面。", sampleIndex:8, sampleCaption:"大堂高层视角：吊灯群+落地窗花园（image-search实拍样片，非原帖图）" },
+    { name:"空中花园露台俯瞰天际线（人像机位·image-search实拍）", where:"空中花园露台/小径，高层俯瞰城市天际线。对应原帖第6/12张机位（台账 bangkok/athenee-garden）。", how:"傍晚在露台小径上，以天际线为背景拍人像剪影或合影。", sampleIndex:9, sampleCaption:"空中花园露台俯瞰城市天际线（image-search实拍样片，非原帖图）" },
+  ],
 };
