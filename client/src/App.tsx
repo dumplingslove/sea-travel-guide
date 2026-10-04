@@ -14,6 +14,7 @@ import { usePlanItinerary } from "@/guide/plannerSchedule";
 import NotesPage from "@/pages/records/NotesPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
+import ForceRefreshButton from "@/components/ForceRefreshButton";
 import {
   AttractionDetailPage,
   RestaurantDetailPage,
@@ -175,6 +176,8 @@ function AppRouter() {
           </Routes>
         </main>
         <SiteFooter />
+        {/* 2026-10-03 用户：调试期间一键强制刷新（清缓存+硬重载），放右下角 */}
+        <ForceRefreshButton />
       </div>
     </BrowserRouter>
   );
