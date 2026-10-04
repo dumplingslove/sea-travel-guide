@@ -42,7 +42,7 @@ import {
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
-import StickyMapBar, { buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
+import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 
 const kindBadge: Record<BookingKind, string> = {
@@ -351,7 +351,7 @@ function FavoriteActionList({
       {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点，看位置合不合适、离酒店远近；
           只显示大行程定下的城市；2026-10-04 用户裁决：点卡片高亮——点哪张卡地图高亮它，其他正常显示
           （航班卡=两机场+连线），不点显示全部，再点一次取消 */}
-      <StickyMapBar
+      <SafeStickyMapBar
         items={bookingMapItems}
         activeCity={null}
         activeLabel={mapSelLabel}
@@ -1018,7 +1018,7 @@ function BookingsInner() {
       {menu === "hotels" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览候选酒店时也要有地图；点卡片/切城市时地图联动 */}
-          <StickyMapBar
+          <SafeStickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel")}
             activeCity={hotelCity}
             activeItemKeys={hotelSel ? [hotelSel] : null}
@@ -1035,7 +1035,7 @@ function BookingsInner() {
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览候选餐厅时也要有地图；点卡片/切城市时地图联动 */}
-          <StickyMapBar
+          <SafeStickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant")}
             activeCity={restCity}
             activeItemKeys={restSel ? [restSel] : null}
@@ -1048,7 +1048,7 @@ function BookingsInner() {
       ) : menu === "attractions" ? (
         <div className="guide-scope">
           {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点 */}
-          <StickyMapBar
+          <SafeStickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "attraction")}
             activeCity={attrCity}
             activeItemKeys={attrSel ? [attrSel] : null}

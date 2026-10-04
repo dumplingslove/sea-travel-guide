@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { LL, addAmapTiles } from "@/lib/amap";
@@ -7,6 +7,28 @@ import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord } from "@/data/stopCoords";
 import { days } from "@/guide/data";
+
+/** 地图错误边界（2026-10-04 用户：收起→展开白屏修三次未好；改打法：
+ * 地图再怎么崩也只显示重试按钮，绝不把整页拖白） */
+class MapErrorBoundary extends Component<{ children: ReactNode; title: string }, { err: Error | null }> {
+  state = { err: null as Error | null };
+  static getDerivedStateFromError(err: Error) { return { err }; }
+  componentDidCatch(err: Error) { console.error("[StickyMap]", this.props.title, err); }
+  render() {
+    if (this.state.err) {
+      return (
+        <div className="sticky z-[6] -mx-4 px-4 bg-[#faf8f3]/95 border-b border-gray-200 py-3 text-sm text-gray-600">
+          <span>{this.props.title} 加载出错</span>
+          <button
+            className="ml-3 text-teal-700 underline"
+            onClick={() => this.setState({ err: null })}
+          >重试</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /**
  * 吸顶地图条（2026-10-03 用户需求；2026-10-03 晚用户改口：行程页要常显地图）：
@@ -917,5 +939,14 @@ export default function StickyMapBar({
         style={{ display: collapsed ? "none" : "block", height: 300, width: "100%", zIndex: 0 }}
       />
     </div>
+  );
+}
+
+/** 安全版：带错误边界，地图崩了只显示重试条，不拖白整页 */
+export function SafeStickyMapBar(props: Parameters<typeof StickyMapBar>[0]) {
+  return (
+    <MapErrorBoundary title={props.title || "地图"}>
+      <StickyMapBar {...props} />
+    </MapErrorBoundary>
   );
 }
