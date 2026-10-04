@@ -9,6 +9,7 @@
  * 2026-10-02 13:25–13:45 UTC（28 家行程酒店全量重查：新加坡 12/06–12/11、普吉 12/11–12/14、清迈 12/14–12/16、曼谷 12/16–12/19；Raffles 新加坡与曼谷文华东方该日期整店售罄；曼谷丽思卡尔顿本轮无 Suite 命名房型）。
  * 2026-10-03 16:23–16:53 UTC（28 家行程酒店全量重查：新加坡 12/06–12/11、普吉 12/11–12/14、清迈 12/14–12/16、曼谷 12/16–12/19；Raffles 新加坡与曼谷文华东方该日期仍整店售罄；Amanpuri 基础房 +17.8%（$3,100→$3,653/晚，同为 Garden Pool Pavilion）；Rosewood Bangkok 套房 +10.3%（$632→$697/晚，同为 Premier Suite）；新加坡 7 家页面未显示数字总价、按每晚×晚数机械推算已在 note 标注；无验证码/风控墙）。
  * 2026-10-04 15:12–15:35 UTC（28 家行程酒店按用户新口径重查：新加坡 12/06–12/10 4晚、普吉 12/10–12/13 3晚、清迈 12/13–12/15 2晚、曼谷 12/15–12/18 3晚；新加坡 5 家遇 Trip.com 登录墙、按规则未登录硬刷，保留上一轮价格并标 dateMismatch；Raffles 新加坡该日期仍整店售罄；页面未显示数字总价的不再机械相乘（totalUSD=null、totalInclTax='unknown'）。
+ * 2026-10-04 17:14 UTC（新加坡 5 家按 12/06–12/10 4晚重查：用户亲自登录 Trip.com 会员；MBS $699/晚、Ritz $428/晚、文华东方 $458/晚、香格里拉 $260/晚（会员10% off）、富丽敦 $283/晚（会员10% off）；dateMismatch 清除；套房价仍为 10-03 旧日期数据，标 suiteNote 待更新）。
  * 2026-10-04 审计修复：10-03 轮合并时误删 23 家非行程城市酒店（吉隆坡5/槟城5/胡志明9/富国岛4），本轮从 01bc1ee 原样恢复（价格为 2026-09-25/26 实查，checkedAt 保留原值）；恢复后 data.ts 51 名 ↔ 本文件 51 键双向零差异。
 */
 
@@ -65,40 +66,39 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   source: 'Trip.com', checkedAt: '2026-10-04T15:30:00Z',
  },
   'Marina Bay Sands': {
-  checkIn: '2026-12-06', checkOut: '2026-12-11', nights: 5,
-  dateMismatch: true,
-  base: { room: 'Sands Premier King', perNightUSD: 697, totalUSD: 3485, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 4', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Exclusive price for multi-night stays · Early bird price；Last booked 3 hrs ago；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'Sands Premier King', perNightUSD: 699, totalUSD: 3049, totalInclTax: true, cancel: 'Free cancellation before 11:59 PM, Dec 4', breakfast: 'Includes 2 breakfasts', note: 'Prepay online；Instant confirmation；登录会员查询，该房型无会员专属标签；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Sands Bay Suite King Gardens By The Bay View', perNightUSD: 1316, totalUSD: 6580, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 4', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Early bird price；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
-  source: 'Trip.com', checkedAt: '2026-10-03 ~16:23–16:53 UTC',
+  suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
+  source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'The Ritz-Carlton, Millenia Singapore': {
-  checkIn: '2026-12-06', checkOut: '2026-12-11', nights: 5,
-  dateMismatch: true,
-  base: { room: 'Deluxe Kallang King Room', perNightUSD: 413, totalUSD: 2065, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Oct 5', breakfast: 'optional (Great breakfast for $60.95)', note: 'Prepay online；Instant confirmation；Best price with free cancellation；We Price Match；Last booked 12 mins ago；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'Deluxe Kallang King Room', perNightUSD: 428, totalUSD: 1868, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'optional', note: 'Value deal 17% off（原价 $524/晚）；Early bird price；Confirmed within 12 hours；Prepay online；登录会员查询，该房型无会员专属标签；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Club Deluxe King Suite, Club Lounge Access, High Floor', perNightUSD: 843, totalUSD: 4215, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Oct 5', breakfast: 'Includes 1 great breakfast', note: '1-adult price caveat（该价显示为 1 位成人，"We recommend 2 rooms for your group"）；Prepay online；Instant confirmation；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
-  source: 'Trip.com', checkedAt: '2026-10-03 ~16:23–16:53 UTC',
+  suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
+  source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Mandarin Oriental Singapore 文华东方': {
-  checkIn: '2026-12-06', checkOut: '2026-12-11', nights: 5,
-  dateMismatch: true,
-  base: { room: 'Sea View Room King', perNightUSD: 488, totalUSD: 2440, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 4', breakfast: 'optional (Great breakfast for $33.76)', note: 'Prepay online；Instant confirmation；Best price with free cancellation；We Price Match；Last booked 2 hrs ago；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'Sea View Room King', perNightUSD: 458, totalUSD: 1998, totalInclTax: true, cancel: 'Free cancellation before 6:00 PM, Dec 4', breakfast: 'optional', note: 'Prepay online；Instant confirmation；该房型无会员标签；Platinum Tier Deal 仅部分高阶房型（如 Premier Room With Balcony 含双早 $724→$713/晚）；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Family Suite', perNightUSD: 1275, totalUSD: 6375, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 4', breakfast: 'Includes 1 great breakfast', note: '1-adult price caveat（该价显示为 1 位成人）；Prepay online；Instant confirmation；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
-  source: 'Trip.com', checkedAt: '2026-10-03 ~16:23–16:53 UTC',
+  suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
+  source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Shangri-La Singapore 香格里拉': {
-  checkIn: '2026-12-06', checkOut: '2026-12-11', nights: 5,
-  dateMismatch: true,
-  base: { room: 'Tower Wing Deluxe King Room', perNightUSD: 286, totalUSD: 1430, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'optional (Great breakfast for $40.36)', note: 'Prepay online；Instant confirmation；Early bird price；Today\'s best price!；First booking offer；Last booked 4 mins ago；同房型另有免费取消价 $357/晚（Pay at hotel）；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'Tower Wing Deluxe King Room', perNightUSD: 260, totalUSD: 1132, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'optional', note: '会员专属 Platinum Tier Deal 10% off（原价 $291/晚→会员价 $260/晚）；Early bird price；Instant confirmation；Prepay online；Earn $11.32 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: null,
-  suiteNote: '页面全部 11 个房型均为 Deluxe / Horizon Club / Valley Wing 命名，无任何房型名称含 Suite',
-  source: 'Trip.com', checkedAt: '2026-10-03 ~16:23–16:53 UTC',
+  suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
+  source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'The Fullerton Hotel Singapore 新加坡富丽敦酒店': {
-  checkIn: '2026-12-06', checkOut: '2026-12-11', nights: 5,
-  dateMismatch: true,
-  base: { room: 'Premier Courtyard Room', perNightUSD: 315, totalUSD: 1575, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'not stated（$315 档价未显示早餐说明）', note: 'Prepay online；Instant confirmation；Early bird price；Today\'s best price!；First booking offer；Last booked 12 hrs ago；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'Premier Courtyard Room', perNightUSD: 283, totalUSD: 1236, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'not stated', note: '会员专属 Platinum Tier Deal 10% off（原价 $319/晚→会员价 $283/晚）；Early bird price；Instant confirmation；Prepay online；Earn $61.80 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Premier Collyer Suite', perNightUSD: 582, totalUSD: 2910, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Our last 2!；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
-  source: 'Trip.com', checkedAt: '2026-10-03 ~16:23–16:53 UTC',
+  suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
+  source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Amanpuri': {
   checkIn: '2026-12-10', checkOut: '2026-12-13', nights: 3,
