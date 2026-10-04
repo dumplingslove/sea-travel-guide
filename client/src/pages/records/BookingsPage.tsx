@@ -807,8 +807,28 @@ function BookingsInner() {
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
   /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换；
-   * 城市 tab 也吸顶，top = 顶栏高度 + 二级菜单高度，经 CSS 变量 --citytabs-top 传入（挂在 documentElement 上全局继承） */
+   * 2026-10-04 用户：二级菜单被地图盖住、城市 tab 压在地图上——三层吸顶必须错开：
+   * 顶栏(0~headerH) → 二级菜单(headerH) → 地图(headerH+navH) → 城市tab(headerH+navH+地图高)。
+   * 地图高度经 onHeightChange 实时上报，城市 tab 的 --citytabs-top 跟着变。 */
+  const [searchParams] = useSearchParams();
+  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "transport";
+  const [menu, setMenu] = useState<MenuKey>(() => {
+    const m = searchParams.get("menu");
+    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "transport") return m;
+    if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
+    return "hotels";
+  });
   const menuNavRef = useRef<HTMLDivElement>(null);
+  const [mapStickyTop, setMapStickyTop] = useState<number | undefined>(undefined);
+  const mapHeightsRef = useRef<Record<string, number>>({});
+  const syncCityTabsTop = (menuKey: string) => {
+    const header = document.querySelector("header.sticky");
+    const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
+    const nav = menuNavRef.current;
+    const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+    const mh = mapHeightsRef.current[menuKey] || 0;
+    document.documentElement.style.setProperty("--citytabs-top", `${headerH + navH + mh}px`);
+  };
   useLayoutEffect(() => {
     const nav = menuNavRef.current;
     if (!nav) return;
@@ -817,7 +837,9 @@ function BookingsInner() {
       const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
       if (header) nav.style.top = `${headerH}px`;
       const navH = Math.round(nav.getBoundingClientRect().height);
-      document.documentElement.style.setProperty("--citytabs-top", `${headerH + navH}px`);
+      // 地图吸顶位置 = 顶栏 + 二级菜单，传给 SafeStickyMapBar（2026-10-04 修盖住问题）
+      setMapStickyTop(headerH + navH);
+      syncCityTabsTop(menu);
     };
     sync();
     const ro = new ResizeObserver(sync);
@@ -829,22 +851,18 @@ function BookingsInner() {
       ro.disconnect();
       window.removeEventListener("resize", sync);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menu]);
+  /** 地图高度变化 → 更新城市 tab 的吸顶位置（2026-10-04 修 tab 压地图） */
+  const onMapHeight = (key: string) => (h: number) => {
+    mapHeightsRef.current[key] = h;
+    syncCityTabsTop(key);
+  };
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  /** 二级菜单：酒店 / 航班 / 餐厅 / 景点 / 预订行动 / 交通（支持 ?menu=hotels|flights|restaurants|attractions|action|transport 深链；旧 ?menu=details&view=hotels|restaurants 自动兼容）
-      2026-10-02 用户：tab 顺序改为酒店→飞机→餐厅→景点→行动安排（行动最后）；加景点 tab */
-  const [searchParams] = useSearchParams();
-  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "transport";
-  const [menu, setMenu] = useState<MenuKey>(() => {
-    const m = searchParams.get("menu");
-    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "transport") return m;
-    if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
-    return "hotels";
-  });
   /* 2026-10-03 用户：切换二级菜单时回到顶端，滚动位置不在不同 tab 间继承 */
   const switchMenu = (m: MenuKey) => {
     setMenu(m);
@@ -1011,14 +1029,19 @@ function BookingsInner() {
 
       {menu === "hotels" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览候选酒店时也要有地图；点卡片/切城市时地图联动 */}
+          {/* 2026-10-04 用户：浏览候选酒店时也要有地图；点卡片/切城市时地图联动
+              2026-10-04 用户（全景思维）：酒店图 = 该城全部酒店 + 全部景点（看酒店离景点远近），
+              点卡只高亮不缩放；stickyTop 让地图吸在二级菜单下方，不盖住它 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel")}
+            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel" || i.kind === "attraction")}
             activeCity={hotelCity}
             activeItemKeys={hotelSel ? [hotelSel] : null}
             expandSignal={hotelExpandSig}
             title="🗺️ 候选酒店位置"
             storageKey="sticky-map-booking-hotels"
+            stickyTop={mapStickyTop}
+            selectZoom={false}
+            onHeightChange={onMapHeight("hotels")}
           />
           <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k); if(k) setHotelExpandSig(s=>s+1);}} />
         </div>
@@ -1028,20 +1051,25 @@ function BookingsInner() {
         </div>
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览候选餐厅时也要有地图；点卡片/切城市时地图联动 */}
+          {/* 2026-10-04 用户：浏览候选餐厅时也要有地图；点卡片/切城市时地图联动
+              2026-10-04 用户（全景思维）：餐厅图 = 该城全部餐厅 + 全部景点，点卡只高亮不缩放 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant")}
+            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant" || i.kind === "attraction")}
             activeCity={restCity}
             activeItemKeys={restSel ? [restSel] : null}
             expandSignal={restExpandSig}
             title="🗺️ 候选餐厅位置"
             storageKey="sticky-map-booking-restaurants"
+            stickyTop={mapStickyTop}
+            selectZoom={false}
+            onHeightChange={onMapHeight("restaurants")}
           />
           <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k); if(k) setRestExpandSig(s=>s+1);}} />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点 */}
+          {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点
+              2026-10-04：点卡只高亮不缩放，保持全景 */}
           <SafeStickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "attraction")}
             activeCity={attrCity}
@@ -1049,6 +1077,9 @@ function BookingsInner() {
             expandSignal={attrExpandSig}
             title="🗺️ 景点位置"
             storageKey="sticky-map-booking-attractions"
+            stickyTop={mapStickyTop}
+            selectZoom={false}
+            onHeightChange={onMapHeight("attractions")}
           />
           <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k); if(k) setAttrExpandSig(s=>s+1);}} />
         </div>

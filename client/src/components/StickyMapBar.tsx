@@ -341,6 +341,18 @@ interface StickyMapBarProps {
   onHeightChange?: (h: number) => void;
   /** 常显模式：地图一直显示，不提供折叠按钮（2026-10-03 晚用户：行程页地图常显） */
   alwaysVisible?: boolean;
+  /**
+   * 外部指定的吸顶 top（px）。不传时内部按顶栏高度算。
+   * 2026-10-04 用户：预订页地图被二级菜单盖住——地图 sticky top 必须 = 顶栏 + 二级菜单，
+   * 由 BookingsPage 把算好的值传进来。
+   */
+  stickyTop?: number;
+  /**
+   * 点选卡片时是否缩放到该点（默认 true）。
+   * 2026-10-04 用户：预订页酒店/餐厅地图要点"全景思维"——显示该城全部酒店+全部景点，
+   * 点某张卡只高亮它，不许把地图缩放到只剩一个点。传 false 关闭缩放。
+   */
+  selectZoom?: boolean;
 }
 
 export default function StickyMapBar({
@@ -356,6 +368,8 @@ export default function StickyMapBar({
   storageKey,
   onHeightChange,
   alwaysVisible = false,
+  stickyTop,
+  selectZoom = true,
 }: StickyMapBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
@@ -417,8 +431,12 @@ export default function StickyMapBar({
   const showLabelsRef = useRef(showLabels);
   const [topPx, setTopPx] = useState(0);
 
-  // sticky top：紧贴 header 底部（动态测量，避免硬编码）
+  // sticky top：优先用外部传入的 stickyTop（预订页：顶栏+二级菜单），否则动态测量顶栏
   useEffect(() => {
+    if (stickyTop != null) {
+      setTopPx(stickyTop);
+      return;
+    }
     const sync = () => {
       const header = document.querySelector("header.sticky");
       setTopPx(header ? Math.round(header.getBoundingClientRect().height) : 0);
@@ -426,7 +444,7 @@ export default function StickyMapBar({
     sync();
     window.addEventListener("resize", sync);
     return () => window.removeEventListener("resize", sync);
-  }, []);
+  }, [stickyTop]);
 
   // 高度变化上报
   useEffect(() => {
@@ -443,21 +461,11 @@ export default function StickyMapBar({
     if (alwaysVisible) return; // 常显模式无折叠
     const nv = !collapsed;
     setCollapsed(nv);
-    if (!nv) {
-      setMapReady(true); // 首次展开：放行地图初始化
-      // 2026-10-04 修：延迟确保 DOM 可见后再 invalidate，否则白屏
-      setTimeout(() => {
-        try {
-          const el = mapEl.current;
-          // 只有容器可见时才 invalidate
-          if (el && el.offsetParent !== null) {
-            mapRef.current?.invalidateSize();
-          }
-        } catch (e) {
-          console.warn("map invalidateSize failed", e);
-        }
-      }, 100);
-    }
+    // 2026-10-04 根治：收起→展开白屏/报错的根子是 Leaflet 实例在 display:none 里
+    // 反复 invalidateSize 也救不回来。改打法：收起直接销毁地图实例，
+    // 展开时重建一个干净的（容器此时已有真实尺寸，一次初始化成功）。
+    // 错误边界保留作最后一道兜底。
+    setMapReady(!nv);
     if (storageKey) {
       try {
         localStorage.setItem(storageKey, nv ? "1" : "0");
@@ -474,11 +482,7 @@ export default function StickyMapBar({
     if (expandSignal != null && expandSignal > lastExpandSigRef.current) {
       lastExpandSigRef.current = expandSignal;
       setCollapsed(false);
-      setMapReady(true);
-      // 2026-10-04 修：从 display:none 恢复后 Leaflet 需 invalidateSize，否则白屏
-      requestAnimationFrame(() => {
-        mapRef.current?.invalidateSize();
-      });
+      setMapReady(true); // 重建干净的地图实例（根治打法，见 toggle）
     }
   }, [expandSignal, alwaysVisible]);
 
@@ -839,6 +843,13 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
+      // 2026-10-04 用户（预订页全景思维）：selectZoom=false 时点卡只高亮、不缩放，
+      // 地图保持显示该城全部酒店+全部景点，用户自己看距离。默认 true 保持旧行为。
+      if (!selectZoom) {
+        refreshLabelVisibility();
+        refreshCandidateVisibility();
+        return;
+      }
       // 2026-10-04 用户：点选平移+缩放到位，用 setView 直接过渡，不要 flyTo 的先拉远再推进效果
       if (pts.length === 1) {
         const kind = selKindRef.current;
@@ -861,7 +872,7 @@ export default function StickyMapBar({
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
     refreshLabelVisibility();
-  }, [activeCity, activeSig, itemMode, items, flightRoutes, activeDayRoute, mapReady]);
+  }, [activeCity, activeSig, itemMode, items, flightRoutes, activeDayRoute, mapReady, selectZoom]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
