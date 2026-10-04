@@ -749,6 +749,18 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
             🍳 {rate.breakfast}
             {rate.memberDeal && <span className="ml-2 text-amber-700 font-medium">🏷️ {rate.memberDeal}</span>}
           </div>
+          {p!.baselineUSD != null && (
+            <div className="text-gray-500 mt-0.5">
+              📊 Baseline (Google Hotels): ${p!.baselineUSD}/晚
+              {rate.perNightUSD < p!.baselineUSD && (
+                <span className="text-green-700 font-medium"> · 比 baseline 省 ${Math.round(p!.baselineUSD - rate.perNightUSD)}/晚</span>
+              )}
+              {rate.perNightUSD > p!.baselineUSD && (
+                <span className="text-red-600"> · 比 baseline 贵 ${Math.round(rate.perNightUSD - p!.baselineUSD)}/晚</span>
+              )}
+              {rate.perNightUSD === p!.baselineUSD && <span> · 与 baseline 持平</span>}
+            </div>
+          )}
         </div>
       );
     }

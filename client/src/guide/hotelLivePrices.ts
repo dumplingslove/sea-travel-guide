@@ -51,6 +51,10 @@ export interface LiveHotelPrice {
   source: string;
   /** 查询时间（UTC） */
   checkedAt: string;
+  /** Google Hotels 基准价（每晚 USD），横向对比用 baseline；未查到则不填 */
+  baselineUSD?: number;
+  /** baseline 查询时间 */
+  baselineCheckedAt?: string;
 }
 
 export const hotelLivePrices: Record<string, LiveHotelPrice> = {
