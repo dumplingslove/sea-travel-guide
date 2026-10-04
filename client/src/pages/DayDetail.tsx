@@ -41,7 +41,10 @@ export default function DayDetail() {
   const prevDay = days.find((d) => d.day === dayNum - 1) || null;
   // 主页（Home.tsx）对云端天叠加了 cloudDayOverrides 修正；/day/N 必须用同一套，
   // 否则单独页面与主页内容对不上（2026-09-26 验收：/day/10 还在显示恰图恰）。
-  const guided = isCloud ? applyCloudDayOverride(dayNum, detail) : detail;
+  // 2026-10-03：按城市+城内序号修正，不依赖绝对天号
+  const guided = isCloud && day
+    ? applyCloudDayOverride(day.city_zh, idxInCity, cityDayList.length, detail)
+    : detail;
   // 横幅口径：云端天的内容若来自非本天号的原版/弹性日，如实说明来源
   const shifted = isCloud && !!guided && guided.day !== dayNum;
   const ordinalInCity =

@@ -198,12 +198,11 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池；云端13天再叠加逐日修正）
   const isCloud = plan.source === "cloud";
   const details = days.map((d) => {
-    const base = detailForPlanDay(
-      d,
-      idxInCity.get(d.day) || 0,
-      cityCounts.get(d.city_zh) || 1,
-    );
-    return isCloud ? applyCloudDayOverride(d.day, base) : base;
+    const ordinal = idxInCity.get(d.day) || 0;
+    const total = cityCounts.get(d.city_zh) || 1;
+    const base = detailForPlanDay(d, ordinal, total);
+    // 2026-10-03：按城市+城内序号修正，不依赖绝对天号
+    return isCloud ? applyCloudDayOverride(d.city_zh, ordinal, total, base) : base;
   });
   // 每城全部已排站点名（用于算“本城备选”：整个城市段都没排进去的景点）
   const cityScheduled = new Map<string, Set<string>>();
