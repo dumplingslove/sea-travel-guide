@@ -1043,7 +1043,6 @@ function BookingsInner() {
             title="🗺️ 候选酒店位置"
             storageKey="sticky-map-booking-hotels"
             stickyTop={mapStickyTop}
-            selectZoom={false}
             onHeightChange={onMapHeight("hotels")}
           />
           <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k); if(k) setHotelExpandSig(s=>s+1);}} />
@@ -1067,7 +1066,6 @@ function BookingsInner() {
             title="🗺️ 候选餐厅位置"
             storageKey="sticky-map-booking-restaurants"
             stickyTop={mapStickyTop}
-            selectZoom={false}
             onHeightChange={onMapHeight("restaurants")}
           />
           <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k); if(k) setRestExpandSig(s=>s+1);}} />
@@ -1086,7 +1084,6 @@ function BookingsInner() {
             title="🗺️ 景点位置"
             storageKey="sticky-map-booking-attractions"
             stickyTop={mapStickyTop}
-            selectZoom={false}
             onHeightChange={onMapHeight("attractions")}
           />
           <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k); if(k) setAttrExpandSig(s=>s+1);}} />
