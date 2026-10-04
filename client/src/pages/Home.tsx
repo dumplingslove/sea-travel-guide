@@ -11,7 +11,7 @@ import {
 } from "@/components/ItineraryDayCard";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
-import { usePlanItinerary, KOREA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
+import { usePlanItinerary, KOREA_CITY_ZH, SEA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
 import { parseBookingBody } from "@/bookings/bookingTypes";
 
 type Day = PlanDay;
@@ -110,12 +110,14 @@ function FavoriteItineraryCheck({
 
 export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   const plan = usePlanItinerary();
-  // 顶部导航拆成"东南亚行程"/"韩国行程"两个页面：按 KOREA_CITY_ZH 过滤天数，
+  // 顶部导航拆成"东南亚行程"/"韩国行程"两个页面：
+  // 东南亚行程只显示 SEA_CITY_ZH（新加坡/普吉/清迈/曼谷），北京/西安不混入；
+  // 韩国行程只显示 KOREA_CITY_ZH（首尔）。
   // 天编号（D1、D2…）保持原行程不变，预订/笔记按天关联不受影响。
   const allDays: Day[] = plan.days;
   const days: Day[] = koreaOnly
     ? allDays.filter((d) => KOREA_CITY_ZH.has(d.city_zh))
-    : allDays.filter((d) => !KOREA_CITY_ZH.has(d.city_zh));
+    : allDays.filter((d) => SEA_CITY_ZH.has(d.city_zh));
   const scrollKey = koreaOnly ? KOREA_SCROLL_KEY : SEA_SCROLL_KEY;
   // 从详情页返回时恢复离开时的滚动位置，不再跳回页面顶部。
   // 位置在卸载时写入 sessionStorage，恢复后立即清除，避免刷新页面时误恢复。

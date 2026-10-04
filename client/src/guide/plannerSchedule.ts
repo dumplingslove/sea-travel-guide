@@ -276,6 +276,12 @@ const META_BY_ZH = new Map<string, CityMeta>([
  */
 export const KOREA_CITY_ZH = new Set<string>(["首尔"]);
 
+/**
+ * 东南亚行程包含的城市（中文名）。"东南亚行程"页只显示这些城市；
+ * 北京/西安等非东南亚城市不出现在东南亚行程页（2026-10-03 用户明确）。
+ */
+export const SEA_CITY_ZH = new Set<string>(["新加坡", "普吉", "清迈", "曼谷"]);
+
 const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 
 function fmtMD(iso: string): string {
