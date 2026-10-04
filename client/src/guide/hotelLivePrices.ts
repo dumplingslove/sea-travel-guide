@@ -55,6 +55,8 @@ export interface LiveHotelPrice {
   baselineUSD?: number;
   /** baseline 查询时间 */
   baselineCheckedAt?: string;
+  /** Google Hotels 可验证链接（搜索页，用户可点过去核对） */
+  baselineUrl?: string;
 }
 
 export const hotelLivePrices: Record<string, LiveHotelPrice> = {
@@ -63,6 +65,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Premier Twin Room With Garden View', perNightUSD: 1174, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 6:00 PM, Dec 3', breakfast: 'Not included; optional breakfast available for $63.77', note: 'Cheapest bookable rate is \'Pay at hotel\' with instant confirmation. Page did not display a 4-night total for this rate (label \'Total price: 1 room x 4 nights incl. taxes & fees\' without amount), so no total reported. Reference: $1,291/night featured rate for same room showed Total $5,629 (1 room x 4 nights incl. taxes & fees) on search list card.' },
   suite: { room: 'Sentosa Suite', perNightUSD: 1565, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 6:00 PM, Dec 3', breakfast: 'Not included; optional breakfast available for $63.77', note: '\'Our last 5!\' inventory note. Cheapest bookable rate is \'Pay at hotel\' with instant confirmation. Page did not display a 4-night total for this rate.' },
   baselineUSD: 880, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Capella%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T15:30:00Z',
  },
   'Raffles Singapore': {
@@ -71,6 +74,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: null,
   unavailable: '该日期整店售罄（No rooms available for your selected dates）',
   baselineUSD: 920, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Raffles%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T15:30:00Z',
  },
   'Marina Bay Sands': {
@@ -79,6 +83,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: { room: 'Sands Bay Suite King Gardens By The Bay View', perNightUSD: 1316, totalUSD: 6580, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 4', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Early bird price；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   baselineUSD: 599, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Marina%20Bay%20Sands%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'The Ritz-Carlton, Millenia Singapore': {
@@ -87,6 +92,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: { room: 'Club Deluxe King Suite, Club Lounge Access, High Floor', perNightUSD: 843, totalUSD: 4215, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Oct 5', breakfast: 'Includes 1 great breakfast', note: '1-adult price caveat（该价显示为 1 位成人，"We recommend 2 rooms for your group"）；Prepay online；Instant confirmation；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   baselineUSD: 415, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Ritz-Carlton%20Millenia%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Mandarin Oriental Singapore 文华东方': {
@@ -95,6 +101,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: { room: 'Family Suite', perNightUSD: 1275, totalUSD: 6375, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 4', breakfast: 'Includes 1 great breakfast', note: '1-adult price caveat（该价显示为 1 位成人）；Prepay online；Instant confirmation；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   baselineUSD: 360, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Mandarin%20Oriental%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Shangri-La Singapore 香格里拉': {
@@ -103,6 +110,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: null,
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   baselineUSD: 219, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Shangri-La%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'The Fullerton Hotel Singapore 新加坡富丽敦酒店': {
@@ -111,6 +119,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   suite: { room: 'Premier Collyer Suite', perNightUSD: 582, totalUSD: 2910, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Our last 2!；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   baselineUSD: 226, baselineCheckedAt: '2026-10-04T18:16:50Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Fullerton%20Hotel%20Singapore',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Amanpuri': {
@@ -118,6 +127,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Garden Pool Pavilion', perNightUSD: 3300, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 23:59, Nov 9', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest bookable rate for 2 adults, prepay online, instant confirmation. Stock: \'Our last 3!\'. Page shows \'Total price: 1 room x 3 nights incl. taxes & fees\' without numeric total, so no total invented. Note: the search list page moments earlier showed this room at $3,653/night with total $11,751 incl. taxes & fees; prices fluctuated between loads - figure above is from the room-detail page.' },
   suite: null,
   baselineUSD: 1850, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Amanpuri%20Phuket',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   'Trisara': {
@@ -125,6 +135,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Ocean View Pool Villa', perNightUSD: 1921, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 23:59, Nov 25', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest rate: prepay online US$1,921. Alternates: pay at hotel US$1,924 (free cancellation before 23:59, Nov 26); \'Show 4 more room rate (from US$2,044)\'. Stock: \'Our last 5!\'. \'Total price:1 room x 3 nights incl. taxes & fees\' shown without numeric total.' },
   suite: { room: 'Signature Ocean View Pool Suite', perNightUSD: 2721, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 23:59, Nov 25', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest bookable suite (room name contains \'Suite\'), prepay online. Alternates: pay at hotel US$2,726 (cancel before 23:59, Nov 26); 4 more rates from US$2,868. Stock: \'Our last 2!\'. No numeric total displayed.' },
   baselineUSD: 1586, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Trisara%20Phuket',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   'Banyan Tree Phuket': {
@@ -132,6 +143,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Banyan Pool Villa', perNightUSD: 676, totalUSD: 2408, totalInclTax: true, cancel: 'Non-refundable (cheapest rate); free-cancellation variant US$845/night allows free cancellation before 23:59, Nov 26', breakfast: 'Includes 2 great breakfasts', note: 'Total US$2,408 = 1 room x 3 nights incl. taxes & fees, shown numerically on page. Prepay online, instant confirmation. Free-cancel variant totals US$3,010.' },
   suite: null,
   baselineUSD: 671, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Banyan%20Tree%20Phuket',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   'JW Marriott Phuket Resort & Spa 普吉JW万豪': {
@@ -139,6 +151,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Guest Room, 2 Double, Garden View, Balcony', perNightUSD: 363, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 23:59, Dec 7', breakfast: 'Great breakfast for US$31.58 (optional) - breakfast NOT included', note: 'Cheapest rate: pay at hotel / prepay online US$363. \'Show 6 more room rate (from US$398)\'. Page shows \'Total price:1 room x 3 nights incl. taxes & fees\' without numeric total.' },
   suite: { room: '1 Bedroom Suite, 1 King, Oceanfront, Private Pool', perNightUSD: 1292, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 23:59, Dec 7', breakfast: 'Great breakfast for US$31.58 (optional) - breakfast NOT included', note: 'Cheapest bookable suite (room name contains \'Suite\'), pay at hotel / prepay online. \'Show 6 more room rate (from US$1,328)\'. No numeric total displayed.' },
   baselineUSD: 372, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=JW%20Marriott%20Phuket%20Resort%20Spa',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   'The Surin Phuket': {
@@ -146,6 +159,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'One Bedroom Hillside Cottage', perNightUSD: 828, totalUSD: null, totalInclTax: 'unknown', cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Original price US$912, 8% off. Stock: \'Our last 1!\'. Prepay online, instant confirmation. \'Total price: 1 room x 3 nights incl. taxes & fees\' shown without numeric total.' },
   suite: { room: 'Beach Suite', perNightUSD: 1557, totalUSD: null, totalInclTax: 'unknown', cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest bookable suite (room name contains \'Suite\'). Original US$1,616, US$59 off. Stock: \'Our last 1!\'. No numeric total displayed.' },
   baselineUSD: 523, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Surin%20Phuket',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   'Keemala': {
@@ -153,6 +167,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Clay Pool Cottage', perNightUSD: 693, totalUSD: null, totalInclTax: 'unknown', cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Limited Time Offer 45% off (original US$1,365). Stock: \'Our last 4!\'. Instant confirmation; cheapest rate is pay-at-hotel, prepay-online rate also US$693, plus 2 more rates from US$1,133. \'Total price: 1 room x 3 nights incl. taxes & fees\' shown without numeric total.' },
   suite: null,
   baselineUSD: 624, baselineCheckedAt: '2026-10-04T18:20:20Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Keemala%20Phuket',
   source: 'Trip.com', checkedAt: '2026-10-04T15:12:00Z',
  },
   '137 Pillars House': {
@@ -160,6 +175,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Rajah Brooke Suite', perNightUSD: 607, totalUSD: 1301, totalInclTax: true, cancel: 'Free Cancellation before 1:00 AM, Nov 21', breakfast: 'Includes 2 great breakfasts', note: 'Our last 5!; Special Discount 8% off (orig $666/night on list page, $670 on detail page); Last booked 1 hr ago; Prepay online, instant confirmation. Total $1,301 shown on search results card (1 room x 2 nights incl. taxes & fees); detail page shows per-night price only.' },
   suite: { room: 'Rajah Brooke Suite', perNightUSD: 607, totalUSD: 1301, totalInclTax: true, cancel: 'Free Cancellation before 1:00 AM, Nov 21', breakfast: 'Includes 2 great breakfasts', note: 'All room types at this hotel are suites; cheapest suite is the same room as base.' },
   baselineUSD: 609, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=137%20Pillars%20House%20Chiang%20Mai',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'Four Seasons Resort Chiang Mai': {
@@ -167,6 +183,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Upper Garden Pavilion King', perNightUSD: 1597, totalUSD: 3792, totalInclTax: true, cancel: 'Free Cancellation before 15:00, Dec 6', breakfast: 'Includes 2 great breakfasts', note: 'Our last 1!; Prepay online, instant confirmation; list card also flagged \'Only 1 left at this price\'. Total $3,792 shown on search results card (1 room x 2 nights incl. taxes & fees); detail page shows per-night price only.' },
   suite: null,
   baselineUSD: 1651, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Four%20Seasons%20Resort%20Chiang%20Mai',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'Raya Heritage': {
@@ -174,6 +191,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Rin Suite with Terrace', perNightUSD: 446, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 6:00 PM, Nov 22', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest rate: Pay at hotel, instant confirmation. 页面未显示该房价的总价 (detail page shows per-night price only). For reference, the search list card showed total $967 incl. taxes & fees for the $451/night rate (Special Discount 9% off, orig $497, prepay, \'Our last 1!\').' },
   suite: { room: 'Rin Suite with Terrace', perNightUSD: 446, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 6:00 PM, Nov 22', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest bookable suite is the same room as base (all room types are suites).' },
   baselineUSD: 387, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Raya%20Heritage%20Chiang%20Mai',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'Anantara Chiang Mai': {
@@ -181,6 +199,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe Room With Garden View', perNightUSD: 422, totalUSD: null, totalInclTax: 'unknown', cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest rate: Pay at hotel, instant confirmation. 页面未显示该房价的总价 (detail page shows per-night price only). For reference, the search list card showed total $974 incl. taxes & fees for the $454/night rate ($14 off, orig $468, non-refundable, prepay). List card also noted \'Last booked 4 hrs ago\'.' },
   suite: { room: 'Lanna Garden View Suite', perNightUSD: 673, totalUSD: null, totalInclTax: 'unknown', cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Cheapest suite rate: Prepay online, Early bird price, instant confirmation. 页面未显示总价. A higher suite rate ($698/night, orig $719) adds free cancellation before 12:00 PM, Nov 27 and \'Our last 4!\'.' },
   baselineUSD: 345, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Anantara%20Chiang%20Mai%20Resort',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'Shangri-La Chiang Mai 清迈香格里拉': {
@@ -188,6 +207,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe King Room', perNightUSD: 180, totalUSD: 385, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 12', breakfast: 'Great breakfast for $21.45 (optional) - not included', note: 'Last booked 25 mins ago; Multi-night Discount 15% off (orig $213/night); Prepay online, instant confirmation. Total $385 shown on search results card (1 room x 2 nights incl. taxes & fees); detail page shows per-night price only.' },
   suite: { room: 'Executive King Suite', perNightUSD: 323, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 6:00 PM, Dec 12', breakfast: 'Includes 2 great breakfasts', note: 'Horizon Club Lounge Benefits (incl. breakfasts, afternoon tea, cocktail hour, all-day beverages); Prepay online, instant confirmation; Special Discount 15% off (orig $383). 页面未显示该房价的总价.' },
   baselineUSD: 133, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Shangri-La%20Chiang%20Mai',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'Chiang Mai Marriott Hotel 清迈万豪': {
@@ -195,6 +215,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe King - City View', perNightUSD: 197, totalUSD: 424, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 12', breakfast: 'Great breakfast for $22.79 (optional) - not included', note: 'Last booked 24 mins ago; Pay at hotel (prepay rate also $197/night), instant confirmation. Total $424 shown on search results card (1 room x 2 nights incl. taxes & fees); detail page shows per-night price only.' },
   suite: { room: 'Executive Suite, 1 Bedroom, 1 King, Club Lounge Access', perNightUSD: 328, totalUSD: null, totalInclTax: 'unknown', cancel: 'Free Cancellation before 11:59 PM, Dec 12', breakfast: 'Great breakfast for $22.79 (optional) - not included', note: '818 ft², mountain view, unlimited M Club access (Club Lounge benefits); Instant confirmation, Pay at hotel. 页面未显示该房价的总价. Pricier suites: Diplomatic Suite from $1,672/night, Royal Suite (2 bedroom) from $2,163/night.' },
   baselineUSD: 179, baselineCheckedAt: '2026-10-04T18:16:59Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Chiang%20Mai%20Marriott%20Hotel',
   source: 'Trip.com', checkedAt: '2026-10-04T15:35:00Z',
  },
   'The Ritz-Carlton, Bangkok': {
@@ -202,6 +223,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe King', perNightUSD: 386, totalUSD: 1231, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 14', breakfast: 'Great breakfast for $33.32 (optional)', note: 'Pay at hotel; cheapest bookable option. Total $1,231 from search results page (1 room x 3 nights incl. taxes & fees).' },
   suite: null,
   baselineUSD: 348, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Ritz-Carlton%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'The Peninsula Bangkok': {
@@ -209,6 +231,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe King Room', perNightUSD: 399, totalUSD: 1272, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; Member deal 10% off (orig $446); \'Our last 4!\'. Total $1,272 from search results page (incl. taxes & fees). Free-cancellation option available at $416/night (breakfast optional $42.90).' },
   suite: null,
   baselineUSD: 341, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Peninsula%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'Rosewood Bangkok': {
@@ -216,6 +239,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe King Room', perNightUSD: 351, totalUSD: 1119, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 8', breakfast: 'Great breakfast for $44.90 (optional)', note: 'Pay at hotel; Member deal 15% off (orig $416); \'Our last 1!\'. Total $1,119 from search results page and detail page (1 room x 3 nights incl. taxes & fees).' },
   suite: { room: 'Premier Suite', perNightUSD: 673, totalUSD: null, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 8', breakfast: 'Includes 1 great breakfast', note: 'Prepay online; Member deal 15% off (orig $800). Page shows \'Total price: 1 room x 3 nights incl. taxes & fees\' but total amount not displayed in accessible text.' },
   baselineUSD: 309, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Rosewood%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   '曼谷文华东方': {
@@ -223,6 +247,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe Premier King Room', perNightUSD: 682, totalUSD: 2174, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 14', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; \'USD 150 hotel credit per stay\'. Total $2,174 from search results page (incl. taxes & fees). Hotel is AVAILABLE (not sold out) for these dates - availability flip vs old dates.' },
   suite: null,
   baselineUSD: 460, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Mandarin%20Oriental%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'Capella Bangkok': {
@@ -230,6 +255,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Riverfront King Room', perNightUSD: 905, totalUSD: 2886, totalInclTax: true, cancel: 'Free Cancellation before 3:00 PM, Dec 10', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; \'Our last 3!\'. Total $2,886 from search results page (1 room x 3 nights incl. taxes & fees).' },
   suite: { room: 'Courtyard Suite', perNightUSD: 1447, totalUSD: null, totalInclTax: true, cancel: 'Free Cancellation before 3:00 PM, Dec 10', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; \'Our last 1!\'. Page shows \'Total price: 1 room x 3 nights incl. taxes & fees\' but total amount not displayed in accessible text.' },
   baselineUSD: 893, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Capella%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'Aman Nai Lert Bangkok': {
@@ -238,6 +264,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   baseNote: 'suite-only property（52 间全套房：Deluxe King Suite / Deluxe Twin Suite / Premier Suite / Corner Suite / Premier Corner Suite / Terrace Suite）',
   suite: { room: 'Premier Suite', perNightUSD: 1943, totalUSD: 6197, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; cheapest bookable option is non-refundable. Free-cancellation option available at $2,159/night. Total $6,197 from search results page (incl. taxes & fees).' },
   baselineUSD: 1485, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Aman%20Nai%20Lert%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'Four Seasons Bangkok': {
@@ -245,6 +272,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Deluxe Palm Court Room - Twin', perNightUSD: 693, totalUSD: 2210, totalInclTax: true, cancel: 'Free Cancellation before 3:00 PM, Dec 14', breakfast: 'Great breakfast for $47.34 (optional)', note: 'Prepay online; \'Our last 1!\' / \'Only 1 left at this price\'. Total $2,210 from search results page (1 room x 3 nights incl. taxes & fees). Confirmed Chao Phraya River property (hotelId 48004058).' },
   suite: null,
   baselineUSD: 564, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Four%20Seasons%20Hotel%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'The Siam': {
@@ -253,6 +281,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   baseNote: 'suite-only property（套房/泳池别墅：Siam Suite / Garden View Suite / Premier Garden View Suite / River View Suite / Premier River View Suite / Courtyard Pool Villa）',
   suite: { room: 'Siam Suite', perNightUSD: 692, totalUSD: 2209, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online; Special Discount 7% off (orig $745); Free minibar; Boat transfer service. Total $2,209 from search results page (incl. taxes & fees).' },
   baselineUSD: 598, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Siam%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店': {
@@ -260,6 +289,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   base: { room: 'Athenee King Room Non smoking', perNightUSD: 234, totalUSD: 747, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 14', breakfast: 'Great breakfast for $29.80 (optional)', note: 'Pay at hotel (cheapest); prepay online also $234. Total $747 from search results page (1 room x 3 nights incl. taxes & fees).' },
   suite: { room: 'Athenee Suite Non smoking', perNightUSD: 443, totalUSD: null, totalInclTax: true, cancel: 'Free Cancellation before 11:59 PM, Dec 14', breakfast: 'Includes 1 great breakfast', note: 'Prepay online. Page shows \'Total price: 1 room x 3 nights incl. taxes & fees\' but total amount not displayed in accessible text.' },
   baselineUSD: 211, baselineCheckedAt: '2026-10-04T18:21:54Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Athenee%20Hotel%20Bangkok',
   source: 'Trip.com', checkedAt: '2026-10-04T15:25:00Z',
  },
   'Caravelle Saigon': {
@@ -406,6 +436,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 484, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Lotte%20Hotel%20Seoul',
  },
   '威斯汀朝鲜首尔 The Westin Josun Seoul': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -413,6 +444,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 558, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Westin%20Josun%20Seoul',
  },
   '首尔四季酒店 Four Seasons Hotel Seoul': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -420,6 +452,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 886, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Four%20Seasons%20Hotel%20Seoul',
  },
   '首尔江南朝鲜宫殿豪华精选酒店 Josun Palace, a Luxury Collection Hotel': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -427,6 +460,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 707, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Josun%20Palace%20Seoul%20Gangnam',
  },
   '首尔江南安达仕酒店 Andaz Seoul Gangnam': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -434,6 +468,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 879, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Andaz%20Seoul%20Gangnam',
  },
   '首尔新罗酒店 The Shilla Seoul': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -441,6 +476,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 542, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=The%20Shilla%20Seoul',
  },
   '首尔Signiel Signiel Seoul': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -448,6 +484,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 887, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Signiel%20Seoul',
  },
   '首尔梨泰院蒙德里安 Mondrian Seoul Itaewon': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -455,6 +492,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 349, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=Mondrian%20Seoul%20Itaewon',
  },
   '首尔弘大RYSE RYSE, Autograph Collection': {
   checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
@@ -462,6 +500,7 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   unavailable: 'Trip.com 实时价待查；当前仅有 Google Hotels baseline',
   source: 'Google Hotels', checkedAt: '2026-10-04T18:39:25Z',
   baselineUSD: 504, baselineCheckedAt: '2026-10-04T18:39:25Z',
+  baselineUrl: 'https://www.google.com/travel/hotels?q=RYSE%20Autograph%20Collection%20Seoul',
  },
 };
 
