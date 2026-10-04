@@ -54,6 +54,18 @@ const KIND_EMOJI: Record<StickyMapKind, string> = {
   airport: "✈️",
 };
 
+/**
+ * 航线短路径经度（2026-10-04 Bug 5：跨太平洋航线连线绕地球一圈）。
+ * 若两点经度差 >180°，把终点经度 ±360°，让 Polyline 走最短的那一边（如西雅图→北京走太平洋而不是大西洋）。
+ */
+function shortPathLng(fromLng: number, toLng: number): number {
+  let lng = toLng;
+  const diff = lng - fromLng;
+  if (diff > 180) lng -= 360;
+  else if (diff < -180) lng += 360;
+  return lng;
+}
+
 function iconFor(kind: StickyMapKind, active = false) {
   const size = active ? 46 : 32;
   const conf: Record<StickyMapKind, [string, string, string]> = {
@@ -86,6 +98,11 @@ function iconFor(kind: StickyMapKind, active = false) {
 export function buildItemsFromFavorites(
   favorites: { name: string; city: string; type: string }[],
   itineraryCities?: string[],
+  /**
+   * 是否收录详细行程里的全部景点（2026-10-04 Bug 3：行动安排页只有航班/酒店卡，
+   * 行程景点标记永远不可见，传 false 去掉，别留死标记；默认 true 保持行程页行为）
+   */
+  includeItinerary: boolean = true,
 ): StickyMapItem[] {
   const out: StickyMapItem[] = [];
   const seen = new Set<string>();
@@ -139,6 +156,7 @@ export function buildItemsFromFavorites(
   }
 
   for (const d of days) {
+    if (!includeItinerary) break;
     if (allowedCities && !allowedCities.has(d.city)) continue;
     for (const s of d.stops) {
       const key = `itinerary:${s.name}`;
@@ -268,6 +286,18 @@ export default function StickyMapBar({
     const map = L.map(mapEl.current, { zoomControl: true, scrollWheelZoom: false });
     mapRef.current = map;
     addAmapTiles(map);
+    // 初始视图（2026-10-04 Bug 3：行动安排页 items 可能为空，不能依赖 markers effect 设视图，
+    // 否则地图空白）：优先按全部航线范围，否则给一个东亚概览
+    const routePts: L.LatLng[] = [];
+    for (const r of flightRoutes) {
+      const from = airportForCity(r.fromCity);
+      const to = airportForCity(r.toCity);
+      if (!from || !to) continue;
+      routePts.push(LL(from.lat, from.lng), LL(to.lat, shortPathLng(from.lng, to.lng)));
+    }
+    if (routePts.length > 1) map.fitBounds(L.latLngBounds(routePts).pad(0.25));
+    else if (routePts.length === 1) map.setView(routePts[0], 5);
+    else map.setView([35, 112], 3);
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapEl.current) ro.observe(mapEl.current);
     // zoom >= 14 显示景点名称标签
@@ -324,21 +354,26 @@ export default function StickyMapBar({
     };
     for (const it of items) addMarker(it);
     // 所涉城市的机场（✈️ 紫色）
-    const cities = new Set(items.map((i) => i.city));
-    for (const c of cities) {
-      const ap = airportForCity(c);
-      if (ap)
-        addMarker({
-          name: `${ap.name}（${ap.code}）`,
-          city: c,
-          lat: ap.lat,
-          lng: ap.lng,
-          kind: "airport",
-        });
+    // 2026-10-04 Bug 3：项目级模式（行动安排页）下自动加的机场标记永远不可见（高亮逻辑只认卡片 key），
+    // 别留死标记；航班走航线层。城市级模式（行程页）保持原行为。
+    const itemModeInit = activeItemKeys !== null;
+    if (!itemModeInit) {
+      const cities = new Set(items.map((i) => i.city));
+      for (const c of cities) {
+        const ap = airportForCity(c);
+        if (ap)
+          addMarker({
+            name: `${ap.name}（${ap.code}）`,
+            city: c,
+            lat: ap.lat,
+            lng: ap.lng,
+            kind: "airport",
+          });
+      }
     }
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
-  }, [items, mapReady]);
+  }, [items, mapReady, activeItemKeys]);
 
   // 航班航线层：每条航线 = 出发机场标记 + 到达机场标记 + 紫色虚线连线
   // （2026-10-04 用户：行动安排里航班卡片在地图上显示两个机场图标以及连线）
@@ -355,13 +390,30 @@ export default function StickyMapBar({
       const from = airportForCity(r.fromCity);
       const to = airportForCity(r.toCity);
       if (!from || !to) continue; // 任一机场查不到坐标就不画这条线
+      // 2026-10-04 Bug 5：终点经度走短路径（如西雅图→北京走太平洋），到达标记也用调整后的经度，与连线对齐
+      const toLng = shortPathLng(from.lng, to.lng);
       const m1 = L.marker(LL(from.lat, from.lng), { icon: iconFor("airport") })
         .bindPopup(`<b>${from.name}（${from.code}）</b><br/>🛫 出发 · ${r.name}`)
+        // 2026-10-04 Bug 4：航线标记之前没有 tooltip，4 个机场名称显示为空；补上
+        .bindTooltip(`${from.name}（${from.code}）`, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -20],
+          className: "sea-stickymap-label",
+          opacity: 0,
+        })
         .addTo(map);
-      const m2 = L.marker(LL(to.lat, to.lng), { icon: iconFor("airport") })
+      const m2 = L.marker(LL(to.lat, toLng), { icon: iconFor("airport") })
         .bindPopup(`<b>${to.name}（${to.code}）</b><br/>🛬 到达 · ${r.name}`)
+        .bindTooltip(`${to.name}（${to.code}）`, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -20],
+          className: "sea-stickymap-label",
+          opacity: 0,
+        })
         .addTo(map);
-      const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, to.lng)], {
+      const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, toLng)], {
         color: "#7c3aed",
         weight: 3,
         opacity: 0,
@@ -440,7 +492,9 @@ export default function StickyMapBar({
       const ap = airportForCity(activeCity);
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
-  }, [activeCity, activeSig, items, flightRoutes]);
+    // 2026-10-04 Bug 1：mapReady 加入依赖——地图懒初始化完成后（用户展开地图时）必须重跑一次高亮，
+    // 否则 activeItemKeys 早已就绪但高亮从未执行，标记全部保持隐藏
+  }, [activeCity, activeSig, items, flightRoutes, mapReady]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -451,7 +505,8 @@ export default function StickyMapBar({
   const itemMode = activeSig !== null;
   const inViewCount = itemMode ? activeSig.split("|").filter(Boolean).length : 0;
 
-  if (!items.length) return null;
+  // 2026-10-04 Bug 3：items 为空但有航线时地图仍要渲染（行动安排页只有航班卡）；两者都空才返回 null
+  if (!items.length && !flightRoutes.length) return null;
 
   return (
     <div

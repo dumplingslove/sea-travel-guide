@@ -216,7 +216,9 @@ function FavoriteActionList({
   const bookingItemKey = (f: (typeof favs)[number]) =>
     stickyItemKey(f.type, itemCity(f), f.row.title);
   const [mapActiveItemKeys, setMapActiveItemKeys] = useState<string[]>([]);
-  const visibleKeysRef = useRef(new Set<string>());
+  // 2026-10-04 Bug 2：同一 key 可能出现在多个 DOM 元素上（去重前），用 Set<string> 按 key 跟踪会在
+  // "A 退出而 B 仍在视口" 时误删。改按元素跟踪：Map<元素, key>，再从可见元素集合派生 key 集合。
+  const visibleElsRef = useRef(new Map<HTMLElement, string>());
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
   const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
   const segSig = segs.map((s) => s.city).join(",");
@@ -225,6 +227,7 @@ function FavoriteActionList({
       buildItemsFromFavorites(
         favs.map((f) => ({ name: f.row.title, city: itemCity(f), type: f.type })),
         segs.map((s) => s.city),
+        false, // 2026-10-04 Bug 3：行动安排页只有航班/酒店卡，行程景点标记永远不可见，别留死标记
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [favSig, segSig],
@@ -252,32 +255,57 @@ function FavoriteActionList({
   // 地图只显示/高亮这些卡片对应的点（航班卡片对应两机场+连线）
   const sectionKey = useMemo(() => segSig + "|" + favSig, [segSig, favSig]);
   useEffect(() => {
-    visibleKeysRef.current.clear();
+    visibleElsRef.current.clear();
     const els = Array.from(document.querySelectorAll<HTMLElement>("[data-booking-item]"));
     if (!els.length) {
       setMapActiveItemKeys([]);
       return;
     }
+    // 2026-10-04 Bug 1：IntersectionObserver 只在交叉状态变化时回调，首屏已在视口内的卡片
+    // 可能永远不触发。mount 后立即按同一中央 band（上下各 30%）同步检查一次，不等 scroll 事件。
+    const syncCheck = () => {
+      const vh = window.innerHeight;
+      const bandTop = vh * 0.3;
+      const bandBottom = vh * 0.7;
+      let changed = false;
+      for (const el of els) {
+        const k = el.dataset.bookingItem || "";
+        if (!k) continue;
+        const r = el.getBoundingClientRect();
+        const inBand = r.bottom > bandTop && r.top < bandBottom;
+        const has = visibleElsRef.current.has(el);
+        if (inBand && !has) {
+          visibleElsRef.current.set(el, k);
+          changed = true;
+        } else if (!inBand && has) {
+          visibleElsRef.current.delete(el);
+          changed = true;
+        }
+      }
+      if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
+    };
     const io = new IntersectionObserver(
       (entries) => {
         let changed = false;
         for (const e of entries) {
-          const k = (e.target as HTMLElement).dataset.bookingItem || "";
+          const el = e.target as HTMLElement;
+          const k = el.dataset.bookingItem || "";
           if (!k) continue;
-          const has = visibleKeysRef.current.has(k);
+          const has = visibleElsRef.current.has(el);
           if (e.isIntersecting && !has) {
-            visibleKeysRef.current.add(k);
+            visibleElsRef.current.set(el, k);
             changed = true;
           } else if (!e.isIntersecting && has) {
-            visibleKeysRef.current.delete(k);
+            visibleElsRef.current.delete(el);
             changed = true;
           }
         }
-        if (changed) setMapActiveItemKeys([...visibleKeysRef.current]);
+        if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
       },
       { rootMargin: "-30% 0px -30% 0px", threshold: [0, 0.25, 0.5] },
     );
     els.forEach((el) => io.observe(el));
+    syncCheck(); // 首屏立即检查
     return () => io.disconnect();
   }, [sectionKey]);
   // 标题副文案：取在看卡片的第一个城市
@@ -328,13 +356,21 @@ function FavoriteActionList({
       other.push(f);
     }
   }
-  const citySections = cityOrder
-    .filter((c) => grouped.has(c))
-    .map((c) => ({
-      city: c,
-      seg: segs.find((s) => s.city === c)!,
-      items: grouped.get(c)!,
-    }));
+  // 2026-10-04 Bug 6：大行程里同一城市可出现多次（如北京 11/28–12/5 和 12/22–12/30 两段），
+  // cityOrder 会带重名，直接 map 会把同一批 items 渲染两次。按城市去重，每城只保留一段（首段）。
+  const citySections: { city: string; seg: PlanSegment; items: typeof favs }[] = [];
+  {
+    const seenCity = new Set<string>();
+    for (const c of cityOrder) {
+      if (!grouped.has(c) || seenCity.has(c)) continue;
+      seenCity.add(c);
+      citySections.push({
+        city: c,
+        seg: segs.find((s) => s.city === c)!,
+        items: grouped.get(c)!,
+      });
+    }
+  }
   if (other.length) {
     citySections.push({ city: "其他", seg: null as unknown as PlanSegment, items: other });
   }
