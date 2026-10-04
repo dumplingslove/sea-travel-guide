@@ -756,14 +756,8 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
           </div>
           {p!.baselineUSD != null && (
             <div className="text-gray-500 mt-0.5">
-              📊 Baseline (Google Hotels): ${p!.baselineUSD}/晚
-              {rate.perNightUSD < p!.baselineUSD && (
-                <span className="text-green-700 font-medium"> · 比 baseline 省 ${Math.round(p!.baselineUSD - rate.perNightUSD)}/晚</span>
-              )}
-              {rate.perNightUSD > p!.baselineUSD && (
-                <span className="text-red-600"> · 比 baseline 贵 ${Math.round(rate.perNightUSD - p!.baselineUSD)}/晚</span>
-              )}
-              {rate.perNightUSD === p!.baselineUSD && <span> · 与 baseline 持平</span>}
+              📊 Baseline (Google Hotels): ${p!.baselineUSD}/晚（不含税）
+              <span className="text-gray-400" title="Google baseline 不含税，Trip.com 每晚价税费口径未明确，口径不一致时不直接计算差额"> · 口径不同，未算差价</span>
             </div>
           )}
         </div>
