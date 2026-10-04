@@ -745,6 +745,10 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
           )}
           <span className="text-gray-400"> · {p!.source}实查 {p!.checkedAt}</span>
           {p!.dateMismatch && <span className="text-amber-600"> ⚠️日期待重查</span>}
+          <div className="text-gray-500 mt-0.5">
+            🍳 {rate.breakfast}
+            {rate.memberDeal && <span className="ml-2 text-amber-700 font-medium">🏷️ {rate.memberDeal}</span>}
+          </div>
         </div>
       );
     }

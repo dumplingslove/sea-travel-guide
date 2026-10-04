@@ -28,6 +28,8 @@ export interface LiveRoomRate {
   breakfast: string;
   /** 备注（如仅剩几间、单人价等） */
   note?: string;
+  /** 会员专属折扣（如 Trip.com Platinum Tier Deal 10% off，原价→会员价）；无则不填 */
+  memberDeal?: string;
 }
 
 export interface LiveHotelPrice {
@@ -81,21 +83,21 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
  },
   'Mandarin Oriental Singapore 文华东方': {
   checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
-  base: { room: 'Sea View Room King', perNightUSD: 458, totalUSD: 1998, totalInclTax: true, cancel: 'Free cancellation before 6:00 PM, Dec 4', breakfast: 'optional', note: 'Prepay online；Instant confirmation；该房型无会员标签；Platinum Tier Deal 仅部分高阶房型（如 Premier Room With Balcony 含双早 $724→$713/晚）；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
+  base: { room: 'Sea View Room King', perNightUSD: 458, totalUSD: 1998, totalInclTax: true, cancel: 'Free cancellation before 6:00 PM, Dec 4', breakfast: 'optional', memberDeal: 'Platinum Tier Deal 仅部分高阶房型（如 Premier Room With Balcony 含双早 $724→$713/晚）', note: 'Prepay online；Instant confirmation；该房型无会员标签；Platinum Tier Deal 仅部分高阶房型（如 Premier Room With Balcony 含双早 $724→$713/晚）；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Family Suite', perNightUSD: 1275, totalUSD: 6375, totalInclTax: true, cancel: 'Free Cancellation before 6:00 PM, Dec 4', breakfast: 'Includes 1 great breakfast', note: '1-adult price caveat（该价显示为 1 位成人）；Prepay online；Instant confirmation；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'Shangri-La Singapore 香格里拉': {
   checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
-  base: { room: 'Tower Wing Deluxe King Room', perNightUSD: 260, totalUSD: 1132, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'optional', note: '会员专属 Platinum Tier Deal 10% off（原价 $291/晚→会员价 $260/晚）；Early bird price；Instant confirmation；Prepay online；Earn $11.32 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
+  base: { room: 'Tower Wing Deluxe King Room', perNightUSD: 260, totalUSD: 1132, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'optional', memberDeal: '会员专属 10% off（原价 $291/晚 → 会员价 $260/晚）', note: '会员专属 Platinum Tier Deal 10% off（原价 $291/晚→会员价 $260/晚）；Early bird price；Instant confirmation；Prepay online；Earn $11.32 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: null,
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
  },
   'The Fullerton Hotel Singapore 新加坡富丽敦酒店': {
   checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
-  base: { room: 'Premier Courtyard Room', perNightUSD: 283, totalUSD: 1236, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'not stated', note: '会员专属 Platinum Tier Deal 10% off（原价 $319/晚→会员价 $283/晚）；Early bird price；Instant confirmation；Prepay online；Earn $61.80 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
+  base: { room: 'Premier Courtyard Room', perNightUSD: 283, totalUSD: 1236, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'not stated', memberDeal: '会员专属 10% off（原价 $319/晚 → 会员价 $283/晚）', note: '会员专属 Platinum Tier Deal 10% off（原价 $319/晚→会员价 $283/晚）；Early bird price；Instant confirmation；Prepay online；Earn $61.80 Trip Coins；总价为页面显示 Total price: 1 room × 4 nights incl. taxes & fees' },
   suite: { room: 'Premier Collyer Suite', perNightUSD: 582, totalUSD: 2910, totalInclTax: true, cancel: 'Non-refundable', breakfast: 'Includes 2 great breakfasts', note: 'Prepay online；Instant confirmation；Our last 2!；总价为每晚×晚数机械推算，非页面原值（页面仅标注 incl. taxes & fees 标签、未显示数字总价）' },
   suiteNote: '套房价为 2026-10-03 实查（旧日期 12/06–12/11），本轮仅重查基础房',
   source: 'Trip.com', checkedAt: '2026-10-04T17:14:00Z',
