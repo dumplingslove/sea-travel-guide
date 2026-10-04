@@ -251,39 +251,49 @@ function FavoriteActionList({
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favSig]);
-  // 滚动联动：IntersectionObserver 观察每张预订卡片，收集屏幕中央可见的 item key，
+  // 滚动联动：观察每张预订卡片，收集"当前屏幕里"的 item key，
   // 地图只显示/高亮这些卡片对应的点（航班卡片对应两机场+连线）
+  // 2026-10-04 真站：中央 40% band（上下各 -30%）会漏掉贴在吸顶地图栏正下方的卡片——
+  // 首屏折叠时第一张卡在 band 之上（"在看 0 项"），滚回 AS120 时卡在吸顶栏下也不进集合。
+  // 改为"吸顶栏下方全可视区"判定：卡片矩形与 [吸顶底边+8, 视口底边-48] 相交即算在看。
+  const [mapBarH, setMapBarH] = useState(0);
   const sectionKey = useMemo(() => segSig + "|" + favSig, [segSig, favSig]);
   useEffect(() => {
     visibleElsRef.current.clear();
     const els = Array.from(document.querySelectorAll<HTMLElement>("[data-booking-item]"));
-    if (!els.length) {
-      setMapActiveItemKeys([]);
-      return;
-    }
-    // 2026-10-04 Bug 1：IntersectionObserver 只在交叉状态变化时回调，首屏已在视口内的卡片
-    // 可能永远不触发。mount 后立即按同一中央 band（上下各 30%）同步检查一次，不等 scroll 事件。
-    const syncCheck = () => {
+    // 可视区上沿 = 全局吸顶 header + 地图吸顶栏高度（展开/折叠都会变，mapBarH 变化时本 effect 重跑）
+    const computeBand = () => {
       const vh = window.innerHeight;
-      const bandTop = vh * 0.3;
-      const bandBottom = vh * 0.7;
+      const header = document.querySelector("header.sticky");
+      const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
+      const top = headerH + mapBarH + 8;
+      const bottom = Math.max(top + 48, vh - 48);
+      return { top, bottom, vh };
+    };
+    const syncCheck = () => {
+      const { top, bottom } = computeBand();
       let changed = false;
       for (const el of els) {
         const k = el.dataset.bookingItem || "";
         if (!k) continue;
         const r = el.getBoundingClientRect();
-        const inBand = r.bottom > bandTop && r.top < bandBottom;
+        const inView = r.bottom > top && r.top < bottom;
         const has = visibleElsRef.current.has(el);
-        if (inBand && !has) {
+        if (inView && !has) {
           visibleElsRef.current.set(el, k);
           changed = true;
-        } else if (!inBand && has) {
+        } else if (!inView && has) {
           visibleElsRef.current.delete(el);
           changed = true;
         }
       }
       if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
     };
+    if (!els.length) {
+      setMapActiveItemKeys([]);
+      return;
+    }
+    const { top } = computeBand();
     const io = new IntersectionObserver(
       (entries) => {
         let changed = false;
@@ -302,17 +312,32 @@ function FavoriteActionList({
         }
         if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
       },
-      { rootMargin: "-30% 0px -30% 0px", threshold: [0, 0.25, 0.5] },
+      // observer 根也按同一可视区收缩：顶部扣掉吸顶栏，底部留 48px
+      { rootMargin: `-${top}px 0px -48px 0px`, threshold: [0, 0.25, 0.5] },
     );
     els.forEach((el) => io.observe(el));
-    syncCheck(); // 首屏立即检查
-    return () => io.disconnect();
-  }, [sectionKey]);
-  // 标题副文案：取在看卡片的第一个城市
+    syncCheck(); // 首屏立即检查（observer 回调是异步的，不等它）
+    // 滚动/缩放时也同步一次（rAF 节流），IO 在吸顶元素附近可能丢回调时兜底
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncCheck);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+    // mapBarH：用户展开/折叠地图（地图 ready）时高度变化，重建 observer 并重跑检查
+  }, [sectionKey, mapBarH]);
+  // 标题副文案：取在看卡片的第一个城市（📍 由 StickyMapBar 统一加，这里不再加，避免 "📍 📍"）
   const mapActiveLabel = useMemo(() => {
     if (!mapActiveItemKeys.length) return undefined;
     const city = mapActiveItemKeys[0].split(":")[1];
-    return city ? `📍 ${city}` : undefined;
+    return city || undefined;
   }, [mapActiveItemKeys]);
 
   /** 2026-10-03 用户：每个预订项的时间线日期——航班用航班日期，酒店用入住日期 */
@@ -410,6 +435,7 @@ function FavoriteActionList({
         flightRoutes={bookingFlightRoutes}
         title="🗺️ 行动安排地图"
         storageKey="sticky-map-bookings"
+        onHeightChange={setMapBarH}
       />
 
       {citySections.map((sec, si) => (

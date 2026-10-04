@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { LL, addAmapTiles } from "@/lib/amap";
-import { airportForCity } from "@/data/airportCoords";
+import { airportForCity, type AirportInfo } from "@/data/airportCoords";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord } from "@/data/stopCoords";
@@ -221,7 +221,19 @@ export default function StickyMapBar({
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
-  const routeLayersRef = useRef(new Map<string, { markers: L.Marker[]; line: L.Polyline }>());
+  // 航线层：连线按航线 key 存；机场标记按"IATA+世界副本"去重后共享（多条航线经停同一机场时只建一个 marker）
+  // 2026-10-04 真站：HU496（西雅图→北京）与 AS120（首尔→西雅图）共用 SEA，DOM 里出现 dup=1/2、2/2
+  interface RouteAirportEntry {
+    marker: L.Marker;
+    ap: AirportInfo;
+    latlng: L.LatLng;
+    /** 哪些航线用到该机场 + 每条航线的角色（出发/到达），用于显隐与 popup */
+    roles: Map<string, "dep" | "arr">;
+  }
+  const routeLayersRef = useRef<{
+    lines: Map<string, L.Polyline>;
+    airports: Map<string, RouteAirportEntry>;
+  }>({ lines: new Map(), airports: new Map() });
   // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免滚动时无意义重飞
   const activeSig = activeItemKeys ? [...activeItemKeys].sort().join("|") : null;
 
@@ -280,6 +292,23 @@ export default function StickyMapBar({
     }
   };
 
+  // zoom >= 14 显示名称标签（与 ActionMapView 同口径）。
+  // 2026-10-04 真站：航线标记是 flightRoutes 异步到达后（重）建的，updateLabels 只在 zoomend/400ms 跑一次，
+  // 重建后 tooltip 永远停在 opacity 0。改为组件级函数，markers/航线层每次（重）建后都调一次。
+  const refreshLabelVisibility = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const show = map.getZoom() >= 14;
+    map.eachLayer((layer: unknown) => {
+      const m = layer as L.Marker;
+      if (m.getTooltip) {
+        const tip = m.getTooltip();
+        const el = tip && tip.getElement();
+        if (el) (el as HTMLElement).style.opacity = show ? "1" : "0";
+      }
+    });
+  };
+
   // 地图初始化（一次，懒：首次展开后容器有真实尺寸才创建，避免 display:none 里初始化）
   useEffect(() => {
     if (!mapReady || !mapEl.current || mapRef.current) return;
@@ -300,26 +329,16 @@ export default function StickyMapBar({
     else map.setView([35, 112], 3);
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapEl.current) ro.observe(mapEl.current);
-    // zoom >= 14 显示景点名称标签
-    const updateLabels = () => {
-      const show = map.getZoom() >= 14;
-      map.eachLayer((layer: unknown) => {
-        const m = layer as L.Marker;
-        if (m.getTooltip) {
-          const tip = m.getTooltip();
-          const el = tip && tip.getElement();
-          if (el) (el as HTMLElement).style.opacity = show ? "1" : "0";
-        }
-      });
-    };
-    map.on("zoomend", updateLabels);
-    const t = setTimeout(updateLabels, 400);
+    map.on("zoomend", refreshLabelVisibility);
+    const t = setTimeout(refreshLabelVisibility, 400);
     return () => {
       clearTimeout(t);
+      map.off("zoomend", refreshLabelVisibility);
       ro.disconnect();
       map.remove();
       mapRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapReady]);
 
   // markers 重建（items 变化时）
@@ -373,59 +392,68 @@ export default function StickyMapBar({
     }
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
+    refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, mapReady, activeItemKeys]);
 
-  // 航班航线层：每条航线 = 出发机场标记 + 到达机场标记 + 紫色虚线连线
+  // 航班航线层：每条航线 = 紫色虚线连线；机场标记按 IATA+世界副本去重共享
   // （2026-10-04 用户：行动安排里航班卡片在地图上显示两个机场图标以及连线）
+  // （2026-10-04 真站：HU496 与 AS120 共用 SEA，旧代码每条航线各建一对标记，DOM 里 dup=1/2、2/2）
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    routeLayersRef.current.forEach((l) => {
-      l.markers.forEach((m) => m.remove());
-      l.line.remove();
-    });
-    routeLayersRef.current.clear();
+    const layers = routeLayersRef.current;
+    layers.lines.forEach((l) => l.remove());
+    layers.airports.forEach((a) => a.marker.remove());
+    layers.lines.clear();
+    layers.airports.clear();
     if (!flightRoutes.length) return;
+    const routeNameOf = (key: string) => flightRoutes.find((x) => x.key === key)?.name ?? key;
+    /** 取或建共享机场标记；同一机场被多条航线使用时 popup 合并显示各航线角色 */
+    const ensureAirport = (ap: AirportInfo, lat: number, lng: number, role: "dep" | "arr", routeKey: string) => {
+      const ak = `${ap.code}@${Math.round(lng)}`;
+      let entry = layers.airports.get(ak);
+      if (!entry) {
+        const marker = L.marker(LL(lat, lng), { icon: iconFor("airport") })
+          // 2026-10-04 Bug 4：航线标记之前没有 tooltip，补上（zoom>=14 由 refreshLabelVisibility 控制显隐）
+          .bindTooltip(`${ap.name}（${ap.code}）`, {
+            permanent: true,
+            direction: "top",
+            offset: [0, -20],
+            className: "sea-stickymap-label",
+            opacity: 0,
+          })
+          .addTo(map);
+        entry = { marker, ap, latlng: LL(lat, lng), roles: new Map() };
+        layers.airports.set(ak, entry);
+        // 初始隐藏，等下方高亮 effect 按 activeItemKeys 决定显隐，避免首屏闪现全部航线
+        const el = marker.getElement();
+        if (el) el.style.opacity = "0";
+      }
+      entry.roles.set(routeKey, role);
+      const roleLines = [...entry.roles.entries()]
+        .map(([rk, rl]) => `${rl === "dep" ? "🛫 出发" : "🛬 到达"} · ${routeNameOf(rk)}`)
+        .join("<br/>");
+      entry.marker.bindPopup(`<b>${ap.name}（${ap.code}）</b><br/>${roleLines}`);
+    };
     for (const r of flightRoutes) {
       const from = airportForCity(r.fromCity);
       const to = airportForCity(r.toCity);
       if (!from || !to) continue; // 任一机场查不到坐标就不画这条线
       // 2026-10-04 Bug 5：终点经度走短路径（如西雅图→北京走太平洋），到达标记也用调整后的经度，与连线对齐
       const toLng = shortPathLng(from.lng, to.lng);
-      const m1 = L.marker(LL(from.lat, from.lng), { icon: iconFor("airport") })
-        .bindPopup(`<b>${from.name}（${from.code}）</b><br/>🛫 出发 · ${r.name}`)
-        // 2026-10-04 Bug 4：航线标记之前没有 tooltip，4 个机场名称显示为空；补上
-        .bindTooltip(`${from.name}（${from.code}）`, {
-          permanent: true,
-          direction: "top",
-          offset: [0, -20],
-          className: "sea-stickymap-label",
-          opacity: 0,
-        })
-        .addTo(map);
-      const m2 = L.marker(LL(to.lat, toLng), { icon: iconFor("airport") })
-        .bindPopup(`<b>${to.name}（${to.code}）</b><br/>🛬 到达 · ${r.name}`)
-        .bindTooltip(`${to.name}（${to.code}）`, {
-          permanent: true,
-          direction: "top",
-          offset: [0, -20],
-          className: "sea-stickymap-label",
-          opacity: 0,
-        })
-        .addTo(map);
       const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, toLng)], {
         color: "#7c3aed",
         weight: 3,
         opacity: 0,
         dashArray: "8 6",
       }).addTo(map);
-      // 初始隐藏，等下方高亮 effect 按 activeItemKeys 决定显隐，避免首屏闪现全部航线
-      for (const m of [m1, m2]) {
-        const el = m.getElement();
-        if (el) el.style.opacity = "0";
-      }
-      routeLayersRef.current.set(r.key, { markers: [m1, m2], line });
+      layers.lines.set(r.key, line);
+      ensureAirport(from, from.lat, from.lng, "dep", r.key);
+      ensureAirport(to, to.lat, toLng, "arr", r.key);
     }
+    refreshLabelVisibility(); // 2026-10-04 真站：航线层（重）建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flightRoutes, mapReady]);
 
   // 高亮
@@ -464,21 +492,35 @@ export default function StickyMapBar({
       }
       if (on) pts.push(LL(it.lat, it.lng));
     });
-    // 航线层显隐
-    routeLayersRef.current.forEach((layers, key) => {
-      const show = itemMode ? activeSet!.has(key) : true;
-      for (const mk of layers.markers) {
-        mk.setIcon(iconFor("airport", show));
-        const el = mk.getElement();
+    // 航线层显隐（2026-10-04 真站：机场标记去重共享后，按"任一关联航线在看"决定显隐）
+    const rl = routeLayersRef.current;
+    if (itemMode) {
+      rl.airports.forEach((a) => {
+        const show = [...a.roles.keys()].some((k) => activeSet!.has(k));
+        a.marker.setIcon(iconFor("airport", show));
+        const el = a.marker.getElement();
         if (el) {
           el.style.transition = "opacity .3s";
           el.style.opacity = show ? "1" : "0";
           el.style.pointerEvents = show ? "auto" : "none";
         }
-        if (show) pts.push(mk.getLatLng());
-      }
-      layers.line.setStyle({ opacity: show ? 0.9 : 0 });
-    });
+        if (show) pts.push(a.latlng);
+      });
+      rl.lines.forEach((line, key) => {
+        line.setStyle({ opacity: activeSet!.has(key) ? 0.9 : 0 });
+      });
+    } else {
+      // 非项目级（行程页旧行为）：航线全显
+      rl.airports.forEach((a) => {
+        a.marker.setIcon(iconFor("airport", false));
+        const el = a.marker.getElement();
+        if (el) {
+          el.style.opacity = "1";
+          el.style.pointerEvents = "auto";
+        }
+      });
+      rl.lines.forEach((line) => line.setStyle({ opacity: 0.9 }));
+    }
     if (itemMode) {
       if (!pts.length) return; // 屏幕中央暂无卡片时不动地图，避免乱飞
       if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
