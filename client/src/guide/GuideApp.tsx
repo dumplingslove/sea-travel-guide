@@ -798,6 +798,17 @@ function RecordsPage({kind,title,summary,image}:{kind:RecordKind;title:string;su
 export function GuideApp({initialTab='酒店',hideChrome=false}:{initialTab?:Tab;hideChrome?:boolean}){
  const [tab,setTab]=useState<Tab>(initialTab);
  const [bookingPreset,setBookingPreset]=useState<BookingPreset|null>(null);
+ // 2026-10-04 用户要求城市 tab 吸顶：设置 --citytabs-top 为全局顶栏高度，吸顶位置才对
+ useEffect(()=>{
+   const sync=()=>{
+     const header=document.querySelector("header.sticky");
+     const h=header?Math.round(header.getBoundingClientRect().height):0;
+     document.documentElement.style.setProperty("--citytabs-top",`${h}px`);
+   };
+   sync();
+   window.addEventListener("resize",sync);
+   return ()=>window.removeEventListener("resize",sync);
+ },[]);
  const onBook:OnBook=(p)=>setBookingPreset(p);
  const content=useMemo(()=>{if(tab==='航班')return <Flights onBook={onBook}/>;if(tab==='交通')return <Transport/>;if(tab==='酒店')return <HotelCatalog onBook={onBook}/>;if(tab==='餐厅')return <RestaurantCatalog onBook={onBook}/>;if(tab==='景点')return <AttractionGuide standalone onBook={onBook}/>;if(tab==='实用信息')return <SectionErrorBoundary label="实用信息"><Practical onBook={onBook}/></SectionErrorBoundary>;if(tab==='信息来源搜索状态')return <ResearchProgressPage/>;if(tab==='旅行研究')return <TravelResearch/>;if(tab==='我的预订')return <RecordsPage kind="booking" title="我的预订" summary="集中保存酒店、餐厅、航班、门票与确认号。" image={singaporeImg}/>;return <RecordsPage kind="journal" title="旅行游记" summary="按 Day 1—20 写下当天见闻、餐桌和照片线索。" image={penangImg}/>},[tab]);
  const go=(t:Tab)=>{setTab(t);window.scrollTo({top:0,behavior:'auto'})};
