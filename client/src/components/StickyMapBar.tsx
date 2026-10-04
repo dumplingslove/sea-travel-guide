@@ -6,7 +6,7 @@ import { airportForCity, type AirportInfo } from "@/data/airportCoords";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord } from "@/data/stopCoords";
-import { days } from "@/guide/data";
+import { days, attractions } from "@/guide/data";
 
 /** 地图错误边界（2026-10-04 用户：收起→展开白屏修三次未好；改打法：
  * 地图再怎么崩也只显示重试按钮，绝不把整页拖白） */
@@ -79,7 +79,7 @@ export interface DayRouteStop {
   name: string;
   lat: number;
   lng: number;
-  kind: "attraction" | "restaurant" | "hotel";
+  kind: "attraction" | "restaurant" | "hotel" | "airport";
 }
 /** 当日路线：stops 按游览顺序排列，景点连线 */
 export interface DayRoute {
@@ -270,22 +270,6 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     "普吉": "phuket", "首尔": "seoul", "北京": "beijing", "西安": "xian",
     "槟城": "penang", "吉隆坡": "kualalumpur", "胡志明市": "hochiminh", "富国岛": "phuquoc",
   };
-  // 需提前订票的景点（2026-10-04 用户：备选景点要在地图上显示）
-  // 名单 = GuideApp.MUST_BOOK_ATTRACTIONS 的行程城市子集（双子塔/VinWonders/Vinpearl Safari
-  // 非行程城市，tab 在 scopeCities 下同样过滤，故不收录）
-  const MUST_BOOK: { name: string; city: string }[] = [
-    { name: "大象自然公园", city: "清迈" },
-    { name: "Phuket Elephant Sanctuary", city: "普吉" },
-    { name: "Siam Niramit", city: "普吉" },
-    { name: "夜间动物园", city: "新加坡" },
-    { name: "环球影城", city: "新加坡" },
-    { name: "Singapore Oceanarium", city: "新加坡" },
-    { name: "滨海湾花园", city: "新加坡" },
-    { name: "吉姆·汤普森之家", city: "曼谷" },
-    { name: "攀牙湾", city: "普吉" },
-    { name: "皮皮岛", city: "普吉" },
-    { name: "因他农国家公园", city: "清迈" },
-  ];
   for (const zh of cities) {
     const id = zhToId[zh];
     if (!id) continue;
@@ -296,12 +280,13 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     for (const r of places.restaurants) {
       out.push({ name: r.name, city: zh, lat: r.lat, lng: r.lng, kind: "restaurant", candidate: true, note: "候选餐厅" });
     }
-    // 需提前订票的景点（只收录行程城市的）
-    for (const a of MUST_BOOK) {
+    // 2026-10-04 用户：预订页地图要显示该城市 ALL 景点（不是只卖票的11个），
+    // 才能判断餐厅/酒店位置是否合理。有坐标的才收录（findStopCoord → MUST_BOOK_COORDS 兜底）。
+    for (const a of attractions) {
       if (a.city !== zh) continue;
       const coord = findStopCoord(a.name) ?? MUST_BOOK_COORDS[a.name];
       if (coord) {
-        out.push({ name: a.name, city: zh, lat: coord.lat, lng: coord.lng, kind: "attraction", candidate: true, note: "需提前订票" });
+        out.push({ name: a.name, city: zh, lat: coord.lat, lng: coord.lng, kind: "attraction", candidate: true, note: "景点" });
       }
     }
   }
@@ -354,9 +339,7 @@ interface StickyMapBarProps {
    */
   selectZoom?: boolean;
   /**
-   * 点选模式下是否保留自动添加的机场标记（默认 false）。
-   * 2026-10-04 修：预订页酒店/餐厅地图的机场是距离参考，点卡时不许消失；
-   * 行动安排页走航线层，点选时自动机场仍隐藏（原逻辑）。
+   * @deprecated 2026-10-04 用户：其他地图都不需要自动标注机场，此 prop 废弃保留仅防旧调用报错。
    */
   keepAirportsInSelect?: boolean;
 }
@@ -376,7 +359,6 @@ export default function StickyMapBar({
   alwaysVisible = false,
   stickyTop,
   selectZoom = true,
-  keepAirportsInSelect = false,
 }: StickyMapBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
@@ -598,26 +580,9 @@ export default function StickyMapBar({
       itemByKeyRef.current.set(key, it);
     };
     for (const it of items) addMarker(it);
-    // 所涉城市的机场（✈️ 紫色）
-    // 2026-10-04：点选模式（行动安排页）下自动加的机场标记只会添乱，航班走航线层；
-    // 城市级模式（行程页）保持原行为。用 itemMode（非空选择）而非 activeItemKeys!==null，
-    // 空数组 = 未点选 = 全部显示，不触发项目级逻辑。
-    // 2026-10-04 修：keepAirportsInSelect=true（预订页）时点选也保留机场——点卡不许掉标记。
-    const itemModeInit = itemMode;
-    if (!itemModeInit || keepAirportsInSelect) {
-      const cities = new Set(items.map((i) => i.city));
-      for (const c of cities) {
-        const ap = airportForCity(c);
-        if (ap)
-          addMarker({
-            name: `${ap.name}（${ap.code}）`,
-            city: c,
-            lat: ap.lat,
-            lng: ap.lng,
-            kind: "airport",
-          });
-      }
-    }
+    // 2026-10-04 用户：其他地图都不需要自动标注机场。只有每日行程有坐飞机才标机场
+    // （走 activeDayRoute.stops，由 ItineraryDayCard 按转场日显式加入），航班走 flightRoutes 航线层。
+    // 此处不再自动加机场。
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) {
       // 2026-10-04 用户：缩放太小、标记挤成一团看不清。收紧 padding（0.15→0.05）；
@@ -628,9 +593,10 @@ export default function StickyMapBar({
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
     refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, mapReady, keepAirportsInSelect]);
+  }, [items, mapReady]);
   // 2026-10-04 修：点选（activeItemKeys）变化不许重建 markers——高亮 effect 已负责更新图标，
-  // 重建会导致闪烁和时序错乱（机场标记时有时无）。markers 只随 items/mapReady 重建。
+  // 重建会导致闪烁和时序错乱。markers 只随 items/mapReady 重建。
+  // 2026-10-04 用户：其他地图不再自动加机场（keepAirportsInSelect 废弃）。
 
   // 航班航线层（2026-10-04 点选重构）：
   // - 每个机场按 IATA code 全站唯一标记，位置取规范经度（太平洋世界副本），DOM 重复从根子上消失

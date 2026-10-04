@@ -19,6 +19,7 @@ type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
 import { cloudStopsForTimeline, stopCoordsForDay, type StopCoord } from "@/data/stopCoords";
 import { placesForCity } from "@/data/placeCoords";
+import { airportForCity } from "@/data/airportCoords";
 import { stickyItemKey, type DayRoute, type DayRouteStop } from "@/components/StickyMapBar";
 import {
   bookingPolicyBadge,
@@ -734,6 +735,15 @@ export function ItineraryDayCard({
       seen.add(k);
       stops.push({ name, lat, lng, kind });
     };
+    // 2026-10-04 用户：每日行程有坐飞机才在地图上标机场（其他天不标）。
+    // transferRoute = "北京 → 新加坡"（城市变化即转场日），取两端机场坐标。
+    if (transferRoute) {
+      const [fromCity, toCity] = transferRoute.split("→").map((s) => s.trim());
+      for (const c of [fromCity, toCity]) {
+        const ap = airportForCity(c);
+        if (ap) push(`${ap.name}（${ap.code}）`, "airport", ap.lat, ap.lng);
+      }
+    }
     // 景点：时间线顺序；云端天用调用方查好的坐标，静态天用 stopCoordsForDay
     const tl: { name: string; lat: number; lng: number }[] = isCloud
       ? (cloudStops ?? []).map((x) => ({ name: x.name, lat: x.lat, lng: x.lng }))
@@ -758,7 +768,7 @@ export function ItineraryDayCard({
     }
     return { day: day.day, city: day.city_zh, label: `D${day.day} · ${day.city_zh}`, stops };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck]);
+  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck, transferRoute]);
 
   /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */
   const handleSelect = (kind: "attraction" | "restaurant" | "hotel", name: string) => {
