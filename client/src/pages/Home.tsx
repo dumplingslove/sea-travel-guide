@@ -144,7 +144,8 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   const dateNavRef = useRef<HTMLDivElement>(null);
   // 2026-10-03 用户：吸顶可折叠地图 + 滚动联动高亮
   const [activeDay, setActiveDay] = useState<number | null>(null);
-  const [mapBarH, setMapBarH] = useState(48);
+  // 2026-10-03 晚：行程页地图常显，初始高度按标题行(~44px)+地图(300px)+边距估算，ResizeObserver 会校准精确值
+  const [mapBarH, setMapBarH] = useState(352);
   // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
   // 2026-10-03：吸顶地图条在日期导航之上，日期导航 top = header 高 + 地图条高
   useLayoutEffect(() => {
@@ -281,13 +282,13 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
   const activeDayObj = activeDay != null ? days.find((d) => d.day === activeDay) : undefined;
   return (
     <>
-      {/* 2026-10-03 用户：吸顶可折叠地图，滚动时高亮当前城市并飞过去 */}
+      {/* 2026-10-03 晚用户：行程页地图常显（不用点展开），滚动时只高亮当前城市的点、其他淡化，地图跟随飞过去 */}
       <StickyMapBar
         items={mapItems}
         activeCity={activeDayObj?.city_zh ?? null}
         activeLabel={activeDayObj ? `D${activeDayObj.day} · ${activeDayObj.city_zh}` : undefined}
         title="🗺️ 行程地图"
-        storageKey={koreaOnly ? "sticky-map-korea" : "sticky-map-sea"}
+        alwaysVisible
         onHeightChange={setMapBarH}
       />
       {/* 悬浮日期导航（紧贴吸顶地图条底部，top 由 JS 动态测量 header 高度 + 地图条高设置） */}

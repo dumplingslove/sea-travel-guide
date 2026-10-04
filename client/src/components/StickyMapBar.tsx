@@ -9,9 +9,11 @@ import { findStopCoord } from "@/data/stopCoords";
 import { days } from "@/guide/data";
 
 /**
- * 吸顶可折叠地图条（2026-10-03 用户需求）：
- * - sticky 在屏幕最上方（header 之下），点 ▾/▴ 展开折叠，折叠时只占一条细 bar
- * - activeCity 变化时：该城市的点高亮（放大+红圈脉冲），地图平滑飞到该城市
+ * 吸顶地图条（2026-10-03 用户需求；2026-10-03 晚用户改口：行程页要常显地图）：
+ * - sticky 在屏幕最上方（header 之下）；alwaysVisible 时常显地图、无需点展开，
+ *   否则点 ▾/▴ 展开折叠，折叠时只占一条细 bar
+ * - activeCity 变化时：该城市的点高亮（放大+红圈脉冲），其他城市点淡化；
+ *   地图平滑飞到该城市
  * - zoom >= 14 时直接显示景点名称标签（与 ActionMapView 同口径）
  * - 自动标注所涉城市的机场（✈️ 紫色图标）
  */
@@ -149,10 +151,12 @@ interface StickyMapBarProps {
   activeLabel?: string;
   title?: string;
   defaultCollapsed?: boolean;
-  /** localStorage key：记住折叠状态 */
+  /** localStorage key：记住折叠状态（alwaysVisible 时忽略） */
   storageKey?: string;
   /** 高度变化回调（父组件用它叠放其他 sticky 条） */
   onHeightChange?: (h: number) => void;
+  /** 常显模式：地图一直显示，不提供折叠按钮（2026-10-03 晚用户：行程页地图常显） */
+  alwaysVisible?: boolean;
 }
 
 export default function StickyMapBar({
@@ -163,6 +167,7 @@ export default function StickyMapBar({
   defaultCollapsed = true,
   storageKey,
   onHeightChange,
+  alwaysVisible = false,
 }: StickyMapBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
@@ -171,6 +176,8 @@ export default function StickyMapBar({
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
+    // 常显模式：永不折叠，忽略 storageKey/defaultCollapsed
+    if (alwaysVisible) return false;
     if (storageKey) {
       try {
         const v = localStorage.getItem(storageKey);
@@ -182,7 +189,8 @@ export default function StickyMapBar({
     }
     return defaultCollapsed;
   });
-  // 地图懒初始化：首次展开时才创建 Leaflet（display:none 容器里初始化会导致首展视图错乱）
+  // 地图懒初始化：折叠模式下首次展开时才创建 Leaflet（display:none 容器里初始化会导致首展视图错乱）；
+  // 常显模式直接初始化（容器初始即有尺寸）
   const [mapReady, setMapReady] = useState(!collapsed);
   const [topPx, setTopPx] = useState(0);
 
@@ -209,6 +217,7 @@ export default function StickyMapBar({
   }, [onHeightChange]);
 
   const toggle = () => {
+    if (alwaysVisible) return; // 常显模式无折叠
     const nv = !collapsed;
     setCollapsed(nv);
     if (!nv) setMapReady(true); // 首次展开：放行地图初始化
@@ -299,7 +308,8 @@ export default function StickyMapBar({
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
   }, [items, mapReady]);
 
-  // 高亮 + 飞到 activeCity
+  // 高亮 + 淡化 + 飞到 activeCity
+  // 2026-10-03 晚用户：地图不要所有点都一样突出，只高亮当前浏览城市的点，其他淡化
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -307,8 +317,15 @@ export default function StickyMapBar({
     markersRef.current.forEach((m, key) => {
       const it = itemByKeyRef.current.get(key);
       if (!it) return;
-      const on = !!activeCity && it.city === activeCity && it.kind !== "airport";
+      const inActiveCity = !!activeCity && it.city === activeCity;
+      const on = inActiveCity && it.kind !== "airport";
       m.setIcon(iconFor(it.kind, on));
+      // 非当前城市的点淡化（机场跟随所属城市一起淡化）
+      const el = m.getElement();
+      if (el) {
+        el.style.transition = "opacity .3s";
+        el.style.opacity = activeCity ? (inActiveCity ? "1" : "0.22") : "1";
+      }
       if (on) pts.push(LL(it.lat, it.lng));
     });
     if (!activeCity) return;
@@ -335,23 +352,39 @@ export default function StickyMapBar({
       style={{ top: topPx }}
     >
       <style>{`@keyframes sea-pin-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}`}</style>
-      <button
-        onClick={toggle}
-        className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900"
-        aria-expanded={!collapsed}
-      >
-        <span className="truncate">
-          {title}
-          {activeLabel && (
-            <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
-          )}
-          <span className="ml-2 text-xs font-normal text-gray-400">
-            {items.length}个点
-            {counts.airport ? ` · ✈️${counts.airport}` : ""}
+      {alwaysVisible ? (
+        /* 常显模式：标题行不可点，无折叠按钮 */
+        <div className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900">
+          <span className="truncate">
+            {title}
+            {activeLabel && (
+              <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
+            )}
+            <span className="ml-2 text-xs font-normal text-gray-400">
+              {items.length}个点
+              {counts.airport ? ` · ✈️${counts.airport}` : ""}
+            </span>
           </span>
-        </span>
-        <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
-      </button>
+        </div>
+      ) : (
+        <button
+          onClick={toggle}
+          className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900"
+          aria-expanded={!collapsed}
+        >
+          <span className="truncate">
+            {title}
+            {activeLabel && (
+              <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
+            )}
+            <span className="ml-2 text-xs font-normal text-gray-400">
+              {items.length}个点
+              {counts.airport ? ` · ✈️${counts.airport}` : ""}
+            </span>
+          </span>
+          <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
+        </button>
+      )}
       {/* 地图容器 className 保持静态，全屏/折叠高矮走 style（Leaflet touch 修复口径） */}
       <div
         ref={mapEl}
