@@ -619,7 +619,11 @@ export default function StickyMapBar({
       }
     }
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
-    else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
+    else if (latlngs.length > 1) {
+      // 2026-10-04 用户：缩放太小、标记挤成一团看不清。收紧 padding（0.15→0.05），
+      // 并限制最大 zoom-out 到 13——视野聚焦在城市建成区，不缩到看全岛。
+      map.fitBounds(L.latLngBounds(latlngs).pad(0.05), { maxZoom: 13 });
+    }
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
     refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
     // eslint-disable-next-line react-hooks/exhaustive-deps
