@@ -545,7 +545,7 @@ export default function DayMap({
           </button>
           <button
             onClick={() => setCollapsed(true)}
-            className="absolute top-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+            className="absolute bottom-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
           >
             ▴ 收起
           </button>

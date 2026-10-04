@@ -297,7 +297,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           {/* 2026-10-04 用户：点击收起/展开地图，不占屏幕空间 */}
           <button
             onClick={() => setCollapsed(true)}
-            className="absolute top-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
+            className="absolute bottom-2 left-2 z-[500] bg-white/95 hover:bg-white text-teal-800 text-xs font-bold rounded-full px-3 py-1.5 shadow border border-gray-200"
             aria-expanded="true"
           >
             ▴ 收起

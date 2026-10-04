@@ -382,8 +382,15 @@ export default function StickyMapBar({
     setCollapsed(nv);
     if (!nv) {
       setMapReady(true); // 首次展开：放行地图初始化
+      // 2026-10-04 修：双重 rAF 确保 DOM 更新完再 invalidate，否则白屏
       requestAnimationFrame(() => {
-        mapRef.current?.invalidateSize();
+        requestAnimationFrame(() => {
+          try {
+            mapRef.current?.invalidateSize();
+          } catch (e) {
+            console.warn("map invalidateSize failed", e);
+          }
+        });
       });
     }
     if (storageKey) {
@@ -732,7 +739,8 @@ export default function StickyMapBar({
         visible = true; // 2026-10-04 用户：其他的简单显示，不隐藏
       } else {
         const inActiveCity = !!activeCity && it.city === activeCity;
-        on = inActiveCity && it.kind !== "airport";
+        // 2026-10-04 修：城市切换只过滤可见性，不触发脉冲高亮；脉冲只给点选的单项
+        on = false;
         visible = !activeCity || inActiveCity;
       }
       m.setIcon(iconFor(it.kind, on, !!it.candidate && !on));
