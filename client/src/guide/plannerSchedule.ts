@@ -310,24 +310,26 @@ const STATIC_ITINERARY: PlanItinerary = {
 
 /** 把规划器的 schedule（日期->城市）转成全站用的 Day 数组 */
 export function planToItinerary(plan: PlannerPlan): PlanItinerary | null {
-  const dates = Object.keys(plan.schedule || {}).sort();
-  if (!dates.length) return null;
-  const days: PlanDay[] = [];
-  for (let i = 0; i < dates.length; i++) {
-    const iso = dates[i];
-    const entry = plan.schedule[iso];
-    if (!entry?.city) return null;
-    const meta = META_BY_ZH.get(entry.city);
-    if (!meta) return null;
-    days.push({
-      day: i + 1,
-      date: fmtMD(iso),
-      weekday: weekdayOf(iso),
-      city: meta.en,
-      city_zh: meta.zh,
-      city_id: meta.id,
-    });
-  }
+  // 2026-10-03 白屏修复：此函数绝不抛异常，任何异常都返回 null 由调用方回退到静态
+  try {
+    const dates = Object.keys(plan?.schedule || {}).sort();
+    if (!dates.length) return null;
+    const days: PlanDay[] = [];
+    for (let i = 0; i < dates.length; i++) {
+      const iso = dates[i];
+      const entry = plan.schedule[iso];
+      if (!entry?.city) return null;
+      const meta = META_BY_ZH.get(entry.city);
+      if (!meta) return null;
+      days.push({
+        day: i + 1,
+        date: fmtMD(iso),
+        weekday: weekdayOf(iso),
+        city: meta.en,
+        city_zh: meta.zh,
+        city_id: meta.id,
+      });
+    }
   const cityStops: PlanCityStop[] = [];
   let cur = null as null | { meta: CityMeta; start: number; startDate: string };
   const flush = (endDay: number, endDate: string) => {
@@ -358,6 +360,10 @@ export function planToItinerary(plan: PlannerPlan): PlanItinerary | null {
     dateRangeLong: `${dates[0]} ～ ${dates[dates.length - 1]}`,
     cityCount: cityStops.length,
   };
+  } catch {
+    // 任何解析异常都返回 null，调用方回退到静态行程，绝不白屏
+    return null;
+  }
 }
 
 /**
@@ -427,18 +433,23 @@ export function usePlanItinerary(): PlanItinerary & { loading: boolean } {
   // 13 天云端行程——用户看到的就是“一闪先 20 天再变 13 天”。
   const [state, setState] = useState<PlanItinerary & { loading: boolean }>(
     () => {
-      if (memoryPlan) return { ...memoryPlan, loading: false };
-      // 同步读本地缓存：localStorage 里是上次云端解析完写回的 13 天规划，
-      // 首屏直接按它渲染，不再经过 20 天静态中间态。
-      const cached = readPlannerCache();
-      const conv = cached ? planToItinerary(cached.plan) : null;
-      if (conv && cached) {
-        return {
-          ...conv,
-          updatedByName: cached.updatedByName,
-          updatedAt: cached.updatedAt,
-          loading: true,
-        };
+      // 2026-10-03 白屏修复：初始化器绝不抛异常，任何解析失败都回退到静态行程
+      try {
+        if (memoryPlan) return { ...memoryPlan, loading: false };
+        // 同步读本地缓存：localStorage 里是上次云端解析完写回的 13 天规划，
+        // 首屏直接按它渲染，不再经过 20 天静态中间态。
+        const cached = readPlannerCache();
+        const conv = cached ? planToItinerary(cached.plan) : null;
+        if (conv && cached) {
+          return {
+            ...conv,
+            updatedByName: cached.updatedByName,
+            updatedAt: cached.updatedAt,
+            loading: true,
+          };
+        }
+      } catch {
+        // 缓存损坏或解析异常：静默回退到静态，不白屏
       }
       return { ...STATIC_ITINERARY, loading: true };
     }
