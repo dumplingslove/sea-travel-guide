@@ -825,14 +825,18 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
-      // 2026-10-04 用户（预订页全景思维）：selectZoom=false 时点卡只平移居中、不改变缩放，
-      // 地图保持显示该城全部酒店+全部景点（用户自己看距离），被点的酒店移到视野中央。
-      // 2026-10-04 用户反馈：完全不动也不对，要移到我要的地方。
+      // 2026-10-04 用户最终要求：点卡的效果 = 像人手拖地图一样平滑挪到那家，
+      // 不要闪、不要从高空缩放、不要 flyTo。只平移，不变缩放。
       if (!selectZoom) {
-        if (pts.length === 1) {
-          map.panTo(pts[0], { animate: true, duration: 0.8 });
-        } else if (pts.length > 1) {
-          map.panTo(L.latLngBounds(pts).getCenter(), { animate: true, duration: 0.8 });
+        // 直接按 activeItemKeys 查坐标，不依赖 pts 数组（pts 可能因时序为空）
+        const keys = activeSig!.split("|");
+        for (const k of keys) {
+          const it = itemByKeyRef.current.get(k);
+          if (it) {
+            // 2026-10-04：用人手拖拽的手感——panTo 动画 1.2 秒，不变 zoom
+            map.panTo(LL(it.lat, it.lng), { animate: true, duration: 1.2 });
+            break; // 只处理第一个选中的
+          }
         }
         refreshLabelVisibility();
         refreshCandidateVisibility();
