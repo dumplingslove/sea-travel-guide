@@ -210,15 +210,13 @@ function FavoriteActionList({
   const itemCity = (f: (typeof favs)[number]) =>
     f.type === "flight" ? flightCity(f) : f.city;
 
-  // 2026-10-03 用户：吸顶可折叠地图 + 滚动联动高亮（地图点 = 收藏 + 行程景点，只收行程城市）
-  // 2026-10-04 用户：只高亮当前屏幕里的具体项目（酒店/餐厅/景点卡片），航班显示两机场+连线
+  // 2026-10-03 用户：吸顶可折叠地图（地图点 = 收藏，只收行程城市）
+  // 2026-10-04 用户裁决：废弃滚动侦测，改点卡片高亮——点哪张卡地图只显示它的点
+  // （航班卡=两机场+连线），不点显示全部；再点一次取消选择
   /** 预订卡片 ↔ 地图点的关联 key（与 StickyMapBar 内 marker key 同算法） */
   const bookingItemKey = (f: (typeof favs)[number]) =>
     stickyItemKey(f.type, itemCity(f), f.row.title);
-  const [mapActiveItemKeys, setMapActiveItemKeys] = useState<string[]>([]);
-  // 2026-10-04 Bug 2：同一 key 可能出现在多个 DOM 元素上（去重前），用 Set<string> 按 key 跟踪会在
-  // "A 退出而 B 仍在视口" 时误删。改按元素跟踪：Map<元素, key>，再从可见元素集合派生 key 集合。
-  const visibleElsRef = useRef(new Map<HTMLElement, string>());
+  const [mapSelKey, setMapSelKey] = useState<string | null>(null);
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
   const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
   const segSig = segs.map((s) => s.city).join(",");
@@ -251,94 +249,14 @@ function FavoriteActionList({
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favSig]);
-  // 滚动联动：观察每张预订卡片，收集"当前屏幕里"的 item key，
-  // 地图只显示/高亮这些卡片对应的点（航班卡片对应两机场+连线）
-  // 2026-10-04 真站：中央 40% band（上下各 -30%）会漏掉贴在吸顶地图栏正下方的卡片——
-  // 首屏折叠时第一张卡在 band 之上（"在看 0 项"），滚回 AS120 时卡在吸顶栏下也不进集合。
-  // 改为"吸顶栏下方全可视区"判定：卡片矩形与 [吸顶底边+8, 视口底边-48] 相交即算在看。
-  const [mapBarH, setMapBarH] = useState(0);
-  const sectionKey = useMemo(() => segSig + "|" + favSig, [segSig, favSig]);
-  useEffect(() => {
-    visibleElsRef.current.clear();
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-booking-item]"));
-    // 可视区上沿 = 全局吸顶 header + 地图吸顶栏高度（展开/折叠都会变，mapBarH 变化时本 effect 重跑）
-    const computeBand = () => {
-      const vh = window.innerHeight;
-      const header = document.querySelector("header.sticky");
-      const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
-      const top = headerH + mapBarH + 8;
-      const bottom = Math.max(top + 48, vh - 48);
-      return { top, bottom, vh };
-    };
-    const syncCheck = () => {
-      const { top, bottom } = computeBand();
-      let changed = false;
-      for (const el of els) {
-        const k = el.dataset.bookingItem || "";
-        if (!k) continue;
-        const r = el.getBoundingClientRect();
-        const inView = r.bottom > top && r.top < bottom;
-        const has = visibleElsRef.current.has(el);
-        if (inView && !has) {
-          visibleElsRef.current.set(el, k);
-          changed = true;
-        } else if (!inView && has) {
-          visibleElsRef.current.delete(el);
-          changed = true;
-        }
-      }
-      if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
-    };
-    if (!els.length) {
-      setMapActiveItemKeys([]);
-      return;
-    }
-    const { top } = computeBand();
-    const io = new IntersectionObserver(
-      (entries) => {
-        let changed = false;
-        for (const e of entries) {
-          const el = e.target as HTMLElement;
-          const k = el.dataset.bookingItem || "";
-          if (!k) continue;
-          const has = visibleElsRef.current.has(el);
-          if (e.isIntersecting && !has) {
-            visibleElsRef.current.set(el, k);
-            changed = true;
-          } else if (!e.isIntersecting && has) {
-            visibleElsRef.current.delete(el);
-            changed = true;
-          }
-        }
-        if (changed) setMapActiveItemKeys([...new Set(visibleElsRef.current.values())]);
-      },
-      // observer 根也按同一可视区收缩：顶部扣掉吸顶栏，底部留 48px
-      { rootMargin: `-${top}px 0px -48px 0px`, threshold: [0, 0.25, 0.5] },
-    );
-    els.forEach((el) => io.observe(el));
-    syncCheck(); // 首屏立即检查（observer 回调是异步的，不等它）
-    // 滚动/缩放时也同步一次（rAF 节流），IO 在吸顶元素附近可能丢回调时兜底
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(syncCheck);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
-    // mapBarH：用户展开/折叠地图（地图 ready）时高度变化，重建 observer 并重跑检查
-  }, [sectionKey, mapBarH]);
-  // 标题副文案：取在看卡片的第一个城市（📍 由 StickyMapBar 统一加，这里不再加，避免 "📍 📍"）
-  const mapActiveLabel = useMemo(() => {
-    if (!mapActiveItemKeys.length) return undefined;
-    const city = mapActiveItemKeys[0].split(":")[1];
-    return city || undefined;
-  }, [mapActiveItemKeys]);
+  // 标题副文案：点选模式下显示被选中的卡片名（航班显示路线；📍 由 StickyMapBar 统一加）
+  const mapSelLabel = useMemo(() => {
+    if (!mapSelKey) return undefined;
+    const f = favs.find((x) => bookingItemKey(x) === mapSelKey);
+    if (!f) return undefined;
+    return f.type === "flight" && f.flight?.route ? f.flight.route : f.row.title;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapSelKey, favSig]);
 
   /** 2026-10-03 用户：每个预订项的时间线日期——航班用航班日期，酒店用入住日期 */
   const itemTimelineDate = (f: (typeof favs)[number]): string => {
@@ -421,21 +339,21 @@ function FavoriteActionList({
           </span>
         </div>
         <p className="text-xs text-gray-500">
-          按行程时间线分城市排列，每个城市的航班/酒店/餐厅/景点都在一块，实时价格直接比较。看好点「✓ 确定」锁定，再「加入预订」走正式流程
+          按行程时间线分城市排列，每个城市的航班/酒店/餐厅/景点都在一块，实时价格直接比较。点任意卡片→地图只定位它（航班显示两机场+连线），再点一次取消；看好点「✓ 确定」锁定，再「加入预订」走正式流程
         </p>
       </div>
 
-      {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点 + 行程全部景点，看位置合不合适、离酒店远近；
-          只显示大行程定下的城市；2026-10-04 用户：只高亮当前屏幕里的具体项目，航班显示两机场+连线 */}
+      {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点，看位置合不合适、离酒店远近；
+          只显示大行程定下的城市；2026-10-04 用户裁决：点卡片高亮——点哪张卡地图只显示它的点
+          （航班卡=两机场+连线），不点显示全部，再点一次取消 */}
       <StickyMapBar
         items={bookingMapItems}
         activeCity={null}
-        activeLabel={mapActiveLabel}
-        activeItemKeys={mapActiveItemKeys}
+        activeLabel={mapSelLabel}
+        activeItemKeys={mapSelKey ? [mapSelKey] : null}
         flightRoutes={bookingFlightRoutes}
         title="🗺️ 行动安排地图"
         storageKey="sticky-map-bookings"
-        onHeightChange={setMapBarH}
       />
 
       {citySections.map((sec, si) => (
@@ -483,13 +401,23 @@ function FavoriteActionList({
                     const flightLeg = f.type === "flight" && f.flight?.route
                       ? FLIGHT_LEGS.find((l) => l.route === f.flight!.route)
                       : undefined;
+                    // 2026-10-04 点选模式：点卡片本体 → 地图只显示它（再点取消）；卡片里的按钮/链接不触发
+                    const cardKey = bookingItemKey(f);
+                    const cardSelected = mapSelKey === cardKey;
                     return (
                     <div
                       key={f.row.id}
                       id={`booking-card-${f.row.id}`}
-                      data-booking-item={bookingItemKey(f)}
-                      className={`bg-white rounded-lg border px-3 py-2.5 ${
-                        f.row.done ? "border-green-200 bg-green-50/50" : "border-gray-200"
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).closest("button, a")) return;
+                        setMapSelKey((prev) => (prev === cardKey ? null : cardKey));
+                      }}
+                      className={`bg-white rounded-lg border px-3 py-2.5 cursor-pointer ${
+                        cardSelected
+                          ? "ring-2 ring-teal-600 border-teal-600"
+                          : f.row.done
+                            ? "border-green-200 bg-green-50/50"
+                            : "border-gray-200"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">

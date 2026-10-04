@@ -55,15 +55,14 @@ const KIND_EMOJI: Record<StickyMapKind, string> = {
 };
 
 /**
- * 航线短路径经度（2026-10-04 Bug 5：跨太平洋航线连线绕地球一圈）。
- * 若两点经度差 >180°，把终点经度 ±360°，让 Polyline 走最短的那一边（如西雅图→北京走太平洋而不是大西洋）。
+ * 规范经度（2026-10-04 点选模式重构：所有航线统一挪到以太平洋为中心的世界副本，
+ *  每个机场全站只保留一个标记，从根子上杜绝"同一机场在 DOM 里出现两次"）。
+ * 把经度平移到离 center 最近的 ±360° 副本（如西雅图 -122.3 → 237.7），
+ * 连线自动走最短路径（太平洋），不再逐段 wrap。
  */
-function shortPathLng(fromLng: number, toLng: number): number {
-  let lng = toLng;
-  const diff = lng - fromLng;
-  if (diff > 180) lng -= 360;
-  else if (diff < -180) lng += 360;
-  return lng;
+const WORLD_CENTER_LNG = 150;
+function canonicalLng(lng: number, center: number = WORLD_CENTER_LNG): number {
+  return lng + 360 * Math.round((center - lng) / 360);
 }
 
 function iconFor(kind: StickyMapKind, active = false) {
@@ -186,10 +185,9 @@ interface StickyMapBarProps {
   /** bar 上显示的副标题，如 "D9 · 新加坡" */
   activeLabel?: string;
   /**
-   * 项目级高亮（2026-10-04 用户：行动安排地图只显示当前屏幕里的具体项目）：
-   * 当前可见卡片对应的地图 item key 集合（stickyItemKey 生成）。
-   * 传入非 null 数组时按 item 级显示/隐藏（城市级逻辑停用）；
-   * 不传（undefined）时保持旧的城市级行为（行程页用）。
+   * 点选高亮（2026-10-04 用户裁决：废弃滚动侦测，改点卡片高亮）：
+   * 非空数组 = 用户点选了某张卡片，只显示该卡片对应的点（航班卡=两机场+连线）；
+   * null/undefined/空数组 = 未点选，全部显示（行程页旧的城市级行为此时仍按 activeCity 走）。
    */
   activeItemKeys?: string[] | null;
   /** 航班航线（出发/到达机场标记 + 紫色连线），key 与卡片关联 */
@@ -221,8 +219,8 @@ export default function StickyMapBar({
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
-  // 航线层：连线按航线 key 存；机场标记按"IATA+世界副本"去重后共享（多条航线经停同一机场时只建一个 marker）
-  // 2026-10-04 真站：HU496（西雅图→北京）与 AS120（首尔→西雅图）共用 SEA，DOM 里出现 dup=1/2、2/2
+  // 航线层：连线按航线 key 存；机场标记按 IATA code 全站唯一（规范经度已统一世界副本，
+  // 同一机场不可能出现两次，2026-10-04 点选重构根治 DOM 重复）
   interface RouteAirportEntry {
     marker: L.Marker;
     ap: AirportInfo;
@@ -234,8 +232,12 @@ export default function StickyMapBar({
     lines: Map<string, L.Polyline>;
     airports: Map<string, RouteAirportEntry>;
   }>({ lines: new Map(), airports: new Map() });
-  // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免滚动时无意义重飞
-  const activeSig = activeItemKeys ? [...activeItemKeys].sort().join("|") : null;
+  // show-all 下航线首次就绪时适配一次全景，之后不再打扰用户缩放/点选
+  const routesFittedRef = useRef(false);
+  // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免无意义重飞
+  const activeSig = activeItemKeys && activeItemKeys.length ? [...activeItemKeys].sort().join("|") : null;
+  // 点选模式：非空选择 = 只显示被选中的；空/null = 全部显示
+  const itemMode = activeSig !== null;
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     // 常显模式：永不折叠，忽略 storageKey/defaultCollapsed
@@ -315,18 +317,8 @@ export default function StickyMapBar({
     const map = L.map(mapEl.current, { zoomControl: true, scrollWheelZoom: false });
     mapRef.current = map;
     addAmapTiles(map);
-    // 初始视图（2026-10-04 Bug 3：行动安排页 items 可能为空，不能依赖 markers effect 设视图，
-    // 否则地图空白）：优先按全部航线范围，否则给一个东亚概览
-    const routePts: L.LatLng[] = [];
-    for (const r of flightRoutes) {
-      const from = airportForCity(r.fromCity);
-      const to = airportForCity(r.toCity);
-      if (!from || !to) continue;
-      routePts.push(LL(from.lat, from.lng), LL(to.lat, shortPathLng(from.lng, to.lng)));
-    }
-    if (routePts.length > 1) map.fitBounds(L.latLngBounds(routePts).pad(0.25));
-    else if (routePts.length === 1) map.setView(routePts[0], 5);
-    else map.setView([35, 112], 3);
+    // 初始视图：太平洋为中心的概览；航线层就绪后会 fit 到全部航线（routesFittedRef 只做一次）
+    map.setView([30, 150], 3);
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapEl.current) ro.observe(mapEl.current);
     map.on("zoomend", refreshLabelVisibility);
@@ -373,9 +365,10 @@ export default function StickyMapBar({
     };
     for (const it of items) addMarker(it);
     // 所涉城市的机场（✈️ 紫色）
-    // 2026-10-04 Bug 3：项目级模式（行动安排页）下自动加的机场标记永远不可见（高亮逻辑只认卡片 key），
-    // 别留死标记；航班走航线层。城市级模式（行程页）保持原行为。
-    const itemModeInit = activeItemKeys !== null;
+    // 2026-10-04：点选模式（行动安排页）下自动加的机场标记只会添乱，航班走航线层；
+    // 城市级模式（行程页）保持原行为。用 itemMode（非空选择）而非 activeItemKeys!==null，
+    // 空数组 = 未点选 = 全部显示，不触发项目级逻辑。
+    const itemModeInit = itemMode;
     if (!itemModeInit) {
       const cities = new Set(items.map((i) => i.city));
       for (const c of cities) {
@@ -396,9 +389,10 @@ export default function StickyMapBar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, mapReady, activeItemKeys]);
 
-  // 航班航线层：每条航线 = 紫色虚线连线；机场标记按 IATA+世界副本去重共享
-  // （2026-10-04 用户：行动安排里航班卡片在地图上显示两个机场图标以及连线）
-  // （2026-10-04 真站：HU496 与 AS120 共用 SEA，旧代码每条航线各建一对标记，DOM 里 dup=1/2、2/2）
+  // 航班航线层（2026-10-04 点选重构）：
+  // - 每个机场按 IATA code 全站唯一标记，位置取规范经度（太平洋世界副本），DOM 重复从根子上消失
+  // - 每条航线 = 紫色虚线连线（规范经度下自动走太平洋短路径）
+  // - 点选某航班卡时高亮 effect 只显示该航线；未点选时全部显示
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -409,14 +403,27 @@ export default function StickyMapBar({
     layers.airports.clear();
     if (!flightRoutes.length) return;
     const routeNameOf = (key: string) => flightRoutes.find((x) => x.key === key)?.name ?? key;
-    /** 取或建共享机场标记；同一机场被多条航线使用时 popup 合并显示各航线角色 */
-    const ensureAirport = (ap: AirportInfo, lat: number, lng: number, role: "dep" | "arr", routeKey: string) => {
-      const ak = `${ap.code}@${Math.round(lng)}`;
-      let entry = layers.airports.get(ak);
+    /** 规范坐标（code → 唯一位置，多条航线共用） */
+    const canon = new Map<string, { ap: AirportInfo; lat: number; lng: number }>();
+    const canonOf = (city: string) => {
+      const ap = airportForCity(city);
+      if (!ap) return null;
+      let c = canon.get(ap.code);
+      if (!c) {
+        c = { ap, lat: ap.lat, lng: canonicalLng(ap.lng) };
+        canon.set(ap.code, c);
+      }
+      return c;
+    };
+    const ensureAirport = (
+      c: { ap: AirportInfo; lat: number; lng: number },
+      role: "dep" | "arr",
+      routeKey: string,
+    ) => {
+      let entry = layers.airports.get(c.ap.code);
       if (!entry) {
-        const marker = L.marker(LL(lat, lng), { icon: iconFor("airport") })
-          // 2026-10-04 Bug 4：航线标记之前没有 tooltip，补上（zoom>=14 由 refreshLabelVisibility 控制显隐）
-          .bindTooltip(`${ap.name}（${ap.code}）`, {
+        const marker = L.marker(LL(c.lat, c.lng), { icon: iconFor("airport") })
+          .bindTooltip(`${c.ap.name}（${c.ap.code}）`, {
             permanent: true,
             direction: "top",
             offset: [0, -20],
@@ -424,58 +431,56 @@ export default function StickyMapBar({
             opacity: 0,
           })
           .addTo(map);
-        entry = { marker, ap, latlng: LL(lat, lng), roles: new Map() };
-        layers.airports.set(ak, entry);
-        // 初始隐藏，等下方高亮 effect 按 activeItemKeys 决定显隐，避免首屏闪现全部航线
-        const el = marker.getElement();
-        if (el) el.style.opacity = "0";
+        entry = { marker, ap: c.ap, latlng: LL(c.lat, c.lng), roles: new Map() };
+        layers.airports.set(c.ap.code, entry);
       }
       entry.roles.set(routeKey, role);
       const roleLines = [...entry.roles.entries()]
         .map(([rk, rl]) => `${rl === "dep" ? "🛫 出发" : "🛬 到达"} · ${routeNameOf(rk)}`)
         .join("<br/>");
-      entry.marker.bindPopup(`<b>${ap.name}（${ap.code}）</b><br/>${roleLines}`);
+      entry.marker.bindPopup(`<b>${c.ap.name}（${c.ap.code}）</b><br/>${roleLines}`);
     };
+    const pts: L.LatLng[] = [];
     for (const r of flightRoutes) {
-      const from = airportForCity(r.fromCity);
-      const to = airportForCity(r.toCity);
+      const from = canonOf(r.fromCity);
+      const to = canonOf(r.toCity);
       if (!from || !to) continue; // 任一机场查不到坐标就不画这条线
-      // 2026-10-04 Bug 5：终点经度走短路径（如西雅图→北京走太平洋），到达标记也用调整后的经度，与连线对齐
-      const toLng = shortPathLng(from.lng, to.lng);
-      const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, toLng)], {
+      const line = L.polyline([LL(from.lat, from.lng), LL(to.lat, to.lng)], {
         color: "#7c3aed",
         weight: 3,
-        opacity: 0,
+        opacity: 0.9,
         dashArray: "8 6",
       }).addTo(map);
       layers.lines.set(r.key, line);
-      ensureAirport(from, from.lat, from.lng, "dep", r.key);
-      ensureAirport(to, to.lat, toLng, "arr", r.key);
+      ensureAirport(from, "dep", r.key);
+      ensureAirport(to, "arr", r.key);
+      pts.push(LL(from.lat, from.lng), LL(to.lat, to.lng));
     }
-    refreshLabelVisibility(); // 2026-10-04 真站：航线层（重）建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
+    refreshLabelVisibility();
+    // 未点选时航线首次就绪 → 适配全部航线全景（只做一次，不打扰后续点选/缩放）
+    if (!routesFittedRef.current && pts.length > 1) {
+      routesFittedRef.current = true;
+      map.fitBounds(L.latLngBounds(pts).pad(0.25));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flightRoutes, mapReady]);
 
-  // 高亮
-  // - 项目级（activeItemKeys 非 null，行动安排页）：只显示当前屏幕里卡片对应的点，
-  //   其他全部隐藏；航班卡片显示两机场 + 连线；地图飞到可见点范围
-  // - 城市级（activeCity，行程页旧行为）：高亮该城市的点，其他城市隐藏并飞过去
-  // 2026-10-03 晚用户：地图不要所有点都一样突出，只高亮当前浏览城市的点
-  // 2026-10-04 凌晨用户：非当前城市的点不要显示，只突出当前滚动到的景点/酒店/餐厅
-  // 2026-10-04 用户：行动安排地图只高亮当前屏幕里的具体项目；航班显示两机场+连线
+  // 高亮（2026-10-04 点选重构：废弃滚动侦测）
+  // - 点选模式（itemMode，行动安排页点卡片）：只显示被选中的点；
+  //   选中的是航班卡 → 该航线的两机场 + 连线；选中的是酒店/餐厅/景点卡 → 仅该点；地图飞过去
+  // - 未点选：全部显示，不乱飞（行程页旧的城市级行为保留：activeCity 非空时仍按城市高亮+飞过去）
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const pts: L.LatLng[] = [];
-    const itemMode = activeSig !== null;
-    const activeSet = itemMode ? new Set(activeSig.split("|").filter(Boolean)) : null;
+    const activeSet = itemMode ? new Set(activeSig!.split("|")) : null;
     markersRef.current.forEach((m, key) => {
       const it = itemByKeyRef.current.get(key);
       if (!it) return;
       let visible: boolean;
       let on: boolean;
       if (itemMode) {
-        // 项目级：只有"在看"的卡片对应的点才显示；自动加的机场标记一律隐藏（航班走航线层）
+        // 点选：只有被选中的卡片对应的点才显示；航班走航线层，这里的 airport 标记一律隐藏
         visible = activeSet!.has(key) && it.kind !== "airport";
         on = visible;
       } else {
@@ -492,9 +497,10 @@ export default function StickyMapBar({
       }
       if (on) pts.push(LL(it.lat, it.lng));
     });
-    // 航线层显隐（2026-10-04 真站：机场标记去重共享后，按"任一关联航线在看"决定显隐）
+    // 航线层显隐
     const rl = routeLayersRef.current;
     if (itemMode) {
+      // 点选模式：只显示选中航线的两机场 + 连线（机场按"任一关联航线被选中"显隐）
       rl.airports.forEach((a) => {
         const show = [...a.roles.keys()].some((k) => activeSet!.has(k));
         a.marker.setIcon(iconFor("airport", show));
@@ -510,7 +516,7 @@ export default function StickyMapBar({
         line.setStyle({ opacity: activeSet!.has(key) ? 0.9 : 0 });
       });
     } else {
-      // 非项目级（行程页旧行为）：航线全显
+      // 未点选：航线全显
       rl.airports.forEach((a) => {
         a.marker.setIcon(iconFor("airport", false));
         const el = a.marker.getElement();
@@ -522,30 +528,30 @@ export default function StickyMapBar({
       rl.lines.forEach((line) => line.setStyle({ opacity: 0.9 }));
     }
     if (itemMode) {
-      if (!pts.length) return; // 屏幕中央暂无卡片时不动地图，避免乱飞
+      if (!pts.length) return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
       else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       return;
     }
-    if (!activeCity) return;
+    if (!activeCity) return; // 行动安排页未点选：全部显示，不飞
     if (pts.length === 1) map.flyTo(pts[0], Math.max(map.getZoom(), 12), { duration: 0.8 });
     else if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
     else {
       const ap = airportForCity(activeCity);
       if (ap) map.flyTo(LL(ap.lat, ap.lng), 11, { duration: 0.8 });
     }
-    // 2026-10-04 Bug 1：mapReady 加入依赖——地图懒初始化完成后（用户展开地图时）必须重跑一次高亮，
-    // 否则 activeItemKeys 早已就绪但高亮从未执行，标记全部保持隐藏
-  }, [activeCity, activeSig, items, flightRoutes, mapReady]);
+  }, [activeCity, activeSig, itemMode, items, flightRoutes, mapReady]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
     for (const i of items) c[i.kind] = (c[i.kind] || 0) + 1;
     return c;
   }, [items]);
-  // 项目级模式下标题显示"在看 N 项"，而不是全部点数
-  const itemMode = activeSig !== null;
-  const inViewCount = itemMode ? activeSig.split("|").filter(Boolean).length : 0;
+  // 标题副文案：点选模式下 📍 显示被选中的卡片名（activeLabel），不再有"在看 N 项"；
+  // 未点选显示全部点数/航线数
+  const titleSub = itemMode
+    ? ""
+    : `${items.length}个收藏点${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
 
   // 2026-10-04 Bug 3：items 为空但有航线时地图仍要渲染（行动安排页只有航班卡）；两者都空才返回 null
   if (!items.length && !flightRoutes.length) return null;
@@ -566,8 +572,8 @@ export default function StickyMapBar({
               <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
             )}
             <span className="ml-2 text-xs font-normal text-gray-400">
-              {itemMode ? `在看 ${inViewCount} 项` : `${items.length}个点`}
-              {!itemMode && counts.airport ? ` · ✈️${counts.airport}` : ""}
+              {titleSub}
+              
             </span>
           </span>
         </div>
@@ -583,8 +589,8 @@ export default function StickyMapBar({
               <span className="ml-2 text-xs font-normal text-teal-700">📍 {activeLabel}</span>
             )}
             <span className="ml-2 text-xs font-normal text-gray-400">
-              {itemMode ? `在看 ${inViewCount} 项` : `${items.length}个点`}
-              {!itemMode && counts.airport ? ` · ✈️${counts.airport}` : ""}
+              {titleSub}
+              
             </span>
           </span>
           <span className="text-teal-700 whitespace-nowrap ml-2">{collapsed ? "▾ 展开" : "▴ 收起"}</span>
