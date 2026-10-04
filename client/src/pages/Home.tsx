@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   ItineraryDayCard,
   detailForPlanDay,
@@ -13,6 +13,8 @@ import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
 import { usePlanItinerary, KOREA_CITY_ZH, SEA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
 import { parseBookingBody } from "@/bookings/bookingTypes";
+import StickyMapBar, { type StickyMapItem } from "@/components/StickyMapBar";
+import { findStopCoord } from "@/data/stopCoords";
 
 type Day = PlanDay;
 
@@ -140,13 +142,18 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
     };
   }, [scrollKey]);
   const dateNavRef = useRef<HTMLDivElement>(null);
+  // 2026-10-03 用户：吸顶可折叠地图 + 滚动联动高亮
+  const [activeDay, setActiveDay] = useState<number | null>(null);
+  const [mapBarH, setMapBarH] = useState(48);
   // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
+  // 2026-10-03：吸顶地图条在日期导航之上，日期导航 top = header 高 + 地图条高
   useLayoutEffect(() => {
     const nav = dateNavRef.current;
     if (!nav) return;
     const sync = () => {
       const header = document.querySelector("header.sticky");
-      if (header) nav.style.top = `${Math.round(header.getBoundingClientRect().height)}px`;
+      const hh = header ? Math.round(header.getBoundingClientRect().height) : 0;
+      nav.style.top = `${hh + mapBarH}px`;
     };
     sync();
     const ro = new ResizeObserver(sync);
@@ -157,7 +164,7 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
       ro.disconnect();
       window.removeEventListener("resize", sync);
     };
-  }, []);
+  }, [mapBarH]);
   const { rows } = useRecordsData(["booking"]);
   const { rows: favRows } = useRecordsData(["favorite"]);
   // 2026-10-03：预订没填天号时按日期自动挂天（不再丢弃）；收藏按城市进每天卡片
@@ -219,9 +226,71 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
     det.stops.forEach((st) => s.add(st.name));
   });
   const isCloudPlan = plan.source === "cloud";
+  // 2026-10-03 用户：吸顶地图的点 = 每天行程的景点（按名查坐标），滚动联动高亮
+  // days/details 每 render 都是新数组引用，用天号签名做 memo key，避免地图 markers 无意义重建
+  const daysSig = days.map((d) => d.day).join(",");
+  const mapItems = useMemo<StickyMapItem[]>(() => {
+    const out: StickyMapItem[] = [];
+    const seen = new Set<string>();
+    days.forEach((d, i) => {
+      const det = details[i];
+      if (!det) return;
+      for (const s of det.stops) {
+        const key = `itinerary:${s.name}`;
+        if (seen.has(key)) continue;
+        const coord = findStopCoord(s.name);
+        if (coord) {
+          seen.add(key);
+          out.push({
+            name: s.name,
+            city: d.city_zh,
+            lat: coord.lat,
+            lng: coord.lng,
+            kind: "itinerary",
+            note: `D${d.day} ${d.date}`,
+          });
+        }
+      }
+    });
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [daysSig]);
+  // 滚动联动：屏幕中央的 Day 卡触发高亮
+  useEffect(() => {
+    const els: HTMLElement[] = [];
+    days.forEach((d) => {
+      const el = document.getElementById(`day-${d.day}`);
+      if (el) els.push(el);
+    });
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const vis = entries.filter((e) => e.isIntersecting);
+        if (!vis.length) return;
+        vis.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const id = (vis[0].target as HTMLElement).id;
+        const n = Number(id.replace("day-", ""));
+        if (Number.isFinite(n)) setActiveDay(n);
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.2, 0.4, 0.6] },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [daysSig]);
+  const activeDayObj = activeDay != null ? days.find((d) => d.day === activeDay) : undefined;
   return (
     <>
-      {/* 悬浮日期导航（紧贴 header 底部，top 由 JS 动态测量 header 高度设置） */}
+      {/* 2026-10-03 用户：吸顶可折叠地图，滚动时高亮当前城市并飞过去 */}
+      <StickyMapBar
+        items={mapItems}
+        activeCity={activeDayObj?.city_zh ?? null}
+        activeLabel={activeDayObj ? `D${activeDayObj.day} · ${activeDayObj.city_zh}` : undefined}
+        title="🗺️ 行程地图"
+        storageKey={koreaOnly ? "sticky-map-korea" : "sticky-map-sea"}
+        onHeightChange={setMapBarH}
+      />
+      {/* 悬浮日期导航（紧贴吸顶地图条底部，top 由 JS 动态测量 header 高度 + 地图条高设置） */}
       <div ref={dateNavRef} className="sticky z-[5] -mx-4 px-4 py-2 mb-6 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200">
         <div className="flex gap-1.5 overflow-x-auto pb-0.5">
           {days.map((d) => (
