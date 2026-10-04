@@ -8,6 +8,7 @@ import MapPage from "@/pages/MapPage";
 
 export default function Planner() {
   const hostRef = useRef<HTMLDivElement>(null);
+  const mapBarRef = useRef<HTMLDivElement>(null);
   const plan = usePlanItinerary();
   const [searchParams] = useSearchParams();
   const showMap = searchParams.get("view") === "map";
@@ -21,18 +22,24 @@ export default function Planner() {
     return cleanup;
   }, [showMap]);
 
-  /* 2026-10-03 用户：planner 三个 tab（大行程/东南亚城市规划/检查确认）吸顶；top 经 CSS 变量传入 Shadow DOM */
+  /* 2026-10-03 用户：planner 三个 tab（大行程/东南亚城市规划/检查确认）吸顶；top 经 CSS 变量传入 Shadow DOM。
+     2026-10-03 用户：行程规划地图也置顶吸顶（像首页一样固定在屏幕顶部）——地图条本身 sticky 在站点顶栏下方，
+     tabs 的 sticky top = 顶栏高度 + 地图条高度，避免两者重叠。 */
   useEffect(() => {
     if (showMap || !hostRef.current) return;
     const host = hostRef.current;
     const sync = () => {
       const header = document.querySelector("header.sticky");
-      if (header) host.style.setProperty("--planner-tabs-top", `${Math.round(header.getBoundingClientRect().height)}px`);
+      const headerH = header ? Math.round(header.getBoundingClientRect().height) : 64;
+      const mapH = mapBarRef.current ? Math.round(mapBarRef.current.getBoundingClientRect().height) : 0;
+      document.documentElement.style.setProperty("--planner-header-h", `${headerH}px`);
+      host.style.setProperty("--planner-tabs-top", `${headerH + mapH}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
     const header = document.querySelector("header.sticky");
     if (header) ro.observe(header);
+    if (mapBarRef.current) ro.observe(mapBarRef.current);
     window.addEventListener("resize", sync);
     return () => {
       ro.disconnect();
@@ -46,23 +53,28 @@ export default function Planner() {
 
   return (
     <div style={{ minWidth: 0, overflowX: "clip" }}>
-      <div className="max-w-5xl mx-auto px-4 pt-8">
-        <h2 className="text-xl font-bold mb-3">
-          {plan.totalDays}天路线总览
-        </h2>
-        {plan.source === "cloud" && plan.updatedByName && (
-          <p className="text-xs text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 mb-3">
-            ☁️ 已按云端规划更新（{plan.updatedByName}
-            {plan.updatedAt
-              ? ` · ${plan.updatedAt.slice(0, 16).replace("T", " ")}`
-              : ""}
-            ）
-          </p>
-        )}
-        <div className="mb-8">
-          <TripOverviewMap key={stopsKey} stops={plan.cityStops} />
+      {/* 2026-10-03 用户：行程规划地图置顶吸顶，滚动时保持可见（像首页的吸顶地图条） */}
+      <div
+        ref={mapBarRef}
+        className="sticky z-30 bg-[#f7f4ee] border-b border-gray-200"
+        style={{ top: "var(--planner-header-h, 64px)" }}
+      >
+        <div className="max-w-5xl mx-auto px-4 pt-3 pb-2">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <h2 className="text-lg font-bold">
+              {plan.totalDays}天路线总览
+            </h2>
+            {plan.source === "cloud" && plan.updatedByName && (
+              <span className="text-[11px] text-teal-700 bg-teal-50 border border-teal-100 rounded-full px-2 py-0.5">
+                ☁️ 云端已更新
+              </span>
+            )}
+          </div>
+          <TripOverviewMap key={stopsKey} stops={plan.cityStops} mapHeight={230} />
         </div>
-        <p className="text-sm text-gray-500 mb-6">
+      </div>
+      <div className="max-w-5xl mx-auto px-4">
+        <p className="text-sm text-gray-500 my-4">
           下方工具可调整城市、天数与日期，改完后<Link to="/" className="underline font-medium text-teal-700">回首页</Link>查看更新后的每日行程。
         </p>
       </div>

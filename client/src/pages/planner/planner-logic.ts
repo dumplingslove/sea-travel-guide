@@ -741,23 +741,36 @@ function durationCn(d: string): string {
   return d.replace(/(\d+)h/i, "$1小时").replace(/(\d+)m/i, "$1分");
 }
 /* 段间转场航班信息卡：路线 + 状态徽章 + 放大价格 + 班次逐行，不再挤成灰色小字段落
-   2026-09-28：回西雅图三段另有一次转机航班，分区显示；回西雅图三段全部中文显示 */
+   2026-09-28：回西雅图三段另有一次转机航班，分区显示；回西雅图三段全部中文显示
+   2026-10-03 用户：机票卡默认折叠，只显示一行摘要（有直飞/无直飞＋起降时间＋时间是否合适），点开展开详情 */
 function tripFlightCard(key: string, label: string){
   const d=TRIP_FLIGHTS[key];
   const segCode=key.split("|")[0];
   const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
   const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
-  const head=(status:string,cls:string)=>`<div class="tfi-head"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></div>`;
+  /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
+  const wrap=(status:string,cls:string,sub:string,inner:string)=>
+    `<details class="tfi-leg"><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
+  const redeyeOf=(flights:{dep:string}[])=>flights.some(f=>{const h=Number(String(f.dep||"").slice(0,2));return !isNaN(h)&&h<6;});
+  const timeRange=(flights:{dep:string}[])=>{
+    const deps=flights.map(f=>f.dep).filter(Boolean);
+    if(!deps.length) return "";
+    return `${deps.reduce((a,b)=>a<b?a:b)}–${deps.reduce((a,b)=>a>b?a:b)}`;
+  };
+  const fitBadge=(flights:{dep:string}[])=>redeyeOf(flights)
+    ? `<span class="tfi-sum-bad">🌙 含红眼航班</span>`
+    : `<span class="tfi-sum-good">✓ 时间合适</span>`;
   /* 已出票航班铁律（2026-10-03 site-improve 交叉核验发现并修复：88a81b9 把 ICN-SEA 2027-01-01 的
      泛搜索结果入库后，此处曾渲染"4班直飞/出票前重查"，与已出票 AS120/CNESXC 矛盾）。
      命中 ticketed 腿则只渲染出票信息卡，绝不读库覆盖。 */
   const tk=TICKETED_LEG_BY_KEY(key);
   if(tk){
-    return `<div class="tfi-leg">${head("✅ 已出票","ok")}
-      <div class="tfi-prices"><span class="tfi-price">${tk.carrier} <b>${tk.schedule}</b></span>${tk.priceBasis?`<span class="tfi-basis">（${tk.priceBasis}）</span>`:""}</div>
-      <p class="tfi-note">${tk.note}</p></div>`;
+    return wrap("✅ 已出票","ok",`${esc(tk.carrier)} ${esc(tk.schedule)}`,
+      `<div class="tfi-prices"><span class="tfi-price">${tk.carrier} <b>${tk.schedule}</b></span>${tk.priceBasis?`<span class="tfi-basis">（${tk.priceBasis}）</span>`:""}</div>
+      <p class="tfi-note">${tk.note}</p>`);
   }
-  if(!d) return `<div class="tfi-leg">${head("⏳ 航班待查询","pending")}<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p></div>`;
+  if(!d) return wrap("⏳ 航班待查询","pending","",
+    `<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p>`);
   /* 一次转机分区（有就显示） */
   const onestopHtml=(()=>{
     if(!d.onestopQueriedAt && !d.onestopResults) return "";
@@ -779,7 +792,9 @@ function tripFlightCard(key: string, label: string){
       <ul class="tfi-flights">${rows}</ul>
       ${d.onestopQueriedAt?`<div class="tfi-src">Google Flights ${d.onestopQueriedAt} 实查 · 非实时价，出票前重查</div>`:""}</div>`;
   })();
-  if(!d.direct) return `<div class="tfi-leg">${head("⚪ 暂无直飞","none")}<p class="tfi-note">Google Flights 实查确认当天无直飞${d.queriedAt?`（${d.queriedAt}）`:""}。</p>${onestopHtml}</div>`;
+  if(!d.direct) return wrap("⚪ 暂无直飞","none",
+    d.onestopResults?`🔄 一次转机 ${d.onestopResults}班`:"",
+    `<p class="tfi-note">Google Flights 实查确认当天无直飞${d.queriedAt?`（${d.queriedAt}）`:""}。</p>${onestopHtml}`);
   const prices: string[]=[];
   if(d.eco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.eco}</b></span>`);
   if(d.biz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.biz}</b></span>`);
@@ -792,12 +807,12 @@ function tripFlightCard(key: string, label: string){
     const dur=f.duration?`<span class="tfi-dur">${isReturnSea?durationCn(f.duration):f.duration}</span>`:"";
     return `<li>${al}<span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${dur}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
   }).join("");
-  return `<div class="tfi-leg">${head(`🟢 ${d.results}班直飞`,"ok")}
-    <div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
+  return wrap(`🟢 ${d.results}班直飞`,"ok",`${timeRange(d.flights)} ${fitBadge(d.flights)}`,
+    `<div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
     ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.map(c=>airlineName(c)).join(" / ")}</div>`:""}
     <div class="tfi-flcap">各航班整单价（经济 / 商务）</div>
     <ul class="tfi-flights">${rows}</ul>
-    ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}</div>`;
+    ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}`);
 }
 /* 回西雅图卡片：2026-10-02 用户定为分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔，首尔停留2天后三人一起飞西雅图；
    出发城市仍可在大行程里改（北京 / 上海 / 重庆），中转首尔逻辑不变 */
@@ -822,16 +837,22 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
 }
 function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
+  /* 2026-10-03 用户：时间线视觉层级加强——当前段高亮。今天落在某段日期内则标"进行中"，
+     出发前则第一段标"下一段"，全部结束后不标。 */
+  const todayIso=(()=>{const t=new Date();return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;})();
+  const nowId=(()=>{for(const s of TRIP_SEGS){const r=ranges[s.id];if(r&&todayIso>=r.from&&todayIso<=r.to)return s.id;}return "";})();
+  const nextId=nowId?"":(()=>{for(const s of TRIP_SEGS){const r=ranges[s.id];if(r&&todayIso<r.from)return s.id;}return "";})();
   const segCard=(s: TripSegDef)=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
+    const isNow=s.id===nowId, isNext=s.id===nextId;
     /* 北京（你一人）是独立的一段，永远按原样显示；回程集结城市是它之后单独的卡片，不许把这段改名成上海/重庆 */
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
-        <div class="trip-seg-title">${s.label} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
-        <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}</div>
         ${s.cta?`<div class="trip-seg-cta"><button class="ghost" id="tripToWizard">去「东南亚城市规划」定这 ${d} 天的城市 →</button></div>`:""}
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -864,8 +885,10 @@ function renderTrip(){
       }));
       const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
       const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
-      /* 视觉分组：段卡片+它的转场包在同一个容器里，左边一条竖线连起来，一眼看出按钮归谁 */
-      parts.push(`<div class="trip-seg-group">${segHtml}
+      /* 视觉分组：段卡片+它的转场包在同一个容器里，左边一条竖线连起来，一眼看出按钮归谁；
+         2026-10-03 用户：当前段整组高亮 */
+      const grpCls=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
+      parts.push(`<div class="${grpCls}">${segHtml}
       <div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
     ${t.note?`<p class="micro">${t.note}</p>`:""}
     ${t.noFlight
@@ -873,7 +896,8 @@ function renderTrip(){
       : `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>`}
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
-      parts.push(`<div class="trip-seg-group">${segHtml}</div>`);
+      const grpCls2=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
+      parts.push(`<div class="${grpCls2}">${segHtml}</div>`);
     }
   }
   body.innerHTML=`

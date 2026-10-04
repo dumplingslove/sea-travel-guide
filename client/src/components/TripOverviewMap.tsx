@@ -71,7 +71,7 @@ function ensureZoomLabelCss() {
  * stops 可选：传入云端规划解析出的城市站点（城市顺序/天数随规划变化）；
  * 不传则回退静态 cities.json。
  */
-export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
+export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop[]; mapHeight?: number }) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const refitRef = useRef<(() => void) | null>(null);
@@ -257,7 +257,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       <div
         ref={mapEl}
         className="leaflet-container w-full z-0"
-        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: 300 }}
+        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: mapHeight ?? 300 }}
       />
       {!expanded && (
         <>
