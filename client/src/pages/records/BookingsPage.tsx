@@ -42,7 +42,7 @@ import {
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
-import StickyMapBar, { buildItemsFromFavorites, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
+import StickyMapBar, { buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 
 const kindBadge: Record<BookingKind, string> = {
@@ -220,16 +220,21 @@ function FavoriteActionList({
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
   const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
   const segSig = segs.map((s) => s.city).join(",");
-  const bookingMapItems = useMemo(
-    () =>
-      buildItemsFromFavorites(
-        favs.map((f) => ({ name: f.row.title, city: itemCity(f), type: f.type })),
-        segs.map((s) => s.city),
-        false, // 2026-10-04 Bug 3：行动安排页只有航班/酒店卡，行程景点标记永远不可见，别留死标记
-      ),
+  const bookingMapItems = useMemo(() => {
+    // 2026-10-04 用户一次搞定：预订页地图显示全部——
+    // ① 已收藏（可点卡片高亮）；② 行程全部景点（简单显示）；③ 各城市候选酒店/餐厅（灰标）
+    const favItems = buildItemsFromFavorites(
+      favs.map((f) => ({ name: f.row.title, city: itemCity(f), type: f.type })),
+      segs.map((s) => s.city),
+      true, // 行程景点也显示（用户要求：其他景点简单显示在地图上）
+    );
+    const seen = new Set(favItems.map((it) => stickyItemKey(it.kind, it.city, it.name)));
+    const candidates = buildCandidateItems(segs.map((s) => s.city)).filter(
+      (it) => !seen.has(stickyItemKey(it.kind, it.city, it.name)),
+    );
+    return [...favItems, ...candidates];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [favSig, segSig],
-  );
+  }, [favSig, segSig]);
   // 航班航线：每张航班卡片一条（出发/到达机场 + 连线），key 与卡片同键
   const bookingFlightRoutes = useMemo<FlightRoute[]>(() => {
     const out: FlightRoute[] = [];

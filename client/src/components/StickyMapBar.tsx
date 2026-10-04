@@ -30,6 +30,9 @@ export interface StickyMapItem {
   lng: number;
   kind: StickyMapKind;
   note?: string;
+  /** 候选（非已收藏）：2026-10-04 用户要在预订页地图看到全部候选酒店/餐厅；
+   * 候选用小一号灰色 marker，点击只弹信息框，不关联卡片 */
+  candidate?: boolean;
 }
 
 /** 地图 marker 的稳定 key：`${kind}:${city}:${name}`（预订卡片用它与地图点关联） */
@@ -101,8 +104,9 @@ function numIcon(n: number, active = false) {
   });
 }
 
-function iconFor(kind: StickyMapKind, active = false) {
-  const size = active ? 46 : 32;
+function iconFor(kind: StickyMapKind, active = false, candidate = false) {
+  // 候选：小一号灰色（2026-10-04 用户：预订页地图显示全部候选，与已收藏区分）
+  const size = candidate ? 22 : active ? 46 : 32;
   const conf: Record<StickyMapKind, [string, string, string]> = {
     hotel: ["#1d4ed8", "#ffffff", "#1d4ed8"],
     restaurant: ["#ffffff", "#c2410c", "#ea580c"],
@@ -111,12 +115,14 @@ function iconFor(kind: StickyMapKind, active = false) {
     airport: ["#7c3aed", "#ffffff", "#7c3aed"],
   };
   const [bg, fg, border] = conf[kind];
+  const cBg = candidate ? "#9ca3af" : bg;
+  const cBorder = candidate ? "#6b7280" : border;
   return L.divIcon({
     className: "sea-stickymap-marker",
     html: `<span style="
       display:grid;place-items:center;width:${size}px;height:${size}px;border-radius:999px;
-      background:${bg};color:${fg};border:${active ? 4 : 2}px solid ${active ? "#dc2626" : border};
-      font-size:${active ? 20 : 15}px;line-height:1;
+      background:${cBg};color:${fg};border:${active ? 4 : 2}px solid ${active ? "#dc2626" : cBorder};
+      font-size:${candidate ? 11 : active ? 20 : 15}px;line-height:1;
       box-shadow:0 2px 10px rgba(0,0,0,.3);
       ${active ? "animation:sea-pin-pulse 1.2s ease-in-out infinite;" : ""}
     ">${KIND_EMOJI[kind]}</span>`,
@@ -208,6 +214,32 @@ export function buildItemsFromFavorites(
           note: `${d.date} ${d.title}`,
         });
       }
+    }
+  }
+  return out;
+}
+
+/**
+ * 候选酒店/餐厅（2026-10-04 用户：预订页地图要看到全部候选，不只已收藏的）。
+ * 返回指定城市（中文名）在 cityPlaces 里的全部酒店+餐厅，标 candidate:true。
+ * 调用方负责与已收藏去重（同 key 的已收藏优先）。
+ */
+export function buildCandidateItems(cities: string[]): StickyMapItem[] {
+  const out: StickyMapItem[] = [];
+  const zhToId: Record<string, string> = {
+    "新加坡": "singapore", "曼谷": "bangkok", "清迈": "chiangmai",
+    "普吉": "phuket", "首尔": "seoul", "北京": "beijing", "西安": "xian",
+    "槟城": "penang", "吉隆坡": "kualalumpur", "胡志明市": "hochiminh", "富国岛": "phuquoc",
+  };
+  for (const zh of cities) {
+    const id = zhToId[zh];
+    if (!id) continue;
+    const places = placesForCity(id);
+    for (const h of places.hotels) {
+      out.push({ name: h.name, city: zh, lat: h.lat, lng: h.lng, kind: "hotel", candidate: true, note: "候选酒店" });
+    }
+    for (const r of places.restaurants) {
+      out.push({ name: r.name, city: zh, lat: r.lat, lng: r.lng, kind: "restaurant", candidate: true, note: "候选餐厅" });
     }
   }
   return out;
@@ -440,7 +472,7 @@ export default function StickyMapBar({
       seen.add(key);
       const ll = LL(it.lat, it.lng);
       latlngs.push(ll);
-      const marker = L.marker(ll, { icon: iconFor(it.kind) })
+      const marker = L.marker(ll, { icon: iconFor(it.kind, false, !!it.candidate) })
         .bindPopup(
           `<b>${it.name}</b><br/>${KIND_EMOJI[it.kind]} ${it.city}${it.note ? `<br/><span style="color:#6b7280;font-size:12px">${it.note}</span>` : ""}`,
         )
@@ -672,7 +704,7 @@ export default function StickyMapBar({
         on = inActiveCity && it.kind !== "airport";
         visible = !activeCity || inActiveCity;
       }
-      m.setIcon(iconFor(it.kind, on));
+      m.setIcon(iconFor(it.kind, on, !!it.candidate && !on));
       setVis(m, visible);
       if (on) pts.push(LL(it.lat, it.lng));
     });
@@ -721,6 +753,7 @@ export default function StickyMapBar({
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
     for (const i of items) c[i.kind] = (c[i.kind] || 0) + 1;
+    c.candidate = items.filter((i) => i.candidate).length;
     return c;
   }, [items]);
   // 标题副文案：点选模式下 📍 显示被选中的卡片名（activeLabel），不再有"在看 N 项"；
@@ -730,7 +763,7 @@ export default function StickyMapBar({
     ? `${activeDayRoute!.stops.length}个站点`
     : itemMode
       ? ""
-      : `${items.length}个收藏点${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
+      : `${items.length}个点${counts.candidate ? `（含${counts.candidate}个灰标候选）` : ""}${flightRoutes.length ? ` · ${flightRoutes.length}条航线` : ""}${counts.airport ? ` · ✈️${counts.airport}` : ""}`;
 
   // 标题栏"名称"开关（2026-10-04 用户：景点名称默认不显示，加开关控制）
   const labelToggle = (
