@@ -24,6 +24,7 @@ import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnaps
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
+import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy, bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
@@ -496,15 +497,17 @@ function FavoriteActionList({
                             </>);
                           })()}
                           <p className="text-gray-400">
-                            <Link
+                            <DetailLink
                               to={placeDetailPath(
                                 f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction",
                                 f.city, f.row.title
                               )}
+                              pageKey="bookings"
+                              cardId={`booking-card-${f.row.id}`}
                               className="text-teal-700 hover:underline"
                             >
                               看完整详情页（含照片/评论）→
-                            </Link>
+                            </DetailLink>
                           </p>
                         </div>
                       )}
@@ -684,6 +687,8 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
 }
 
 function BookingsInner() {
+  // 2026-10-03 用户：所有跳详情页的入口返回时恢复原卡片位置
+  useDetailReturn("bookings");
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
   /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换；
