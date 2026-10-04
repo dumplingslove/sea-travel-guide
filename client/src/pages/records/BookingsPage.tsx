@@ -1047,9 +1047,9 @@ function BookingsInner() {
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动 */}
+          {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点 */}
           <StickyMapBar
-            items={buildItemsFromFavorites([], scoped ? planCities : [], true)}
+            items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "attraction")}
             activeCity={attrCity}
             activeItemKeys={attrSel ? [attrSel] : null}
             expandSignal={attrExpandSig}

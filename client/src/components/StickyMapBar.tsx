@@ -231,6 +231,20 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     "普吉": "phuket", "首尔": "seoul", "北京": "beijing", "西安": "xian",
     "槟城": "penang", "吉隆坡": "kualalumpur", "胡志明市": "hochiminh", "富国岛": "phuquoc",
   };
+  // 需提前订票的景点（2026-10-04 用户：备选景点要在地图上显示）
+  const MUST_BOOK: { name: string; city: string }[] = [
+    { name: "大象自然公园", city: "清迈" },
+    { name: "Phuket Elephant Sanctuary", city: "普吉" },
+    { name: "Siam Niramit", city: "普吉" },
+    { name: "夜间动物园", city: "新加坡" },
+    { name: "环球影城", city: "新加坡" },
+    { name: "Singapore Oceanarium", city: "新加坡" },
+    { name: "滨海湾花园", city: "新加坡" },
+    { name: "吉姆·汤普森之家", city: "曼谷" },
+    { name: "攀牙湾", city: "普吉" },
+    { name: "皮皮岛", city: "普吉" },
+    { name: "因他农国家公园", city: "清迈" },
+  ];
   for (const zh of cities) {
     const id = zhToId[zh];
     if (!id) continue;
@@ -240,6 +254,14 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
     }
     for (const r of places.restaurants) {
       out.push({ name: r.name, city: zh, lat: r.lat, lng: r.lng, kind: "restaurant", candidate: true, note: "候选餐厅" });
+    }
+    // 需提前订票的景点（只收录行程城市的）
+    for (const a of MUST_BOOK) {
+      if (a.city !== zh) continue;
+      const coord = findStopCoord(a.name);
+      if (coord) {
+        out.push({ name: a.name, city: zh, lat: coord.lat, lng: coord.lng, kind: "attraction", candidate: true, note: "需提前订票" });
+      }
     }
   }
   return out;
@@ -709,12 +731,9 @@ export default function StickyMapBar({
         }
       });
       if (pts.length) {
-        // 点了具体卡片：平移+缩放到位（2026-10-04 用户：酒店/餐厅 16，景点 15）
+        // 点了具体卡片：只平移，保持当前缩放（2026-10-04 用户：景点之间移动只要平移，不要缩放效果）
         if (pts.length === 1) {
-          const kind = selKindRef.current;
-          const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
-          if (map.getZoom() >= target) map.panTo(pts[0], { animate: true, duration: 0.8 });
-          else map.flyTo(pts[0], target, { duration: 0.8 });
+          map.panTo(pts[0], { animate: true, duration: 0.8 });
         } else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
         // 刚切到当日（还没点具体卡）：看当日全景
@@ -775,13 +794,9 @@ export default function StickyMapBar({
         refreshLabelVisibility();
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
-      // 2026-10-04 用户 refined：点选要缩放到位——按类型给目标级别
-      // （酒店/餐厅 16=建筑级，景点 15=街区级）；已在目标级别以上只平移
+      // 2026-10-04 用户：点选只平移，保持当前缩放，不要缩放效果
       if (pts.length === 1) {
-        const kind = selKindRef.current;
-        const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
-        if (map.getZoom() >= target) map.panTo(pts[0], { animate: true, duration: 0.8 });
-        else map.flyTo(pts[0], target, { duration: 0.8 });
+        map.panTo(pts[0], { animate: true, duration: 0.8 });
       } else map.flyToBounds(L.latLngBounds(pts).pad(0.3), { duration: 0.8 });
       refreshLabelVisibility();
       refreshCandidateVisibility();
