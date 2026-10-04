@@ -75,10 +75,35 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const refitRef = useRef<(() => void) | null>(null);
+  /** 城市 id → marker，供外部聚焦事件使用 */
+  const cityMarkersRef = useRef(new Map<string, L.Marker>());
   /** 点击展开全屏（2026-09-27 用户要求） */
   const [expanded, setExpanded] = useState(false);
   /** 2026-10-03 用户：跳 /day 详情页回来要恢复原位置 */
   useDetailReturn("home-map");
+  /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
+  /* 2026-10-04 用户：规划页联动——点城市卡片/标记时平移到该城市。
+   * 已在合理缩放（城市级 >=11）只平移；缩太远则平移并缩放到 11。 */
+  const focusCity = (cityId: string, openPopup: boolean) => {
+    const map = mapRef.current;
+    const mk = cityMarkersRef.current.get(cityId);
+    if (!map || !mk) return;
+    const ll = mk.getLatLng();
+    if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
+    else map.flyTo(ll, 11, { duration: 0.8 });
+    if (openPopup) mk.openPopup();
+  };
+
+  /* 外部聚焦事件：planner-logic.ts 里点城市卡片时 dispatch */
+  useEffect(() => {
+    const onFocus = (e: Event) => {
+      const id = (e as CustomEvent<{ cityId?: string }>).detail?.cityId;
+      if (id) focusCity(id, true);
+    };
+    window.addEventListener("planner:focus-city", onFocus);
+    return () => window.removeEventListener("planner:focus-city", onFocus);
+  }, []);
+
   /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
   useEffect(() => {
     (window as unknown as { __saveMapDetailReturn?: (cardId: string) => void }).__saveMapDetailReturn =
@@ -98,6 +123,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
 
   useEffect(() => {
     if (!mapEl.current) return;
+    cityMarkersRef.current.clear();
     // 2026-10-03 白屏修复：过滤掉无坐标的城市，避免 CITY_COORDS[s.id] 为 undefined 导致崩溃
     const cur = mapStops.filter((s) => {
       if (!CITY_COORDS[s.id]) {
@@ -142,7 +168,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
 
     cur.forEach((s, i) => {
       const c = CITY_COORDS[s.id];
-      L.marker(LL(c[0], c[1]), { icon: markerIcon(i + 1) })
+      const mk = L.marker(LL(c[0], c[1]), { icon: markerIcon(i + 1) })
         .bindPopup(
           `<div style="min-width:150px;font-family:inherit">
             <div style="font-weight:800;font-size:14px;color:#134e4a">${i + 1}. ${s.zh}</div>
@@ -156,7 +182,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           offset: [0, -18],
           className: "sea-zoom-label",
         })
+        // 2026-10-04 用户：地图联动——点标记平移到该城市并缩放到合理大小（城市级 11）
+        .on("click", () => focusCity(s.id, true))
         .addTo(map);
+      cityMarkersRef.current.set(s.id, mk);
     });
 
     // 机场标注（2026-10-03 用户）：行程各城市的机场，紫色 ✈️ 标记；不并入视野计算

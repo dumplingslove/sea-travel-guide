@@ -637,9 +637,13 @@ export default function StickyMapBar({
         if (sel) pts.push(e.marker.getLatLng());
       });
       if (pts.length) {
-        // 点了具体卡片：只平移过去，不放大（2026-10-04 用户：切换景点不要放大效果）
-        if (pts.length === 1) map.panTo(pts[0], { animate: true, duration: 0.8 });
-        else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
+        // 点了具体卡片：平移到被选景点。2026-10-04 用户 refined：
+        // 已在合理缩放（>=14）时只平移、不改变 zoom（不要放大效果）；
+        // 缩得太远时平移并缩放到合理大小（14），否则停在总览级别平移过去没意义。
+        if (pts.length === 1) {
+          if (map.getZoom() >= 14) map.panTo(pts[0], { animate: true, duration: 0.8 });
+          else map.flyTo(pts[0], 14, { duration: 0.8 });
+        } else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
         // 刚切到当日（还没点具体卡）：看当日全景
         const all = [...dl.entries.values()].map((e) => e.marker.getLatLng());

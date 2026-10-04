@@ -41,6 +41,7 @@ import {
 /* 景点详细信息：攻略站 8 城 69 个景点的完整条目（名称/关键信息/游览重点/怎么安排），
    供分步规划 Step1 选城时直接结合决策，不再只看城市名。 */
 import { attractions } from "../../guide/data";
+import { CITY_ID_BY_ZH } from "../../data/cityCoords";
 import {
   savePlannerPlan,
   loadPlannerPlan,
@@ -1093,7 +1094,7 @@ function wzStep2(){
     const cnt = wz.order.filter(c=>wz.cities.includes(c)).length;
     const upBtn = idx>0 ? `<button class="icon-btn" data-wzordup="${idx}" aria-label="${city}前移">↑</button>` : `<span class="wz-ph"></span>`;
     const dnBtn = idx<cnt-1 ? `<button class="icon-btn" data-wzorddn="${idx}" aria-label="${city}后移">↓</button>` : `<span class="wz-ph"></span>`;
-    return `<div class="card wz-dayrow"><div class="wz-move">${upBtn}${dnBtn}</div><div><b>${idx+1}. ${city}</b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
+    return `<div class="card wz-dayrow"><div class="wz-move">${upBtn}${dnBtn}</div><div><b><span class="wz-cityname" data-focus-city="${city}" role="button" tabindex="0" title="在地图上看${city}" style="cursor:pointer;text-decoration:underline dotted">${idx+1}. ${city}</span></b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
       ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
       ${attrLink}</div>
@@ -1450,6 +1451,9 @@ function wzWire(){
   S.querySelectorAll(".wz-city").forEach(card=>{
     const toggle=()=>{ const c=(card as HTMLElement).dataset.city||"";
       if(wz.cities.includes(c)) wz.cities=wz.cities.filter(x=>x!==c); else { wz.cities.push(c); wz.order=[...WZ_ORDER.filter(x=>wz.cities.includes(x))]; }
+      /* 2026-10-04 用户：规划页地图联动——点城市卡片时顶部地图平移到该城市 */
+      const cid=CITY_ID_BY_ZH[c];
+      if(cid) window.dispatchEvent(new CustomEvent("planner:focus-city",{detail:{cityId:cid}}));
       wzRender() };
     (card as HTMLElement).onclick=toggle;
     (card as HTMLElement).onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle() } };
@@ -1458,6 +1462,12 @@ function wzWire(){
   S.querySelectorAll(".wz-spots,.wz-cov").forEach(d=>{
     (d as HTMLElement).onclick=e=>e.stopPropagation();
     (d as HTMLElement).onkeydown=e=>e.stopPropagation();
+  });
+  /* 2026-10-04 用户：规划页地图联动——Step2 点城市名也在顶部地图聚焦 */
+  S.querySelectorAll("[data-focus-city]").forEach(n=>{
+    const go=()=>{ const cid=CITY_ID_BY_ZH[(n as HTMLElement).dataset.focusCity||""]; if(cid) window.dispatchEvent(new CustomEvent("planner:focus-city",{detail:{cityId:cid}})); };
+    (n as HTMLElement).onclick=(e)=>{ e.stopPropagation(); go(); };
+    (n as HTMLElement).onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } };
   });
   const on=(id:string,fn:()=>void)=>{ const n=S.getElementById(id); if(n) (n as HTMLElement).onclick=fn };
   on("wzAll",()=>{ wz.cities=[...WZ_ORDER]; wz.order=[...WZ_ORDER]; Object.assign(wz.days,baselineNights); wzRender() });
