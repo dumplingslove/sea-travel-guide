@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { airportForCity } from "@/data/airportCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord } from "@/data/stopCoords";
 import { LL, addAmapTiles } from "@/lib/amap";
@@ -44,6 +45,40 @@ const KIND_LABEL: Record<ActionMapItem["kind"], string> = {
   attraction: "🏛️ 收藏景点",
   itinerary: "📍 行程景点",
 };
+
+/** 机场标记：✈️ 紫色徽章（2026-10-03 用户：所有地图都标机场，用不同图标区分） */
+function airportIcon() {
+  return L.divIcon({
+    className: "sea-airport-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:32px;height:32px;border-radius:999px;
+      background:#7c3aed;color:#ffffff;border:2px solid #ffffff;
+      font-size:16px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.45);
+    ">✈️</span>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+}
+
+/**
+ * 缩放显示名称标签的 CSS（2026-10-03 用户：zoom in 后直接显示景点名称，不用点）。
+ * zoom >= 14 时地图容器加 .show-labels，CSS 才显示标签；低缩放级别隐藏避免重叠。
+ * 注意：用 DOM classList 切换，不走 React className（Leaflet touch 修复口径：容器 className 必须静态）。
+ */
+const ZOOM_LABEL_CSS = `
+.leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.leaflet-tooltip.sea-zoom-label::before{display:none}
+.show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+`;
+function ensureZoomLabelCss() {
+  if (document.querySelector("style[data-sea-zoom-labels]")) return;
+  const el = document.createElement("style");
+  el.setAttribute("data-sea-zoom-labels", "");
+  el.textContent = ZOOM_LABEL_CSS;
+  document.head.appendChild(el);
+}
 
 /**
  * @param favorites 收藏项 {name, city, type: hotel|restaurant|attraction}
@@ -143,6 +178,7 @@ export default function ActionMapView({
     const map = L.map(mapEl.current, { zoomControl: true, scrollWheelZoom: false });
     mapRef.current = map;
     addAmapTiles(map);
+    ensureZoomLabelCss();
 
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapEl.current) ro.observe(mapEl.current);
@@ -154,41 +190,42 @@ export default function ActionMapView({
       const marker = L.marker(ll, { icon: iconFor(it.kind) })
         .bindPopup(
           `<b>${it.name}</b><br/>${KIND_LABEL[it.kind]} · ${it.city}${it.note ? `<br/><span style="color:#6b7280;font-size:12px">${it.note}</span>` : ""}`
+        );
+      // 2026-10-03 用户：zoom >= 14 直接显示景点/行程点名称，不用点（CSS .show-labels 控制显隐）
+      if (it.kind === "attraction" || it.kind === "itinerary") {
+        marker.bindTooltip(it.name, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -18],
+          className: "sea-zoom-label",
+        });
+      }
+      marker.addTo(map);
+    }
+    // 机场标注（2026-10-03 用户）：显示城市的机场，紫色 ✈️ 标记；respect 行程城市过滤
+    const apCities = new Set(visible.map((it) => it.city));
+    for (const cityZh of apCities) {
+      const ap = airportForCity(cityZh);
+      if (!ap) continue;
+      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
+        .bindPopup(
+          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${cityZh}机场</span>`,
         )
         .addTo(map);
-      // 2026-10-03 用户：zoom in 到一定程度后直接显示名字，不用点
-      marker.bindTooltip(it.name, {
-        permanent: true,
-        direction: "top",
-        offset: [0, -18],
-        className: "sea-actionmap-label",
-        opacity: 0, // 默认隐藏，靠 zoom 控制
-      });
     }
-    // 根据 zoom 级别显示/隐藏标签：>=14 显示名字
-    const updateLabels = () => {
-      const z = map.getZoom();
-      const show = z >= 14;
-      map.eachLayer((layer: unknown) => {
-        const m = layer as L.Marker;
-        if (m.getTooltip) {
-          const tip = m.getTooltip();
-          if (tip) {
-            const el = tip.getElement();
-            if (el) el.style.opacity = show ? "1" : "0";
-          }
-        }
-      });
+    // 根据 zoom 级别显示/隐藏名称标签：>=14 显示（classList 直操作 DOM，不走 React className）
+    const syncLabels = () => {
+      mapEl.current?.classList.toggle("show-labels", map.getZoom() >= 14);
     };
-    map.on("zoomend", updateLabels);
-    // 初始化时也跑一次
-    setTimeout(updateLabels, 300);
+    map.on("zoomend", syncLabels);
+    syncLabels();
     if (latlngs.length === 1) map.setView(latlngs[0], 14);
     else if (latlngs.length > 1) map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
     else map.setView(LL(1.3521, 103.8198), 11);
 
     return () => {
       ro.disconnect();
+      map.off("zoomend", syncLabels);
       map.remove();
       mapRef.current = null;
     };
@@ -200,6 +237,13 @@ export default function ActionMapView({
     return c;
   }, [visible]);
 
+  /** 显示城市中有机场数据的城市数（2026-10-03 用户：地图标注机场） */
+  const airportCount = useMemo(() => {
+    const s = new Set<string>();
+    for (const i of visible) if (airportForCity(i.city)) s.add(i.city);
+    return s.size;
+  }, [visible]);
+
   if (!items.length) return null;
 
   return (
@@ -208,7 +252,7 @@ export default function ActionMapView({
         <h4 className="text-sm font-bold text-gray-900">
           🗺️ 位置总览
           <span className="ml-2 text-xs font-normal text-gray-500">
-            🏨{counts.hotel} 🍽️{counts.restaurant} 🏛️{counts.attraction} 📍{counts.itinerary}
+            🏨{counts.hotel} 🍽️{counts.restaurant} 🏛️{counts.attraction} 📍{counts.itinerary} ✈️{airportCount}
           </span>
         </h4>
         <div className="flex items-center gap-2">
@@ -231,7 +275,7 @@ export default function ActionMapView({
         </div>
       </div>
       <p className="text-xs text-gray-500 mb-2">
-        收藏的酒店/餐厅/景点 + 行程里全部景点都在图上，一眼看酒店位置合不合适、离各景点多远。图例：🏨收藏酒店 🍽️收藏餐厅 🏛️收藏景点 📍行程景点
+        收藏的酒店/餐厅/景点 + 行程里全部景点都在图上，一眼看酒店位置合不合适、离各景点多远。图例：🏨收藏酒店 🍽️收藏餐厅 🏛️收藏景点 📍行程景点 ✈️机场。放大地图直接显示景点名称。
       </p>
       {/* 地图容器 className 保持静态，全屏高矮走 style（Leaflet touch 修复口径） */}
       <div

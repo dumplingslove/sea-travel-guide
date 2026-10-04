@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { airportForCity } from "@/data/airportCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { mallAnchorId } from "@/guide/data";
 import { LL, addAmapTiles, wgs84ToGcj02 } from "@/lib/amap";
@@ -98,6 +99,40 @@ function shoppingIcon() {
   });
 }
 
+/** 机场标记：✈️ 紫色徽章（2026-10-03 用户：所有地图都标机场，用不同图标区分） */
+function airportIcon() {
+  return L.divIcon({
+    className: "sea-airport-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:32px;height:32px;border-radius:999px;
+      background:#7c3aed;color:#ffffff;border:2px solid #ffffff;
+      font-size:16px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.45);
+    ">✈️</span>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+}
+
+/**
+ * 缩放显示名称标签的 CSS（2026-10-03 用户：zoom in 后直接显示名称，不用点）。
+ * zoom >= 14 时地图容器加 .show-labels，CSS 才显示标签；低缩放级别隐藏避免重叠。
+ * 注意：用 DOM classList 切换，不走 React className（Leaflet touch 修复口径：容器 className 必须静态）。
+ */
+const ZOOM_LABEL_CSS = `
+.leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.leaflet-tooltip.sea-zoom-label::before{display:none}
+.show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+`;
+function ensureZoomLabelCss() {
+  if (document.querySelector("style[data-sea-zoom-labels]")) return;
+  const el = document.createElement("style");
+  el.setAttribute("data-sea-zoom-labels", "");
+  el.textContent = ZOOM_LABEL_CSS;
+  document.head.appendChild(el);
+}
+
 /**
  * 地图页：城市站点来自全站共享的行程事实源（云端规划优先，静态回退）。
  * 站点变化时整个画布按 key 重建，保证地图与列表一致。
@@ -168,6 +203,10 @@ function MapCanvas({
     const { hotels, restaurants, malls } = placesForCity(cityId);
     if (hotels.length === 0 && restaurants.length === 0 && malls.length === 0) return;
     const layer = L.layerGroup();
+    const cityZh =
+      stops.find((s) => s.id === cityId)?.zh ??
+      extraCities.find((e) => e.id === cityId)?.zh ??
+      "";
     for (const h of hotels) {
       L.marker(LL(h.lat, h.lng), { icon: hotelIcon() })
         .bindPopup(
@@ -184,16 +223,21 @@ function MapCanvas({
     }
     for (const m of malls) {
       const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-      const cityZh =
-        stops.find((s) => s.id === cityId)?.zh ??
-        extraCities.find((e) => e.id === cityId)?.zh ??
-        "";
       const mLink = cityZh
         ? `<br><a href="${base}/practical?shop=${encodeURIComponent(cityZh)}#${mallAnchorId(m.name)}" style="color:#7c3aed;font-weight:700;font-size:12px">查看商场详情 →</a>`
         : "";
       L.marker(LL(m.lat, m.lng), { icon: shoppingIcon() })
         .bindPopup(
           `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场</span>${mLink}`,
+        )
+        .addTo(layer);
+    }
+    // 机场标注（2026-10-03 用户）：点选城市（含行程外研究城市）时一并标机场
+    const ap = airportForCity(cityZh);
+    if (ap) {
+      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
+        .bindPopup(
+          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${cityZh}机场</span>`,
         )
         .addTo(layer);
     }
@@ -209,6 +253,15 @@ function MapCanvas({
     );
     // 高德中文底图（2026-09-27 用户要求）；坐标统一走 LL() 做 GCJ-02 校正
     addAmapTiles(map);
+
+    // 缩放显示名称：zoom >= 14 时容器加 .show-labels，CSS 控制城市名称标签显隐
+    // （2026-10-03 用户；classList 直操作 DOM，不走 React className，遵守容器 className 静态口径）
+    ensureZoomLabelCss();
+    const syncLabels = () => {
+      mapEl.current?.classList.toggle("show-labels", map.getZoom() >= 14);
+    };
+    map.on("zoomend", syncLabels);
+    syncLabels();
 
     const latlngs = stops.map((s) => LL(s.lat, s.lng));
     L.polyline(latlngs, {
@@ -230,13 +283,32 @@ function MapCanvas({
           </div>
         </div>`,
       );
+      // 2026-10-03 用户：zoom >= 14 直接显示城市名称，不用点
+      m.bindTooltip(s.zh, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -20],
+        className: "sea-zoom-label",
+      });
       m.addTo(map);
       return m;
     });
 
+    // 机场标注（2026-10-03 用户）：行程各城市的机场，紫色 ✈️ 标记；不并入视野计算
+    for (const s of stops) {
+      const ap = airportForCity(s.zh);
+      if (!ap) continue;
+      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
+        .bindPopup(
+          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${s.zh}机场</span>`,
+        )
+        .addTo(map);
+    }
+
     map.fitBounds(L.latLngBounds(latlngs).pad(0.18));
     mapRef.current = map;
     return () => {
+      map.off("zoomend", syncLabels);
       map.remove();
       mapRef.current = null;
       markersRef.current = [];
@@ -288,7 +360,7 @@ function MapCanvas({
             </span>
           )}
           <span className="ml-2 text-gray-400">
-            · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅 / 🛍️ 值得逛商场（仅位置）
+            · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅 / 🛍️ 值得逛商场 / ✈️ 机场（仅位置）
           </span>
         </p>
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">

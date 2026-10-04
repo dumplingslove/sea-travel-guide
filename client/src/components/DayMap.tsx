@@ -12,6 +12,7 @@ import {
 } from "@/guide/placeDetail";
 import { useDetailReturn, saveDetailReturn } from "@/components/DetailReturn";
 import { mallAnchorId } from "@/guide/data";
+import { airportForCity } from "@/data/airportCoords";
 
 interface DayMapProps {
   dayNum: number;
@@ -106,6 +107,40 @@ function numIcon(n: number) {
   });
 }
 
+/** 机场标记：✈️ 紫色徽章（2026-10-03 用户：所有地图都标机场，用不同图标区分） */
+function airportIcon() {
+  return L.divIcon({
+    className: "sea-airport-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:32px;height:32px;border-radius:999px;
+      background:#7c3aed;color:#ffffff;border:2px solid #ffffff;
+      font-size:16px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.45);
+    ">✈️</span>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+}
+
+/**
+ * 缩放显示名称标签的 CSS（2026-10-03 用户：zoom in 后直接显示景点名称，不用点）。
+ * zoom >= 14 时地图容器加 .show-labels，CSS 才显示标签；低缩放级别隐藏避免重叠。
+ * 注意：用 DOM classList 切换，不走 React className（Leaflet touch 修复口径：容器 className 必须静态）。
+ */
+const ZOOM_LABEL_CSS = `
+.leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.leaflet-tooltip.sea-zoom-label::before{display:none}
+.show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+`;
+function ensureZoomLabelCss() {
+  if (document.querySelector("style[data-sea-zoom-labels]")) return;
+  const el = document.createElement("style");
+  el.setAttribute("data-sea-zoom-labels", "");
+  el.textContent = ZOOM_LABEL_CSS;
+  document.head.appendChild(el);
+}
+
 /**
  * 行程详情页的当天小地图：与顶级地图页共用 CITY_COORDS。
  * 转场日画出上一城→本城的航线；非转场日只标当天城市。
@@ -180,6 +215,15 @@ export default function DayMap({
     // Google 中文底图（2026-09-27 用户要求中文标注，高德反爬废弃）；WGS-84 无需转换
     addAmapTiles(map);
 
+    // 缩放显示名称：zoom >= 14 时容器加 .show-labels，CSS 控制景点名称标签显隐
+    // （2026-10-03 用户；classList 直操作 DOM，不走 React className，遵守容器 className 静态口径）
+    ensureZoomLabelCss();
+    const syncLabels = () => {
+      mapEl.current?.classList.toggle("show-labels", map.getZoom() >= 14);
+    };
+    map.on("zoomend", syncLabels);
+    syncLabels();
+
     // 全屏/窗口尺寸变化时自动重算（2026-09-27 全屏空白修复）：
     // ResizeObserver 监听容器尺寸，变化时强制 invalidateSize，避免全屏后瓦片不加载
     const ro = new ResizeObserver(() => {
@@ -217,11 +261,23 @@ export default function DayMap({
         .bindPopup(
           `<b>${prevCityZh}</b><br><span style="font-size:12px;color:#6b7280">Day ${dayNum - 1} 出发</span>`,
         )
+        .bindTooltip(prevCityZh || "", {
+          permanent: true,
+          direction: "top",
+          offset: [0, -16],
+          className: "sea-zoom-label",
+        })
         .addTo(map);
       L.marker(to, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
         .bindPopup(
           `<b>${cityZh}</b><br><span style="font-size:12px;color:#6b7280">Day ${dayNum} 到达</span>`,
         )
+        .bindTooltip(cityZh, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -18],
+          className: "sea-zoom-label",
+        })
         .addTo(map);
       map.fitBounds(L.latLngBounds([from, to]).pad(0.35));
     } else if (hasStops) {
@@ -240,6 +296,12 @@ export default function DayMap({
             .bindPopup(
               `<b>${i + 1} · ${s.name}</b><br><span style="font-size:12px;color:#6b7280">${s.time}${s.note ? ` · ${s.note}` : ""}</span>${stopLink}`,
             )
+            .bindTooltip(s.name, {
+              permanent: true,
+              direction: "top",
+              offset: [0, -14],
+              className: "sea-zoom-label",
+            })
             .addTo(map);
         });
         if (pts.length > 1) {
@@ -264,6 +326,12 @@ export default function DayMap({
         to = at;
         L.marker(at, { icon: dotIcon(`Day ${dayNum} · ${cityZh}`, true) })
           .bindPopup(`<b>${cityZh}</b>`)
+          .bindTooltip(cityZh, {
+            permanent: true,
+            direction: "top",
+            offset: [0, -18],
+            className: "sea-zoom-label",
+          })
           .addTo(map);
         map.setView(at, 11);
       }
@@ -307,6 +375,16 @@ export default function DayMap({
       L.marker(pt, { icon: shoppingIcon() })
         .bindPopup(
           `<b>🛍️ ${m.name}</b><br><span style="font-size:12px;color:#6b7280">值得逛商场/市场</span>${mLink}`,
+        )
+        .addTo(map);
+    }
+    // 机场标注（2026-10-03 用户：所有地图都标机场，紫色 ✈️ 区分）；
+    // 不并入视野计算，避免机场偏远把当天景点视野撑大
+    const ap = airportForCity(cityZh);
+    if (ap) {
+      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
+        .bindPopup(
+          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${cityZh}机场</span>`,
         )
         .addTo(map);
     }
@@ -378,6 +456,7 @@ export default function DayMap({
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
       ro.disconnect();
+      map.off("zoomend", syncLabels);
       refitRef.current = null;
       map.remove();
       mapRef.current = null;
@@ -465,7 +544,8 @@ export default function DayMap({
                 ? `Day ${dayNum}${isTransfer ? ` 转场：${prevCityZh} → ${cityZh}${transferLabel ? `（${transferLabel}）` : ""} ·` : " ·"} 站点顺序动线（编号对应当天时间线）`
                 : `Day ${dayNum} · ${cityZh}市内游`}
             <span className="ml-2 text-gray-400">
-              ①-⑳ 景点动线 · 🏨 候选酒店（仅位置） · 🍽️ 推荐餐厅
+              ①-⑳ 景点动线 · 🏨 候选酒店（仅位置） · 🍽️ 推荐餐厅 · ✈️ 机场 ·
+              放大地图显示景点名称
             </span>
           </p>
         </>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CITY_COORDS } from "@/data/cityCoords";
+import { airportForCity } from "@/data/airportCoords";
 import { LL, addAmapTiles } from "@/lib/amap";
 import cities from "@/data/cities.json";
 
@@ -26,6 +27,40 @@ function markerIcon(order: number) {
     iconAnchor: [15, 15],
     popupAnchor: [0, -16],
   });
+}
+
+/** 机场标记：✈️ 紫色徽章（2026-10-03 用户：所有地图都标机场，用不同图标区分） */
+function airportIcon() {
+  return L.divIcon({
+    className: "sea-airport-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:32px;height:32px;border-radius:999px;
+      background:#7c3aed;color:#ffffff;border:2px solid #ffffff;
+      font-size:16px;line-height:1;
+      box-shadow:0 2px 8px rgba(124,58,237,.45);
+    ">✈️</span>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+}
+
+/**
+ * 缩放显示名称标签的 CSS（2026-10-03 用户：zoom in 后直接显示名称，不用点）。
+ * zoom >= 14 时地图容器加 .show-labels，CSS 才显示标签；低缩放级别隐藏避免重叠。
+ * 注意：用 DOM classList 切换，不走 React className（Leaflet touch 修复口径：容器 className 必须静态）。
+ */
+const ZOOM_LABEL_CSS = `
+.leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.leaflet-tooltip.sea-zoom-label::before{display:none}
+.show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+`;
+function ensureZoomLabelCss() {
+  if (document.querySelector("style[data-sea-zoom-labels]")) return;
+  const el = document.createElement("style");
+  el.setAttribute("data-sea-zoom-labels", "");
+  el.textContent = ZOOM_LABEL_CSS;
+  document.head.appendChild(el);
 }
 
 /**
@@ -61,6 +96,15 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
     // Google 中文底图（2026-09-27 用户要求中文标注，高德反爬废弃）；WGS-84 无需转换
     addAmapTiles(map);
 
+    // 缩放显示名称：zoom >= 14 时容器加 .show-labels，CSS 控制城市名称标签显隐
+    // （2026-10-03 用户；classList 直操作 DOM，不走 React className，遵守容器 className 静态口径）
+    ensureZoomLabelCss();
+    const syncLabels = () => {
+      mapEl.current?.classList.toggle("show-labels", map.getZoom() >= 14);
+    };
+    map.on("zoomend", syncLabels);
+    syncLabels();
+
     // 全屏/窗口尺寸变化时自动重算（2026-09-27 全屏空白修复）
     const ro = new ResizeObserver(() => {
       map.invalidateSize();
@@ -88,8 +132,25 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
             <a href="${base}/day/${s.days[0]}" style="color:#0f766e;font-weight:700;font-size:12px">第 ${s.days[0]} 天行程 →</a>
           </div>`,
         )
+        .bindTooltip(s.zh, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -18],
+          className: "sea-zoom-label",
+        })
         .addTo(map);
     });
+
+    // 机场标注（2026-10-03 用户）：行程各城市的机场，紫色 ✈️ 标记；不并入视野计算
+    for (const s of cur) {
+      const ap = airportForCity(s.zh);
+      if (!ap) continue;
+      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
+        .bindPopup(
+          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${s.zh}机场</span>`,
+        )
+        .addTo(map);
+    }
 
     const bounds = L.latLngBounds(latlngs).pad(0.18);
     map.fitBounds(bounds);
@@ -111,6 +172,7 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
       ro.disconnect();
+      map.off("zoomend", syncLabels);
       refitRef.current = null;
       mapRef.current = null;
       map.remove();
