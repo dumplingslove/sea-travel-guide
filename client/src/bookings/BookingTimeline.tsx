@@ -4,7 +4,7 @@
  */
 import { useMemo, useState } from "react";
 import { hotels, restaurants } from "@/guide/data";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import { usePlanScope } from "@/guide/GuideApp";
 import {
   getRestaurantBookingPolicy,
@@ -334,10 +334,11 @@ export default function BookingTimeline({
     let when = "";
     list.forEach((h) => {
       const p = getLiveHotelPrice(h.name);
-      if (p && !p.unavailable && p.base) {
-        if (min == null || p.base.perNightUSD < min) {
-          min = p.base.perNightUSD;
-          when = p.checkedAt;
+      const rate = liveDisplayRate(p);
+      if (rate) {
+        if (min == null || rate.perNightUSD < min) {
+          min = rate.perNightUSD;
+          when = p!.checkedAt;
         }
       }
     });
@@ -648,14 +649,10 @@ export default function BookingTimeline({
             .filter((h) => h.city === s.city)
             .map((h) => ({ h, p: getLiveHotelPrice(h.name) }))
             .sort((a, b) => {
-              const pa =
-                a.p && !a.p.unavailable && a.p.base
-                  ? a.p.base.perNightUSD
-                  : Infinity;
-              const pb =
-                b.p && !b.p.unavailable && b.p.base
-                  ? b.p.base.perNightUSD
-                  : Infinity;
+              const ra = liveDisplayRate(a.p);
+              const rb = liveDisplayRate(b.p);
+              const pa = ra ? ra.perNightUSD : Infinity;
+              const pb = rb ? rb.perNightUSD : Infinity;
               return pa - pb;
             });
           const min = cityMinPrice(s.city);
@@ -685,9 +682,7 @@ export default function BookingTimeline({
                       mk(`tl-hotel-pick-${s.city}-${h.name}`, "hotel", h.name, s.city, {
                         date: s.checkIn,
                         note: `${checkInLabel}入住 ${s.nights}晚${
-                          p && !p.unavailable && p.base
-                            ? ` · $${p.base.perNightUSD}/晚`
-                            : ""
+                          (() => { const r = liveDisplayRate(p); return r ? ` · $${r.perNightUSD}/晚${p && !p.base ? "（套房）" : ""}` : ""; })()
                         }`,
                       }),
                     );
@@ -713,19 +708,19 @@ export default function BookingTimeline({
                             )}
                           </div>
                           <div className="text-xs text-gray-500 truncate">{h.meta}</div>
-                          {p && !p.unavailable && p.base ? (
+                          {(() => { const rate = liveDisplayRate(p); return rate ? (
                             <div className="text-xs mt-0.5">
                               <b className="text-teal-700">
-                                ${p.base.perNightUSD}/晚
+                                ${rate.perNightUSD}/晚{p && !p.base ? "（套房）" : ""}
                               </b>
                               <span className="text-gray-400">
                                 {" "}
-                                · 查于{fmtChecked(p.checkedAt)}
+                                · 查于{fmtChecked(p!.checkedAt)}
                               </span>
                             </div>
                           ) : (
                             <div className="text-xs text-gray-400 mt-0.5">暂无实时价</div>
-                          )}
+                          ); })()}
                           {h.best && (
                             <div className="text-xs text-gray-400 mt-0.5">
                               {h.best.length > 90 ? h.best.slice(0, 90) + "…" : h.best}

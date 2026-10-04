@@ -41,7 +41,7 @@ import {
   type BookingPreset,
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { buildItemsFromFavorites, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 
@@ -733,16 +733,18 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
   }
   if (type === "hotel") {
     // 酒店：用 getLiveHotelPrice 查实查房价；2026-10-03 用户要价格趋势：显示每晚+总价+实查时间
+    // 2026-10-04 审计修复：套房专属酒店（base:null）用套房价展示，不再误显示"暂无实时价"
     const p = getLiveHotelPrice(name);
-    if (p && !p.unavailable && p.base) {
+    const rate = liveDisplayRate(p);
+    if (rate) {
       return (
         <div className="text-xs text-gray-600 mt-1">
-          💰 <span className="font-semibold text-teal-700 text-sm">${p.base.perNightUSD}/晚</span>
-          {p.base.totalUSD != null && (
-            <span className="text-gray-600"> · 共 <span className="font-semibold">${Math.round(p.base.totalUSD)}</span>{p.nights ? `/${p.nights}晚` : ""}</span>
+          💰 <span className="font-semibold text-teal-700 text-sm">${rate.perNightUSD}/晚{p && !p.base ? "（套房）" : ""}</span>
+          {rate.totalUSD != null && (
+            <span className="text-gray-600"> · 共 <span className="font-semibold">${Math.round(rate.totalUSD)}</span>{p && p.nights ? `/${p.nights}晚` : ""}</span>
           )}
-          <span className="text-gray-400"> · {p.source}实查 {p.checkedAt}</span>
-          {p.dateMismatch && <span className="text-amber-600"> ⚠️日期待重查</span>}
+          <span className="text-gray-400"> · {p!.source}实查 {p!.checkedAt}</span>
+          {p!.dateMismatch && <span className="text-amber-600"> ⚠️日期待重查</span>}
         </div>
       );
     }

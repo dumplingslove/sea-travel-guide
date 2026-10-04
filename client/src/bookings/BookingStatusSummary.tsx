@@ -11,7 +11,7 @@
  */
 import { useState } from "react";
 import { hotels, restaurants, attractions } from "@/guide/data";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import {
   useAvailability,
   AvBadge,
@@ -97,18 +97,18 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                       >
                         {h.name}
                       </DetailLink>
-                      {p && !p.unavailable && p.base ? (
+                      {(() => { const rate = liveDisplayRate(p); return rate ? (
                         <span className="text-xs text-gray-500 shrink-0">
                           <b className="text-teal-700">
-                            ${p.base.perNightUSD}/晚起
+                            ${rate.perNightUSD}/晚起{p && !p.base ? "（套房）" : ""}
                           </b>{" "}
-                          · 查询于 {p.checkedAt}
+                          · 查询于 {p!.checkedAt}
                         </span>
                       ) : (
                         <span className="text-xs text-gray-400 shrink-0">
                           暂无实时价
                         </span>
-                      )}
+                      ); })()}
                     </div>
                   );
                 })}

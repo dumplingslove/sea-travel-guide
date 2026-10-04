@@ -372,6 +372,16 @@ export function getLiveHotelPrice(name: string): LiveHotelPrice | undefined {
  return hotelLivePrices[name];
 }
 
+/**
+ * 可展示的最低价房型（2026-10-04 审计修复）：
+ * 基础房优先；套房专属酒店（base:null，如 Aman Nai Lert Bangkok、The Siam）用套房价，
+ * 否则它们会被显示成"暂无实时价"——库里明明有价。都没有或整店无房返回 null。
+ */
+export function liveDisplayRate(p: LiveHotelPrice | undefined): LiveRoomRate | null {
+  if (!p || p.unavailable) return null;
+  return p.base || p.suite || null;
+}
+
 /** 当前价格数据覆盖的行程住宿日期快照（行程变化检测用） */
 export const livePriceStayDates: Record<string, { checkIn: string; checkOut: string }> = Object.fromEntries(
  Object.entries(hotelLivePrices).map(([name, p]) => [name, { checkIn: p.checkIn, checkOut: p.checkOut }]),
