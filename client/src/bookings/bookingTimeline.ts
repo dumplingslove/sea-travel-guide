@@ -463,10 +463,10 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     priceNote: "270 USD（2成人总价）",
     businessPriceNote: "无商务舱直飞",
     direct: true,
-    queriedAt: "2026-10-03 12:17 PDT",
+    queriedAt: "2026-10-04 12:15 PDT",
     priceBasis: "2成人总价",
     options: [
-      { carrier: "Spring Airlines", flight: "9C6294", depart: "14:05", arrive: "19:00", arrivePlusDay: false, stops: 0, bags: "待定", price: 270, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞；白天出发、同日19:00到达，无红眼；与上一轮价格持平（270 USD/2成人总价）" },
+      { carrier: "Spring Airlines", flight: "9C6294", depart: "14:05", arrive: "19:00", arrivePlusDay: false, stops: 0, bags: "待定", price: 270, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞；白天出发、同日19:00到达，无红眼；与上一轮持平（270 USD/2成人总价含税）" },
     ],
     businessOptions: [],
     fragile: true,
