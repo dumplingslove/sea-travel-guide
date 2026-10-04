@@ -190,17 +190,6 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       cityMarkersRef.current.set(s.id, mk);
     });
 
-    // 机场标注（2026-10-03 用户）：行程各城市的机场，紫色 ✈️ 标记；不并入视野计算
-    for (const s of cur) {
-      const ap = airportForCity(s.zh);
-      if (!ap) continue;
-      L.marker(LL(ap.lat, ap.lng), { icon: airportIcon() })
-        .bindPopup(
-          `<b>✈️ ${ap.name}</b><br><span style="font-size:12px;color:#6b7280">${ap.code} · ${s.zh}机场</span>`,
-        )
-        .addTo(map);
-    }
-
     const bounds = L.latLngBounds(latlngs).pad(0.18);
     map.fitBounds(bounds);
     // 首次加载偶发空白修复（backlog P1）：L.map 在 React commit 时创建，
