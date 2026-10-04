@@ -800,6 +800,16 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
 function BookingsInner() {
   // 2026-10-03 用户：所有跳详情页的入口返回时恢复原卡片位置
   useDetailReturn("bookings");
+  // 2026-10-04 用户：浏览tab地图联动（切城市/点卡片时地图高亮）
+  const [hotelCity, setHotelCity] = useState<string|null>(null);
+  const [hotelSel, setHotelSel] = useState<string|null>(null);
+  const [hotelExpandSig, setHotelExpandSig] = useState(0);
+  const [restCity, setRestCity] = useState<string|null>(null);
+  const [restSel, setRestSel] = useState<string|null>(null);
+  const [restExpandSig, setRestExpandSig] = useState(0);
+  const [attrCity, setAttrCity] = useState<string|null>(null);
+  const [attrSel, setAttrSel] = useState<string|null>(null);
+  const [attrExpandSig, setAttrExpandSig] = useState(0);
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
   /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换；
@@ -1007,14 +1017,16 @@ function BookingsInner() {
 
       {menu === "hotels" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览候选酒店时也要有地图 */}
+          {/* 2026-10-04 用户：浏览候选酒店时也要有地图；点卡片/切城市时地图联动 */}
           <StickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "hotel")}
-            activeCity={null}
+            activeCity={hotelCity}
+            activeItemKeys={hotelSel ? [hotelSel] : null}
+            expandSignal={hotelExpandSig}
             title="🗺️ 候选酒店位置"
             storageKey="sticky-map-booking-hotels"
           />
-          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
+          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k); if(k) setHotelExpandSig(s=>s+1);}} />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">
@@ -1022,25 +1034,29 @@ function BookingsInner() {
         </div>
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览候选餐厅时也要有地图 */}
+          {/* 2026-10-04 用户：浏览候选餐厅时也要有地图；点卡片/切城市时地图联动 */}
           <StickyMapBar
             items={buildCandidateItems(scoped ? planCities : []).filter((i) => i.kind === "restaurant")}
-            activeCity={null}
+            activeCity={restCity}
+            activeItemKeys={restSel ? [restSel] : null}
+            expandSignal={restExpandSig}
             title="🗺️ 候选餐厅位置"
             storageKey="sticky-map-booking-restaurants"
           />
-          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} />
+          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k); if(k) setRestExpandSig(s=>s+1);}} />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
-          {/* 2026-10-04 用户：浏览景点时也要有地图 */}
+          {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动 */}
           <StickyMapBar
             items={buildItemsFromFavorites([], scoped ? planCities : [], true)}
-            activeCity={null}
+            activeCity={attrCity}
+            activeItemKeys={attrSel ? [attrSel] : null}
+            expandSignal={attrExpandSig}
             title="🗺️ 景点位置"
             storageKey="sticky-map-booking-attractions"
           />
-          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} />
+          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k); if(k) setAttrExpandSig(s=>s+1);}} />
         </div>
       ) : menu === "action" ? (
         <>
