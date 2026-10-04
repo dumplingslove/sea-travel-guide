@@ -10,6 +10,8 @@ export const CITY_COORDS: Record<string, [number, number]> = {
   phuquoc: [10.227, 103.9639],
   singapore: [1.3521, 103.8198],
   seoul: [37.5667, 126.9783],
+  beijing: [39.9042, 116.4074],
+  xian: [34.3416, 108.9398],
 };
 
 /** 中文城市名 → 城市 id（与 itinerary.json / cities.json 一致） */

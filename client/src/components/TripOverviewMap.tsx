@@ -87,7 +87,14 @@ export default function TripOverviewMap({ stops }: { stops?: TripStop[] }) {
 
   useEffect(() => {
     if (!mapEl.current) return;
-    const cur = mapStops;
+    // 2026-10-03 白屏修复：过滤掉无坐标的城市，避免 CITY_COORDS[s.id] 为 undefined 导致崩溃
+    const cur = mapStops.filter((s) => {
+      if (!CITY_COORDS[s.id]) {
+        console.warn(`[TripOverviewMap] 跳过无坐标城市: ${s.id}`);
+        return false;
+      }
+      return true;
+    });
     const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     const map = L.map(mapEl.current, {
       zoomControl: true,

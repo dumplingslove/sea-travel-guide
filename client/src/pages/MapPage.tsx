@@ -34,11 +34,19 @@ interface ExtraCity {
 const COORDS: Record<string, [number, number]> = CITY_COORDS;
 
 function withCoords(stops: PlanCityStop[]): CityStop[] {
-  return stops.map((c) => {
-    const coord = COORDS[c.id];
-    if (!coord) throw new Error(`missing coords for city ${c.id}`);
-    return { ...c, lat: coord[0], lng: coord[1] };
-  });
+  // 2026-10-03 白屏修复：缺坐标的城市直接跳过，不抛异常（抛异常会导致 React 整树卸载白屏）
+  return stops
+    .filter((c) => {
+      if (!COORDS[c.id]) {
+        console.warn(`[MapPage] 跳过无坐标城市: ${c.id}`);
+        return false;
+      }
+      return true;
+    })
+    .map((c) => {
+      const coord = COORDS[c.id]!;
+      return { ...c, lat: coord[0], lng: coord[1] };
+    });
 }
 
 function markerIcon(order: number, active: boolean) {
