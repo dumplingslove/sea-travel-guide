@@ -586,9 +586,10 @@ export default function StickyMapBar({
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) {
       // 2026-10-04 用户：缩放太小、标记挤成一团看不清。收紧 padding（0.15→0.05）；
-      // fit 后若 zoom < 13（被远景点撑开视野），强制拉到 13 聚焦建成区——市中心酒店标记才能分开看清。
+      // fit 后若 zoom < 14（被远景点撑开视野），强制拉到 14 聚焦建成区——市中心酒店标记才能分开看清。
+      // 2026-10-04 真站：13 仍不够，市中心 1.5km 内 8 个点还挤着，提到 14。
       map.fitBounds(L.latLngBounds(latlngs).pad(0.05));
-      if (map.getZoom() < 13) map.setZoom(13);
+      if (map.getZoom() < 14) map.setZoom(14);
     }
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
     refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
