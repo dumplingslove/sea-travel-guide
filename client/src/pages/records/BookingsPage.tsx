@@ -230,7 +230,19 @@ function FavoriteActionList({
   const grouped = new Map<string, typeof favs>();
   const other: typeof favs = [];
   for (const f of favs) {
-    const c = itemCity(f);
+    let c = itemCity(f);
+    /* 2026-10-03 用户：航班按行程相关城市归类——出发地在行程里用出发地（如首尔→西雅图归首尔），
+       出发地不在行程里但到达地在行程里用到达地（如西雅图→北京归北京） */
+    if (f.type === "flight" && f.flight?.route) {
+      const parts = f.flight.route.split("→").map((s) => s.trim());
+      const origin = parts[0] || "";
+      const dest = parts[1] || "";
+      if (origin && cityOrder.includes(origin)) {
+        c = origin;
+      } else if (dest && cityOrder.includes(dest)) {
+        c = dest;
+      }
+    }
     if (c && cityOrder.includes(c)) {
       if (!grouped.has(c)) grouped.set(c, []);
       grouped.get(c)!.push(f);
