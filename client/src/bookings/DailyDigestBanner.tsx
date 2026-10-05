@@ -27,7 +27,7 @@ const FALLBACK_CITIES = [
   "富国岛",
 ];
 
-type MenuKey = "action" | "hotels" | "restaurants" | "flights" | "transport";
+type MenuKey = "action" | "hotels" | "restaurants" | "flights";
 
 /** "2026-09-27 02:40 PDT" / "2026-09-26 15:11 UTC" → "09-27 02:40" */
 const shortT = (s?: string | null) => (s ? s.slice(5, 16) : null);

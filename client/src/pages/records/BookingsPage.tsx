@@ -811,10 +811,10 @@ function BookingsInner() {
    * 顶栏(0~headerH) → 二级菜单(headerH) → 地图(headerH+navH) → 城市tab(headerH+navH+地图高)。
    * 地图高度经 onHeightChange 实时上报，城市 tab 的 --citytabs-top 跟着变。 */
   const [searchParams] = useSearchParams();
-  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "transport";
+  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action";
   const [menu, setMenu] = useState<MenuKey>(() => {
     const m = searchParams.get("menu");
-    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "transport") return m;
+    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action") return m;
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "hotels";
   });
@@ -1002,7 +1002,6 @@ function BookingsInner() {
     { key: "restaurants", label: "🍽️ 餐厅" },
     { key: "attractions", label: "🏛️ 景点" },
     { key: "action", label: "📋 行动安排" },
-    { key: "transport", label: "🚋 交通" },
   ];
 
   return (

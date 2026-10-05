@@ -732,7 +732,7 @@ function Practical({onBook}:{onBook?:OnBook}){
   const mall=hash.startsWith('#mall-')?decodeURIComponent(hash.slice(6)):'';
   return {shop,mall};
  },[]);
- const [mode,setMode]=useState<'实用信息'|'购物推荐'|'打包清单'>(deep.shop?'购物推荐':'实用信息');
+ const [mode,setMode]=useState<'实用信息'|'购物推荐'|'打包清单'|'交通'>(deep.shop?'购物推荐':'实用信息');
  useEffect(()=>{
   if(mode!=='购物推荐'||!deep.mall) return;
   const t=window.setTimeout(()=>{
@@ -756,7 +756,11 @@ function Practical({onBook}:{onBook?:OnBook}){
  ['寺庙礼仪与着装','进寺庙/清真寺：脱鞋，着装遮肩过膝（备一条纱笼/薄长袖）。不要摸小孩头、不要用脚指人像。泰国王室话题慎言。参观大皇宫、双龙寺等有严格着装要求，不合规会被拦下租纱笼。'],
  ['小费文化','泰国：按摩/酒店行李给20-50泰铢小费是习惯；餐厅已收服务费可不另给。新加坡/马来西亚：一般不给小费（账单含服务费）。越南：高档餐厅可给5-10%。小费自愿，不强制，给了是对服务认可。']
  ];
- return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、打包、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐','打包清单'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid">{info.map((x,i)=><article key={x[0]}><span>{String(i+1).padStart(2,'0')}</span><h2>{x[0]}</h2><p>{x[1]}</p></article>)}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0||c===deep.shop}><ShopGuide city={c} openMall={c===deep.shop?deep.mall:undefined}/></Fold>)}</div></SectionErrorBoundary>}{mode==='打包清单'&&<SectionErrorBoundary label="打包清单"><PackingTab/></SectionErrorBoundary>}</div>
+ return <div className="page"><PageHero eyebrow="FIELD GUIDE" title="实用信息" summary="签证、天气、货币、打包、购物集中在一页，方便行前逐项收口。" image={hcmImg}/><div className="subtabs">{(['实用信息','购物推荐','打包清单','交通'] as const).map(x=><button key={x} className={mode===x?'active':''} onClick={()=>setMode(x)}>{x}</button>)}</div>{mode==='实用信息'&&<><section className="notice"><h2>出发前最后核验</h2><p>本攻略是 2026-09-12 的固定研究快照。开放时间、票价、签证、航班、天气停运、房态和预约规则请在出发前向官方渠道再次确认。</p></section><div className="infogrid visual">{info.map((x,i)=>{
+ const icons=['🛂','🌤️','💳','📱','🔌','🚇','✈️','🗣️','🧾','🏥','🛡️','📞','🛕','💰'];
+ const icon=icons[i]||'📌';
+ return <article key={x[0]} className="infocard"><div className="infoicon">{icon}</div><div><h2>{x[0]}</h2><p>{x[1]}</p></div></article>
+})}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0||c===deep.shop}><ShopGuide city={c} openMall={c===deep.shop?deep.mall:undefined}/></Fold>)}</div></SectionErrorBoundary>}{mode==='打包清单'&&<SectionErrorBoundary label="打包清单"><PackingTab/></SectionErrorBoundary>}{mode==='交通'&&<Transport/>}</div>
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
