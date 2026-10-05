@@ -1054,6 +1054,7 @@ function BookingsInner() {
             stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("hotels")}
+            onMarkerSelect={(key)=>{ setHotelSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
@@ -1076,6 +1077,7 @@ function BookingsInner() {
             stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("restaurants")}
+            onMarkerSelect={(key)=>{ setRestSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
         </div>
@@ -1093,6 +1095,7 @@ function BookingsInner() {
             stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("attractions")}
+            onMarkerSelect={(key)=>{ setAttrSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} defaultListExpanded />
         </div>

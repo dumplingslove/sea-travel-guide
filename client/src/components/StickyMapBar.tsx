@@ -318,6 +318,12 @@ interface StickyMapBarProps {
    * 不传则无此行为。
    */
   expandSignal?: number;
+  /**
+   * 标记点被点击时（2026-10-04 用户：地图里的文字加详细信息链接，点击跳转到对应文字位置）：
+   * 弹窗里的"查看详情"链接被点时调用，传 marker 的 key（如 hotel:新加坡:Raffles Singapore）。
+   * 父组件负责滚到对应卡片。
+   */
+  onMarkerSelect?: (key: string) => void;
   title?: string;
   defaultCollapsed?: boolean;
   /** localStorage key：记住折叠状态（alwaysVisible 时忽略） */
@@ -364,6 +370,7 @@ export default function StickyMapBar({
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
+  const onMarkerSelectRef = useRef<((key: string) => void) | undefined>(undefined);
   const selKindRef = useRef<string | null>(null);
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
   // 航线层：连线按航线 key 存；机场标记按 IATA code 全站唯一（规范经度已统一世界副本，
@@ -566,9 +573,22 @@ export default function StickyMapBar({
       latlngs.push(ll);
       const marker = L.marker(ll, { icon: iconFor(it.kind, false, !!it.candidate) })
         .bindPopup(
-          `<b>${it.name}</b><br/>${KIND_EMOJI[it.kind]} ${it.city}${it.note ? `<br/><span style="color:#6b7280;font-size:12px">${it.note}</span>` : ""}`,
+          `<b>${it.name}</b><br/>${KIND_EMOJI[it.kind]} ${it.city}${it.note ? `<br/><span style="color:#6b7280;font-size:12px">${it.note}</span>` : ""}<br/><a href="#" data-detail-key="${key}" style="color:#0d9488;font-size:13px;font-weight:600">查看详情 →</a>`,
         )
         .addTo(map);
+      // 2026-10-04 用户：弹窗里的"查看详情"点一下，页面滚到对应卡片
+      marker.on("popupopen", (e: any) => {
+        const el = e.popup?.getElement?.() as HTMLElement | undefined;
+        const link = el?.querySelector?.("[data-detail-key]") as HTMLElement | null;
+        if (link && !(link as any)._detailBound) {
+          (link as any)._detailBound = true;
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const k = link.getAttribute("data-detail-key");
+            if (k) onMarkerSelectRef.current?.(k);
+          });
+        }
+      });
       marker.bindTooltip(it.name, {
         permanent: true,
         direction: "top",
