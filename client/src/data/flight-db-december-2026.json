@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T19:54:56+00:00",
+ "updated_at": "2026-10-05T20:31:01+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2921,8 +2921,8 @@
      "business_note": "当天无直飞"
     },
     "2026-12-07": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 324,
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 333.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2933,7 +2933,7 @@
        "dep": "01:55",
        "arr": "07:50",
        "duration": "5h 55m",
-       "price_usd": 324
+       "price_usd": 333.0
       },
       {
        "airline": "China Eastern",
@@ -2941,18 +2941,18 @@
        "dep": "07:20",
        "arr": "12:55",
        "duration": "5h 35m",
-       "price_usd": 418,
        "business_price_usd": 1385
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
-     "business_usd": 1385,
-     "business_price_basis": "2成人总价"
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
+     "business_usd": null,
+     "business_price_basis": "2成人总价",
+     "business_note": "Price unavailable for the nonstop flight"
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 769,
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 780.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2963,7 +2963,7 @@
        "dep": "01:55",
        "arr": "07:50",
        "duration": "5h 55m",
-       "price_usd": 769
+       "price_usd": 780.0
       },
       {
        "airline": "China Eastern",
@@ -2971,18 +2971,18 @@
        "dep": "07:20",
        "arr": "12:55",
        "duration": "5h 35m",
-       "price_usd": 804,
-       "business_price_usd": 2087
+       "price_usd": 801.0,
+       "business_price_usd": 2104.0
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
-     "business_usd": 2087,
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
+     "business_usd": 2104.0,
      "business_price_basis": "2成人总价"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 693,
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 686.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2993,11 +2993,11 @@
        "dep": "01:55",
        "arr": "07:50",
        "duration": "5h 55m",
-       "price_usd": 693
+       "price_usd": 686.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -3165,8 +3165,8 @@
      "business_price_basis": "2成人总价"
     },
     "2026-12-08": {
-     "economy_queried_at": "2026-09-28T19:54:46+00:00",
-     "economy_usd": 247,
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 247.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -3174,41 +3174,20 @@
       {
        "airline": "Scoot",
        "flight": null,
-       "dep": "18:15",
-       "arr": "19:20",
+       "dep": "12:00",
+       "arr": "13:05",
        "duration": "2h 5m",
-       "price_usd": 247
+       "price_usd": 247.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:54:46+00:00",
-     "business_usd": 1312,
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
+     "business_usd": 1538.0,
      "business_price_basis": "2成人总价"
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-09-28T19:54:46+00:00",
-     "economy_usd": 247,
-     "currency": "USD",
-     "economy_price_basis": "2成人总价",
-     "source": "google-flights",
-     "nonstop_flights": [
-      {
-       "airline": "Scoot",
-       "flight": null,
-       "dep": "18:15",
-       "arr": "19:20",
-       "duration": "2h 5m",
-       "price_usd": 247
-      }
-     ],
-     "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:54:46+00:00",
-     "business_usd": 1308,
-     "business_price_basis": "2成人总价"
-    },
-    "2026-12-11": {
-     "economy_queried_at": "2026-09-28T19:54:46+00:00",
-     "economy_usd": 346,
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 247.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -3218,13 +3197,34 @@
        "flight": null,
        "dep": "08:40",
        "arr": "09:40",
-       "duration": "2h",
-       "price_usd": 346
+       "duration": "2h 0m",
+       "price_usd": 247.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:54:46+00:00",
-     "business_usd": 1426,
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
+     "business_usd": 1538.0,
+     "business_price_basis": "2成人总价"
+    },
+    "2026-12-11": {
+     "economy_queried_at": "2026-10-05T20:31:01+00:00",
+     "economy_usd": 247.0,
+     "currency": "USD",
+     "economy_price_basis": "2成人总价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Scoot",
+       "flight": null,
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h 0m",
+       "price_usd": 247.0
+      }
+     ],
+     "nonstop_count": 1,
+     "business_queried_at": "2026-10-05T20:31:01+00:00",
+     "business_usd": 1538.0,
      "business_price_basis": "2成人总价"
     },
     "2026-12-12": {
