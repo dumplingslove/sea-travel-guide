@@ -888,6 +888,17 @@ function BookingsInner() {
     return m;
   }, [segments]);
   const scoped = segments.length > 0;
+  // 2026-10-04：items 用 useMemo 稳定引用，避免每次选卡 re-render 都触发地图 markers effect 的 fitBounds
+  //（之前 Capella 点卡时 fitBounds 和 setView 打架，地图闪回高空）
+  const hotelMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
+    .filter((i) => (i.kind === "hotel" || i.kind === "attraction") && i.city === (hotelCity || planCities[0]))
+    .map((i) => ({ ...i, candidate: false })), [scoped, planCities, hotelCity]);
+  const restMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
+    .filter((i) => (i.kind === "restaurant" || i.kind === "attraction") && i.city === (restCity || planCities[0]))
+    .map((i) => ({ ...i, candidate: false })), [scoped, planCities, restCity]);
+  const attrMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
+    .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
+    .map((i) => ({ ...i, candidate: false })), [scoped, planCities, attrCity]);
   /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），行动安排页酒店收藏展示用 */
   const stays = useMemo(
     () => hotelStaysFromPlan(segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
@@ -1034,9 +1045,7 @@ function BookingsInner() {
               点卡只高亮不缩放；stickyTop 让地图吸在二级菜单下方，不盖住它
               2026-10-04 修：只显示当前城市的点（不跨城），去灰标按种类配色（酒店蓝/景点绿） */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : [])
-              .filter((i) => (i.kind === "hotel" || i.kind === "attraction") && i.city === (hotelCity || planCities[0]))
-              .map((i) => ({ ...i, candidate: false }))}
+            items={hotelMapItems}
             activeCity={hotelCity}
             activeItemKeys={hotelSel ? [hotelSel] : null}
             expandSignal={hotelExpandSig}
@@ -1058,9 +1067,7 @@ function BookingsInner() {
               2026-10-04 用户（全景思维）：餐厅图 = 当前城市全部餐厅 + 全部景点，点卡只高亮不缩放
               2026-10-04 修：只显示当前城市的点，去灰标按种类配色 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : [])
-              .filter((i) => (i.kind === "restaurant" || i.kind === "attraction") && i.city === (restCity || planCities[0]))
-              .map((i) => ({ ...i, candidate: false }))}
+            items={restMapItems}
             activeCity={restCity}
             activeItemKeys={restSel ? [restSel] : null}
             expandSignal={restExpandSig}
@@ -1077,9 +1084,7 @@ function BookingsInner() {
           {/* 2026-10-04 用户：浏览景点时也要有地图；点卡片/切城市时地图联动；显示需提前订票的备选景点
               2026-10-04：点卡只高亮不缩放，保持全景；只显示当前城市 */}
           <SafeStickyMapBar
-            items={buildCandidateItems(scoped ? planCities : [])
-              .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
-              .map((i) => ({ ...i, candidate: false }))}
+            items={attrMapItems}
             activeCity={attrCity}
             activeItemKeys={attrSel ? [attrSel] : null}
             expandSignal={attrExpandSig}
