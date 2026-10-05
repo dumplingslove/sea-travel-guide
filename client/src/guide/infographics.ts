@@ -24,6 +24,15 @@ import igBkXiri from './assets/infographics/bangkok/xirimuyixizhu-bangkok-plan.w
 import igHcmMuxia from './assets/infographics/hochiminh/muxia-vietnam-handmap.webp';
 import igPgXiri from './assets/infographics/penang/xirimuyixizhu-penang-plan.webp';
 import igSgXiri from './assets/infographics/singapore/xirimuyixizhu-singapore-plan.webp';
+import igSeoulVisitMap1 from './assets/infographics/seoul/seoul-visitseoul-map-01.jpg';
+import igSeoulVisitMap2 from './assets/infographics/seoul/seoul-visitseoul-map-02.jpg';
+import igSeoulVisitMap3 from './assets/infographics/seoul/seoul-visitseoul-map-03.jpg';
+import igSeoulVisitMap4 from './assets/infographics/seoul/seoul-visitseoul-map-04.jpg';
+import igSeoulVisitMap5 from './assets/infographics/seoul/seoul-visitseoul-map-05.jpg';
+import igSeoulInsadongWalk from './assets/infographics/seoul/seoul-insadong-walking-map.jpg';
+import igSeoulMetroMap from './assets/infographics/seoul/seoul-metro-map-zh.jpg';
+import igPhuketTouristMap from './assets/infographics/phuket/phuket-tourist-map-detailed.jpg';
+import igPhuketPhiPhiRoute from './assets/infographics/phuket/phuket-phiphi-phangnga-route.png';
 import igMultiCost from './assets/infographics/multi/saltydog-cost-breakdown.webp';
 import igMultiHotel from './assets/infographics/multi/saltydog-hotel-breakdown.webp';
 import igMultiApps from './assets/infographics/multi/saltydog-useful-apps.webp';
@@ -243,6 +252,75 @@ postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
 },
 ];
 
+const seoul: Infographic[] = [
+{
+file: igSeoulVisitMap1,
+title: '首尔官方手绘景点地图',
+summary: '首尔官方旅游网手绘风景点地图：汉江/景福宫/南山/63大厦等地标插画，4处编号推荐点。',
+source: '首尔官方旅游网 visitseoul.net',
+postUrl: 'https://english.visitseoul.net/',
+},
+{
+file: igSeoulVisitMap2,
+title: '首尔官方手绘景点地图 · 汉江北岸',
+summary: '首尔官方旅游网手绘地图：63大厦/景福宫/南山一带4处编号推荐点。',
+source: '首尔官方旅游网 visitseoul.net',
+postUrl: 'https://english.visitseoul.net/',
+},
+{
+file: igSeoulVisitMap3,
+title: '首尔官方手绘景点地图 · 中文版',
+summary: '首尔官方旅游网（中文站）手绘景点地图：5处编号推荐点。',
+source: '首尔官方旅游网中文站 chinese.visitseoul.net',
+postUrl: 'https://chinese.visitseoul.net/',
+},
+{
+file: igSeoulVisitMap4,
+title: '首尔官方手绘景点地图 · 景福宫一带',
+summary: '首尔官方旅游网手绘地图：景福宫/63大厦一带4处编号推荐点。',
+source: '首尔官方旅游网 visitseoul.net',
+postUrl: 'https://korean.visitseoul.net/',
+},
+{
+file: igSeoulVisitMap5,
+title: '首尔官方手绘景点地图 · 汉江南岸',
+summary: '首尔官方旅游网手绘地图：汉江以南4处编号推荐点。',
+source: '首尔官方旅游网 visitseoul.net',
+postUrl: 'https://korean.visitseoul.net/',
+},
+{
+file: igSeoulInsadongWalk,
+title: '仁寺洞步行路线图（官方）',
+summary: '首尔官方旅游网仁寺洞步行路线图：红色路线串起 Ssamzie-gil/曹溪寺/云岘宫/塔谷公园，标注安国站4号出口、钟阁站等交通点。',
+source: '首尔官方旅游网 visitseoul.net',
+postUrl: 'https://english.visitseoul.net/walking-tour',
+},
+{
+file: igSeoulMetroMap,
+title: '首尔地铁图（中文版）',
+summary: '首尔市政府官方地铁图中文版：1–9号线及机场快线AREX全线网，站点中文标注，含客服电话。',
+source: '首尔市政府 Seoul Metropolitan Government',
+postUrl: '',
+},
+];
+
+const phuket: Infographic[] = [
+{
+file: igPhuketTouristMap,
+title: '普吉岛详细旅游地图',
+summary: '普吉岛全岛详细旅游地图：各海滩/普吉镇/机场/码头位置，图例标注餐厅/购物/医院/寺庙/酒店，附实用电话（旅游警察/医院/移民局）。',
+source: 'mapsof.net',
+postUrl: 'https://www.mapsof.net/index.php/phuket/map-phuket',
+},
+{
+file: igPhuketPhiPhiRoute,
+title: '皮皮岛/攀牙湾跳岛路线图',
+summary: '普吉出发跳岛路线图：皇家普吉码头出发，皮皮岛（Phi Phi Don/猴子湾/维京洞/皮莱湾/玛雅湾/竹子岛）与攀牙湾（詹姆斯邦德岛/宏岛/帕纳岛）点位。',
+source: 'phuket-ryoko.com',
+postUrl: 'https://www.phuket-ryoko.com/',
+},
+];
+
 /** 跨城通用图：在各城市板块末尾以"跨城参考"分组展示。 */
 const crossCity: Infographic[] = [
 {
@@ -302,6 +380,8 @@ export const infographicsByCity: Record<string, Infographic[]> = {
 '胡志明市': hochiminh,
 '槟城': penang,
 '新加坡': singapore,
+'首尔': seoul,
+'普吉': phuket,
 };
 
 export function getInfographics(city: string): Infographic[] {
