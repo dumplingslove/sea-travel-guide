@@ -1035,7 +1035,7 @@ function BookingsInner() {
             onHeightChange={onMapHeight("hotels")}
             onMarkerSelect={(key)=>{ setHotelSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
-          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
+          <HotelCatalog bare onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">
@@ -1058,7 +1058,7 @@ function BookingsInner() {
             onHeightChange={onMapHeight("restaurants")}
             onMarkerSelect={(key)=>{ setRestSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
-          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
+          <RestaurantCatalog bare onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
