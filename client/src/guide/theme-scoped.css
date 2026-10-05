@@ -357,6 +357,15 @@
 .guide-scope .livepricenone{font-size:12.5px;color:#8a978f}
 .guide-scope .livepricedatewarn{font-size:12px!important;color:#9a5b00!important;background:#fff6e3;border:1px solid #f0d48a;border-radius:8px;padding:8px 10px!important;margin:0 0 10px!important;line-height:1.6}
 .guide-scope .livepricefoot{display:block;margin-top:10px;font-size:10.5px!important;color:#7d968f!important}
+.guide-scope .baselineblock{margin-top:14px;padding-top:12px;border-top:1px dashed #b9d4ce}
+.guide-scope .baselineblock h4{font-size:13px;color:#145a50;margin:0 0 8px!important}
+.guide-scope .baselinerow{display:flex;align-items:center;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.guide-scope .baselinerow b{color:#145a50}
+.guide-scope .baselinerow small{color:#7d968f;font-size:11px}
+.guide-scope .baselinerow a{font-size:12px;color:#0d9488;font-weight:600}
+.guide-scope .baselinenote{font-size:11px;color:#7d968f;margin:0 0 8px!important}
+.guide-scope .baselineunknown{margin:0 0 8px!important;padding-left:18px;font-size:11.5px;color:#5b7a75;line-height:1.7}
+.guide-scope .baselinewarn{font-size:11px;color:#9a5b00;background:#fff6e3;border:1px solid #f0d48a;border-radius:8px;padding:8px 10px!important;margin:0!important;line-height:1.6}
 .guide-scope .detailsection.availblock{background:#f6f4ec;border:1px solid #e0d9c2;padding:17px 18px!important}
 .guide-scope .detailsection.availblock>span{font-size:9px;letter-spacing:.16em;font-weight:800;color:#8a6d1c}
 .guide-scope .detailsection.availblock h3{color:#6b5312!important}
