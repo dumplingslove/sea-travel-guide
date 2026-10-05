@@ -1094,7 +1094,7 @@ function BookingsInner() {
             selectZoom={false}
             onHeightChange={onMapHeight("attractions")}
           />
-          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} />
+          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} defaultExpandAll />
         </div>
       ) : menu === "action" ? (
         <>
