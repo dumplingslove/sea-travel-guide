@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T09:10:35+00:00",
+ "updated_at": "2026-10-05T09:32:48+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2066,12 +2066,11 @@
      "business_price_basis": "2大1小总价"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-09-28T08:26:01+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 3361,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "当天有直飞（CA889/CA969/CA975/SQ801/SQ805/SQ807），但所有航班行均显示 Price unavailable（价格尚未发布，非'当天无直飞'）",
      "nonstop_flights": [
       {
        "airline": "Singapore Airlines",
@@ -2079,15 +2078,8 @@
        "dep": "00:10",
        "arr": "06:45",
        "duration": "6h 35m",
+       "price_usd": 3361,
        "business_price_usd": 4743
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA975",
-       "dep": "00:15",
-       "arr": "06:50",
-       "duration": "6h 35m",
-       "business_price_usd": 4920
       },
       {
        "airline": "Singapore Airlines",
@@ -2095,6 +2087,16 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
+       "price_usd": 4229,
+       "business_price_usd": 4743
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 4229,
        "business_price_usd": 4743
       },
       {
@@ -2107,26 +2109,25 @@
       },
       {
        "airline": "Air China",
-       "flight": "CA969",
-       "dep": "15:45",
-       "arr": "21:55",
-       "duration": "6h 10m",
-       "business_price_usd": 6822
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h 35m",
+       "business_price_usd": 4920
       },
       {
-       "airline": "Singapore Airlines",
-       "flight": "SQ807",
-       "dep": "16:40",
-       "arr": "22:55",
-       "duration": "6h 15m",
-       "business_price_usd": 4743
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h 20m",
+       "business_price_usd": 6822
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T08:26:01+00:00",
-     "business_usd": 4743,
-     "business_price_basis": "2大1小总价",
-     "business_note": "Cheapest tab showed 'from 4616 US dollars'; cheapest listed row 4743. All row prices include required taxes + fees for 3 passengers."
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_usd": 4769,
+     "business_price_basis": "2大1小总价"
     }
    }
   },
@@ -2219,8 +2220,8 @@
      "business_note": "当天无直飞"
     },
     "2026-12-08": {
-     "economy_queried_at": "2026-09-28T08:41:06+00:00",
-     "economy_usd": 332,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2228,21 +2229,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "1:55 AM",
-       "arr": "7:50 AM",
-       "duration": "5 hr 55 min",
-       "price_usd": 332
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T08:41:06+00:00",
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-09-28T08:41:06+00:00",
-     "economy_usd": 332,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2250,29 +2251,28 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "1:55 AM",
-       "arr": "7:50 AM",
-       "duration": "5 hr 55 min",
-       "price_usd": 332
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 333
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "7:20 AM",
-       "arr": "12:55 PM",
-       "duration": "5 hr 35 min",
-       "price_usd": 536,
+       "dep": "07:20",
+       "arr": "12:55",
+       "duration": "5h 35m",
        "business_price_usd": 1384
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T08:41:06+00:00",
-     "business_usd": 1384,
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_usd": 2386,
      "business_price_basis": "2成人总价"
     },
     "2026-12-10": {
-     "economy_queried_at": "2026-09-28T08:41:06+00:00",
-     "economy_usd": 383,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 384,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2280,21 +2280,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "1:55 AM",
-       "arr": "7:50 AM",
-       "duration": "5 hr 55 min",
-       "price_usd": 383
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 384
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T08:41:06+00:00",
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-11": {
-     "economy_queried_at": "2026-09-28T08:41:06+00:00",
-     "economy_usd": 323,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2302,29 +2302,28 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "1:55 AM",
-       "arr": "7:50 AM",
-       "duration": "5 hr 55 min",
-       "price_usd": 323
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 333
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "7:20 AM",
-       "arr": "12:55 PM",
-       "duration": "5 hr 35 min",
-       "price_usd": 802,
+       "dep": "07:20",
+       "arr": "12:55",
+       "duration": "5h 35m",
        "business_price_usd": 1384
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T08:41:06+00:00",
-     "business_usd": 1384,
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_usd": 1369,
      "business_price_basis": "2成人总价"
     },
     "2026-12-12": {
-     "economy_queried_at": "2026-09-28T08:41:06+00:00",
-     "economy_usd": 383,
+     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2332,14 +2331,14 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "1:55 AM",
-       "arr": "7:50 AM",
-       "duration": "5 hr 55 min",
-       "price_usd": 383
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T08:41:06+00:00",
+     "business_queried_at": "2026-10-05T09:32:48+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
