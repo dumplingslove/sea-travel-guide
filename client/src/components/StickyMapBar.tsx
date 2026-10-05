@@ -585,11 +585,9 @@ export default function StickyMapBar({
     // 此处不再自动加机场。
     if (latlngs.length === 1) map.setView(latlngs[0], 13);
     else if (latlngs.length > 1) {
-      // 2026-10-04 用户：标记挤成一团看不清。直接定到 zoom 14 聚焦建成区，
-      // 不用 fitBounds（远景点会把视野撑开到 zoom 11，setZoom(14) 又被时序问题吞掉）。
-      // 用户可手动缩小看全岛。
-      const center = L.latLngBounds(latlngs).getCenter();
-      map.setView(center, 14);
+      // 2026-10-04 用户：每次打开页面要是全局 view（所有酒店都在视野里）。
+      // 用 fitBounds 显示全部，不定死 zoom 14。
+      map.fitBounds(L.latLngBounds(latlngs).pad(0.05));
     }
     refreshLabelVisibility(); // 2026-10-04 真站：markers 重建后 tooltip 重置为 opacity 0，立即按当前 zoom 恢复
     refreshCandidateVisibility(); // 2026-10-04：重建后按当前 zoom 决定候选标显隐
@@ -826,15 +824,16 @@ export default function StickyMapBar({
         return; // 选中的 key 对不上任何点时不动地图，避免乱飞
       }
       // 2026-10-04 用户最终要求：点卡的效果 = 像人手拖地图一样平滑挪到那家，
-      // 不要闪、不要从高空缩放、不要 flyTo。只平移，不变缩放。
+      // 不要闪、不要从高空缩放、不要 flyTo。
+      // 行为：平滑 setView 到那家，zoom 14（合理大小）；已在 14 时就是纯平移，起点=当前位置。
       if (!selectZoom) {
         // 直接按 activeItemKeys 查坐标，不依赖 pts 数组（pts 可能因时序为空）
         const keys = activeSig!.split("|");
         for (const k of keys) {
           const it = itemByKeyRef.current.get(k);
           if (it) {
-            // 2026-10-04：用人手拖拽的手感——panTo 动画 1.2 秒，不变 zoom
-            map.panTo(LL(it.lat, it.lng), { animate: true, duration: 1.2 });
+            // 2026-10-04：setView 带 animate，平滑挪过去；zoom 14 看得清又不丢全景感
+            map.setView(LL(it.lat, it.lng), 14, { animate: true, duration: 1.2 });
             break; // 只处理第一个选中的
           }
         }
