@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T10:45:17+00:00",
+ "updated_at": "2026-10-05T10:47:17+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3023,7 +3023,7 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-04T10:30:40+00:00",
+     "business_queried_at": "2026-10-05T10:47:17+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
