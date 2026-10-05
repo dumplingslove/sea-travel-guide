@@ -10,7 +10,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
-  PageShell,
   SyncBanner,
   Card,
   GhostButton,
@@ -994,11 +993,8 @@ function BookingsInner() {
   ];
 
   return (
-    <PageShell
-      eyebrow="MY BOOKINGS"
-      title="预订"
-      summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」只显示行程规划里定好的城市和日期（照片、口碑、实时价、订位政策），挑中了直接点预订。"
-    >
+    {/* 2026-10-04 用户：预订标题和下面的文字都不要，直接从分类tab开始 */}
+    <div className="max-w-5xl mx-auto px-4 py-8">
       {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换）
           2026-10-04 用户：总结块（每日动态/行程日期）只放在行动安排里，分类tab一上来直接就是列表 */}
       <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-1 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
@@ -1120,7 +1116,7 @@ function BookingsInner() {
       <p className="mt-8 text-xs text-gray-400">
         预订信息保存在这里（登录后云端同步）。旧版纯文本记录会自动兼容展示。
       </p>
-    </PageShell>
+    </div>
   );
 }
 
