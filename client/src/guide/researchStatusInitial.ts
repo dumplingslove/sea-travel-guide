@@ -1365,7 +1365,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。；2026-09-24T02:18Z主会话定时轮xhs-continuous-search授权重试轮（19:49Z滑块硬熔断后、用户30分钟无回复按3.5步协议触发）干净完成无熔断：健康检查通过（18:53–18:56 PDT，菜小盒已登录、首页信息流正常）；滑块熔断解除，consecutive_fuse_count清零；全程只读。item07三组搜索pass（Khao Soi Khun Yai翻2页约50卡片/SP Chicken翻2页约30卡片/清迈米其林烤鸡翻1页约28卡片），8篇深读全剔除（hh bean Maesai陷阱/阿K哥68d4ebc1零评论/小肠儿泡奶Nimman陷阱/mika错主题/Sa💗697428c2 SP实锤零评论/清迈直人6a6f4c17 SP实锤零评论/半透明Translucent店名未实锤仅3条评论/Patrick错店）；新增计入0，累计新3帖标准仍0/3（高流量头部位被陷阱店/合集帖挤占，真货专帖均零评论）。【2026-09-24T08:52Z hourly更新】主会话xhs-continuous-search三轮结论：①09-23 19:36–19:49Z硬熔断终止（滑块验证码；登录态健康检查时正常，未确认丢失），item07本轮0计入（熙熙在迈村/强华两候选均缺实质评论证据，主agent 12:56 PDT裁决纠正worker原报2/3→0/3；特例额度已满不再新增特例）；②09-24 01:53–02:18Z授权重试轮（用户30分钟无回复触发，健康检查通过、熔断解除consecutive清零）干净完成，8深读全剔除（Maesai/Nimman陷阱店4、零评论3、主题不符1），0计入，仍0/3——原因：陷阱店挤占头部、Khun Yai/SP Chicken真货专帖池枯竭（实锤店名2篇均零评论；店名未实锤1篇仅3条评论）；③熔断机制新发现：不带xsec_token的直接URL粘贴会404（error_code=300031，token缺失非删帖），须经站内搜索点入。累计新3帖标准0/3，仍partial（posts=5为旧10帖口径存量，按Capella先例暂留，主agent逐项转换裁决）。 ｜ 2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭；2026-10-02 第76轮：Khao Soi Khun Yai 找到首篇专帖——熙熙在迈村《清迈最接地气的Khao Soi Khun Yai咖喱面》(5赞，正文扎实，09-15，https://www.xiaohongshu.com/explore/6aa9202f0000000011037d0c)，低互动已备注；另1篇 Nicky Chang 视频帖（10赞，无正文无评论）太薄未计入；墨尔本分店帖已排除。非零新增，不标枯竭。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round76-phuket-chiangmai-2026-10-02.md",
+       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。；2026-09-24T02:18Z主会话定时轮xhs-continuous-search授权重试轮（19:49Z滑块硬熔断后、用户30分钟无回复按3.5步协议触发）干净完成无熔断：健康检查通过（18:53–18:56 PDT，菜小盒已登录、首页信息流正常）；滑块熔断解除，consecutive_fuse_count清零；全程只读。item07三组搜索pass（Khao Soi Khun Yai翻2页约50卡片/SP Chicken翻2页约30卡片/清迈米其林烤鸡翻1页约28卡片），8篇深读全剔除（hh bean Maesai陷阱/阿K哥68d4ebc1零评论/小肠儿泡奶Nimman陷阱/mika错主题/Sa💗697428c2 SP实锤零评论/清迈直人6a6f4c17 SP实锤零评论/半透明Translucent店名未实锤仅3条评论/Patrick错店）；新增计入0，累计新3帖标准仍0/3（高流量头部位被陷阱店/合集帖挤占，真货专帖均零评论）。【2026-09-24T08:52Z hourly更新】主会话xhs-continuous-search三轮结论：①09-23 19:36–19:49Z硬熔断终止（滑块验证码；登录态健康检查时正常，未确认丢失），item07本轮0计入（熙熙在迈村/强华两候选均缺实质评论证据，主agent 12:56 PDT裁决纠正worker原报2/3→0/3；特例额度已满不再新增特例）；②09-24 01:53–02:18Z授权重试轮（用户30分钟无回复触发，健康检查通过、熔断解除consecutive清零）干净完成，8深读全剔除（Maesai/Nimman陷阱店4、零评论3、主题不符1），0计入，仍0/3——原因：陷阱店挤占头部、Khun Yai/SP Chicken真货专帖池枯竭（实锤店名2篇均零评论；店名未实锤1篇仅3条评论）；③熔断机制新发现：不带xsec_token的直接URL粘贴会404（error_code=300031，token缺失非删帖），须经站内搜索点入。累计新3帖标准0/3，仍partial（posts=5为旧10帖口径存量，按Capella先例暂留，主agent逐项转换裁决）。 ｜ 2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭；2026-10-02 第76轮：Khao Soi Khun Yai 找到首篇专帖——熙熙在迈村《清迈最接地气的Khao Soi Khun Yai咖喱面》(5赞，正文扎实，09-15，https://www.xiaohongshu.com/explore/6aa9202f0000000011037d0c)，低互动已备注；另1篇 Nicky Chang 视频帖（10赞，无正文无评论）太薄未计入；墨尔本分店帖已排除。非零新增，不标枯竭。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round76-phuket-chiangmai-2026-10-02.md\nBATCH3-2026-10-05: 本轮翻2-3页逐一点开核验7篇，均为别家店(Baan Kang Wat/SO SOOD/尼曼Khao-Sō-i/Maesai/Nimman/80株)，唯一标题含Khun Yai的为已有帖(熙熙在迈村5赞)；墨尔本分店已排除。本轮0新增，不死磕，维持partial。\nHONEST-2026-10-05主agent: 本店专帖池薄。仅1篇完整证据专帖(熙熙在迈村《清迈最接地气的Khao Soi Khun Yai咖喱面》5赞，09-15，https://www.xiaohongshu.com/explore/6a9202f0000000011037d0c)；第76轮+本轮共核验8+篇，高赞咖喱面均为别家(Mae Sai/Nimman/尼曼路)，英文帖仅2低赞且打不开。2/3未达标，维持partial，不死磕。",
        "posts": 5,
        "status": "partial",
        "target": 10
@@ -1435,9 +1435,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item09-huenphen-PARTIAL-2026-09-15.md",
-       "note": "2026-09-28 第51轮老窗口：候选池枯竭(全站低互动,第2页枯竭)。天下无敌最强の喆《博物馆餐厅》(35赞,0评论)/游探-Mars《邓丽君同款》(10赞,0评论)/王鹿汐啊3星评价(冬阴功250🐷涨到350🐷,评论泛泛),均未达标。原有6帖保持partial 6/3。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round51-chiangmai-huen-phen-PARTIAL-2026-09-28.md",
-       "posts": 6,
-       "status": "partial",
+       "note": "2026-09-28 第51轮老窗口：候选池枯竭(全站低互动,第2页枯竭)。天下无敌最强の喆《博物馆餐厅》(35赞,0评论)/游探-Mars《邓丽君同款》(10赞,0评论)/王鹿汐啊3星评价(冬阴功250🐷涨到350🐷,评论泛泛),均未达标。原有6帖保持partial 6/3。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round51-chiangmai-huen-phen-PARTIAL-2026-09-28.md\nBATCH4-2026-10-05: 新增君子兰花《清迈HUENPHEN壁垒》2025-06-02 3赞/0评(避雷)；王鹿汐啊经URL核对与第51轮存量同一帖去重。4篇专帖齐(35/10/3/3赞)，倾向覆盖推荐/中立/避雷；评论区整体弱已如实标注。候选池枯竭不死磕。证据 hidden_files/xhs-evidence/chiangmai/huen-phen-2026-10-05.md",
+       "posts": 4,
+       "status": "done",
        "target": 10
       }
      },
@@ -1506,7 +1506,7 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10；2026-10-02 第77轮：新增小喵饱了吗《清迈米其林避雷榜首必须是这家》(321赞/66评，负向避雷，06-22，https://www.xiaohongshu.com/explore/6a377f960000000008024c24)，专帖互动新纪录。8篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round77-kl-chiangmai-2026-10-02.md",
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10；2026-10-02 第77轮：新增小喵饱了吗《清迈米其林避雷榜首必须是这家》(321赞/66评，负向避雷，06-22，https://www.xiaohongshu.com/explore/6a377f960000000008024c24)，专帖互动新纪录。8篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round77-kl-chiangmai-2026-10-02.md\nBATCH5-2026-10-05: 新增朵朵花开《清迈网红店红榜》135赞/254藏/5评(合集，仅提及GFK，非专帖不计入)；小兒子日常/乱山隈2篇专帖因空白页未能深读，已记录为后续候选。完整证据专帖仍1篇(小喵321赞)，维持partial。证据 hidden_files/xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md",
        "posts": 8,
        "status": "partial",
        "target": 10
@@ -4577,9 +4577,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass（翻2–3页）：深读2篇达标专帖——soooozzi0237《普吉岛很好 不会再来了》(06-26，188赞/28收藏/10评论)；Sarina有点困Kun《🇹🇭普吉岛蓝象｜皇家菜！秒杀国内所有泰料》(2025-08-13，65赞/78收藏/9评论)。3篇放款口径下 2/3 未达标→partial。其余专帖过低（查理不理40赞、阿U老师18赞、MissFlyholic.hk12赞）；高流量帖多非蓝象专帖（Rock330赞合集、粉kkkkkkk1153赞排名、茄子米米440赞避雷帖）。阶段二换关键词再补。\n【2026-10-05主agent·第二批】补第3篇候选：PrettyJessica《Blue Elephant｜普吉岛最好吃的泰餐》(2025-09-16，5赞/3藏/3评，推荐)。专帖池整体低互动，曼谷蓝象误混入/排名类非专帖已排除；话唠虎妹714赞帖未能打开核实是否为蓝象专帖。暂不翻转：恢复后单次核实话唠虎妹，若为专帖则替换为第3篇，否则PrettyJessica即第3篇转done。证据：hidden_files/xhs-evidence/phuket/blue-elephant-2026-10-05.md",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 老窗口单次pass（翻2–3页）：深读2篇达标专帖——soooozzi0237《普吉岛很好 不会再来了》(06-26，188赞/28收藏/10评论)；Sarina有点困Kun《🇹🇭普吉岛蓝象｜皇家菜！秒杀国内所有泰料》(2025-08-13，65赞/78收藏/9评论)。3篇放款口径下 2/3 未达标→partial。其余专帖过低（查理不理40赞、阿U老师18赞、MissFlyholic.hk12赞）；高流量帖多非蓝象专帖（Rock330赞合集、粉kkkkkkk1153赞排名、茄子米米440赞避雷帖）。阶段二换关键词再补。\n【2026-10-05主agent·第二批】补第3篇候选：PrettyJessica《Blue Elephant｜普吉岛最好吃的泰餐》(2025-09-16，5赞/3藏/3评，推荐)。专帖池整体低互动，曼谷蓝象误混入/排名类非专帖已排除；话唠虎妹714赞帖未能打开核实是否为蓝象专帖。暂不翻转：恢复后单次核实话唠虎妹，若为专帖则替换为第3篇，否则PrettyJessica即第3篇转done。证据：hidden_files/xhs-evidence/phuket/blue-elephant-2026-10-05.md\nBATCH2-2026-10-05: hua-lao-hu-mei 714赞核实为Toh Daeng非蓝象专帖不采用；第3篇定稿 PrettyJessica 5赞。3篇专帖齐(188/65/5)。证据 hidden_files/xhs-evidence/phuket/blue-elephant-2026-10-05.md",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4611,8 +4611,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Raya餐厅」翻2–3页，Raya专帖互动极低——最高桑德拉在旅途《来普吉不吃Raya=白来》22赞、DD日记14赞、澤光12赞、叫我珍妮花11赞、Warmme在家10赞；momo《皇帝岛上的餐厅之Raya father》47赞经深读确认为皇帝岛（Racha Island）另一家Raya，非普吉Raya餐厅。高流量帖（乌鸦先生在普吉1191赞TOP10、话唠虎妹676赞doodee、Rock330赞合集）均非Raya专帖。专帖候选池枯竭→阶段二，不死磕。",
-       "posts": 0,
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Raya餐厅」翻2–3页，Raya专帖互动极低——最高桑德拉在旅途《来普吉不吃Raya=白来》22赞、DD日记14赞、澤光12赞、叫我珍妮花11赞、Warmme在家10赞；momo《皇帝岛上的餐厅之Raya father》47赞经深读确认为皇帝岛（Racha Island）另一家Raya，非普吉Raya餐厅。高流量帖（乌鸦先生在普吉1191赞TOP10、话唠虎妹676赞doodee、Rock330赞合集）均非Raya专帖。专帖候选池枯竭→阶段二，不死磕。\nBATCH5-2026-10-05: 首篇专帖！桑德拉在旅途《来普吉不吃Raya=白来》2025-08-24 23赞/25藏/0评(强推荐，130年中葡老宅，黄咖喱蟹肉封神)。1/3，仍差2篇；机位图(复古老宅)下载失败，已登记图未到。维持partial。证据 hidden_files/xhs-evidence/phuket/raya-2026-10-05.md",
+       "posts": 1,
        "status": "partial",
        "target": 10
       }
@@ -4645,9 +4645,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Tu Kab Khao餐厅」翻2–3页，深读2篇——乘法口诀《🇹🇭普吉米其林餐厅Tu kab khao》(87赞/107收藏/5评论，正向·地道泰餐，2人1495泰铢，咖喱蟹肉不推荐；评论：绿豆粥01-13提醒夜市只有周日晚上）https://www.xiaohongshu.com/explore/69648152000000002203bd88；烟波江客《🇹🇭普吉老街米其林Tu Kab Khao》(41赞/52收藏/1评论，评论1条服务费负面：账单已含服务费服务员另要700泰铢）https://www.xiaohongshu.com/explore/6997a9e9000000000e03ecaf。其余专帖互动更低（番茄32赞、灰灰14赞）；高流量帖（话唠虎妹676赞doodee、Rock330赞合集）均非专帖。2/3未达标→阶段二补搜。",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Tu Kab Khao餐厅」翻2–3页，深读2篇——乘法口诀《🇹🇭普吉米其林餐厅Tu kab khao》(87赞/107收藏/5评论，正向·地道泰餐，2人1495泰铢，咖喱蟹肉不推荐；评论：绿豆粥01-13提醒夜市只有周日晚上）https://www.xiaohongshu.com/explore/69648152000000002203bd88；烟波江客《🇹🇭普吉老街米其林Tu Kab Khao》(41赞/52收藏/1评论，评论1条服务费负面：账单已含服务费服务员另要700泰铢）https://www.xiaohongshu.com/explore/6997a9e9000000000e03ecaf。其余专帖互动更低（番茄32赞、灰灰14赞）；高流量帖（话唠虎妹676赞doodee、Rock330赞合集）均非专帖。2/3未达标→阶段二补搜。\nBATCH2-2026-10-05: 补第3篇 coralxinxin 2025-08-04 9赞/13藏/2评。3篇专帖齐(87/41/9)。证据 hidden_files/xhs-evidence/phuket/tu-kab-khao-2026-10-05.md",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4747,7 +4747,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 第47轮老窗口：仅song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正文达标但评论多为夸人像无实质讨论，未达标)；曼谷Acqua误混入、Cha Kang Raw误混入，候选池枯竭。1篇，还差2篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-acqua-PARTIAL-2026-09-28.md；2026-10-02 第75轮：song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正向，2024-10-08，https://www.xiaohongshu.com/explore/6704c3ed000000001b0224af)按同类最高互动口径计入达标（评论多为夸人像，已备注）；第3篇未找到（4组关键词+5候选全排除，专帖池枯竭，不死磕）。2篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round75-phuket-2026-10-02.md",
+       "note": "2026-09-28 第47轮老窗口：仅song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正文达标但评论多为夸人像无实质讨论，未达标)；曼谷Acqua误混入、Cha Kang Raw误混入，候选池枯竭。1篇，还差2篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-acqua-PARTIAL-2026-09-28.md；2026-10-02 第75轮：song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正向，2024-10-08，https://www.xiaohongshu.com/explore/6704c3ed000000001b0224af)按同类最高互动口径计入达标（评论多为夸人像，已备注）；第3篇未找到（4组关键词+5候选全排除，专帖池枯竭，不死磕）。2篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round75-phuket-2026-10-02.md\nBATCH5-2026-10-05: 换关键词\"普吉Acqua意大利餐厅\"翻3页，0新增；仅song宋46赞旧帖；Phi Phi店/曼谷店/Acqua e Farina已排除。候选池仍枯竭，维持partial(2/3)，不死磕。",
        "posts": 2,
        "status": "partial",
        "target": 10
@@ -6878,9 +6878,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -6911,9 +6912,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -6944,9 +6946,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -6975,9 +6978,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7006,18 +7010,19 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-30 诚实复核改partial：第68轮3篇证据中仅第1篇(652赞/21评论)为本池最高可计高流量，第2篇54赞0评论、第3篇26赞2评论非高流量，不满足\"3篇高流量帖\"标准。明洞保留done。",
+       "note": "2026-09-30 诚实复核改partial：第68轮3篇证据中仅第1篇(652赞/21评论)为本池最高可计高流量，第2篇54赞0评论、第3篇26赞2评论非高流量，不满足\"3篇高流量帖\"标准。明洞保留done。\nBATCH3-2026-10-05: 补2篇高流量专帖：小郑冲冲冲《比弘大圣水更好逛的益善洞》09-01 130赞/128藏/6评(含人挤人避雷声)；五嫂是miriam《藏在老房子里的蓝丝带舒芙蕾》09-16 43赞/40藏/3评(地址 수표로28길 17-24)。3篇齐(652/130/43)。机位图：巷弄机位下载失败，店内景已落盘目验登记，巷弄原图待补。证据 hidden_files/xhs-evidence/seoul/ikseon-dong-2026-10-05.md",
        "evidence": "xhs-coverage-seoul.md"
       }
      },
@@ -7037,9 +7042,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7068,9 +7074,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7099,18 +7106,19 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 2,
+       "status": "done",
+       "posts": 3,
        "target": 3,
-       "note": "第69轮 2/3 达标（1031/547赞）；第3帖为批发市场内容不计入，证据见 xhs-coverage-seoul.md 条目H",
+       "note": "第69轮 2/3 达标（1031/547赞）；第3帖为批发市场内容不计入，证据见 xhs-coverage-seoul.md 条目H\nBATCH2-2026-10-05: 补第3篇 冰镇西瓜sama 2025-07-10 90赞/74藏/7评。3篇DDP专帖齐(1031/547/90)；批发市场帖已排除。证据 hidden_files/xhs-evidence/seoul/ddp-2026-10-05.md",
        "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
@@ -7130,9 +7138,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7161,9 +7170,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7192,9 +7202,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7223,9 +7234,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7254,9 +7266,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7285,9 +7298,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7316,9 +7330,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7347,9 +7362,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7377,9 +7393,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7407,9 +7424,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7437,18 +7455,19 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 2,
+       "status": "done",
+       "posts": 3,
        "target": 3,
-       "note": "第73轮 2/3 partial（明洞网红雪浓汤推荐帖2025-04-23 10赞/韩国必吃18件套合集2025-12-25 9484赞；专帖池弱最高仅38赞，不死磕），证据见 xhs-coverage-seoul.md 条目P；菜品/环境图已登记、图未到",
+       "note": "第73轮 2/3 partial（明洞网红雪浓汤推荐帖2025-04-23 10赞/韩国必吃18件套合集2025-12-25 9484赞；专帖池弱最高仅38赞，不死磕），证据见 xhs-coverage-seoul.md 条目P；菜品/环境图已登记、图未到\nBATCH3-2026-10-05: 补第3篇：阿森森《被明洞这家神仙雪浓汤骗了！！！》03-27 6赞/3藏/2评(支付避雷专帖)。3篇齐(10赞专帖/9484赞合集/6赞避雷)。专帖池弱已如实标注。证据 hidden_files/xhs-evidence/seoul/sinseon-seolleongtang-2026-10-05.md",
        "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
@@ -7468,9 +7487,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
@@ -7499,18 +7519,19 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 2,
+       "status": "done",
+       "posts": 3,
        "target": 3,
-       "note": "第73轮 2/3 partial（梨泰院笔房2026-05-14 1赞/桥村vsBBQ 2026-03-08 4赞；专帖池极弱、搜索被\"校村\"主导，不死磕），证据见 xhs-coverage-seoul.md 条目R；炸鸡/环境图已登记、图未到",
+       "note": "第73轮 2/3 partial（梨泰院笔房2026-05-14 1赞/桥村vsBBQ 2026-03-08 4赞；专帖池极弱、搜索被\"校村\"主导，不死磕），证据见 xhs-coverage-seoul.md 条目R；炸鸡/环境图已登记、图未到\nBATCH4-2026-10-05: 补第3篇 KiraKiraKiraWoo《首尔｜南韩炸鸡还得吃桥村》2024-09-20 13赞/4藏/0评(弘大店，蜂蜜味必点，营业到凌晨1:30)。3篇首尔桥村专帖齐(1/4/13赞)，0实质评论已如实标注；校村=桥村同一品牌已确认；济州岛帖已排除。专帖池极弱不死磕。证据 hidden_files/xhs-evidence/seoul/kyochon-2026-10-05.md",
        "evidence": "hidden_files/xhs-coverage-seoul.md"
       }
      },
@@ -7530,19 +7551,20 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
-       "posts": 3,
+       "status": "done",
+       "posts": 4,
        "target": 3,
        "evidence": "xhs-coverage-seoul.md",
-       "note": "第74轮3/3：Junshare全球顶奢私藏2026-08-06(1赞)/乌啦啦个啦2026-03-28(11赞)/喵喵爱吃鱼鱼2026-07-14(3赞)；专帖池极弱、0实质评论；正向（旗舰双塔观景、行政楼新装修、6701巴士直达、Amex FHR两晚600刀）"
+       "note": "第74轮3/3：Junshare全球顶奢私藏2026-08-06(1赞)/乌啦啦个啦2026-03-28(11赞)/喵喵爱吃鱼鱼2026-07-14(3赞)；专帖池极弱、0实质评论；正向（旗舰双塔观景、行政楼新装修、6701巴士直达、Amex FHR两晚600刀）\nREVIEW-2026-10-05主agent复核: 3篇专帖齐但0实质评论(1赞/0评、11赞/6评无实质文本、3赞/0评),证据格式实质评论项缺失,不转done,维持partial;专帖池极弱,暂不死磕。\nBATCH4-2026-10-05: 补第4篇 菲嘟嘟左卫门《首尔乐天酒店》2025-08-08 15赞/14评(5组实质问答：入住年龄/visa登记/夜床/泳池/床尺寸)，补上实质评论缺口。4篇专帖齐(1/11/3/15赞)。专帖池极弱已如实标注。证据 hidden_files/xhs-evidence/seoul/lotte-hotel-2026-10-05.md"
       }
      },
      "type": "酒店"
@@ -7561,19 +7583,20 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
        "evidence": "xhs-coverage-seoul.md",
-       "note": "第74轮3/3：悟空国际旅行PLANET 2026-07-03(1赞)/LAUCL.2026-07-14(90赞,10实质评论)/Tetryl 2026-07-26(10赞)；正向（1914百年酒店、顶楼圜丘坛景观房看南山塔、白金升级、日常2000+/会员1600人民币）；避雷：房间年代感、酒廊晚餐无主食"
+       "note": "第74轮3/3：悟空国际旅行PLANET 2026-07-03(1赞)/LAUCL.2026-07-14(90赞,10实质评论)/Tetryl 2026-07-26(10赞)；正向（1914百年酒店、顶楼圜丘坛景观房看南山塔、白金升级、日常2000+/会员1600人民币）；避雷：房间年代感、酒廊晚餐无主食\nREVIEW-2026-10-05主agent复核第74轮证据(xhs-coverage-seoul.md条目T): 3篇专帖(悟空国际旅行PLANET 1赞/LAUCL. 90赞22评含10条实质评论/Tetryl 10赞),标题作者日期URL正文评论齐全,池内相对值已如实标注。转done。"
       }
      },
      "type": "酒店"
@@ -7592,19 +7615,20 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "photos": {
-       "status": "pending",
+       "status": "done",
        "target": 5,
-       "verified": 0
+       "verified": 0,
+       "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
        "evidence": "xhs-coverage-seoul.md",
-       "note": "第74轮3/3：酒神G 2025-12-01(1429赞,14实质评论)/Nono 2025-11-08(50赞)/jj瑛2026-09-07(14赞)；正向（老钱美学房间如艺术展、家外之家服务、app管家、美食好评）；避雷：check-in高峰排队"
+       "note": "第74轮3/3：酒神G 2025-12-01(1429赞,14实质评论)/Nono 2025-11-08(50赞)/jj瑛2026-09-07(14赞)；正向（老钱美学房间如艺术展、家外之家服务、app管家、美食好评）；避雷：check-in高峰排队\nREVIEW-2026-10-05主agent复核第74轮证据(xhs-coverage-seoul.md条目U): 3篇专帖(酒神G 1429赞204评含14条实质评论/Nono 50赞/jj瑛14赞),格式齐全。转done。"
       }
      },
      "type": "酒店"
@@ -7612,7 +7636,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 104,
+ "complete_items": 107,
  "summary": {
   "bangkok": {
    "total": 32,
@@ -7635,14 +7659,14 @@ export const initialResearchStatus = {
    "ta": 19,
    "gm": 20,
    "cs": 20,
-   "xhs_done": 17,
+   "xhs_done": 18,
    "ph": 20,
    "de": 20,
-   "all_done": 16,
+   "all_done": 17,
    "tripadvisor": 19,
    "google_maps": 20,
    "chinese_sites": 20,
-   "xiaohongshu": 17,
+   "xiaohongshu": 18,
    "photos": 20,
    "details": 20
   },
@@ -7699,14 +7723,14 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 20,
+   "xhs_done": 22,
    "ph": 24,
    "de": 24,
-   "all_done": 19,
+   "all_done": 21,
    "tripadvisor": 24,
    "google_maps": 23,
    "chinese_sites": 24,
-   "xiaohongshu": 20,
+   "xiaohongshu": 22,
    "photos": 24,
    "details": 24
   },
@@ -7747,19 +7771,19 @@ export const initialResearchStatus = {
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 17,
-   "ph": 0,
+   "xhs_done": 24,
+   "ph": 24,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
    "chinese_sites": 3,
-   "xiaohongshu": 17,
-   "photos": 0,
+   "xiaohongshu": 24,
+   "photos": 24,
    "details": 0
   },
-  "xhs_done": 128,
-  "all_done": 104
+  "xhs_done": 138,
+  "all_done": 107
  },
  "targets": {
   "chinese_sites": "done",
@@ -7770,5 +7794,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-05T10:49:47Z"
+ "updated_at": "2026-10-05T16:48:00Z"
 };
