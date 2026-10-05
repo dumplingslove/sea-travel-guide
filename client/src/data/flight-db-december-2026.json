@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T04:54:25+00:00",
+ "updated_at": "2026-10-05T05:11:03+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -435,175 +435,203 @@
      "business_note": "列表页1个新航代码共享行(SQ5285)价格照实抄录，合并时按航班号匹配、无匹配不新增"
     },
     "2026-12-14": {
-     "economy_queried_at": "2026-09-28T04:36:30+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-05T05:11:03+00:00",
+     "economy_usd": 909.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child; booking panel states 'Price hidden because it might be incorrect'.",
+     "economy_note": "Air China flights showed no price (price unavailable)",
      "nonstop_flights": [
       {
        "airline": "Singapore Airlines",
-       "arr": "06:45",
+       "flight": "SQ801",
        "dep": "00:10",
+       "arr": "06:45",
        "duration": "6h35m",
-       "flight": "SQ801"
-      },
-      {
-       "airline": "Air China",
-       "arr": "06:50",
-       "dep": "00:15",
-       "duration": "6h35m",
-       "flight": "CA975"
+       "price_usd": 909.0,
+       "business_price_usd": 4747.0
       },
       {
        "airline": "Singapore Airlines",
-       "arr": "15:20",
+       "flight": "SQ805",
        "dep": "08:45",
+       "arr": "15:20",
        "duration": "6h35m",
-       "flight": "SQ805"
-      },
-      {
-       "airline": "Air China",
-       "arr": "16:15",
-       "dep": "09:45",
-       "duration": "6h30m",
-       "flight": "CA889"
-      },
-      {
-       "airline": "Air China",
-       "arr": "21:55",
-       "dep": "15:45",
-       "duration": "6h10m",
-       "flight": "CA969"
+       "price_usd": 1388.0,
+       "business_price_usd": 3666.0
       },
       {
        "airline": "Singapore Airlines",
-       "arr": "22:55",
+       "flight": "SQ807",
        "dep": "16:40",
+       "arr": "22:55",
        "duration": "6h15m",
-       "flight": "SQ807"
+       "price_usd": 2135.0,
+       "business_price_usd": 4747.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h30m",
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h35m",
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h20m",
+       "business_price_usd": 3055.0
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T04:36:30+00:00",
-     "business_usd": null,
-     "business_price_basis": "2大1小总价",
-     "business_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child."
+     "business_queried_at": "2026-10-05T05:11:03+00:00",
+     "business_usd": 3055.0,
+     "business_price_basis": "2大1小总价"
     },
     "2026-12-15": {
-     "economy_queried_at": "2026-09-28T04:36:30+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-05T05:11:03+00:00",
+     "economy_usd": 644.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child.",
      "nonstop_flights": [
       {
-       "airline": "Singapore Airlines",
-       "arr": "15:20",
-       "dep": "08:45",
-       "duration": "6h35m",
-       "flight": "SQ805"
-      },
-      {
-       "airline": "Singapore Airlines",
-       "arr": "06:45",
-       "dep": "00:10",
-       "duration": "6h35m",
-       "flight": "SQ801"
-      },
-      {
        "airline": "Air China",
-       "arr": "06:50",
-       "dep": "00:15",
-       "duration": "6h35m",
-       "flight": "CA975"
-      },
-      {
-       "airline": "Air China",
-       "arr": "16:15",
+       "flight": "CA889",
        "dep": "09:45",
+       "arr": "16:15",
        "duration": "6h30m",
-       "flight": "CA889"
-      },
-      {
-       "airline": "Air China",
-       "arr": "21:55",
-       "dep": "15:45",
-       "duration": "6h10m",
-       "flight": "CA969"
+       "price_usd": 644.0,
+       "business_price_usd": 3055.0
       },
       {
        "airline": "Singapore Airlines",
-       "arr": "22:55",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h35m",
+       "price_usd": 750.0,
+       "business_price_usd": 4769.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h35m",
+       "price_usd": 813.0,
+       "business_price_usd": 4641.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h35m",
+       "price_usd": 826.0,
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h20m",
+       "price_usd": 961.0,
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
        "dep": "16:40",
+       "arr": "22:55",
        "duration": "6h15m",
-       "flight": "SQ807"
+       "price_usd": 1284.0,
+       "business_price_usd": 4747.0
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T04:36:30+00:00",
-     "business_usd": null,
-     "business_price_basis": "2大1小总价",
-     "business_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child."
+     "business_queried_at": "2026-10-05T05:11:03+00:00",
+     "business_usd": 3055.0,
+     "business_price_basis": "2大1小总价"
     },
     "2026-12-16": {
-     "economy_queried_at": "2026-09-28T04:36:30+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-05T05:11:03+00:00",
+     "economy_usd": 644.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child.",
      "nonstop_flights": [
       {
-       "airline": "Singapore Airlines",
-       "arr": "06:45",
-       "dep": "00:10",
-       "duration": "6h35m",
-       "flight": "SQ801"
-      },
-      {
        "airline": "Air China",
-       "arr": "06:50",
-       "dep": "00:15",
-       "duration": "6h35m",
-       "flight": "CA975"
-      },
-      {
-       "airline": "Singapore Airlines",
-       "arr": "15:20",
-       "dep": "08:45",
-       "duration": "6h35m",
-       "flight": "SQ805"
-      },
-      {
-       "airline": "Air China",
-       "arr": "16:15",
+       "flight": "CA889",
        "dep": "09:45",
+       "arr": "16:15",
        "duration": "6h30m",
-       "flight": "CA889"
-      },
-      {
-       "airline": "Air China",
-       "arr": "21:55",
-       "dep": "15:45",
-       "duration": "6h10m",
-       "flight": "CA969"
+       "price_usd": 644.0,
+       "business_price_usd": 3055.0
       },
       {
        "airline": "Singapore Airlines",
-       "arr": "22:55",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h35m",
+       "price_usd": 750.0,
+       "business_price_usd": 4641.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA975",
+       "dep": "00:15",
+       "arr": "06:50",
+       "duration": "6h35m",
+       "price_usd": 826.0,
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h20m",
+       "price_usd": 961.0,
+       "business_price_usd": 3055.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h35m",
+       "price_usd": 1132.0,
+       "business_price_usd": 4747.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
        "dep": "16:40",
+       "arr": "22:55",
        "duration": "6h15m",
-       "flight": "SQ807"
+       "price_usd": 1285.0,
+       "business_price_usd": 4747.0
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-09-28T04:36:30+00:00",
-     "business_usd": null,
-     "business_price_basis": "2大1小总价",
-     "business_note": "Google Flights shows 'Total price is unavailable' for all nonstop flights with 2 adults + 1 child."
+     "business_queried_at": "2026-10-05T05:11:03+00:00",
+     "business_usd": 3055.0,
+     "business_price_basis": "2大1小总价"
     },
     "2026-12-04": {
      "economy_queried_at": "2026-09-28T05:33:01+00:00",
