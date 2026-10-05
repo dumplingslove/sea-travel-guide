@@ -1008,9 +1008,9 @@ function BookingsInner() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* 2026-10-04 用户：分类+城市+地图三层一起吸顶，统一容器不打架 */}
-      <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 py-1 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
+      <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 py-0.5 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
         {/* 分类导航 */}
-        <div role="tablist" aria-label="预订二级菜单" className="py-0.5">
+        <div role="tablist" aria-label="预订二级菜单">
         <div className="booking-tabs flex gap-1.5 overflow-x-auto">
           {menus.map((m) => (
             <button
@@ -1033,7 +1033,7 @@ function BookingsInner() {
 
         {/* 城市导航（仅酒店/餐厅/景点） */}
         {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
-          <div role="tablist" aria-label="城市筛选" className="py-0.5 mt-1">
+          <div role="tablist" aria-label="城市筛选" className="mt-0.5">
           <div className="flex gap-1.5 overflow-x-auto">
             {(scoped ? planCities.filter(c => allCities.includes(c)) : []).map((c) => {
               const currentCity = (menu === "hotels" ? hotelCity : menu === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
