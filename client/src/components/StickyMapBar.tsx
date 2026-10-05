@@ -827,17 +827,34 @@ export default function StickyMapBar({
       // 不要闪、不要从高空缩放、不要 flyTo。
       // 行为：平滑 panTo 到那家（起点=当前位置，连贯）；zoom 用 setZoom 平滑到 14，
       // 不用 setView 的动画（长距离会触发先拉远再推进且实测会卡在高空不动）。
+      // 2026-10-04 修：pan 和 zoom 串行（pan 完再 zoom），避免重叠动画打架导致飞错地方（如 Raffles 飞到柔佛）。
       if (!selectZoom) {
         // 直接按 activeItemKeys 查坐标，不依赖 pts 数组（pts 可能因时序为空）
         const keys = activeSig!.split("|");
         for (const k of keys) {
           const it = itemByKeyRef.current.get(k);
-          if (it) {
-            // 2026-10-04：先平滑挪过去（人手感），再平滑缩放到 14
-            map.panTo(LL(it.lat, it.lng), { animate: true, duration: 1.0 });
-            if (map.getZoom() !== 14) {
-              // 延迟一点等 pan 启动，避免两个动画打架
-              setTimeout(() => { map.setZoom(14, { animate: true }); }, 150);
+          if (it && typeof it.lat === "number" && typeof it.lng === "number") {
+            const target = LL(it.lat, it.lng);
+            const needZoom = map.getZoom() !== 14;
+            // 先平滑挪过去
+            map.panTo(target, { animate: true, duration: 1.0 });
+            if (needZoom) {
+              // pan 结束后（moveend）再平滑缩放到 14，串行不打架
+              const onMoveEnd = () => {
+                map.off("moveend", onMoveEnd);
+                // 确认还在目标附近（用户没手动挪走）才 zoom
+                if (map.getCenter().distanceTo(target) < 500) {
+                  map.setZoom(14, { animate: true });
+                }
+              };
+              map.on("moveend", onMoveEnd);
+              // 兜底：2 秒后还没 moveend 也 zoom（防止事件丢）
+              setTimeout(() => {
+                map.off("moveend", onMoveEnd);
+                if (map.getCenter().distanceTo(target) < 5000 && map.getZoom() !== 14) {
+                  map.setZoom(14, { animate: true });
+                }
+              }, 2000);
             }
             break; // 只处理第一个选中的
           }
