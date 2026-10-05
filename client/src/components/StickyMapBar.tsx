@@ -330,6 +330,8 @@ interface StickyMapBarProps {
   storageKey?: string;
   /** 高度变化回调（父组件用它叠放其他 sticky 条） */
   onHeightChange?: (h: number) => void;
+  /** 2026-10-04 用户反馈三层吸顶打架：为 true 时地图不吸顶，随页面滚动 */
+  disableSticky?: boolean;
   /** 常显模式：地图一直显示，不提供折叠按钮（2026-10-03 晚用户：行程页地图常显） */
   alwaysVisible?: boolean;
   /**
@@ -364,6 +366,7 @@ export default function StickyMapBar({
   onHeightChange,
   alwaysVisible = false,
   stickyTop,
+  disableSticky,
   selectZoom = true,
   onMarkerSelect,
 }: StickyMapBarProps) {
@@ -949,8 +952,8 @@ export default function StickyMapBar({
   return (
     <div
       ref={wrapRef}
-      className="sticky z-[6] -mx-4 px-4 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200"
-      style={{ top: topPx }}
+      className={`${disableSticky ? "relative" : "sticky"} z-[6] -mx-4 px-4 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200`}
+      style={disableSticky ? undefined : { top: topPx }}
     >
       <style>{`@keyframes sea-pin-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}`}</style>
       {alwaysVisible ? (

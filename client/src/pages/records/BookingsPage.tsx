@@ -825,9 +825,8 @@ function BookingsInner() {
     const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
     const nav = menuNavRef.current;
     const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
-    const mh = mapHeightsRef.current[menuKey] || 0;
-    // 2026-10-04 用户：顺序为 地图→分类→城市，城市tab在地图+分类下方
-    document.documentElement.style.setProperty("--citytabs-top", `${headerH + mh + navH}px`);
+    // 2026-10-04 用户反馈：城市tab吸顶于分类下方（地图不吸顶，不计入）
+    document.documentElement.style.setProperty("--citytabs-top", `${headerH + navH}px`);
   };
   useLayoutEffect(() => {
     const nav = menuNavRef.current;
@@ -835,11 +834,9 @@ function BookingsInner() {
     const sync = () => {
       const header = document.querySelector("header.sticky");
       const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
-      const mh = mapHeightsRef.current[menu] || 0;
-      // 2026-10-04 用户：顺序为 地图→分类→城市
-      // 地图吸顶 = 顶栏高度；分类吸顶 = 顶栏+地图高；城市tab由 --citytabs-top 控制
-      setMapStickyTop(headerH);
-      if (header) nav.style.top = `${headerH + mh}px`;
+      // 2026-10-04 用户反馈三层吸顶打架：改为地图不吸顶（滚走），分类吸顶于顶栏下，城市吸顶于分类下
+      setMapStickyTop(undefined);
+      if (header) nav.style.top = `${headerH}px`;
       const navH = Math.round(nav.getBoundingClientRect().height);
       syncCityTabsTop(menu);
     };
@@ -1008,7 +1005,7 @@ function BookingsInner() {
             expandSignal={hotelExpandSig}
             title="🗺️ 候选酒店位置"
             storageKey="sticky-map-booking-hotels"
-            stickyTop={mapStickyTop}
+            disableSticky
             selectZoom={false}
             onHeightChange={onMapHeight("hotels")}
             onMarkerSelect={(key)=>{ setHotelSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
@@ -1022,7 +1019,7 @@ function BookingsInner() {
             expandSignal={restExpandSig}
             title="🗺️ 候选餐厅位置"
             storageKey="sticky-map-booking-restaurants"
-            stickyTop={mapStickyTop}
+            disableSticky
             selectZoom={false}
             onHeightChange={onMapHeight("restaurants")}
             onMarkerSelect={(key)=>{ setRestSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
@@ -1036,7 +1033,7 @@ function BookingsInner() {
             expandSignal={attrExpandSig}
             title="🗺️ 景点位置"
             storageKey="sticky-map-booking-attractions"
-            stickyTop={mapStickyTop}
+            disableSticky
             selectZoom={false}
             onHeightChange={onMapHeight("attractions")}
             onMarkerSelect={(key)=>{ setAttrSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
