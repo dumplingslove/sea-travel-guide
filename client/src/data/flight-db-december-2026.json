@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T17:07:59+00:00",
+ "updated_at": "2026-10-05T19:54:56+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2772,8 +2772,8 @@
      "business_note": "该舱位有直飞但价格不可用（Price unavailable），故整单价记 null"
     },
     "2026-12-29": {
-     "economy_queried_at": "2026-09-28T18:56:15+00:00",
-     "economy_usd": 525.0,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 533,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2781,21 +2781,22 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h55m",
-       "price_usd": 525.0
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 533
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T18:56:15+00:00",
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞",
+     "economy_note": "Cheapest tab showed 'From $533' after prices settled; Best tab briefly showed $536 while fetching"
     },
     "2026-12-30": {
-     "economy_queried_at": "2026-09-28T18:56:15+00:00",
-     "economy_usd": 525.0,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 550,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2803,28 +2804,29 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h55m",
-       "price_usd": 525.0
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 550
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
-       "duration": "5h35m",
-       "price_usd": 686.0
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
+       "duration": "5 hr 35 min",
+       "price_usd": 887,
+       "business_price_usd": 1458
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T18:56:15+00:00",
-     "business_usd": null,
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
+     "business_usd": 1458,
      "business_price_basis": "2成人总价"
     },
     "2026-12-31": {
-     "economy_queried_at": "2026-09-28T18:56:15+00:00",
-     "economy_usd": 693.0,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 663,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2832,21 +2834,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h55m",
-       "price_usd": 693.0
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 663
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T18:56:15+00:00",
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-01": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 324,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 330,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2854,21 +2856,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h 55m",
-       "price_usd": 324
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 330
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-02": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 324,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 330,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2876,29 +2878,29 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h 55m",
-       "price_usd": 324
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 330
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
-       "duration": "5h 35m",
-       "price_usd": 607,
-       "business_price_usd": 1385
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
+       "duration": "5 hr 35 min",
+       "price_usd": 612,
+       "business_price_usd": 1370
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
-     "business_usd": 1385,
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
+     "business_usd": 1370,
      "business_price_basis": "2成人总价"
     },
     "2026-12-03": {
-     "economy_queried_at": "2026-09-28T19:12:31+00:00",
-     "economy_usd": 332,
+     "economy_queried_at": "2026-10-05T19:54:56+00:00",
+     "economy_usd": 330,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2906,14 +2908,14 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h 55m",
-       "price_usd": 332
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
+       "duration": "5 hr 55 min",
+       "price_usd": 330
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-28T19:12:31+00:00",
+     "business_queried_at": "2026-10-05T19:54:56+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
