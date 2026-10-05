@@ -140,7 +140,7 @@ function AppRouter() {
             <Route path="/travel-research" element={<GuidePage tab="旅行研究" />} />
             <Route path="/practical" element={<GuidePage tab="实用信息" />} />
             <Route path="/flights" element={<Navigate to="/bookings?menu=flights" replace />} />
-            <Route path="/transport" element={<Navigate to="/bookings?menu=transport" replace />} />
+            <Route path="/transport" element={<Navigate to="/practical?mode=交通" replace />} />
             <Route path="/map" element={<Navigate to="/planner?view=map" replace />} />
             <Route path="/research" element={<GuidePage tab="信息来源搜索状态" />} />
             <Route path="/guide" element={<Navigate to="/" replace />} />

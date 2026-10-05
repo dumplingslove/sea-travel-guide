@@ -893,10 +893,10 @@ export function ItineraryDayCard({
                 💡 {mobility[2]}
               </p>
               <Link
-                to="/bookings?menu=transport"
+                to="/practical?mode=交通"
                 className="inline-block mt-3 text-sm font-medium text-sky-700 underline"
               >
-                去预订页看交通指南 →
+                去实用信息看交通指南 →
               </Link>
             </div>
           </Collapsible>

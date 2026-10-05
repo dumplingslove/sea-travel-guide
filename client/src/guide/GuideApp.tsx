@@ -726,15 +726,16 @@ function PackingStrip(){
 }
 
 function Practical({onBook}:{onBook?:OnBook}){
- /** 地图商场标记深链：/practical?shop=<城市中文>#mall-<encodeURIComponent(商场名)> */
+ /** 地图商场标记深链：/practical?shop=<城市中文>#mall-<encodeURIComponent(商场名)>；交通直达：/practical?mode=交通 */
  const deep=useMemo(()=>{
   const q=new URLSearchParams(window.location.search);
   const shop=q.get('shop')||'';
+  const mode0=q.get('mode')||'';
   const hash=window.location.hash||'';
   const mall=hash.startsWith('#mall-')?decodeURIComponent(hash.slice(6)):'';
-  return {shop,mall};
+  return {shop,mall,mode0};
  },[]);
- const [mode,setMode]=useState<'实用信息'|'购物推荐'|'打包清单'|'交通'>(deep.shop?'购物推荐':'实用信息');
+ const [mode,setMode]=useState<'实用信息'|'购物推荐'|'打包清单'|'交通'>(deep.shop?'购物推荐':(deep.mode0==='交通'?'交通':'实用信息'));
  useEffect(()=>{
   if(mode!=='购物推荐'||!deep.mall) return;
   const t=window.setTimeout(()=>{
