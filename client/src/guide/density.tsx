@@ -21,8 +21,8 @@ export function Fold({eyebrow,title,meta,image,defaultOpen,extra,className,child
 }
 
 /** 长列表分页：先显示 pageSize 条，按钮展开全部 / 收起。 */
-export function usePaged<T>(items:T[],pageSize:number,unit:string){
- const [expanded,setExpanded]=useState(false);
+export function usePaged<T>(items:T[],pageSize:number,unit:string,defaultExpanded?:boolean){
+ const [expanded,setExpanded]=useState(!!defaultExpanded);
  const paged=items.length>pageSize;
  const visible=expanded?items:items.slice(0,pageSize);
  const toggle=paged?<div className="showmore">
