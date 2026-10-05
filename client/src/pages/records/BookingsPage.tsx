@@ -1065,9 +1065,36 @@ function BookingsInner() {
         </div>
       </div>
 
+      {/* 2026-10-04 用户：城市导航固定在分类下方，一起吸顶；地图不吸顶 */}
+      {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
+        <div className="sticky z-[4] -mx-4 px-4 py-1.5 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--citytabs-top, 60px)' }} role="tablist" aria-label="城市筛选">
+          <div className="flex gap-1.5 overflow-x-auto">
+            {(scoped ? planCities : []).map((c) => {
+              const currentCity = (menu === "hotels" ? hotelCity : menu === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
+              const setCity = menu === "hotels" ? setHotelCity : menu === "restaurants" ? setRestCity : setAttrCity;
+              return (
+                <button
+                  key={c}
+                  role="tab"
+                  aria-selected={currentCity === c}
+                  onClick={() => setCity(c)}
+                  className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
+                    currentCity === c
+                      ? "bg-teal-700 text-white border-teal-700"
+                      : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+                  }`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {menu === "hotels" ? (
         <div className="guide-scope">
-          <HotelCatalog bare onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
+          <HotelCatalog key={`hotels-${hotelCity}`} bare hideCityTabs initialCity={hotelCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">
@@ -1075,11 +1102,11 @@ function BookingsInner() {
         </div>
       ) : menu === "restaurants" ? (
         <div className="guide-scope">
-          <RestaurantCatalog bare onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
+          <RestaurantCatalog key={`restaurants-${restCity}`} bare hideCityTabs initialCity={restCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
-          <AttractionCatalog scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} defaultListExpanded />
+          <AttractionCatalog key={`attractions-${attrCity}`} hideCityTabs initialCity={attrCity || undefined} scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} defaultListExpanded />
         </div>
       ) : menu === "action" ? (
         <>
