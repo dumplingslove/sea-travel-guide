@@ -1055,7 +1055,7 @@ function BookingsInner() {
             selectZoom={false}
             onHeightChange={onMapHeight("hotels")}
           />
-          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} />
+          <HotelCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultExpandAll />
         </div>
       ) : menu === "flights" ? (
         <div className="guide-scope">
@@ -1077,7 +1077,7 @@ function BookingsInner() {
             selectZoom={false}
             onHeightChange={onMapHeight("restaurants")}
           />
-          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} />
+          <RestaurantCatalog onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultExpandAll />
         </div>
       ) : menu === "attractions" ? (
         <div className="guide-scope">
