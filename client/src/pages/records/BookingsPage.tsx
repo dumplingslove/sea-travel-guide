@@ -820,16 +820,28 @@ function BookingsInner() {
   });
   const menuNavRef = useRef<HTMLDivElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
-  // 2026-10-04: 测量站点头高度，设置吸顶容器的 top
+  // 2026-10-04: 用 ResizeObserver 实时跟踪站点头高度，吸顶 top 永远准确，一次根治 gap
   useEffect(() => {
     const setTop = () => {
       const header = document.querySelector('header');
-      const h = header ? header.getBoundingClientRect().height : 0;
+      const h = header ? Math.ceil(header.getBoundingClientRect().height) : 0;
       document.documentElement.style.setProperty('--sticky-top', `${h}px`);
     };
     setTop();
+    const header = document.querySelector('header');
+    let ro: ResizeObserver | null = null;
+    if (header && typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(setTop);
+      ro.observe(header);
+    }
     window.addEventListener('resize', setTop);
-    return () => window.removeEventListener('resize', setTop);
+    // 字体加载后高度可能变化，延迟再校准一次
+    const t = window.setTimeout(setTop, 1000);
+    return () => {
+      window.removeEventListener('resize', setTop);
+      window.clearTimeout(t);
+      ro?.disconnect();
+    };
   }, []);
   const [mapStickyTop, setMapStickyTop] = useState<number | undefined>(undefined);
   const mapHeightsRef = useRef<Record<string, number>>({});
