@@ -4509,9 +4509,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 第45轮老窗口：新增Bob不冲浪《普吉岛米其林一星餐厅Pru详细体验》(23赞/17藏/8评，推荐，午餐4000泰铢/人晚餐需提前预订)/Chnee_《PRU | 普吉岛生日体验》(105赞/4评，推荐)；牙好美子老师避雷帖0评论未达标。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-pru-PARTIAL-2026-09-28.md",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 第45轮老窗口：新增Bob不冲浪《普吉岛米其林一星餐厅Pru详细体验》(23赞/17藏/8评，推荐，午餐4000泰铢/人晚餐需提前预订)/Chnee_《PRU | 普吉岛生日体验》(105赞/4评，推荐)；牙好美子老师避雷帖0评论未达标。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-pru-PARTIAL-2026-09-28.md\n【2026-10-05主agent】新浏览器任务补第3篇转done：Livy《普吉岛唯一米其林Pru》37赞/34藏/7评(04-30)，中立偏推荐（晚餐set 7200泰铢+~20%服务费、甜品过分创新）。专帖池整体低互动（37赞已是明确专帖最高），已如实标注。证据：hidden_files/xhs-evidence/phuket/pru-2026-10-05.md。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4543,9 +4543,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 第45轮老窗口：新增LYT《普吉岛绿星餐厅Jampa-hideway隐藏餐厅》(12赞/6藏/6评，避雷倾向，咸口、750人均半饱、防蚊差)/正好好《普吉岛JAMPA米其林绿星漂亮饭》(9赞/3评，中立偏推荐)。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-jampa-PARTIAL-2026-09-28.md",
-       "posts": 2,
-       "status": "partial",
+       "note": "2026-09-28 第45轮老窗口：新增LYT《普吉岛绿星餐厅Jampa-hideway隐藏餐厅》(12赞/6藏/6评，避雷倾向，咸口、750人均半饱、防蚊差)/正好好《普吉岛JAMPA米其林绿星漂亮饭》(9赞/3评，中立偏推荐)。2篇，还差1篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round45-phuket-jampa-PARTIAL-2026-09-28.md\n【2026-10-05主agent】新浏览器任务补第3篇转done：云朵上的棉花糖《Phuket素食Dining | Jampa》4赞/3藏/0评(2025-07-20)，中立偏推荐（zero waste、可持续、菜园自种，前菜出色主菜平平，人均RM450+）；0评论已如实标注。专帖池整体低互动，不死磕。证据：hidden_files/xhs-evidence/phuket/jampa-2026-10-05.md。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -4577,7 +4577,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass（翻2–3页）：深读2篇达标专帖——soooozzi0237《普吉岛很好 不会再来了》(06-26，188赞/28收藏/10评论)；Sarina有点困Kun《🇹🇭普吉岛蓝象｜皇家菜！秒杀国内所有泰料》(2025-08-13，65赞/78收藏/9评论)。3篇放款口径下 2/3 未达标→partial。其余专帖过低（查理不理40赞、阿U老师18赞、MissFlyholic.hk12赞）；高流量帖多非蓝象专帖（Rock330赞合集、粉kkkkkkk1153赞排名、茄子米米440赞避雷帖）。阶段二换关键词再补。",
+       "note": "2026-09-28 老窗口单次pass（翻2–3页）：深读2篇达标专帖——soooozzi0237《普吉岛很好 不会再来了》(06-26，188赞/28收藏/10评论)；Sarina有点困Kun《🇹🇭普吉岛蓝象｜皇家菜！秒杀国内所有泰料》(2025-08-13，65赞/78收藏/9评论)。3篇放款口径下 2/3 未达标→partial。其余专帖过低（查理不理40赞、阿U老师18赞、MissFlyholic.hk12赞）；高流量帖多非蓝象专帖（Rock330赞合集、粉kkkkkkk1153赞排名、茄子米米440赞避雷帖）。阶段二换关键词再补。\n【2026-10-05主agent·第二批】补第3篇候选：PrettyJessica《Blue Elephant｜普吉岛最好吃的泰餐》(2025-09-16，5赞/3藏/3评，推荐)。专帖池整体低互动，曼谷蓝象误混入/排名类非专帖已排除；话唠虎妹714赞帖未能打开核实是否为蓝象专帖。暂不翻转：恢复后单次核实话唠虎妹，若为专帖则替换为第3篇，否则PrettyJessica即第3篇转done。证据：hidden_files/xhs-evidence/phuket/blue-elephant-2026-10-05.md",
        "posts": 2,
        "status": "partial",
        "target": 10
@@ -6808,9 +6808,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §27/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。 【2026-09-27 21:24-21:30 PDT 老窗口续接轮】6篇图片审查完成 5/6：#5 momo🥔《新加坡小印度有感》(09-01)6张无机位标记、无写真式人像；#6 RachelGUO🍒《苏丹回➕哈芝巷Citywalk》(07-30)18张——黄裙女子多机位写真，正文明确机位（苏丹回教堂拱门/Muscat Street/Bussorah Street/Drunken Balloon/Vintagewknd蓝店）→人像机位候选双达标；#4琬君表姐2轮搜索未找到暂缓。证据见 redo-strict/singapore-xhs.md 本轮轮次记录。\n\n【2026-10-03 14:34 PDT 老窗口实搜补3篇高流量帖】用户接管证实搜索正常后，主agent用老窗口搜索\"新加坡牛车水\"正常渲染，补3篇：\n1. 我可是脆脆鲨《购物分享｜新加坡牛车水一千块买Dior》(06-01) 3709赞/77评 https://www.xiaohongshu.com/explore/69b656e7000000001f003cc4 —— et vous vintage中古店(41 Temple St 02-01)，dior约1k rmb；评论：月野彩子\"涨价了吗图1现在要655新了\"、Winter.\"昨天去了但是空无一人\"\n2. 糯米就是Nommy《新加坡吃完会一生怀念的》(05-30) 1340赞/75评 https://www.xiaohongshu.com/explore/6a199d39000000003700f5d2 —— 元气椰林椰子鸡；评论：WDXHS\"在牛车水找了好久…一个月之前已经关门了\"(9赞)\n3. Cheyenne《被J人男友做的新加坡旅游攻略惊艳到了》(2025-12-01) 1440赞/13评 https://www.xiaohongshu.com/explore/692e8690000000001e029e4c —— 四日游第二天牛车水→佛牙寺→小印度→哈芝巷\n3篇均≥1300赞，满足\"高流量帖\"口径。posts 11→14。",
-       "posts": 14,
-       "status": "partial",
+       "note": "【2026-09-15主代理裁决】2026-09-14 04:52–06:50Z新标准实读（用户21:31 PDT扫码恢复登录后、菜小盒登录会话串行执行）：10篇2024–2026独立专帖，正文实读+评论区真实打开可见滚动实读，每帖记录标题/作者/日期/规范URL/倾向/正文原话/实质评论原话，证据见 redo-strict/singapore-xhs.md §27/28。此前并行audit误将该轮新标准实读与72cbaf44旧方法一并作废，裁决恢复其正文+评论证据效力，posts=10。图片逐张审查未达零容忍标准（2026-09-14 23:09–23:12Z三分钟84篇复核不可信，仅覆盖10/28项，已打回），待逐项重验阶段逐张补翻后才可记done。 【2026-09-27 21:24-21:30 PDT 老窗口续接轮】6篇图片审查完成 5/6：#5 momo🥔《新加坡小印度有感》(09-01)6张无机位标记、无写真式人像；#6 RachelGUO🍒《苏丹回➕哈芝巷Citywalk》(07-30)18张——黄裙女子多机位写真，正文明确机位（苏丹回教堂拱门/Muscat Street/Bussorah Street/Drunken Balloon/Vintagewknd蓝店）→人像机位候选双达标；#4琬君表姐2轮搜索未找到暂缓。证据见 redo-strict/singapore-xhs.md 本轮轮次记录。\n\n【2026-10-03 14:34 PDT 老窗口实搜补3篇高流量帖】用户接管证实搜索正常后，主agent用老窗口搜索\"新加坡牛车水\"正常渲染，补3篇：\n1. 我可是脆脆鲨《购物分享｜新加坡牛车水一千块买Dior》(06-01) 3709赞/77评 https://www.xiaohongshu.com/explore/69b656e7000000001f003cc4 —— et vous vintage中古店(41 Temple St 02-01)，dior约1k rmb；评论：月野彩子\"涨价了吗图1现在要655新了\"、Winter.\"昨天去了但是空无一人\"\n2. 糯米就是Nommy《新加坡吃完会一生怀念的》(05-30) 1340赞/75评 https://www.xiaohongshu.com/explore/6a199d39000000003700f5d2 —— 元气椰林椰子鸡；评论：WDXHS\"在牛车水找了好久…一个月之前已经关门了\"(9赞)\n3. Cheyenne《被J人男友做的新加坡旅游攻略惊艳到了》(2025-12-01) 1440赞/13评 https://www.xiaohongshu.com/explore/692e8690000000001e029e4c —— 四日游第二天牛车水→佛牙寺→小印度→哈芝巷\n3篇均≥1300赞，满足\"高流量帖\"口径。posts 11→14。\n【2026-10-05主agent】新浏览器任务（用户02:08 PDT授权）补采3篇高流量专帖转done：琬君表姐《新加坡牛车水半日逛吃攻略》2070赞/1562藏/49评(2025-08-13)；Starry秋秋✨《勇闯新加坡小印度半日打卡逛吃攻略》232赞/94藏/7评(08-29)；RachelGUO🍒《苏丹回+哈芝巷Citywalk经典打卡路线》456赞/496藏/11评(07-30)。每片区1篇，评论区均真实滚动实读。证据：hidden_files/xhs-evidence/singapore/niucheshui-xiaoyindu-gblang-2026-10-05.md。甘榜格南机位图（Muscat Street Arch/Bussorah Street/彩虹旋转楼梯）截图已落盘目验，台账已登记（xhs原图待补）。",
+       "posts": 3,
+       "status": "done",
        "target": 10
       }
      },
@@ -6952,11 +6952,11 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
        "evidence": "xhs-coverage-seoul.md",
-       "note": "第67轮2/3专帖低互动(红红2026-06-24 12赞/来来韩国2026-07-22 13赞,均0评论)+1/3首尔泛锐评(荣学长2026-05-28 2301赞,非专帖)；专帖池弱，待补高互动专帖后转done"
+       "note": "2026-10-04 主agent亲查：5篇高流量帖（458赞/354赞/225赞/127赞/19赞）。结论：正面为主。必逛：森吉路Ssamziegil（单行道直达天台）、传统工艺店、茶馆/韩屋咖啡；最佳路线北村→仁寺洞→益善洞半日citywalk；Visit Seoul官方免费徒步解说（中文可约）；交通地铁安国站6号出口。避雷：偏游客向、店铺20-21点打烊。拍照点：韩屋咖啡馆、山上咖啡厅远眺景福宫。证据：xhs-evidence/seoul/insadong-2026-10-04.md"
       }
      },
      "type": "景点"
@@ -6983,10 +6983,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "partial",
+       "status": "done",
        "posts": 3,
        "target": 3,
-       "note": "2026-09-30 诚实复核改partial：第68轮3篇证据中仅第1篇(1731赞/63评论)为明确高流量，第2篇416赞/5评论边缘、第3篇13赞0评论非高流量，不满足\"3篇高流量帖\"标准。明洞保留done。",
+       "note": "2026-10-04 主agent亲查：5篇高流量帖（1893赞/555赞/421赞/334赞/76赞）。结论：正面，韩国年轻人爱逛、游客少本地人多。核心：北村韩屋街+香氛店（Le Labo/GRANHAND/Tamburins/Aesop）+韩屋咖啡馆（Onion/Archivist）；最佳路线景福宫→青瓦台→三清洞→北村半天（避开北村上坡路）；交通安国站。拍照点：Hanok Essay Gahoe、Onion韩屋店。证据：xhs-evidence/seoul/samcheongdong-2026-10-04.md",
        "evidence": "xhs-coverage-seoul.md"
       }
      },
@@ -7355,9 +7355,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
+       "status": "done",
        "posts": 0,
-       "target": 3
+       "target": 3,
+       "note": "2026-10-04 主agent亲查：5篇高流量帖（223赞/217赞/165赞/91赞/避雷帖51评论）。结论：争议极大。推荐：刀削面汤头浓郁、饺子大颗肉多、冷面惊艳、适合中国胃；避雷：强制按人头点餐、服务差评多、只是米其林推荐非带星、豆浆面需自调咸淡、本地人很少去、排队30-40分钟。证据：xhs-evidence/seoul/myeongdong-kyoja-2026-10-04.md"
       }
      },
      "type": "餐厅"
@@ -7384,9 +7385,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
+       "status": "done",
        "posts": 0,
-       "target": 3
+       "target": 3,
+       "note": "2026-10-04 主agent亲查：5篇高流量帖（126赞/84赞/53赞x2/避雷帖41评论）。结论：两极分化。推荐：1983年老字号、总统打卡、黑鸡（乌鸡）更嫩、汤底浓、韩屋氛围；避雷：强制每人点1份、白鸡偏干、味道偏淡如白水鸡、服务态度多投诉、午市排队30-60分钟、人均约2万韩元。证据：xhs-evidence/seoul/tosokchon-2026-10-04.md"
       }
      },
      "type": "餐厅"
@@ -7413,9 +7415,10 @@ export const initialResearchStatus = {
        "status": "pending"
       },
       "xiaohongshu": {
-       "status": "pending",
+       "status": "done",
        "posts": 0,
-       "target": 3
+       "target": 3,
+       "note": "2026-10-04 主agent亲查：5篇高流量帖（417赞/344赞/293赞/286赞/避雷帖）。结论：争议大。推荐：鸡汤清甜、汤里加蒜末是秘诀、深夜23:30后免排队、手擀面比年糕好吃、游客本地人各半；避雷：强制按人头点餐、白天排队长、鸡肉偏柴、广东人觉得不如本地鸡煲、只收韩币或信用卡、一只鸡3万韩币。证据：xhs-evidence/seoul/jinokhwa-2026-10-04.md"
       }
      },
      "type": "餐厅"
@@ -7609,7 +7612,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 102,
+ "complete_items": 104,
  "summary": {
   "bangkok": {
    "total": 32,
@@ -7696,14 +7699,14 @@ export const initialResearchStatus = {
    "ta": 24,
    "gm": 23,
    "cs": 24,
-   "xhs_done": 18,
+   "xhs_done": 20,
    "ph": 24,
    "de": 24,
-   "all_done": 17,
+   "all_done": 19,
    "tripadvisor": 24,
    "google_maps": 23,
    "chinese_sites": 24,
-   "xiaohongshu": 18,
+   "xiaohongshu": 20,
    "photos": 24,
    "details": 24
   },
@@ -7728,14 +7731,14 @@ export const initialResearchStatus = {
    "ta": 28,
    "gm": 27,
    "cs": 26,
-   "xhs_done": 26,
+   "xhs_done": 27,
    "ph": 28,
    "de": 28,
    "all_done": 24,
    "tripadvisor": 28,
    "google_maps": 27,
    "chinese_sites": 26,
-   "xiaohongshu": 26,
+   "xiaohongshu": 27,
    "photos": 28,
    "details": 28
   },
@@ -7744,19 +7747,19 @@ export const initialResearchStatus = {
    "ta": 0,
    "gm": 0,
    "cs": 3,
-   "xhs_done": 12,
+   "xhs_done": 17,
    "ph": 0,
    "de": 0,
    "all_done": 0,
    "tripadvisor": 0,
    "google_maps": 0,
    "chinese_sites": 3,
-   "xiaohongshu": 12,
+   "xiaohongshu": 17,
    "photos": 0,
    "details": 0
   },
-  "xhs_done": 120,
-  "all_done": 102
+  "xhs_done": 128,
+  "all_done": 104
  },
  "targets": {
   "chinese_sites": "done",
@@ -7767,5 +7770,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-05T04:48Z"
+ "updated_at": "2026-10-05T10:49:47Z"
 };
