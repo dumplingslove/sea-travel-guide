@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-05T21:25:10+00:00",
+ "updated_at": "2026-10-05T21:38:54+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3915,98 +3915,27 @@
      "business_note": "当天无直飞"
     },
     "2026-12-20": {
-     "economy_queried_at": "2026-09-28T20:51:53+00:00",
-     "economy_usd": 537,
+     "economy_queried_at": "2026-10-05T21:38:54+00:00",
+     "economy_usd": 251,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Thai Lion Air",
-       "flight": "SL103",
-       "dep": "3:30 PM",
-       "arr": "4:20 PM",
-       "duration": "1h 50m",
-       "price_usd": 537
-      },
-      {
        "airline": "Scoot",
-       "flight": "TR664",
-       "dep": "11:40 AM",
-       "arr": "12:45 PM",
-       "duration": "2h 5m",
-       "price_usd": 629
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ740",
-       "dep": "6:35 PM",
-       "arr": "7:35 PM",
-       "duration": "2h",
-       "price_usd": 779
-      },
-      {
-       "airline": "Scoot",
-       "flight": "TR678",
-       "dep": "8:40 AM",
-       "arr": "9:40 AM",
-       "duration": "2h",
-       "price_usd": 629
-      },
-      {
-       "airline": "Scoot",
-       "flight": "TR652",
-       "dep": "6:15 PM",
-       "arr": "7:20 PM",
-       "duration": "2h 5m",
-       "price_usd": 629
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ724",
-       "dep": "6:55 AM",
-       "arr": "7:50 AM",
-       "duration": "1h 55m",
-       "price_usd": 936
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ736",
-       "dep": "4:10 PM",
-       "arr": "5:10 PM",
-       "duration": "2h",
-       "price_usd": 936
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ726",
-       "dep": "8:15 AM",
-       "arr": "9:15 AM",
-       "duration": "2h",
-       "price_usd": 1230
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ728",
-       "dep": "9:00 AM",
-       "arr": "10:05 AM",
-       "duration": "2h 5m",
-       "price_usd": 1230
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ732",
-       "dep": "12:50 PM",
-       "arr": "1:55 PM",
-       "duration": "2h 5m",
-       "price_usd": 1230
+       "flight": "",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2 hr",
+       "price_usd": 251
       }
      ],
-     "nonstop_count": 10,
+     "nonstop_count": 1,
      "business_queried_at": "2026-09-29T01:09:02+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞",
+     "economy_note": "One-way SIN-HKT, 2026-12-20, 2 adults, Economy, Nonstop-only filter, currency USD. Prices are the 'From' prices shown per flight row in the price-sorted Cheapest tab; page states 'Prices include required taxes + fees for 2 adults.' Flight numbers are not displayed on rows. The 4:10 PM Singapore Airlines flight carries a Bangkok Airways codeshare note. Read-only; no booking buttons clicked."
     },
     "2026-12-21": {
      "economy_queried_at": "2026-09-28T22:08:58+00:00",
