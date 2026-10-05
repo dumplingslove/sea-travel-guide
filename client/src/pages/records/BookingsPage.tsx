@@ -1084,6 +1084,21 @@ function BookingsInner() {
         </div>
       ) : menu === "action" ? (
         <>
+        {/* 2026-10-04 用户：总结块（每日动态/行程日期/登录条）只放在行动安排里 */}
+        <SyncBanner mode={syncMode} />
+        <DailyDigestBanner
+          scopeCities={scoped ? planCities : undefined}
+          onJump={setMenu}
+        />
+        {scoped && (
+          <div className="mb-4 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">
+            <span className="font-bold">📅 按行程规划只看这些：</span>
+            {segments.map((s) => `${s.city} ${planDateShort(s.start)}–${planDateShort(s.end)}`).join(" · ")}
+            <Link to="/planner" className="ml-2 font-medium text-teal-700 underline">
+              去行程规划调整 →
+            </Link>
+          </div>
+        )}
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
       <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
         </>
