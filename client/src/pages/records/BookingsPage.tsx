@@ -819,6 +819,18 @@ function BookingsInner() {
     return "hotels";
   });
   const menuNavRef = useRef<HTMLDivElement>(null);
+  const stickyContainerRef = useRef<HTMLDivElement>(null);
+  // 2026-10-04: 测量站点头高度，设置吸顶容器的 top
+  useEffect(() => {
+    const setTop = () => {
+      const header = document.querySelector('header');
+      const h = header ? header.getBoundingClientRect().height : 0;
+      document.documentElement.style.setProperty('--sticky-top', `${h}px`);
+    };
+    setTop();
+    window.addEventListener('resize', setTop);
+    return () => window.removeEventListener('resize', setTop);
+  }, []);
   const [mapStickyTop, setMapStickyTop] = useState<number | undefined>(undefined);
   const mapHeightsRef = useRef<Record<string, number>>({});
   const syncCityTabsTop = (menuKey: string) => {
@@ -996,7 +1008,7 @@ function BookingsInner() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* 2026-10-04 用户：分类+城市+地图三层一起吸顶，统一容器不打架 */}
-      <div className="sticky z-[5] -mx-4 px-4 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
+      <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
         {/* 分类导航 */}
         <div role="tablist" aria-label="预订二级菜单" className="py-1 mb-2">
         <div className="booking-tabs flex gap-1.5 overflow-x-auto">
