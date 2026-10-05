@@ -357,7 +357,21 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
  if(p.unavailable) return <div className="decision"><b>💰 价格</b><span title={p.unavailable}>⚠️ 该日期暂无可订房</span></div>;
  if(!rate) return <div className="decision"><b>💰 价格</b><span>暂无实时价</span></div>;
  const nights=p.nights;const dateStr=isNonItineraryPriceCity(it.city)?'参考房价':`${p.checkIn}→${p.checkOut}（${nights}晚）`;
- return <div className="pricetablewrap"><b>💰 价格对比</b><span className="pricedates">{dateStr} · {p.source}实查 {p.checkedAt}{p.dateMismatch&&<b title="行程日期有调整：此价格查询日期可能与你当前行程日期不一致，仅供参考"> ⚠️</b>}</span><table className="pricetable"><thead><tr><th>房型</th><th>{p.source}实查</th><th>Google基准</th></tr></thead><tbody><tr><td>基础房</td><td>{p.base?`$${p.base.perNightUSD}/晚${p.base.totalUSD!=null?` · 整段$${p.base.totalUSD}`:''}`:'—'}</td><td rowSpan={p.suite?2:1}>{p.baselineUSD!=null?`$${p.baselineUSD}/晚（不含税）`:'—'}</td></tr>{p.suite&&<tr><td>套房</td><td>{`$${p.suite.perNightUSD}/晚${p.suite.totalUSD!=null?` · 整段$${p.suite.totalUSD}`:''}`}</td></tr>}</tbody></table><small className="pricefoot">基准价为Google搜索页每晚参考价（不含税），房型/早餐/退改未收录；口径不同不直接比差价。</small></div>;
+ const fmtTax = (t: boolean | "unknown") => t === true ? "含税" : t === false ? "不含税" : "税费未明确";
+ const roomBlock = (label: string, r: NonNullable<typeof p.base>) => (
+   <div className="proom">
+     <div className="proom-head"><span className="proom-label">{label}</span><span className="proom-name">{r.room}</span></div>
+     <div className="proom-price"><b>${r.perNightUSD}/晚</b>{r.totalUSD != null && <span> · 整段 ${r.totalUSD}（{fmtTax(r.totalInclTax)}）</span>}{r.totalUSD == null && <span className="proom-tax">（{fmtTax(r.totalInclTax)}）</span>}</div>
+     <div className="proom-meta"><span>🍳 {r.breakfast}</span><span>↩️ {r.cancel}</span></div>
+     {r.memberDeal && <div className="proom-deal">🏷️ {r.memberDeal}</div>}
+     {r.note && <div className="proom-note">{r.note}</div>}
+   </div>
+ );
+ return <div className="pricetablewrap"><b>💰 实时房价</b><span className="pricedates">{dateStr} · {p.source}实查 {p.checkedAt}{p.dateMismatch&&<b title="行程日期有调整：此价格查询日期可能与你当前行程日期不一致，仅供参考"> ⚠️</b>}</span>
+ {p.base && roomBlock("基础房", p.base)}
+ {p.suite && roomBlock("套房", p.suite)}
+ {p.baselineUSD != null && <div className="pbaseline"><span className="pbaseline-label">📊 Google 参考价</span><span className="pbaseline-price">${p.baselineUSD}/晚（不含税）</span><span className="pbaseline-time">查询于 {p.baselineCheckedAt}{p.baselineUrl && <> · <a href={p.baselineUrl} target="_blank" rel="noreferrer">去核验→</a></>}</span><span className="pbaseline-warn">Google 只给笼统每晚价，未收录具体房型、早餐、退改政策，与上方 {p.source} 具体房型口径不同，不直接比差价。</span></div>}
+ </div>;
 })()}<XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>{setSelectedKey(null);setExpandedKey(hopen?null:hkey);}}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)} />}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
 }
 

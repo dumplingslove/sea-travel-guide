@@ -501,3 +501,21 @@
 .guide-scope details.evidence>summary h3{font-size:14px!important;color:#6b5312!important;margin:2px 0 0!important}
 .guide-scope details.evidence .evidencelist{padding:0 14px 12px}
 .guide-scope details.evidence .evidenceempty{padding:0 14px 12px;font-size:12px;color:#8a8a8a}
+/* 2026-10-04 用户：价格对比重新设计——每个房型独立块，房型名/税费/早餐/退改全展示；Google基准独立说明，不混表 */
+.guide-scope .proom{border:1px solid #d4e5e0;border-radius:6px;padding:10px 12px;margin:8px 0;background:#fbfefd}
+.guide-scope .proom-head{display:flex;gap:8px;align-items:baseline;margin-bottom:6px}
+.guide-scope .proom-label{font-size:11px;font-weight:800;color:#fff;background:#145a50;border-radius:4px;padding:2px 8px;white-space:nowrap}
+.guide-scope .proom-name{font-size:13px;color:#2d4a45;font-weight:600}
+.guide-scope .proom-price{font-size:14px;color:#143c34;margin-bottom:6px}
+.guide-scope .proom-price b{font-size:16px;color:#0f3d36}
+.guide-scope .proom-price span{color:#5a7370;font-size:12.5px}
+.guide-scope .proom-tax{color:#8a9d99!important}
+.guide-scope .proom-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:#5a7370;margin-bottom:4px}
+.guide-scope .proom-deal{font-size:12px;color:#9a6b1a;background:#fdf6e3;border-radius:4px;padding:4px 8px;margin-top:6px;display:inline-block}
+.guide-scope .proom-note{font-size:11.5px;color:#7d968f;margin-top:6px;line-height:1.5}
+.guide-scope .pbaseline{border:1px dashed #c9d8d4;border-radius:6px;padding:10px 12px;margin:10px 0 4px;background:#f7faf9}
+.guide-scope .pbaseline-label{font-size:12px;font-weight:800;color:#145a50;display:block;margin-bottom:4px}
+.guide-scope .pbaseline-price{font-size:14px;font-weight:700;color:#2d4a45}
+.guide-scope .pbaseline-time{font-size:11px;color:#8a9d99;display:block;margin-top:2px}
+.guide-scope .pbaseline-time a{color:#145a50}
+.guide-scope .pbaseline-warn{font-size:11px;color:#9a6b1a;display:block;margin-top:6px;line-height:1.5}
