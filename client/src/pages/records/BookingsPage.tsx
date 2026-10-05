@@ -21,6 +21,7 @@ import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
+import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
@@ -994,9 +995,61 @@ function BookingsInner() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      {/* 2026-10-04 用户：顺序为 地图 → 分类 → 城市，地图在最上面 */}
-      {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
-        <div className="guide-scope">
+      {/* 2026-10-04 用户：分类+城市+地图三层一起吸顶，统一容器不打架 */}
+      <div className="sticky z-[5] -mx-4 px-4 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
+        {/* 分类导航 */}
+        <div role="tablist" aria-label="预订二级菜单" className="py-1 mb-2">
+        <div className="booking-tabs flex gap-1.5 overflow-x-auto">
+          {menus.map((m) => (
+            <button
+              key={m.key}
+              role="tab"
+              aria-selected={menu === m.key}
+              onClick={() => switchMenu(m.key)}
+              className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
+                menu === m.key
+                  ? "bg-teal-700 text-white border-teal-700"
+                  : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+
+        {/* 城市导航（仅酒店/餐厅/景点） */}
+        {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
+          <div role="tablist" aria-label="城市筛选" className="py-1.5 mb-2">
+          <div className="flex gap-1.5 overflow-x-auto">
+            {(scoped ? planCities.filter(c => allCities.includes(c)) : []).map((c) => {
+              const currentCity = (menu === "hotels" ? hotelCity : menu === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
+              const setCity = menu === "hotels" ? setHotelCity : menu === "restaurants" ? setRestCity : setAttrCity;
+              return (
+                <button
+                  key={c}
+                  role="tab"
+                  aria-selected={currentCity === c}
+                  onClick={() => setCity(c)}
+                  className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
+                    currentCity === c
+                      ? "bg-teal-700 text-white border-teal-700"
+                      : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+                  }`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+
+        {/* 地图（仅酒店/餐厅/景点） */}
+        {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
+          <div className="guide-scope">
           {menu === "hotels" && (
           <SafeStickyMapBar
             items={hotelMapItems}
@@ -1042,57 +1095,10 @@ function BookingsInner() {
         </div>
       )}
 
-      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换）
-          2026-10-04 用户：总结块（每日动态/行程日期）只放在行动安排里，分类tab一上来直接就是列表
-          2026-10-04 用户：顺序为 地图→分类→城市，分类在地图下方 */}
-      <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-1 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
-        <div className="booking-tabs flex gap-1.5 overflow-x-auto">
-          {menus.map((m) => (
-            <button
-              key={m.key}
-              role="tab"
-              aria-selected={menu === m.key}
-              onClick={() => switchMenu(m.key)}
-              className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
-                menu === m.key
-                  ? "bg-teal-700 text-white border-teal-700"
-                  : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
-              }`}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
+
       </div>
 
-      {/* 2026-10-04 用户：城市导航固定在分类下方，一起吸顶；地图不吸顶 */}
-      {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
-        <div className="sticky z-[4] -mx-4 px-4 py-1.5 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-b border-gray-200" style={{ top: 'var(--citytabs-top, 60px)' }} role="tablist" aria-label="城市筛选">
-          <div className="flex gap-1.5 overflow-x-auto">
-            {(scoped ? planCities : []).map((c) => {
-              const currentCity = (menu === "hotels" ? hotelCity : menu === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
-              const setCity = menu === "hotels" ? setHotelCity : menu === "restaurants" ? setRestCity : setAttrCity;
-              return (
-                <button
-                  key={c}
-                  role="tab"
-                  aria-selected={currentCity === c}
-                  onClick={() => setCity(c)}
-                  className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
-                    currentCity === c
-                      ? "bg-teal-700 text-white border-teal-700"
-                      : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
-                  }`}
-                >
-                  {c}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {menu === "hotels" ? (
+            {menu === "hotels" ? (
         <div className="guide-scope">
           <HotelCatalog key={`hotels-${hotelCity}`} bare hideCityTabs initialCity={hotelCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
