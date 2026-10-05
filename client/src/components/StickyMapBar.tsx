@@ -825,15 +825,20 @@ export default function StickyMapBar({
       }
       // 2026-10-04 用户最终要求：点卡的效果 = 像人手拖地图一样平滑挪到那家，
       // 不要闪、不要从高空缩放、不要 flyTo。
-      // 行为：平滑 setView 到那家，zoom 14（合理大小）；已在 14 时就是纯平移，起点=当前位置。
+      // 行为：平滑 panTo 到那家（起点=当前位置，连贯）；zoom 用 setZoom 平滑到 14，
+      // 不用 setView 的动画（长距离会触发先拉远再推进且实测会卡在高空不动）。
       if (!selectZoom) {
         // 直接按 activeItemKeys 查坐标，不依赖 pts 数组（pts 可能因时序为空）
         const keys = activeSig!.split("|");
         for (const k of keys) {
           const it = itemByKeyRef.current.get(k);
           if (it) {
-            // 2026-10-04：setView 带 animate，平滑挪过去；zoom 14 看得清又不丢全景感
-            map.setView(LL(it.lat, it.lng), 14, { animate: true, duration: 1.2 });
+            // 2026-10-04：先平滑挪过去（人手感），再平滑缩放到 14
+            map.panTo(LL(it.lat, it.lng), { animate: true, duration: 1.0 });
+            if (map.getZoom() !== 14) {
+              // 延迟一点等 pan 启动，避免两个动画打架
+              setTimeout(() => { map.setZoom(14, { animate: true }); }, 150);
+            }
             break; // 只处理第一个选中的
           }
         }
