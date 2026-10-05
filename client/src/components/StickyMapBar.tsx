@@ -365,12 +365,14 @@ export default function StickyMapBar({
   alwaysVisible = false,
   stickyTop,
   selectZoom = true,
+  onMarkerSelect,
 }: StickyMapBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
   const onMarkerSelectRef = useRef<((key: string) => void) | undefined>(undefined);
+  onMarkerSelectRef.current = onMarkerSelect;
   const selKindRef = useRef<string | null>(null);
   const itemByKeyRef = useRef(new Map<string, StickyMapItem>());
   // 航线层：连线按航线 key 存；机场标记按 IATA code 全站唯一（规范经度已统一世界副本，
