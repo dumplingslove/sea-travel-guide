@@ -999,25 +999,8 @@ function BookingsInner() {
       title="预订"
       summary="📋 机票、酒店、餐饮、交通收拢在一页：「预订行动」是时间线、状态与你的预订记录；「酒店」「餐厅」「航班」「交通」只显示行程规划里定好的城市和日期（照片、口碑、实时价、订位政策），挑中了直接点预订。"
     >
-      <SyncBanner mode={syncMode} />
-
-      {/* 每日预订动态横幅：三个每日任务的最新结果汇总，点每行跳到对应菜单看明细 */}
-      <DailyDigestBanner
-        scopeCities={scoped ? planCities : undefined}
-        onJump={setMenu}
-      />
-
-      {scoped && (
-        <div className="mb-4 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">
-          <span className="font-bold">📅 按行程规划只看这些：</span>
-          {segments.map((s) => `${s.city} ${planDateShort(s.start)}–${planDateShort(s.end)}`).join(" · ")}
-          <Link to="/planner" className="ml-2 font-medium text-teal-700 underline">
-            去行程规划调整 →
-          </Link>
-        </div>
-      )}
-
-      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换） */}
+      {/* 二级菜单：预订行动 / 酒店与餐厅 / 航班 / 交通（2026-10-03 用户：吸顶固定，随时可切换）
+          2026-10-04 用户：总结块（每日动态/行程日期）只放在行动安排里，分类tab一上来直接就是列表 */}
       <div ref={menuNavRef} className="sticky z-[5] -mx-4 px-4 py-1 mb-3 bg-[#faf8f3]/95 backdrop-blur-sm border-y border-gray-200" role="tablist" aria-label="预订二级菜单">
         <div className="booking-tabs flex gap-1.5 overflow-x-auto">
           {menus.map((m) => (
