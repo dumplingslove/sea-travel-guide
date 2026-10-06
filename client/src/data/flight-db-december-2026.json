@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T20:02:01+00:00",
+ "updated_at": "2026-10-06T21:02:09+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -16457,47 +16457,38 @@
      "business_price_basis": "1成人单价"
     },
     "2026-12-14": {
-     "economy_queried_at": "2026-09-29T19:59:41+00:00",
-     "economy_usd": 355,
+     "economy_queried_at": "2026-10-06T21:02:09+00:00",
+     "economy_usd": 140,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "1成人单价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Asiana",
+       "airline": "Asiana Airlines",
        "flight": "OZ332",
        "dep": "10:50",
        "arr": "13:45",
        "duration": "1h 55m",
-       "price_usd": 355,
-       "business_price_usd": 1148
+       "price_usd": 140,
+       "business_price_usd": 380
       },
       {
-       "airline": "Asiana",
+       "airline": "Asiana Airlines",
        "flight": "OZ334",
        "dep": "15:35",
        "arr": "18:35",
        "duration": "2h",
-       "price_usd": 355,
-       "business_price_usd": 1148
+       "price_usd": 140,
+       "business_price_usd": 380
       },
       {
-       "airline": "Asiana",
+       "airline": "Asiana Airlines",
        "flight": "OZ336",
        "dep": "17:30",
        "arr": "20:25",
        "duration": "1h 55m",
-       "price_usd": 355,
-       "business_price_usd": 1049
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE864",
-       "dep": "01:30",
-       "arr": "04:20",
-       "duration": "1h 50m",
-       "price_usd": 357,
-       "business_price_usd": 1991
+       "price_usd": 140,
+       "business_price_usd": 380
       },
       {
        "airline": "Korean Air",
@@ -16505,8 +16496,8 @@
        "dep": "14:15",
        "arr": "17:35",
        "duration": "2h 20m",
-       "price_usd": 357,
-       "business_price_usd": 1340
+       "price_usd": 142,
+       "business_price_usd": 567
       },
       {
        "airline": "Korean Air",
@@ -16514,46 +16505,53 @@
        "dep": "18:55",
        "arr": "21:55",
        "duration": "2h",
-       "price_usd": 357,
-       "business_price_usd": 1556
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA709",
-       "dep": "19:00",
-       "arr": "21:55",
-       "duration": "1h 55m",
-       "price_usd": 368
+       "price_usd": 142,
+       "business_price_usd": 567
       },
       {
        "airline": "Air China",
        "flight": "CA135",
        "dep": "12:10",
        "arr": "15:10",
-       "duration": "2h",
-       "price_usd": 385
+       "duration": "2h"
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE864",
+       "dep": "01:30",
+       "arr": "04:20",
+       "duration": "1h 50m",
+       "price_usd": 142,
+       "business_price_usd": 725
       },
       {
        "airline": "Air China",
        "flight": "CA123",
        "dep": "08:40",
        "arr": "11:40",
-       "duration": "2h",
-       "price_usd": 385
+       "duration": "2h"
       },
       {
        "airline": "Air China",
        "flight": "CA125",
        "dep": "13:30",
        "arr": "16:35",
-       "duration": "2h 5m",
-       "price_usd": 385
+       "duration": "2h 5m"
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA709",
+       "dep": "19:00",
+       "arr": "21:55",
+       "duration": "1h 55m"
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T19:59:41+00:00",
-     "business_usd": 1049,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-06T21:02:09+00:00",
+     "business_usd": 380,
+     "business_price_basis": "1成人单价",
+     "economy_note": "CA135/CA123/CA125/CA709 showed 'Price unavailable' for economy so price_usd omitted; CA709 row was labeled Business Class in the economy view",
+     "business_note": "Air China rows showed 'Price unavailable' for business cabin so business_price_usd omitted; page banner read 'Cheapest from 380 US dollars'"
     },
     "2026-12-15": {
      "economy_queried_at": "2026-09-29T19:59:41+00:00",
