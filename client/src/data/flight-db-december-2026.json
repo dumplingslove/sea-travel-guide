@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T07:15:09+00:00",
+ "updated_at": "2026-10-06T07:52:32+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -11686,76 +11686,36 @@
      "business_price_basis": "2成人总价"
     },
     "2026-12-25": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 118,
+     "economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "economy_usd": 140,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
-      {
-       "airline": "AirAsia",
-       "flight": "FD4109",
-       "dep": "18:05",
-       "arr": "19:25",
-       "duration": "1h 20m",
-       "price_usd": 118
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4103",
-       "dep": "20:40",
-       "arr": "22:05",
-       "duration": "1h 25m",
-       "price_usd": 118
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4101",
-       "dep": "08:55",
-       "arr": "10:10",
-       "duration": "1h 15m",
-       "price_usd": 132
-      },
       {
        "airline": "Thai Airways",
        "flight": "TG115",
        "dep": "19:35",
        "arr": "21:00",
        "duration": "1h 25m",
-       "price_usd": 148,
-       "business_price_usd": 404
+       "price_usd": 140,
+       "business_price_usd": 403
       },
       {
-       "airline": "AirAsia",
+       "airline": "Thai AirAsia",
+       "flight": "FD4101",
+       "dep": "08:55",
+       "arr": "10:10",
+       "duration": "1h 15m",
+       "price_usd": 145
+      },
+      {
+       "airline": "Thai AirAsia",
        "flight": "FD4105",
        "dep": "12:40",
        "arr": "14:00",
        "duration": "1h 20m",
        "price_usd": 145
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4097",
-       "dep": "18:00",
-       "arr": "19:25",
-       "duration": "1h 25m",
-       "price_usd": 145
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
-       "dep": "17:20",
-       "arr": "18:40",
-       "duration": "1h 20m",
-       "price_usd": 148
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
-       "dep": "20:50",
-       "arr": "22:10",
-       "duration": "1h 20m",
-       "price_usd": 148
       },
       {
        "airline": "Thai Airways",
@@ -11764,15 +11724,7 @@
        "arr": "22:30",
        "duration": "1h 20m",
        "price_usd": 148,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
-       "dep": "22:35",
-       "arr": "23:55",
-       "duration": "1h 20m",
-       "price_usd": 148
+       "business_price_usd": 403
       },
       {
        "airline": "Thai Airways",
@@ -11780,19 +11732,67 @@
        "dep": "09:30",
        "arr": "10:55",
        "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 404
+       "price_usd": 159,
+       "business_price_usd": 460
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
-       "dep": "06:35",
-       "arr": "07:55",
+       "airline": "Thai AirAsia",
+       "flight": "FD4097",
+       "dep": "18:00",
+       "arr": "19:25",
+       "duration": "1h 25m",
+       "price_usd": 145
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD4109",
+       "dep": "18:05",
+       "arr": "19:25",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 145
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai AirAsia",
+       "flight": "FD4103",
+       "dep": "20:40",
+       "arr": "22:05",
+       "duration": "1h 25m",
+       "price_usd": 145
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ109",
+       "dep": "17:20",
+       "arr": "18:40",
+       "duration": "1h 20m",
+       "price_usd": 148
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ123",
+       "dep": "19:35",
+       "arr": "20:55",
+       "duration": "1h 20m",
+       "price_usd": 148
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ2107",
+       "dep": "20:50",
+       "arr": "22:10",
+       "duration": "1h 20m",
+       "price_usd": 148
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ119",
+       "dep": "22:35",
+       "arr": "23:55",
+       "duration": "1h 20m",
+       "price_usd": 148
+      },
+      {
+       "airline": "Thai Vietjet Air",
        "flight": "VZ115",
        "dep": "09:40",
        "arr": "11:00",
@@ -11800,7 +11800,7 @@
        "price_usd": 162
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai Vietjet Air",
        "flight": "VZ103",
        "dep": "12:35",
        "arr": "13:55",
@@ -11808,7 +11808,7 @@
        "price_usd": 162
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai Vietjet Air",
        "flight": "VZ111",
        "dep": "14:20",
        "arr": "15:40",
@@ -11816,7 +11816,7 @@
        "price_usd": 162
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai Vietjet Air",
        "flight": "VZ105",
        "dep": "15:15",
        "arr": "16:35",
@@ -11824,19 +11824,11 @@
        "price_usd": 162
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai Vietjet Air",
        "flight": "VZ107",
        "dep": "15:45",
        "arr": "17:10",
        "duration": "1h 25m",
-       "price_usd": 162
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
-       "dep": "19:35",
-       "arr": "20:55",
-       "duration": "1h 20m",
        "price_usd": 162
       },
       {
@@ -11846,16 +11838,7 @@
        "arr": "09:30",
        "duration": "1h 25m",
        "price_usd": 173,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG123",
-       "dep": "11:05",
-       "arr": "12:30",
-       "duration": "1h 25m",
-       "price_usd": 173,
-       "business_price_usd": 529
+       "business_price_usd": 403
       },
       {
        "airline": "Bangkok Airways",
@@ -11866,12 +11849,29 @@
        "price_usd": 179
       },
       {
-       "airline": "VietJet Thailand",
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ2105",
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 179
+      },
+      {
+       "airline": "Thai Vietjet Air",
        "flight": "VZ101",
        "dep": "08:25",
        "arr": "09:45",
        "duration": "1h 20m",
-       "price_usd": 180
+       "price_usd": 179
+      },
+      {
+       "airline": "Thai Airways",
+       "flight": "TG123",
+       "dep": "11:05",
+       "arr": "12:30",
+       "duration": "1h 25m",
+       "price_usd": 191,
+       "business_price_usd": 528
       },
       {
        "airline": "Thai Airways",
@@ -11880,7 +11880,7 @@
        "arr": "16:45",
        "duration": "1h 20m",
        "price_usd": 191,
-       "business_price_usd": 529
+       "business_price_usd": 528
       },
       {
        "airline": "Thai Airways",
@@ -11901,21 +11901,21 @@
        "business_price_usd": 573
       },
       {
-       "airline": "Bangkok Airways",
-       "flight": "PG216",
-       "dep": "10:10",
-       "arr": "11:35",
-       "duration": "1h 25m",
-       "price_usd": 221
-      },
-      {
        "airline": "Thai Airways",
        "flight": "TG107",
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 460
+       "price_usd": 206,
+       "business_price_usd": 573
+      },
+      {
+       "airline": "Bangkok Airways",
+       "flight": "PG216",
+       "dep": "10:10",
+       "arr": "11:35",
+       "duration": "1h 25m",
+       "price_usd": 247
       },
       {
        "airline": "Bangkok Airways",
@@ -11927,9 +11927,11 @@
       }
      ],
      "nonstop_count": 28,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
-     "business_price_basis": "2成人总价"
+     "business_queried_at": "2026-10-06T07:52:32+00:00",
+     "business_usd": 403,
+     "business_price_basis": "2成人总价",
+     "economy_note": "28 nonstop flights total, all with flight numbers expanded",
+     "business_note": "9 Thai Airways business flights; low-cost carriers have no business cabin"
     },
     "2026-12-26": {
      "economy_queried_at": "2026-09-29T06:56:58+00:00",
@@ -22726,10 +22728,10 @@
      "onestop_business_note": "混营航班记录首段(ICN出发段)航司与航班号"
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-10-05T06:58:03+00:00",
-     "economy_usd": 4149.0,
+     "economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "economy_usd": 4151,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "2大小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
@@ -22738,16 +22740,17 @@
        "dep": "16:10",
        "arr": "09:05",
        "duration": "9h 55m",
-       "price_usd": 4149.0,
-       "business_price_usd": 10039.0
+       "price_usd": 4151,
+       "business_price_usd": 10046
       },
       {
-       "airline": "Delta",
-       "flight": "DL196",
-       "dep": "18:45",
-       "arr": "11:51",
-       "duration": "10h 6m",
-       "price_usd": 4149.0
+       "airline": "Alaska Airlines",
+       "flight": "AS120",
+       "dep": "20:00",
+       "arr": "12:55",
+       "duration": "9h 55m",
+       "price_usd": 4151,
+       "business_price_usd": 7471
       },
       {
        "airline": "Korean Air",
@@ -22755,27 +22758,44 @@
        "dep": "21:20",
        "arr": "14:10",
        "duration": "9h 50m",
-       "price_usd": 4149.0,
-       "business_price_usd": 10039.0
+       "price_usd": 4151,
+       "business_price_usd": 10046
       },
       {
-       "airline": "Alaska",
-       "flight": "AS120",
-       "dep": "20:00",
-       "arr": "12:55",
-       "duration": "9h 55m",
-       "price_usd": 4384.0,
-       "business_price_usd": 7459.0
+       "airline": "Delta Air Lines",
+       "flight": "DL196",
+       "dep": "18:45",
+       "arr": "11:51",
+       "duration": "10h 6m",
+       "price_usd": 4499
       }
      ],
      "nonstop_count": 4,
-     "business_queried_at": "2026-10-05T06:58:03+00:00",
-     "business_usd": 7459.0,
-     "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-10-05T06:58:03+00:00",
-     "onestop_economy_usd": 3164.0,
-     "onestop_economy_price_basis": "2大1小总价",
+     "business_queried_at": "2026-10-06T07:52:32+00:00",
+     "business_usd": 7471,
+     "business_price_basis": "2大小总价",
+     "onestop_economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "onestop_economy_usd": 3034,
+     "onestop_economy_price_basis": "2大小总价",
      "onestop_flights": [
+      {
+       "airline": "Korean Air, Delta Air Lines",
+       "flight": "KE53/DL440",
+       "dep": "20:50",
+       "arr": "07:35+1",
+       "duration": "27h 45m",
+       "via": "檀香山",
+       "price_usd": 3034
+      },
+      {
+       "airline": "Korean Air, Delta Air Lines",
+       "flight": "KE51/DL440",
+       "dep": "22:20",
+       "arr": "07:35+1",
+       "duration": "26h 15m",
+       "via": "檀香山",
+       "price_usd": 3034
+      },
       {
        "airline": "Air Canada",
        "flight": "AC64/AC8806",
@@ -22783,7 +22803,7 @@
        "arr": "18:22",
        "duration": "16h 27m",
        "via": "温哥华",
-       "price_usd": 3164.0
+       "price_usd": 3166
       },
       {
        "airline": "Air Canada",
@@ -22792,37 +22812,17 @@
        "arr": "21:57",
        "duration": "20h 2m",
        "via": "温哥华",
-       "price_usd": 3164.0
+       "price_usd": 3166
       },
       {
-       "airline": "Korean Air, Delta",
+       "airline": "Korean Air, Delta Air Lines",
        "flight": "KE71/DL3968",
        "dep": "18:15",
        "arr": "17:00",
        "duration": "15h 45m",
        "via": "温哥华",
-       "price_usd": 3228.0,
-       "business_price_usd": 9065.0
-      },
-      {
-       "airline": "Philippine Airlines",
-       "flight": "PR401/PR124",
-       "dep": "07:30",
-       "arr": "18:45",
-       "duration": "28h 15m",
-       "via": "马尼拉",
-       "price_usd": 3526.0,
-       "business_price_usd": 7684.0
-      },
-      {
-       "airline": "Korean Air, Delta",
-       "flight": "KE75/DL3764",
-       "dep": "22:55",
-       "arr": "08:45",
-       "duration": "26h 50m",
-       "via": "温哥华",
-       "price_usd": 3658.0,
-       "business_price_usd": 9735.0
+       "price_usd": 3230,
+       "business_price_usd": 8188
       },
       {
        "airline": "Air Canada",
@@ -22831,31 +22831,36 @@
        "arr": "14:37",
        "duration": "12h 42m",
        "via": "温哥华",
-       "price_usd": 4222.0
+       "price_usd": 3432
       },
       {
-       "airline": "Korean Air, Delta",
-       "flight": "KE11/DL2640",
-       "dep": "19:40",
-       "arr": "20:42",
-       "duration": "18h 2m",
-       "via": "洛杉矶",
-       "price_usd": 4289.0
+       "airline": "Philippine Airlines",
+       "flight": "PR401/PR124",
+       "dep": "07:30",
+       "arr": "18:45",
+       "duration": "28h 15m",
+       "via": "马尼拉",
+       "price_usd": 3526,
+       "business_price_usd": 7235
       },
       {
-       "airline": "Korean Air, Alaska",
-       "flight": "KE17/AS1616",
-       "dep": "14:30",
-       "arr": "13:28",
-       "duration": "15h 58m",
-       "via": "洛杉矶",
-       "price_usd": 4514.0
+       "airline": "Air Canada, Alaska Airlines",
+       "flight": "AC64/AS2222",
+       "dep": "18:55",
+       "arr": "18:43",
+       "duration": "16h 48m",
+       "via": "温哥华",
+       "price_usd": 4165
       }
      ],
      "onestop_count": 8,
-     "onestop_business_queried_at": "2026-10-05T06:58:03+00:00",
-     "onestop_business_usd": 7684.0,
-     "onestop_business_price_basis": "2大1小总价"
+     "onestop_business_queried_at": "2026-10-06T07:52:32+00:00",
+     "onestop_business_usd": 7235,
+     "onestop_business_price_basis": "2大小总价",
+     "economy_note": "AS120 market price recorded only (already ticketed); 4 nonstop flights",
+     "business_note": "No Delta business fare for 3 passengers shown; 3 nonstop results",
+     "onestop_economy_note": "8 cheapest 1-stop flights; filter '1 stop or fewer' used, nonstop rows excluded",
+     "onestop_business_note": "8 cheapest 1-stop business flights; filter '1 stop or fewer' used, nonstop rows excluded"
     }
    }
   },
@@ -22869,19 +22874,19 @@
    "label": "西安→首尔（1大1小，老婆带娃）",
    "days": {
     "2026-12-31": {
-     "economy_queried_at": "2026-10-05T06:58:03+00:00",
-     "economy_usd": 353.0,
+     "economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "economy_usd": 353,
      "currency": "USD",
-     "economy_price_basis": "1成人+1儿童总价",
+     "economy_price_basis": "1大小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Asiana",
+       "airline": "Asiana Airlines",
        "flight": "OZ348",
        "dep": "13:25",
        "arr": "17:10",
        "duration": "2h 45m",
-       "price_usd": 353.0,
+       "price_usd": 353,
        "business_price_usd": 655
       },
       {
@@ -22890,8 +22895,8 @@
        "dep": "12:55",
        "arr": "16:45",
        "duration": "2h 50m",
-       "price_usd": 475.0,
-       "business_price_usd": 949.0
+       "price_usd": 475,
+       "business_price_usd": 949
       },
       {
        "airline": "China Eastern",
@@ -22903,17 +22908,19 @@
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-05T06:58:03+00:00",
-     "business_usd": 949.0,
-     "business_price_basis": "1成人+1儿童总价",
+     "business_queried_at": "2026-10-06T07:52:32+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大小总价",
      "economy_price_usd": 338,
-     "business_price_usd": 655
+     "business_price_usd": 655,
+     "economy_note": "MU853 2-passenger price unavailable on page; 3 nonstop flights total",
+     "business_note": "Asiana nonstop has no 2-passenger business fare shown; 2 nonstop results; MU853 price unavailable"
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-10-05T06:58:03+00:00",
-     "economy_usd": 351.0,
+     "economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "economy_usd": 351,
      "currency": "USD",
-     "economy_price_basis": "1成人+1儿童总价",
+     "economy_price_basis": "1大小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
@@ -22922,16 +22929,16 @@
        "dep": "12:55",
        "arr": "16:45",
        "duration": "2h 50m",
-       "price_usd": 351.0,
-       "business_price_usd": 949.0
+       "price_usd": 351,
+       "business_price_usd": 949
       },
       {
-       "airline": "Asiana",
+       "airline": "Asiana Airlines",
        "flight": "OZ348",
        "dep": "13:25",
        "arr": "17:10",
        "duration": "2h 45m",
-       "price_usd": 353.0,
+       "price_usd": 353,
        "business_price_usd": 844
       },
       {
@@ -22944,17 +22951,19 @@
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-05T06:58:03+00:00",
-     "business_usd": 949.0,
-     "business_price_basis": "1成人+1儿童总价",
+     "business_queried_at": "2026-10-06T07:52:32+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大小总价",
      "economy_price_usd": 334,
-     "business_price_usd": 819
+     "business_price_usd": 819,
+     "economy_note": "MU853 2-passenger price unavailable; 3 nonstop flights total",
+     "business_note": "Asiana nonstop has no 2-passenger business fare shown; 2 nonstop results; MU853 price unavailable"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-10-05T06:58:03+00:00",
-     "economy_usd": 475.0,
+     "economy_queried_at": "2026-10-06T07:52:32+00:00",
+     "economy_usd": 475,
      "currency": "USD",
-     "economy_price_basis": "1成人+1儿童总价",
+     "economy_price_basis": "1大小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
@@ -22963,8 +22972,8 @@
        "dep": "12:55",
        "arr": "16:45",
        "duration": "2h 50m",
-       "price_usd": 475.0,
-       "business_price_usd": 949.0
+       "price_usd": 475,
+       "business_price_usd": 949
       },
       {
        "airline": "China Eastern",
@@ -22976,11 +22985,13 @@
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T06:58:03+00:00",
-     "business_usd": 949.0,
-     "business_price_basis": "1成人+1儿童总价",
+     "business_queried_at": "2026-10-06T07:52:32+00:00",
+     "business_usd": 949,
+     "business_price_basis": "1大小总价",
      "economy_price_usd": 463,
-     "business_price_usd": 819
+     "business_price_usd": 819,
+     "economy_note": "No Asiana flight on Jan 2; 2 nonstop flights; MU853 price unavailable",
+     "business_note": "No Asiana on Jan 2; 2 nonstop results; MU853 price unavailable"
     },
     "2026-12-08": {
      "economy_queried_at": "2026-10-03T05:03:47+00:00",
