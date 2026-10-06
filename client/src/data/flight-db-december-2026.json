@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T06:51:35+00:00",
+ "updated_at": "2026-10-06T07:15:09+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -10235,1446 +10235,1454 @@
      "business_price_basis": "2成人总价"
     },
     "2026-12-19": {
-     "economy_queried_at": "2026-09-29T05:27:04+00:00",
-     "economy_usd": 110,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 91,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "20:40",
+       "arr": "22:05",
+       "duration": "1h 25m",
+       "price_usd": 91
+      },
+      {
        "airline": "Thai Vietjet Air",
-       "flight": "VZ 123",
-       "dep": "7:35 PM",
-       "arr": "8:55 PM",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "20:55",
        "duration": "1h 20m",
-       "price_usd": 110
+       "price_usd": 94
       },
       {
        "airline": "Thai AirAsia",
-       "flight": "FD 4103",
-       "dep": "8:40 PM",
-       "arr": "10:05 PM",
-       "duration": "1h 25m",
-       "price_usd": 118
-      },
-      {
-       "airline": "THAI",
-       "flight": "TG 115",
-       "dep": "7:35 PM",
-       "arr": "9:00 PM",
-       "duration": "1h 25m",
-       "price_usd": 140,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 2107",
-       "dep": "8:50 PM",
-       "arr": "10:10 PM",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 119",
-       "dep": "10:35 PM",
-       "arr": "11:55 PM",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 2105",
-       "dep": "6:35 AM",
-       "arr": "7:55 AM",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 115",
-       "dep": "9:40 AM",
-       "arr": "11:00 AM",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 111",
-       "dep": "2:20 PM",
-       "arr": "3:40 PM",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ 109",
-       "dep": "5:20 PM",
-       "arr": "6:40 PM",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "Thai AirAsia",
-       "flight": "FD 4101",
-       "dep": "8:55 AM",
-       "arr": "10:10 AM",
+       "flight": null,
+       "dep": "08:55",
+       "arr": "10:10",
        "duration": "1h 15m",
-       "price_usd": 132
-      },
-      {
-       "airline": "Thai AirAsia",
-       "flight": "FD 4097",
-       "dep": "6:00 PM",
-       "arr": "7:25 PM",
-       "duration": "1h 25m",
-       "price_usd": 132
+       "price_usd": 104
       },
       {
        "airline": "Thai Vietjet Air",
-       "flight": "VZ 101",
-       "dep": "8:25 AM",
-       "arr": "9:45 AM",
+       "flight": null,
+       "dep": "20:50",
+       "arr": "22:10",
        "duration": "1h 20m",
-       "price_usd": 133
+       "price_usd": 94
       },
       {
        "airline": "Thai Vietjet Air",
-       "flight": "VZ 103",
-       "dep": "12:35 PM",
-       "arr": "1:55 PM",
+       "flight": null,
+       "dep": "22:35",
+       "arr": "23:55",
        "duration": "1h 20m",
-       "price_usd": 133
+       "price_usd": 94
       },
       {
        "airline": "Thai Vietjet Air",
-       "flight": "VZ 107",
-       "dep": "3:45 PM",
-       "arr": "5:10 PM",
+       "flight": null,
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "14:20",
+       "arr": "15:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "17:20",
+       "arr": "18:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "08:25",
+       "arr": "09:45",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "12:35",
+       "arr": "13:55",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "15:45",
+       "arr": "17:10",
        "duration": "1h 25m",
-       "price_usd": 133
+       "price_usd": 116
       },
       {
        "airline": "Thai AirAsia",
-       "flight": "FD 4105",
-       "dep": "12:40 PM",
-       "arr": "2:00 PM",
+       "flight": null,
+       "dep": "12:40",
+       "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
        "airline": "Thai AirAsia",
-       "flight": "FD 4109",
-       "dep": "6:05 PM",
-       "arr": "7:25 PM",
-       "duration": "1h 20m",
-       "price_usd": 145
-      },
-      {
-       "airline": "THAI",
-       "flight": "TG 121",
-       "dep": "9:10 PM",
-       "arr": "10:30 PM",
-       "duration": "1h 20m",
-       "price_usd": 148,
-       "business_price_usd": 573
-      },
-      {
-       "airline": "THAI",
-       "flight": "TG 101",
-       "dep": "8:05 AM",
-       "arr": "9:30 AM",
+       "flight": null,
+       "dep": "18:00",
+       "arr": "19:25",
        "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 404
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "18:05",
+       "arr": "19:25",
+       "duration": "1h 20m",
+       "price_usd": 116
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG 220",
-       "dep": "7:45 PM",
-       "arr": "9:10 PM",
+       "flight": null,
+       "dep": "19:45",
+       "arr": "21:10",
        "duration": "1h 25m",
-       "price_usd": 161
+       "price_usd": 135
       },
       {
        "airline": "THAI",
-       "flight": "TG 123",
-       "dep": "11:05 AM",
-       "arr": "12:30 PM",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
        "duration": "1h 25m",
-       "price_usd": 173,
-       "business_price_usd": 460
+       "price_usd": 138,
+       "business_price_usd": 398
       },
       {
        "airline": "THAI",
-       "flight": "TG 111",
-       "dep": "3:25 PM",
-       "arr": "4:45 PM",
+       "flight": null,
+       "dep": "21:10",
+       "arr": "22:30",
        "duration": "1h 20m",
-       "price_usd": 173,
-       "business_price_usd": 460
+       "price_usd": 147,
+       "business_price_usd": 557
       },
       {
        "airline": "THAI",
-       "flight": "TG 103",
-       "dep": "9:30 AM",
-       "arr": "10:55 AM",
+       "flight": null,
+       "dep": "08:05",
+       "arr": "09:30",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 404
+       "price_usd": 159,
+       "business_price_usd": 398
       },
       {
        "airline": "THAI",
-       "flight": "TG 105",
-       "dep": "12:15 PM",
-       "arr": "1:35 PM",
-       "duration": "1h 20m",
-       "price_usd": 191,
-       "business_price_usd": 529
+       "flight": null,
+       "dep": "11:05",
+       "arr": "12:30",
+       "duration": "1h 25m",
+       "price_usd": 172,
+       "business_price_usd": 454
       },
       {
        "airline": "THAI",
-       "flight": "TG 107",
-       "dep": "2:05 PM",
-       "arr": "3:25 PM",
+       "flight": null,
+       "dep": "12:15",
+       "arr": "13:35",
        "duration": "1h 20m",
-       "price_usd": 191,
-       "business_price_usd": 573
+       "price_usd": 183,
+       "business_price_usd": 454
       },
       {
        "airline": "THAI",
-       "flight": "TG 113",
-       "dep": "5:10 PM",
-       "arr": "6:30 PM",
+       "flight": null,
+       "dep": "15:25",
+       "arr": "16:45",
        "duration": "1h 20m",
-       "price_usd": 191,
-       "business_price_usd": 460
+       "price_usd": 183,
+       "business_price_usd": 454
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG 216",
-       "dep": "10:10 AM",
-       "arr": "11:35 AM",
+       "flight": null,
+       "dep": "10:10",
+       "arr": "11:35",
        "duration": "1h 25m",
-       "price_usd": 203
+       "price_usd": 187
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "09:30",
+       "arr": "10:55",
+       "duration": "1h 25m",
+       "price_usd": 190,
+       "business_price_usd": 398
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "17:10",
+       "arr": "18:30",
+       "duration": "1h 20m",
+       "price_usd": 190,
+       "business_price_usd": 454
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "14:05",
+       "arr": "15:25",
+       "duration": "1h 20m",
+       "price_usd": 198,
+       "business_price_usd": 557
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG 224",
-       "dep": "12:10 PM",
-       "arr": "1:35 PM",
+       "flight": null,
+       "dep": "12:10",
+       "arr": "13:35",
        "duration": "1h 25m",
-       "price_usd": 247
+       "price_usd": 232
       }
      ],
      "nonstop_count": 27,
-     "business_queried_at": "2026-09-29T05:27:04+00:00",
-     "business_usd": 404,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 398,
      "business_price_basis": "2成人总价"
     },
     "2026-12-20": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 110,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 92,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
-       "dep": "06:35",
-       "arr": "07:55",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ115",
-       "dep": "09:40",
-       "arr": "11:00",
-       "duration": "1h 20m",
-       "price_usd": 133
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4101",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "08:55",
        "arr": "10:10",
        "duration": "1h 15m",
-       "price_usd": 145
+       "price_usd": 92
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ103",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "12:35",
        "arr": "13:55",
        "duration": "1h 20m",
-       "price_usd": 148
+       "price_usd": 130
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG101",
-       "dep": "08:05",
-       "arr": "09:30",
-       "duration": "1h 25m",
-       "price_usd": 173,
-       "business_price_usd": 460
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "22:35",
        "arr": "23:55",
        "duration": "1h 20m",
-       "price_usd": 148
+       "price_usd": 130
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ101",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "08:25",
        "arr": "09:45",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "15:15",
+       "arr": "16:35",
+       "duration": "1h 20m",
+       "price_usd": 143
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "20:50",
        "arr": "22:10",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ107",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "15:45",
        "arr": "17:10",
        "duration": "1h 25m",
-       "price_usd": 180
+       "price_usd": 159
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG103",
-       "dep": "09:30",
-       "arr": "10:55",
-       "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 573
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG115",
-       "dep": "19:35",
-       "arr": "21:00",
-       "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG121",
-       "dep": "21:10",
-       "arr": "22:30",
-       "duration": "1h 20m",
-       "price_usd": 191,
-       "business_price_usd": 573
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ111",
-       "dep": "14:20",
-       "arr": "15:40",
-       "duration": "1h 20m",
-       "price_usd": 199
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
-       "dep": "17:20",
-       "arr": "18:40",
-       "duration": "1h 20m",
-       "price_usd": 199
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
-       "dep": "19:35",
-       "arr": "20:55",
-       "duration": "1h 20m",
-       "price_usd": 199
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4105",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "12:40",
        "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 201
+       "price_usd": 164
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4097",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:00",
        "arr": "19:25",
        "duration": "1h 25m",
-       "price_usd": 201
+       "price_usd": 164
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4109",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:05",
        "arr": "19:25",
        "duration": "1h 20m",
-       "price_usd": 201
+       "price_usd": 164
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4103",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "20:40",
        "arr": "22:05",
        "duration": "1h 25m",
-       "price_usd": 201
+       "price_usd": 164
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "08:05",
+       "arr": "09:30",
+       "duration": "1h 25m",
+       "price_usd": 165,
+       "business_price_usd": 454
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "09:30",
+       "arr": "10:55",
+       "duration": "1h 25m",
+       "price_usd": 172,
+       "business_price_usd": 522
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
+       "duration": "1h 25m",
+       "price_usd": 173,
+       "business_price_usd": 454
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "14:20",
+       "arr": "15:40",
+       "duration": "1h 20m",
+       "price_usd": 177
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "17:20",
+       "arr": "18:40",
+       "duration": "1h 20m",
+       "price_usd": 177
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "20:55",
+       "duration": "1h 20m",
+       "price_usd": 177
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG220",
+       "flight": null,
        "dep": "19:45",
        "arr": "21:10",
        "duration": "1h 25m",
-       "price_usd": 203
+       "price_usd": 187
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG123",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "21:10",
+       "arr": "22:30",
+       "duration": "1h 20m",
+       "price_usd": 190,
+       "business_price_usd": 557
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "11:05",
        "arr": "12:30",
        "duration": "1h 25m",
-       "price_usd": 206,
-       "business_price_usd": 573
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG105",
-       "dep": "12:15",
-       "arr": "13:35",
-       "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 573
+       "price_usd": 200,
+       "business_price_usd": 557
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG216",
+       "flight": null,
        "dep": "10:10",
        "arr": "11:35",
        "duration": "1h 25m",
-       "price_usd": 221
+       "price_usd": 205
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG224",
+       "flight": null,
        "dep": "12:10",
        "arr": "13:35",
        "duration": "1h 25m",
-       "price_usd": 221
+       "price_usd": 205
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG107",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "12:15",
+       "arr": "13:35",
+       "duration": "1h 20m",
+       "price_usd": 215,
+       "business_price_usd": 557
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 573
+       "price_usd": 215,
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG111",
+       "airline": "THAI",
+       "flight": null,
        "dep": "15:25",
        "arr": "16:45",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 573
+       "price_usd": 215,
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG113",
+       "airline": "THAI",
+       "flight": null,
        "dep": "17:10",
        "arr": "18:30",
        "duration": "1h 20m",
        "price_usd": 222,
-       "business_price_usd": 573
+       "business_price_usd": 557
       }
      ],
-     "nonstop_count": 27,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
+     "nonstop_count": 28,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 454,
      "business_price_basis": "2成人总价"
     },
     "2026-12-21": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 122,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 104,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ115",
-       "dep": "09:40",
-       "arr": "11:00",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4101",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "08:55",
        "arr": "10:10",
        "duration": "1h 15m",
-       "price_usd": 132
+       "price_usd": 104
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG101",
-       "dep": "08:05",
-       "arr": "09:30",
-       "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 460
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "06:35",
        "arr": "07:55",
        "duration": "1h 20m",
-       "price_usd": 122
+       "price_usd": 105
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ103",
-       "dep": "12:35",
-       "arr": "13:55",
-       "duration": "1h 20m",
-       "price_usd": 133
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
-       "dep": "20:50",
-       "arr": "22:10",
-       "duration": "1h 20m",
-       "price_usd": 133
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
-       "dep": "22:35",
-       "arr": "23:55",
-       "duration": "1h 20m",
-       "price_usd": 133
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4105",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "12:40",
        "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4097",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "12:35",
+       "arr": "13:55",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "22:35",
+       "arr": "23:55",
+       "duration": "1h 20m",
+       "price_usd": 116
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:00",
        "arr": "19:25",
        "duration": "1h 25m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4109",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:05",
        "arr": "19:25",
        "duration": "1h 20m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4103",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "20:40",
        "arr": "22:05",
        "duration": "1h 25m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ101",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "08:25",
        "arr": "09:45",
        "duration": "1h 20m",
-       "price_usd": 148
+       "price_usd": 130
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "19:35",
        "arr": "20:55",
        "duration": "1h 20m",
-       "price_usd": 148
+       "price_usd": 130
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG115",
-       "dep": "19:35",
-       "arr": "21:00",
-       "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 404
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "20:50",
+       "arr": "22:10",
+       "duration": "1h 20m",
+       "price_usd": 130
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ111",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "14:20",
        "arr": "15:40",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ105",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "15:15",
        "arr": "16:35",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ107",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "15:45",
        "arr": "17:10",
        "duration": "1h 25m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "17:20",
        "arr": "18:40",
        "duration": "1h 20m",
-       "price_usd": 162
+       "price_usd": 143
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG121",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "08:05",
+       "arr": "09:30",
+       "duration": "1h 25m",
+       "price_usd": 152,
+       "business_price_usd": 456
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
+       "duration": "1h 25m",
+       "price_usd": 152,
+       "business_price_usd": 400
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "21:10",
        "arr": "22:30",
        "duration": "1h 20m",
-       "price_usd": 173,
-       "business_price_usd": 529
+       "price_usd": 165,
+       "business_price_usd": 524
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG103",
+       "airline": "THAI",
+       "flight": null,
        "dep": "09:30",
        "arr": "10:55",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 573
+       "price_usd": 183,
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG123",
+       "airline": "THAI",
+       "flight": null,
        "dep": "11:05",
        "arr": "12:30",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 460
+       "price_usd": 184,
+       "business_price_usd": 456
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG111",
-       "dep": "15:25",
-       "arr": "16:45",
-       "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 573
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG113",
+       "airline": "THAI",
+       "flight": null,
        "dep": "17:10",
        "arr": "18:30",
        "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 573
+       "price_usd": 198,
+       "business_price_usd": 557
       },
       {
-       "airline": "Bangkok Airways",
-       "flight": "PG216",
-       "dep": "10:10",
-       "arr": "11:35",
-       "duration": "1h 25m",
-       "price_usd": 221
-      },
-      {
-       "airline": "Bangkok Airways",
-       "flight": "PG224",
-       "dep": "12:10",
-       "arr": "13:35",
-       "duration": "1h 25m",
-       "price_usd": 221
-      },
-      {
-       "airline": "Bangkok Airways",
-       "flight": "PG220",
-       "dep": "19:45",
-       "arr": "21:10",
-       "duration": "1h 25m",
-       "price_usd": 221
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG105",
+       "airline": "THAI",
+       "flight": null,
        "dep": "12:15",
        "arr": "13:35",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 573
+       "price_usd": 199,
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG107",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "15:25",
+       "arr": "16:45",
+       "duration": "1h 20m",
+       "price_usd": 199,
+       "business_price_usd": 557
+      },
+      {
+       "airline": "Bangkok Airways",
+       "flight": null,
+       "dep": "10:10",
+       "arr": "11:35",
+       "duration": "1h 25m",
+       "price_usd": 205
+      },
+      {
+       "airline": "Bangkok Airways",
+       "flight": null,
+       "dep": "19:45",
+       "arr": "21:10",
+       "duration": "1h 25m",
+       "price_usd": 205
+      },
+      {
+       "airline": "Bangkok Airways",
+       "flight": null,
+       "dep": "12:10",
+       "arr": "13:35",
+       "duration": "1h 25m",
+       "price_usd": 210
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 529
+       "price_usd": 213,
+       "business_price_usd": 557
       }
      ],
      "nonstop_count": 28,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 400,
      "business_price_basis": "2成人总价"
     },
     "2026-12-22": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 110,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 91,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
-       "dep": "06:35",
-       "arr": "07:55",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4101",
-       "dep": "08:55",
-       "arr": "10:10",
-       "duration": "1h 15m",
-       "price_usd": 118
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG115",
-       "dep": "19:35",
-       "arr": "21:00",
-       "duration": "1h 25m",
-       "price_usd": 140,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ101",
-       "dep": "08:25",
-       "arr": "09:45",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ115",
-       "dep": "09:40",
-       "arr": "11:00",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ103",
-       "dep": "12:35",
-       "arr": "13:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
-       "dep": "19:35",
-       "arr": "20:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
-       "dep": "20:50",
-       "arr": "22:10",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
-       "dep": "22:35",
-       "arr": "23:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4103",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "20:40",
        "arr": "22:05",
        "duration": "1h 25m",
-       "price_usd": 132
+       "price_usd": 91
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ111",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "08:55",
+       "arr": "10:10",
+       "duration": "1h 15m",
+       "price_usd": 104
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "22:35",
+       "arr": "23:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "08:25",
+       "arr": "09:45",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "12:35",
+       "arr": "13:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "20:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "20:50",
+       "arr": "22:10",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "14:20",
        "arr": "15:40",
        "duration": "1h 20m",
-       "price_usd": 133
+       "price_usd": 116
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ107",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "15:45",
        "arr": "17:10",
        "duration": "1h 25m",
-       "price_usd": 133
+       "price_usd": 116
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "17:20",
        "arr": "18:40",
        "duration": "1h 20m",
-       "price_usd": 133
+       "price_usd": 116
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG121",
-       "dep": "21:10",
-       "arr": "22:30",
-       "duration": "1h 20m",
-       "price_usd": 140,
-       "business_price_usd": 460
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4105",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "12:40",
        "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4097",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:00",
        "arr": "19:25",
        "duration": "1h 25m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4109",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:05",
        "arr": "19:25",
        "duration": "1h 20m",
-       "price_usd": 145
+       "price_usd": 116
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG101",
-       "dep": "08:05",
-       "arr": "09:30",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "21:10",
+       "arr": "22:30",
+       "duration": "1h 20m",
+       "price_usd": 133,
+       "business_price_usd": 456
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
        "duration": "1h 25m",
-       "price_usd": 148,
-       "business_price_usd": 404
+       "price_usd": 138,
+       "business_price_usd": 400
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG220",
+       "flight": null,
        "dep": "19:45",
        "arr": "21:10",
        "duration": "1h 25m",
-       "price_usd": 161
+       "price_usd": 145
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG103",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "08:05",
+       "arr": "09:30",
+       "duration": "1h 25m",
+       "price_usd": 147,
+       "business_price_usd": 400
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "09:30",
        "arr": "10:55",
        "duration": "1h 25m",
-       "price_usd": 173,
-       "business_price_usd": 404
+       "price_usd": 159,
+       "business_price_usd": 400
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG216",
+       "flight": null,
        "dep": "10:10",
        "arr": "11:35",
        "duration": "1h 25m",
-       "price_usd": 179
+       "price_usd": 186
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG123",
+       "airline": "Bangkok Airways",
+       "flight": null,
+       "dep": "12:10",
+       "arr": "13:35",
+       "duration": "1h 25m",
+       "price_usd": 187
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "11:05",
        "arr": "12:30",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 460
+       "price_usd": 190,
+       "business_price_usd": 456
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG113",
+       "airline": "THAI",
+       "flight": null,
        "dep": "17:10",
        "arr": "18:30",
        "duration": "1h 20m",
        "price_usd": 191,
-       "business_price_usd": 460
+       "business_price_usd": 456
       },
       {
-       "airline": "Bangkok Airways",
-       "flight": "PG224",
-       "dep": "12:10",
-       "arr": "13:35",
-       "duration": "1h 25m",
-       "price_usd": 203
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG105",
+       "airline": "THAI",
+       "flight": null,
        "dep": "12:15",
        "arr": "13:35",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 460
+       "price_usd": 205,
+       "business_price_usd": 400
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG107",
+       "airline": "THAI",
+       "flight": null,
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
        "price_usd": 222,
-       "business_price_usd": 573
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG111",
+       "airline": "THAI",
+       "flight": null,
        "dep": "15:25",
        "arr": "16:45",
        "duration": "1h 20m",
        "price_usd": 222,
-       "business_price_usd": 573
+       "business_price_usd": 557
       }
      ],
      "nonstop_count": 27,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 400,
      "business_price_basis": "2成人总价"
     },
     "2026-12-23": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 110,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 91,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
-       "dep": "06:35",
-       "arr": "07:55",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ111",
-       "dep": "14:20",
-       "arr": "15:40",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4105",
-       "dep": "12:40",
-       "arr": "14:00",
-       "duration": "1h 20m",
-       "price_usd": 132
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG115",
-       "dep": "19:35",
-       "arr": "21:00",
-       "duration": "1h 25m",
-       "price_usd": 140,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "Bangkok Airways",
-       "flight": "PG220",
-       "dep": "19:45",
-       "arr": "21:10",
-       "duration": "1h 25m",
-       "price_usd": 140
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
-       "dep": "20:50",
-       "arr": "22:10",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
-       "dep": "22:35",
-       "arr": "23:55",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4103",
-       "dep": "20:40",
-       "arr": "22:05",
-       "duration": "1h 25m",
-       "price_usd": 118
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ101",
-       "dep": "08:25",
-       "arr": "09:45",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ115",
-       "dep": "09:40",
-       "arr": "11:00",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ103",
-       "dep": "12:35",
-       "arr": "13:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ107",
-       "dep": "15:45",
-       "arr": "17:10",
-       "duration": "1h 25m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
-       "dep": "17:20",
-       "arr": "18:40",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
-       "dep": "19:35",
-       "arr": "20:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4101",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "08:55",
        "arr": "10:10",
        "duration": "1h 15m",
-       "price_usd": 132
+       "price_usd": 91
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ105",
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "18:00",
+       "arr": "19:25",
+       "duration": "1h 25m",
+       "price_usd": 91
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "18:05",
+       "arr": "19:25",
+       "duration": "1h 20m",
+       "price_usd": 91
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "20:40",
+       "arr": "22:05",
+       "duration": "1h 25m",
+       "price_usd": 91
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "20:50",
+       "arr": "22:10",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "22:35",
+       "arr": "23:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "08:25",
+       "arr": "09:45",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "12:35",
+       "arr": "13:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "14:20",
+       "arr": "15:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "17:20",
+       "arr": "18:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "20:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "15:45",
+       "arr": "17:10",
+       "duration": "1h 25m",
+       "price_usd": 111
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
        "dep": "15:15",
        "arr": "16:35",
        "duration": "1h 20m",
-       "price_usd": 133
+       "price_usd": 116
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG121",
-       "dep": "21:10",
-       "arr": "22:30",
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "12:40",
+       "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 140,
-       "business_price_usd": 404
+       "price_usd": 116
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4097",
-       "dep": "18:00",
-       "arr": "19:25",
+       "airline": "Bangkok Airways",
+       "flight": null,
+       "dep": "19:45",
+       "arr": "21:10",
        "duration": "1h 25m",
-       "price_usd": 145
+       "price_usd": 124
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG101",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
+       "duration": "1h 25m",
+       "price_usd": 138,
+       "business_price_usd": 400
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "08:05",
        "arr": "09:30",
        "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 404
+       "price_usd": 147,
+       "business_price_usd": 400
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG111",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "21:10",
+       "arr": "22:30",
+       "duration": "1h 20m",
+       "price_usd": 147,
+       "business_price_usd": 428
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "15:25",
        "arr": "16:45",
        "duration": "1h 20m",
-       "price_usd": 173,
-       "business_price_usd": 529
+       "price_usd": 172,
+       "business_price_usd": 524
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG103",
-       "dep": "09:30",
-       "arr": "10:55",
-       "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 460
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG123",
+       "airline": "THAI",
+       "flight": null,
        "dep": "11:05",
        "arr": "12:30",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 573
+       "price_usd": 183,
+       "business_price_usd": 557
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4109",
-       "dep": "18:05",
-       "arr": "19:25",
-       "duration": "1h 20m",
-       "price_usd": 201
+       "airline": "THAI",
+       "flight": null,
+       "dep": "09:30",
+       "arr": "10:55",
+       "duration": "1h 25m",
+       "price_usd": 183,
+       "business_price_usd": 456
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG105",
-       "dep": "12:15",
-       "arr": "13:35",
-       "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 529
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG107",
+       "airline": "THAI",
+       "flight": null,
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 573
+       "price_usd": 190,
+       "business_price_usd": 524
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "12:15",
+       "arr": "13:35",
+       "duration": "1h 20m",
+       "price_usd": 198,
+       "business_price_usd": 524
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG216",
+       "flight": null,
        "dep": "10:10",
        "arr": "11:35",
        "duration": "1h 25m",
-       "price_usd": 221
+       "price_usd": 205
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG224",
+       "flight": null,
        "dep": "12:10",
        "arr": "13:35",
        "duration": "1h 25m",
-       "price_usd": 221
+       "price_usd": 205
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG113",
+       "airline": "THAI",
+       "flight": null,
        "dep": "17:10",
        "arr": "18:30",
        "duration": "1h 20m",
-       "price_usd": 222,
-       "business_price_usd": 529
+       "price_usd": 213,
+       "business_price_usd": 524
       }
      ],
      "nonstop_count": 28,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 400,
      "business_price_basis": "2成人总价"
     },
     "2026-12-24": {
-     "economy_queried_at": "2026-09-29T05:59:53+00:00",
-     "economy_usd": 110,
+     "economy_queried_at": "2026-10-06T07:15:09+00:00",
+     "economy_usd": 94,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "AirAsia",
-       "flight": "FD4101",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "08:55",
        "arr": "10:10",
        "duration": "1h 15m",
-       "price_usd": 118
+       "price_usd": 103
       },
       {
-       "airline": "VietJet Thailand",
-       "flight": "VZ103",
-       "dep": "12:35",
-       "arr": "13:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG115",
-       "dep": "19:35",
-       "arr": "21:00",
-       "duration": "1h 25m",
-       "price_usd": 140,
-       "business_price_usd": 404
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2107",
-       "dep": "20:50",
-       "arr": "22:10",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ119",
-       "dep": "22:35",
-       "arr": "23:55",
-       "duration": "1h 20m",
-       "price_usd": 110
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4097",
-       "dep": "18:00",
-       "arr": "19:25",
-       "duration": "1h 25m",
-       "price_usd": 118
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4103",
-       "dep": "20:40",
-       "arr": "22:05",
-       "duration": "1h 25m",
-       "price_usd": 118
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ2105",
-       "dep": "06:35",
-       "arr": "07:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ101",
-       "dep": "08:25",
-       "arr": "09:45",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ115",
-       "dep": "09:40",
-       "arr": "11:00",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ111",
-       "dep": "14:20",
-       "arr": "15:40",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ107",
-       "dep": "15:45",
-       "arr": "17:10",
-       "duration": "1h 25m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ109",
-       "dep": "17:20",
-       "arr": "18:40",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "VietJet Thailand",
-       "flight": "VZ123",
-       "dep": "19:35",
-       "arr": "20:55",
-       "duration": "1h 20m",
-       "price_usd": 122
-      },
-      {
-       "airline": "AirAsia",
-       "flight": "FD4105",
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "12:40",
        "arr": "14:00",
        "duration": "1h 20m",
-       "price_usd": 132
+       "price_usd": 103
       },
       {
-       "airline": "AirAsia",
-       "flight": "FD4109",
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "09:40",
+       "arr": "11:00",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "20:50",
+       "arr": "22:10",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "22:35",
+       "arr": "23:55",
+       "duration": "1h 20m",
+       "price_usd": 94
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "18:00",
+       "arr": "19:25",
+       "duration": "1h 25m",
+       "price_usd": 103
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
        "dep": "18:05",
        "arr": "19:25",
        "duration": "1h 20m",
-       "price_usd": 132
+       "price_usd": 103
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": null,
+       "dep": "20:40",
+       "arr": "22:05",
+       "duration": "1h 25m",
+       "price_usd": 103
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "06:35",
+       "arr": "07:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "08:25",
+       "arr": "09:45",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "14:20",
+       "arr": "15:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "15:45",
+       "arr": "17:10",
+       "duration": "1h 25m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "17:20",
+       "arr": "18:40",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "20:55",
+       "duration": "1h 20m",
+       "price_usd": 105
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": null,
+       "dep": "12:35",
+       "arr": "13:55",
+       "duration": "1h 20m",
+       "price_usd": 116
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG220",
+       "flight": null,
        "dep": "19:45",
        "arr": "21:10",
        "duration": "1h 25m",
-       "price_usd": 140
+       "price_usd": 124
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG121",
+       "airline": "THAI",
+       "flight": null,
        "dep": "21:10",
        "arr": "22:30",
        "duration": "1h 20m",
-       "price_usd": 140,
-       "business_price_usd": 404
+       "price_usd": 133,
+       "business_price_usd": 400
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG101",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "19:35",
+       "arr": "21:00",
+       "duration": "1h 25m",
+       "price_usd": 138,
+       "business_price_usd": 400
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "08:05",
        "arr": "09:30",
        "duration": "1h 25m",
-       "price_usd": 160,
-       "business_price_usd": 404
+       "price_usd": 159,
+       "business_price_usd": 400
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG103",
-       "dep": "09:30",
-       "arr": "10:55",
-       "duration": "1h 25m",
-       "price_usd": 173,
-       "business_price_usd": 529
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG113",
+       "airline": "THAI",
+       "flight": null,
        "dep": "17:10",
        "arr": "18:30",
        "duration": "1h 20m",
-       "price_usd": 173,
-       "business_price_usd": 460
+       "price_usd": 159,
+       "business_price_usd": 557
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG123",
-       "dep": "11:05",
-       "arr": "12:30",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "09:30",
+       "arr": "10:55",
        "duration": "1h 25m",
-       "price_usd": 191,
-       "business_price_usd": 529
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG105",
-       "dep": "12:15",
-       "arr": "13:35",
-       "duration": "1h 20m",
-       "price_usd": 191
-      },
-      {
-       "airline": "Thai Airways",
-       "flight": "TG111",
-       "dep": "15:25",
-       "arr": "16:45",
-       "duration": "1h 20m",
-       "price_usd": 191,
-       "business_price_usd": 529
+       "price_usd": 165,
+       "business_price_usd": 524
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG216",
+       "flight": null,
        "dep": "10:10",
        "arr": "11:35",
        "duration": "1h 25m",
-       "price_usd": 203
+       "price_usd": 177
       },
       {
-       "airline": "Thai Airways",
-       "flight": "TG107",
+       "airline": "THAI",
+       "flight": null,
+       "dep": "11:05",
+       "arr": "12:30",
+       "duration": "1h 25m",
+       "price_usd": 183,
+       "business_price_usd": 524
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "15:25",
+       "arr": "16:45",
+       "duration": "1h 20m",
+       "price_usd": 183,
+       "business_price_usd": 524
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
        "dep": "14:05",
        "arr": "15:25",
        "duration": "1h 20m",
-       "price_usd": 206,
-       "business_price_usd": 573
+       "price_usd": 198,
+       "business_price_usd": 557
       },
       {
        "airline": "Bangkok Airways",
-       "flight": "PG224",
+       "flight": null,
        "dep": "12:10",
        "arr": "13:35",
        "duration": "1h 25m",
-       "price_usd": 221
+       "price_usd": 205
+      },
+      {
+       "airline": "THAI",
+       "flight": null,
+       "dep": "12:15",
+       "arr": "13:35",
+       "duration": "1h 20m",
+       "price_usd": 205
       }
      ],
      "nonstop_count": 27,
-     "business_queried_at": "2026-09-29T05:59:53+00:00",
-     "business_usd": 404,
+     "business_queried_at": "2026-10-06T07:15:09+00:00",
+     "business_usd": 400,
      "business_price_basis": "2成人总价"
     },
     "2026-12-25": {
