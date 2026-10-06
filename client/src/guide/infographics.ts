@@ -28,6 +28,10 @@ import igBkYaowarat from './assets/infographics/bangkok/bangkok-yaowarat-food-ma
 import igHcmMuxia from './assets/infographics/hochiminh/muxia-vietnam-handmap.webp';
 import igPgXiri from './assets/infographics/penang/xirimuyixizhu-penang-plan.webp';
 import igSgXiri from './assets/infographics/singapore/xirimuyixizhu-singapore-plan.webp';
+import igSgMrt from './assets/infographics/singapore/singapore-mrt-map.jpg';
+import igSgAttr from './assets/infographics/singapore/singapore-attractions-map.jpg';
+import igSgHawker from './assets/infographics/singapore/singapore-hawker-food-guide.jpg';
+import igSgSentosa from './assets/infographics/singapore/singapore-sentosa-map.jpg';
 import igSeoulVisitMap1 from './assets/infographics/seoul/seoul-visitseoul-map-01.jpg';
 import igSeoulVisitMap2 from './assets/infographics/seoul/seoul-visitseoul-map-02.jpg';
 import igSeoulVisitMap3 from './assets/infographics/seoul/seoul-visitseoul-map-03.jpg';
@@ -284,6 +288,34 @@ title: '《7月新马泰 solo trip 16天》新加坡中转一日行程',
 summary: '作者自制行程图：新加坡中转一日行程。',
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
+},
+{
+file: igSgMrt,
+title: '新加坡MRT地铁线路图',
+summary: 'Jug Cerovic 绘制的高清 schematic 版本，线路配色清晰，1600×1600。',
+source: 'inat.fr',
+postUrl: 'https://inat.fr/',
+},
+{
+file: igSgAttr,
+title: '新加坡主要景点分布图（A-Z）',
+summary: 'Sygic Travel "Must See Things in Singapore A-Z"，26个景点按字母标注在地图上。',
+source: 'tripomatic.com',
+postUrl: 'https://www.tripomatic.com/',
+},
+{
+file: igSgHawker,
+title: '新加坡10大地标美食指南',
+summary: "World's 50 Best 新加坡地标美食拼图（未标注菜名，配合站内文字指南使用）。",
+source: 'theworlds50best.com',
+postUrl: 'https://www.theworlds50best.com/',
+},
+{
+file: igSgSentosa,
+title: '圣淘沙区域详图',
+summary: 'Wikivoyage 分区地图，See/Do/Buy/Eat/Drink/Sleep 六类POI带编号图例。',
+source: 'Wikimedia Commons',
+postUrl: 'https://commons.wikimedia.org/',
 },
 ];
 
