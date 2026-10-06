@@ -59,6 +59,14 @@ export interface LiveHotelPrice {
   baselineCheckedAt?: string;
   /** Google Hotels 可验证链接（搜索页，用户可点过去核对） */
   baselineUrl?: string;
+  /** Amex Travel 实查价（每晚 USD）；未查到则不填，卡片显示"未明确" */
+  amexUSD?: number;
+  /** Amex 查询时间 */
+  amexCheckedAt?: string;
+  /** Chase Travel 实查价（每晚 USD）；未查到则不填，卡片显示"未明确" */
+  chaseUSD?: number;
+  /** Chase 查询时间 */
+  chaseCheckedAt?: string;
 }
 
 export const hotelLivePrices: Record<string, LiveHotelPrice> = {
