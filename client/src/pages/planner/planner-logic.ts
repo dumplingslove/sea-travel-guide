@@ -1256,6 +1256,47 @@ function ordReturnSummary(): string {
       <div class="trip-flightinfo" style="margin-top:6px">${seaCard}</div></div>
   </div>`;
 }
+/* 检查确认 tab：全部转场航班一览（2026-10-05 用户：要点开每天才能看到所有航班；
+   这里按日期一次性列出所有转场航班卡，不用逐天点。回程首尔段另见下方「回程」卡。） */
+function ordAllFlights(): string {
+  const ranges = tripRanges();
+  const groups: {date:string; title:string; cards:string[]}[] = [];
+  const pushCard = (date:string|undefined, title:string, card:string) => {
+    if(!date) return;
+    let g = groups.find(x=>x.date===date);
+    if(!g){ g={date, title, cards:[]}; groups.push(g); }
+    else if(!g.title.includes(title)) g.title += "＋" + title;
+    g.cards.push(card);
+  };
+  const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+  const rm = RETURN_CITY_META[rc];
+  const xiyLeg = thailandToXianLeg();
+  const sinLeg = singaporeToFirstCityLeg();
+  for(const t of TRIP_TRANSITIONS){
+    if(t.noFlight) continue;
+    const choice = tripFlyChoice(t.after);
+    const date = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(!date) continue;
+    const title = t.title
+      .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
+      .replace("__SIN_FIRST__", `${sinLeg.label}`)
+      .replace("__RETURN_SEOUL__", `${rm.city}→首尔`);
+    for(const l of t.legs){
+      const code = l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code).replace("__RETURN_ICN_CODE__", `${rc}-ICN`);
+      const label = l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label).replace("__RETURN_ICN_LABEL__", `${rm.city}→首尔`);
+      pushCard(date, title, tripFlightCard(`${code}|${date}`, label));
+    }
+  }
+  for(const leg of wzLegs()){
+    const fromCode = CITY_AIRPORT[leg.from], toCode = CITY_AIRPORT[leg.to];
+    if(fromCode && toCode) pushCard(leg.date, "东南亚段内转场", tripFlightCard(`${fromCode}-${toCode}|${leg.date}`, `${leg.from}→${leg.to}`));
+  }
+  if(!groups.length) return "";
+  groups.sort((a,b)=>a.date<b.date?-1:1);
+  return `<div class="card" style="margin:16px 0"><div class="trip-seg-head"><div class="trip-seg-title">✈️ 全部转场航班一览</div>
+    <div class="micro">所有转场日的航班卡都在这里，不用逐天点开；点每行展开看班次和价格。回程首尔段见下方「回程」卡。</div></div>
+    ${groups.map(g=>`<div style="margin:10px 0"><div class="micro" style="margin-bottom:6px"><b>📅 ${dateLabel(g.date)}</b> · ${esc(g.title)}</div><div class="trip-flightinfo">${g.cards.join("")}</div></div>`).join("")}</div>`;
+}
 function renderOrderTab(){
   const body = el("orderBody");
   body.innerHTML = `
@@ -1272,6 +1313,7 @@ function renderOrderTab(){
     </div>
     <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <div id="ordDayDetail"></div>
+    ${ordAllFlights()}
     ${ordReturnSummary()}
     ${buildCityTaboos()}
     <div class="card" style="margin-top:16px"><div class="micro">📅 夫妻东南亚段：<b>${dateLabel(wz.start)} – ${dateLabel(addDays(wz.start,(tripDays["couple"]||0)-1))}</b>（共 ${tripDays["couple"]||0} 天，来自「🗺️ 大行程」）</div>
