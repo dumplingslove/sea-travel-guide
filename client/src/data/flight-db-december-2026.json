@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T03:15:35+00:00",
+ "updated_at": "2026-10-06T03:46:37+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -6209,34 +6209,26 @@
      "business_note": "当天无直飞"
     },
     "2026-12-16": {
-     "economy_queried_at": "2026-09-29T00:54:16+00:00",
-     "economy_usd": 203,
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
+     "economy_usd": 218,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Thai AirAsia",
-       "flight": "FD3159",
-       "dep": "09:00",
-       "arr": "11:00",
-       "duration": "2h 0m",
-       "price_usd": 203
-      },
-      {
        "airline": "Thai Vietjet Air",
        "flight": "VZ415",
        "dep": "08:15",
        "arr": "10:20",
-       "duration": "2h 5m",
+       "duration": "2 hr 5 min",
        "price_usd": 218
       },
       {
        "airline": "Thai AirAsia",
-       "flight": "FD3161",
-       "dep": "10:35",
-       "arr": "12:35",
-       "duration": "2h 0m",
+       "flight": "FD3159",
+       "dep": "09:00",
+       "arr": "11:00",
+       "duration": "2 hr",
        "price_usd": 243
       },
       {
@@ -6244,7 +6236,7 @@
        "flight": "FD3167",
        "dep": "18:55",
        "arr": "20:55",
-       "duration": "2h 0m",
+       "duration": "2 hr",
        "price_usd": 243
       },
       {
@@ -6252,37 +6244,37 @@
        "flight": "VZ417",
        "dep": "13:25",
        "arr": "15:40",
-       "duration": "2h 15m",
-       "price_usd": 245
+       "duration": "2 hr 15 min",
+       "price_usd": 277
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 277
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T00:54:16+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-17": {
-     "economy_queried_at": "2026-09-29T00:54:16+00:00",
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
      "economy_usd": 218,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Thai AirAsia",
-       "flight": "FD3161",
-       "dep": "10:35",
-       "arr": "12:35",
-       "duration": "2h 0m",
-       "price_usd": 243
-      },
-      {
        "airline": "Thai Vietjet Air",
        "flight": "VZ415",
        "dep": "08:15",
        "arr": "10:20",
-       "duration": "2h 5m",
+       "duration": "2 hr 5 min",
        "price_usd": 218
       },
       {
@@ -6290,35 +6282,43 @@
        "flight": "FD3159",
        "dep": "09:00",
        "arr": "11:00",
-       "duration": "2h 0m",
-       "price_usd": 243
+       "duration": "2 hr",
+       "price_usd": 220
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3167",
        "dep": "18:55",
        "arr": "20:55",
-       "duration": "2h 0m",
-       "price_usd": 243
+       "duration": "2 hr",
+       "price_usd": 220
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3161",
+       "dep": "10:35",
+       "arr": "12:35",
+       "duration": "2 hr",
+       "price_usd": 229
       },
       {
        "airline": "Thai Vietjet Air",
        "flight": "VZ417",
        "dep": "13:25",
        "arr": "15:40",
-       "duration": "2h 15m",
+       "duration": "2 hr 15 min",
        "price_usd": 277
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T00:54:16+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-18": {
-     "economy_queried_at": "2026-09-29T02:53:29+00:00",
-     "economy_usd": 203,
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
+     "economy_usd": 184,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -6328,15 +6328,15 @@
        "flight": "FD3167",
        "dep": "18:55",
        "arr": "20:55",
-       "duration": "2h 00m",
-       "price_usd": 203
+       "duration": "2 hr",
+       "price_usd": 184
       },
       {
        "airline": "Thai Vietjet Air",
        "flight": "VZ417",
        "dep": "13:25",
        "arr": "15:40",
-       "duration": "2h 15m",
+       "duration": "2 hr 15 min",
        "price_usd": 218
       },
       {
@@ -6344,34 +6344,34 @@
        "flight": "FD3161",
        "dep": "10:35",
        "arr": "12:35",
-       "duration": "2h 00m",
-       "price_usd": 243
+       "duration": "2 hr",
+       "price_usd": 251
       },
       {
        "airline": "Thai Vietjet Air",
        "flight": "VZ415",
        "dep": "08:15",
        "arr": "10:20",
-       "duration": "2h 5m",
-       "price_usd": 245
+       "duration": "2 hr 5 min",
+       "price_usd": 218
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3159",
        "dep": "09:00",
        "arr": "11:00",
-       "duration": "2h 00m",
-       "price_usd": 278
+       "duration": "2 hr",
+       "price_usd": 251
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T02:53:29+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-19": {
-     "economy_queried_at": "2026-09-29T02:53:29+00:00",
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
      "economy_usd": 218,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -6382,7 +6382,7 @@
        "flight": "VZ415",
        "dep": "08:15",
        "arr": "10:20",
-       "duration": "2h 5m",
+       "duration": "2 hr 5 min",
        "price_usd": 218
       },
       {
@@ -6390,97 +6390,97 @@
        "flight": "FD3159",
        "dep": "09:00",
        "arr": "11:00",
-       "duration": "2h 00m",
-       "price_usd": 243
+       "duration": "2 hr",
+       "price_usd": 220
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3161",
        "dep": "10:35",
        "arr": "12:35",
-       "duration": "2h 00m",
-       "price_usd": 278
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ417",
-       "dep": "13:25",
-       "arr": "15:40",
-       "duration": "2h 15m",
-       "price_usd": 277
+       "duration": "2 hr",
+       "price_usd": 251
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3167",
        "dep": "18:55",
        "arr": "20:55",
-       "duration": "2h 00m",
-       "price_usd": 278
+       "duration": "2 hr",
+       "price_usd": 251
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 277
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T02:53:29+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-20": {
-     "economy_queried_at": "2026-09-29T02:53:29+00:00",
-     "economy_usd": 192,
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
+     "economy_usd": 184,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ415",
-       "dep": "08:15",
-       "arr": "10:20",
-       "duration": "2h 5m",
-       "price_usd": 192
-      },
-      {
        "airline": "Thai AirAsia",
        "flight": "FD3159",
        "dep": "09:00",
        "arr": "11:00",
-       "duration": "2h 00m",
-       "price_usd": 203
+       "duration": "2 hr",
+       "price_usd": 184
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ415",
+       "dep": "08:15",
+       "arr": "10:20",
+       "duration": "2 hr 5 min",
+       "price_usd": 218
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3161",
        "dep": "10:35",
        "arr": "12:35",
-       "duration": "2h 00m",
-       "price_usd": 278
+       "duration": "2 hr",
+       "price_usd": 251
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3167",
        "dep": "18:55",
        "arr": "20:55",
-       "duration": "2h 00m",
-       "price_usd": 278
+       "duration": "2 hr",
+       "price_usd": 251
       },
       {
        "airline": "Thai Vietjet Air",
        "flight": "VZ417",
        "dep": "13:25",
        "arr": "15:40",
-       "duration": "2h 15m",
+       "duration": "2 hr 15 min",
        "price_usd": 313
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T02:53:29+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
     },
     "2026-12-21": {
-     "economy_queried_at": "2026-09-29T02:53:29+00:00",
-     "economy_usd": 192,
+     "economy_queried_at": "2026-10-06T03:46:37+00:00",
+     "economy_usd": 191,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -6490,44 +6490,44 @@
        "flight": "VZ415",
        "dep": "08:15",
        "arr": "10:20",
-       "duration": "2h 5m",
-       "price_usd": 192
+       "duration": "2 hr 5 min",
+       "price_usd": 191
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3159",
        "dep": "09:00",
        "arr": "11:00",
-       "duration": "2h 00m",
-       "price_usd": 203
-      },
-      {
-       "airline": "Thai AirAsia",
-       "flight": "FD3167",
-       "dep": "18:55",
-       "arr": "20:55",
-       "duration": "2h 00m",
-       "price_usd": 243
-      },
-      {
-       "airline": "Thai Vietjet Air",
-       "flight": "VZ417",
-       "dep": "13:25",
-       "arr": "15:40",
-       "duration": "2h 15m",
-       "price_usd": 277
+       "duration": "2 hr",
+       "price_usd": 220
       },
       {
        "airline": "Thai AirAsia",
        "flight": "FD3161",
        "dep": "10:35",
        "arr": "12:35",
-       "duration": "2h 00m",
-       "price_usd": 278
+       "duration": "2 hr",
+       "price_usd": 251
+      },
+      {
+       "airline": "Thai AirAsia",
+       "flight": "FD3167",
+       "dep": "18:55",
+       "arr": "20:55",
+       "duration": "2 hr",
+       "price_usd": 251
+      },
+      {
+       "airline": "Thai Vietjet Air",
+       "flight": "VZ417",
+       "dep": "13:25",
+       "arr": "15:40",
+       "duration": "2 hr 15 min",
+       "price_usd": 313
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-09-29T02:53:29+00:00",
+     "business_queried_at": "2026-10-06T03:46:37+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
