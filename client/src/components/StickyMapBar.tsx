@@ -958,12 +958,12 @@ export default function StickyMapBar({
       <style>{`@keyframes sea-pin-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}`}</style>
       {alwaysVisible ? (
         /* 常显模式：标题行不可点，无折叠按钮 */
-        <div className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-gray-900">
+        <div className="w-full flex items-center justify-between py-1.5 text-sm font-bold text-gray-900">
           {titleInner}
           {labelToggle}
         </div>
       ) : (
-        <div className="w-full flex items-center justify-between py-2.5">
+        <div className="w-full flex items-center justify-between py-1.5">
           <button
             onClick={toggle}
             className="flex-1 min-w-0 flex items-center justify-between text-sm font-bold text-gray-900 text-left"
@@ -979,7 +979,7 @@ export default function StickyMapBar({
       <div
         ref={mapEl}
         className="rounded-lg overflow-hidden border border-gray-200 mb-2"
-        style={{ display: collapsed ? "none" : "block", height: 300, width: "100%", zIndex: 0 }}
+        style={{ display: collapsed ? "none" : "block", height: 180, width: "100%", zIndex: 0 }}
       />
     </div>
   );
