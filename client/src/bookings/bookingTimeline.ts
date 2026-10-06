@@ -1,6 +1,6 @@
 /**
- * /bookings 预订行动时间线：13 天行程（2026-12-06 ～ 12-18）
- * 新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13。
+ * /bookings 预订行动时间线：东南亚段 2026-12-06 ～ 12-19（2026-10-05 用户锁死）
+ * 新加坡 12/06–12/11 → 普吉 12/11–12/15 → 清迈 12/15–12/18 → 曼谷 12/18–12/19。
  * （2026-09-30 site-improve：HOTEL_STAYS 曾写旧行程 12-12～12-24 与旧城市顺序曼谷→清迈，
  *  与云端规划/航班转场段/酒店实时价格日期全部错位，已按当前行程修正。）
  *
@@ -20,33 +20,23 @@ export interface PlanSegment { city: string; start: string; end: string; days: n
 /**
  * 城际转场航班的出发日期。
  * 2026-10-03 用户：改了大行程后航班日期要跟着变，不许写死。
- * 2026-10-03 修：大行程有北京两段（beijing1/beijing3）、西安两用（去新加坡会合/去首尔），
- * 不能只按城市名匹配——按航线显式映射到段ID+日期类型。
+ * 2026-10-05 修：云端 schedule 按到达口径标注（转场日记在到达城市名下，
+ * 如 12/11 记在普吉名下），航班日 = 到达城市段的第一天。
+ * 旧规则“出发城市最后一天”在该口径下会少算一天（如 SIN→HKT 算出 12-10，
+ * 实际 12-11），且与写死的旧日期错得一样，导致自动纠正永远触发不了。
+ * 目的城市在行程里只出现一次，按目的地匹配无歧义（原 ROUTE_DATE_MAP 不再需要）。
  */
 export function flightDateFromPlan(route: string, segments: PlanSegment[]): string | null {
-  const byId = (id: string) => segments.find((s) => s.segId === id);
-  const byCity = (city: string) => segments.find((s) => s.city === city);
-  /* 航线 → (段ID, 取start还是end) 显式映射 */
-  const ROUTE_DATE_MAP: Record<string, [string, "start" | "end"]> = {
-    /* 2026-10-03 用户原则：只用云端保存的日程（schedule），不许用天数推导北京/西安/首尔段。
-     * 日程里没有的段，一律用静态计划日期，不猜。 */
-    "西安 → 新加坡": ["singapore", "start"], /* 岳父母飞来新加坡会合（行程首日，日程里有新加坡） */
-    "新加坡 → 西安": ["singapore", "end"],    /* 岳父母带娃回西安 */
-    "曼谷 → 西安": ["曼谷", "end"],          /* 夫妻从曼谷飞西安 */
-    /* 北京→新加坡、回程三段用静态日期（日程里没有北京/首尔段，不推导；
-     * 首尔→西雅图是已出票的 AS120（2027-01-01），以实际出票为准） */
-  };
-  const mapped = ROUTE_DATE_MAP[route];
-  if (mapped) {
-    const seg = byId(mapped[0]) || byCity(mapped[0]);
-    if (seg) return mapped[1] === "start" ? seg.start : seg.end;
-    return null;
+  if (route === "新加坡 → 西安") {
+    /* 岳父母带娃回西安：跟夫妻同一天离开新加坡 = 新加坡段结束的次日（即下一段的第一天） */
+    const idx = segments.findIndex((s) => s.city === "新加坡");
+    const next = idx >= 0 ? segments[idx + 1] : undefined;
+    return next ? next.start : null;
   }
-  /* 其他城际段：出发城市最后一天 */
-  const origin = route.split("→")[0]?.trim();
-  if (!origin) return null;
-  const seg = byCity(origin);
-  return seg ? seg.end : null;
+  const dest = route.split("→")[1]?.trim();
+  if (!dest) return null;
+  const seg = segments.find((s) => s.city === dest);
+  return seg ? seg.start : null;
 }
 
 /**
@@ -60,8 +50,9 @@ export function hotelStayFromPlan(city: string, segments: PlanSegment[]): [strin
   const idx = segments.findIndex((s) => s.city === city);
   if (idx < 0) return null;
   const seg = segments[idx]!;
-  const checkIn = idx === 0 ? seg.start : segments[idx - 1]!.end;
-  return [checkIn, seg.end];
+  const next = segments[idx + 1];
+  // 2026-10-05 修：与 schedule 到达口径一致——入住=本段第一天，退房=下一段第一天（转场航班日）
+  return [seg.start, next ? next.start : seg.end];
 }
 
 export interface HotelStay {
@@ -81,10 +72,10 @@ export interface HotelStay {
 
 /** planner 读不到时的酒店住宿兜底（与当前行程一致；planner 能读到时一律按 planner 推导，不许写死覆盖） */
 export const FALLBACK_STAYS: HotelStay[] = [
-  { city: "新加坡", checkIn: "2026-12-06", checkOut: "2026-12-10", nights: 4 },
-  { city: "普吉", checkIn: "2026-12-10", checkOut: "2026-12-13", nights: 3 },
-  { city: "清迈", checkIn: "2026-12-13", checkOut: "2026-12-15", nights: 2 },
-  { city: "曼谷", checkIn: "2026-12-15", checkOut: "2026-12-18", nights: 3 },
+  { city: "新加坡", checkIn: "2026-12-06", checkOut: "2026-12-11", nights: 5 },
+  { city: "普吉", checkIn: "2026-12-11", checkOut: "2026-12-15", nights: 4 },
+  { city: "清迈", checkIn: "2026-12-15", checkOut: "2026-12-18", nights: 3 },
+  { city: "曼谷", checkIn: "2026-12-18", checkOut: "2026-12-19", nights: 1 },
 ];
 
 /**
@@ -97,12 +88,16 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
   const days = (a: string, b: string) =>
     Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
   return segments.map((seg, idx) => {
-    const checkIn = idx === 0 ? seg.start : segments[idx - 1]!.end;
+    // 2026-10-05 修：与 schedule 到达口径一致——入住=本段第一天（到达当天），
+    // 退房=下一段第一天（即转场航班日，当天退房当天飞）；最后一段退房=段末日。
+    const checkIn = seg.start;
+    const next = segments[idx + 1];
+    const checkOut = next ? next.start : seg.end;
     return {
       city: seg.city,
       checkIn,
-      checkOut: seg.end,
-      nights: Math.max(0, days(checkIn, seg.end)),
+      checkOut,
+      nights: Math.max(0, days(checkIn, checkOut)),
     };
   });
 }
@@ -313,11 +308,11 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "sin-hkt",
     dbSeg: "SIN-HKT",
-    ctx: "D5 转场：新加坡段结束、普吉段开始",
+    ctx: "D14 转场：新加坡段结束、普吉段开始",
     route: "新加坡 → 普吉",
-    date: "2026-12-10",
-    dateLabel: "12-10",
-    day: 5,
+    date: "2026-12-11",
+    dateLabel: "12-11",
+    day: 14,
     kind: "intercity",
     note: "Google Flights 实查 2026-10-05 18:21 PDT（2 成人，9 班经济直飞 + 5 班商务直飞，价格为 2 人整单总价）：Scoot 3 班（$247 起）、Singapore Airlines 6 班（$405 起）；商务舱均为 Singapore Airlines（$1,538 起）",
     carrier: "Scoot TR652",
@@ -350,11 +345,11 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "sin-xiy",
     dbSeg: "SIN-XIY",
-    ctx: "D5：新加坡段结束，岳父母带娃回西安",
+    ctx: "D14：新加坡段结束，岳父母带娃回西安",
     route: "新加坡 → 西安",
-    date: "2026-12-10",
-    dateLabel: "12-10",
-    day: 5,
+    date: "2026-12-11",
+    dateLabel: "12-11",
+    day: 14,
     kind: "intl",
     note: "Google Flights 实查 2026-10-06 06:24 PDT（2大1小，货币 USD）：SIN→XIY 当天仅 1 班直飞——酷航 TR134 19:15→00:45（次日抵达），列表确认 3 人整单 $1,295（含税，上一轮 $1,292，+0.2%，未达通报线）；商务舱当天无直飞（Scoot 该日期无商务舱价格）",
     carrier: "Scoot TR134",
@@ -373,11 +368,11 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "hkt-cnx",
     dbSeg: "HKT-CNX",
-    ctx: "D8 转场：普吉段结束、清迈段开始",
+    ctx: "D18 转场：普吉段结束、清迈段开始",
     route: "普吉 → 清迈",
-    date: "2026-12-13",
-    dateLabel: "12-13",
-    day: 8,
+    date: "2026-12-15",
+    dateLabel: "12-15",
+    day: 18,
     kind: "intercity",
     note: "Google Flights 实查 2026-10-05 18:21 PDT（2 成人，5 班经济直飞，价格为 2 人整单总价）：Thai VietJet 2 班（$218 起）、Thai AirAsia 3 班（$243 起）；商务舱当天无直飞",
     carrier: "Thai VietJet VZ415",
@@ -401,11 +396,11 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "cnx-bkk",
     dbSeg: "CNX-BKK",
-    ctx: "D10 转场：清迈段结束、曼谷段开始",
+    ctx: "D21 转场：清迈段结束、曼谷段开始",
     route: "清迈 → 曼谷",
-    date: "2026-12-15",
-    dateLabel: "12-15",
-    day: 10,
+    date: "2026-12-18",
+    dateLabel: "12-18",
+    day: 21,
     kind: "intercity",
     note: "Google Flights 实查 2026-10-05 18:21 PDT（2 成人，28 班经济直飞 + 9 班商务直飞，价格为 2 人整单总价）：Thai VietJet 11 班（$110 起）、Thai AirAsia 5 班（$118 起）、Thai Airways 9 班（$140 起）、Bangkok Airways 3 班（$136 起）；商务舱均为 Thai Airways（$403 起）",
     carrier: "Thai VietJet VZ115",
@@ -461,11 +456,11 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "bkk-xiy",
     dbSeg: "BKK-XIY",
-    ctx: "D13：曼谷段结束，夫妻回西安",
+    ctx: "D22：曼谷段结束，夫妻回西安",
     route: "曼谷 → 西安",
-    date: "2026-12-18",
-    dateLabel: "12-18",
-    day: 13,
+    date: "2026-12-19",
+    dateLabel: "12-19",
+    day: 22,
     kind: "intl",
     note: "D13：曼谷段结束，夫妻回西安；Google Flights 实查 2026-10-06 12:18 PDT（2 成人，1 班经济直飞，价格为 2 人整单总价）：Spring Airlines 9C6294 14:05→19:00 详情页确认 2 人整单 $269（含税，上一轮 $268，+0.4%）；商务舱当天无直飞",
     carrier: "Spring Airlines",
@@ -486,9 +481,9 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dbSeg: "PEK-ICN",
     ctx: "回程：用户一人北京→首尔（1成人），与老婆孩子在首尔会合",
     route: "北京 → 首尔",
-    date: "2026-12-31",
-    dateLabel: "12-31",
-    day: 17,
+    date: "2026-12-30",
+    dateLabel: "12-30",
+    day: 33,
     kind: "intl",
     note: "回程第一段：用户一人北京→首尔（1成人）；Google Flights 实查，只查直飞",
     carrier: null,
@@ -507,9 +502,9 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dbSeg: "XIY-ICN",
     ctx: "回程：老婆带Dylan西安→首尔（1大1小），与用户在首尔会合",
     route: "西安 → 首尔",
-    date: "2026-12-31",
-    dateLabel: "12-31",
-    day: 17,
+    date: "2026-12-30",
+    dateLabel: "12-30",
+    day: 33,
     kind: "intl",
     note: "回程第一段：老婆带Dylan西安→首尔（1大1小）；Google Flights 实查，只查直飞",
     carrier: null,
