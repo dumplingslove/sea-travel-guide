@@ -21,6 +21,10 @@ import igCm10Payment from './assets/infographics/chiangmai/cm10-payment-guide.we
 import igCm10Hotel from './assets/infographics/chiangmai/cm10-hotel-guide.webp';
 import igCmXiriChi from './assets/infographics/chiangmai/xirimuyixizhu-chiangmai-plan.webp';
 import igBkXiri from './assets/infographics/bangkok/xirimuyixizhu-bangkok-plan.webp';
+import igBkBtsMrt from './assets/infographics/bangkok/bangkok-bts-mrt-map.jpg';
+import igBkOldTown from './assets/infographics/bangkok/bangkok-old-town-temples-map.jpg';
+import igBkBoat from './assets/infographics/bangkok/bangkok-chao-phraya-boat-map.jpg';
+import igBkYaowarat from './assets/infographics/bangkok/bangkok-yaowarat-food-map.jpg';
 import igHcmMuxia from './assets/infographics/hochiminh/muxia-vietnam-handmap.webp';
 import igPgXiri from './assets/infographics/penang/xirimuyixizhu-penang-plan.webp';
 import igSgXiri from './assets/infographics/singapore/xirimuyixizhu-singapore-plan.webp';
@@ -33,6 +37,9 @@ import igSeoulInsadongWalk from './assets/infographics/seoul/seoul-insadong-walk
 import igSeoulMetroMap from './assets/infographics/seoul/seoul-metro-map-zh.jpg';
 import igPhuketTouristMap from './assets/infographics/phuket/phuket-tourist-map-detailed.jpg';
 import igPhuketPhiPhiRoute from './assets/infographics/phuket/phuket-phiphi-phangnga-route.png';
+import igPhuketBeachMap from './assets/infographics/phuket/phuket-beach-map.jpg';
+import igPhuketOldTownWalk from './assets/infographics/phuket/phuket-old-town-walking-map.jpg';
+import igPhuketPhiPhiMaiton from './assets/infographics/phuket/phuket-phiphi-maiton-daytrip.jpg';
 import igMultiCost from './assets/infographics/multi/saltydog-cost-breakdown.webp';
 import igMultiHotel from './assets/infographics/multi/saltydog-hotel-breakdown.webp';
 import igMultiApps from './assets/infographics/multi/saltydog-useful-apps.webp';
@@ -220,6 +227,34 @@ summary: '作者自制行程图：曼谷 7.21–7.23 逐日安排（含曼谷→
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
 },
+{
+file: igBkBtsMrt,
+title: '曼谷轨道交通全图（BTS/MRT/机场线）',
+summary: 'BTS、MRT、机场快线全含，站名泰英双语，2025年9月更新版。出行前先看懂这张。',
+source: 'portail-asie.com',
+postUrl: 'https://portail-asie.com/en/',
+},
+{
+file: igBkOldTown,
+title: '曼谷老城区手绘旅游地图',
+summary: '大皇宫、卧佛寺、郑王庙、考山路 + 昭披耶河 N7–N13 码头全标注，老城区步行游览一张图搞定。',
+source: 'maps-bangkok.com',
+postUrl: 'https://ms.maps-bangkok.com/bangkok-bersiar-siar-peta',
+},
+{
+file: igBkBoat,
+title: '昭披耶河快船全线图',
+summary: 'Sathorn 到 Nonthaburi 所有码头，四种旗船线 + Zone 分区，游客区对应码头都标了。',
+source: 'maps-bangkok.com（原图 MAPaPLAN.com）',
+postUrl: 'http://tl.maps-bangkok.com/bangkok-ferry-mapa',
+},
+{
+file: igBkYaowarat,
+title: '耀华力唐人街手绘美食地图',
+summary: '30 家餐厅/小吃位置全标（全泰文标注，配合中文攻略使用）。',
+source: 'chillpainai.com',
+postUrl: 'https://chillpainai.com/scoop/7353/',
+},
 ];
 
 const hochiminh: Infographic[] = [
@@ -318,6 +353,27 @@ title: '皮皮岛/攀牙湾跳岛路线图',
 summary: '普吉出发跳岛路线图：皇家普吉码头出发，皮皮岛（Phi Phi Don/猴子湾/维京洞/皮莱湾/玛雅湾/竹子岛）与攀牙湾（詹姆斯邦德岛/宏岛/帕纳岛）点位。',
 source: 'phuket-ryoko.com',
 postUrl: 'https://www.phuket-ryoko.com/',
+},
+{
+file: igPhuketBeachMap,
+title: '普吉岛海滩分布图',
+summary: '普吉全岛海滩分布：西海岸 Mai Khao/Nai Yang/Nai Thon/Layan/Bang Tao/Surin/Kamala/Kalim/Patong/Karon/Kata/Kata Noi/Nai Harn 一字排开，附普吉镇/机场/查龙方位。',
+source: 'planetacestovani.cz',
+postUrl: 'https://www.planetacestovani.cz/thajsko/phuket/mapa/',
+},
+{
+file: igPhuketOldTownWalk,
+title: '普吉老镇步行导览图',
+summary: '普吉老镇步行路线：Thalang/Dibuk/Krabi/Phang Nga/Rassada 老街，中葡建筑、寺庙神龛、历史遗迹点位，粉色线为推荐步行trail。',
+source: 'pinterest.com',
+postUrl: 'https://www.artofit.org/ideas/khao-lak-phuket-thailand-trip-planner',
+},
+{
+file: igPhuketPhiPhiMaiton,
+title: '皮皮岛+麦通岛一日游行程图',
+summary: 'Love Andaman 皮皮岛一日游：Panwa码头出发→Pileh Lagoon→Maya Bay→Phi Phi Don午餐→Maiton Island浮潜看日落，含时刻表与成人4500泰铢/儿童3600泰铢报价。',
+source: 'tourphuket.info (Love Andaman)',
+postUrl: 'https://tourphuket.info/th/holiday-tour-phuket-patong/',
 },
 ];
 
