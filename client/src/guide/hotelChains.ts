@@ -78,6 +78,7 @@ const HOTEL_NAME_ALIASES:[research:string,item:string][]=[
   // [research-entry 名, data.ts 酒店名]：双向别名，两边互相查找都用
   ['The Ritz-Carlton Millenia 丽思卡尔顿','The Ritz-Carlton, Millenia Singapore'],
   ['Four Seasons Hotel Kuala Lumpur','Four Seasons Kuala Lumpur'],
+  ['首尔四季酒店 Four Seasons Seoul','首尔四季酒店 Four Seasons Hotel Seoul'],
 ];
 export function orderHotelsByResearch(items:Item[],entries:ResearchHotelEntry[],city:string){
   const cityEntries=entries.filter(entry=>entry.city===city).sort((a,b)=>a.order-b.order);
