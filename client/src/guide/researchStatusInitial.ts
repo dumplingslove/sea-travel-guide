@@ -1,5 +1,5 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// 注意：这是静态快照，非实时数据；页面“重新读取”返回该快照。
+// 注意：这是静态快照，非实时数据；页面"重新读取"返回该快照。
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -1114,7 +1114,7 @@ export const initialResearchStatus = {
    "total": 32
   },
   "chiangmai": {
-   "complete": 16,
+   "complete": 17,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -4281,7 +4281,7 @@ export const initialResearchStatus = {
    "total": 24
   },
   "phuket": {
-   "complete": 17,
+   "complete": 21,
    "items": [
     {
      "name": "Amanpuri",
@@ -6860,7 +6860,7 @@ export const initialResearchStatus = {
   "seoul": {
    "name": "首尔",
    "total": 24,
-   "complete": 0,
+   "complete": 21,
    "items": [
     {
      "name": "景福宫 Gyeongbokgung",
@@ -6872,10 +6872,14 @@ export const initialResearchStatus = {
        "note": "2026-09-29补全：2条带日期中文评价(KarenCCY 2024-08-30 5/5 穿韩服免费入场/里面宫殿人少好拍；可乐的小黑猫 2025-04-09 5/5 历史文化氛围厚重)，评价页去追踪参数已收录"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -6884,7 +6888,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -6906,10 +6912,14 @@ export const initialResearchStatus = {
        "note": "2026-09-29补全：2条带日期中文评价(Bekie 2024-12-30 5/5 韩屋群+博物馆工艺品店/周末人多；乐享旅行推荐官 2025-04-30 5/5 近青瓦台景福宫/韩服打卡/景区不大0.6km巷子)，已排除App评价与英文评价冒充"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -6918,7 +6928,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -6940,10 +6952,14 @@ export const initialResearchStatus = {
        "note": "2026-09-29补全：2条带日期中文评价(学校 2025-08-02 5/5 百年茶屋五味子茶/避开周一工坊闭店；旅行侠 2024-11-26 5/5 手工艺品发饰/食物偏甜冬天寒冷)，评价页去追踪参数已收录"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -6952,7 +6968,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -6969,13 +6987,19 @@ export const initialResearchStatus = {
      "note": "【景点】韩屋咖啡馆街，景福宫步行可达（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05马蜂窝实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -6984,7 +7008,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7001,13 +7027,19 @@ export const initialResearchStatus = {
      "note": "【景点】老韩屋改造的文艺小店街，年轻人聚集（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05马蜂窝实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -7016,7 +7048,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7033,13 +7067,19 @@ export const initialResearchStatus = {
      "note": "【景点】购物+街头小吃，酒店多集中于此（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05马蜂窝实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -7048,7 +7088,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7065,13 +7107,19 @@ export const initialResearchStatus = {
      "note": "【景点】登高看全城夜景，缆车上山（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05马蜂窝实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -7080,7 +7128,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7097,13 +7147,19 @@ export const initialResearchStatus = {
      "note": "【景点】扎哈地标建筑，夜景+设计展（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05马蜂窝实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "photos": {
        "status": "done",
@@ -7112,7 +7168,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupA-2026-10-05.md",
+       "updated_at": "2026-10-06T01:01Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7129,13 +7187,19 @@ export const initialResearchStatus = {
      "note": "【景点】街头表演+潮店，年轻人夜生活（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7144,7 +7208,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7161,13 +7227,19 @@ export const initialResearchStatus = {
      "note": "【景点】首尔布鲁克林，咖啡馆+快闪店（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "partial",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md 【2026-10-05复查：trip.com有Seongsu Cafe Street页4.0/5但仅1条点评，未达2条标准，仍partial】",
+       "updated_at": "2026-10-06T01:23Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md 【2026-10-05复查更正：B组漏查。GM地点页\"Seongsu-dong Café Street\"4.4星/63条】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:23Z"
       },
       "photos": {
        "status": "done",
@@ -7176,7 +7248,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "partial",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md 【2026-10-05复查确认：TA无圣水洞街区级评价页，仅分类页+导览团，partial成立】",
+       "updated_at": "2026-10-06T01:23Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7193,13 +7267,19 @@ export const initialResearchStatus = {
      "note": "【景点】汉江野餐+夜景，带娃放风（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7208,7 +7288,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7225,13 +7307,19 @@ export const initialResearchStatus = {
      "note": "【景点】百年传统市场，生牛肉拌饭+绿豆煎饼（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7240,7 +7328,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7257,13 +7347,19 @@ export const initialResearchStatus = {
      "note": "【景点】异国风情街区，多国料理（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "partial",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md 【2026-10-05复查：Google不对街区评分是平台机制；区内代表POI Itaewon Antique Furniture Street 3.9/651条已记入证据】",
+       "updated_at": "2026-10-06T01:23Z"
       },
       "photos": {
        "status": "done",
@@ -7272,7 +7368,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7289,13 +7387,19 @@ export const initialResearchStatus = {
      "note": "【景点】COEX巨型书架，人像机位（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7304,7 +7408,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7321,13 +7427,19 @@ export const initialResearchStatus = {
      "note": "【景点】室内主题乐园，带娃雨天备选（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7336,7 +7448,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7353,13 +7467,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】米其林必比登，刀削面+蒸饺（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "photos": {
        "status": "done",
@@ -7368,7 +7488,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupB-2026-10-05.md",
+       "updated_at": "2026-10-06T01:05Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7384,13 +7506,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】景福宫旁老字号参鸡汤（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7399,7 +7527,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7415,13 +7545,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】东大门一只鸡，蒜香鸡汤（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7430,7 +7566,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "partial",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7446,13 +7584,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】24小时雪浓汤，明洞店方便（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7461,7 +7605,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7478,13 +7624,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】明洞韩牛烤肉老字号（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7493,7 +7645,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7510,13 +7664,19 @@ export const initialResearchStatus = {
      "note": "【餐厅】韩式炸鸡代表，蜂蜜蒜香（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7525,7 +7685,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7542,13 +7704,19 @@ export const initialResearchStatus = {
      "note": "【酒店】明洞/乙支路，行政酒廊+免税店（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7557,7 +7725,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7574,13 +7744,19 @@ export const initialResearchStatus = {
      "note": "【酒店】明洞，1924年开业老牌奢华（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7589,7 +7765,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7606,13 +7784,19 @@ export const initialResearchStatus = {
      "note": "【酒店】光化门，顶奢，带娃服务好（2026-09-29 新增：回程北京经首尔中转、停留2天，2大1小）",
      "sources": {
       "chinese_sites": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "details": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "google_maps": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "photos": {
        "status": "done",
@@ -7621,7 +7805,9 @@ export const initialResearchStatus = {
        "note": "2026-10-05: 24项各补1张目验真实照片，已接入网站 place-images.json（217条），assets/places/<key>.jpg 落盘。"
       },
       "tripadvisor": {
-       "status": "pending"
+       "status": "done",
+       "note": " 【2026-10-05只读实查】证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/seoul-groupC-2026-10-05.md",
+       "updated_at": "2026-10-06T01:25Z"
       },
       "xiaohongshu": {
        "status": "done",
@@ -7636,154 +7822,154 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 107,
+ "complete_items": 128,
  "summary": {
   "bangkok": {
-   "total": 32,
-   "ta": 32,
-   "gm": 32,
-   "cs": 31,
-   "xhs_done": 32,
-   "ph": 32,
-   "de": 32,
-   "all_done": 31,
    "tripadvisor": 32,
+   "ta": 32,
    "google_maps": 32,
+   "gm": 32,
    "chinese_sites": 31,
+   "cs": 31,
    "xiaohongshu": 32,
+   "xhs_done": 32,
    "photos": 32,
-   "details": 32
+   "ph": 32,
+   "details": 32,
+   "de": 32,
+   "total": 32,
+   "all_done": 31
   },
   "chiangmai": {
-   "total": 20,
-   "ta": 19,
-   "gm": 20,
-   "cs": 20,
-   "xhs_done": 18,
-   "ph": 20,
-   "de": 20,
-   "all_done": 17,
    "tripadvisor": 19,
+   "ta": 19,
    "google_maps": 20,
+   "gm": 20,
    "chinese_sites": 20,
+   "cs": 20,
    "xiaohongshu": 18,
+   "xhs_done": 18,
    "photos": 20,
-   "details": 20
+   "ph": 20,
+   "details": 20,
+   "de": 20,
+   "total": 20,
+   "all_done": 17
   },
   "hcmc": {
-   "total": 23,
-   "ta": 23,
-   "gm": 23,
-   "cs": 22,
-   "xhs_done": 3,
-   "ph": 23,
-   "de": 23,
-   "all_done": 3,
    "tripadvisor": 23,
+   "ta": 23,
    "google_maps": 23,
+   "gm": 23,
    "chinese_sites": 22,
+   "cs": 22,
    "xiaohongshu": 3,
+   "xhs_done": 3,
    "photos": 23,
-   "details": 23
+   "ph": 23,
+   "details": 23,
+   "de": 23,
+   "total": 23,
+   "all_done": 3
   },
   "kualalumpur": {
-   "total": 22,
-   "ta": 22,
-   "gm": 21,
-   "cs": 22,
-   "xhs_done": 12,
-   "ph": 22,
-   "de": 22,
-   "all_done": 11,
    "tripadvisor": 22,
+   "ta": 22,
    "google_maps": 21,
+   "gm": 21,
    "chinese_sites": 22,
+   "cs": 22,
    "xiaohongshu": 12,
+   "xhs_done": 12,
    "photos": 22,
-   "details": 22
+   "ph": 22,
+   "details": 22,
+   "de": 22,
+   "total": 22,
+   "all_done": 11
   },
   "penang": {
-   "total": 24,
-   "ta": 22,
-   "gm": 24,
-   "cs": 23,
-   "xhs_done": 0,
-   "ph": 24,
-   "de": 23,
-   "all_done": 0,
    "tripadvisor": 22,
+   "ta": 22,
    "google_maps": 24,
+   "gm": 24,
    "chinese_sites": 23,
+   "cs": 23,
    "xiaohongshu": 0,
+   "xhs_done": 0,
    "photos": 24,
-   "details": 23
+   "ph": 24,
+   "details": 23,
+   "de": 23,
+   "total": 24,
+   "all_done": 0
   },
   "phuket": {
-   "total": 24,
-   "ta": 24,
-   "gm": 23,
-   "cs": 24,
-   "xhs_done": 22,
-   "ph": 24,
-   "de": 24,
-   "all_done": 21,
    "tripadvisor": 24,
+   "ta": 24,
    "google_maps": 23,
+   "gm": 23,
    "chinese_sites": 24,
+   "cs": 24,
    "xiaohongshu": 22,
+   "xhs_done": 22,
    "photos": 24,
-   "details": 24
+   "ph": 24,
+   "details": 24,
+   "de": 24,
+   "total": 24,
+   "all_done": 21
   },
   "phuquoc": {
-   "total": 22,
-   "ta": 21,
-   "gm": 22,
-   "cs": 21,
-   "xhs_done": 0,
-   "ph": 22,
-   "de": 22,
-   "all_done": 0,
    "tripadvisor": 21,
+   "ta": 21,
    "google_maps": 22,
+   "gm": 22,
    "chinese_sites": 21,
+   "cs": 21,
    "xiaohongshu": 0,
+   "xhs_done": 0,
    "photos": 22,
-   "details": 22
+   "ph": 22,
+   "details": 22,
+   "de": 22,
+   "total": 22,
+   "all_done": 0
   },
   "singapore": {
-   "total": 28,
-   "ta": 28,
-   "gm": 27,
-   "cs": 26,
-   "xhs_done": 27,
-   "ph": 28,
-   "de": 28,
-   "all_done": 24,
    "tripadvisor": 28,
+   "ta": 28,
    "google_maps": 27,
+   "gm": 27,
    "chinese_sites": 26,
+   "cs": 26,
    "xiaohongshu": 27,
+   "xhs_done": 27,
    "photos": 28,
-   "details": 28
+   "ph": 28,
+   "details": 28,
+   "de": 28,
+   "total": 28,
+   "all_done": 24
   },
   "seoul": {
-   "total": 24,
-   "ta": 0,
-   "gm": 0,
-   "cs": 3,
-   "xhs_done": 24,
-   "ph": 24,
-   "de": 0,
-   "all_done": 0,
-   "tripadvisor": 0,
-   "google_maps": 0,
-   "chinese_sites": 3,
+   "tripadvisor": 22,
+   "ta": 22,
+   "google_maps": 23,
+   "gm": 23,
+   "chinese_sites": 23,
+   "cs": 23,
    "xiaohongshu": 24,
+   "xhs_done": 24,
    "photos": 24,
-   "details": 0
+   "ph": 24,
+   "details": 24,
+   "de": 24,
+   "total": 24,
+   "all_done": 21
   },
-  "xhs_done": 138,
-  "all_done": 107
+  "all_done": 128,
+  "xhs_done": 138
  },
  "targets": {
   "chinese_sites": "done",
@@ -7794,5 +7980,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-05T22:48Z"
+ "updated_at": "2026-10-06T04:48Z"
 };
