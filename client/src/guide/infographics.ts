@@ -225,6 +225,13 @@ summary: '作者自制行程图：曼谷 7.21–7.23 逐日安排（含曼谷→
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
 },
+{
+file: igBkXhs15,
+title: '曼谷必去的15个景点（插画版）',
+summary: 'NO.1王权云顶大厦、NO.2水门寺大佛、NO.3郑王庙、NO.4大皇宫、NO.5唐人街等，15个景点可爱插画+中英文标注。',
+source: '小红书@泰好玩',
+postUrl: 'https://www.xiaohongshu.com/explore/6a43b89a000000000f031614',
+},
 ];
 
 const hochiminh: Infographic[] = [
@@ -254,6 +261,20 @@ title: '《7月新马泰 solo trip 16天》新加坡中转一日行程',
 summary: '作者自制行程图：新加坡中转一日行程。',
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
+},
+{
+file: igSgXhs3Zones,
+title: '新加坡3大板块游览地图',
+summary: '新加坡分3个板块，标注各景点门票价格（滨海湾花园156r、环球影城413r）、3天行程路线、交通说明。1539赞/2415收藏。',
+source: '小红书@流浪猪猪侠',
+postUrl: 'https://www.xiaohongshu.com/explore/69b183990000000022023094',
+},
+{
+file: igSgXhs5Day,
+title: '新加坡5天4晚手绘旅游攻略',
+summary: '手绘Day1滨海湾行程信息图：时间轴、景点插画、建议时长、步行路线图、小贴士。2155赞/2733收藏。',
+source: '小红书@jiangjiangjiang',
+postUrl: 'https://www.xiaohongshu.com/explore/6a587e11000000000402bb15',
 },
 ];
 
