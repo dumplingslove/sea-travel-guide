@@ -20,7 +20,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -40,7 +40,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, useFullTripSegments, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
