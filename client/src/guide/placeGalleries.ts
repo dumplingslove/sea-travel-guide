@@ -1174,6 +1174,72 @@ import g1256 from "./assets/galleries/surin-hkt/beach-hut-dress-portrait.webp";
 import g1257 from "./assets/galleries/surin-hkt/wooden-hut-straw-hat-outfit.webp";
 import g1258 from "./assets/galleries/keemala-hkt/birdnest-villa-spiral-staircase.png";
 import g1259 from "./assets/galleries/capella-bkk/white-peacock-sculpture.jpg";
+import g1271 from "./assets/places/7fcbbde5d177.jpg";
+import g1272 from "./assets/places/a5f7b489bd21.jpg";
+import g1273 from "./assets/places/bf3650dd49e4.jpg";
+import g1274 from "./assets/places/fa9b487a8236.jpg";
+import g1275 from "./assets/places/a17ef2dd2337.jpg";
+import g1276 from "./assets/places/a147467ada8b.jpg";
+import g1277 from "./assets/places/ab0655104b2d.jpg";
+import g1278 from "./assets/places/398ef09790b3.jpg";
+import g1279 from "./assets/places/a9dc8443a90c.jpg";
+import g1280 from "./assets/places/853da96af894.jpg";
+import g1281 from "./assets/places/cbd7af51a5b4.jpg";
+import g1282 from "./assets/places/a89b22de84e6.jpg";
+import g1283 from "./assets/places/03963c9e4293.jpg";
+import g1284 from "./assets/places/2bc7dbef0302.jpg";
+import g1285 from "./assets/places/665b602ee18d.jpg";
+import g1286 from "./assets/places/a0e615b8a397.jpg";
+import g1287 from "./assets/places/33a358351a64.jpg";
+import g1288 from "./assets/places/8c41819e4772.jpg";
+import g1289 from "./assets/places/bd3db05d0286.jpg";
+import g1290 from "./assets/places/10decfbe9a46.jpg";
+import g1291 from "./assets/places/d366ebaebecd.jpg";
+import g1292 from "./assets/places/8557ba4a617b.jpg";
+import g1293 from "./assets/places/2fc2b8254f18.jpg";
+import g1294 from "./assets/places/03495c96b37c.jpg";
+import g1295 from "./assets/galleries/josun-palace-gangnam/1.jpg";
+import g1296 from "./assets/galleries/josun-palace-gangnam/2.jpg";
+import g1297 from "./assets/galleries/josun-palace-gangnam/3.jpg";
+import g1298 from "./assets/galleries/josun-palace-gangnam/4.jpg";
+import g1299 from "./assets/galleries/josun-palace-gangnam/5.jpg";
+import g1300 from "./assets/galleries/andaz-seoul-gangnam/1.jpg";
+import g1301 from "./assets/galleries/andaz-seoul-gangnam/2.jpg";
+import g1302 from "./assets/galleries/andaz-seoul-gangnam/3.jpg";
+import g1303 from "./assets/galleries/andaz-seoul-gangnam/4.jpg";
+import g1304 from "./assets/galleries/andaz-seoul-gangnam/5.jpg";
+import g1305 from "./assets/galleries/shilla-seoul/1.jpg";
+import g1306 from "./assets/galleries/shilla-seoul/2.jpg";
+import g1307 from "./assets/galleries/shilla-seoul/3.jpg";
+import g1308 from "./assets/galleries/shilla-seoul/4.jpg";
+import g1309 from "./assets/galleries/shilla-seoul/5.jpg";
+import g1310 from "./assets/galleries/signiel-seoul/1.jpg";
+import g1311 from "./assets/galleries/signiel-seoul/2.webp";
+import g1312 from "./assets/galleries/signiel-seoul/3.jpg";
+import g1313 from "./assets/galleries/signiel-seoul/4.webp";
+import g1314 from "./assets/galleries/signiel-seoul/5.webp";
+import g1315 from "./assets/galleries/mondrian-seoul-itaewon/1.jpg";
+import g1316 from "./assets/galleries/mondrian-seoul-itaewon/2.jpg";
+import g1317 from "./assets/galleries/mondrian-seoul-itaewon/3.webp";
+import g1318 from "./assets/galleries/mondrian-seoul-itaewon/4.jpg";
+import g1319 from "./assets/galleries/mondrian-seoul-itaewon/5.webp";
+import g1320 from "./assets/galleries/ryse-hongdae/1.jpg";
+import g1321 from "./assets/galleries/ryse-hongdae/2.jpg";
+import g1322 from "./assets/galleries/ryse-hongdae/3.webp";
+import g1323 from "./assets/galleries/ryse-hongdae/4.webp";
+import g1324 from "./assets/galleries/ryse-hongdae/5.jpg";
+import g1325 from "./assets/galleries/lescape-myeongdong/1.jpg";
+import g1326 from "./assets/galleries/lescape-myeongdong/2.jpg";
+import g1327 from "./assets/galleries/lescape-myeongdong/3.jpg";
+import g1328 from "./assets/galleries/lescape-myeongdong/4.webp";
+import g1329 from "./assets/galleries/lescape-myeongdong/5.webp";
+import g1330 from "./assets/galleries/lotte-hotel-seoul/1.webp";
+import g1331 from "./assets/galleries/lotte-hotel-seoul/2.jpg";
+import g1332 from "./assets/galleries/westin-josun-seoul/1.webp";
+import g1333 from "./assets/galleries/westin-josun-seoul/2.webp";
+import g1334 from "./assets/galleries/four-seasons-seoul/1.jpg";
+import g1335 from "./assets/galleries/four-seasons-seoul/2.jpg";
+import g1336 from "./assets/galleries/four-seasons-seoul/3.webp";
 import ps0 from "./assets/portrait-spots/bangkok/wat-arun-main-stupa.jpg";
 import ps1 from "./assets/portrait-spots/bangkok/yaowarat-neon-street-night.webp";
 import ps2 from "./assets/portrait-spots/bangkok/yaowarat-shophouse-corner.webp";
@@ -1438,9 +1504,37 @@ const galleries:Record<string,PlacePhoto[]>={
   "酒店|新加坡|The Ritz-Carlton Millenia 丽思卡尔顿":[{src:g1145,sourceUrl:"https://www.myboutiquehotel.com/en/boutique-hotels-singapore/?page=2",title:"新加坡丽思卡尔顿 Millenia 外观：摩天轮与金沙之间的白色网格塔楼"}],
   "酒店|新加坡|Shangri-La Singapore 香格里拉":[{src:g1146,sourceUrl:"https://housity.net/hotel/shangri-la-singapore/",title:"新加坡香格里拉 外观：乌节路标志性白色塔楼+棕榈园林"},{src:g1221,sourceUrl:"https://thehoneycombers.com/singapore/luxury-hotel-singapore-staycation-review-of-shangri-la-hotel-at-orchard-road/",title:"新加坡香格里拉 大堂：高立柱+水面倒影+绿植墙标志性大堂（2026-09-25 目验确认；thehoneycombers.com 实拍测评）"},{src:g1222,sourceUrl:"https://www.qantas.com/travelinsider/en/explore/asia/singapore/singapore/shangri-la-singapore-hotel-review-orchard-road.html",title:"新加坡香格里拉 泳池：Garden Wing 圆拱阳台楼群前的喷泉大泳池（2026-09-25 目验确认；qantas.com 酒店测评）"},{src:g1223,sourceUrl:"https://www.shangri-la.com/singapore/shangrila/dining/?restaurantAlias=blu-bar",title:"新加坡香格里拉 餐饮：官网大堂吧酒廊区，绿植墙+高立柱吧台+白色休闲椅（2026-09-25 目验确认；shangri-la.com 官网餐饮页）"},{src:g1224,sourceUrl:"https://milelion.com/2021/02/13/review-shangri-la-garden-wing-staycation/",title:"新加坡香格里拉 泳池：Garden Wing 蓝色大泳池，圆拱阳台园翼楼+白色 Tower Wing（2026-09-25 目验确认；milelion.com Garden Wing 测评实拍）"}],
   "酒店|新加坡|The Fullerton Hotel Singapore 新加坡富丽敦酒店":[{src:g1147,sourceUrl:"https://www.ForbesTravelGuide.com",title:"新加坡富丽敦酒店 外观：夜景下带 THE FULLERTON HOTEL 大字的新古典楼体"},{src:g1225,sourceUrl:"https://www.asiadreams.com/the-fullerton-hotel-singapore-4/",title:"新加坡富丽敦酒店 泳池：无边泳池甲板+新古典石柱廊+远眺安德逊桥与滨海湾天际线（2026-09-25 目验确认；asiadreams.com 酒店专题）"},{src:g1226,sourceUrl:"https://mysummit.de/wp-content/uploads/2020-02-singapur-16-1024x716.jpg",title:"新加坡富丽敦酒店 外观：滨海白昼新古典楼体，屋顶 THE FULLERTON HOTEL 金字铭牌（2026-09-25 目验确认；mysummit.de 博客配图）"},{src:g1227,sourceUrl:"https://www.thomascook.com/holidays/singapore/singapore/the-fullerton-hotel-singapore-117474/",title:"新加坡富丽敦酒店 客房：双床+雕花天花线+落地窗城市景观（2026-09-25 目验确认；thomascook.com 酒店页）"},{src:g1228,sourceUrl:"https://www.hashcorner.com/travel/singapore/the-fullerton-hotel-singapore/",title:"新加坡富丽敦酒店 餐饮：Town Restaurant 环形木质自助餐岛+藤编吊顶（2026-09-25 目验确认；hashcorner.com 实拍）"}],
-  "酒店|首尔|乐天酒店首尔 Lotte Hotel Seoul":[{src:g1260,sourceUrl:"https://lotte-executive-tower.seoulhotelspage.com/el/",title:"乐天酒店首尔 行政楼客房：双床房+落地窗俯瞰首尔城景（2026-10-01 目验确认；seoulhotelspage 酒店专页实拍）"},{src:g1261,sourceUrl:"https://www.lottehotel.com/seoul-hotel/en/rooms/executive-tower-deluxe-suite-room",title:"乐天酒店首尔 行政楼豪华套房：大床+整面落地窗城景、采光好（2026-10-01 目验确认；乐天酒店官网客房页）"}],
-  "酒店|首尔|威斯汀朝鲜首尔 The Westin Josun Seoul":[{src:g1243,sourceUrl:"https://www.marriott.com/en-us/hotels/selwi-the-westin-josun-seoul/rooms/?ref=ghidultauonl",title:"威斯汀朝鲜首尔 客房：大床房+大面窗俯瞰首尔城景（2026-10-01 目验确认；万豪官网客房页）"},{src:g1244,sourceUrl:"https://registration.forbestravelguide.com/hotels/seoul-south-korea/the-westin-josun-seoul",title:"威斯汀朝鲜首尔 客房：夜景城景房，窗外城市灯火（2026-10-01 目验确认；Forbes Travel Guide 酒店页实拍；非特指圜丘坛景观房）"}],
-  "酒店|首尔|首尔四季酒店 Four Seasons Hotel Seoul":[{src:g1245,sourceUrl:"https://four-seasons-hotel-seoul.seoul-hotels-kr.com/en/",title:"首尔四季酒店 客房：双床房+整面落地窗城景，蓝色系地毯与现代陈设（2026-10-01 目验确认）"}],
+  "酒店|首尔|乐天酒店首尔 Lotte Hotel Seoul":[{src:g1260,sourceUrl:"https://lotte-executive-tower.seoulhotelspage.com/el/",title:"乐天酒店首尔 行政楼客房：双床房+落地窗俯瞰首尔城景（2026-10-01 目验确认；seoulhotelspage 酒店专页实拍）"},{src:g1261,sourceUrl:"https://www.lottehotel.com/seoul-hotel/en/rooms/executive-tower-deluxe-suite-room",title:"乐天酒店首尔 行政楼豪华套房：大床+整面落地窗城景、采光好（2026-10-01 目验确认；乐天酒店官网客房页）"},{src:g1286,sourceUrl:"https://holiday.cathaypacific.com/id_ID/holidays/top-cathay-hotel-offers-this-february.html",title:"乐天酒店首尔 外观：楼顶 LOTTE HOTEL 大字的双塔楼夜景（2026-10-05 目验确认；来源 holiday.cathaypacific.com）"},{src:g1330,sourceUrl:"https://www.lottehotel.com/seoul-hotel/en/about/gallery",title:"乐天酒店首尔 大堂：暖金色调大理石前台+垂吊水晶灯，弧形接待柜台与休息区（2026-10-05 目验确认；来源 lottehotel.com）"},{src:g1331,sourceUrl:"https://vexploretours.com/lotte-hotel-seoul/",title:"乐天酒店首尔 餐厅：La Seine 自助餐厅，明黄/橙色调餐区与水果取餐台（2026-10-05 目验确认；来源 vexploretours.com）"}],
+  "酒店|首尔|威斯汀朝鲜首尔 The Westin Josun Seoul":[{src:g1243,sourceUrl:"https://www.marriott.com/en-us/hotels/selwi-the-westin-josun-seoul/rooms/?ref=ghidultauonl",title:"威斯汀朝鲜首尔 客房：大床房+大面窗俯瞰首尔城景（2026-10-01 目验确认；万豪官网客房页）"},{src:g1244,sourceUrl:"https://registration.forbestravelguide.com/hotels/seoul-south-korea/the-westin-josun-seoul",title:"威斯汀朝鲜首尔 客房：夜景城景房，窗外城市灯火（2026-10-01 目验确认；Forbes Travel Guide 酒店页实拍；非特指圜丘坛景观房）"},{src:g1287,sourceUrl:"https://roame.travel/hotels/SELWI",title:"威斯汀朝鲜首尔（来源：roame.travel，2026-10-05 收录）"},{src:g1332,sourceUrl:"https://www.marriott.com/ko/hotels/selwi-the-westin-josun-seoul/photos/",title:"威斯汀朝鲜首尔 大堂：深棕木质立柱+大理石地面，左侧树形艺术墙+前台区夜景（2026-10-05 目验确认；来源 marriott.com）"},{src:g1333,sourceUrl:"https://www.marriott.com/en-us/hotels/selwi-the-westin-josun-seoul/dining/",title:"威斯汀朝鲜首尔 餐厅：Aria 自助餐台，白碗取餐区+明厨开放式厨房与铜锅（2026-10-05 目验确认；来源 marriott.com）"}],
+  "酒店|首尔|首尔四季酒店 Four Seasons Hotel Seoul":[{src:g1245,sourceUrl:"https://four-seasons-hotel-seoul.seoul-hotels-kr.com/en/",title:"首尔四季酒店 客房：双床房+整面落地窗城景，蓝色系地毯与现代陈设（2026-10-01 目验确认）"},{src:g1288,sourceUrl:"https://four-seasons-hotel-seoul.seoul-hotels-kr.com",title:"首尔四季酒店（来源：seoul-hotels-kr.com，2026-10-05 收录）"},{src:g1334,sourceUrl:"https://www.audleytravel.com/us/south-korea/accommodation/four-seasons-seoul",title:"首尔四季酒店 大堂：挑高木质格栅墙+壁炉休憩区，米色沙发组（2026-10-05 目验确认；来源 audleytravel.com）"},{src:g1335,sourceUrl:"https://planetescape.pl/hotel/korea-poludniowa-seul-four-seasons-hotel-seoul/",title:"首尔四季酒店 泳池：大理石墙面室内泳池+镜面天花板，临窗百叶（2026-10-05 目验确认；来源 planetescape.pl）"},{src:g1336,sourceUrl:"https://four-seasons-hotel-seoul.seoul-hotels-kr.com",title:"首尔四季酒店 外观：暮色中大楼顶部 FOUR SEASONS HOTEL 灯牌，前景韩式宫殿门楼檐角（2026-10-05 目验确认；来源 seoul-hotels-kr.com）"}],
+  "酒店|首尔|首尔江南朝鲜宫殿豪华精选酒店 Josun Palace, a Luxury Collection Hotel":[{src:g1295,sourceUrl:"https://www.seoul-hotels-kr.net/en/property/josun-palace-a-luxury-collection-hotelgangnam.html",title:"首尔江南朝鲜宫殿豪华精选酒店 大堂：同心圆环吊顶+红色座椅+弧形接待台（2026-10-05 目验确认；来源 seoul-hotels-kr.net）"},{src:g1296,sourceUrl:"https://theholidaytravelagentusa.com/offers/josun-palace-a-luxury-collection-hotel-seoul-gangnam-710983/",title:"首尔江南朝鲜宫殿豪华精选酒店 客房：六边形吊灯+米白墙+壁灯+落地窗城市景观（2026-10-05 目验确认；来源 theholidaytravelagentusa.com）"},{src:g1297,sourceUrl:"https://www.marriott.com/en-gb/hotels/hotel-information/restaurant/sellc-josun-palace-a-luxury-collection-hotel-seoul-gangnam/",title:"首尔江南朝鲜宫殿豪华精选酒店 1914 Lounge & Bar：挑高落地窗+伞状吊灯+环形吧台（2026-10-05 目验确认；来源 marriott.com）"},{src:g1298,sourceUrl:"https://www.businessclass.com/hotel/review/Josun-Palace-a-Luxury-Collection-Hotel-Seoul-Gangnam",title:"首尔江南朝鲜宫殿豪华精选酒店 室内泳池：长方形池+整排落地窗+躺椅区（2026-10-05 目验确认；来源 businessclass.com）"},{src:g1299,sourceUrl:"https://www.cathaypacific.com/cx/en_TW/inspiration/holidays/exciting-new-hotel-openings-2022.html",title:"首尔江南朝鲜宫殿豪华精选酒店 客房：床头六边形吊灯+床尾绿长凳+窗外山景（2026-10-05 目验确认；来源 cathaypacific.com）"}],
+  "酒店|首尔|首尔江南安达仕酒店 Andaz Seoul Gangnam":[{src:g1300,sourceUrl:"https://www.hyatt.com/landing/promo/hyrox-offer-asia-pacific",title:"首尔江南安达仕酒店 外观：整栋建筑日景，楼顶 ANDAZ 标识+玻璃顶层（2026-10-05 目验确认；来源 hyatt.com）"},{src:g1301,sourceUrl:"https://www.hyatt.com/andaz/ko-KR/selaz-andaz-seoul-gangnam",title:"首尔江南安达仕酒店 客房 Deluxe King：黄色几何装饰墙板+大理石圆桌+书桌（2026-10-05 目验确认；来源 hyatt.com）"},{src:g1302,sourceUrl:"https://digital.aspirelifestyles.com/content/travel/hotels/hotels-detail?1a5faeff-bbc3-497e-9af1-b022961d16eb",title:"首尔江南安达仕酒店 大堂：大理石楼梯+悬挂木条艺术装置+接待台（2026-10-05 目验确认；来源 digital.aspirelifestyles.com）"},{src:g1303,sourceUrl:"https://www.hyatt.com/andaz/ko-KR/selaz-andaz-seoul-gangnam",title:"首尔江南安达仕酒店 泳池：池壁 LED 艺术墙（彩色雨伞/涂鸦）+木格栅休息区（2026-10-05 目验确认；来源 hyatt.com）"},{src:g1304,sourceUrl:"https://pietboon.com/nl/corporate-projects/andaz-hotel/",title:"首尔江南安达仕酒店 餐厅/酒吧：开放式吧台+红色雕塑+绿植隔断（2026-10-05 目验确认；来源 pietboon.com）"}],
+  "酒店|首尔|首尔新罗酒店 The Shilla Seoul":[{src:g1305,sourceUrl:"https://holiday.cathaypacific.com/id_ID/holidays/exceptional-seoul-hotels-next-stay.html",title:"首尔新罗酒店 外观：红砖大楼楼顶 THE SHILLA 字样+前景韩式迎宾馆（2026-10-05 目验确认；来源 cathaypacific.com）"},{src:g1306,sourceUrl:"https://registration.forbestravelguide.com/hotels/seoul-south-korea/the-shilla-seoul",title:"首尔新罗酒店 客房 Executive Grand Deluxe：床+沙发区+窗外南山塔夜景（2026-10-05 目验确认；来源 forbestravelguide.com）"},{src:g1307,sourceUrl:"https://www.yonder.fr/les-tops/hotels/meilleurs-hotels-5-etoiles-seoul",title:"首尔新罗酒店 大堂：标志性水晶吊饰+木质中庭+GRAFF 珠宝店（2026-10-05 目验确认；来源 yonder.fr）"},{src:g1308,sourceUrl:"http://news.hotelier-indonesia.com/2018/10/the-shilla-seouls-la-yeon-restaurant.html",title:"首尔新罗酒店 La Yeon 韩餐厅：韩式镂空屏风+白桌布餐桌（2026-10-05 目验确认；来源 hotelier-indonesia.com）"},{src:g1309,sourceUrl:"https://mail.amuraworld.com/topics/by-the-world/articles/6402-the-shilla-seoul",title:"首尔新罗酒店 Urban Island 户外泳池夜景：远眺南山塔+躺椅/遮阳伞区（2026-10-05 目验确认；来源 amuraworld.com）"}],
+  "酒店|首尔|首尔Signiel Signiel Seoul":[{src:g1310,sourceUrl:"https://www.top-rated.online/countries/South+Korea/cities/Duchon-ri/@hotel/top-rated?distance=100",title:"首尔Signiel 外观：555 米乐天世界大厦日间航拍（Signiel 位于该楼 76–101 层）（2026-10-05 目验确认；来源 top-rated.online）"},{src:g1311,sourceUrl:"https://www.lottehotel.com/seoul-signiel/ko/rooms",title:"首尔Signiel 客房：双床房+落地窗夜景城市灯海（2026-10-05 目验确认；来源 lottehotel.com 官网客房页）"},{src:g1312,sourceUrl:"http://www.forbestravelguide.com/hotels/seoul-south-korea/signiel-seoul",title:"首尔Signiel 大堂：前台接待区，木质柜台+大理石柱（2026-10-05 目验确认；来源 forbestravelguide.com）"},{src:g1313,sourceUrl:"https://www.lottehotel.com/seoul-signiel/en/facilities/swimming-pool",title:"首尔Signiel 泳池：高层室内泳池，窗外城市景观（2026-10-05 目验确认；来源 lottehotel.com 官网泳池页）"},{src:g1314,sourceUrl:"https://www.lottehotel.com/seoul-signiel/ko/dining/restaurant-stay-modern",title:"首尔Signiel 餐厅：Stay 米其林法餐厅私人包间（2026-10-05 目验确认；来源 lottehotel.com 官网 Stay 页面）"}],
+  "酒店|首尔|首尔梨泰院蒙德里安 Mondrian Seoul Itaewon":[{src:g1315,sourceUrl:"https://www.fkcci.com/actualites/n/news/accor-and-sbe-unveil-first-mondrian-hotel-in-asia.html",title:"梨泰院蒙德里安 外观：楼顶 MONDRIAN 标识+远处南山塔（2026-10-05 目验确认；来源 fkcci.com Accor 发布会资料）"},{src:g1316,sourceUrl:"https://www.fkcci.com/actualites/n/news/accor-and-sbe-unveil-first-mondrian-hotel-in-asia.html",title:"梨泰院蒙德里安 客房：转角套房卧室（2026-10-05 目验确认；来源 fkcci.com Accor 发布会资料）"},{src:g1317,sourceUrl:"https://thepointsguy.com/hotel/reviews/mondrian-seoul-itaewon/",title:"梨泰院蒙德里安 大堂：接待休憩区，标志性彩色地毯（2026-10-05 目验确认；来源 thepointsguy.com 实拍）"},{src:g1318,sourceUrl:"https://www.fkcci.com/actualites/n/news/accor-and-sbe-unveil-first-mondrian-hotel-in-asia.html",title:"梨泰院蒙德里安 泳池：室内泳池拱廊（2026-10-05 目验确认；来源 fkcci.com Accor 发布会资料）"},{src:g1319,sourceUrl:"https://mondrianhotels.com/zh/seoul-itaewon/dining/",title:"梨泰院蒙德里安 餐饮：Blind Spot 餐厅/酒吧区（2026-10-05 目验确认；来源 mondrianhotels.com 官网餐饮页）"}],
+  "酒店|首尔|首尔弘大RYSE RYSE, Autograph Collection":[{src:g1320,sourceUrl:"http://www.haeahn.com/en/project/detail.do?prjctSeq=2459",title:"弘大RYSE 外观：入口立面+RYSE 及 Autograph Collection 标识（2026-10-05 目验确认；来源 haeahn.com 建筑事务所）"},{src:g1321,sourceUrl:"https://rysehotel.com/stay/",title:"弘大RYSE 客房：标志性芥末黄椅子+长桌（2026-10-05 目验确认；来源 rysehotel.com 官网）"},{src:g1322,sourceUrl:"https://www.marriott.com/en-us/hotels/selsa-ryse-autograph-collection/overview/",title:"弘大RYSE 大堂：粉色镜面地面+蓝色雕塑+阶梯休息区（2026-10-05 目验确认；来源 marriott.com 官网）"},{src:g1323,sourceUrl:"https://www.greysuitcase.net/blog/tag/Tartine",title:"弘大RYSE 餐饮：Tartine 面包咖啡吧（柱上有 TARTINE COFFEE BAR 标识；2026-10-05 目验确认；来源 greysuitcase.net 实拍，图底有小字博主署名 GREYSUITCASE.NET）"},{src:g1324,sourceUrl:"https://www.rysehotel.co.kr/side-note-club/",title:"弘大RYSE 酒吧：15 楼 Side Note Club 酒吧台（2026-10-05 目验确认；来源 rysehotel.co.kr 官网）"}],
+  "酒店|首尔|明洞L'Escape L'Escape, a Luxury Collection Hotel":[{src:g1325,sourceUrl:"https://www.travelandtourworld.de/News/Artikel/lescape-hotel-in-south-koreas-seoul-transforms-the-citys-luxury-hospitality-landscape/",title:"明洞L'Escape 外观：街面入口，金色 L'ESCAPE 标识+巴洛克式遮阳帘（2026-10-05 目验确认；来源 travelandtourworld.de）"},{src:g1326,sourceUrl:"https://lescape.seoulhotelsdeals.com/",title:"明洞L'Escape 公区：Tea Rose Salon 法式红丝绒卡座（2026-10-05 目验确认；来源 lescape.seoulhotelsdeals.com）"},{src:g1327,sourceUrl:"https://lescape.seoulhotelspage.com/en/",title:"明洞L'Escape 客房：红丝绒休息区+法式墙纸书桌（2026-10-05 目验确认；来源 lescape.seoulhotelspage.com）"},{src:g1328,sourceUrl:"https://lescape-hotel.seoul-hotels-kr.com/de/",title:"明洞L'Escape 客房：套房爪足浴缸+卧床（2026-10-05 目验确认；来源 lescape-hotel.seoul-hotels-kr.com）"},{src:g1329,sourceUrl:"https://lescape-hotel.seoul-hotels-kr.com/de/",title:"明洞L'Escape 客房：卧床+敞开浴室爪足浴缸（2026-10-05 目验确认；来源 lescape-hotel.seoul-hotels-kr.com）"}],
+  "景点|首尔|三清洞 Samcheong-dong":[{src:g1271,sourceUrl:"https://seoulinspired.com/neighbourhoods-in-seoul/",title:"三清洞（来源：seoulinspired.com，2026-10-05 收录）"}],
+  "景点|首尔|东大门设计广场 DDP":[{src:g1272,sourceUrl:"https://i.natgeofe.com/",title:"东大门设计广场 DDP（来源：natgeofe.com，2026-10-05 收录）"}],
+  "景点|首尔|乐天世界 Lotte World":[{src:g1273,sourceUrl:"https://cf.creatrip.com/",title:"乐天世界（来源：creatrip.com，2026-10-05 收录）"}],
+  "景点|首尔|仁寺洞 Insadong":[{src:g1274,sourceUrl:"https://taraohreilly.com/one-day-in-seoul-itinerary/",title:"仁寺洞（来源：taraohreilly.com，2026-10-05 收录）"}],
+  "景点|首尔|北村韩屋村 Bukchon":[{src:g1275,sourceUrl:"https://k-decoded.com/blog/first-timer-seoul-itinerary-4-days/",title:"北村韩屋村（来源：k-decoded.com，2026-10-05 收录）"}],
+  "景点|首尔|南山首尔塔 N Seoul Tower":[{src:g1276,sourceUrl:"https://img1.daumcdn.net/",title:"南山首尔塔（来源：daumcdn.net，2026-10-05 收录）"}],
+  "景点|首尔|圣水洞 Seongsu-dong":[{src:g1277,sourceUrl:"https://english.seoul.go.kr/",title:"圣水洞（来源：english.seoul.go.kr，2026-10-05 收录）"}],
+  "景点|首尔|广藏市场 Gwangjang Market":[{src:g1278,sourceUrl:"https://travelgossip.co.uk/",title:"广藏市场（来源：travelgossip.co.uk，2026-10-05 收录）"}],
+  "景点|首尔|弘大 Hongdae":[{src:g1279,sourceUrl:"https://www.pelago.com/",title:"弘大（来源：pelago.com，2026-10-05 收录）"}],
+  "景点|首尔|明洞 Myeongdong":[{src:g1280,sourceUrl:"https://english.visitseoul.net/",title:"明洞主街：LINE/daiso/ABC MART 招牌林立的购物街（2026-10-05 目验确认；来源 english.visitseoul.net）"}],
+  "景点|首尔|星空图书馆 Starfield Library":[{src:g1281,sourceUrl:"https://ilmestieredileggereblog.com/",title:"星空图书馆（来源：ilmestieredileggereblog.com，2026-10-05 收录）"}],
+  "景点|首尔|景福宫 Gyeongbokgung":[{src:g1282,sourceUrl:"https://ordertrip.jp/feed/",title:"景福宫光化门：双层门楼+韩服游客（2026-10-05 目验确认；来源 ordertrip.jp）"}],
+  "景点|首尔|梨泰院 Itaewon":[{src:g1283,sourceUrl:"https://www.trotop.be/",title:"梨泰院（来源：trotop.be，2026-10-05 收录）"}],
+  "景点|首尔|汝矣岛汉江公园":[{src:g1284,sourceUrl:"https://www.roughguides.com/south-korea/itineraries/",title:"汝矣岛汉江公园（来源：roughguides.com，2026-10-05 收录）"}],
+  "景点|首尔|益善洞 Ikseon-dong":[{src:g1285,sourceUrl:"https://kaicakorea.com/korea-trip/seoul-jongno-ikseon-guide/",title:"益善洞（来源：kaicakorea.com，2026-10-05 收录）"}],
+  "餐厅|首尔|土俗村参鸡汤 Tosokchon":[{src:g1289,sourceUrl:"https://www.panasm.com/tosokchon-samgyetang/",title:"土俗村参鸡汤（来源：panasm.com，2026-10-05 收录）"}],
+  "餐厅|首尔|明洞饺子 Myeongdong Kyoja":[{src:g1290,sourceUrl:"https://southkoreahallyu.com/myeongdong-kyoja-seoul-restaurant/",title:"明洞饺子（来源：southkoreahallyu.com，2026-10-05 收录）"}],
+  "餐厅|首尔|桥村炸鸡 Kyochon":[{src:g1291,sourceUrl:"https://hmong.in.th/wiki/KyoChon",title:"桥村炸鸡：蜂蜜酱料裹着的脆皮鸡腿（2026-10-05 目验确认；来源 hmong.in.th）"}],
+  "餐厅|首尔|王妃家烤肉 Wangbijib":[{src:g1292,sourceUrl:"https://www.ladyironchef.com/2017/10/wangbijib-myeongdong/",title:"王妃家烤肉（来源：ladyironchef.com，2026-10-05 收录）"}],
+  "餐厅|首尔|神仙雪浓汤 Sinseon Seolleongtang":[{src:g1293,sourceUrl:"http://www.j-e-a-n.com/2018/02/myeongdong-seoul-eat-sinseon.html",title:"神仙雪浓汤（来源：j-e-a-n.com，2026-10-05 收录）"}],
+  "餐厅|首尔|陈玉华一只鸡 Jinokhwa":[{src:g1294,sourceUrl:"https://th.trip.com/restaurant/south-korea/seoul/detail/granny-jin-ok-hwa-original-dakhanmari-10560297/",title:"陈玉华一只鸡（来源：trip.com，2026-10-05 收录）"}],
  };
 export function getPlaceGallery(kind:'酒店'|'餐厅'|'景点',item:Item){return galleries[`${kind}|${item.city}|${item.name}`]||[]}
 export const placeGalleryPlaceCount=Object.values(galleries).filter(x=>x.length>=5).length;

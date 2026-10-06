@@ -2437,7 +2437,7 @@
  },
  {
   "kind": "attraction",
-  "name": "汝矣岛汉江公园 Yeouido Hangang Park",
+  "name": "汝矣岛汉江公园",
   "city": "首尔",
   "key": "2bc7dbef0302",
   "file": "./assets/places/2bc7dbef0302.jpg",
@@ -2533,7 +2533,7 @@
  },
  {
   "kind": "restaurant",
-  "name": "神仙雪浓汤 Sinseon",
+  "name": "神仙雪浓汤 Sinseon Seolleongtang",
   "city": "首尔",
   "key": "2fc2b8254f18",
   "file": "./assets/places/2fc2b8254f18.jpg",
@@ -2569,7 +2569,7 @@
  },
  {
   "kind": "hotel",
-  "name": "威斯汀朝鲜首尔 The Westin Josun",
+  "name": "威斯汀朝鲜首尔 The Westin Josun Seoul",
   "city": "首尔",
   "key": "33a358351a64",
   "file": "./assets/places/33a358351a64.jpg",
@@ -2581,7 +2581,7 @@
  },
  {
   "kind": "hotel",
-  "name": "首尔四季酒店 Four Seasons Seoul",
+  "name": "首尔四季酒店 Four Seasons Hotel Seoul",
   "city": "首尔",
   "key": "8c41819e4772",
   "file": "./assets/places/8c41819e4772.jpg",
