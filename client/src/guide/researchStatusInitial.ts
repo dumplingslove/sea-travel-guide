@@ -1,5 +1,4 @@
 // 研究状态静态快照（由 research-snapshot-refresh 生成）
-// 注意：这是静态快照，非实时数据；页面"重新读取"返回该快照。
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7980,5 +7979,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 219,
- "updated_at": "2026-10-06T04:48Z"
+ "updated_at": "2026-10-06T10:49Z"
 };
