@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T09:42:22+00:00",
+ "updated_at": "2026-10-06T11:37:42+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3030,15 +3030,15 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T10:47:17+00:00",
+     "business_queried_at": "2026-10-06T11:37:42+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞",
      "economy_note": "Only 1 nonstop flight this day. Times are local; arrival is next-day 00:45."
     },
     "2026-12-11": {
-     "economy_queried_at": "2026-10-05T10:45:17+00:00",
-     "economy_usd": 1292,
+     "economy_queried_at": "2026-10-06T11:37:42+00:00",
+     "economy_usd": 1530,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -3046,24 +3046,26 @@
       {
        "airline": "Scoot",
        "flight": "TR134",
-       "dep": "7:15 PM",
-       "arr": "12:45 AM +1",
+       "dep": "19:15",
+       "arr": "00:45",
        "duration": "5h 30m",
-       "price_usd": 1292
+       "price_usd": 1530
       },
       {
        "airline": "China Eastern",
        "flight": "MU2070",
-       "dep": "1:55 PM",
-       "arr": "7:20 PM",
+       "dep": "13:55",
+       "arr": "19:20",
        "duration": "5h 25m",
+       "price_usd": 1735,
        "business_price_usd": 3517
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T10:45:17+00:00",
-     "business_usd": 3492,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-06T11:37:42+00:00",
+     "business_usd": null,
+     "business_price_basis": "2大1小总价",
+     "business_note": "唯一非停直飞航班未显示价格"
     }
    }
   },
