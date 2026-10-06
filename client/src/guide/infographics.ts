@@ -21,17 +21,12 @@ import igCm10Payment from './assets/infographics/chiangmai/cm10-payment-guide.we
 import igCm10Hotel from './assets/infographics/chiangmai/cm10-hotel-guide.webp';
 import igCmXiriChi from './assets/infographics/chiangmai/xirimuyixizhu-chiangmai-plan.webp';
 import igBkXiri from './assets/infographics/bangkok/xirimuyixizhu-bangkok-plan.webp';
-import igBkBtsMrt from './assets/infographics/bangkok/bangkok-bts-mrt-map.jpg';
-import igBkOldTown from './assets/infographics/bangkok/bangkok-old-town-temples-map.jpg';
-import igBkBoat from './assets/infographics/bangkok/bangkok-chao-phraya-boat-map.jpg';
-import igBkYaowarat from './assets/infographics/bangkok/bangkok-yaowarat-food-map.jpg';
+import igBkXhs15 from './assets/infographics/bangkok/xhs-bangkok-15spots.webp';
 import igHcmMuxia from './assets/infographics/hochiminh/muxia-vietnam-handmap.webp';
 import igPgXiri from './assets/infographics/penang/xirimuyixizhu-penang-plan.webp';
 import igSgXiri from './assets/infographics/singapore/xirimuyixizhu-singapore-plan.webp';
-import igSgMrt from './assets/infographics/singapore/singapore-mrt-map.jpg';
-import igSgAttr from './assets/infographics/singapore/singapore-attractions-map.jpg';
-import igSgHawker from './assets/infographics/singapore/singapore-hawker-food-guide.jpg';
-import igSgSentosa from './assets/infographics/singapore/singapore-sentosa-map.jpg';
+import igSgXhs3Zones from './assets/infographics/singapore/xhs-singapore-3zones-map.webp';
+import igSgXhs5Day from './assets/infographics/singapore/xhs-singapore-5day-guide.webp';
 import igSeoulVisitMap1 from './assets/infographics/seoul/seoul-visitseoul-map-01.jpg';
 import igSeoulVisitMap2 from './assets/infographics/seoul/seoul-visitseoul-map-02.jpg';
 import igSeoulVisitMap3 from './assets/infographics/seoul/seoul-visitseoul-map-03.jpg';
@@ -41,9 +36,8 @@ import igSeoulInsadongWalk from './assets/infographics/seoul/seoul-insadong-walk
 import igSeoulMetroMap from './assets/infographics/seoul/seoul-metro-map-zh.jpg';
 import igPhuketTouristMap from './assets/infographics/phuket/phuket-tourist-map-detailed.jpg';
 import igPhuketPhiPhiRoute from './assets/infographics/phuket/phuket-phiphi-phangnga-route.png';
-import igPhuketBeachMap from './assets/infographics/phuket/phuket-beach-map.jpg';
-import igPhuketOldTownWalk from './assets/infographics/phuket/phuket-old-town-walking-map.jpg';
-import igPhuketPhiPhiMaiton from './assets/infographics/phuket/phuket-phiphi-maiton-daytrip.jpg';
+import igPhuketXhsZones from './assets/infographics/phuket/xhs-phuket-zone-map.webp';
+import igPhuketXhsHotels from './assets/infographics/phuket/xhs-phuket-hotel-zones.webp';
 import igMultiCost from './assets/infographics/multi/saltydog-cost-breakdown.webp';
 import igMultiHotel from './assets/infographics/multi/saltydog-hotel-breakdown.webp';
 import igMultiApps from './assets/infographics/multi/saltydog-useful-apps.webp';
@@ -231,34 +225,6 @@ summary: '作者自制行程图：曼谷 7.21–7.23 逐日安排（含曼谷→
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
 },
-{
-file: igBkBtsMrt,
-title: '曼谷轨道交通全图（BTS/MRT/机场线）',
-summary: 'BTS、MRT、机场快线全含，站名泰英双语，2025年9月更新版。出行前先看懂这张。',
-source: 'portail-asie.com',
-postUrl: 'https://portail-asie.com/en/',
-},
-{
-file: igBkOldTown,
-title: '曼谷老城区手绘旅游地图',
-summary: '大皇宫、卧佛寺、郑王庙、考山路 + 昭披耶河 N7–N13 码头全标注，老城区步行游览一张图搞定。',
-source: 'maps-bangkok.com',
-postUrl: 'https://ms.maps-bangkok.com/bangkok-bersiar-siar-peta',
-},
-{
-file: igBkBoat,
-title: '昭披耶河快船全线图',
-summary: 'Sathorn 到 Nonthaburi 所有码头，四种旗船线 + Zone 分区，游客区对应码头都标了。',
-source: 'maps-bangkok.com（原图 MAPaPLAN.com）',
-postUrl: 'http://tl.maps-bangkok.com/bangkok-ferry-mapa',
-},
-{
-file: igBkYaowarat,
-title: '耀华力唐人街手绘美食地图',
-summary: '30 家餐厅/小吃位置全标（全泰文标注，配合中文攻略使用）。',
-source: 'chillpainai.com',
-postUrl: 'https://chillpainai.com/scoop/7353/',
-},
 ];
 
 const hochiminh: Infographic[] = [
@@ -288,34 +254,6 @@ title: '《7月新马泰 solo trip 16天》新加坡中转一日行程',
 summary: '作者自制行程图：新加坡中转一日行程。',
 source: '小红书@洗日暮倚修竹',
 postUrl: 'https://www.xiaohongshu.com/explore/6a75d9460000000032033a39',
-},
-{
-file: igSgMrt,
-title: '新加坡MRT地铁线路图',
-summary: 'Jug Cerovic 绘制的高清 schematic 版本，线路配色清晰，1600×1600。',
-source: 'inat.fr',
-postUrl: 'https://inat.fr/',
-},
-{
-file: igSgAttr,
-title: '新加坡主要景点分布图（A-Z）',
-summary: 'Sygic Travel "Must See Things in Singapore A-Z"，26个景点按字母标注在地图上。',
-source: 'tripomatic.com',
-postUrl: 'https://www.tripomatic.com/',
-},
-{
-file: igSgHawker,
-title: '新加坡10大地标美食指南',
-summary: "World's 50 Best 新加坡地标美食拼图（未标注菜名，配合站内文字指南使用）。",
-source: 'theworlds50best.com',
-postUrl: 'https://www.theworlds50best.com/',
-},
-{
-file: igSgSentosa,
-title: '圣淘沙区域详图',
-summary: 'Wikivoyage 分区地图，See/Do/Buy/Eat/Drink/Sleep 六类POI带编号图例。',
-source: 'Wikimedia Commons',
-postUrl: 'https://commons.wikimedia.org/',
 },
 ];
 
@@ -387,25 +325,18 @@ source: 'phuket-ryoko.com',
 postUrl: 'https://www.phuket-ryoko.com/',
 },
 {
-file: igPhuketBeachMap,
-title: '普吉岛海滩分布图',
-summary: '普吉全岛海滩分布：西海岸 Mai Khao/Nai Yang/Nai Thon/Layan/Bang Tao/Surin/Kamala/Kalim/Patong/Karon/Kata/Kata Noi/Nai Harn 一字排开，附普吉镇/机场/查龙方位。',
-source: 'planetacestovani.cz',
-postUrl: 'https://www.planetacestovani.cz/thajsko/phuket/mapa/',
+file: igPhuketXhsZones,
+title: '2026普吉景点分布地图（ABCD四圈）',
+summary: 'A圈邦涛/卡马拉、B圈芭东/卡伦/卡塔/大佛/神仙半岛、C圈普吉镇/查龙寺/老镇、D圈，各区域景点标注。1585赞/1996收藏。',
+source: '小红书@普吉岛的夏天永不停歇',
+postUrl: 'https://www.xiaohongshu.com/explore/6a04890e000000000803e8d3',
 },
 {
-file: igPhuketOldTownWalk,
-title: '普吉老镇步行导览图',
-summary: '普吉老镇步行路线：Thalang/Dibuk/Krabi/Phang Nga/Rassada 老街，中葡建筑、寺庙神龛、历史遗迹点位，粉色线为推荐步行trail。',
-source: 'pinterest.com',
-postUrl: 'https://www.artofit.org/ideas/khao-lak-phuket-thailand-trip-planner',
-},
-{
-file: igPhuketPhiPhiMaiton,
-title: '皮皮岛+麦通岛一日游行程图',
-summary: 'Love Andaman 皮皮岛一日游：Panwa码头出发→Pileh Lagoon→Maya Bay→Phi Phi Don午餐→Maiton Island浮潜看日落，含时刻表与成人4500泰铢/儿童3600泰铢报价。',
-source: 'tourphuket.info (Love Andaman)',
-postUrl: 'https://tourphuket.info/th/holiday-tour-phuket-patong/',
+file: igPhuketXhsHotels,
+title: '普吉岛4大住宿区域一篇搞定',
+summary: '①邦涛海滩 ②巴东海滩 ③奈汉海滩 ④查龙/普吉镇，每区特点+适合人群。',
+source: '小红书@念念的小宇宙',
+postUrl: 'https://www.xiaohongshu.com/explore/6abb40e7000000001303cd2e',
 },
 ];
 
