@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-06T02:06:36+00:00",
+ "updated_at": "2026-10-06T02:18:53+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3909,7 +3909,7 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T01:09:02+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -3931,7 +3931,7 @@
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-09-29T01:09:02+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞",
@@ -4010,7 +4010,7 @@
       }
      ],
      "nonstop_count": 8,
-     "business_queried_at": "2026-09-29T01:39:46+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -4104,7 +4104,7 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T01:39:46+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -4190,7 +4190,7 @@
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": "2026-09-29T01:39:46+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -4284,7 +4284,7 @@
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T01:39:46+00:00",
+     "business_queried_at": "2026-10-06T02:18:53+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
