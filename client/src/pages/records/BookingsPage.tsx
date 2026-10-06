@@ -40,7 +40,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, useFullTripSegments, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
@@ -923,10 +923,13 @@ function BookingsInner() {
   const attrMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
     .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
     .map((i) => ({ ...i, candidate: false })), [scoped, planCities, attrCity]);
-  /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），行动安排页酒店收藏展示用 */
+  /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），行动安排页酒店收藏展示用
+   * 2026-10-05 修：用完整大行程链（北京1→新加坡→东南亚→西安→北京3→首尔），
+   * 否则最后一段（曼谷）退房取不到转场日，会少算一天 */
+  const fullSegments = useFullTripSegments();
   const stays = useMemo(
-    () => hotelStaysFromPlan(segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
-    [segments]
+    () => hotelStaysFromPlan(fullSegments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
+    [fullSegments]
   );
   /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
   const onBookPreset = (p: BookingPreset) => {
