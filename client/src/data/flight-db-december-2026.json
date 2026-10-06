@@ -18657,7 +18657,7 @@
      "onestop_business_price_basis": "2大1小总价",
      "onestop_business_note": "Only 6 one-stop business itineraries were shown. They are mixed-cabin: legs 1-2 are Economy+Business, 3-4 are Business+Economy, 5 is Business+First, 6 is Business+Business. Google offers no exactly-1-stop filter, so '1 stop or fewer' was applied and only one-stop options were recorded.",
      "onestop_economy_note": "Google offers no exactly-1-stop filter, so '1 stop or fewer' was applied and only one-stop options were recorded. Second legs operated by SkyWest DBA Delta Connection (DL359/DL3764/DL4118/DL3707).",
-     "economy_note": "Market prices only; AS120 on 2027-01-02 is reported as already ticketed per context.",
+     "economy_note": "Market prices only; ticketed AS120 is on 2027-01-01, not shown here.",
      "business_note": "Only 2 business nonstops priced on the page that day (Delta and KE47 nonstops had no business fare shown)."
     },
     "2027-01-03": {
