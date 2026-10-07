@@ -534,9 +534,9 @@
 .guide-scope .maincontent,.guide-scope .page,.guide-scope .research-page{max-width:78rem}
 .guide-scope .itemcard{grid-template-columns:minmax(300px,38%) minmax(0,1fr)}
 .guide-scope .itemmedia{min-height:300px}
-.guide-scope .itemmedia.stack{display:block;overflow:hidden}
+.guide-scope .itemmedia.stack{position:relative;display:block;overflow:hidden;min-height:0;min-width:0}
 .guide-scope .itemmedia.stack:after{display:none}
-.guide-scope .itemmedia.stack .stackrail{display:flex;flex-direction:column;height:100%;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:thin}
+.guide-scope .itemmedia.stack .stackrail{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:thin}
 .guide-scope .itemmedia.stack .stackrail img{width:100%;height:180px;flex:0 0 180px;object-fit:cover;scroll-snap-align:start;display:block}
 .guide-scope .placegallery>div{grid-template-rows:170px 170px}
 .guide-scope .detailhero.with-photo{height:420px}
