@@ -525,3 +525,15 @@
 .guide-scope .pbaseline-time{font-size:11px;color:#8a9d99;display:block;margin-top:2px}
 .guide-scope .pbaseline-time a{color:#145a50}
 .guide-scope .pbaseline-warn{font-size:11px;color:#9a6b1a;display:block;margin-top:6px;line-height:1.5}
+
+/* 双折叠/小平板优化（2026-10-06 用户：展开后图片窄窄的、大屏没利用上）。
+   区间 600–1100px：折叠屏展开态约落在此区间。做法：图片列从固定 156px/126px 改为
+   按比例吃宽度（minmax(300px,38%)），图片区加高，内容容器从 64rem 放宽到 78rem，
+   图库行高加大。不动 ≤560px 手机的上下布局；后置于文件末尾以覆盖前面的固定列宽。 */
+@media(min-width:600px) and (max-width:1100px){
+.guide-scope .maincontent,.guide-scope .page,.guide-scope .research-page{max-width:78rem}
+.guide-scope .itemcard{grid-template-columns:minmax(300px,38%) minmax(0,1fr)}
+.guide-scope .itemmedia{min-height:300px}
+.guide-scope .placegallery>div{grid-template-rows:170px 170px}
+.guide-scope .detailhero.with-photo{height:420px}
+}

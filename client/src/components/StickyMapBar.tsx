@@ -5,8 +5,31 @@ import { LL, addAmapTiles } from "@/lib/amap";
 import { airportForCity, type AirportInfo } from "@/data/airportCoords";
 import { CITY_COORDS } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
-import { findStopCoord } from "@/data/stopCoords";
+import { findStopCoord, STOP_COORDS } from "@/data/stopCoords";
 import { days, attractions } from "@/guide/data";
+
+/**
+ * 景点名模糊匹配坐标（2026-10-06）。
+ * 背景：data.ts 景点名（如"郑王庙 Wat Arun"）与行程站点名（如"郑王庙"）命名口径不一致，
+ * 精确匹配在 8 城漏掉 58 个景点。归一化（去括号/空格/中英文标点）后双向包含即命中，
+ * 口径与本文件酒店/餐厅的 includes 匹配一致；要求较短一方 ≥2 字，避免"塔"这类单字误撞。
+ * 置信度低于精确匹配与人工核验坐标，故放在兜底链最后。
+ */
+function findAttractionCoordFuzzy(name: string) {
+  const norm = (s: string) =>
+    s.toLocaleLowerCase().replace(/[（(].*?[）)]/g, "").replace(/[\s·・—–\-,，.。&＆]/g, "");
+  const want = norm(name);
+  if (want.length < 2) return undefined;
+  for (const dayNum of Object.keys(STOP_COORDS)) {
+    const hit = STOP_COORDS[Number(dayNum)].find((s) => {
+      const cand = norm(s.name);
+      if (cand.length < 2) return false;
+      return cand.includes(want) || want.includes(cand);
+    });
+    if (hit) return hit;
+  }
+  return undefined;
+}
 
 /** 地图错误边界（2026-10-04 用户：收起→展开白屏修三次未好；改打法：
  * 地图再怎么崩也只显示重试按钮，绝不把整页拖白） */
@@ -245,8 +268,8 @@ export function buildItemsFromFavorites(
  * 需提前订票景点坐标兜底（2026-10-04 site-improve-hourly 补）。
  * 背景：findStopCoord 只收录行程站点名（精确匹配），MUST_BOOK 里 9/11 项查不到，
  * 导致预订页景点 tab / 行动安排页地图上备选景点大面积缺失（用户要求"备选景点要在地图上显示"）。
- * 以下坐标 2026-10-04 经 map.geocode 实查，full_address 逐条核对为景点本体（非同名商铺/街道）；
- * Siam Niramit、皮皮岛暂无可验证坐标，保持跳过（不编造），记入 backlog 待研究管线补坐标。
+ * 以下坐标 2026-10-04 经 map.geocode 实查，full_address 逐条核对为景点本体（非同名商铺/街道）。
+ * Siam Niramit 的坐标 2026-10-06 已补（见 EXTRA_ATTRACTION_COORDS）。
  */
 const MUST_BOOK_COORDS: Record<string, { lat: number; lng: number }> = {
   "大象自然公园": { lat: 19.2144, lng: 98.85888 }, // Elephant Nature Park 主园区，Mae Taeng, Chiang Mai
@@ -256,6 +279,42 @@ const MUST_BOOK_COORDS: Record<string, { lat: number; lng: number }> = {
   "滨海湾花园": { lat: 1.28213, lng: 103.86372 }, // Gardens by the Bay, 18 Marina Gardens Dr
   "吉姆·汤普森之家": { lat: 13.74876, lng: 100.52848 }, // Jim Thompson House Museum, Pathum Wan, Bangkok
   "因他农国家公园": { lat: 18.53569, lng: 98.52234 }, // Doi Inthanon NP（1009 公路园内实查点）
+};
+
+/**
+ * 非行程站点景点的坐标兜底（2026-10-06 用户抓包：预订页挑酒店地图普吉只显示 2 个景点；
+ * 按"工作模型全局应用"同轮补齐曼谷/新加坡/清迈三行程城市，非行程城市暂不补）。
+ * 背景：data.ts 景点名与行程站点名命名口径不一致，精确匹配在 8 城漏掉 58 个景点。
+ * 坐标来源分两类：① 复用 stopCoords.ts 里已核验的行程站点坐标（同地异名）；
+ * ② 2026-10-06 经 web 实查（Wikipedia / mapcarta-OSM / place listing），取景点本体（非同名商铺），
+ * 双源交叉印证处已注明。诚实跳过（不编造）：皮皮岛（群岛无单点）、湄南河游船（线路无单点）。
+ */
+const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
+  // —— 普吉（2026-10-06 用户抓包"挑酒店地图普吉只显示 2 个景点"后补） ——
+  "大佛": { lat: 7.827598, lng: 98.312853 }, // GeoHack/Wikipedia，Nakkerd Hill 山顶
+  "查龙寺": { lat: 7.84625, lng: 98.3371 }, // mapcarta/OpenStreetMap
+  "神仙半岛": { lat: 7.761831, lng: 98.305351 }, // place listing；Wikimedia Commons 7.7590,98.3033 交叉印证
+  "卡塔诺伊海滩": { lat: 7.80657, lng: 98.29678 }, // mapcarta Ao Kata Noi 海湾中心
+  "芭东 Bangla 路": { lat: 7.893274, lng: 98.298102 }, // 39 Soi Bangla Rd 沿街商户坐标
+  "Siam Niramit": { lat: 7.932287, lng: 98.37563 }, // 官方站登记地址 55/81 Moo 5 的 place 坐标
+  // —— 曼谷（同轮按"工作模型全局应用"补齐行程城市） ——
+  "大皇宫 & 玉佛寺": { lat: 13.7493514, lng: 100.4918643 }, // 复用行程站点"大皇宫深度游"已核验坐标
+  "卧佛寺 Wat Pho": { lat: 13.7463456, lng: 100.4927381 }, // 复用行程站点"卧佛寺与按摩"已核验坐标
+  "恰图恰周末市场": { lat: 13.8002651, lng: 100.5511228 }, // 复用行程站点"恰图恰周末市集"已核验坐标（市场/市集同地）
+  "伦披尼公园": { lat: 13.73056, lng: 100.54167 }, // Wikipedia Lumphini Park
+  "金山寺": { lat: 13.75389, lng: 100.50833 }, // Wikipedia Wat Saket
+  "Mahanakhon 天空步道": { lat: 13.72361, lng: 100.52833 }, // Wikipedia King Power Mahanakhon
+  "大城府 Ayutthaya 古城遗迹": { lat: 14.34778, lng: 100.56056 }, // Wikipedia UNESCO Historic City of Ayutthaya
+  "丹嫩沙多水上市场+美功铁道": { lat: 13.51933, lng: 99.95928 }, // mapcarta/OSM 丹嫩沙多水上市场；美功铁道市场在 Samut Songkhram，单点仅标水上市场
+  // —— 新加坡 ——
+  "新加坡动物园与Bird Paradise": { lat: 1.403782, lng: 103.79414 }, // Wikipedia Singapore Zoo；Bird Paradise 同属万态片区相邻
+  "小印度": { lat: 1.30667, lng: 103.84972 }, // Wikipedia Little India MRT
+  // —— 清迈 ——
+  "周日步行街": { lat: 18.78821, lng: 98.98799 }, // mapcarta/OSM Sunday Market (Walking Street)
+  "Baan Kang Wat": { lat: 18.77631, lng: 98.94836 }, // mapcarta/OSM
+  "乌蒙寺": { lat: 18.7831833, lng: 98.9513083 }, // Wikipedia Wat Umong
+  "瓦洛洛市场": { lat: 18.790239, lng: 99.000628 }, // place listing，Wichayanon Rd
+  // 诚实跳过（不编造）：皮皮岛（群岛无单点）、湄南河游船（线路无单点）
 };
 
 /**
@@ -281,10 +340,10 @@ export function buildCandidateItems(cities: string[]): StickyMapItem[] {
       out.push({ name: r.name, city: zh, lat: r.lat, lng: r.lng, kind: "restaurant", candidate: true, note: "候选餐厅" });
     }
     // 2026-10-04 用户：预订页地图要显示该城市 ALL 景点（不是只卖票的11个），
-    // 才能判断餐厅/酒店位置是否合理。有坐标的才收录（findStopCoord → MUST_BOOK_COORDS 兜底）。
+    // 才能判断餐厅/酒店位置是否合理。有坐标的才收录（精确 → 人工核验 → 模糊匹配兜底）。
     for (const a of attractions) {
       if (a.city !== zh) continue;
-      const coord = findStopCoord(a.name) ?? MUST_BOOK_COORDS[a.name];
+      const coord = findStopCoord(a.name) ?? MUST_BOOK_COORDS[a.name] ?? EXTRA_ATTRACTION_COORDS[a.name] ?? findAttractionCoordFuzzy(a.name);
       if (coord) {
         out.push({ name: a.name, city: zh, lat: coord.lat, lng: coord.lng, kind: "attraction", candidate: true, note: "景点" });
       }
