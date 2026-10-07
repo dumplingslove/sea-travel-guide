@@ -293,7 +293,11 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('Capella Singapore🇸🇬','https://www.xiaohongshu.com/explore/6a788ddc0000000002003c00','2026-08-09 · 猪猪侠Jackson · 推荐 · 送小蛋糕香槟/上门用餐'),
   L('新加坡嘉佩乐小住日记🇸🇬','https://www.xiaohongshu.com/explore/692aa226000000001f00c898','2026-06-11 · 怡宝 · 推荐 · 蜜月布置+香槟甜点'),
   L('这里原本是一栋房子，只是后来变成了嘉佩乐','https://www.xiaohongshu.com/explore/6a538ec80000000011017665','2026-07-12 · JAGER · 推荐 · 1880年Tanah Merah殖民建筑新旧融合'),
-  L('新加坡嘉佩乐是不会再住了💢','https://www.xiaohongshu.com/explore/6819c22d000000002001c81d','2025-05-06 · GraceSS · 不推荐 · checkout当天全酒店停电')],
+  L('新加坡嘉佩乐是不会再住了💢','https://www.xiaohongshu.com/explore/6819c22d000000002001c81d','2025-05-06 · GraceSS · 不推荐 · checkout当天全酒店停电'),
+  L('新加坡嘉佩乐 SINGAPORE CAPELLA','https://www.xiaohongshu.com/explore/6a62c159000000000402b004','2025-07-24 · leeehaiyang · 6444赞 · 正向：圣淘沙12万平米雨林环绕，1880年殖民建筑；管家服务+免费绘画活动'),
+  L('Afternoons at the Living Room','https://www.xiaohongshu.com/explore/6a43d7a5000000002103edd2','2025-07-02 · 💜金爷 · 1130赞 · 正向：小白楼二层Living Room免费下午茶，度假感拉满'),
+  L('从嘉佩乐换到文华东方落差太大了','https://www.xiaohongshu.com/explore/6a56f75200000000220142d6','2026-07-14 · 马小瑶 · 385赞 · 正向：嘉佩乐老钱风房间 vs 文华东方老旧潮湿，落差强烈'),
+ ],
  'Mandarin Oriental Singapore 文华东方':[
   L('新加坡top酒店测评系列1️⃣（文华东方）','https://www.xiaohongshu.com/explore/6a510616000000001702a8d2','2026-07-15 · 江晨晨 · 推荐 · 公区最满意的一家；中餐馆意外好吃'),
   L('新加坡文华东方一镜到底👾','https://www.xiaohongshu.com/explore/6996c701000000001d0119f3','2026-02-19 · 布叽岛 · 推荐 · 「很贵，但风景很好房间装修很舒服」'),
@@ -338,7 +342,10 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('🇸🇬全球第一家香格里拉酒店开业于1971年','https://www.xiaohongshu.com/explore/69a3f9fc000000001d013987','2026-03-01 · 温莎的树林 · 推荐 · 「喜欢有年代感的、怀旧的，对酒店服务有要求的一定要去体验一次」'),
   L('三人游新加坡强推住乌节路香格里拉🌴','https://www.xiaohongshu.com/explore/69158a410000000007031d9c','2025-11-12 · 迟到几内亚公主 · 推荐 · 塔楼翼豪华阁套房2400+/晚，沙发床加床摊人均约800/晚 · 评论：豪华阁带娃check-in可能被拒'),
   L('不建议用FHR入住新加坡香格里拉','https://www.xiaohongshu.com/explore/68a02c23000000001c011e75','2025-08-15 · momo · 不推荐 · 满房无法升级；房间隔音不好6点被吵醒'),
-  L('🇸🇬如果只在新加坡住一晚，必须是这里！','https://www.xiaohongshu.com/explore/6a0fcd20000000003802098e','2026-05-21 · momo（探店版） · 推荐 · 「乌节路的隐世绿洲」「热带花园的松弛感」')],
+  L('🇸🇬如果只在新加坡住一晚，必须是这里！','https://www.xiaohongshu.com/explore/6a0fcd20000000003802098e','2026-05-21 · momo（探店版） · 推荐 · 「乌节路的隐世绿洲」「热带花园的松弛感」'),
+  L('新加坡圣淘沙香格里拉住客看过来❗❗','https://www.xiaohongshu.com/explore/69aecc71000000002801d09c','2026-03-09 · 宽仔妈妈 · 77赞 · 正向（圣淘沙店）：带娃攻略，住三免一3晚4580含早，儿童俱乐部有中文'),
+  L('46岁｜新加坡｜乌节路香格里拉','https://www.xiaohongshu.com/explore/69e87877000000001b021f12','2026-04-22 · 守10 · 112赞 · 正向：乌节路本店客房落地窗城市景观'),
+ ],
  /* singapore/8,16,17：2026-09-14 主代理裁决新标准实读（10篇独立专帖），2026-09-29 证据登记补漏第三轮 */
  'Odette':[
   L('🇸🇬新加坡 Odette 米其林⭐️⭐️⭐️','https://www.xiaohongshu.com/explore/69b0cde3000000002202f494','2026-09-11 · 🐷小队长 · 中立 · 「用餐耗时3.5个钟，菜肴四平八稳，选用了大量的亚洲食材，标准的Fine Dining出品，挑不出太多毛病也没觉得多令人眼前一亮」· 评论：可以vx支付吗（momo）'),
@@ -593,6 +600,85 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('曼谷 | 100元吃了满满一桌泰国特色船面🚢','https://www.xiaohongshu.com/explore/6a790bed000000002402f94f','JEANTOPIA · 08-10 · 67赞 · 双店对比帖（见鲁通船面条目）；全文展开+评论区可见滚动实读'),
   L('一人吃10碗船面，还说没胃口？！','https://www.xiaohongshu.com/explore/6a52ef7b00000000110114e7','Pittiya不是芭提雅 · 07-11 · 466赞 · 视频帖（未完整播放）；作者评论区推荐"可以去通思密"（暹罗附近）；评论区48条实读'),
   L('曼谷第一顿：周董严选船面','https://www.xiaohongshu.com/explore/699de90800000000280214af','加薪风暴布灵 · 02-24 · 341赞 · CentralWorld店（评论区对3/4/5楼说法不一）；牛肉面+红油抄手；4碗800铢；评论区9条实读'),
+ ],
+ 'The Peninsula Bangkok':[
+  L('曼谷半岛｜1998年的奢华🏨 今天依然经典','https://www.xiaohongshu.com/explore/6a7f118a0000000021022084','2026-08-15 · 翻斗花园壮壮 · 339赞 · 推荐："它确实记得你是谁"，服务记得客人偏好'),
+  L('避雷，曼谷半岛酒店','https://www.xiaohongshu.com/explore/688b1e30000000002302ad07','2025-07-31 · MaxwithLove · 22赞 · 避雷：隔音是硬伤"半夜能听到隔壁上厕所"，设施有年代感、位置偏'),
+  L('一千零一夜第七夜：和我同岁的曼谷半岛','https://www.xiaohongshu.com/explore/6a61866e000000000301fc28','2026-07-22 · 云章 · 276赞 · 推荐带保留：用料扎实空间阔绰，前台服务偶有疏漏')
+ ],
+ 'Rosewood Bangkok':[
+  L('🌿曼谷瑰丽真实测评！无边泳池+黑胶酒吧！','https://www.xiaohongshu.com/explore/6a36c44800000000060201b3','2026-06-20 · 它处 · 2006赞 · 推荐：9楼半室内无边泳池不怕晒，顶楼Lennon黑胶酒吧；低楼层有摩托噪音建议住高层'),
+  L('rosewood bangkok ⛱️','https://www.xiaohongshu.com/explore/685e3d9d000000001c035fb2','2025-06-26 · ar1abb · 290赞 · 推荐：日落泳池设计感强，晚上体验spa很酥胡'),
+  L('曼谷瑰丽🪻','https://www.xiaohongshu.com/explore/68e5e2770000000007032032','2026-09-13 · Saraaa25 · 617赞 · 推荐：过天桥即商场，19楼南北中餐厅烤鸭需提前订；船面有人嫌"酱油煮面"')
+ ],
+ 'The Reverie Saigon':[
+  L('西贡万韵｜藏在南洋烟火里的意式孤品。','https://www.xiaohongshu.com/explore/69cf8eed000000001a02dab1','06-11 · LadyCheetah · 245赞 · 推荐：意式宫殿风立鼎世成员，高楼层河景房框住西贡河与城市屋顶'),
+  L('一个人住进西贡的"意大利皇宫"','https://www.xiaohongshu.com/explore/69d8c0d000000000220281e6','05-05 · 努力小马的酒店手记 · 192赞 · 推荐：第1郡核心阮惠大道，夜床服务每天手写卡片+巧克力')
+ ],
+ 'Park Hyatt Saigon':[
+  L('西贡柏悦的前世今生','https://www.xiaohongshu.com/explore/6a0b1f150000000007024987','05-18 · Charlie 明 · 212赞 · 推荐带保留：1950年Brink酒店旧址老派奢华，客房老旧偏小、硬件不算突出'),
+  L('胡志明｜西贡柏悦','https://www.xiaohongshu.com/explore/6a3798670000000022014efc','06-21 · 阿宝 · 2132赞 · 推荐带保留：法式殖民风+越南元素，早餐半自助越南粉现点现煮，约2000-3000价位')
+ ],
+ 'Mai House Saigon':[
+  L('西贡迈之家Mai House酒店','https://www.xiaohongshu.com/explore/69855405000000000a02dcb3','02-09 · 驭电大叔 · 19赞 · 推荐：第三郡欧陆精品风，顶楼天台酒吧270度鸟瞰全市；水流小是缺点'),
+  L('胡志明市 | Mai House Saigon Hotel','https://www.xiaohongshu.com/explore/6a38a5420000000011014fb6','06-22 · 南北绿豆 · 137赞 · 推荐：860r含早服务细节好（鲜花/欢迎饮品券），位置稍偏但安静')
+ ],
+ 'Caravelle Saigon':[
+  L('Vlog |又来住 Caravelle Saigon Hotel 🇻🇳','https://www.xiaohongshu.com/explore/69187a130000000007002927','2025-11-17 · 一言天成 · 33赞 · 推荐：视频帖"又来住"，第一郡歌剧院旁位置无敌方便'),
+  L('西贡卡拉威尔酒店第四次入住体验记分享🇻🇳','https://www.xiaohongshu.com/explore/6917dae10000000007015af7','2025-11-14 · 一言天成 · 28赞 · 强推荐：第四次入住的"首选常驻饭店"；评论区无实质评论')
+ ],
+ 'Hôtel des Arts Saigon':[
+  L('胡志明 西貢美憬閣藝術酒店','https://www.xiaohongshu.com/explore/6871f02c000000001d00db0e','2025-07-11 · 克里斯先生在越南 · 38赞 · 强推荐：顶楼泳池+酒吧+玻璃天桥，早餐丰盛果汁好喝，价格香'),
+  L('胡志明美憬阁酒店｜西贡美憬阁｜无边泳池','https://www.xiaohongshu.com/explore/660bf10f000000001b00ec42','2024-04-02 · momo · 35赞 · 中立偏推荐：无边泳池+屋顶酒吧景美；位置一般，步行15分钟到中心区'),
+  L('Hotel des Arts Saigon-屋顶bar','https://www.xiaohongshu.com/explore/6939a67d000000001e0275de','2025-12-10 · 旅拍作者 · 低互动 · 中立：15秒视频帖，屋顶酒吧')
+ ],
+ 'The St. Regis Kuala Lumpur':[
+  L('吉隆坡瑞吉','https://www.xiaohongshu.com/explore/6a3ce0a7000000001c027d85','06-25 · 吃水煮菜菜菜 · 465赞 · 推荐'),
+  L('吉隆坡瑞吉劝你别住','https://www.xiaohongshu.com/explore/683ddfcb000000002301cd29','2025-06-04 · 福妮 · 57赞 · 避雷："马来西亚的客房服务我认为是东南亚国家最差的"，泳池局促')
+ ],
+ 'Eastern & Oriental Hotel':[
+  L('🇲🇾住进19Eastern & Orie','https://www.xiaohongshu.com/explore/686f783b000000002400e2e3','2025-07-10 · apple · 696赞 · 推荐：19世纪老酒店入住体验分享'),
+  L('槟城E&O｜住进黑塞笔下的"东方最美酒店" 🏨','https://www.xiaohongshu.com/explore/69f591330000000023006fa7','06-08 · itsalicia · 1409赞 · 推荐：黑塞"东方最美酒店"典故向'),
+  L('避雷🇲🇾槟城东家酒店E&O hotel','https://www.xiaohongshu.com/explore/69fae28b0000000022024210','05-05 · 星球杯杯 · 36评论 · 避雷')
+ ],
+ 'Penang Marriott Hotel 槟城万豪':[
+  L('马来西亚槟城万豪酒店全系Marriott Bonvoy','https://www.xiaohongshu.com/explore/6809a70f000000001c0021bc','2025-04-24 · Artists.H · 207赞 · 中立：万豪全系指南帖')
+ ],
+ 'Cheong Fatt Tze Mansion':[
+  L('没预约别去｜槟城蓝屋超详细预约攻略','https://www.xiaohongshu.com/explore/695cfdca0000000022008756','01-06 · 樱漪落 · 442赞 · 推荐：蓝屋超详细预约攻略'),
+  L('阿嬷的情书在汕头拍的，真正的蓝屋在槟城','https://www.xiaohongshu.com/explore/6a60f18e000000002201ac62','07-22 · 老余说建筑 · 376赞 · 推荐：建筑文化向，真假蓝屋辨析'),
+  L('槟城蓝屋避雷','https://www.xiaohongshu.com/explore/6aaa9832000000001401ce3e','09-16 · 拖拉B懵 · 68赞 · 避雷')
+ ],
+ 'The Prestige Hotel Penang':[
+  L('Malaysia-槟城最出片酒店之一','https://www.xiaohongshu.com/explore/685ecd39000000001203eb41','03-20 · 载酒Kiyo · 128赞 · 推荐：槟城最出片酒店之一')
+ ],
+ 'The Edison George Town':[
+  L('🇲🇾隐藏在乔治市的复古神级酒店！','https://www.xiaohongshu.com/explore/688b58cd0000000004000d6b','09-01 · 打工魂 · 148赞 · 推荐：1906年百年老建筑，殖民拱廊+挑高中庭；每日17-19点免费红酒时段')
+ ],
+ 'JW Marriott Phu Quoc':[
+  L('奔赴山海，邂逅全球顶奢JW秘境🏝️','https://www.xiaohongshu.com/explore/69d8b8c1000000001d01b5bc','04-24 · 沈奕铭 · 2081赞 · 推荐：法式建筑群与海滩，"推开窗就是一整片蓝"')
+ ],
+ 'Regent Phu Quoc':[
+  L('富国岛丽晶，你真的把我养很好','https://www.xiaohongshu.com/explore/6a09b8380000000006033823','05-17 · Kimber 艺然 · 345赞 · 推荐：实质评论最丰富的丽晶专帖')
+ ],
+ 'InterContinental Phu Quoc 洲际':[
+  L('住遍越南🇻🇳 | IHG奢华度假酒店测评','https://www.xiaohongshu.com/explore/6a7d927d00000000330335d5','08-13 · 努力成为小飞侠 · 151赞 · 推荐：评论区有IHG大使升房与4点退房讨论')
+ ],
+ '乐天酒店首尔 Lotte Hotel Seoul':[
+  L('首尔乐天酒店｜明洞地标级顶奢旅居🌆','https://www.xiaohongshu.com/explore/6a743ca90000000022013fea','2026-08-06 · Junshare全球顶奢私藏 · 1赞 · 正向：1979年旗舰明洞地标双塔，高层观景房俯瞰全城'),
+  L('首尔乐天酒店好评！📍Lotte Hotel Seoul','https://www.xiaohongshu.com/explore/69c84dcb0000000022002da0','2026-03-28 · 乌啦啦个啦 · 11赞 · 正向：Amex FHR两晚600美元，本馆有年代感但维护好'),
+  L('首尔明洞封神酒店✨乐天行政楼闭眼冲不踩雷','https://www.xiaohongshu.com/explore/6a565cb700000000150261d9','2026-07-14 · 喵喵爱吃鱼鱼 · 3赞 · 正向：行政楼新装修，33F南山塔夜景，6701巴士直达'),
+  L('首尔乐天酒店','https://www.xiaohongshu.com/explore/6a70bfbf00000000220129c5','2025-08-08 · 菲嘟嘟左卫门 · 15赞 · 推荐：行政楼33F约57平，"意外的不错，没有网上说得那么旧"；14条评论5组实质问答')
+ ],
+ '威斯汀朝鲜首尔 The Westin Josun Seoul':[
+  L('首尔百年潮牌｜威斯汀朝鲜太好住🌆','https://www.xiaohongshu.com/explore/6a45bd010000000021016eb9','2026-07-03 · 悟空国际旅行 PLANET · 1赞 · 正向：百年老牌五星，紧挨明洞+乐天百货，天梦之床+祖马龙洗护'),
+  L('体验首尔市中心112年历史的百年酒店','https://www.xiaohongshu.com/explore/69860fbd000000002802288c','2026-07-14 · LAUCL. · 90赞 · 正向：白金卡升级顶楼圜丘坛景观行政房；酒廊HH丰富；房间有年代感'),
+  L('体验南韩最古老的酒店','https://www.xiaohongshu.com/explore/6a65ca67000000000c033c00','2026-07-26 · Tetryl · 10赞 · 中立：对比明洞VOCO，威斯汀朝鲜为正面体验')
+ ],
+ '首尔四季酒店 Four Seasons Hotel Seoul':[
+  L('在首尔的四季酒店感受到了一种美学力量','https://www.xiaohongshu.com/explore/692676ef000000000d03bf62','2025-12-01 · 酒神G · 1429赞 · 正向："老钱美学"天花板，房间如艺术展'),
+  L('首尔四季Hotel | 忙碌中的井然有序','https://www.xiaohongshu.com/explore/691040180000000003036db1','2025-11-08 · Nono · 50赞 · 正向：光化门四季"家外之家"，服务对得起口碑'),
+  L('韩国首尔 I Four Seasons Hotel 🏨🍂','https://www.xiaohongshu.com/explore/6a9ed6c80000000019030aee','2026-09-07 · jj瑛 · 14赞 · 正向：酒店美食口碑好')
  ],
 };
 
