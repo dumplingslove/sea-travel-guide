@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-07T22:20:11+00:00",
+ "updated_at": "2026-10-07T23:33:24+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15565,7 +15565,7 @@
    "label": "曼谷→西安（2成人）",
    "days": {
     "2026-12-19": {
-     "economy_queried_at": "2026-10-06T23:26:36+00:00",
+     "economy_queried_at": "2026-10-07T23:33:24+00:00",
      "economy_usd": 269,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -15573,20 +15573,19 @@
      "nonstop_flights": [
       {
        "airline": "Spring Airlines",
-       "flight": "9C 6294",
-       "dep": "14:35",
-       "arr": "19:30",
-       "duration": "3h 55m",
+       "flight": "9C6294",
+       "dep": "2:35 PM",
+       "arr": "7:30 PM",
+       "duration": "3hr 55min",
        "price_usd": 269
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-06T23:26:36+00:00",
+     "business_queried_at": "2026-10-07T23:33:24+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞",
-     "economy_price_usd": 269,
-     "economy_note": "2成人整单总价；当天仅1班直飞"
+     "economy_price_usd": 269
     },
     "2026-12-26": {
      "economy_queried_at": "2026-10-02T13:38:30+00:00",
