@@ -752,7 +752,11 @@ function tripFlightCard(key: string, label: string){
   /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
   const wrap=(status:string,cls:string,sub:string,inner:string)=>
     `<details class="tfi-leg"><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
-  const redeyeOf=(flights:{dep:string}[])=>flights.some(f=>{const h=Number(String(f.dep||"").slice(0,2));return !isNaN(h)&&h<6;});
+  /* 起飞小时解析：兼容 24h("16:10")与 12h("4:10 PM"/"12:10 AM")两种库内格式
+     （2026-10-07 修复：旧 Number(dep.slice(0,2)) 在 12h 格式下对红眼航班静默漏标 🌙，
+     如 SQ801 "12:10 AM"、TR135 "1:55 AM" 曾被判成非红眼） */
+  const depHour=(s:string):number=>{const m=/^\s*(\d{1,2}):(\d{2})(?:\s*([AP])\.?\s*M\.?)?\s*$/i.exec(String(s||""));if(!m)return NaN;let h=Number(m[1]);if(m[3]){const pm=/p/i.test(m[3]);if(pm&&h<12)h+=12;if(!pm&&h===12)h=0;}return h;};
+  const redeyeOf=(flights:{dep:string}[])=>flights.some(f=>{const h=depHour(f.dep);return !isNaN(h)&&h<6;});
   const timeRange=(flights:{dep:string}[])=>{
     const deps=flights.map(f=>f.dep).filter(Boolean);
     if(!deps.length) return "";
@@ -780,7 +784,7 @@ function tripFlightCard(key: string, label: string){
     if(d.onestopEco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.onestopEco}</b></span>`);
     if(d.onestopBiz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.onestopBiz}</b></span>`);
     const rows=d.onestopFlights.map(f=>{
-      const dh=Number(f.dep.slice(0,2));
+      const dh=depHour(f.dep);
       const redeye=!isNaN(dh)&&dh<6;
       const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
       const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
@@ -800,7 +804,7 @@ function tripFlightCard(key: string, label: string){
   if(d.eco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.eco}</b></span>`);
   if(d.biz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.biz}</b></span>`);
   const rows=d.flights.map(f=>{
-    const dh=Number(f.dep.slice(0,2));
+    const dh=depHour(f.dep);
     const redeye=!isNaN(dh)&&dh<6;
     const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
     const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
