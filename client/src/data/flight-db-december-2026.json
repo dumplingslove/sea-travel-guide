@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-07T21:44:37+00:00",
+ "updated_at": "2026-10-07T22:06:53+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -22482,132 +22482,141 @@
      "onestop_business_price_basis": "2大1小总价"
     },
     "2026-12-04": {
-     "economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "economy_usd": 2407,
+     "economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "economy_usd": 2431,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Korean Air",
-       "flight": "KE41",
-       "dep": "16:10",
-       "arr": "09:05",
-       "duration": "9h55m",
-       "price_usd": 2407,
-       "business_price_usd": 7390
-      },
-      {
-       "airline": "Delta Air Lines",
-       "flight": "DL196",
-       "dep": "18:45",
-       "arr": "11:56",
-       "duration": "10h11m",
-       "price_usd": 2407,
-       "business_price_usd": 7390
-      },
-      {
        "airline": "Alaska Airlines",
        "flight": "AS120",
-       "dep": "20:00",
-       "arr": "12:55",
-       "duration": "9h55m",
-       "price_usd": 2407,
-       "business_price_usd": 7390
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9h 55m",
+       "price_usd": 2431,
+       "business_price_usd": 7464
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE41",
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9h 55m",
+       "price_usd": 2437,
+       "business_price_usd": 7484
+      },
+      {
+       "airline": "Delta",
+       "flight": "DL196",
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10h 11m",
+       "price_usd": 2437,
+       "business_price_usd": 7484
       },
       {
        "airline": "Korean Air",
        "flight": "KE47",
-       "dep": "21:20",
-       "arr": "14:10",
-       "duration": "9h50m",
-       "price_usd": 2407,
-       "business_price_usd": 7390
+       "dep": "9:20 PM",
+       "arr": "2:10 PM",
+       "duration": "9h 50m",
+       "price_usd": 2437,
+       "business_price_usd": 7484
       }
      ],
      "nonstop_count": 4,
-     "business_queried_at": "2026-09-30T17:04:41+00:00",
-     "business_usd": 7390,
+     "business_queried_at": "2026-10-07T22:06:53+00:00",
+     "business_usd": 7464,
      "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_economy_usd": 1592,
+     "onestop_economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_economy_usd": 1678,
      "onestop_economy_price_basis": "2大1小总价",
-     "onestop_economy_note": "混营航班记录首段(ICN出发段)航司与航班号",
+     "onestop_economy_note": "除菲律宾航空外均为 self transfer（分开出票）；OZ202/F91177 与 YP101/F91177 无免费手提行李舱位",
      "onestop_flights": [
       {
-       "airline": "Asiana Airlines",
-       "flight": "OZ202",
-       "dep": "12:30",
-       "arr": "20:47",
-       "duration": "25h17m",
-       "via": "洛杉矶",
-       "price_usd": 1592
+       "airline": "Air Premia / Alaska Airlines",
+       "flight": "YP111/AS68",
+       "dep": "7:45 PM",
+       "arr": "8:16 AM+1",
+       "duration": "29h 31m",
+       "via": "旧金山",
+       "price_usd": 1678
       },
       {
-       "airline": "Air Premia",
-       "flight": "YP111",
-       "dep": "19:45",
-       "arr": "18:13",
-       "duration": "15h28m",
+       "airline": "Air Premia / Alaska Airlines",
+       "flight": "YP111/AS1340",
+       "dep": "7:45 PM",
+       "arr": "9:24 PM",
+       "duration": "18h 39m",
        "via": "旧金山",
-       "price_usd": 1775
+       "price_usd": 1691
+      },
+      {
+       "airline": "Asiana Airlines / Frontier Airlines",
+       "flight": "OZ202/F91177",
+       "dep": "12:30 PM",
+       "arr": "8:47 PM",
+       "duration": "25h 17m",
+       "via": "洛杉矶",
+       "price_usd": 1756
       },
       {
        "airline": "Philippine Airlines",
-       "flight": "PR401",
-       "dep": "07:30",
-       "arr": "18:45",
-       "duration": "28h15m",
+       "flight": "PR401/PR124",
+       "dep": "7:30 AM",
+       "arr": "6:45 PM",
+       "duration": "28h 15m",
        "via": "马尼拉",
-       "price_usd": 1819,
-       "business_price_usd": 6396
+       "price_usd": 1843,
+       "business_price_usd": 6573
       },
       {
-       "airline": "Asiana Airlines",
-       "flight": "OZ713",
-       "dep": "13:50",
-       "arr": "15:05",
-       "duration": "18h15m",
+       "airline": "Air Premia / Frontier Airlines",
+       "flight": "YP101/F91177",
+       "dep": "1:20 PM",
+       "arr": "8:47 PM",
+       "duration": "24h 27m",
+       "via": "洛杉矶",
+       "price_usd": 1884
+      },
+      {
+       "airline": "Air Premia / Alaska Airlines",
+       "flight": "YP111/AS630",
+       "dep": "7:45 PM",
+       "arr": "6:13 PM",
+       "duration": "15h 28m",
+       "via": "旧金山",
+       "price_usd": 1921
+      },
+      {
+       "airline": "Air Premia / Alaska Airlines",
+       "flight": "YP111/AS620",
+       "dep": "7:45 PM",
+       "arr": "8:04 PM",
+       "duration": "17h 19m",
+       "via": "旧金山",
+       "price_usd": 1921
+      },
+      {
+       "airline": "Scoot / STARLUX Airlines",
+       "flight": "TR873/JX32",
+       "dep": "10:55 PM",
+       "arr": "3:05 PM+1",
+       "duration": "33h 10m",
        "via": "台北",
-       "price_usd": 1925
-      },
-      {
-       "airline": "EVA Air",
-       "flight": "BR169",
-       "dep": "11:40",
-       "arr": "18:10",
-       "duration": "23h30m",
-       "via": "台北",
-       "price_usd": 2058
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE2029",
-       "dep": "16:20",
-       "arr": "15:05",
-       "duration": "15h45m",
-       "via": "台北",
-       "price_usd": 2184
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE6795",
-       "dep": "22:20",
-       "arr": "22:00",
-       "duration": "16h40m",
-       "via": "檀香山",
-       "price_usd": 2242
+       "price_usd": 1941
       }
      ],
-     "onestop_count": 7,
-     "onestop_business_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_business_usd": 6396,
+     "onestop_count": 8,
+     "onestop_business_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_business_usd": 6573,
      "onestop_business_price_basis": "2大1小总价",
-     "onestop_business_note": "混营航班记录首段(ICN出发段)航司与航班号"
+     "onestop_business_note": "KE711/JL68 为经济舱+商务舱混舱"
     },
     "2026-12-05": {
-     "economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "economy_usd": 2590,
+     "economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "economy_usd": 2622,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -22615,109 +22624,128 @@
       {
        "airline": "Alaska Airlines",
        "flight": "AS120",
-       "dep": "20:00",
-       "arr": "12:55",
-       "duration": "9h55m",
-       "price_usd": 2590,
-       "business_price_usd": 7755
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9h 55m",
+       "price_usd": 2622,
+       "business_price_usd": 7794
       },
       {
        "airline": "Korean Air",
        "flight": "KE41",
-       "dep": "16:10",
-       "arr": "09:05",
-       "duration": "9h55m",
-       "price_usd": 2651,
-       "business_price_usd": 7788
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9h 55m",
+       "price_usd": 2684,
+       "business_price_usd": 7866
       },
       {
-       "airline": "Delta Air Lines",
+       "airline": "Delta",
        "flight": "DL196",
-       "dep": "18:45",
-       "arr": "11:56",
-       "duration": "10h11m",
-       "price_usd": 2651,
-       "business_price_usd": 7788
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10h 11m",
+       "price_usd": 2684,
+       "business_price_usd": 7866
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-09-30T17:04:41+00:00",
-     "business_usd": 7755,
+     "business_queried_at": "2026-10-07T22:06:53+00:00",
+     "business_usd": 7794,
      "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_economy_usd": 1773,
+     "onestop_economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_economy_usd": 1785,
      "onestop_economy_price_basis": "2大1小总价",
-     "onestop_economy_note": "混营航班记录首段(ICN出发段)航司与航班号",
      "onestop_flights": [
       {
        "airline": "China Airlines",
-       "flight": "CI161",
-       "dep": "12:30",
-       "arr": "18:10",
-       "duration": "22h40m",
+       "flight": "CI161/CI22",
+       "dep": "12:30 PM",
+       "arr": "6:10 PM",
+       "duration": "22h 40m",
        "via": "台北",
-       "price_usd": 1773
+       "price_usd": 1785,
+       "business_price_usd": 5981
       },
       {
        "airline": "Philippine Airlines",
-       "flight": "PR403",
-       "dep": "20:30",
-       "arr": "18:45",
-       "duration": "39h15m",
+       "flight": "PR403/PR124",
+       "dep": "8:30 PM",
+       "arr": "6:45 PM+1",
+       "duration": "39h 15m",
        "via": "马尼拉",
-       "price_usd": 1845,
-       "business_price_usd": 6396
+       "price_usd": 2000,
+       "business_price_usd": 6095
       },
       {
        "airline": "EVA Air",
-       "flight": "BR159",
-       "dep": "19:45",
-       "arr": "17:30",
-       "duration": "14h45m",
+       "flight": "BR159/BR24",
+       "dep": "7:45 PM",
+       "arr": "5:30 PM",
+       "duration": "14h 45m",
        "via": "台北",
-       "price_usd": 2100,
-       "business_price_usd": 6857
+       "price_usd": 2115
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR159/BR26",
+       "dep": "7:45 PM",
+       "arr": "6:10 PM",
+       "duration": "15h 25m",
+       "via": "台北",
+       "price_usd": 2115,
+       "business_price_usd": 6934
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR169/BR24",
+       "dep": "11:40 AM",
+       "arr": "5:30 PM",
+       "duration": "22h 50m",
+       "via": "台北",
+       "price_usd": 2165,
+       "business_price_usd": 6962
+      },
+      {
+       "airline": "EVA Air",
+       "flight": "BR169/BR26",
+       "dep": "11:40 AM",
+       "arr": "6:10 PM",
+       "duration": "23h 30m",
+       "via": "台北",
+       "price_usd": 2165,
+       "business_price_usd": 6962
       },
       {
        "airline": "China Airlines",
-       "flight": "CI163",
-       "dep": "20:15",
-       "arr": "18:10",
-       "duration": "14h55m",
+       "flight": "CI163/CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14h 55m",
        "via": "台北",
-       "price_usd": 2176,
-       "business_price_usd": 6200
+       "price_usd": 2295
       },
       {
-       "airline": "United Airlines",
-       "flight": "UA806",
-       "dep": "12:45",
-       "arr": "10:24",
-       "duration": "14h39m",
-       "via": "旧金山",
-       "price_usd": 2561,
-       "business_price_usd": 7725
-      },
-      {
-       "airline": "United Airlines",
-       "flight": "UA892",
-       "dep": "18:00",
-       "arr": "16:23",
-       "duration": "15h23m",
-       "via": "旧金山",
-       "price_usd": 2561,
-       "business_price_usd": 7725
+       "airline": "Asiana Airlines / Alaska Airlines",
+       "flight": "OZ202/AS482",
+       "dep": "12:30 PM",
+       "arr": "12:02 PM",
+       "duration": "16h 32m",
+       "via": "洛杉矶",
+       "price_usd": 2593
       }
      ],
-     "onestop_count": 6,
-     "onestop_business_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_business_usd": 6200,
+     "onestop_count": 8,
+     "onestop_business_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_business_usd": 5981,
      "onestop_business_price_basis": "2大1小总价",
-     "onestop_business_note": "混营航班记录首段(ICN出发段)航司与航班号"
+     "onestop_business_note": "TW531/AS2222 为 self transfer（分开出票），由 Horizon Air 执飞第二段",
+     "economy_note": "当天仅 3 班直飞",
+     "business_note": "当天仅 3 班直飞"
     },
     "2026-12-06": {
-     "economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "economy_usd": 2590,
+     "economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "economy_usd": 2622,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -22725,104 +22753,131 @@
       {
        "airline": "Alaska Airlines",
        "flight": "AS120",
-       "dep": "20:00",
-       "arr": "12:55",
-       "duration": "9h55m",
-       "price_usd": 2590,
-       "business_price_usd": 7755
+       "dep": "8:00 PM",
+       "arr": "12:55 PM",
+       "duration": "9h 55m",
+       "price_usd": 2622,
+       "business_price_usd": 7794
       },
       {
        "airline": "Korean Air",
        "flight": "KE41",
-       "dep": "16:10",
-       "arr": "09:05",
-       "duration": "9h55m",
-       "price_usd": 2651,
-       "business_price_usd": 7788
+       "dep": "4:10 PM",
+       "arr": "9:05 AM",
+       "duration": "9h 55m",
+       "price_usd": 2684,
+       "business_price_usd": 7866
       },
       {
-       "airline": "Delta Air Lines",
+       "airline": "Delta",
        "flight": "DL196",
-       "dep": "18:45",
-       "arr": "11:56",
-       "duration": "10h11m",
-       "price_usd": 2651,
-       "business_price_usd": 7788
+       "dep": "6:45 PM",
+       "arr": "11:56 AM",
+       "duration": "10h 11m",
+       "price_usd": 2684,
+       "business_price_usd": 7061
       },
       {
        "airline": "Korean Air",
        "flight": "KE47",
-       "dep": "21:20",
-       "arr": "14:10",
-       "duration": "9h50m",
-       "price_usd": 2651,
-       "business_price_usd": 7788
+       "dep": "9:20 PM",
+       "arr": "2:10 PM",
+       "duration": "9h 50m",
+       "price_usd": 2684,
+       "business_price_usd": 7866
       }
      ],
      "nonstop_count": 4,
-     "business_queried_at": "2026-09-30T17:04:41+00:00",
-     "business_usd": 7755,
+     "business_queried_at": "2026-10-07T22:06:53+00:00",
+     "business_usd": 7061,
      "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_economy_usd": 1773,
+     "onestop_economy_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_economy_usd": 1785,
      "onestop_economy_price_basis": "2大1小总价",
-     "onestop_economy_note": "混营航班记录首段(ICN出发段)航司与航班号",
      "onestop_flights": [
       {
        "airline": "China Airlines",
-       "flight": "CI163",
-       "dep": "20:15",
-       "arr": "18:10",
-       "duration": "14h55m",
+       "flight": "CI161/CI22",
+       "dep": "12:30 PM",
+       "arr": "6:10 PM",
+       "duration": "22h 40m",
        "via": "台北",
-       "price_usd": 1773,
-       "business_price_usd": 6200
+       "price_usd": 1785,
+       "business_price_usd": 5890
       },
       {
        "airline": "Philippine Airlines",
-       "flight": "PR401",
-       "dep": "07:30",
-       "arr": "18:45",
-       "duration": "28h15m",
+       "flight": "PR401/PR124",
+       "dep": "7:30 AM",
+       "arr": "6:45 PM",
+       "duration": "28h 15m",
        "via": "马尼拉",
-       "price_usd": 1845,
-       "business_price_usd": 6396
+       "price_usd": 1867,
+       "business_price_usd": 6001
+      },
+      {
+       "airline": "Philippine Airlines",
+       "flight": "PR403/PR124",
+       "dep": "8:30 PM",
+       "arr": "6:45 PM+1",
+       "duration": "39h 15m",
+       "via": "马尼拉",
+       "price_usd": 1867,
+       "business_price_usd": 6001
       },
       {
        "airline": "EVA Air",
-       "flight": "BR159",
-       "dep": "19:45",
-       "arr": "18:10",
-       "duration": "15h25m",
+       "flight": "BR159/BR26",
+       "dep": "7:45 PM",
+       "arr": "6:10 PM",
+       "duration": "15h 25m",
        "via": "台北",
-       "price_usd": 2100
+       "price_usd": 2115
       },
       {
-       "airline": "United Airlines",
-       "flight": "UA806",
-       "dep": "12:45",
-       "arr": "12:20",
-       "duration": "16h35m",
-       "via": "旧金山",
-       "price_usd": 2561,
-       "business_price_usd": 7725
+       "airline": "EVA Air",
+       "flight": "BR169/BR26",
+       "dep": "11:40 AM",
+       "arr": "6:10 PM",
+       "duration": "23h 30m",
+       "via": "台北",
+       "price_usd": 2165
       },
       {
-       "airline": "United Airlines",
-       "flight": "UA892",
-       "dep": "18:00",
-       "arr": "16:22",
-       "duration": "15h22m",
-       "via": "旧金山",
-       "price_usd": 2561,
-       "business_price_usd": 7725
+       "airline": "China Airlines",
+       "flight": "CI2163/CI22",
+       "dep": "4:35 PM",
+       "arr": "6:10 PM",
+       "duration": "18h 35m",
+       "via": "台北",
+       "price_usd": 2193,
+       "business_price_usd": 5890
+      },
+      {
+       "airline": "China Airlines",
+       "flight": "CI163/CI22",
+       "dep": "8:15 PM",
+       "arr": "6:10 PM",
+       "duration": "14h 55m",
+       "via": "台北",
+       "price_usd": 2193,
+       "business_price_usd": 5890
+      },
+      {
+       "airline": "Asiana Airlines / Alaska Airlines",
+       "flight": "OZ202/AS482",
+       "dep": "12:30 PM",
+       "arr": "12:02 PM",
+       "duration": "16h 32m",
+       "via": "洛杉矶",
+       "price_usd": 2593
       }
      ],
-     "onestop_count": 5,
-     "onestop_business_queried_at": "2026-09-30T17:04:41+00:00",
-     "onestop_business_usd": 6200,
+     "onestop_count": 8,
+     "onestop_business_queried_at": "2026-10-07T22:06:53+00:00",
+     "onestop_business_usd": 5890,
      "onestop_business_price_basis": "2大1小总价",
-     "onestop_business_note": "混营航班记录首段(ICN出发段)航司与航班号"
+     "onestop_business_note": "TW531 开头三班均为 self transfer（分开出票）"
     },
     "2026-12-07": {
      "economy_queried_at": "2026-09-30T17:04:41+00:00",
