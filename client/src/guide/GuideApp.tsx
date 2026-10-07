@@ -404,7 +404,7 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
 /** 航司口碑速览（历史研究结论，来源：git 历史交通页已删内容）。 */
 const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
 /** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
-const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员'};
+const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员',"T'way Air":'韩国低成本航司（德威航空），首尔出发热门廉航选择'};
 
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
