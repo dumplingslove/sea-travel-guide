@@ -535,8 +535,8 @@
 .guide-scope .itemcard{grid-template-columns:minmax(300px,38%) minmax(0,1fr)}
 .guide-scope .itemmedia{min-height:300px}
 .guide-scope .itemmedia.stack{display:flex;flex-direction:column;overflow:hidden}
+.guide-scope .itemmedia.stack:after{display:none}
 .guide-scope .itemmedia.stack img{width:100%;height:180px;flex:0 0 180px;object-fit:cover}
-.guide-scope .itemmedia.stack .imgnav,.guide-scope .itemmedia.stack em{display:none}
 .guide-scope .placegallery>div{grid-template-rows:170px 170px}
 .guide-scope .detailhero.with-photo{height:420px}
 }
