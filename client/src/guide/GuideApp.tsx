@@ -260,17 +260,33 @@ function PhotoCarousel({photos,name}:{photos:PlacePhoto[];name:string}){
  return <section className="photocarousel" aria-label={`${name}照片，共${n}张`}><div className="pc-stage" onTouchStart={e=>{touchX.current=e.touches[0]?.clientX??null}} onTouchEnd={e=>{const x=touchX.current;touchX.current=null;if(x==null)return;const dx=(e.changedTouches[0]?.clientX??x)-x;if(Math.abs(dx)>40)go(dx<0?1:-1)}}><img src={photo.src} alt={`${name}照片 ${index+1}`} loading="eager"/>{n>1&&<><button className="pc-arrow left" aria-label="上一张照片" onClick={()=>go(-1)}>‹</button><button className="pc-arrow right" aria-label="下一张照片" onClick={()=>go(1)}>›</button><span className="pc-count">{index+1} / {n}</span></>}</div><div className="pc-caption">{photo.sourceUrl?<a href={photo.sourceUrl} target="_blank" rel="noreferrer">查看图片来源 ↗</a>:<span>图片来源待复核</span>}<span className="pc-note">左右滑动或点箭头直接切换 · 精确地点匹配逐张复核中</span></div>{n>1&&<div className="pc-thumbs">{photos.map((p,i)=><button key={p.src} className={i===index?'active':''} aria-label={`${name}第${i+1}张照片`} onClick={()=>setIndex(i)}><img src={p.src} alt="" loading="lazy"/></button>)}</div>}</section>
 }
 
+/** 双折叠展开态（600–1100px）用的媒体查询：卡片图片区纵向堆叠多张，不再一次只看一张。 */
+function useFoldableStack(){
+ const [stacked,setStacked]=useState(false);
+ useEffect(()=>{
+  const mq=window.matchMedia("(min-width:600px) and (max-width:1100px)");
+  const f=()=>setStacked(mq.matches);
+  f();
+  mq.addEventListener("change",f);
+  return ()=>mq.removeEventListener("change",f);
+ },[]);
+ return stacked;
+}
+
 function ItemMedia({item,kind,index}:{item:Item;kind:'酒店'|'餐厅'|'景点';index:number}){
  const gallery=getPlaceGallery(kind,item);
  const [imgIdx,setImgIdx]=useState(0);
  const touchX=useRef<number|null>(null);
  const image=gallery[imgIdx]?.src||gallery[0]?.src;
+ const stacked=useFoldableStack();
+ const showStack=stacked&&gallery.length>1;
  const prev=(e:React.MouseEvent)=>{e.stopPropagation();setImgIdx(i=>(i-1+gallery.length)%gallery.length);};
  const next=(e:React.MouseEvent)=>{e.stopPropagation();setImgIdx(i=>(i+1)%gallery.length);};
  const go=(d:number)=>setImgIdx(i=>(i+d+gallery.length)%gallery.length);
- return <div className={`itemmedia ${image?'has-photo':'no-photo'}`}
+ return <div className={`itemmedia ${image?'has-photo':'no-photo'}${showStack?' stack':''}`}
   onTouchStart={e=>{touchX.current=e.touches[0]?.clientX??null}}
-  onTouchEnd={e=>{const x=touchX.current;touchX.current=null;if(x==null)return;const dx=(e.changedTouches[0]?.clientX??x)-x;if(Math.abs(dx)>40){e.stopPropagation();go(dx<0?1:-1)}}}>{image?<img src={image} alt={`${item.name}候选图片`} loading="lazy"/>:<span aria-hidden="true">{item.name.slice(0,1)}</span>}<b style={{background:accents[item.city]}}>{String(index+1).padStart(2,'0')}</b>{gallery.length>1&&<><button type="button" className="imgnav prev" onClick={prev} aria-label="上一张">‹</button><button type="button" className="imgnav next" onClick={next} aria-label="下一张">›</button><em>{imgIdx+1}/{gallery.length}</em></>}</div>}
+  onTouchEnd={e=>{const x=touchX.current;touchX.current=null;if(x==null)return;const dx=(e.changedTouches[0]?.clientX??x)-x;if(Math.abs(dx)>40){e.stopPropagation();go(dx<0?1:-1)}}}
+ >{showStack?gallery.slice(0,3).map(p=><img key={p.src} src={p.src} alt={`${item.name}候选图片`} loading="lazy"/>):(image?<img src={image} alt={`${item.name}候选图片`} loading="lazy"/>:<span aria-hidden="true">{item.name.slice(0,1)}</span>)}<b style={{background:accents[item.city]}}>{String(index+1).padStart(2,'0')}</b>{!showStack&&gallery.length>1&&<><button type="button" className="imgnav prev" onClick={prev} aria-label="上一张">‹</button><button type="button" className="imgnav next" onClick={next} aria-label="下一张">›</button><em>{imgIdx+1}/{gallery.length}</em></>}</div>}
 
 const operationalNotices:Record<string,{title:string;body:string}>={
  'PRU':{title:'营业状态异常',body:'Google Maps 在 2026-09-13 研究快照中显示“Temporarily closed”。不要按原计划直接前往；订位或出发前先向餐厅确认是否恢复营业。'},
