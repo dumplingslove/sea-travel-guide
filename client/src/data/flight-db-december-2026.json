@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-07T07:11:49+00:00",
+ "updated_at": "2026-10-07T07:34:05+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -18208,91 +18208,82 @@
      "business_price_basis": "1成人单价"
     },
     "2026-12-04": {
-     "economy_queried_at": "2026-09-29T23:01:49+00:00",
-     "economy_usd": 390,
+     "economy_queried_at": "2026-10-07T07:34:05+00:00",
+     "economy_usd": 126,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "1成人单价",
      "source": "google-flights",
      "nonstop_flights": [
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ332",
-       "dep": "10:50",
-       "arr": "13:45",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1149
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE856",
-       "dep": "14:15",
-       "arr": "17:35",
-       "duration": "2 hr 20 min",
-       "price_usd": 390,
-       "business_price_usd": 1993
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ334",
-       "dep": "15:35",
-       "arr": "18:35",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1149
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ336",
-       "dep": "17:30",
-       "arr": "20:25",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 2028
-      },
       {
        "airline": "Korean Air",
        "flight": "KE852",
        "dep": "18:55",
        "arr": "21:55",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1341
+       "duration": "2h",
+       "price_usd": 126,
+       "business_price_usd": 488
       },
       {
-       "airline": "Korean Air",
-       "flight": "KE864",
-       "dep": "01:30",
-       "arr": "04:20",
-       "duration": "1 hr 50 min",
-       "price_usd": 390,
-       "business_price_usd": 1993
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA709",
-       "dep": "19:00",
-       "arr": "21:55",
-       "duration": "1 hr 55 min",
-       "price_usd": 415,
-       "business_price_usd": 922
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA123",
-       "dep": "08:40",
-       "arr": "11:40",
-       "duration": "2 hr",
-       "price_usd": 448,
-       "business_price_usd": 1138
+       "airline": "Asiana Airlines",
+       "flight": "OZ332",
+       "dep": "10:50",
+       "arr": "13:45",
+       "duration": "1h 55m",
+       "price_usd": 130,
+       "business_price_usd": 380
       },
       {
        "airline": "Air China",
        "flight": "CA135",
        "dep": "12:10",
        "arr": "15:10",
-       "duration": "2 hr",
-       "price_usd": 448,
+       "duration": "2h",
+       "price_usd": 152,
+       "business_price_usd": 1138
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE864",
+       "dep": "01:30",
+       "arr": "04:20",
+       "duration": "1h 50m",
+       "price_usd": 126,
+       "business_price_usd": 725
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE856",
+       "dep": "14:15",
+       "arr": "17:35",
+       "duration": "2h 20m",
+       "price_usd": 126,
+       "business_price_usd": 725
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ334",
+       "dep": "15:35",
+       "arr": "18:35",
+       "duration": "2h",
+       "price_usd": 128,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ336",
+       "dep": "17:30",
+       "arr": "20:25",
+       "duration": "1h 55m",
+       "price_usd": 128,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA123",
+       "dep": "08:40",
+       "arr": "11:40",
+       "duration": "2h",
+       "price_usd": 152,
        "business_price_usd": 1138
       },
       {
@@ -18300,75 +18291,93 @@
        "flight": "CA125",
        "dep": "13:30",
        "arr": "16:35",
-       "duration": "2 hr 5 min",
-       "price_usd": 448,
+       "duration": "2h 5m",
+       "price_usd": 152,
        "business_price_usd": 1138
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA709",
+       "dep": "19:00",
+       "arr": "21:55",
+       "duration": "1h 55m",
+       "price_usd": 174,
+       "business_price_usd": 922
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T23:01:49+00:00",
-     "business_usd": 922,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-07T07:34:05+00:00",
+     "business_usd": 380,
+     "business_price_basis": "1成人单价"
     },
     "2026-12-05": {
-     "economy_queried_at": "2026-09-29T23:01:49+00:00",
-     "economy_usd": 390,
+     "economy_queried_at": "2026-10-07T07:34:05+00:00",
+     "economy_usd": 128,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "1成人单价",
      "source": "google-flights",
      "nonstop_flights": [
+      {
+       "airline": "Air China",
+       "flight": "CA709",
+       "dep": "19:00",
+       "arr": "21:55",
+       "duration": "1h 55m",
+       "price_usd": 128,
+       "business_price_usd": 922
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ334",
+       "dep": "15:35",
+       "arr": "18:35",
+       "duration": "2h",
+       "price_usd": 128,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ336",
+       "dep": "17:30",
+       "arr": "20:25",
+       "duration": "2h",
+       "price_usd": 128,
+       "business_price_usd": 380
+      },
       {
        "airline": "Korean Air",
        "flight": "KE852",
        "dep": "10:40",
        "arr": "13:45",
-       "duration": "2 hr 5 min",
-       "price_usd": 390,
-       "business_price_usd": 1341
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ334",
-       "dep": "15:35",
-       "arr": "18:35",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1362
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA709",
-       "dep": "19:00",
-       "arr": "21:55",
-       "duration": "1 hr 55 min",
-       "price_usd": 397,
-       "business_price_usd": 922
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ336",
-       "dep": "17:30",
-       "arr": "20:25",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1050
+       "duration": "2h 5m",
+       "price_usd": 132,
+       "business_price_usd": 488
       },
       {
        "airline": "Asiana Airlines",
        "flight": "OZ332",
        "dep": "10:50",
        "arr": "13:45",
-       "duration": "1 hr 55 min",
-       "price_usd": 431,
-       "business_price_usd": 1149
+       "duration": "1h 55m",
+       "price_usd": 144,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE864",
+       "dep": "01:30",
+       "arr": "04:20",
+       "duration": "1h 50m",
+       "price_usd": 139,
+       "business_price_usd": 725
       },
       {
        "airline": "Air China",
        "flight": "CA123",
        "dep": "08:40",
        "arr": "11:40",
-       "duration": "2 hr",
-       "price_usd": 450,
+       "duration": "2h",
+       "price_usd": 152,
        "business_price_usd": 1138
       },
       {
@@ -18376,30 +18385,21 @@
        "flight": "CA125",
        "dep": "13:30",
        "arr": "16:35",
-       "duration": "2 hr 5 min",
-       "price_usd": 450,
+       "duration": "2h 5m",
+       "price_usd": 152,
        "business_price_usd": 1138
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE864",
-       "dep": "01:30",
-       "arr": "04:20",
-       "duration": "1 hr 50 min",
-       "price_usd": 472,
-       "business_price_usd": 1993
       }
      ],
      "nonstop_count": 8,
-     "business_queried_at": "2026-09-29T23:01:49+00:00",
-     "business_usd": 922,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-07T07:34:05+00:00",
+     "business_usd": 380,
+     "business_price_basis": "1成人单价"
     },
     "2026-12-06": {
-     "economy_queried_at": "2026-09-29T23:01:49+00:00",
-     "economy_usd": 361,
+     "economy_queried_at": "2026-10-07T07:34:05+00:00",
+     "economy_usd": 127,
      "currency": "USD",
-     "economy_price_basis": "2大1小总价",
+     "economy_price_basis": "1成人单价",
      "source": "google-flights",
      "nonstop_flights": [
       {
@@ -18407,35 +18407,35 @@
        "flight": "OZ332",
        "dep": "10:50",
        "arr": "13:45",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1149
+       "duration": "1h 55m",
+       "price_usd": 128,
+       "business_price_usd": 380
       },
       {
        "airline": "Asiana Airlines",
        "flight": "OZ334",
        "dep": "15:35",
        "arr": "18:35",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1362
+       "duration": "2h",
+       "price_usd": 128,
+       "business_price_usd": 380
       },
       {
        "airline": "Asiana Airlines",
        "flight": "OZ336",
        "dep": "17:30",
        "arr": "20:25",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1050
+       "duration": "1h 55m",
+       "price_usd": 131,
+       "business_price_usd": 380
       },
       {
        "airline": "Air China",
        "flight": "CA135",
        "dep": "12:10",
        "arr": "15:10",
-       "duration": "2 hr",
-       "price_usd": 397,
+       "duration": "2h",
+       "price_usd": 133,
        "business_price_usd": 1138
       },
       {
@@ -18443,44 +18443,17 @@
        "flight": "CA709",
        "dep": "19:00",
        "arr": "21:55",
-       "duration": "1 hr 55 min",
-       "price_usd": 361,
+       "duration": "1h 55m",
+       "price_usd": 127,
        "business_price_usd": 922
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE864",
-       "dep": "01:30",
-       "arr": "04:20",
-       "duration": "1 hr 50 min",
-       "price_usd": 390,
-       "business_price_usd": 1993
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE856",
-       "dep": "14:15",
-       "arr": "17:35",
-       "duration": "2 hr 20 min",
-       "price_usd": 390,
-       "business_price_usd": 1558
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE852",
-       "dep": "18:55",
-       "arr": "21:55",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1341
       },
       {
        "airline": "Air China",
        "flight": "CA123",
        "dep": "08:40",
        "arr": "11:40",
-       "duration": "2 hr",
-       "price_usd": 397,
+       "duration": "2h",
+       "price_usd": 133,
        "business_price_usd": 1138
       },
       {
@@ -18488,57 +18461,8 @@
        "flight": "CA125",
        "dep": "13:25",
        "arr": "16:35",
-       "duration": "2 hr 10 min",
-       "price_usd": 397,
-       "business_price_usd": 1138
-      }
-     ],
-     "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T23:01:49+00:00",
-     "business_usd": 922,
-     "business_price_basis": "2大1小总价"
-    },
-    "2026-12-07": {
-     "economy_queried_at": "2026-09-29T23:01:49+00:00",
-     "economy_usd": 390,
-     "currency": "USD",
-     "economy_price_basis": "2大1小总价",
-     "source": "google-flights",
-     "nonstop_flights": [
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ332",
-       "dep": "10:50",
-       "arr": "13:45",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1149
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ334",
-       "dep": "15:35",
-       "arr": "18:35",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1149
-      },
-      {
-       "airline": "Asiana Airlines",
-       "flight": "OZ336",
-       "dep": "17:30",
-       "arr": "20:25",
-       "duration": "1 hr 55 min",
-       "price_usd": 390,
-       "business_price_usd": 1050
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA135",
-       "dep": "12:10",
-       "arr": "15:10",
-       "duration": "2 hr",
-       "price_usd": 414,
+       "duration": "2h 10m",
+       "price_usd": 133,
        "business_price_usd": 1138
       },
       {
@@ -18546,44 +18470,120 @@
        "flight": "KE864",
        "dep": "01:30",
        "arr": "04:20",
-       "duration": "1 hr 50 min",
-       "price_usd": 390,
-       "business_price_usd": 1993
+       "duration": "1h 50m",
+       "price_usd": 134,
+       "business_price_usd": 725
       },
       {
        "airline": "Korean Air",
        "flight": "KE856",
        "dep": "14:15",
        "arr": "17:35",
-       "duration": "2 hr 20 min",
-       "price_usd": 390,
-       "business_price_usd": 1558
+       "duration": "2h 20m",
+       "price_usd": 134,
+       "business_price_usd": 488
       },
       {
        "airline": "Korean Air",
        "flight": "KE852",
        "dep": "18:55",
        "arr": "21:55",
-       "duration": "2 hr",
-       "price_usd": 390,
-       "business_price_usd": 1341
+       "duration": "2h",
+       "price_usd": 134,
+       "business_price_usd": 488
+      }
+     ],
+     "nonstop_count": 10,
+     "business_queried_at": "2026-10-07T07:34:05+00:00",
+     "business_usd": 380,
+     "business_price_basis": "1成人单价"
+    },
+    "2026-12-07": {
+     "economy_queried_at": "2026-10-07T07:34:05+00:00",
+     "economy_usd": 127,
+     "currency": "USD",
+     "economy_price_basis": "1成人单价",
+     "source": "google-flights",
+     "nonstop_flights": [
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ332",
+       "dep": "10:50",
+       "arr": "13:45",
+       "duration": "1h 55m",
+       "price_usd": 130,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ334",
+       "dep": "15:35",
+       "arr": "18:35",
+       "duration": "2h",
+       "price_usd": 130,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Asiana Airlines",
+       "flight": "OZ336",
+       "dep": "17:30",
+       "arr": "20:25",
+       "duration": "1h 55m",
+       "price_usd": 130,
+       "business_price_usd": 380
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA135",
+       "dep": "12:10",
+       "arr": "15:10",
+       "duration": "2h",
+       "price_usd": 133,
+       "business_price_usd": 1138
       },
       {
        "airline": "Air China",
        "flight": "CA709",
        "dep": "19:00",
        "arr": "21:55",
-       "duration": "1 hr 55 min",
-       "price_usd": 397,
+       "duration": "1h 55m",
+       "price_usd": 127,
        "business_price_usd": 922
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE864",
+       "dep": "01:30",
+       "arr": "04:20",
+       "duration": "1h 50m",
+       "price_usd": 128,
+       "business_price_usd": 725
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE856",
+       "dep": "14:15",
+       "arr": "17:35",
+       "duration": "2h 20m",
+       "price_usd": 128,
+       "business_price_usd": 646
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE852",
+       "dep": "18:55",
+       "arr": "21:55",
+       "duration": "2h",
+       "price_usd": 128,
+       "business_price_usd": 488
       },
       {
        "airline": "Air China",
        "flight": "CA123",
        "dep": "08:40",
        "arr": "11:40",
-       "duration": "2 hr",
-       "price_usd": 414,
+       "duration": "2h",
+       "price_usd": 133,
        "business_price_usd": 1502
       },
       {
@@ -18591,15 +18591,15 @@
        "flight": "CA125",
        "dep": "13:30",
        "arr": "16:35",
-       "duration": "2 hr 5 min",
-       "price_usd": 414,
+       "duration": "2h 5m",
+       "price_usd": 133,
        "business_price_usd": 1138
       }
      ],
      "nonstop_count": 10,
-     "business_queried_at": "2026-09-29T23:01:49+00:00",
-     "business_usd": 922,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-07T07:34:05+00:00",
+     "business_usd": 380,
+     "business_price_basis": "1成人单价"
     }
    }
   },
