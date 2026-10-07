@@ -276,22 +276,19 @@ function useFoldableStack(){
 function ItemMedia({item,kind,index}:{item:Item;kind:'酒店'|'餐厅'|'景点';index:number}){
  const gallery=getPlaceGallery(kind,item);
  const [imgIdx,setImgIdx]=useState(0);
- const [winStart,setWinStart]=useState(0);
  const touchX=useRef<number|null>(null);
  const n=gallery.length;
  const image=gallery[imgIdx]?.src||gallery[0]?.src;
  const stacked=useFoldableStack();
  const showStack=stacked&&n>1;
  const mod=(a:number,m:number)=>((a%m)+m)%m;
- const prev=(e:React.MouseEvent)=>{e.stopPropagation();if(showStack)setWinStart(s=>mod(s-3,n));else setImgIdx(i=>mod(i-1,n));};
- const next=(e:React.MouseEvent)=>{e.stopPropagation();if(showStack)setWinStart(s=>mod(s+3,n));else setImgIdx(i=>mod(i+1,n));};
- const go=(d:number)=>{if(showStack)setWinStart(s=>mod(s+d*3,n));else setImgIdx(i=>mod(i+d,n));};
- const win=gallery.slice(winStart,winStart+3);
- const winLabel=`${winStart+1}-${Math.min(winStart+3,n)}/${n}`;
+ const prev=(e:React.MouseEvent)=>{e.stopPropagation();setImgIdx(i=>mod(i-1,n));};
+ const next=(e:React.MouseEvent)=>{e.stopPropagation();setImgIdx(i=>mod(i+1,n));};
+ const go=(d:number)=>{if(!showStack)setImgIdx(i=>mod(i+d,n));};
  return <div className={`itemmedia ${image?'has-photo':'no-photo'}${showStack?' stack':''}`}
   onTouchStart={e=>{touchX.current=e.touches[0]?.clientX??null}}
   onTouchEnd={e=>{const x=touchX.current;touchX.current=null;if(x==null)return;const dx=(e.changedTouches[0]?.clientX??x)-x;if(Math.abs(dx)>40){e.stopPropagation();go(dx<0?1:-1)}}}
- >{showStack?win.map(p=><img key={`${winStart}-${p.src}`} src={p.src} alt={`${item.name}候选图片`} loading="lazy"/>):(image?<img src={image} alt={`${item.name}候选图片`} loading="lazy"/>:<span aria-hidden="true">{item.name.slice(0,1)}</span>)}<b style={{background:accents[item.city]}}>{String(index+1).padStart(2,'0')}</b>{n>1&&<><button type="button" className="imgnav prev" onClick={prev} aria-label="上一组照片">‹</button><button type="button" className="imgnav next" onClick={next} aria-label="下一组照片">›</button><em>{showStack?winLabel:`${imgIdx+1}/${n}`}</em></>}</div>}
+ >{showStack?<div className="stackrail">{gallery.map(p=><img key={p.src} src={p.src} alt={`${item.name}候选图片`} loading="lazy"/>)}</div>:(image?<img src={image} alt={`${item.name}候选图片`} loading="lazy"/>:<span aria-hidden="true">{item.name.slice(0,1)}</span>)}<b style={{background:accents[item.city]}}>{String(index+1).padStart(2,'0')}</b>{n>1&&!showStack&&<><button type="button" className="imgnav prev" onClick={prev} aria-label="上一张">‹</button><button type="button" className="imgnav next" onClick={next} aria-label="下一张">›</button><em>{imgIdx+1}/{n}</em></>}{n>1&&showStack&&<em>共{n}张·上滑</em>}</div>}
 
 const operationalNotices:Record<string,{title:string;body:string}>={
  'PRU':{title:'营业状态异常',body:'Google Maps 在 2026-09-13 研究快照中显示“Temporarily closed”。不要按原计划直接前往；订位或出发前先向餐厅确认是否恢复营业。'},
