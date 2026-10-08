@@ -1,8 +1,8 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-08T04:53Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-08T10:48Z）
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 31,
+   "complete": 32,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -5950,7 +5950,7 @@ export const initialResearchStatus = {
    "total": 22
   },
   "singapore": {
-   "complete": 24,
+   "complete": 25,
    "items": [
     {
      "name": "Raffles Singapore 莱佛士",
@@ -8107,7 +8107,7 @@ export const initialResearchStatus = {
    "total": 25,
    "all_done": 21
   },
-  "all_done": 128,
+  "all_done": 130,
   "xhs_done": 142
  },
  "targets": {
@@ -8119,5 +8119,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 223,
- "updated_at": "2026-10-08T04:53Z"
+ "updated_at": "2026-10-08T10:48Z"
 };
