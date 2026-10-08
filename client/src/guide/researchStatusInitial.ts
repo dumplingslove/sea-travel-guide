@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-07T22:49Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-08T04:53Z）
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -1107,10 +1107,45 @@ export const initialResearchStatus = {
       }
      },
      "type": "酒店"
+    },
+    {
+     "name": "Park Hyatt Bangkok 曼谷柏悦酒店",
+     "note": "【酒店】凯悦顶奢柏悦品牌，Central Embassy 上盖、88 Wireless Road（2026-10-07 新增；2026-10-08 全套研究完成：小红书3篇/OTA/TripAdvisor/奖项/照片15张/价格实查均已上站）",
+     "type": "酒店",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-07 实查：4.6/5（约2,279条；Location 4.8/Rooms 4.7/Value 4.3/Cleanliness 4.8/Service 4.7/Sleep 4.7）；2篇点评证据（正面+负面）。证据：hidden_files/hyatt-full-research/park-hyatt-bangkok.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-08 补搜done：Google Maps native业务页实抓 4.6/5（2,834条；5★2,205/4★406/3★103/2★30/1★90），2条完整客评（Elan Adler 4/5 '7 months ago'/sasasa nisa 5/5 '3 months ago'，作者/星级/时间/原话）。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-2026-10-08.md"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-08 补搜done：携程主站done（4.5/很好、438条点评，2条带日期原话：M460795**** 2026-10-01/发发坐 2026-08-11）+马蜂窝done（41蜂评/18条可见，2条带日期原话：87****17 2019-01-14/代代 2018-02-23）+前轮Trip.com（9.1/10、438条、4篇中文点评证据）=中文站覆盖充分；大众点评两轮均反爬（本轮空白页，未登录未绕过），记未能抓取（反爬）。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/bangkok-2026-10-08.md"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-10-08 新窗口只读深读3篇达标专帖（0推荐/1中立/2避雷）：Maverick《曼谷柏悦酒店测评》(2026-06-20，中立7.4/10，36评论）、迷你绿书《曼谷柏悦｜全球最垃柏悦之一》(2026-06-11，避雷，126评论）、傲娇魔羯超龄少女《曼谷柏悦卫生堪忧》(2025-10-19，避雷，33评论）。结论：谨慎选择（避雷向）。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md"
+      },
+      "photos": {
+       "status": "done",
+       "target": 15,
+       "verified": 15,
+       "note": "2026-10-08 15张全目验通过（外观3/客房3/大堂3/泳池3/餐厅3），压至≤1600px/q82，已接线 placeGalleries.ts g1732–g1746"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：谨慎选择（避雷向）"
+      }
+     }
     }
    ],
    "name": "曼谷",
-   "total": 32
+   "total": 33
   },
   "chiangmai": {
    "complete": 17,
@@ -1505,8 +1540,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10；2026-10-02 第77轮：新增小喵饱了吗《清迈米其林避雷榜首必须是这家》(321赞/66评，负向避雷，06-22，https://www.xiaohongshu.com/explore/6a377f960000000008024c24)，专帖互动新纪录。8篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round77-kl-chiangmai-2026-10-02.md\nBATCH5-2026-10-05: 新增朵朵花开《清迈网红店红榜》135赞/254藏/5评(合集，仅提及GFK，非专帖不计入)；小兒子日常/乱山隈2篇专帖因空白页未能深读，已记录为后续候选。完整证据专帖仍1篇(小喵321赞)，维持partial。证据 hidden_files/xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md",
-       "posts": 8,
+       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10；2026-10-02 第77轮：新增小喵饱了吗《清迈米其林避雷榜首必须是这家》(321赞/66评，负向避雷，06-22，https://www.xiaohongshu.com/explore/6a377f960000000008024c24)，专帖互动新纪录。8篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round77-kl-chiangmai-2026-10-02.md\nBATCH5-2026-10-05: 新增朵朵花开《清迈网红店红榜》135赞/254藏/5评(合集，仅提及GFK，非专帖不计入)；小兒子日常/乱山隈2篇专帖因空白页未能深读，已记录为后续候选。完整证据专帖仍1篇(小喵321赞)，维持partial。证据 hidden_files/xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md ｜ 2026-10-08 第92轮（用户批准新窗口只读）：新增Deep Blue 🐳《吃遍清迈米其林｜Ginger Farm kitchen全攻略》(2025-12-27，92赞/68收藏/18评论，推荐)，posts 8→9仍partial；乱山隈/小兒子日常2篇复核为真实专帖但评论不足（1条/0条），记候选不计入；Tonny避雷帖0评论排除。另发现多篇GFK避雷帖，口碑分化如实记录。证据：xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md 第92轮节",
+       "posts": 9,
        "status": "partial",
        "target": 10
       }
@@ -4610,7 +4645,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 老窗口单次pass：关键词「普吉Raya餐厅」翻2–3页，Raya专帖互动极低——最高桑德拉在旅途《来普吉不吃Raya=白来》22赞、DD日记14赞、澤光12赞、叫我珍妮花11赞、Warmme在家10赞；momo《皇帝岛上的餐厅之Raya father》47赞经深读确认为皇帝岛（Racha Island）另一家Raya，非普吉Raya餐厅。高流量帖（乌鸦先生在普吉1191赞TOP10、话唠虎妹676赞doodee、Rock330赞合集）均非Raya专帖。专帖候选池枯竭→阶段二，不死磕。\nBATCH5-2026-10-05: 首篇专帖！桑德拉在旅途《来普吉不吃Raya=白来》2025-08-24 23赞/25藏/0评(强推荐，130年中葡老宅，黄咖喱蟹肉封神)。1/3，仍差2篇；机位图(复古老宅)下载失败，已登记图未到。维持partial。证据 hidden_files/xhs-evidence/phuket/raya-2026-10-05.md",
+       "note": "2026-09-28 老窗口单次pass：关键词「普吉Raya餐厅」翻2–3页，Raya专帖互动极低——最高桑德拉在旅途《来普吉不吃Raya=白来》22赞、DD日记14赞、澤光12赞、叫我珍妮花11赞、Warmme在家10赞；momo《皇帝岛上的餐厅之Raya father》47赞经深读确认为皇帝岛（Racha Island）另一家Raya，非普吉Raya餐厅。高流量帖（乌鸦先生在普吉1191赞TOP10、话唠虎妹676赞doodee、Rock330赞合集）均非Raya专帖。专帖候选池枯竭→阶段二，不死磕。\nBATCH5-2026-10-05: 首篇专帖！桑德拉在旅途《来普吉不吃Raya=白来》2025-08-24 23赞/25藏/0评(强推荐，130年中葡老宅，黄咖喱蟹肉封神)。1/3，仍差2篇；机位图(复古老宅)下载失败，已登记图未到。维持partial。证据 hidden_files/xhs-evidence/phuket/raya-2026-10-05.md ｜ 2026-10-08 第92轮（用户批准新窗口只读）：关键词\"Raya 普吉老镇\"翻3页，深读5篇全排除（720赞无法确认店名；10赞/23赞/1赞评论不足；108赞\"百年宅邸\"专帖仅6条短评论未达标，记候选）。0新增，维持partial 1/3。复古老宅\"黄墙绿窗\"外观图在9图轮播中未提取到直链，继续登记图未到。证据：xhs-evidence/phuket/raya-2026-10-05.md 第92轮节",
        "posts": 1,
        "status": "partial",
        "target": 10
@@ -4746,7 +4781,7 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 第47轮老窗口：仅song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正文达标但评论多为夸人像无实质讨论，未达标)；曼谷Acqua误混入、Cha Kang Raw误混入，候选池枯竭。1篇，还差2篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-acqua-PARTIAL-2026-09-28.md；2026-10-02 第75轮：song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正向，2024-10-08，https://www.xiaohongshu.com/explore/6704c3ed000000001b0224af)按同类最高互动口径计入达标（评论多为夸人像，已备注）；第3篇未找到（4组关键词+5候选全排除，专帖池枯竭，不死磕）。2篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round75-phuket-2026-10-02.md\nBATCH5-2026-10-05: 换关键词\"普吉Acqua意大利餐厅\"翻3页，0新增；仅song宋46赞旧帖；Phi Phi店/曼谷店/Acqua e Farina已排除。候选池仍枯竭，维持partial(2/3)，不死磕。",
+       "note": "2026-09-28 第47轮老窗口：仅song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正文达标但评论多为夸人像无实质讨论，未达标)；曼谷Acqua误混入、Cha Kang Raw误混入，候选池枯竭。1篇，还差2篇。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round47-phuket-acqua-PARTIAL-2026-09-28.md；2026-10-02 第75轮：song宋《打卡普吉岛米其林acqua餐厅🥗》(46赞，正向，2024-10-08，https://www.xiaohongshu.com/explore/6704c3ed000000001b0224af)按同类最高互动口径计入达标（评论多为夸人像，已备注）；第3篇未找到（4组关键词+5候选全排除，专帖池枯竭，不死磕）。2篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round75-phuket-2026-10-02.md\nBATCH5-2026-10-05: 换关键词\"普吉Acqua意大利餐厅\"翻3页，0新增；仅song宋46赞旧帖；Phi Phi店/曼谷店/Acqua e Farina已排除。候选池仍枯竭，维持partial(2/3)，不死磕。 ｜ 2026-10-08 第92轮（用户批准新窗口只读）：\"Acqua Phuket Kalim\"结果全是Kalima酒店弃用；改搜\"普吉 Acqua 米其林\"翻2页，深读3篇全排除（song宋46赞旧帖已计入不重复；231赞/73赞两篇正文均为The Charm Dining Gallery）。0新增，维持partial 2/3，候选池枯竭不死磕。证据：xhs-coverage-phuket.md 第92轮节",
        "posts": 2,
        "status": "partial",
        "target": 10
@@ -5096,10 +5131,45 @@ export const initialResearchStatus = {
       }
      },
      "type": "景点"
+    },
+    {
+     "name": "Hyatt Regency Phuket Resort 普吉凯悦度假酒店",
+     "note": "【酒店】凯悦旗下度假酒店，Kamala 山坡俯瞰卡马拉海滩；普吉唯一在营凯悦系（2026-10-07 新增；2026-10-08 全套研究完成：小红书3篇/OTA/TripAdvisor/奖项/照片15张/价格实查均已上站）",
+     "type": "酒店",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-07 实查：4.6/5（约1,658条）；4篇点评证据（Guxiangping 2026-08-19、Maggie21li 2026-08-31、Patrick999 2026-09-02、SarahChen19 2026-08-19）。证据：hidden_files/hyatt-full-research/hyatt-regency-phuket.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-08 补搜done：Google Maps native业务页实抓 4.4/5（2,907条；5★2,016/4★492/3★167/2★74/1★158），2条完整客评（Shubhi 5/5 '3 months ago'/nada almaskary 5/5 '2 months ago'，作者/星级/时间/原话）。地址页面核验 16, 12 Kamala Beach, Kamala, Amphoe Kathu, Phuket 83150。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-2026-10-08.md"
+      },
+      "chinese_sites": {
+       "status": "partial",
+       "note": "2026-10-08 补搜partial：马蜂窝done（普吉岛凯悦酒店 7.7分/96评论，2条客评引用：木一木 2019-08-12/云鹤 2019-01-28）；携程/大众点评强制登录未能抓取（记未能抓取（需登录/反爬），未登录未绕过）；Trip.com 8.9/10（331条）沿用前轮。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/ota-reviews/phuket-2026-10-08.md"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-10-08 新窗口只读深读3篇达标专帖（3推荐/0中立/0避雷）：泰国小哥讲中文《普吉凯悦，不被xhs网友看好的凯悦》(2026-06-16，30评论）、Sionie《泰国特辑｜凯悦人少到根本不像在普吉》(2026-05-05，37评论）、肉沫茄子《普吉岛凯悦 入住有感》(2025-11-27，21评论）。结论：推荐。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md"
+      },
+      "photos": {
+       "status": "done",
+       "target": 15,
+       "verified": 15,
+       "note": "2026-10-08 15张全目验通过（外观3/客房3/大堂3/泳池3/餐厅3），压至≤1600px/q82，已接线 placeGalleries.ts g1717–g1731"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：推荐"
+      }
+     }
     }
    ],
    "name": "普吉",
-   "total": 24
+   "total": 25
   },
   "phuquoc": {
    "complete": 0,
@@ -6851,14 +6921,49 @@ export const initialResearchStatus = {
       }
      },
      "type": "景点"
+    },
+    {
+     "name": "Andaz Singapore 新加坡安达仕酒店",
+     "note": "【酒店】凯悦奢华生活方式品牌，5 Fraser Street，2017年开业（2026-10-07 新增；2026-10-08 全套研究完成：小红书3篇/OTA/TripAdvisor/奖项/照片15张/价格实查均已上站）",
+     "type": "酒店",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-07 实查：4.5/5（约4,142条，新加坡第115/382家），Travellers’ Choice 2026（前10%）；2篇英文点评证据（Miles 2026-05、Koko P 2026-02-13）。证据：hidden_files/hyatt-full-research/andaz-singapore.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-08 GM native页实读（singapore-2026-10-08.md §一）：4.5/5、3,580条（5★2444/4★763/3★181/2★69/1★123），2条完整客评（Natalia Stansall 5/5 \"a month ago\"、Vee Le 5/5 \"4 months ago\"）+规范链接"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-08（singapore-2026-10-08.md §二）：携程4.6/很好/781条2带日期原话（2026-08-19匿名用户/NicoleChan511）+马蜂窝86点评2带日期原话（2019-01-11瞬间畅想/2018-02-17zddxxhaha）+前轮Trip.com 9.3/10 769条；大众点评强制登录如实注记未能抓取。证据同上md"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-10-08 新窗口只读深读3篇达标专帖（0推荐/1中立/2避雷）：Lee先生888《环球客请避雷新加坡安达仕酒店》(2026-01-14，避雷，168评论）、芋圆有点圆《新加坡安达仕酒店大避雷》(2026-07-18，避雷，50评论）、有聊的光仔《新加坡安达仕|全世界安达仕都长一个样》(2025-05-18，中立，26评论）。结论：谨慎选择（避雷向）。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md"
+      },
+      "photos": {
+       "status": "done",
+       "target": 15,
+       "verified": 15,
+       "note": "2026-10-08 15张全目验通过（外观3/客房3/大堂3/泳池3/餐厅3），压至≤1600px/q82，已接线 placeGalleries.ts g1702–g1716"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-08 data.ts detail 已更新全套研究结论（小红书倾向/OTA评分/奖项/早餐政策/短板），结论定调：谨慎选择（避雷向）"
+      }
+     }
     }
    ],
    "name": "新加坡",
-   "total": 28
+   "total": 29
   },
   "seoul": {
    "name": "首尔",
-   "total": 24,
+   "total": 25,
    "complete": 21,
    "items": [
     {
@@ -7817,27 +7922,62 @@ export const initialResearchStatus = {
       }
      },
      "type": "酒店"
+    },
+    {
+     "name": "首尔柏悦酒店 Park Hyatt Seoul",
+     "note": "【酒店】凯悦顶奢柏悦品牌，606 Teheran-ro, Gangnam-gu，COEX 旁，185间客房（2026-10-07 新增；2026-10-08 全套研究完成：小红书3篇/OTA/TripAdvisor/奖项/照片15张/价格实查均已上站）",
+     "type": "酒店",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-07 实查：4.4/5（约2,386条；首尔第92/567家）；2篇英文点评证据（Sunkyu K 2025-10-02、dkreil 2025-09-15）+1篇混合评价。证据：hidden_files/hyatt-full-research/park-hyatt-seoul.md"
+      },
+      "google_maps": {
+       "status": "partial",
+       "note": "2026-10-07 Google Maps 原生页未直接打开；第三方聚合（top-rated.online）4.4/约1,900条，记为聚合数据。证据：hidden_files/hyatt-full-research/park-hyatt-seoul.md"
+      },
+      "chinese_sites": {
+       "status": "partial",
+       "note": "2026-10-07 Trip.com 香港站 8.2/10（284条）done，2篇中文点评证据；携程国内主站/大众点评/马蜂窝未能抓取。证据：hidden_files/hyatt-full-research/park-hyatt-seoul.md"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-10-08 新窗口只读深读3篇达标专帖（0推荐/2中立/1避雷）：七彩包《首尔柏悦套房一镜到底》(2026-07-19，中立，15评论）、小姑娘巧巧乐滋《到底谁在夸首尔Park Hyatt啊？？》(2026-09-28，避雷，24评论）、whhh爱住酒店《在5k+一晚的首尔柏悦醒来》(2025-11-07，中立8分，37评论）。结论：谨慎选择。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md"
+      },
+      "photos": {
+       "status": "done",
+       "target": 15,
+       "verified": 15,
+       "note": "2026-10-08 15张全目验通过（外观3/客房3/大堂3/泳池3/餐厅3），压至≤1600px/q82，已接线 placeGalleries.ts g1747–g1761"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：谨慎选择"
+      }
+     }
     }
    ]
   }
  },
- "complete_items": 128,
+ "complete_items": 130,
  "summary": {
   "bangkok": {
-   "tripadvisor": 32,
-   "ta": 32,
-   "google_maps": 32,
-   "gm": 32,
-   "chinese_sites": 31,
-   "cs": 31,
-   "xiaohongshu": 32,
-   "xhs_done": 32,
-   "photos": 32,
-   "ph": 32,
-   "details": 32,
-   "de": 32,
-   "total": 32,
-   "all_done": 31
+   "tripadvisor": 33,
+   "ta": 33,
+   "google_maps": 33,
+   "gm": 33,
+   "chinese_sites": 32,
+   "cs": 32,
+   "xiaohongshu": 33,
+   "xhs_done": 33,
+   "photos": 33,
+   "ph": 33,
+   "details": 33,
+   "de": 33,
+   "total": 33,
+   "all_done": 32
   },
   "chiangmai": {
    "tripadvisor": 19,
@@ -7904,19 +8044,19 @@ export const initialResearchStatus = {
    "all_done": 0
   },
   "phuket": {
-   "tripadvisor": 24,
-   "ta": 24,
-   "google_maps": 23,
-   "gm": 23,
+   "tripadvisor": 25,
+   "ta": 25,
+   "google_maps": 24,
+   "gm": 24,
    "chinese_sites": 24,
    "cs": 24,
-   "xiaohongshu": 22,
-   "xhs_done": 22,
-   "photos": 24,
-   "ph": 24,
-   "details": 24,
-   "de": 24,
-   "total": 24,
+   "xiaohongshu": 23,
+   "xhs_done": 23,
+   "photos": 25,
+   "ph": 25,
+   "details": 25,
+   "de": 25,
+   "total": 25,
    "all_done": 21
   },
   "phuquoc": {
@@ -7936,39 +8076,39 @@ export const initialResearchStatus = {
    "all_done": 0
   },
   "singapore": {
-   "tripadvisor": 28,
-   "ta": 28,
-   "google_maps": 27,
-   "gm": 27,
-   "chinese_sites": 26,
-   "cs": 26,
-   "xiaohongshu": 27,
-   "xhs_done": 27,
-   "photos": 28,
-   "ph": 28,
-   "details": 28,
-   "de": 28,
-   "total": 28,
-   "all_done": 24
+   "tripadvisor": 29,
+   "ta": 29,
+   "google_maps": 28,
+   "gm": 28,
+   "chinese_sites": 27,
+   "cs": 27,
+   "xiaohongshu": 28,
+   "xhs_done": 28,
+   "photos": 29,
+   "ph": 29,
+   "details": 29,
+   "de": 29,
+   "total": 29,
+   "all_done": 25
   },
   "seoul": {
-   "tripadvisor": 22,
-   "ta": 22,
+   "tripadvisor": 23,
+   "ta": 23,
    "google_maps": 23,
    "gm": 23,
    "chinese_sites": 23,
    "cs": 23,
-   "xiaohongshu": 24,
-   "xhs_done": 24,
-   "photos": 24,
-   "ph": 24,
-   "details": 24,
-   "de": 24,
-   "total": 24,
+   "xiaohongshu": 25,
+   "xhs_done": 25,
+   "photos": 25,
+   "ph": 25,
+   "details": 25,
+   "de": 25,
+   "total": 25,
    "all_done": 21
   },
   "all_done": 128,
-  "xhs_done": 138
+  "xhs_done": 142
  },
  "targets": {
   "chinese_sites": "done",
@@ -7978,6 +8118,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 219,
- "updated_at": "2026-10-07T22:49Z"
+ "total_locations": 223,
+ "updated_at": "2026-10-08T04:53Z"
 };
