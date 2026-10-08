@@ -562,6 +562,38 @@ export const hotelLivePrices: Record<string, LiveHotelPrice> = {
   baselineUSD: 504, baselineCheckedAt: '2026-10-04T18:39:25Z',
   baselineUrl: 'https://www.google.com/travel/hotels?q=RYSE%20Autograph%20Collection%20Seoul',
  },
+  'Andaz Singapore 新加坡安达仕酒店': {
+  checkIn: '2026-12-06', checkOut: '2026-12-10', nights: 4,
+  base: { room: 'King Room', perNightUSD: 234, totalUSD: 1121.68, totalInclTax: true, cancel: '不可退', breakfast: '不含（+$42.22/人可选）', note: '在线预付；总价为页面明示含税总价' },
+  suite: { room: 'Andaz King Suite', perNightUSD: 640, totalUSD: 3070.68, totalInclTax: true, cancel: '12/04 23:59前免费取消', breakfast: '含1份早餐', note: '总价为页面明示含税总价' },
+  source: 'Trip.com 实查', checkedAt: '2026-10-08T03:22:00Z',
+  baselineUSD: 239, baselineCheckedAt: '2026-10-08T03:22:00Z',
+  baselineUrl: 'https://www.google.com/travel/search?q=andaz%20singapore%20by%20hyatt',
+ },
+  'Hyatt Regency Phuket Resort 普吉凯悦度假酒店': {
+  checkIn: '2026-12-10', checkOut: '2026-12-13', nights: 3,
+  base: { room: '2 Twin Beds', perNightUSD: 276, totalUSD: 981.24, totalInclTax: true, cancel: '12/05 12:00前免费取消', breakfast: '不含（+$22.76/人可选）', note: '仅剩4间；总价为页面明示含税总价' },
+  suite: { room: 'Two Bedroom Regency Suite', perNightUSD: 714, totalUSD: 2542.56, totalInclTax: true, cancel: '12/07 23:59前免费取消', breakfast: '不含', note: '到店付；仅剩1间；总价为页面明示含税总价' },
+  source: 'Trip.com 实查', checkedAt: '2026-10-08T03:22:00Z',
+  baselineUSD: 276, baselineCheckedAt: '2026-10-08T03:22:00Z',
+  baselineUrl: 'https://www.google.com/travel/search?q=hyatt%20regency%20phuket%20resort',
+ },
+  'Park Hyatt Bangkok 曼谷柏悦酒店': {
+  checkIn: '2026-12-15', checkOut: '2026-12-18', nights: 3,
+  base: { room: 'King Room', perNightUSD: 321, totalUSD: 1131.96, totalInclTax: true, cancel: '不可退', breakfast: '含2份早餐', note: '仅剩3间；总价为页面明示含税总价' },
+  suite: { room: 'Park Deluxe Suite', perNightUSD: 689, totalUSD: 2431.86, totalInclTax: true, cancel: '12/09 16:00前免费取消', breakfast: '含2份早餐', note: '总价为页面明示含税总价' },
+  source: 'Trip.com 实查', checkedAt: '2026-10-08T03:22:00Z',
+  baselineUSD: 327, baselineCheckedAt: '2026-10-08T03:22:00Z',
+  baselineUrl: 'https://www.google.com/travel/search?q=park%20hyatt%20bangkok',
+ },
+  '首尔柏悦酒店 Park Hyatt Seoul': {
+  checkIn: '2026-12-31', checkOut: '2027-01-01', nights: 1,
+  base: { room: '1 King Bed', perNightUSD: 692, totalUSD: 761.58, totalInclTax: true, cancel: '不可退', breakfast: '不含（+$48.59/人可选）', note: '仅剩4间；总价为页面明示含税总价' },
+  suite: { room: 'Park Corner Suite', perNightUSD: 1036, totalUSD: 1139.13, totalInclTax: true, cancel: '12/28 23:59前免费取消', breakfast: '不含', note: '仅剩4间；总价为页面明示含税总价' },
+  source: 'Trip.com 实查', checkedAt: '2026-10-08T03:22:00Z',
+  baselineUSD: 707, baselineCheckedAt: '2026-10-08T03:22:00Z',
+  baselineUrl: 'https://www.google.com/travel/search?q=park%20hyatt%20seoul',
+ },
 };
 
 export function getLiveHotelPrice(name: string): LiveHotelPrice | undefined {

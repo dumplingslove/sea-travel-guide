@@ -1636,10 +1636,74 @@ import g1698 from "./assets/galleries/mandarin-oriental-singapore-15x/7.jpg";
 import g1699 from "./assets/galleries/mandarin-oriental-singapore-15x/8.jpg";
 import g1700 from "./assets/galleries/mandarin-oriental-singapore-15x/9.jpg";
 import g1701 from "./assets/galleries/mandarin-oriental-singapore-15x/10.jpg";
+import g1702 from "./assets/galleries/andaz-singapore-15x/1.jpg";
+import g1703 from "./assets/galleries/andaz-singapore-15x/2.jpg";
+import g1704 from "./assets/galleries/andaz-singapore-15x/3.jpg";
+import g1705 from "./assets/galleries/andaz-singapore-15x/4.jpg";
+import g1706 from "./assets/galleries/andaz-singapore-15x/5.jpg";
+import g1707 from "./assets/galleries/andaz-singapore-15x/6.jpg";
+import g1708 from "./assets/galleries/andaz-singapore-15x/7.jpg";
+import g1709 from "./assets/galleries/andaz-singapore-15x/8.jpg";
+import g1710 from "./assets/galleries/andaz-singapore-15x/9.jpg";
+import g1711 from "./assets/galleries/andaz-singapore-15x/10.jpg";
+import g1712 from "./assets/galleries/andaz-singapore-15x/11.jpg";
+import g1713 from "./assets/galleries/andaz-singapore-15x/12.jpg";
+import g1714 from "./assets/galleries/andaz-singapore-15x/13.jpg";
+import g1715 from "./assets/galleries/andaz-singapore-15x/14.jpg";
+import g1716 from "./assets/galleries/andaz-singapore-15x/15.jpg";
+import g1717 from "./assets/galleries/hyatt-regency-phuket-15x/1.jpg";
+import g1718 from "./assets/galleries/hyatt-regency-phuket-15x/2.jpg";
+import g1719 from "./assets/galleries/hyatt-regency-phuket-15x/3.jpg";
+import g1720 from "./assets/galleries/hyatt-regency-phuket-15x/4.jpg";
+import g1721 from "./assets/galleries/hyatt-regency-phuket-15x/5.jpg";
+import g1722 from "./assets/galleries/hyatt-regency-phuket-15x/6.jpg";
+import g1723 from "./assets/galleries/hyatt-regency-phuket-15x/7.jpg";
+import g1724 from "./assets/galleries/hyatt-regency-phuket-15x/8.jpg";
+import g1725 from "./assets/galleries/hyatt-regency-phuket-15x/9.jpg";
+import g1726 from "./assets/galleries/hyatt-regency-phuket-15x/10.jpg";
+import g1727 from "./assets/galleries/hyatt-regency-phuket-15x/11.jpg";
+import g1728 from "./assets/galleries/hyatt-regency-phuket-15x/12.jpg";
+import g1729 from "./assets/galleries/hyatt-regency-phuket-15x/13.jpg";
+import g1730 from "./assets/galleries/hyatt-regency-phuket-15x/14.jpg";
+import g1731 from "./assets/galleries/hyatt-regency-phuket-15x/15.jpg";
+import g1732 from "./assets/galleries/park-hyatt-bangkok-15x/1.jpg";
+import g1733 from "./assets/galleries/park-hyatt-bangkok-15x/2.jpg";
+import g1734 from "./assets/galleries/park-hyatt-bangkok-15x/3.jpg";
+import g1735 from "./assets/galleries/park-hyatt-bangkok-15x/4.jpg";
+import g1736 from "./assets/galleries/park-hyatt-bangkok-15x/5.jpg";
+import g1737 from "./assets/galleries/park-hyatt-bangkok-15x/6.jpg";
+import g1738 from "./assets/galleries/park-hyatt-bangkok-15x/7.jpg";
+import g1739 from "./assets/galleries/park-hyatt-bangkok-15x/8.jpg";
+import g1740 from "./assets/galleries/park-hyatt-bangkok-15x/9.jpg";
+import g1741 from "./assets/galleries/park-hyatt-bangkok-15x/10.jpg";
+import g1742 from "./assets/galleries/park-hyatt-bangkok-15x/11.jpg";
+import g1743 from "./assets/galleries/park-hyatt-bangkok-15x/12.jpg";
+import g1744 from "./assets/galleries/park-hyatt-bangkok-15x/13.jpg";
+import g1745 from "./assets/galleries/park-hyatt-bangkok-15x/14.jpg";
+import g1746 from "./assets/galleries/park-hyatt-bangkok-15x/15.jpg";
+import g1747 from "./assets/galleries/park-hyatt-seoul-15x/1.jpg";
+import g1748 from "./assets/galleries/park-hyatt-seoul-15x/2.jpg";
+import g1749 from "./assets/galleries/park-hyatt-seoul-15x/3.jpg";
+import g1750 from "./assets/galleries/park-hyatt-seoul-15x/4.jpg";
+import g1751 from "./assets/galleries/park-hyatt-seoul-15x/5.jpg";
+import g1752 from "./assets/galleries/park-hyatt-seoul-15x/6.jpg";
+import g1753 from "./assets/galleries/park-hyatt-seoul-15x/7.jpg";
+import g1754 from "./assets/galleries/park-hyatt-seoul-15x/8.jpg";
+import g1755 from "./assets/galleries/park-hyatt-seoul-15x/9.jpg";
+import g1756 from "./assets/galleries/park-hyatt-seoul-15x/10.jpg";
+import g1757 from "./assets/galleries/park-hyatt-seoul-15x/11.jpg";
+import g1758 from "./assets/galleries/park-hyatt-seoul-15x/12.jpg";
+import g1759 from "./assets/galleries/park-hyatt-seoul-15x/13.jpg";
+import g1760 from "./assets/galleries/park-hyatt-seoul-15x/14.jpg";
+import g1761 from "./assets/galleries/park-hyatt-seoul-15x/15.jpg";
 
 export type PlacePhoto={src:string;sourceUrl:string;title:string};
 
 const galleries:Record<string,PlacePhoto[]>={
+  "酒店|新加坡|Andaz Singapore 新加坡安达仕酒店":[{src:g1702,sourceUrl:"https://www.hyatt.com/andaz/en-US/sinaz-andaz-singapore/offers",title:"新加坡安达仕 外观：DUO 双塔蜂巢玻璃幕墙仰拍（官网）"},{src:g1703,sourceUrl:"https://www.travelandleisureasia.com/global/hotels/check-in-to-andaz-singapore/a",title:"新加坡安达仕 外观：DUO 双塔"},{src:g1704,sourceUrl:"https://www.headforpoints.com/2024/07/03/review-andaz-singapore-a-char",title:"新加坡安达仕 外观：DUO 双塔街面实拍"},{src:g1705,sourceUrl:"https://www.hyatt.com/andaz/en-US/sinaz-andaz-singapore",title:"新加坡安达仕 客房：双床房+落地窗城市景观（官网）"},{src:g1706,sourceUrl:"https://www.hyatt.com/andaz/en-US/sinaz-andaz-singapore",title:"新加坡安达仕 客房：豪华大床房转角落地窗（官网）"},{src:g1707,sourceUrl:"https://chickenscrawlings.com",title:"新加坡安达仕 客房：大床房+芥末黄椅（博主实拍）"},{src:g1708,sourceUrl:"https://www.aheadawards.com/asia/2019/shortlist",title:"新加坡安达仕 大堂：25层接待柜台（AHEAD奖入围图）"},{src:g1709,sourceUrl:"https://upgradedpoints.com/news/48-hours-singapore/",title:"新加坡安达仕 大堂：25层休息区实拍"},{src:g1710,sourceUrl:"https://foodrepublic.com",title:"新加坡安达仕 大堂：大厅全景（来源页未记录，图片已目验）"},{src:g1711,sourceUrl:"https://milelion.com/2020/10/07/review-andaz-singapore-staycation/",title:"新加坡安达仕 泳池：屋顶无边泳池+滨海湾摩天轮景观（博主实拍）"},{src:g1712,sourceUrl:"https://www.onceinalifetimejourney.com",title:"新加坡安达仕 泳池：屋顶泳池+躺椅+城市天际线（来源页未记录，图片已目验）"},{src:g1713,sourceUrl:"https://singaporetravelinsider.com/best-mid-range-hotels-singapore/",title:"新加坡安达仕 泳池：屋顶泳池躺椅排+天际线"},{src:g1714,sourceUrl:"https://www.hyatt.com/andaz/en-US/sinaz-andaz-singapore/dining",title:"新加坡安达仕 餐厅：The Cellar 私人宴会厅+海景（官网）"},{src:g1715,sourceUrl:"https://www.hyatt.com/andaz/en-US/sinaz-andaz-singapore/dining",title:"新加坡安达仕 餐厅：665°F 牛排馆包房（官网）"},{src:g1716,sourceUrl:"https://retaildesignblog.net/2018/02/01/andaz-hotel-by-ole-scheeren-and-andre-fu/",title:"新加坡安达仕 餐厅：Alley on 25 全日餐厅用餐区"}],
+  "酒店|普吉|Hyatt Regency Phuket Resort 普吉凯悦度假酒店":[{src:g1717,sourceUrl:"https://prod.modular.multisite.ignitetravel.com/content-library/product-category/escapes/page/209/",title:"普吉凯悦 外观：夜景山坡酒店全景+无边泳池"},{src:g1718,sourceUrl:"https://best-tourism.ru/foto/hyatt-regency-phuket",title:"普吉凯悦 外观：夜景山坡建筑群+泳池倒影"},{src:g1719,sourceUrl:"https://xyz.loveiinfo.com/",title:"普吉凯悦 Casa Boho 悬崖餐厅建筑（四叶纹镂空屏风）"},{src:g1720,sourceUrl:"https://www.expedia.be/Phuket-Hotels-Hyatt-Regency-Phuket-Resort.h523563.Hotelinfo",title:"普吉凯悦 客房：海景大床房+露台面海"},{src:g1721,sourceUrl:"https://biblioglobus.ru/hotels/phuket-kamala-beach/hyatt-regency-phuket-resort",title:"普吉凯悦 客房：双床房"},{src:g1722,sourceUrl:"https://www.awayholidays.co.uk/fareast/thailand/phuket/hyatt-regency-phuket-resort.aspx",title:"普吉凯悦 客房：海景大床房+露台直面安达曼海"},{src:g1723,sourceUrl:"https://hyatt.com/hyatt-regency/phuhr",title:"普吉凯悦 大堂：雕花天花板+铁丝伞形吊灯（官网）"},{src:g1724,sourceUrl:"https://www.rewe-reisen.de/urlaub/Hyatt+Regency+Phuket+Resort-HKT30163.html",title:"普吉凯悦 大堂：另一角度实拍"},{src:g1725,sourceUrl:"https://www.hyatt.com/hyatt-regency/en-US/phuhr-hyatt-regency-phuket-resort",title:"普吉凯悦 大堂：第三角度（来源页未记录，图片已目验为本酒店）"},{src:g1726,sourceUrl:"https://nomadmum.com/hyatt-regency-phuket-with-kids/",title:"普吉凯悦 泳池：主海景泳池（博主实拍）"},{src:g1727,sourceUrl:"https://www.hyatt.com/hyatt-regency/en-US/phuhr-hyatt-regency-phuket-resort/dining",title:"普吉凯悦 泳池：Casa Boho 日落无边泳池（官网）"},{src:g1728,sourceUrl:"https://www.golfinakingdom.com",title:"普吉凯悦 泳池：主海景无边泳池全景（来源页未记录，图片已目验）"},{src:g1729,sourceUrl:"https://www.napsu.fi/hotel/321612/177/hyatt-regency-phuket-resort",title:"普吉凯悦 餐厅：Pool House Kitchen（藤编吊灯+海景餐位）"},{src:g1730,sourceUrl:"https://www.asmallworld.com/collection/hotels/hyatt-regency-phuket-resort",title:"普吉凯悦 餐厅：Pool House Kitchen 外观夜景"},{src:g1731,sourceUrl:"https://www.rewe-reisen.de/urlaub/Hyatt+Regency+Phuket+Resort-HKT30163.html",title:"普吉凯悦 餐厅：Mizu 铁板烧（铁板台+竹节灯柱）"}],
+  "酒店|曼谷|Park Hyatt Bangkok 曼谷柏悦酒店":[{src:g1732,sourceUrl:"https://www.hyatt.com/park-hyatt/en-US/bkkph-park-hyatt-bangkok",title:"曼谷柏悦 外观：Central Embassy 弧形建筑航拍（官网）"},{src:g1733,sourceUrl:"https://milelion.com/2018/04/26/world-of-hyatt-offering-40-bonus-on-points-purchases-get-luxury-stays-for-less/",title:"曼谷柏悦 外观：夜景航拍弧形塔楼"},{src:g1734,sourceUrl:"https://www.travelandleisureasia.com/global/hotels/page/14/",title:"曼谷柏悦 外观：黄昏扭曲玻璃塔楼全景"},{src:g1735,sourceUrl:"https://www.businessclass.com/hotel/review/Park-Hyatt-Bangkok",title:"曼谷柏悦 客房：大床房+落地窗夜景城市观"},{src:g1736,sourceUrl:"https://www.virgilebertrand.com/work/park-hyatt-bangkok",title:"曼谷柏悦 客房：泰式艺术玻璃隔屏+黄昏城市景"},{src:g1737,sourceUrl:"https://park-hyatt.hibangkokhotels.com/en/",title:"曼谷柏悦 客房：大床房+泰式艺术墙"},{src:g1738,sourceUrl:"https://registration.forbestravelguide.com/hotels/bangkok-thailand/park-hyatt-bangkok",title:"曼谷柏悦 大堂：标志性天花板艺术装置+休息区"},{src:g1739,sourceUrl:"https://www.hyatt.com/park-hyatt/en-US/bkkph-park-hyatt-bangkok",title:"曼谷柏悦 大堂：Living Room 休息区（官网）"},{src:g1740,sourceUrl:"https://pierreblake.com/park-hyatt-bangkok-review-top-luxury-hotel-in-thailand/",title:"曼谷柏悦 大堂：天花板艺术装置近景（实拍）"},{src:g1741,sourceUrl:"https://www.travelandleisureasia.com/global/hotels/park-hyatt-bangkok-urban-resort-reinvented/amp/",title:"曼谷柏悦 泳池：屋顶无边泳池+日落天际线"},{src:g1742,sourceUrl:"https://www.hyatt.com/park-hyatt/en-US/bkkph-park-hyatt-bangkok",title:"曼谷柏悦 泳池：Cabana 视角+热带花园（官网）"},{src:g1743,sourceUrl:"https://park-hyatt-bangkok.bangkokshotels.com/en/",title:"曼谷柏悦 泳池：户外泳池+躺椅遮阳伞"},{src:g1744,sourceUrl:"https://www.hyatt.com/park-hyatt/en-US/bkkph-park-hyatt-bangkok/dining/penthouse-bar-grill",title:"曼谷柏悦 餐厅：Penthouse Bar + Grill 内饰（官网）"},{src:g1745,sourceUrl:"https://www.bkkmenu.com/tag/patumwan",title:"曼谷柏悦 餐厅：Embassy Room 内饰"},{src:g1746,sourceUrl:"http://hyatt.com/park-hyatt/en-US/bkkph-park-hyatt-bangkok/dining/penthouse-bar-grill",title:"曼谷柏悦 餐厅：私人包间/主厨餐桌+城市全景窗"}],
+  "酒店|首尔|首尔柏悦酒店 Park Hyatt Seoul":[{src:g1747,sourceUrl:"https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=97449",title:"首尔柏悦 外观：夜景楼体+PARK HYATT 亮字招牌"},{src:g1748,sourceUrl:"https://park-hyatt-seoul-hotel.hotelmix.mx/",title:"首尔柏悦 外观：近景夜景+PARK HYATT 招牌"},{src:g1749,sourceUrl:"https://klook-code.co.kr/",title:"首尔柏悦 外观：夜景楼体全景（来源页未记录，图片已目验）"},{src:g1750,sourceUrl:"https://www.garywong.org/foto-feed/tag/Seoul",title:"首尔柏悦 客房：落地窗客房（电视屏显 PARK HYATT SEOUL）"},{src:g1751,sourceUrl:"https://www.hyatt.com/de-DE/hotel/south-korea/park-hyatt-seoul/selph/rooms/suites/DIPL",title:"首尔柏悦 客房：外交套房客厅（官网）"},{src:g1752,sourceUrl:"https://housity.net/hotel/park-hyatt-seoul/",title:"首尔柏悦 客房：夜景大床房+落地窗首尔夜景"},{src:g1753,sourceUrl:"https://www.kiwicollection.com",title:"首尔柏悦 大堂：前台+石屏风墙体（来源页未记录，图片已目验）"},{src:g1754,sourceUrl:"https://spanish.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=97454",title:"首尔柏悦 大堂：24楼 The Lounge 夜景"},{src:g1755,sourceUrl:"https://www.tablecheck.com/tr/park-hyatt-seoul-lounge/reserve/message?menu_items=62b9748f47ef4e000fd53fcb",title:"首尔柏悦 大堂：24楼 The Lounge 日景"},{src:g1756,sourceUrl:"https://www.forbestravelguide.com",title:"首尔柏悦 泳池：Park Club 室内无边泳池黄昏（来源页未记录，图片已目验）"},{src:g1757,sourceUrl:"http://www.classictravel.com/hotels/park-hyatt-seoul?agent=vicTLT",title:"首尔柏悦 泳池：泳池日景+落地窗城市景"},{src:g1758,sourceUrl:"https://www.uniqhotels.com/park-hyatt-seoul/",title:"首尔柏悦 泳池：泳池夜景+蓝色吊灯"},{src:g1759,sourceUrl:"https://www.forbestravelguide.com/seoul-south-korea/hotels/park-hyatt-seoul",title:"首尔柏悦 餐厅：Cornerstone 包间+吧台"},{src:g1760,sourceUrl:"https://hoadondientueiv.com/pakeuhayasteu",title:"首尔柏悦 餐厅：Cornerstone 橄榄树区就餐区"},{src:g1761,sourceUrl:"https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=97449",title:"首尔柏悦 餐厅：Cornerstone 橄榄树区日光景"}],
   "酒店|吉隆坡|Park Hyatt Kuala Lumpur":[{src:g0,sourceUrl:"https://thepointsguy.com/hotel/reviews/park-hyatt-kuala-lumpur/",title:"Park Hyatt Kuala Lumpur hotel review: Luxury in the sky - The Points Guy"},{src:g1,sourceUrl:"https://secretlifeoffatbacks.com/2026/01/hotel-review-park-hyatt-kuala-lumpur-king-bed-deluxe-second-tallest-hotel-in-the-world-sets-bar-for-ultra-luxury/",title:"Hotel Review: Park Hyatt Kuala Lumpur (King Bed Deluxe) - Second Tallest Hotel In The World Sets Bar For Ultra-Luxury | Secret Life of Fatbacks"},{src:g2,sourceUrl:"https://commons.wikimedia.org/wiki/File:Merdeka_Tower_20241022_-_full_2.jpg",title:"Park Hyatt Kuala Lumpur 外观：Merdeka 118 市中心塔楼"},{src:g3,sourceUrl:"https://ftnnews.com/travel-news/accommodation/park-hyatt-kuala-lumpur-opens-in-malaysias-tallest-skyscraper/",title:"Park Hyatt Kuala Lumpur 客房：高层套房卧室与落地窗"},{src:g4,sourceUrl:"https://wonderlusttravel.com/new-hotel-park-hyatt-kuala-lumpur/",title:"Park Hyatt Kuala Lumpur 大堂：Reception Lobby 金色格栅空间"}],
   "酒店|吉隆坡|Mandarin Oriental Kuala Lumpur":[{src:g5,sourceUrl:"https://www.luxurylink.com/5star/hotels/kuala-lumpur-malaysia/mandarin-oriental-kuala-lumpur?v=S&dtin=2024-11-21&dtout=2024-11-24&guests=2&rooms=0",title:"Mandarin Oriental, Kuala Lumpur in Kuala Lumpur, Malaysia"},{src:g6,sourceUrl:"https://malaysiahoneymoons.com/honeymoons/14-days/grand-malaysia",title:"Mandarin Oriental Kuala Lumpur"},{src:g7,sourceUrl:"https://www.expressionsholidays.co.uk/mandarin-oriental-kuala-lumpur",title:"Mandarin Oriental Kuala Lumpur 外观：楼体仰拍与酒店招牌"},{src:g8,sourceUrl:"https://businessclass.com/hotel/review/Mandarin-Oriental-Kuala-Lumpur",title:"Mandarin Oriental Kuala Lumpur 客房：双床房与双峰塔窗景"},{src:g9,sourceUrl:"https://www.audleytravel.com/malaysia/accommodation/mandarin-oriental",title:"Mandarin Oriental Kuala Lumpur 大堂：水晶吊灯挑高大堂"}],
   "酒店|富国岛|New World Phu Quoc":[{src:g10,sourceUrl:"https://vacation.hotwire.com/Phu-Quoc-Hotels-New-World-Phu-Quoc-Resort.h66527269.Hotel-Information",title:"New World Phu Quoc 客房：卧室（手工编织挂毯墙饰）"},{src:g11,sourceUrl:"https://thehoteljournal.com/new-world-phu-quoc-resort-vietnam-review/",title:"We review New World Phu Quoc Resort | The Hotel Journal"},{src:g12,sourceUrl:"https://thaiest.com/vietnam/travel/phu-quoc-pool-villas",title:"Phu Quoc Villa Resorts with Private Pool Villas in Vietnam"},{src:g13,sourceUrl:"https://phuquoc.newworldhotels.com/en/",title:"Homepage - New World Phu Quoc Resort"},{src:g14,sourceUrl:"https://insiderjourneys.com.au/product/new-world-phu-quoc-resort/",title:"New World Phu Quoc 餐饮：餐厅内景"}],
