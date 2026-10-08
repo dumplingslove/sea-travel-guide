@@ -254,6 +254,15 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
         )}
 
         {/* 酒店：口碑 */}
+        {kind === "hotel" && item.hotelHighlight && (
+          <Section title="✨ 亮点">
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {item.hotelHighlight}
+            </p>
+          </Section>
+        )}
+
+        {/* 酒店：口碑 */}
         {kind === "hotel" && item.hotelAcclaim && (
           <Section title="🏆 公认口碑">
             <p className="text-sm text-gray-700 leading-relaxed">
