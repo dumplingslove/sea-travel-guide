@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-08T22:48Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-09T04:48Z）
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -1148,7 +1148,7 @@ export const initialResearchStatus = {
    "total": 33
   },
   "chiangmai": {
-   "complete": 17,
+   "complete": 18,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -1540,9 +1540,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item11-tongtemtoh-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验收尾（2026-09-16T02:31Z）：partial 5/10，缺5篇；可计入5篇（正文全文+实质评论实读+图片逐张翻完+明确年份）；精确词\"符合明确年份+独立专帖+实质评论\"候选已枯竭；特例2/2已满；2026-09-26 16:12 PDT轮：关键词\"清迈 Ginger Farm Kitchen\"翻3页，0篇达标——专属帖最高96赞且多为避雷帖，高互动帖（1694/1209/1074赞）均为综合攻略、主题相关性不足；候选池枯竭，维持5/10（证据见xhs-coverage-chiangmai.md） ｜ 2026-09-28 第15轮+2篇（7赞推荐/6赞偏负），未达3篇；专帖候选池枯竭，均为低赞<10；2026-10-02 第77轮：新增小喵饱了吗《清迈米其林避雷榜首必须是这家》(321赞/66评，负向避雷，06-22，https://www.xiaohongshu.com/explore/6a377f960000000008024c24)，专帖互动新纪录。8篇，仍 partial。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round77-kl-chiangmai-2026-10-02.md\nBATCH5-2026-10-05: 新增朵朵花开《清迈网红店红榜》135赞/254藏/5评(合集，仅提及GFK，非专帖不计入)；小兒子日常/乱山隈2篇专帖因空白页未能深读，已记录为后续候选。完整证据专帖仍1篇(小喵321赞)，维持partial。证据 hidden_files/xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md ｜ 2026-10-08 第92轮（用户批准新窗口只读）：新增Deep Blue 🐳《吃遍清迈米其林｜Ginger Farm kitchen全攻略》(2025-12-27，92赞/68收藏/18评论，推荐)，posts 8→9仍partial；乱山隈/小兒子日常2篇复核为真实专帖但评论不足（1条/0条），记候选不计入；Tonny避雷帖0评论排除。另发现多篇GFK避雷帖，口碑分化如实记录。证据：xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md 第92轮节",
-       "posts": 9,
-       "status": "partial",
+       "note": "2026-10-09 第94轮重探转done：达标3篇（新3帖口径）——小喵饱了吗《清迈米其林避雷榜首必须是这家》（避雷）、Deep Blue《吃遍清迈米其林｜Ginger Farm kitchen全攻略》（92赞，推荐）、再吃一颗橙子《清迈｜收官之战我给到夯》（373赞，作者推荐/评论区避雷）。说明：3篇均为 Ginger Farm Kitchen 专帖，Tong Tem Toh 半侧仍薄弱，如实记录。证据：hidden_files/xhs-evidence/chiangmai/tong-tem-toh-2026-10-05.md",
+       "posts": 10,
+       "status": "done",
        "target": 10
       }
      },
@@ -7961,7 +7961,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 130,
+ "complete_items": 131,
  "summary": {
   "bangkok": {
    "tripadvisor": 33,
@@ -7986,14 +7986,14 @@ export const initialResearchStatus = {
    "gm": 20,
    "chinese_sites": 20,
    "cs": 20,
-   "xiaohongshu": 18,
-   "xhs_done": 18,
+   "xiaohongshu": 19,
+   "xhs_done": 19,
    "photos": 20,
    "ph": 20,
    "details": 20,
    "de": 20,
    "total": 20,
-   "all_done": 17
+   "all_done": 18
   },
   "hcmc": {
    "tripadvisor": 23,
@@ -8107,7 +8107,7 @@ export const initialResearchStatus = {
    "total": 25,
    "all_done": 21
   },
-  "all_done": 130,
+  "all_done": 131,
   "xhs_done": 142
  },
  "targets": {
@@ -8119,5 +8119,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 223,
- "updated_at": "2026-10-08T22:48Z"
+ "updated_at": "2026-10-09T04:48Z"
 };
