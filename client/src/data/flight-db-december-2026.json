@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-09T09:11:03+00:00",
+ "updated_at": "2026-10-09T10:45:12+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -15610,23 +15610,23 @@
      "economy_price_usd": 416
     },
     "2026-12-18": {
-     "economy_queried_at": "2026-10-08T09:47:12+00:00",
-     "economy_usd": 269,
+     "economy_queried_at": "2026-10-09T10:45:12+00:00",
+     "economy_usd": 266,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Spring Airlines",
-       "flight": "9C6294",
+       "flight": "9C 6294",
        "dep": "14:05",
        "arr": "19:00",
        "duration": "3h 55m",
-       "price_usd": 269
+       "price_usd": 266
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-08T09:47:12+00:00",
+     "business_queried_at": "2026-10-09T10:45:12+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞",
@@ -23152,115 +23152,113 @@
    "label": "西安→首尔（1大1小，老婆带娃）",
    "days": {
     "2026-12-31": {
-     "economy_queried_at": "2026-10-08T09:47:12+00:00",
-     "economy_usd": 353,
+     "economy_queried_at": "2026-10-09T10:45:12+00:00",
+     "economy_usd": 327,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Asiana Airlines",
-       "flight": "OZ348",
+       "flight": "OZ 348",
        "dep": "13:25",
        "arr": "17:10",
        "duration": "2h 45m",
-       "price_usd": 353,
-       "business_price_usd": 655
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE138",
-       "dep": "12:55",
-       "arr": "16:45",
-       "duration": "2h 50m",
-       "price_usd": 475,
-       "business_price_usd": 949
+       "price_usd": 327
       },
       {
        "airline": "China Eastern",
-       "flight": "MU853",
+       "flight": "MU 853",
        "dep": "15:15",
        "arr": "18:55",
        "duration": "2h 40m",
-       "business_price_usd": 800
+       "price_usd": 355
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE 138",
+       "dep": "12:55",
+       "arr": "16:45",
+       "duration": "2h 50m",
+       "price_usd": 465,
+       "business_price_usd": 950
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-08T09:47:12+00:00",
-     "business_usd": 949,
+     "business_queried_at": "2026-10-09T10:45:12+00:00",
+     "business_usd": 950,
      "business_price_basis": "1大1小总价",
      "economy_price_usd": 338,
      "business_price_usd": 655
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-10-08T09:47:12+00:00",
-     "economy_usd": 351,
+     "economy_queried_at": "2026-10-09T10:45:12+00:00",
+     "economy_usd": 329,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Korean Air",
-       "flight": "KE138",
-       "dep": "12:55",
-       "arr": "16:45",
-       "duration": "2h 50m",
-       "price_usd": 351,
-       "business_price_usd": 949
-      },
-      {
        "airline": "Asiana Airlines",
-       "flight": "OZ348",
+       "flight": "OZ 348",
        "dep": "13:25",
        "arr": "17:10",
        "duration": "2h 45m",
-       "price_usd": 353,
-       "business_price_usd": 844
+       "price_usd": 329
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE 138",
+       "dep": "12:55",
+       "arr": "16:45",
+       "duration": "2h 50m",
+       "price_usd": 336,
+       "business_price_usd": 950
       },
       {
        "airline": "China Eastern",
-       "flight": "MU853",
+       "flight": "MU 853",
        "dep": "15:15",
        "arr": "18:55",
        "duration": "2h 40m",
-       "business_price_usd": 819
+       "price_usd": 476
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-08T09:47:12+00:00",
-     "business_usd": 949,
+     "business_queried_at": "2026-10-09T10:45:12+00:00",
+     "business_usd": 950,
      "business_price_basis": "1大1小总价",
      "economy_price_usd": 334,
      "business_price_usd": 819
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-10-08T09:47:12+00:00",
-     "economy_usd": 475,
+     "economy_queried_at": "2026-10-09T10:45:12+00:00",
+     "economy_usd": 465,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Korean Air",
-       "flight": "KE138",
+       "flight": "KE 138",
        "dep": "12:55",
        "arr": "16:45",
        "duration": "2h 50m",
-       "price_usd": 475,
-       "business_price_usd": 1164
+       "price_usd": 465,
+       "business_price_usd": 1165
       },
       {
        "airline": "China Eastern",
-       "flight": "MU853",
+       "flight": "MU 853",
        "dep": "15:15",
        "arr": "18:55",
        "duration": "2h 40m",
-       "business_price_usd": 819
+       "price_usd": 476
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-08T09:47:12+00:00",
-     "business_usd": 1164,
+     "business_queried_at": "2026-10-09T10:45:12+00:00",
+     "business_usd": 1165,
      "business_price_basis": "1大1小总价",
      "economy_price_usd": 463,
      "business_price_usd": 819
@@ -24387,28 +24385,25 @@
    "label": "西雅图→北京",
    "days": {
     "2026-11-28": {
-     "economy_queried_at": "2026-10-08T09:47:12+00:00",
+     "economy_queried_at": "2026-10-09T10:45:12+00:00",
      "economy_usd": 1631,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Hainan",
-       "flight": "HU496",
+       "airline": "Hainan Airlines",
+       "flight": "HU 496",
        "dep": "10:20",
        "arr": "15:50",
        "duration": "13h 30m",
-       "price_usd": 1631,
-       "business_price_usd": 12534
+       "price_usd": 1631
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-08T09:47:12+00:00",
+     "business_queried_at": "2026-10-09T10:45:12+00:00",
      "business_usd": 12534,
-     "business_price_basis": "2大1小总价",
-     "economy_note": "抵达为+1天",
-     "business_note": "抵达为+1天"
+     "business_price_basis": "2大1小总价"
     },
     "2026-12-08": {
      "economy_queried_at": "2026-10-03T05:45:30+00:00",
