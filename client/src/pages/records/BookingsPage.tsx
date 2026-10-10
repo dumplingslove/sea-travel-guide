@@ -523,7 +523,7 @@ function FavoriteActionList({
                       {isOpen && f.type === "flight" && flightLeg && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
-                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"} 当天所有直飞（{flightLeg.options?.length ?? 0} 班）
+                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{flightLeg.ticketed ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
                           </p>
                           {/* 2026-10-03 用户：机票要有价格变动时间线（含每次涨跌的发生时间） */}
                           {f.flight?.price != null && (
@@ -550,7 +550,11 @@ function FavoriteActionList({
                               })()}
                             />
                           )}
-                          {(flightLeg.options ?? []).length ? (
+                          {/* 2026-10-10 site-audit 修复：已出票的腿 options 为空是预期（refreshLegFromDb 直接跳过），
+                              不许再显示"暂无直飞数据（待实查）"误导；直接展示出票信息 */}
+                          {flightLeg.ticketed ? (
+                            <p className="text-emerald-700 font-medium">{flightLeg.note}</p>
+                          ) : (flightLeg.options ?? []).length ? (
                             <div className="space-y-1">
                               {[...(flightLeg.options ?? [])]
                                 .sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))
