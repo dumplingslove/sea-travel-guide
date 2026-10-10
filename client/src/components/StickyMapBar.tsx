@@ -227,7 +227,9 @@ export function buildItemsFromFavorites(
         coord = places.restaurants.find(
           (r) => r.name === name || r.name.includes(name) || name.includes(r.name),
         );
-      else coord = findStopCoord(name);
+      // 2026-10-10 用户：行动安排地图也要有所有景点的坐标——与 buildCandidateItems 同口径，
+      // 景点走 4 级兜底链（精确 → MUST_BOOK 人工核验 → EXTRA 人工补 → 模糊匹配），不只精确匹配
+      else coord = findStopCoord(name) ?? MUST_BOOK_COORDS[name] ?? EXTRA_ATTRACTION_COORDS[name] ?? findAttractionCoordFuzzy(name);
       if (coord) {
         seen.add(key);
         out.push({
@@ -247,7 +249,8 @@ export function buildItemsFromFavorites(
     for (const s of d.stops) {
       const key = `itinerary:${s.name}`;
       if (seen.has(key)) continue;
-      const coord = findStopCoord(s.name);
+      // 2026-10-10 用户：同上，行程站点也走 4 级兜底链
+      const coord = findStopCoord(s.name) ?? MUST_BOOK_COORDS[s.name] ?? EXTRA_ATTRACTION_COORDS[s.name] ?? findAttractionCoordFuzzy(s.name);
       if (coord) {
         seen.add(key);
         out.push({

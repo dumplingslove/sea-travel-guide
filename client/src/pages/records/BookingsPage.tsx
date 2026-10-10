@@ -326,6 +326,8 @@ function FavoriteActionList({
   const decided = favs.filter((f) => f.row.done).length;
   /* 2026-10-03 用户：行动安排的 item 要能展开看详情，方便对比 */
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  // 2026-10-10 用户：卡片按钮太占空间，确定/加入预订/移除收进 ⋯ 菜单
+  const [menuId, setMenuId] = useState<number | null>(null);
   /** 按名称找攻略详情（酒店/餐厅/景点） */
   const findDetail = (name: string, type: string) => {
     if (type === "hotel") return hotels.find((h) => h.name === name);
@@ -489,34 +491,60 @@ function FavoriteActionList({
                             {isOpen ? "▴ 收起" : "▾ 详情"}
                           </button>
                         )}
-                        {!f.row.done ? (
+                        {/* 2026-10-10 用户：按钮不占空间——只留详情，确定/加入预订/移除收进 ⋯ 菜单 */}
+                        <div className="relative shrink-0">
                           <button
-                            onClick={() => save.mutate({
-                              id: f.row.id, kind: f.row.kind, title: f.row.title,
-                              body: f.row.body, day: f.row.day, done: true,
-                            })}
-                            className="px-2.5 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700"
+                            onClick={() => setMenuId(menuId === f.row.id ? null : f.row.id)}
+                            className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
+                            aria-label="更多操作"
+                            aria-expanded={menuId === f.row.id}
                           >
-                            ✓ 确定
+                            ⋯
                           </button>
-                        ) : (
-                          <span className="px-2.5 py-1.5 rounded-lg bg-green-100 text-green-800 text-xs font-medium">
-                            ✓ 已确定
-                          </span>
-                        )}
-                        <button
-                          onClick={() => onAddFavorite(f.row.title, itemCity(f), bkindFor(f.type))}
-                          className="px-2.5 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-medium hover:bg-teal-800"
-                        >
-                          加入预订
-                        </button>
-                        <button
-                          onClick={() => del.mutate({ id: f.row.id })}
-                          className="px-1.5 py-1.5 rounded-lg text-gray-400 text-xs hover:text-gray-600"
-                          aria-label={`移除收藏${f.row.title}`}
-                        >
-                          ✕
-                        </button>
+                          {menuId === f.row.id && (
+                            <>
+                              <div className="fixed inset-0 z-30" onClick={() => setMenuId(null)} />
+                              <div className="absolute right-0 top-full mt-1 z-40 min-w-[132px] bg-white rounded-xl shadow-lg border border-gray-200 py-1">
+                                {!f.row.done ? (
+                                  <button
+                                    onClick={() => {
+                                      setMenuId(null);
+                                      save.mutate({
+                                        id: f.row.id, kind: f.row.kind, title: f.row.title,
+                                        body: f.row.body, day: f.row.day, done: true,
+                                      });
+                                    }}
+                                    className="w-full text-left px-3 py-2 text-xs font-medium text-amber-700 hover:bg-amber-50"
+                                  >
+                                    ✓ 确定
+                                  </button>
+                                ) : (
+                                  <span className="block px-3 py-2 text-xs font-medium text-green-700">
+                                    ✓ 已确定
+                                  </span>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    setMenuId(null);
+                                    onAddFavorite(f.row.title, itemCity(f), bkindFor(f.type));
+                                  }}
+                                  className="w-full text-left px-3 py-2 text-xs font-medium text-teal-700 hover:bg-teal-50"
+                                >
+                                  加入预订
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setMenuId(null);
+                                    del.mutate({ id: f.row.id });
+                                  }}
+                                  className="w-full text-left px-3 py-2 text-xs font-medium text-gray-500 hover:bg-gray-100"
+                                >
+                                  ✕ 移除
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                       </div>
                       {/* 展开：航班看当天所有选项（酒店/餐厅/景点走详情页，此处不再内联展开） */}
