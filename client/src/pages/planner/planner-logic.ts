@@ -1119,8 +1119,10 @@ function wzUnifiedCalendar(){
   const seaRows=wzRanges();
   /* 建立日期→城市映射：先按大行程段，再用东南亚段城市覆盖 couple 段 */
   const dayCity: Record<string,{seg:string;label:string;city:string}> = {};
-  const segColor: Record<string,string> = { beijing1:"#3b82f6", singapore:"#22c55e", couple:"#f59e0b", xian:"#8b5cf6", beijing3:"#3b82f6" };
+  const segColor: Record<string,string> = { beijing1:"#3b82f6", singapore:"#22c55e", couple:"#f59e0b", xian:"#8b5cf6", beijing3:"#3b82f6", outbound:"#0ea5e9" };
   const segCity: Record<string,string> = { beijing1:"北京", singapore:"新加坡", xian:"西安", beijing3:"北京" };
+  /* 去程 11/28（西雅图→北京）：tripRanges 从 11/29 起算，去程日需单独加入日历，否则看不到 */
+  dayCity["2026-11-28"]={ seg:"outbound", label:"去程", city:"西雅图→北京" };
   for(const s of TRIP_SEGS){
     const r=ranges[s.id]; if(!r) continue;
     for(let d=r.from; d<=r.to; d=addDays(d,1)){
@@ -1138,6 +1140,8 @@ function wzUnifiedCalendar(){
   legs.forEach(l=>legByDate[l.date]=`${l.from}→${l.to}`);
   /* 大行程转场日也打 ✈️ 徽标（2026-09-28 用户：北京/新加坡/西安的转场也要有标识，不只东南亚内部） */
   const flightByDate: Record<string,string> = {};
+  /* 去程 11/28 西雅图→北京：TRIP_TRANSITIONS 里没有去程段，单独加徽标 */
+  flightByDate["2026-11-28"]="西雅图→北京（去程）";
   for(const t of TRIP_TRANSITIONS){
     if(t.noFlight) continue; /* 西安→北京坐高铁，不打 ✈️ */
     const choice = tripFlyChoice(t.after);
@@ -1276,6 +1280,8 @@ function ordAllFlights(): string {
   const rm = RETURN_CITY_META[rc];
   const xiyLeg = thailandToXianLeg();
   const sinLeg = singaporeToFirstCityLeg();
+  /* 去程 11/28 西雅图→北京（2大1小）：TRIP_TRANSITIONS 里没有去程段，单独加一张卡 */
+  pushCard("2026-11-28", "西雅图→北京（去程）", tripFlightCard("SEA-PEK|2026-11-28", "西雅图→北京"));
   for(const t of TRIP_TRANSITIONS){
     if(t.noFlight) continue;
     const choice = tripFlyChoice(t.after);
@@ -1310,6 +1316,7 @@ function renderOrderTab(){
       <span><i class="wz-segdot" style="background:#f59e0b"></i>东南亚段</span>
       <span><i class="wz-segdot" style="background:#8b5cf6"></i>西安</span>
       <span><i class="wz-segdot" style="background:#ec4899"></i>首尔/回程</span>
+      <span><i class="wz-segdot" style="background:#0ea5e9"></i>去程</span>
       <span class="wz-legbadge">✈️ 转场</span>
       <span class="wz-legbadge">⚠️ 提醒</span>
       <span class="wz-legbadge">🚫 必去闭馆</span>
@@ -1379,6 +1386,8 @@ function wireOrderTab(){
 function dayFlightCards(d: string): string {
   const ranges = tripRanges();
   const cards: string[] = [];
+  /* 去程 11/28 西雅图→北京（2大1小） */
+  if(d === "2026-11-28") cards.push(tripFlightCard("SEA-PEK|2026-11-28", "西雅图→北京"));
   /* 大行程转场：北京→新加坡 / 新加坡→首城 / 末城→西安 */
   for(const t of TRIP_TRANSITIONS){
     if(t.noFlight) continue;
