@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-10T09:20:46+00:00",
+ "updated_at": "2026-10-10T09:39:09+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -18737,260 +18737,253 @@
      "business_note": "KE41、KE47当天无商务舱报价显示；价格为2成人+1儿童整组总价"
     },
     "2027-01-03": {
-     "economy_queried_at": "2026-10-09T09:11:03+00:00",
-     "economy_usd": 4494,
+     "economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "economy_usd": 4507,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Korean Air",
-       "flight": "KE 41",
-       "dep": "16:10",
-       "arr": "09:05",
+       "flight": "KE41",
+       "dep": "Jan 3, 4:10 PM",
+       "arr": "Jan 3, 9:05 AM",
        "duration": "9h 55m",
-       "price_usd": 4494
+       "price_usd": 4507
       },
       {
-       "airline": "Delta",
-       "flight": "DL 196",
-       "dep": "18:45",
-       "arr": "11:51",
+       "airline": "Delta Air Lines",
+       "flight": "DL196",
+       "dep": "Jan 3, 6:45 PM",
+       "arr": "Jan 3, 11:51 AM",
        "duration": "10h 6m",
-       "price_usd": 4494,
-       "business_price_usd": 9732
-      },
-      {
-       "airline": "Korean Air",
-       "flight": "KE 47",
-       "dep": "21:20",
-       "arr": "14:10",
-       "duration": "9h 50m",
-       "price_usd": 4494
+       "price_usd": 4507
       },
       {
        "airline": "Alaska Airlines",
-       "flight": "AS 120",
-       "dep": "20:00",
-       "arr": "12:55",
+       "flight": "AS120",
+       "dep": "Jan 3, 8:00 PM",
+       "arr": "Jan 3, 12:55 PM",
        "duration": "9h 55m",
-       "price_usd": 4571,
-       "business_price_usd": 10403
+       "price_usd": 4846,
+       "business_price_usd": 10432
+      },
+      {
+       "airline": "Korean Air",
+       "flight": "KE47",
+       "dep": "Jan 3, 9:20 PM",
+       "arr": "Jan 3, 2:10 PM",
+       "duration": "9h 50m",
+       "price_usd": 4507
       }
      ],
      "nonstop_count": 4,
-     "business_queried_at": "2026-10-09T09:11:03+00:00",
-     "business_usd": 9732,
+     "business_queried_at": "2026-10-10T09:39:09+00:00",
+     "business_usd": 10432,
      "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-10-09T09:11:03+00:00",
-     "onestop_economy_usd": 3256,
+     "onestop_economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "onestop_economy_usd": 3265,
      "onestop_economy_price_basis": "2大1小总价",
      "onestop_flights": [
       {
        "airline": "Philippine Airlines",
-       "flight": "PR 403, PR 124",
-       "dep": "20:30",
-       "arr": "18:45",
+       "flight": "PR403 + PR124",
+       "dep": "Jan 3, 8:30 PM",
+       "arr": "Jan 4, 6:45 PM",
        "duration": "39h 15m",
        "via": "马尼拉",
-       "price_usd": 3256,
-       "business_price_usd": 7680
+       "price_usd": 3265,
+       "business_price_usd": 7702
+      },
+      {
+       "airline": "Korean Air + Delta Air Lines",
+       "flight": "KE51 + DL359",
+       "dep": "Jan 3, 10:20 PM",
+       "arr": "Jan 3, 9:50 PM",
+       "duration": "16h 30m",
+       "via": "檀香山",
+       "price_usd": 4311
       },
       {
        "airline": "Philippine Airlines",
-       "flight": "PR 401, PR 124",
-       "dep": "07:30",
-       "arr": "18:45",
+       "flight": "PR401 + PR124",
+       "dep": "Jan 3, 7:30 AM",
+       "arr": "Jan 3, 6:45 PM",
        "duration": "28h 15m",
        "via": "马尼拉",
-       "price_usd": 4452
+       "price_usd": 4465
       },
       {
-       "airline": "Korean Air, Delta",
-       "flight": "KE 17, DL 1045",
-       "dep": "14:30",
-       "arr": "15:51",
-       "duration": "18h 21m",
-       "via": "洛杉矶",
-       "price_usd": 4793
-      },
-      {
-       "airline": "Korean Air, Delta",
-       "flight": "KE 23, DL 4118",
-       "dep": "16:00",
-       "arr": "16:32",
+       "airline": "Korean Air + Delta Air Lines",
+       "flight": "KE23 + DL4118",
+       "dep": "Jan 3, 4:00 PM",
+       "arr": "Jan 3, 4:32 PM",
        "duration": "17h 32m",
        "via": "旧金山",
-       "price_usd": 4840
+       "price_usd": 4854
       },
       {
        "airline": "EVA Air",
-       "flight": "BR 159, BR 26",
-       "dep": "19:45",
-       "arr": "18:10",
+       "flight": "BR159 + BR26",
+       "dep": "Jan 3, 7:45 PM",
+       "arr": "Jan 3, 6:10 PM",
        "duration": "15h 25m",
        "via": "台北",
-       "price_usd": 5353
-      },
-      {
-       "airline": "Korean Air, Delta",
-       "flight": "KE 51, DL 359",
-       "dep": "22:20",
-       "arr": "21:50",
-       "duration": "16h 30m",
-       "via": "檀香山",
-       "price_usd": 5414
+       "price_usd": 5369
       },
       {
        "airline": "China Airlines",
-       "flight": "CI 163, CI 22",
-       "dep": "20:15",
-       "arr": "18:10",
+       "flight": "CI163 + CI22",
+       "dep": "Jan 3, 8:15 PM",
+       "arr": "Jan 3, 6:10 PM",
        "duration": "14h 55m",
        "via": "台北",
-       "price_usd": 5479,
-       "business_price_usd": 18702
+       "price_usd": 5495,
+       "business_price_usd": 18754
       }
      ],
-     "onestop_count": 7,
-     "onestop_business_queried_at": "2026-10-09T09:11:03+00:00",
-     "onestop_business_usd": 7680,
+     "onestop_count": 6,
+     "onestop_business_queried_at": "2026-10-10T09:39:09+00:00",
+     "onestop_business_usd": 7702,
      "onestop_business_price_basis": "2大1小总价",
-     "business_note": "当天直飞共4班，仅达美 DL 196 与阿拉斯加 AS 120 有商务舱售价，大韩航空 KE 41/KE 47 当天无商务舱可售",
-     "onestop_economy_note": "Google Flights 无纯'1 stop'筛选，使用'1 stop or fewer'并排除直飞；当天仅 7 班一次转机",
-     "onestop_business_note": "Google Flights 无纯'1 stop'筛选，使用'1 stop or fewer'并排除直飞；当天商务舱一次转机仅 4 班"
+     "business_note": "当天商务舱仅Alaska一条直飞有可售价格（KE41/DL196/KE47无商务舱报价）。",
+     "onestop_economy_note": "Google仅提供'1 stop or fewer'筛选（无精确1 stop选项），已只记录一次转机航班；当天共6条一次转机。",
+     "onestop_business_note": "KE711+JL68为混合舱位（KE711经济舱+JL68商务舱）；UA806+UA745为商务+头等混合。Cheapest标签页加载中曾显示from $7,237，但列表行最低实为$7,702。"
     },
     "2027-01-04": {
-     "economy_queried_at": "2026-10-09T09:11:03+00:00",
-     "economy_usd": 4382,
+     "economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "economy_usd": 4394,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Alaska Airlines",
-       "flight": "AS 120",
-       "dep": "20:00",
-       "arr": "12:55",
+       "flight": "AS120",
+       "dep": "Jan 4, 8:00 PM",
+       "arr": "Jan 4, 12:55 PM",
        "duration": "9h 55m",
-       "price_usd": 4382,
-       "business_price_usd": 10035
+       "price_usd": 4394,
+       "business_price_usd": 10061
       },
       {
        "airline": "Korean Air",
-       "flight": "KE 41",
-       "dep": "16:10",
-       "arr": "09:05",
+       "flight": "KE41",
+       "dep": "Jan 4, 4:10 PM",
+       "arr": "Jan 4, 9:05 AM",
        "duration": "9h 55m",
-       "price_usd": 4494
+       "price_usd": 4507
       },
       {
-       "airline": "Delta",
-       "flight": "DL 196",
-       "dep": "18:45",
-       "arr": "11:51",
+       "airline": "Delta Air Lines",
+       "flight": "DL196",
+       "dep": "Jan 4, 6:45 PM",
+       "arr": "Jan 4, 11:51 AM",
        "duration": "10h 6m",
-       "price_usd": 4494
+       "price_usd": 4507
       },
       {
        "airline": "Korean Air",
-       "flight": "KE 47",
-       "dep": "21:20",
-       "arr": "14:10",
+       "flight": "KE47",
+       "dep": "Jan 4, 9:20 PM",
+       "arr": "Jan 4, 2:10 PM",
        "duration": "9h 50m",
-       "price_usd": 4494
+       "price_usd": 4507
       }
      ],
      "nonstop_count": 4,
-     "business_queried_at": "2026-10-09T09:11:03+00:00",
-     "business_usd": 10035,
+     "business_queried_at": "2026-10-10T09:39:09+00:00",
+     "business_usd": 10061,
      "business_price_basis": "2大1小总价",
-     "onestop_economy_queried_at": "2026-10-09T09:11:03+00:00",
-     "onestop_economy_usd": 3256,
+     "onestop_economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "onestop_economy_usd": 3067,
      "onestop_economy_price_basis": "2大1小总价",
      "onestop_flights": [
       {
        "airline": "Philippine Airlines",
-       "flight": "PR 401, PR 124",
-       "dep": "07:30",
-       "arr": "18:45",
+       "flight": "PR401 + PR124",
+       "dep": "Jan 4, 7:30 AM",
+       "arr": "Jan 4, 6:45 PM",
        "duration": "28h 15m",
        "via": "马尼拉",
-       "price_usd": 3256,
-       "business_price_usd": 7680
+       "price_usd": 3067,
+       "business_price_usd": 7237
       },
       {
-       "airline": "Korean Air, Alaska Airlines",
-       "flight": "KE 23, AS 656",
-       "dep": "16:00",
-       "arr": "14:47",
-       "duration": "15h 47m",
-       "via": "旧金山",
-       "price_usd": 3672
-      },
-      {
-       "airline": "Korean Air, Delta",
-       "flight": "KE 71, DL 3887",
-       "dep": "18:15",
-       "arr": "19:47",
-       "duration": "18h 32m",
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE71 + AS1601",
+       "dep": "Jan 4, 6:15 PM",
+       "arr": "Jan 5, 7:08 AM",
+       "duration": "29h 53m",
        "via": "温哥华",
-       "price_usd": 3962
+       "price_usd": 3087
       },
       {
-       "airline": "Korean Air, Delta",
-       "flight": "KE 75, DL 3887",
-       "dep": "22:55",
-       "arr": "19:47",
-       "duration": "13h 52m",
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE75 + AS1601",
+       "dep": "Jan 4, 10:55 PM",
+       "arr": "Jan 5, 7:08 AM",
+       "duration": "25h 13m",
        "via": "温哥华",
-       "price_usd": 3962
+       "price_usd": 3087,
+       "business_price_usd": 9889
       },
       {
-       "airline": "Air Canada",
-       "flight": "AC 64, AC 8806",
-       "dep": "18:55",
-       "arr": "18:22",
-       "duration": "16h 27m",
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE75 + AS2263",
+       "dep": "Jan 4, 10:55 PM",
+       "arr": "Jan 5, 12:58 PM",
+       "duration": "31h 3m",
        "via": "温哥华",
-       "price_usd": 4595
+       "price_usd": 3087,
+       "business_price_usd": 9889
       },
       {
-       "airline": "Korean Air, Japan Airlines",
-       "flight": "KE 711, JL 68",
-       "dep": "13:25",
-       "arr": "10:05",
-       "duration": "13h 40m",
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE75 + AS1603",
+       "dep": "Jan 4, 10:55 PM",
+       "arr": "Jan 5, 2:41 PM",
+       "duration": "32h 46m",
+       "via": "温哥华",
+       "price_usd": 3087,
+       "business_price_usd": 9889
+      },
+      {
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE71 + AS2222",
+       "dep": "Jan 4, 6:15 PM",
+       "arr": "Jan 4, 6:43 PM",
+       "duration": "17h 28m",
+       "via": "温哥华",
+       "price_usd": 3157
+      },
+      {
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE713 + AS124",
+       "dep": "Jan 4, 4:55 PM",
+       "arr": "Jan 5, 9:15 AM",
+       "duration": "33h 20m",
        "via": "东京",
-       "price_usd": 4597,
-       "business_price_usd": 7803
+       "price_usd": 3636
       },
       {
-       "airline": "United",
-       "flight": "UA 806, UA 1730",
-       "dep": "12:45",
-       "arr": "14:22",
-       "duration": "18h 37m",
-       "via": "旧金山",
-       "price_usd": 4669
-      },
-      {
-       "airline": "United",
-       "flight": "UA 892, UA 433",
-       "dep": "18:00",
-       "arr": "16:32",
-       "duration": "15h 32m",
-       "via": "旧金山",
-       "price_usd": 4669
+       "airline": "Korean Air + Alaska Airlines",
+       "flight": "KE705 + AS124",
+       "dep": "Jan 4, 6:55 PM",
+       "arr": "Jan 5, 9:15 AM",
+       "duration": "31h 20m",
+       "via": "东京",
+       "price_usd": 3636
       }
      ],
      "onestop_count": 8,
-     "onestop_business_queried_at": "2026-10-09T09:11:03+00:00",
-     "onestop_business_usd": 7680,
+     "onestop_business_queried_at": "2026-10-10T09:39:09+00:00",
+     "onestop_business_usd": 7237,
      "onestop_business_price_basis": "2大1小总价",
-     "business_note": "当天商务舱直飞仅 1 班有售（阿拉斯加 AS 120）",
-     "onestop_economy_note": "Google Flights 无纯'1 stop'筛选，使用'1 stop or fewer'并排除直飞；取最便宜的 8 班",
-     "onestop_business_note": "Google Flights 无纯'1 stop'筛选，使用'1 stop or fewer'并排除直飞"
+     "business_note": "当天商务舱仅Alaska一条直飞有可售价格。",
+     "onestop_economy_note": "按Cheapest排序取最便宜8条；价格为列表行显示的'From'最低可选预订价。AS2263/AS2222由Horizon Air执飞。",
+     "onestop_business_note": "按Cheapest排序取最便宜8条；价格为'From'最低可选预订价。KE+JAL为经济+商务混合舱位；KE+Alaska多为商务+头等混合（AS段为First Class）。AS2263/AS2222由Horizon Air执飞。",
+     "economy_note": "Cheapest排序确认最低直飞为Alaska $4,394。"
     },
     "2026-12-08": {
      "economy_queried_at": "2026-10-07T09:42:29+00:00",
@@ -23736,77 +23729,77 @@
      "economy_note": "MU853当天无经济舱报价显示；价格为1成人+1儿童整组总价"
     },
     "2026-12-22": {
-     "economy_queried_at": "2026-10-03T08:44:45+00:00",
-     "economy_usd": 337,
+     "economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "economy_usd": 353,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "China Eastern",
-       "flight": "MU853",
-       "dep": "3:15 PM",
-       "arr": "6:55 PM",
-       "duration": "2h 40m",
-       "price_usd": 337,
-       "business_price_usd": 597
-      },
-      {
        "airline": "Asiana Airlines",
        "flight": "OZ348",
-       "dep": "1:25 PM",
-       "arr": "5:10 PM",
+       "dep": "Dec 22, 1:25 PM",
+       "arr": "Dec 22, 5:10 PM",
        "duration": "2h 45m",
        "price_usd": 353
       },
       {
        "airline": "Korean Air",
        "flight": "KE138",
-       "dep": "12:55 PM",
-       "arr": "4:45 PM",
+       "dep": "Dec 22, 12:55 PM",
+       "arr": "Dec 22, 4:45 PM",
        "duration": "2h 50m",
-       "price_usd": 396,
-       "business_price_usd": 949
+       "price_usd": 397,
+       "business_price_usd": 951
+      },
+      {
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "Dec 22, 3:15 PM",
+       "arr": "Dec 22, 6:55 PM",
+       "duration": "2h 40m",
+       "business_price_usd": 589
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-03T08:44:45+00:00",
-     "business_usd": 597,
+     "business_queried_at": "2026-10-10T09:39:09+00:00",
+     "business_usd": 589,
      "business_price_basis": "1大1小总价",
-     "business_note": "Asiana OZ348 未出现在商务舱结果中"
+     "business_note": "韩亚航空OZ348直飞当天无商务舱可售价格。价格为'From'价。",
+     "economy_note": "MU853列表行显示'Price unavailable'，已按任务要求省略其price_usd字段。"
     },
     "2026-12-23": {
-     "economy_queried_at": "2026-10-03T08:44:45+00:00",
-     "economy_usd": 337,
+     "economy_queried_at": "2026-10-10T09:39:09+00:00",
+     "economy_usd": 362,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
-     "economy_note": "Asiana 当天无直飞航班",
+     "economy_note": "韩亚OZ348当天无航班，当天仅2条直飞。",
      "nonstop_flights": [
       {
        "airline": "China Eastern",
        "flight": "MU853",
-       "dep": "3:15 PM",
-       "arr": "6:55 PM",
+       "dep": "Dec 23, 3:15 PM",
+       "arr": "Dec 23, 6:55 PM",
        "duration": "2h 40m",
-       "price_usd": 337,
-       "business_price_usd": 594
+       "price_usd": 362,
+       "business_price_usd": 589
       },
       {
        "airline": "Korean Air",
        "flight": "KE138",
-       "dep": "12:55 PM",
-       "arr": "4:45 PM",
+       "dep": "Dec 23, 12:55 PM",
+       "arr": "Dec 23, 4:45 PM",
        "duration": "2h 50m",
-       "price_usd": 396,
-       "business_price_usd": 949
+       "price_usd": 397,
+       "business_price_usd": 951
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-03T08:44:45+00:00",
-     "business_usd": 594,
+     "business_queried_at": "2026-10-10T09:39:09+00:00",
+     "business_usd": 589,
      "business_price_basis": "1大1小总价",
-     "business_note": "Asiana 当天无直飞航班"
+     "business_note": "KE138为Lie flat seat。价格为'From'价。"
     },
     "2026-12-24": {
      "economy_queried_at": "2026-10-03T08:44:45+00:00",
