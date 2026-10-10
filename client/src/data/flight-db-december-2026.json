@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-10T06:46:56+00:00",
+ "updated_at": "2026-10-10T07:06:29+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -24507,7 +24507,7 @@
      "business_note": "当天无直飞"
     },
     "2026-12-14": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24516,14 +24516,14 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-15": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
-     "economy_usd": 3347,
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
+     "economy_usd": 3347.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24531,20 +24531,20 @@
       {
        "airline": "Hainan Airlines",
        "flight": "HU496",
-       "dep": "10:20",
-       "arr": "15:50+1",
+       "dep": "10:20 AM",
+       "arr": "3:50 PM+1",
        "duration": "13 hr 30 min",
-       "price_usd": 3347,
-       "business_price_usd": 22186
+       "price_usd": 3347.0,
+       "business_price_usd": 22186.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
-     "business_usd": 22186,
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
+     "business_usd": 22186.0,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-16": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24553,13 +24553,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-17": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24568,13 +24568,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-18": {
-     "economy_queried_at": "2026-10-03T06:30:28+00:00",
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24583,14 +24583,14 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T06:30:28+00:00",
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-19": {
-     "economy_queried_at": "2026-10-03T06:30:28+00:00",
-     "economy_usd": 8737,
+     "economy_queried_at": "2026-10-10T07:06:29+00:00",
+     "economy_usd": 6757.0,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24598,16 +24598,16 @@
       {
        "airline": "Hainan Airlines",
        "flight": "HU496",
-       "dep": "10:20",
-       "arr": "15:50+1",
+       "dep": "10:20 AM",
+       "arr": "3:50 PM+1",
        "duration": "13 hr 30 min",
-       "price_usd": 8737,
-       "business_price_usd": 22269
+       "price_usd": 6757.0,
+       "business_price_usd": 22269.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T06:30:28+00:00",
-     "business_usd": 22269,
+     "business_queried_at": "2026-10-10T07:06:29+00:00",
+     "business_usd": 22269.0,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-20": {
