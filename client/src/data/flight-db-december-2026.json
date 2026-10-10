@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-10T05:34:27+00:00",
+ "updated_at": "2026-10-10T06:46:56+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -24403,8 +24403,8 @@
      "business_price_basis": "2大1小总价"
     },
     "2026-12-08": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
-     "economy_usd": 1549,
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
+     "economy_usd": 1741,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24414,18 +24414,18 @@
        "flight": "HU496",
        "dep": "10:20",
        "arr": "15:50+1",
-       "duration": "13 hr 30 min",
-       "price_usd": 1549,
+       "duration": "13h30m",
+       "price_usd": 1741,
        "business_price_usd": 12451
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
      "business_usd": 12451,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24434,13 +24434,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-10": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24449,13 +24449,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-11": {
-     "economy_queried_at": "2026-10-03T05:45:30+00:00",
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24464,14 +24464,14 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T05:45:30+00:00",
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-12": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
-     "economy_usd": 4475,
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
+     "economy_usd": 3430,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24481,18 +24481,18 @@
        "flight": "HU496",
        "dep": "10:20",
        "arr": "15:50+1",
-       "duration": "13 hr 30 min",
-       "price_usd": 4475,
-       "business_price_usd": 18226
+       "duration": "13h30m",
+       "price_usd": 3430,
+       "business_price_usd": 12891
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
-     "business_usd": 18226,
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
+     "business_usd": 12891,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-13": {
-     "economy_queried_at": "2026-10-03T06:05:11+00:00",
+     "economy_queried_at": "2026-10-10T06:46:56+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24501,7 +24501,7 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T06:05:11+00:00",
+     "business_queried_at": "2026-10-10T06:46:56+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
