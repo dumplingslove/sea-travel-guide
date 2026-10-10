@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-10T01:33:34+00:00",
+ "updated_at": "2026-10-10T05:34:27+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -23262,44 +23262,43 @@
      "business_price_usd": 819
     },
     "2026-12-08": {
-     "economy_queried_at": "2026-10-03T05:03:47+00:00",
-     "economy_usd": 334,
+     "economy_queried_at": "2026-10-10T05:34:27+00:00",
+     "economy_usd": 352,
      "currency": "USD",
-     "economy_price_basis": "1大1小总价",
+     "economy_price_basis": "1成人+1儿童总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "China Eastern",
-       "flight": "MU853",
-       "dep": "15:15",
-       "arr": "18:55",
-       "duration": "2h 40m",
-       "price_usd": 334,
-       "business_price_usd": 594
+       "airline": "Korean Air",
+       "flight": "KE138",
+       "dep": "12:55 PM",
+       "arr": "4:45 PM",
+       "duration": "2 hr 50 min",
+       "price_usd": 352,
+       "business_price_usd": 951
       },
       {
        "airline": "Asiana Airlines",
        "flight": "OZ348",
-       "dep": "13:25",
-       "arr": "17:10",
-       "duration": "2h 45m",
-       "price_usd": 334,
+       "dep": "1:25 PM",
+       "arr": "5:10 PM",
+       "duration": "2 hr 45 min",
+       "price_usd": 353,
        "business_price_usd": 655
       },
       {
-       "airline": "Korean Air",
-       "flight": "KE138",
-       "dep": "12:55",
-       "arr": "16:45",
-       "duration": "2h 50m",
-       "price_usd": 337,
-       "business_price_usd": 949
+       "airline": "China Eastern",
+       "flight": "MU853",
+       "dep": "3:15 PM",
+       "arr": "6:55 PM",
+       "duration": "2 hr 40 min",
+       "business_price_usd": 594
       }
      ],
      "nonstop_count": 3,
-     "business_queried_at": "2026-10-03T05:03:47+00:00",
-     "business_usd": 594,
-     "business_price_basis": "1大1小总价",
+     "business_queried_at": "2026-10-10T05:34:27+00:00",
+     "business_usd": 951,
+     "business_price_basis": "1成人+1儿童总价",
      "economy_price_usd": 334,
      "business_price_usd": 594
     },
