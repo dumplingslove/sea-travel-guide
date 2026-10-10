@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-10T07:46:51+00:00",
+ "updated_at": "2026-10-10T08:12:47+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -23303,8 +23303,8 @@
      "business_price_usd": 594
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
-     "economy_usd": 396,
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
+     "economy_usd": 397,
      "currency": "USD",
      "economy_price_basis": "1大1小总价",
      "source": "google-flights",
@@ -23314,22 +23314,24 @@
        "flight": "KE138",
        "dep": "12:55 PM",
        "arr": "4:45 PM",
-       "duration": "2h50m",
-       "price_usd": 396,
-       "business_price_usd": 949
+       "duration": "2 hr 50 min",
+       "price_usd": 397,
+       "business_price_usd": 951
       },
       {
        "airline": "China Eastern Airlines",
        "flight": "MU853",
        "dep": "3:15 PM",
        "arr": "6:55 PM",
-       "duration": "2h40m"
+       "duration": "2 hr 40 min"
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
-     "business_usd": 949,
-     "business_price_basis": "1大1小总价"
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
+     "business_usd": 951,
+     "business_price_basis": "1大1小总价",
+     "economy_note": "东航MU853页面显示Price unavailable，未填价格",
+     "business_note": "东航MU853页面显示Price unavailable，未填价格"
     },
     "2026-12-10": {
      "economy_queried_at": "2026-10-03T07:55:06+00:00",
@@ -24879,8 +24881,8 @@
      "business_note": "当天无直飞"
     },
     "2026-12-05": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
-     "economy_usd": 1914,
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
+     "economy_usd": 2687,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24889,19 +24891,19 @@
        "airline": "Hainan Airlines",
        "flight": "HU496",
        "dep": "10:20 AM",
-       "arr": "3:50 PM+1",
-       "duration": "13h30m",
-       "price_usd": 1914,
+       "arr": "3:50 PM",
+       "duration": "13 hr 30 min",
+       "price_usd": 2687,
        "business_price_usd": 12534
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
      "business_usd": 12534,
      "business_price_basis": "2大1小总价"
     },
     "2026-12-06": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24910,13 +24912,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2026-12-07": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24925,13 +24927,13 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2027-01-01": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
      "economy_usd": null,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
@@ -24940,14 +24942,14 @@
      "nonstop_flights": [],
      "nonstop_count": 0,
      "note": "当天无直飞",
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
      "business_usd": null,
      "business_price_basis": "2大1小总价",
      "business_note": "当天无直飞"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-10-03T07:34:39+00:00",
-     "economy_usd": 3072,
+     "economy_queried_at": "2026-10-10T08:12:47+00:00",
+     "economy_usd": 1631,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -24956,15 +24958,15 @@
        "airline": "Hainan Airlines",
        "flight": "HU496",
        "dep": "10:20 AM",
-       "arr": "3:50 PM+1",
-       "duration": "13h30m",
-       "price_usd": 3072,
-       "business_price_usd": 17869
+       "arr": "3:50 PM",
+       "duration": "13 hr 30 min",
+       "price_usd": 1631,
+       "business_price_usd": 11745
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-03T07:34:39+00:00",
-     "business_usd": 17869,
+     "business_queried_at": "2026-10-10T08:12:47+00:00",
+     "business_usd": 11745,
      "business_price_basis": "2大1小总价"
     }
    }
