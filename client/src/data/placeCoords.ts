@@ -276,8 +276,16 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "首尔梨泰院蒙德里安 Mondrian Seoul Itaewon", lat: 37.5285592, lng: 126.9931256, precision: "exact", note: "23 Jangmun-ro, Yongsan-gu（2026-10-05 新增：Nominatim 몬드리안 서울 이태원 全地址匹配 hotel/building）" },
       { name: "首尔弘大RYSE RYSE, Autograph Collection", lat: 37.5542951, lng: 126.9212674, precision: "exact", note: "130 Yanghwa-ro, Mapo-gu（2026-10-05 新增：Nominatim RYSE Hotel Seoul Hongdae 全地址匹配 hotel/tourism）" },
       { name: "明洞L'Escape L'Escape, a Luxury Collection Hotel", lat: 37.5600276, lng: 126.9795778, precision: "exact", note: "Namdaemunsijang 10-gil, Jung-gu（2026-10-05 新增：Nominatim L'Escape Seoul 全地址匹配 hotel/tourism）" },
+      { name: "首尔柏悦酒店 Park Hyatt Seoul", lat: 37.5086027, lng: 127.0641785, precision: "exact", note: "606 Teheran-ro, Gangnam-gu（2026-10-11 新增：Nominatim Park Hyatt 全地址匹配 hotel/tourism）" },
     ],
-    restaurants: [],
+    restaurants: [
+      { name: "明洞饺子 Myeongdong Kyoja", lat: 37.5625608, lng: 126.9856037, precision: "exact", note: "29 Myeongdong 10-gil, Jung-gu（2026-10-11 新增：Nominatim Myeongdong Kyoja 全地址匹配 restaurant/amenity）" },
+      { name: "土俗村参鸡汤 Tosokchon", lat: 37.5776803, lng: 126.9715276, precision: "exact", note: "Jahamun-ro 5-gil, Jongno-gu（2026-10-11 新增：Nominatim Tosokchon Samgyetang 命中 restaurant/amenity）" },
+      { name: "陈玉华一只鸡 Jinokhwa", lat: 37.5703933, lng: 127.0058915, precision: "exact", note: "18 Jong-ro 40ga-gil, Jongno-gu（2026-10-11 新增：Nominatim Jinokhwa Halmae Wonjo Dakhanmari 全地址匹配 restaurant/amenity）" },
+      { name: "神仙雪浓汤 Sinseon Seolleongtang", lat: 37.5642456, lng: 126.9855393, precision: "street", note: "明洞街56号2层（2026-10-11 新增：Nominatim 地址级，明洞店地址出自卡片；该地址POI未单独验证）" },
+      { name: "王妃家烤肉 Wangbijib", lat: 37.5626124, lng: 126.9844789, precision: "exact", note: "10 Myeongdong 6-gil, Jung-gu（2026-10-11 新增：Nominatim 왕비집 命中 restaurant/amenity）" },
+      { name: "桥村炸鸡 Kyochon", lat: 37.4919229, lng: 127.0321504, precision: "chain", note: "多分店连锁，标江南代表店（2026-10-11 新增：Nominatim KyoChon Gangnam-daero 66-gil 分店）" },
+    ],
     malls: [],
   },
 };
