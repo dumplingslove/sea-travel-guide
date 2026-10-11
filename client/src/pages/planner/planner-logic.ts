@@ -1157,39 +1157,28 @@ function wzUnifiedCalendar(){
   /* 按月分组 */
   const dates=Object.keys(dayCity).sort();
   if(!dates.length) return '<p class="micro">暂无行程日期。</p>';
-  const months: Record<string,string[]> = {};
-  dates.forEach(d=>{ const m=d.slice(0,7); (months[m]=months[m]||[]).push(d); });
   const monthNames=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
-  /* 显示范围：行程首月往前3个月 ~ 行程末月往后3个月（用户2026-10-11：前后3个月一起显示）；
-     整月全量渲染，非行程日灰色占位 */
-  const tripMs=Object.keys(months).sort();
-  const [fy,fmo]=tripMs[0].split("-").map(Number);
-  const [ly,lmo]=tripMs[tripMs.length-1].split("-").map(Number);
-  let sy=fy, smo=fmo-3; while(smo<1){smo+=12;sy--;}
-  let ey=ly, emo=lmo+3; while(emo>12){emo-=12;ey++;}
+  /* 整段行程合并为一个连续日历（用户2026-10-11：前后3个月一起显示、合并月之间的分隔）：
+     从行程首日所在周的周一排到行程末日所在周的周日，星期天然对齐；月份在1号处以"M/D"标注 */
+  const firstD=dates[0], lastD=dates[dates.length-1];
+  const gridStart=addDays(firstD,-((new Date(firstD+"T12:00:00Z").getUTCDay()+6)%7));
+  const gridEnd=addDays(lastD,6-((new Date(lastD+"T12:00:00Z").getUTCDay()+6)%7));
+  const [fy,fmo]=firstD.split("-").map(Number), [ly,lmo]=lastD.split("-").map(Number);
+  const rangeHead=fy===ly?`${fy}年${monthNames[fmo-1]} – ${monthNames[lmo-1]}`:`${fy}年${monthNames[fmo-1]} – ${ly}年${monthNames[lmo-1]}`;
   const wdHead='<div class="wz-calwd">一</div><div class="wz-calwd">二</div><div class="wz-calwd">三</div><div class="wz-calwd">四</div><div class="wz-calwd">五</div><div class="wz-calwd">六</div><div class="wz-calwd">日</div>';
-  let html="";
-  let y=sy, mo=smo;
-  while(y<ey||(y===ey&&mo<=emo)){
-    const m=`${y}-${String(mo).padStart(2,"0")}`;
-    const dim=new Date(y,mo,0).getDate();
-    const firstDow=new Date(`${m}-01T12:00:00Z`).getUTCDay();
-    const startPad=(firstDow+6)%7; /* 周一开头 */
-    html+=`<div class="wz-calmonth"><h4>${y}年${monthNames[mo-1]}</h4><div class="wz-calgrid">${wdHead}`;
-    for(let i=0;i<startPad;i++) html+=`<div class="wz-calday empty"></div>`;
-    for(let dom=1;dom<=dim;dom++){
-      const d=`${m}-${String(dom).padStart(2,"0")}`;
-      const info=dayCity[d];
-      if(!info){ html+=`<div class="wz-calday off"><span class="wz-caldate">${dom}</span></div>`; continue; }
-      const issues=wzDayIssues(d, info.city, legByDate[d]);
-      const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
-      const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
-      const color=segColor[info.seg]||"#94a3b8";
-      html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dom}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
-    }
-    html+=`</div></div>`;
-    mo++; if(mo>12){mo=1;y++;}
+  let html=`<div class="wz-calmonth"><h4>${rangeHead}</h4><div class="wz-calgrid">${wdHead}`;
+  for(let d=gridStart; d<=gridEnd; d=addDays(d,1)){
+    const dom=Number(d.slice(8)), mo=Number(d.slice(5,7));
+    const info=dayCity[d];
+    const dateNum=dom===1?`${mo}/${dom}`:`${dom}`;
+    if(!info){ html+=`<div class="wz-calday off"><span class="wz-caldate">${dateNum}</span></div>`; continue; }
+    const issues=wzDayIssues(d, info.city, legByDate[d]);
+    const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
+    const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
+    const color=segColor[info.seg]||"#94a3b8";
+    html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dateNum}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
   }
+  html+=`</div></div>`;
   return html;
 }
 /* 大行程转场日的航班检查：北京→新加坡 / 新加坡→东南亚 / 东南亚→西安 / 回西雅图。
