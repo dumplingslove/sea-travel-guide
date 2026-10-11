@@ -1,5 +1,5 @@
 import { ItineraryTab } from "./Home";
-import { RestaurantCatalog } from "../guide/GuideApp";
+import { RestaurantCatalog, AttractionCatalog } from "../guide/GuideApp";
 
 /**
  * 韩国行程页（/korea）：首尔段逐日行程卡 + 推荐第二城「水原」当日往返模块。
@@ -57,12 +57,26 @@ function SeoulRestaurants() {
   );
 }
 
+/** 首尔景点推荐：复用景点目录，仅显示首尔（15个均已做小红书实测） */
+function SeoulAttractions() {
+  return (
+    <section className="mb-6">
+      <h2 className="text-lg font-bold text-gray-900 mb-1">📍 首尔景点推荐</h2>
+      <p className="text-xs text-gray-500 mb-3">
+        15个小红书已实测：景福宫、北村韩屋村、明洞、南山首尔塔、圣水洞、星空图书馆、广藏市场等
+      </p>
+      <AttractionCatalog scopeCities={["首尔"]} hideCityTabs />
+    </section>
+  );
+}
+
 export default function KoreaItinerary() {
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
       <SuwonDayTrip />
       <ItineraryTab koreaOnly />
       <SeoulRestaurants />
+      <SeoulAttractions />
     </div>
   );
 }
