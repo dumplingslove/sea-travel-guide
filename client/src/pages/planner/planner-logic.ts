@@ -1163,7 +1163,9 @@ function wzUnifiedCalendar(){
   let html="";
   for(const m of Object.keys(months).sort()){
     const [y,mo]=m.split("-").map(Number);
-    const firstDow=new Date(m+"-01T12:00:00Z").getUTCDay();
+    /* 按本月首个行程日的星期补齐（周一开头）：之前按每月1号补齐，但只渲染行程日，
+       首个行程日不是1号时整月错位（如2026-11-28周六被放到周日列） */
+    const firstDow=new Date(months[m][0]+"T12:00:00Z").getUTCDay();
     const startPad=(firstDow+6)%7; /* 周一开头 */
     html+=`<div class="wz-calmonth"><h4>${y}年${monthNames[mo-1]}</h4><div class="wz-calgrid"><div class="wz-calwd">一</div><div class="wz-calwd">二</div><div class="wz-calwd">三</div><div class="wz-calwd">四</div><div class="wz-calwd">五</div><div class="wz-calwd">六</div><div class="wz-calwd">日</div>`;
     for(let i=0;i<startPad;i++) html+=`<div class="wz-calday empty"></div>`;
