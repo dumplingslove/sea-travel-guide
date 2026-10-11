@@ -1160,24 +1160,35 @@ function wzUnifiedCalendar(){
   const months: Record<string,string[]> = {};
   dates.forEach(d=>{ const m=d.slice(0,7); (months[m]=months[m]||[]).push(d); });
   const monthNames=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+  /* 显示范围：行程首月往前3个月 ~ 行程末月往后3个月（用户2026-10-11：前后3个月一起显示）；
+     整月全量渲染，非行程日灰色占位 */
+  const tripMs=Object.keys(months).sort();
+  const [fy,fmo]=tripMs[0].split("-").map(Number);
+  const [ly,lmo]=tripMs[tripMs.length-1].split("-").map(Number);
+  let sy=fy, smo=fmo-3; while(smo<1){smo+=12;sy--;}
+  let ey=ly, emo=lmo+3; while(emo>12){emo-=12;ey++;}
+  const wdHead='<div class="wz-calwd">一</div><div class="wz-calwd">二</div><div class="wz-calwd">三</div><div class="wz-calwd">四</div><div class="wz-calwd">五</div><div class="wz-calwd">六</div><div class="wz-calwd">日</div>';
   let html="";
-  for(const m of Object.keys(months).sort()){
-    const [y,mo]=m.split("-").map(Number);
-    /* 按本月首个行程日的星期补齐（周一开头）：之前按每月1号补齐，但只渲染行程日，
-       首个行程日不是1号时整月错位（如2026-11-28周六被放到周日列） */
-    const firstDow=new Date(months[m][0]+"T12:00:00Z").getUTCDay();
+  let y=sy, mo=smo;
+  while(y<ey||(y===ey&&mo<=emo)){
+    const m=`${y}-${String(mo).padStart(2,"0")}`;
+    const dim=new Date(y,mo,0).getDate();
+    const firstDow=new Date(`${m}-01T12:00:00Z`).getUTCDay();
     const startPad=(firstDow+6)%7; /* 周一开头 */
-    html+=`<div class="wz-calmonth"><h4>${y}年${monthNames[mo-1]}</h4><div class="wz-calgrid"><div class="wz-calwd">一</div><div class="wz-calwd">二</div><div class="wz-calwd">三</div><div class="wz-calwd">四</div><div class="wz-calwd">五</div><div class="wz-calwd">六</div><div class="wz-calwd">日</div>`;
+    html+=`<div class="wz-calmonth"><h4>${y}年${monthNames[mo-1]}</h4><div class="wz-calgrid">${wdHead}`;
     for(let i=0;i<startPad;i++) html+=`<div class="wz-calday empty"></div>`;
-    for(const d of months[m]){
+    for(let dom=1;dom<=dim;dom++){
+      const d=`${m}-${String(dom).padStart(2,"0")}`;
       const info=dayCity[d];
+      if(!info){ html+=`<div class="wz-calday off"><span class="wz-caldate">${dom}</span></div>`; continue; }
       const issues=wzDayIssues(d, info.city, legByDate[d]);
       const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
       const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
       const color=segColor[info.seg]||"#94a3b8";
-      html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${Number(d.slice(8))}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
+      html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dom}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
     }
     html+=`</div></div>`;
+    mo++; if(mo>12){mo=1;y++;}
   }
   return html;
 }
