@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-11T20:40Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-11T20:44Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -7975,6 +7975,7 @@ export const initialResearchStatus = {
  "complete_items": 135,
  "summary": {
   "bangkok": {
+   "total": 33,
    "tripadvisor": 33,
    "ta": 33,
    "google_maps": 33,
@@ -7987,26 +7988,26 @@ export const initialResearchStatus = {
    "ph": 33,
    "details": 33,
    "de": 33,
-   "total": 33,
    "all_done": 32
   },
   "chiangmai": {
+   "total": 20,
    "tripadvisor": 19,
    "ta": 19,
    "google_maps": 20,
    "gm": 20,
    "chinese_sites": 20,
    "cs": 20,
-   "xiaohongshu": 20,
-   "xhs_done": 20,
+   "xiaohongshu": 19,
+   "xhs_done": 19,
    "photos": 20,
    "ph": 20,
    "details": 20,
    "de": 20,
-   "total": 20,
-   "all_done": 19
+   "all_done": 18
   },
   "hcmc": {
+   "total": 23,
    "tripadvisor": 23,
    "ta": 23,
    "google_maps": 23,
@@ -8019,10 +8020,10 @@ export const initialResearchStatus = {
    "ph": 23,
    "details": 23,
    "de": 23,
-   "total": 23,
    "all_done": 3
   },
   "kualalumpur": {
+   "total": 22,
    "tripadvisor": 22,
    "ta": 22,
    "google_maps": 21,
@@ -8035,10 +8036,10 @@ export const initialResearchStatus = {
    "ph": 22,
    "details": 22,
    "de": 22,
-   "total": 22,
    "all_done": 11
   },
   "penang": {
+   "total": 24,
    "tripadvisor": 22,
    "ta": 22,
    "google_maps": 24,
@@ -8051,10 +8052,10 @@ export const initialResearchStatus = {
    "ph": 24,
    "details": 23,
    "de": 23,
-   "total": 24,
    "all_done": 0
   },
   "phuket": {
+   "total": 25,
    "tripadvisor": 25,
    "ta": 25,
    "google_maps": 24,
@@ -8067,10 +8068,10 @@ export const initialResearchStatus = {
    "ph": 25,
    "details": 25,
    "de": 25,
-   "total": 25,
    "all_done": 23
   },
   "phuquoc": {
+   "total": 22,
    "tripadvisor": 21,
    "ta": 21,
    "google_maps": 22,
@@ -8083,10 +8084,10 @@ export const initialResearchStatus = {
    "ph": 22,
    "details": 22,
    "de": 22,
-   "total": 22,
    "all_done": 0
   },
   "singapore": {
+   "total": 29,
    "tripadvisor": 29,
    "ta": 29,
    "google_maps": 28,
@@ -8099,10 +8100,10 @@ export const initialResearchStatus = {
    "ph": 29,
    "details": 29,
    "de": 29,
-   "total": 29,
    "all_done": 26
   },
   "seoul": {
+   "total": 25,
    "tripadvisor": 24,
    "ta": 24,
    "google_maps": 24,
@@ -8115,11 +8116,8 @@ export const initialResearchStatus = {
    "ph": 25,
    "details": 25,
    "de": 25,
-   "total": 25,
    "all_done": 22
-  },
-  "all_done": 136,
-  "xhs_done": 147
+  }
  },
  "targets": {
   "chinese_sites": "done",
@@ -8130,5 +8128,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 223,
- "updated_at": "2026-10-11T20:40Z"
+ "updated_at": "2026-10-11T20:44Z"
 };
