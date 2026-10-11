@@ -1,4 +1,5 @@
 import { ItineraryTab } from "./Home";
+import { RestaurantCatalog } from "../guide/GuideApp";
 
 /**
  * 韩国行程页（/korea）：首尔段逐日行程卡 + 推荐第二城「水原」当日往返模块。
@@ -43,11 +44,25 @@ function SuwonDayTrip() {
   );
 }
 
+/** 首尔餐厅推荐：复用餐厅目录，仅显示首尔（6家均已做小红书实测） */
+function SeoulRestaurants() {
+  return (
+    <section className="mb-6">
+      <h2 className="text-lg font-bold text-gray-900 mb-1">🍽️ 首尔餐厅推荐</h2>
+      <p className="text-xs text-gray-500 mb-3">
+        6家小红书已实测：明洞饺子、土俗村参鸡汤、陈玉华一只鸡、神仙雪浓汤、王妃家烤肉、桥村炸鸡
+      </p>
+      <RestaurantCatalog scopeCities={["首尔"]} hideCityTabs bare />
+    </section>
+  );
+}
+
 export default function KoreaItinerary() {
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
       <SuwonDayTrip />
       <ItineraryTab koreaOnly />
+      <SeoulRestaurants />
     </div>
   );
 }
