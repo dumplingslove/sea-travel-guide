@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-11T12:44:21+00:00",
+ "updated_at": "2026-10-11T16:39:09+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -3037,8 +3037,8 @@
      "economy_note": "当天仅1班直飞"
     },
     "2026-12-11": {
-     "economy_queried_at": "2026-10-10T15:36:14+00:00",
-     "economy_usd": 1293,
+     "economy_queried_at": "2026-10-11T16:39:09+00:00",
+     "economy_usd": 1124,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -3047,9 +3047,9 @@
        "airline": "Scoot",
        "flight": "TR134",
        "dep": "19:15",
-       "arr": "00:45+1",
+       "arr": "00:45",
        "duration": "5h 30m",
-       "price_usd": 1293
+       "price_usd": 1124
       },
       {
        "airline": "China Eastern",
@@ -3057,14 +3057,16 @@
        "dep": "13:55",
        "arr": "19:20",
        "duration": "5h 25m",
-       "business_price_usd": 3499
+       "price_usd": 1732,
+       "business_price_usd": 3500
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-10T15:36:14+00:00",
-     "business_usd": null,
+     "business_queried_at": "2026-10-11T16:39:09+00:00",
+     "business_usd": 3500,
      "business_price_basis": "2大1小总价",
-     "business_note": "有1班直飞（MU2070）但当日商务舱无价格显示"
+     "business_note": "商务舱直飞仅1班。Scoot 在该航线不销售商务舱，未出现在商务舱结果中。Best页签一度显示'No results returned.'（加载异常），Cheapest页签正常显示MU2070行价$3500并保持稳定，按此记录。刷新页面前曾出现价格暂时'Price unavailable'，刷新后价格正常加载。",
+     "economy_note": "直飞共2班，均为列表行显示价格。Scoot行价在初始加载瞬间曾显示$1157，刷新后Best与Cheapest两页签均稳定显示$1124，按最终稳定值记录。"
     }
    }
   },
