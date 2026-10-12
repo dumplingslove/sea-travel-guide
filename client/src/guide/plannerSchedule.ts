@@ -54,6 +54,8 @@ export interface PlannerPlan {
   returnCity?: "" | "PEK" | "PVG" | "CKG";
   /** 大行程总览：每段转场起飞日（transition.after -> "last"|"next"；回程 key 为 "return"），可选以兼容旧保存 */
   tripFlightDay?: Record<string, "last"|"next">;
+  /** 大行程总览：每段转场方式（transition.after -> "flight"|"rail"；2026-10-13 用户：转场不一定是飞机，可选高铁），可选以兼容旧保存 */
+  legModes?: Record<string, string>;
 }
 
 export interface LoadedPlan {

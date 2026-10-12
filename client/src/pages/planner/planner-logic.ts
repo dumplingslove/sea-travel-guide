@@ -369,6 +369,7 @@ function renderTransferAlerts(){
   if(!rows.length){wrap.innerHTML='<div class="transfer-alert"><strong>暂无转场</strong><p>当前日历没有连续两天切换城市。安排城市后，这里会按当天星期查询完整矩阵。</p></div>';return}
   wrap.innerHTML=rows.map(r=>{
     const routeLabel=`${r.date.slice(5)} · ${esc(r.from)}→${esc(r.to)}`,a=r.assessment;
+    if(transferModeForDate(r.date)==="rail")return `<div class="transfer-alert"><strong>${routeLabel}</strong><p>🚄 已选高铁转场（在大行程里逐段设置），这段不查航班。</p></div>`;
     if(a.kind==="direct")return `<div class="transfer-alert"><strong>${routeLabel}</strong><p>✓ 当天有直飞 · ${a.airlines.map(x=>`${esc(x.code)} ${esc(x.name)}`).join(" / ")} · 安全优先排序。${r.route.verification_status.includes("部分待核验")?" 排班模式已核验，精确日期时刻待核验。":""}</p></div>`;
     if(a.kind==="no-service")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 当天无运营直飞。${esc((r.route.calendar_warnings||[]).join(" ")||"请改期或查看中转、铁路方案。")}</p></div>`;
     if(a.kind==="no-direct")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 已确认无直飞。${esc(r.route.notes||"请查看合理中转方案。")}</p></div>`;
@@ -396,35 +397,14 @@ function renderHardConstraints(){
     (specialDateMarkers[date]||[]).filter(marker=>marker.city===plan.city).forEach(marker=>add("warn",`${dateLabel(date)} · ${marker.title}`,marker.body,"2026 年 12 月特殊开放日核查"));
   });
 
-  const limited=[
-    {city:"曼谷",name:"恰图恰周末市场",days:[0,6],dayText:"周六或周日",source:constraintSources.chatuchak},
-    {city:"清迈",name:"周六步行街",days:[6],dayText:"周六",source:constraintSources.chiangMaiSaturday},
-    {city:"清迈",name:"周日步行街",days:[0],dayText:"周日",source:constraintSources.chiangMaiSunday},
-    {city:"普吉",name:"Lard Yai 周日步行街",days:[0],dayText:"周日",source:constraintSources.lardYai}
-  ];
-  let limitedMisses=0;
-  limited.forEach(rule=>{
-    const dates=cityDates(rule.city);if(!dates.length)return;
-    if(!dates.some(date=>rule.days.includes(new Date(date+"T12:00:00Z").getUTCDay()))){
-      limitedMisses++;
-      add("warn",`这次去赶不上${rule.name}`,`${rule.city}当前排在 ${dates.map(dateLabel).join("、")}；建议把${rule.city}挪到${rule.dayText}，否则这个限定日体验本次就没有。`,sourceLink(rule.source));
-    }
-  });
-  if(!limitedMisses)add("pass","限定日景点已对上","当前已排城市没有错过恰图恰、清迈周六/周日步行街或普吉 Lard Yai 的限定开放日；未排入的城市不参与检查。","营业日仍建议出行前再确认。 ");
-
-  const mondayThai=entries.filter(([date,plan])=>cityCountry[plan.city]==="TH"&&new Date(date+"T12:00:00Z").getUTCDay()===1);
-  if(mondayThai.length)add("warn","泰国周一博物馆闭馆风险",`${mondayThai.map(([d,p])=>`${dateLabel(d)} ${p.city}`).join("、")}：若安排博物馆，请逐馆核对；Museum Siam 等馆周一闭馆，曼谷国家博物馆周一、周二闭馆，不能把所有馆一概而论。`,sourceLink(constraintSources.museums)+" · 建议出行前再确认");
-
-  const mondayKL=cityDates("吉隆坡").filter(date=>new Date(date+"T12:00:00Z").getUTCDay()===1);
-  if(mondayKL.length)add("blocked","双子塔周一闭馆",`${mondayKL.map(dateLabel).join("、")} 安排在吉隆坡；双子塔不要排在这些日期。建议改到周二至周日，并提前 3–4 周在线抢票。`,"双子塔 2026 开放时间核查");
-  const tuesdayPhuket=cityDates("普吉").filter(date=>new Date(date+"T12:00:00Z").getUTCDay()===2);
-  if(tuesdayPhuket.length)add("warn","Siam Niramit 每周二休演",`${tuesdayPhuket.map(dateLabel).join("、")} 安排在普吉；若计划看 Siam Niramit，请换到非周二。`,"Siam Niramit 2026 演出日历核查");
+  /* 2026-10-13 用户：限定日景点（恰图恰/步行街/Lard Yai/Siam Niramit/双子塔周一闭馆/泰国周一博物馆）
+     不再按天报警——「今天不是周日所以周日市集不开」不是警告，只会让人混淆，整段移除。 */
 
   if(cityDates("曼谷").length)add("warn","11 月中下旬复核大皇宫开放状态","王太后火化仪式存在临时闭馆风险；排曼谷前先复核官方公告，并准备卧佛寺、郑王庙等备选。","行前提醒");
   if(cityDates("清迈").length)add("warn","10 月底前完成 Elephant Nature Park 预订","12 月旺季建议提前 6–8 周预订，不接受 walk-in。","行前提醒");
   if(cityDates("吉隆坡").length)add("warn","双子塔票提前 3–4 周在线预订","12 月时段票可能提前 18–25 天售罄；行程日期确定后立即锁票。","行前提醒");
 
-  const transfers=scheduleTransitions(), problemTransfers=transfers.filter(r=>r.assessment.kind!=="direct");
+  const transfers=scheduleTransitions().filter(r=>transferModeForDate(r.date)==="flight"), problemTransfers=transfers.filter(r=>r.assessment.kind!=="direct");
   problemTransfers.forEach(r=>{
     if(r.assessment.kind==="no-service")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}当天无直飞`,(r.route.calendar_warnings||[]).join(" ")+" 请改期，或查看中转／普通铁路替代。","来源：最终 56 对矩阵 · 2026-09-14");
     else if(r.assessment.kind==="no-direct")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}已确认无直飞`,r.route.notes||"请选择中转方案。","来源：最终 56 对矩阵 · 多源交叉核验");
@@ -502,11 +482,9 @@ function citySuitability(date: string): CitySuit[] {
     if (holiday && holiday.countries.includes(cityCountry[city])) warn(`撞上${holiday.name}，人多、酒店贵`);
     if (date >= "2026-12-24" && date <= "2026-12-31") warn("圣诞/跨年旺季，人多价高，奢华酒店可能有 minimum stay");
     markers.filter(m => m.city === city).forEach(m => warn(`${m.title}：${m.body}`));
-    if (city === "曼谷" && !weekend) warn("恰图恰周末市场今日不开", "/sea-travel-guide/travel-research?from=planner&spot=恰图恰周末市场", "查看恰图恰详情 →");
-    if (city === "清迈") { if (dow !== 6) warn("周六步行街今日不开"); if (dow !== 0) warn("周日步行街今日不开"); }
-    if (city === "普吉") { if (dow !== 0) warn("Lard Yai 周日步行街今日不开"); if (dow === 2) warn("Siam Niramit 每周二休演"); }
-    if (cityCountry[city] === "TH" && dow === 1) warn("泰国周一博物馆闭馆风险，需逐馆核对");
-    if (city === "吉隆坡" && dow === 1) block("双子塔周一闭馆");
+    /* 2026-10-13 用户：不要因为「某个周日才开的景点今天不开」就把这一天标成警告——
+       限定日景点不开是常态，标了只会让人混淆。闭馆/限定日信息保留在城市详情里，不再进每日适宜度。 */
+    void weekend; void block;
     return { city, level, reasons };
   });
 }
@@ -553,6 +531,7 @@ function renderCalendar(){
   S.querySelector(".calendar")?.setAttribute("aria-label",`${monthYearLabel(mc.gridStart)}–${monthYearLabel(mc.gridEnd)}行程日历`);
   const transferByDate=Object.fromEntries(scheduleTransitions().map(item=>[item.date,item]));
   const bigFlights=bigTripFlightDates(); /* 2026-10-02 用户：大行程航班日也要标出来 */
+  const planeNights=planeNightDates(); /* 2026-10-13 用户：过夜/红眼航班那晚睡飞机上，日历城市按「当晚睡哪」标 */
   dates.forEach(date=>{
     const plan=state.schedule[date],d=new Date(date+"T12:00:00Z"),inMonth=date>=state.start&&date<=mc.lastScheduled;
     const wd=["周日","周一","周二","周三","周四","周五","周六"][d.getUTCDay()];
@@ -561,8 +540,11 @@ function renderCalendar(){
     const specials=(specialDateMarkers[date]||[]).filter(marker=>!plan||marker.city===plan.city);
     const dayMarker=[holiday,...specials.map(marker=>marker.short)].filter(Boolean).join(" · ");
     const transition=transferByDate[date],transfer=Boolean(transition),assessment=transition?.assessment;
-    /* 2026-10-02 用户：日历上只显示航班有没有，不显示详细信息（详情在预订页看过了） */
-    const transferCopy=transfer?(assessment.kind==="direct"?`✈ 有直飞`:assessment.kind==="no-service"?"⚠ 无直飞":assessment.kind==="no-direct"?"⚠ 无直飞":"⚠ 待核验"):"";
+    const railTransfer=transition&&transferModeForDate(date)==="rail";
+    /* 2026-10-02 用户：日历上只显示航班有没有，不显示详细信息（详情在预订页看过了）；
+       2026-10-13：选了高铁的转场显示高铁，不查航班 */
+    const transferCopy=transfer?(railTransfer?`🚄 高铁转场`:assessment.kind==="direct"?`✈ 有直飞`:assessment.kind==="no-service"?"⚠ 无直飞":assessment.kind==="no-direct"?"⚠ 无直飞":"⚠ 待核验"):"";
+    const planeNight=Boolean(plan)&&planeNights.has(date);
     const paceCap=4; /* 双人节奏固定为特种兵默认（约4个点/天），节奏选择器已随智能推荐页移除 */
     const decision=state.calMode==="decision";
     const suits=decision?citySuitability(date):null, fs=decision?dayFlightSummary(date):null;
@@ -572,15 +554,19 @@ function renderCalendar(){
       <span class="flight-line">✈ 当日直飞 <b>${fs.direct}/56</b> 方向</span>
       ${fs.noService?`<span class="no-service-line" role="alert"><b>⚠ 今日无直飞</b>：${esc(fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、"))}</span>`:""}`:"";
     const b=document.createElement("button");b.className=`day ${inMonth?"":"out"} ${dayMarker?"holiday":""} ${decision?"decision":""} ${bigFlights.has(date)?"flight-day":""}`;
-    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${bigFlights.has(date)?`<span class="flight-label">✈️ 航班日</span>`:""}${intelHtml}${plan?`<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`:""}`;
+    /* 2026-10-13 用户：格子里的城市 = 当晚住宿城市。过夜航班那天主标「🌙 飞机上过夜」，白天所在城市退为小字。 */
+    const planChip=plan?(planeNight
+      ? `<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">🌙 飞机上过夜<small>白天在${esc(plan.city)} · 晚班飞机</small></span>`
+      : `<span class="day-plan ${plan.mode} ${transfer?"transfer":""}">${plan.mode==="family"?"👨‍👩‍👧":"↗"} ${esc(plan.city)}<small>${transfer?esc(transferCopy):(plan.mode==="family"?"1–2点 · 午休":`约${paceCap}个点`)}</small></span>`):"";
+    b.innerHTML=`<span class="date-no">${d.getUTCDate()}</span><span class="date-wd">${wd}</span>${dayMarker?`<span class="holiday-label">${esc(dayMarker)}</span>`:""}${bigFlights.has(date)?`<span class="flight-label">✈️ 航班日</span>`:""}${intelHtml}${planChip}`;
     const suitNote=decision&&suits?`；适宜度：${suits.map(x=>`${x.city}${suitDot(x.level)}`).join(" ")}`:"";
     const noSvcNote=decision&&fs&&fs.noService?`；今日无直飞：${fs.problems.map(p=>p.replace(/今日无直飞$/,"")).join("、")}`:"";
-    b.setAttribute("aria-label",`${date} ${wd}${plan?` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`:" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${noSvcNote}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
+    b.setAttribute("aria-label",`${date} ${wd}${plan?(planeNight?` 当晚睡在飞机上（白天在${plan.city}）`:` ${plan.city} ${plan.mode==="family"?"亲子":"双人"}模式`):" 未安排"}${dayMarker?` ${dayMarker}`:""}${decision&&fs?`；${fs.direct}/56 方向直飞`:""}${noSvcNote}${suitNote}`);b.onclick=()=>openDay(date);grid.appendChild(b);
   });
   const days=Object.keys(state.schedule).length, couple=Object.values(state.schedule).filter(x=>x.mode==="couple").length, family=days-couple;
   const paceName="特种兵";
   const note=elOpt("calendarNote");
-  if(note) note.textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，元旦 1/1，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
+  if(note) note.textContent=`当前排入 ${days} 天：双人${paceName}节奏 ${couple} 天，亲子慢节奏 ${family} 天。每格城市按「当晚睡在哪」标注：转场日写到达城市，过夜／红眼航班那晚标「🌙 飞机上过夜」。转场日已保留机场与安全缓冲；已标出泰国 12/5、12/7、12/10、12/31，马来西亚／新加坡 12/25，元旦 1/1，以及特殊开放与州属假日提醒。日历已按起始日＋最长行程自动扩展至 ${mc.gridStart.slice(5).replace("-","/")}–${mc.gridEnd.slice(5).replace("-","/")}，共 ${Math.round(mc.cells.length/7)} 周。决策视图下每格直接显示 8 城当日适宜度（绿宜／黄谨慎／红不宜）与 56 个方向的直飞汇总，点击日期可看逐城原因、逐方向直飞明细并一键排城。`;
   renderTransferAlerts();
   renderHardConstraints();
 }
@@ -600,7 +586,7 @@ function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state
 function planText(){
   const lines=["2026年12月东南亚行程",""];
   Object.keys(state.schedule).sort().forEach(date=>{const p=state.schedule[date];lines.push(`${date}｜${p.city}｜${p.mode==="family"?"亲子 2大1小（1–2个点＋午休）":p.mode==="free"?"留白 / 休整":"双人"}`)});
-  lines.push("","硬约束提醒：泰国公共假日 12/5、12/7补假、12/10、12/31；马来西亚／新加坡圣诞节 12/25；元旦 1/1；另查 12/1、12/9、12/11、12/12 特殊开放。周末限定市场、闭馆日、航线核验、酒店 minimum stay 与 gala dinner 请按页面检查。航班资料核查于 2026-09-14，预订前仍需按实际日期重查。")
+  lines.push("","硬约束提醒：泰国公共假日 12/5、12/7补假、12/10、12/31；马来西亚／新加坡圣诞节 12/25；元旦 1/1；另查 12/1、12/9、12/11、12/12 特殊开放。航线核验、酒店 minimum stay 与 gala dinner 请按页面检查。航班资料核查于 2026-09-14，预订前仍需按实际日期重查。")
   return lines.join("\n")
 }
 async function copyPlan(){const text=planText();try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}toast("行程已复制")}
@@ -647,22 +633,88 @@ const RETURN_CITY_META: Record<Exclude<ReturnCityCode,"">,{city:string;airport:s
    key = transition.after（回程用 "return"）；统一用本段最后一天（ranges[after].to） */
 let tripFlightDay: Record<string,"last"|"next"> = {};
 function tripFlyChoice(key: string): "last"|"next"{ return "last"; }
+/* 每段转场方式（2026-10-13 用户：转场不一定是飞机，也可以是高铁；在大行程里逐段选，存云端）。
+   key = transition.after；西安→北京默认高铁（用户 2026-09-28 已定不坐飞机），其余默认飞机。 */
+let legModes: Record<string,"flight"|"rail"> = {};
+function legMode(after: string): "flight"|"rail"{
+  if(legModes[after]) return legModes[after];
+  const t=TRIP_TRANSITIONS.find(x=>x.after===after);
+  return t?.noFlight ? "rail" : "flight";
+}
+/* 日历上某个转场日（= 目的段第一天）的转场方式：按目的段反查出发段 */
+function transferModeForDate(date: string): "flight"|"rail"{
+  const ranges=tripRanges();
+  for(const t of TRIP_TRANSITIONS){ if(ranges[t.before]&&ranges[t.before].from===date) return legMode(t.after); }
+  return "flight";
+}
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
   const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
 }
-/* 大行程航班日（2026-10-02 用户：日历上标出坐飞机的那几天）：去程11/28 + 各段最后一天（转场飞） */
+/* 大行程航班日（日历上标出坐飞机的那几天）。
+   2026-10-13 用户口径修正：转场航班日 = 到达段的第一天（当天落地、当晚睡在到达城市），
+   不是出发段的最后一天——旧口径把起飞日标在出发段末日，与航班库/预订页的实际日期差一天。
+   选了高铁的转场不算航班日；首尔→西雅图在首尔段最后一天（01-01 晚飞）出发。 */
 function bigTripFlightDates(): Set<string>{
   const ranges=tripRanges(), dates=new Set<string>();
   dates.add("2026-11-28"); /* 去程：西雅图→北京 */
-  for(const segId of ["beijing1","singapore","couple","beijing3","seoul"]){
-    if(ranges[segId]) dates.add(ranges[segId].to);
+  for(const t of TRIP_TRANSITIONS){
+    if(legMode(t.after)==="flight"&&ranges[t.before]) dates.add(ranges[t.before].from);
   }
-  /* 2026-10-03 注：西安→首尔（老婆带娃）与北京→首尔同一天飞（预订页两段同为 12/31），
-   * 已由 beijing3 段末日标记覆盖；回程各段精确日期待完整大行程模型验证后统一推导，不在此处猜 */
+  if(ranges["seoul"]) dates.add(ranges["seoul"].to); /* 首尔→西雅图 AS120 01-01 晚飞 */
   return dates;
+}
+/* 某航段在某天是否「过夜航班」：以航班库里最便宜的直飞为准，起飞+时长跨过午夜
+   （含跨日界线的长程：20:00 飞 10 小时这种）→ 那晚睡在飞机上。
+   凌晨 00:00–05:00 起飞的红眼另行处理：它占的是前一晚。 */
+function legOvernightInfo(code: string, date: string): { overnight: boolean; earlyRedeye: boolean }{
+  const d=TRIP_FLIGHTS[`${code}|${date}`];
+  if(!d||!d.flights.length) return { overnight:false, earlyRedeye:false };
+  const priced=d.flights.filter(f=>f.price!=null);
+  const rep=(priced.length?priced.reduce((a,b)=>(a.price!<=b.price!?a:b)):d.flights[0])!;
+  const tparse=(t: string)=>{
+    const m24=t.match(/(\d{1,2}):(\d{2})/);
+    if(!m24) return null;
+    let h=+m24[1]; const mi=+m24[2];
+    const ap=t.match(/(AM|PM)/i);
+    if(ap){ const pm=/pm/i.test(ap[1]); if(pm&&h<12)h+=12; if(!pm&&h===12)h=0; }
+    return h*60+mi;
+  };
+  const dep=tparse(rep.dep);
+  const dm=rep.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+  if(dep==null||!dm) return { overnight:false, earlyRedeye:false };
+  const dur=+dm[1]*60+(dm[2]?+dm[2]:0);
+  return { overnight: dep+dur>=1440, earlyRedeye: dep<300 };
+}
+/* 日历上「睡在飞机上」的日期集合：过夜航班的起飞日 + 红眼航班的前一晚 */
+function planeNightDates(): Set<string>{
+  const ranges=tripRanges(), out=new Set<string>();
+  const addLeg=(code: string, date: string)=>{
+    const info=legOvernightInfo(code, date);
+    if(info.overnight) out.add(date);
+    if(info.earlyRedeye) out.add(addDays(date,-1));
+  };
+  /* 去程与各转场（与大行程转场行同口径解析动态航段代码） */
+  addLeg("SEA-PEK","2026-11-28");
+  const rc=(returnCity||"PEK") as Exclude<ReturnCityCode,"">;
+  for(const t of TRIP_TRANSITIONS){
+    if(legMode(t.after)!=="flight") continue;
+    const date=ranges[t.before]?.from; if(!date) continue;
+    for(const l of t.legs){
+      const code=l.code.replace("__COUPLE_XIY_CODE__",thailandToXianLeg().code).replace("__SIN_FIRST_CODE__",singaporeToFirstCityLeg().code).replace("__RETURN_ICN_CODE__",`${rc}-ICN`);
+      addLeg(code, date);
+    }
+  }
+  /* 向导夫妻段内部转场（新加坡→首城在上面的转场行里；这里是城与城之间） */
+  for(const leg of wzLegs()){
+    const code=`${CITY_AIRPORT[leg.from]||""}-${CITY_AIRPORT[leg.to]||""}`;
+    if(code.length>1) addLeg(code, leg.date);
+  }
+  /* 回程首尔→西雅图 */
+  if(ranges["seoul"]) addLeg("ICN-SEA", ranges["seoul"].to);
+  return out;
 }
 interface FlightDbFlight { airline: string; flight: string|null; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
 interface FlightDbDay {
@@ -720,10 +772,11 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"__SIN_FIRST_CODE__",label:"__SIN_FIRST_LABEL__"},{code:"SIN-XIY",label:"新加坡→西安"}] },
   { after:"couple", before:"xian", title:"__COUPLE_XIY__",
     legs:[{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__"}] },
-  /* 用户 2026-09-28：西安→北京不坐飞机了，删掉这张机票卡；航班库也不再查 XIY-PEK */
+  /* 用户 2026-09-28：西安→北京不坐飞机了，删掉这张机票卡；航班库也不再查 XIY-PEK。
+     2026-10-13：转场方式改为可选项（默认仍高铁）；切回飞机时显示 XIY-PEK 卡（航班库未查此段，显示待查询）。 */
   { after:"xian", before:"beijing3", title:"西安→北京（用户一人）", noFlight:true,
-    note:"你坐高铁去北京，不需要机票。",
-    legs:[] },
+    note:"默认坐高铁去北京，不需要机票；也可以在上面切回飞机。",
+    legs:[{code:"XIY-PEK",label:"西安→北京"}] },
   /* 2026-10-02 用户：回程分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔；航段代码随回程城市动态变 */
   { after:"beijing3", before:"seoul", title:"__RETURN_SEOUL__（分两路会合）",
     legs:[{code:"__RETURN_ICN_CODE__",label:"__RETURN_ICN_LABEL__（你一人）"},{code:"XIY-ICN",label:"西安→首尔（老婆带娃）"}] },
@@ -876,11 +929,12 @@ function renderTrip(){
     const segHtml = segCard(s);
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
-      /* 2026-10-02 用户：不要二选一，直接按排定日期（本段最后一天）走；
-         用户 2026-09-28：西安→北京坐高铁，灵活不需要选出发日，只标日期 */
-      const choice=t.noFlight ? "last" : tripFlyChoice(t.after);
-      const date=choice==="last"?ranges[t.after].to:ranges[t.before].from;
-      const lastD=ranges[t.after].to, nextD=ranges[t.before].from;
+      /* 转场日 = 到达段第一天（2026-10-13 用户口径：当天落地、当晚睡在到达城市；
+         旧口径用出发段最后一天，与航班库/预订页的实际航班日期差一天，已废止）。
+         转场方式逐段可选（飞机/高铁，2026-10-13 用户），默认：西安→北京高铁，其余飞机。 */
+      const mode=legMode(t.after);
+      const isRail=mode==="rail";
+      const date=ranges[t.before].from;
       const xiyLeg = thailandToXianLeg();
       const sinLeg = singaporeToFirstCityLeg();
       /* 2026-09-29：回程经首尔中转，航段代码随回程城市动态变（默认北京） */
@@ -896,17 +950,19 @@ function renderTrip(){
         label: l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label)
           .replace("__RETURN_ICN_LABEL__", `${rm.city}→首尔`),
       }));
-      const cards=legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
-      const dayWord=t.noFlight?"出发日":"起飞日", goWord=t.noFlight?"走":"飞";
+      const cards=isRail?"":legs.map(l=>tripFlightCard(`${l.code}|${date}`,l.label)).join("");
+      const dayWord=isRail?"出发日":"起飞日";
       /* 视觉分组：段卡片+它的转场包在同一个容器里，左边一条竖线连起来，一眼看出按钮归谁；
          2026-10-03 用户：当前段整组高亮 */
       const grpCls=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
       parts.push(`<div class="${grpCls}">${segHtml}
-      <div class="trip-flight"><span>${t.noFlight?"🧳":"✈️"}</span><strong>${t.noFlight?"":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
+      <div class="trip-flight"><span>${isRail?"🚄":"✈️"}</span><strong>${isRail?"🚄 ":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
+    <div class="micro trip-legmode">转场方式：
+      <button data-legmode="${t.after}|flight" class="${isRail?"":"active"}" aria-pressed="${!isRail}">✈️ 飞机</button>
+      <button data-legmode="${t.after}|rail" class="${isRail?"active":""}" aria-pressed="${isRail}">🚄 高铁</button>
+    </div>
     ${t.note?`<p class="micro">${t.note}</p>`:""}
-    ${t.noFlight
-      ? `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}</div>`
-      : `<div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>`}
+    <div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
       const grpCls2=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
@@ -938,6 +994,13 @@ function renderTrip(){
     const [key,val]=((b as HTMLElement).dataset.flyday||"").split("|");
     tripFlightDay[key]=val==="next"?"next":"last";
     renderTrip(); cachePlannerLocal();
+  });
+  /* 转场方式切换（2026-10-13 用户）：飞机/高铁逐段选，立即重渲染大行程与日历并缓存，保存后存云端 */
+  body.querySelectorAll("[data-legmode]").forEach(b=>(b as HTMLElement).onclick=()=>{
+    const [key,val]=((b as HTMLElement).dataset.legmode||"").split("|");
+    if(key) legModes[key]=val==="rail"?"rail":"flight";
+    renderTrip(); renderCalendar(); cachePlannerLocal();
+    toast(val==="rail"?"这段转场已改成高铁 🚄":"这段转场已改成飞机 ✈️");
   });
 }
 
@@ -1151,17 +1214,13 @@ function wzUnifiedCalendar(){
   /* 去程 11/28 西雅图→北京：TRIP_TRANSITIONS 里没有去程段，单独加徽标 */
   flightByDate["2026-11-28"]="西雅图→北京（去程）";
   for(const t of TRIP_TRANSITIONS){
-    if(t.noFlight) continue; /* 西安→北京坐高铁，不打 ✈️ */
-    const choice = tripFlyChoice(t.after);
-    const tdate = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(legMode(t.after)==="rail") continue; /* 高铁转场不打 ✈️（2026-10-13：方式可选，默认西安→北京高铁） */
+    const tdate = ranges[t.before]?.from; /* 转场日 = 到达段第一天（2026-10-13 口径） */
     if(tdate) flightByDate[tdate]=t.title;
   }
-  const b3 = ranges["beijing3"];
-  if(b3){
-    const rc = tripFlyChoice("return");
-    const flyDate = rc==="last" ? b3.to : addDays(b3.to, 1);
-    flightByDate[flyDate]="回西雅图";
-  }
+  const sl2 = ranges["seoul"];
+  if(sl2) flightByDate[sl2.to]="首尔→西雅图";
+  const planeNightsOrd = planeNightDates();
   /* 按月分组 */
   const dates=Object.keys(dayCity).sort();
   if(!dates.length) return '<p class="micro">暂无行程日期。</p>';
@@ -1182,9 +1241,11 @@ function wzUnifiedCalendar(){
     if(!info){ html+=`<div class="wz-calday off"><span class="wz-caldate">${dateNum}</span></div>`; continue; }
     const issues=wzDayIssues(d, info.city, legByDate[d]);
     const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
-    const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="必去闭馆">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
+    const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="有严重问题">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
     const color=segColor[info.seg]||"#94a3b8";
-    html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dateNum}</span><span class="wz-calcity">${info.city}</span><span class="wz-calbadges">${badges}</span></button>`;
+    /* 2026-10-13 用户：城市按当晚住宿标——过夜航班那天显示「🌙 飞机上过夜」 */
+    const cityLabel=planeNightsOrd.has(d)?"🌙 飞机上过夜":info.city;
+    html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dateNum}</span><span class="wz-calcity">${cityLabel}</span><span class="wz-calbadges">${badges}</span></button>`;
   }
   html+=`</div></div>`;
   return html;
@@ -1199,23 +1260,24 @@ function tripTransitionFlightIssues(date: string): DayIssue[] {
     if(!d) return; /* 还没查过，不打扰 */
     if(!d.direct) out.push({ severity: "critical", text: `✈️ ${label}（${date.slice(5).replace("-","/")}）：实查确认无直飞`, why: `Google Flights ${d.queriedAt||"近期"}实查当天无直飞，需要改期或看中转方案` });
   };
-  /* 北京→新加坡：beijing1 最后一天 */
+  /* 转场检查按「到达段第一天 = 航班日」触发（2026-10-13 口径，与航班库/预订页一致；
+     旧口径挂在出发段最后一天，查的是前一天的航班数据，已废止）。选了高铁的段不查航班。 */
   const b1 = ranges["beijing1"], sg = ranges["singapore"];
-  if(b1 && sg && date === b1.to){
+  if(b1 && sg && date === sg.from && legMode("beijing1")==="flight"){
     check("PEK-SIN", "北京→新加坡");
     check("XIY-SIN", "西安→新加坡（岳父母）");
   }
-  /* 新加坡→东南亚段：singapore 最后一天 */
+  /* 新加坡→东南亚段：couple 第一天 */
   const cp = ranges["couple"];
-  if(sg && cp && date === sg.to){
+  if(sg && cp && date === cp.from && legMode("singapore")==="flight"){
     const firstCity = wz.order.filter(c=>wz.cities.includes(c))[0];
     const cityCode: Record<string,string> = {"普吉":"HKT","清迈":"CNX","曼谷":"BKK","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC"};
     if(firstCity && cityCode[firstCity]) check(`SIN-${cityCode[firstCity]}`, `新加坡→${firstCity}`);
     check("SIN-XIY", "新加坡→西安（岳父母带娃）");
   }
-  /* 东南亚段→西安：couple 最后一天 */
+  /* 东南亚段→西安：xian 第一天 */
   const xa = ranges["xian"];
-  if(cp && xa && date === cp.to){
+  if(cp && xa && date === xa.from && legMode("couple")==="flight"){
     const cities = wz.order.filter(c=>wz.cities.includes(c));
     const lastCity = cities[cities.length-1];
     const cityCode: Record<string,string> = {"普吉":"HKT","清迈":"CNX","曼谷":"BKK","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC"};
@@ -1226,12 +1288,9 @@ function tripTransitionFlightIssues(date: string): DayIssue[] {
 function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] {
   const out: DayIssue[]=[];
   out.push(...tripTransitionFlightIssues(date));
-  out.push(...dayClosureIssues(city, date));
+  /* 2026-10-13 用户：去掉「限定日景点今天不开」这类按天警告（周日步行街非周日不开之类），只会造成混淆 */
   const suits=citySuitability(date).filter(x=>x.city===city&&x.level!=="ok");
-  /* 去重（2026-09-28 用户：dayClosureIssues 已按严重级别+深链输出过的，不再重复一条提醒） */
-  const closureNames=(MUST_GO_CLOSURES[city]||[]).map(c=>c.name);
   suits.forEach(s=>s.reasons.forEach(r=>{
-    if(closureNames.some(n=>r.text.includes(n))) return;
     out.push({ severity:s.level==="blocked"?"critical":"warn", text:`${city}：${r.text}`, link:r.link, linkText:r.linkText });
   }));
   const hd=publicHolidays[date];
@@ -1257,9 +1316,8 @@ function ordReturnSummary(): string {
   if(!bj3 || !seoul) return "";
   const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
   const rm = RETURN_CITY_META[rc];
-  /* 北京→首尔：起飞日二选一（beijing3最后一天 或 seoul第一天） */
-  const bjChoice = tripFlyChoice("beijing3");
-  const bjFlyDate = bjChoice==="last" ? bj3.to : seoul.from;
+  /* 北京→首尔：起飞日 = 首尔段第一天（2026-10-13 口径：当天落地、当晚睡首尔；旧口径用 beijing3 末日差一天） */
+  const bjFlyDate = seoul.from;
   const bjCard = tripFlightCard(`${rc}-ICN|${bjFlyDate}`, `${rm.city}→首尔（2大1小）`);
   /* 首尔→西雅图：起飞日二选一（seoul最后一天 或 次日） */
   const seaChoice = tripFlyChoice("return");
@@ -1293,9 +1351,8 @@ function ordAllFlights(): string {
   /* 去程 11/28 西雅图→北京（2大1小）：TRIP_TRANSITIONS 里没有去程段，单独加一张卡 */
   pushCard("2026-11-28", "西雅图→北京（去程）", tripFlightCard("SEA-PEK|2026-11-28", "西雅图→北京"));
   for(const t of TRIP_TRANSITIONS){
-    if(t.noFlight) continue;
-    const choice = tripFlyChoice(t.after);
-    const date = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(legMode(t.after)==="rail") continue; /* 2026-10-13：高铁转场不列航班卡 */
+    const date = ranges[t.before]?.from; /* 转场日 = 到达段第一天（2026-10-13 口径） */
     if(!date) continue;
     const title = t.title
       .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
@@ -1398,11 +1455,10 @@ function dayFlightCards(d: string): string {
   const cards: string[] = [];
   /* 去程 11/28 西雅图→北京（2大1小） */
   if(d === "2026-11-28") cards.push(tripFlightCard("SEA-PEK|2026-11-28", "西雅图→北京"));
-  /* 大行程转场：北京→新加坡 / 新加坡→首城 / 末城→西安 */
+  /* 大行程转场：北京→新加坡 / 新加坡→首城 / 末城→西安（转场日 = 到达段第一天；高铁段不出航班卡） */
   for(const t of TRIP_TRANSITIONS){
-    if(t.noFlight) continue;
-    const choice = tripFlyChoice(t.after);
-    const date = choice==="last" ? ranges[t.after]?.to : ranges[t.before]?.from;
+    if(legMode(t.after)==="rail") continue;
+    const date = ranges[t.before]?.from;
     if(date !== d) continue;
     const xiyLeg = thailandToXianLeg();
     const sinLeg = singaporeToFirstCityLeg();
@@ -1595,6 +1651,7 @@ function serializePlan(): PlannerPlan{
     trip:{...tripDays},
     returnCity,
     tripFlightDay:{...tripFlightDay},
+    legModes:{...legModes},
   };
 }
 function applyLoadedPlan(p: PlannerPlan){
@@ -1611,6 +1668,9 @@ function applyLoadedPlan(p: PlannerPlan){
   returnCity = "PEK";
   if(p.tripFlightDay&&typeof p.tripFlightDay==="object"){
     for(const [k,v] of Object.entries(p.tripFlightDay)){ if(v==="last"||v==="next") tripFlightDay[k]=v; }
+  }
+  if(p.legModes&&typeof p.legModes==="object"){
+    for(const [k,v] of Object.entries(p.legModes)){ if(v==="flight"||v==="rail") legModes[k]=v as "flight"|"rail"; }
   }
   if(p.trip&&typeof p.trip==="object"){
     for(const s of TRIP_SEGS){ const v=(p.trip as Record<string,unknown>)[s.id]; if(typeof v==="number"&&v>=1&&v<=20) tripDays[s.id]=v; }

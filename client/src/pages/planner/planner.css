@@ -94,6 +94,9 @@ h4{font-size:16px;margin:0;font-weight:700}
 .trip-seg-group .trip-seg{margin-bottom:8px;border:none;background:transparent;padding:0}
 .trip-seg-group .trip-flight{margin:8px 0 4px;padding:10px 12px;background:var(--bg-soft);border-radius:8px}
 .trip-seg-group .trip-flydays{margin:8px 0}
+.trip-legmode{margin:8px 0 0;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.trip-legmode button{border:1px solid #d8d2c2;background:#fff;border-radius:999px;padding:4px 12px;font-size:12px;cursor:pointer;min-height:32px}
+.trip-legmode button.active{background:#0f766e;border-color:#0f766e;color:#fff;font-weight:700}
 .trip-seg-group .trip-flightinfo{margin-top:8px}
 .trip-seg-head{flex:1;min-width:0}
 .trip-seg-title{font-size:18px;font-weight:700;color:var(--ink)}
