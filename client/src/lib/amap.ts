@@ -1,12 +1,16 @@
 import L from "leaflet";
 
 /**
- * 高德中文底图 + WGS-84 → GCJ-02 坐标校正（2026-09-27 用户要求：行程地图用中文地图）。
+ * 地图底图：Google Maps 中文标注（hl=zh-CN）+ WGS-84 坐标直通。
  *
- * 高德瓦片按 GCJ-02 坐标系渲染，站内核实坐标是 WGS-84（Google Maps 来源）。
- * 在东南亚直接叠加会有约 100–400 米偏移，街道级放大后肉眼可见，
- * 因此所有 marker / polyline / bounds / setView / flyTo 入口统一走 LL() 转换。
- * 纯数学函数（经典 eviltransform），不依赖任何外部 API。
+ * 站内核实坐标是 WGS-84（Google Maps 来源），Google 瓦片同为 WGS-84，
+ * 因此 LL() 直接透传、不做 GCJ-02 转换。
+ *
+ * ⚠️ 底图选型裁决（2026-10-13 用户明确）：用户手机卡可直连外网，
+ * Google 瓦片在其设备上正常加载——不许再以"用户在大陆"为由切高德。
+ * 高德海外（东南亚）数据弱于 Google，且 GCJ-02 转换在境外反而引入偏移。
+ * 历史：2026-09-27 高德反爬空白图 → Esri → Google；2026-10-12 误判
+ * "大陆被墙"切回高德一天，次日用户纠正后切回 Google，此后以此为准。
  */
 
 const PI = Math.PI;
@@ -50,24 +54,20 @@ export function wgs84ToGcj02(lat: number, lng: number): [number, number] {
   return [lat + adjLat, lng + adjLng];
 }
 
-/** WGS-84 经纬度 → Leaflet LatLng。高德底图按 GCJ-02 渲染，统一做坐标校正
- *（2026-10-12 切回高德时恢复；Google 时代曾直接透传）。 */
+/** WGS-84 经纬度 → Leaflet LatLng。Google 底图同为 WGS-84，直接透传，
+ * 不做 GCJ-02 转换（wgs84ToGcj02 保留备用，当前不调用）。 */
 export function LL(lat: number, lng: number): L.LatLng {
-  const [gcjLat, gcjLng] = wgs84ToGcj02(lat, lng);
-  return L.latLng(gcjLat, gcjLng);
+  return L.latLng(lat, lng);
 }
 
-/** 地图底图：高德中文街道图。
- * 2026-10-12 从 Google 切回高德：Google 瓦片（mt*.google.com）在
- * 中国大陆被墙，用户在北京时行程地图完全空白。高德 2026-10-12 实测
- * 瓦片正常（返回真实地图非空白图，中文标注）。
- * 高德用 GCJ-02，坐标统一走 LL() 转换。 */
+/** 地图底图：Google Maps 中文标注（hl=zh-CN）。2026-09-27 用户要求中文地图；
+ * 2026-10-13 用户确认其手机卡可直连外网、Google 正常加载，定为长期底图。 */
 export function addAmapTiles(map: L.Map): L.TileLayer {
   return new RetryTileLayer(
-    "https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
+    "https://mt{s}.google.com/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}",
     {
-      subdomains: "1234",
-      attribution: '&copy; <a href="https://www.amap.com/">高德地图 AutoNavi</a>',
+      subdomains: "0123",
+      attribution: "&copy; Google Maps",
       maxZoom: 19,
     },
   ).addTo(map);
