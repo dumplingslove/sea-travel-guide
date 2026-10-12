@@ -113,6 +113,18 @@ function FavoriteActionList({
     }
     return m;
   }, [bookingRows]);
+  /* 已出票判定同样只认 DB：已确认的交通类预订记录按航班号建索引，收藏航班号命中即已出票 */
+  const ticketedByFlightNo = useMemo(() => {
+    const m = new Map<string, { code?: string; summary: string }>();
+    for (const r of bookingRows) {
+      if (!r.done) continue;
+      const d = parseBookingBody(r.body);
+      if (d.bkind !== "transport") continue;
+      const hit = `${r.title} ${d.extra ?? ""}`.match(/[A-Z]{2}\d{3,4}/);
+      if (hit) m.set(hit[0], { code: d.code, summary: bookingSummary(d) });
+    }
+    return m;
+  }, [bookingRows]);
   const { segments } = usePlanScope();
   const segs: PlanSegment[] = useMemo(
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
@@ -164,31 +176,9 @@ function FavoriteActionList({
     })
     .filter((f) => ["hotel", "flight", "restaurant", "attraction"].includes(f.type));
 
-  /* 2026-10-03 用户：已出票的航班自动进出现在行动安排，不用手动收藏 */
-  const autoTicketed = FLIGHT_LEGS.filter((l) => l.ticketed).filter((l) => {
-    // 已在手动收藏里的不重复加
-    return !manualFavs.some((f) => f.type === "flight" && f.flight?.route === l.route);
-  }).map((l) => ({
-    row: { id: `auto-ticketed-${l.id}`, title: `${l.route} ${l.carrier || ""} ${l.schedule || ""}`.trim(), done: true } as unknown as (typeof rows)[number],
-    city: "",
-    type: "flight" as string,
-    flight: {
-      carrier: l.carrier || undefined,
-      flight: l.schedule?.split(" ")[0],
-      depart: undefined as string | undefined,
-      arrive: undefined as string | undefined,
-      arrivePlusDay: undefined as boolean | undefined,
-      price: undefined as number | undefined,
-      cabin: undefined as string | undefined,
-      route: l.route,
-      date: l.date,
-      priceBasis: l.priceBasis || undefined,
-      queriedAt: undefined as string | undefined,
-    },
-    auto: true as boolean,
-  }));
-
-  const favs = [...autoTicketed, ...manualFavs];
+  /* 2026-10-13 用户铁律：预定筛选只显示 DB 里的收藏记录，不许再从代码常量（FLIGHT_LEGS）
+     自动注入已出票航班。出票信息先进 DB 预订记录，再由下面的已出票匹配从 DB 反映出来 */
+  const favs = manualFavs;
 
   if (!favs.length) {
     return (
@@ -446,31 +436,18 @@ function FavoriteActionList({
                           {f.type === "flight" && f.flight?.route && (
                             <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
                           )}
-                          {/* 2026-10-03 用户：已出票的航班在行动安排里标已购买 */}
-                          {f.type === "flight" && flightLeg?.ticketed && (
+                          {/* 已出票徽标只认 DB 已确认的交通预订记录（按航班号匹配），不读代码常量 */}
+                          {f.type === "flight" && f.flight?.flight && ticketedByFlightNo.has(f.flight.flight) && (
                             <span
-                              title={flightLeg.note}
+                              title={ticketedByFlightNo.get(f.flight.flight)!.summary}
                               className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
                             >
-                              ✅ 已出票
+                              ✅ 已出票{ticketedByFlightNo.get(f.flight.flight)!.code ? ` · ${ticketedByFlightNo.get(f.flight.flight)!.code}` : ""}
                             </span>
                           )}
-                          {/* 2026-10-03 用户：已预订的酒店在行动安排里标已预订（1359213 曾误加入已下线的 BookingTimeline，本轮移到 BookingsPage） */}
-                          {f.type === "hotel" && (() => {
-                            const st = stayOf(itemCity(f));
-                            return st?.booked ? (
-                              <span
-                                title={st.confirmationCode ? `确认号 ${st.confirmationCode}` : "已预订"}
-                                className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
-                              >
-                                ✅ 已预订{st.bookedHotelName ? ` · ${st.bookedHotelName}` : ""}
-                              </span>
-                            ) : null;
-                          })()}
                           {/* 2026-10-13 用户：预定筛选要标"是否已预订"——与已确认预订记录同名即标（餐厅订位主要靠这条） */}
                           {(() => {
-                            if (f.type === "flight" && flightLeg?.ticketed) return null;
-                            if (f.type === "hotel" && stayOf(itemCity(f))?.booked) return null;
+                            if (f.type === "flight" && f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) return null;
                             const rec = confirmedByName.get(f.row.title.trim().toLowerCase());
                             if (!rec) return null;
                             return (
@@ -578,7 +555,7 @@ function FavoriteActionList({
                       {isOpen && f.type === "flight" && flightLeg && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
-                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{flightLeg.ticketed ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
+                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
                           </p>
                           {/* 2026-10-03 用户：机票要有价格变动时间线（含每次涨跌的发生时间） */}
                           {f.flight?.price != null && (
@@ -605,10 +582,9 @@ function FavoriteActionList({
                               })()}
                             />
                           )}
-                          {/* 2026-10-10 site-audit 修复：已出票的腿 options 为空是预期（refreshLegFromDb 直接跳过），
-                              不许再显示"暂无直飞数据（待实查）"误导；直接展示出票信息 */}
-                          {flightLeg.ticketed ? (
-                            <p className="text-emerald-700 font-medium">{flightLeg.note}</p>
+                          {/* 已出票（以 DB 预订记录为准）直接给出票摘要；否则列当天直飞选项比价 */}
+                          {(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? (
+                            <p className="text-emerald-700 font-medium">✅ 已出票 · {ticketedByFlightNo.get(f.flight.flight)!.summary}（全部细节见「✅ 最终预定」）</p>
                           ) : (flightLeg.options ?? []).length ? (
                             <div className="space-y-1">
                               {[...(flightLeg.options ?? [])]
@@ -852,8 +828,9 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
   return null;
 }
 
-/** 最终预定（2026-10-13 用户新增）：只放已经定下来的东西——
- * 已确认的预订记录（kind=booking 且 done）+ 已出票航班（FLIGHT_LEGS ticketed）。
+/** 最终预定（2026-10-13 用户新增）：只放已经定下来的东西。
+ * 数据铁律（2026-10-13 用户）：只读 DB 里已确认的预订记录（kind=booking 且 done），
+ * 不许从任何代码常量拼数据——机票出票、酒店预订、餐厅订位都先进 DB 记录，再从 DB 反映到这里。
  * 点开任意一条看全部预订细节，确认号大字展示，方便直接给对方出示核对。 */
 function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { rows, loading } = useRecordsData(["booking"]);
@@ -907,35 +884,6 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
       code: data.code,
       lines,
       recordId: row.id,
-    });
-  }
-  /* 已出票航班：预订记录里已覆盖的（同航班号）不重复列 */
-  for (const leg of FLIGHT_LEGS.filter((l) => l.ticketed)) {
-    const flightNo = leg.schedule?.split(" ")[0] ?? "";
-    const covered = confirmed.some(
-      ({ row, data }) =>
-        (flightNo !== "" && (row.title.includes(flightNo) || (data.extra ?? "").includes(flightNo))) ||
-        (data.bkind === "transport" && data.date === leg.date),
-    );
-    if (covered) continue;
-    const codeMatch = leg.note?.match(/确认号\s*([A-Za-z0-9]+)/);
-    const lines: { label: string; value: string }[] = [
-      { label: "航线", value: leg.route },
-      { label: "出发日期", value: leg.date || "待定" },
-    ];
-    if (leg.carrier || leg.schedule)
-      lines.push({ label: "航班", value: `${leg.carrier ?? ""} ${leg.schedule ?? ""}`.trim() });
-    if (leg.priceBasis) lines.push({ label: "乘客", value: leg.priceBasis });
-    if (leg.note) lines.push({ label: "出票信息", value: leg.note });
-    items.push({
-      key: `leg-${leg.id}`,
-      kindLabel: "✈️ 已出票",
-      badgeCls: "bg-indigo-600 text-white",
-      title: `${leg.route}${flightNo ? ` · ${leg.carrier ?? ""} ${flightNo}` : ""}`,
-      sortDate: leg.date || "9999",
-      headLine: `${leg.date || ""} · ${leg.schedule ?? ""}`.trim(),
-      code: codeMatch ? codeMatch[1] : undefined,
-      lines,
     });
   }
   items.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
