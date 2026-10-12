@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-12T05:41:10+00:00",
+ "updated_at": "2026-10-12T06:34:10+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -397,36 +397,20 @@
      "business_price_basis": "2大1小总价"
     },
     "2026-12-06": {
-     "economy_queried_at": "2026-10-05T04:54:25+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-12T06:34:10+00:00",
+     "economy_usd": 512,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "全部直飞航班均未显示价格",
      "nonstop_flights": [
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ801",
-       "dep": "00:10",
-       "arr": "06:45",
-       "duration": "6h 35m",
-       "business_price_usd": 3346.0
-      },
       {
        "airline": "Air China",
        "flight": "CA975",
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
+       "price_usd": 512,
        "business_price_usd": 3034.0
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ805",
-       "dep": "08:45",
-       "arr": "15:20",
-       "duration": "6h 35m",
-       "business_price_usd": 3346.0
       },
       {
        "airline": "Air China",
@@ -434,6 +418,7 @@
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
+       "price_usd": 525,
        "business_price_usd": 3034.0
       },
       {
@@ -442,7 +427,26 @@
        "dep": "15:35",
        "arr": "21:55",
        "duration": "6h 20m",
+       "price_usd": 564,
        "business_price_usd": 3034.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h 35m",
+       "price_usd": 573,
+       "business_price_usd": 3346.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 656,
+       "business_price_usd": 3346.0
       },
       {
        "airline": "Singapore Airlines",
@@ -450,6 +454,7 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
+       "price_usd": 1196,
        "business_price_usd": 4450.0
       }
      ],
@@ -2166,27 +2171,28 @@
    "label": "西安→新加坡（2成人）",
    "days": {
     "2026-12-06": {
-     "economy_queried_at": "2026-10-05T04:54:25+00:00",
-     "economy_usd": 384,
+     "economy_queried_at": "2026-10-12T06:34:10+00:00",
+     "economy_usd": 420,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
-      {
-       "airline": "Scoot",
-       "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
-       "duration": "5h 55m",
-       "price_usd": 384
-      },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
        "dep": "07:20",
        "arr": "12:55",
        "duration": "5h 35m",
+       "price_usd": 420,
        "business_price_usd": 1384.0
+      },
+      {
+       "airline": "Scoot",
+       "flight": "TR135",
+       "dep": "01:55",
+       "arr": "07:50",
+       "duration": "5h 55m",
+       "price_usd": 464
       }
      ],
      "nonstop_count": 2,
@@ -3127,19 +3133,27 @@
    "label": "新加坡→普吉（2成人）",
    "days": {
     "2026-12-10": {
-     "economy_queried_at": "2026-10-05T04:54:25+00:00",
-     "economy_usd": 246,
+     "economy_queried_at": "2026-10-12T06:34:10+00:00",
+     "economy_usd": 241,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
        "airline": "Scoot",
+       "flight": "TR658",
+       "dep": "08:40",
+       "arr": "09:40",
+       "duration": "2h",
+       "price_usd": 241
+      },
+      {
+       "airline": "Scoot",
        "flight": "TR652",
        "dep": "18:15",
        "arr": "19:20",
        "duration": "2h 5m",
-       "price_usd": 246
+       "price_usd": 241
       },
       {
        "airline": "Scoot",
@@ -3147,7 +3161,7 @@
        "dep": "11:15",
        "arr": "12:20",
        "duration": "2h 5m",
-       "price_usd": 291
+       "price_usd": 339
       },
       {
        "airline": "Singapore Airlines",
@@ -3155,16 +3169,8 @@
        "dep": "18:35",
        "arr": "19:35",
        "duration": "2h",
-       "price_usd": 379,
+       "price_usd": 347,
        "business_price_usd": 2278.0
-      },
-      {
-       "airline": "Scoot",
-       "flight": "TR658",
-       "dep": "08:40",
-       "arr": "09:40",
-       "duration": "2h",
-       "price_usd": 291
       },
       {
        "airline": "Singapore Airlines",
@@ -3172,17 +3178,8 @@
        "dep": "06:55",
        "arr": "07:50",
        "duration": "1h 55m",
-       "price_usd": 366,
+       "price_usd": 386,
        "business_price_usd": 1422.0
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ728",
-       "dep": "09:00",
-       "arr": "10:05",
-       "duration": "2h 5m",
-       "price_usd": 501,
-       "business_price_usd": 2278.0
       },
       {
        "airline": "Singapore Airlines",
@@ -3190,7 +3187,7 @@
        "dep": "16:10",
        "arr": "17:10",
        "duration": "2h",
-       "price_usd": 501,
+       "price_usd": 397,
        "business_price_usd": 2122.0
       },
       {
@@ -3199,8 +3196,17 @@
        "dep": "12:50",
        "arr": "13:55",
        "duration": "2h 5m",
-       "price_usd": 522,
+       "price_usd": 476,
        "business_price_usd": 1828.0
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ728",
+       "dep": "09:00",
+       "arr": "10:05",
+       "duration": "2h 5m",
+       "price_usd": 564,
+       "business_price_usd": 2278.0
       },
       {
        "airline": "Singapore Airlines",
@@ -3208,14 +3214,15 @@
        "dep": "08:15",
        "arr": "09:15",
        "duration": "2h",
-       "price_usd": 844,
+       "price_usd": 664,
        "business_price_usd": 1828.0
       }
      ],
      "nonstop_count": 9,
      "business_queried_at": "2026-10-05T08:36:52+00:00",
      "business_usd": null,
-     "business_price_basis": "2成人总价"
+     "business_price_basis": "2成人总价",
+     "economy_note": "页面标注 SQ740、SQ736、SQ732 由 Bangkok Airways 实际承运（新航航班号代码共享）"
     },
     "2026-12-08": {
      "economy_queried_at": "2026-10-05T20:31:01+00:00",
