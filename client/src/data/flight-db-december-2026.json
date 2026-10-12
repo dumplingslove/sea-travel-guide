@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-12T11:34:27+00:00",
+ "updated_at": "2026-10-12T11:41:22+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2597,8 +2597,8 @@
      "business_note": "商务舱仅1班直飞（China Eastern MU2069），价格不可用（Price unavailable）"
     },
     "2026-12-19": {
-     "economy_queried_at": "2026-10-05T11:06:15+00:00",
-     "economy_usd": 384,
+     "economy_queried_at": "2026-10-12T11:41:22+00:00",
+     "economy_usd": 376.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2606,21 +2606,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
-       "price_usd": 384
+       "price_usd": 376.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T11:06:15+00:00",
+     "business_queried_at": "2026-10-12T11:41:22+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞。页面明确显示 No nonstop flights found；当日唯一执飞直飞的 Scoot TR135 为廉航，Google Flights 商务舱筛选下无售价。"
     },
     "2026-12-20": {
-     "economy_queried_at": "2026-10-05T11:06:15+00:00",
-     "economy_usd": 470,
+     "economy_queried_at": "2026-10-12T11:41:22+00:00",
+     "economy_usd": 462.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2628,28 +2628,29 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
-       "price_usd": 470
+       "price_usd": 462.0
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
        "duration": "5h 35m",
-       "business_price_usd": 1457
+       "price_usd": 888.0,
+       "business_price_usd": 2345.0
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T11:06:15+00:00",
-     "business_usd": 1457,
+     "business_queried_at": "2026-10-12T11:41:22+00:00",
+     "business_usd": 2345.0,
      "business_price_basis": "2成人总价"
     },
     "2026-12-21": {
-     "economy_queried_at": "2026-10-05T11:06:15+00:00",
-     "economy_usd": 470,
+     "economy_queried_at": "2026-10-12T11:41:22+00:00",
+     "economy_usd": 374.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2657,28 +2658,29 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
-       "price_usd": 470
+       "price_usd": 374.0
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
        "duration": "5h 35m",
-       "business_price_usd": 1457
+       "price_usd": 884.0,
+       "business_price_usd": 1460.0
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T11:06:15+00:00",
-     "business_usd": 1457,
+     "business_queried_at": "2026-10-12T11:41:22+00:00",
+     "business_usd": 1460.0,
      "business_price_basis": "2成人总价"
     },
     "2026-12-22": {
-     "economy_queried_at": "2026-10-05T11:06:15+00:00",
-     "economy_usd": 384,
+     "economy_queried_at": "2026-10-12T11:41:22+00:00",
+     "economy_usd": 464.0,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
      "source": "google-flights",
@@ -2686,17 +2688,17 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
-       "price_usd": 384
+       "price_usd": 464.0
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T11:06:15+00:00",
+     "business_queried_at": "2026-10-12T11:41:22+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞。页面明确显示 No nonstop flights found；当日唯一执飞直飞的 Scoot TR135 为廉航，Google Flights 商务舱筛选下无售价。"
     },
     "2026-12-23": {
      "economy_queried_at": "2026-10-05T17:07:59+00:00",
