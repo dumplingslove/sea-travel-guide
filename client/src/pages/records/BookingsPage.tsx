@@ -1055,15 +1055,17 @@ function BookingsCalendar() {
         if (mode === "rail") return;
         const nfs = fdb?.segments?.[code]?.days?.[date]?.nonstop_flights ?? [];
         if (!nfs.length) return;
-        if (code === "SEA-PEK" || code === "ICN-SEA") { plane.add(date); return; } /* 跨太平洋约 10 小时，必在机上过夜 */
-        const priced = nfs.filter((f) => f.price_usd != null);
-        const rep = priced.length ? priced.reduce((a, b) => (a.price_usd! <= b.price_usd! ? a : b)) : nfs[0]!;
-        const dep = tparse(rep.dep);
-        const dm = rep.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
-        if (dep == null || !dm) return;
-        const dur = +dm[1] * 60 + (dm[2] ? +dm[2] : 0);
-        if (dep + dur >= 1440) plane.add(date);
-        if (dep < 300) plane.add(add(date, -1));
+        /* 与行程安排同一规则（2026-10-13 用户纠正）：没选定航班前，只有当天全部直飞
+           都是过夜班才标「飞机上过夜」；有红眼也有白天班时不替用户做主。 */
+        const infos = nfs.map((f) => {
+          const dep = tparse(f.dep);
+          const dm = f.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+          if (dep == null || !dm) return null;
+          return { dep, dur: +dm[1] * 60 + (dm[2] ? +dm[2] : 0) };
+        }).filter((x): x is { dep: number; dur: number } => x != null);
+        if (!infos.length) return;
+        if (infos.every((x) => x.dep + x.dur >= 1440 || x.dur >= 480)) plane.add(date);
+        if (infos.every((x) => x.dep < 300)) plane.add(add(date, -1));
       };
       checkLeg("SEA-PEK", "2026-11-28", "flight");
       checkLeg("PEK-SIN", ranges.singapore!.from, lm("beijing1"));

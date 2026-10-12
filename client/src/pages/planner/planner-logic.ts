@@ -666,14 +666,14 @@ function bigTripFlightDates(): Set<string>{
   if(ranges["seoul"]) dates.add(ranges["seoul"].to); /* 首尔→西雅图 AS120 01-01 晚飞 */
   return dates;
 }
-/* 某航段在某天是否「过夜航班」：以航班库里最便宜的直飞为准，起飞+时长跨过午夜
-   （含跨日界线的长程：20:00 飞 10 小时这种）→ 那晚睡在飞机上。
-   凌晨 00:00–05:00 起飞的红眼另行处理：它占的是前一晚。 */
+/* 某航段在某天是否「过夜航班」。
+   2026-10-13 用户纠正：检查确认阶段还没选定航班，不能拿某一个航班替用户做主——
+   只有当天全部直飞都是过夜班（起飞+时长跨午夜，或时长 ≥8 小时的长程）时，
+   才断定那晚睡在飞机上；有红眼也有白天班的航段不标，由选定的航班决定。
+   凌晨出发同理：全部直飞都在 00:00–05:00 起飞时，才算占了前一晚。 */
 function legOvernightInfo(code: string, date: string): { overnight: boolean; earlyRedeye: boolean }{
   const d=TRIP_FLIGHTS[`${code}|${date}`];
   if(!d||!d.flights.length) return { overnight:false, earlyRedeye:false };
-  const priced=d.flights.filter(f=>f.price!=null);
-  const rep=(priced.length?priced.reduce((a,b)=>(a.price!<=b.price!?a:b)):d.flights[0])!;
   const tparse=(t: string)=>{
     const m24=t.match(/(\d{1,2}):(\d{2})/);
     if(!m24) return null;
@@ -682,11 +682,17 @@ function legOvernightInfo(code: string, date: string): { overnight: boolean; ear
     if(ap){ const pm=/pm/i.test(ap[1]); if(pm&&h<12)h+=12; if(!pm&&h===12)h=0; }
     return h*60+mi;
   };
-  const dep=tparse(rep.dep);
-  const dm=rep.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
-  if(dep==null||!dm) return { overnight:false, earlyRedeye:false };
-  const dur=+dm[1]*60+(dm[2]?+dm[2]:0);
-  return { overnight: dep+dur>=1440, earlyRedeye: dep<300 };
+  const infos=d.flights.map(f=>{
+    const dep=tparse(f.dep);
+    const dm=f.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+    if(dep==null||!dm) return null;
+    return { dep, dur:+dm[1]*60+(dm[2]?+dm[2]:0) };
+  }).filter((x): x is {dep:number;dur:number}=>x!=null);
+  if(!infos.length) return { overnight:false, earlyRedeye:false };
+  return {
+    overnight: infos.every(x=>x.dep+x.dur>=1440||x.dur>=480),
+    earlyRedeye: infos.every(x=>x.dep<300),
+  };
 }
 /* 日历上「睡在飞机上」的日期集合：过夜航班的起飞日 + 红眼航班的前一晚 */
 function planeNightDates(): Set<string>{
