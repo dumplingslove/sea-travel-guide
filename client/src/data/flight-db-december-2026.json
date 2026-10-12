@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-12T09:30:36+00:00",
+ "updated_at": "2026-10-12T09:36:07+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2224,7 +2224,7 @@
        "arr": "12:55",
        "duration": "5h 35m",
        "price_usd": 420,
-       "business_price_usd": 1384.0
+       "business_price_usd": 1372
       },
       {
        "airline": "Scoot",
@@ -2236,12 +2236,12 @@
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T08:36:52+00:00",
-     "business_usd": null,
+     "business_queried_at": "2026-10-12T09:36:07+00:00",
+     "business_usd": 1372,
      "business_price_basis": "2成人总价"
     },
     "2026-12-04": {
-     "economy_queried_at": "2026-10-05T08:15:46+00:00",
+     "economy_queried_at": "2026-10-12T09:36:07+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2250,28 +2250,29 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
        "duration": "5h 35m",
-       "price_usd": 421,
-       "business_price_usd": 1384.0
+       "price_usd": 420,
+       "business_price_usd": 1372
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T08:15:46+00:00",
-     "business_usd": 1384,
-     "business_price_basis": "2成人总价"
+     "business_queried_at": "2026-10-12T09:36:07+00:00",
+     "business_usd": 1372,
+     "business_price_basis": "2成人总价",
+     "business_note": "Scoot 无商务舱，未出现在结果中"
     },
     "2026-12-05": {
-     "economy_queried_at": "2026-10-05T08:15:46+00:00",
+     "economy_queried_at": "2026-10-12T09:36:07+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2280,14 +2281,14 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T08:15:46+00:00",
+     "business_queried_at": "2026-10-12T09:36:07+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
      "business_note": "当天无直飞"
@@ -3210,7 +3211,7 @@
        "arr": "19:35",
        "duration": "2h",
        "price_usd": 347,
-       "business_price_usd": 2278.0
+       "business_price_usd": 2334
       },
       {
        "airline": "Singapore Airlines",
@@ -3219,7 +3220,7 @@
        "arr": "07:50",
        "duration": "1h 55m",
        "price_usd": 386,
-       "business_price_usd": 1422.0
+       "business_price_usd": 1546
       },
       {
        "airline": "Singapore Airlines",
@@ -3228,7 +3229,7 @@
        "arr": "17:10",
        "duration": "2h",
        "price_usd": 397,
-       "business_price_usd": 2122.0
+       "business_price_usd": 1980
       },
       {
        "airline": "Singapore Airlines",
@@ -3237,7 +3238,7 @@
        "arr": "13:55",
        "duration": "2h 5m",
        "price_usd": 476,
-       "business_price_usd": 1828.0
+       "business_price_usd": 1980
       },
       {
        "airline": "Singapore Airlines",
@@ -3246,7 +3247,7 @@
        "arr": "10:05",
        "duration": "2h 5m",
        "price_usd": 564,
-       "business_price_usd": 2278.0
+       "business_price_usd": 2472
       },
       {
        "airline": "Singapore Airlines",
@@ -3255,14 +3256,15 @@
        "arr": "09:15",
        "duration": "2h",
        "price_usd": 664,
-       "business_price_usd": 1828.0
+       "business_price_usd": 1980
       }
      ],
      "nonstop_count": 9,
-     "business_queried_at": "2026-10-05T08:36:52+00:00",
-     "business_usd": null,
+     "business_queried_at": "2026-10-12T09:36:07+00:00",
+     "business_usd": 1546,
      "business_price_basis": "2成人总价",
-     "economy_note": "页面标注 SQ740、SQ736、SQ732 由 Bangkok Airways 实际承运（新航航班号代码共享）"
+     "economy_note": "页面标注 SQ740、SQ736、SQ732 由 Bangkok Airways 实际承运（新航航班号代码共享）",
+     "business_note": "按页面显示顺序（Best 排序）列出；Scoot 无商务舱"
     },
     "2026-12-08": {
      "economy_queried_at": "2026-10-05T20:31:01+00:00",
