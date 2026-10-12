@@ -8,8 +8,9 @@
  * 按"最晚行动时间"排，不是按"酒店/餐厅/景点"分类堆。
  * 行动（时间线）/ 参考（城市明细）/ 记录（我的预订）三层各司其职。
  *
- * 航班数据：统一读 Google Flights 航班库（client/src/data/flight-db-december-2026.json），
- * 本文件底部的 applyFlightDb() 在模块加载时把库数据灌进 FLIGHT_LEGS；
+ * 航班数据：统一读 Google Flights 航班库（现存 Supabase sea_guide_datasets 的 flight_db 数据集，
+ * 经 lib/datasets.ts 的 getDataset 读取；内嵌 JSON 文件已于 2026-10-13 删除），
+ * 本文件底部的 applyFlightDb() 在数据集到达时把库数据灌进 FLIGHT_LEGS；
  * 只看直飞，中转选项一律不保留。
  */
 import { getDataset, onDataset } from "../lib/datasets";
@@ -542,7 +543,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
 ];
 
 /* ============ 预订页航班统一读 Google Flights 航班库 ============
- * 唯一真实来源：client/src/data/flight-db-december-2026.json（每小时 cron 实查，只含直飞）。
+ * 唯一真实来源：Supabase sea_guide_datasets 的 flight_db 数据集（每小时 cron 实查后发布入 DB，只含直飞）。
  * - 库里有该 (航段,日期) → 用库的直飞数据覆盖 options/businessOptions/价格/口径/实查时间；
  * - 库里没有 → 保留本文件静态直飞选项兜底（已过滤中转），等 cron 填库后自动接管；
  * - 中转选项一律删除（只看直飞是用户铁律）。
