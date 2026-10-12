@@ -39,6 +39,27 @@ export function applyCloudDayOverride(
     };
   }
 
+  // 新加坡第2天（12/8）：Candlenut 盯放号提醒
+  if (cityZh === "新加坡" && ordinalInCity === 1) {
+    return {
+      ...base,
+      food:
+        "🍽️ 晚餐备选：Candlenut（米其林一星娘惹菜，全球唯一）12 月尚未放号，盯 SevenRooms 放位（当前只开到 11 月 10 日左右）。" +
+        (base.food ? "另：" + base.food : ""),
+    };
+  }
+
+  // 新加坡第3天（12/9）：Jumbo Seafood 已订位
+  if (cityZh === "新加坡" && ordinalInCity === 2) {
+    return {
+      ...base,
+      food:
+        "✅ 晚餐已订：Jumbo Seafood（珍宝海鲜 Dempsey Hill 店）19:30，5 人（4 大 1 小，幼儿 2 岁），确认号 TW7NH3，无押金、无需信用卡。" +
+        "Indoor 已满、按无偏好预订（已备注希望室内）；17:30–20:00 的桌可能被要求提前让位，桌位只保留 15 分钟，别迟到。" +
+        (base.food ? "另：" + base.food : ""),
+    };
+  }
+
   // 新加坡末日：转场前日（次日一早飞普吉），不是"返程"当天离境
   if (cityZh === "新加坡" && ordinalInCity === totalInCity - 1 && totalInCity > 1) {
     const stops = base.stops.map((s) => {
@@ -72,6 +93,17 @@ export function applyCloudDayOverride(
     };
   }
 
+  // 普吉首日（12/12）：PRU 晚餐计划（待信用卡押金确认）
+  if (cityZh === "普吉" && ordinalInCity === 0) {
+    return {
+      ...base,
+      food:
+        "🍽️ 晚餐计划：PRU（普吉唯一米其林星，农场直供）12/12 周六晚有位（17:45 吧台 / 18:45 / 19:00 正餐区）；" +
+        "需信用卡付每人 5,000 铢不可退押金（2 人共 10,000 铢，抵餐费），tasting menu 约 7,500++ 铢/人——等信用卡确认后下单。" +
+        (base.food ? "另：" + base.food : ""),
+    };
+  }
+
   // 普吉：研究建议攀牙湾与皮皮岛二选一（仅当普吉有3天时，第三天提示）
   if (cityZh === "普吉" && ordinalInCity === 2 && totalInCity >= 3) {
     return {
@@ -82,7 +114,7 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 曼谷首日：从清迈短途飞来，不是跨洲飞行
+  // 曼谷首日：从清迈短途飞来，不是跨洲飞行；Le Du 晚餐盯放号
   if (cityZh === "曼谷" && ordinalInCity === 0) {
     return {
       ...base,
@@ -91,6 +123,11 @@ export function applyCloudDayOverride(
           ? { ...s, detail: s.detail.replace("跨洲飞行", "短途飞行") }
           : s,
       ),
+      food:
+        "🍽️ 晚餐计划：Le Du（一星现代泰餐）12/19 周六尚未放号（12 月只开了 1–11 号），盯 CoverManager 放位；" +
+        "72 小时内取消按每人 5,000 铢收费。备选 Nahm（一星泰餐）/ Nusara（仅 10 座，极难订）；" +
+        "午餐 Jay Fai 现场排队（周六 9:00–19:30，只收现金，队长早去）。" +
+        (base.food ? "另：" + base.food : ""),
     };
   }
 
