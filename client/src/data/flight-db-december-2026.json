@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-12T09:36:07+00:00",
+ "updated_at": "2026-10-12T09:45:44+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -2138,8 +2138,8 @@
      "business_price_basis": "2大1小总价"
     },
     "2027-01-02": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
-     "economy_usd": 3361,
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
+     "economy_usd": 1285,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
@@ -2147,59 +2147,64 @@
       {
        "airline": "Singapore Airlines",
        "flight": "SQ801",
-       "dep": "00:10",
-       "arr": "06:45",
+       "dep": "12:10 AM",
+       "arr": "6:45 AM",
        "duration": "6h 35m",
-       "price_usd": 3361,
-       "business_price_usd": 4743
+       "price_usd": 1285,
+       "business_price_usd": 4749
       },
       {
        "airline": "Singapore Airlines",
        "flight": "SQ805",
-       "dep": "08:45",
-       "arr": "15:20",
+       "dep": "8:45 AM",
+       "arr": "3:20 PM",
        "duration": "6h 35m",
-       "price_usd": 4229,
-       "business_price_usd": 4743
+       "price_usd": 1285,
+       "business_price_usd": 4749
       },
       {
        "airline": "Singapore Airlines",
        "flight": "SQ807",
-       "dep": "16:40",
-       "arr": "22:55",
+       "dep": "4:40 PM",
+       "arr": "10:55 PM",
        "duration": "6h 15m",
-       "price_usd": 4229,
-       "business_price_usd": 4743
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA889",
-       "dep": "09:45",
-       "arr": "16:15",
-       "duration": "6h 30m",
-       "business_price_usd": 4920
+       "price_usd": 1285,
+       "business_price_usd": 4749
       },
       {
        "airline": "Air China",
        "flight": "CA975",
-       "dep": "00:15",
-       "arr": "06:50",
+       "dep": "12:15 AM",
+       "arr": "6:50 AM",
        "duration": "6h 35m",
-       "business_price_usd": 4920
+       "price_usd": 2133,
+       "business_price_usd": 4724
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "9:45 AM",
+       "arr": "4:15 PM",
+       "duration": "6h 30m",
+       "price_usd": 2600,
+       "business_price_usd": 6599
       },
       {
        "airline": "Air China",
        "flight": "CA969",
-       "dep": "15:35",
-       "arr": "21:55",
+       "dep": "3:35 PM",
+       "arr": "9:55 PM",
        "duration": "6h 20m",
-       "business_price_usd": 6822
+       "price_usd": 2600,
+       "business_price_usd": 6602
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
-     "business_usd": 4769,
-     "business_price_basis": "2大1小总价"
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
+     "business_usd": 4724,
+     "business_price_basis": "2大1小总价",
+     "economy_note": "页面注明 Prices include required taxes + fees for 3 passengers",
+     "business_note": "页面注明 Prices include required taxes + fees for 3 passengers"
     }
    }
   },
@@ -2294,7 +2299,7 @@
      "business_note": "当天无直飞"
     },
     "2026-12-08": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2303,20 +2308,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞（Scoot 为低成本航空，无公务舱销售；页面显示 No nonstop flights found）",
+     "economy_note": "页面注明 Prices include required taxes + fees for 2 adults"
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2325,27 +2331,30 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
        "duration": "5h 35m",
-       "business_price_usd": 1384
+       "price_usd": 544,
+       "business_price_usd": 2379
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
-     "business_usd": 2386,
-     "business_price_basis": "2成人总价"
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
+     "business_usd": 2379,
+     "business_price_basis": "2成人总价",
+     "economy_note": "页面注明 Prices include required taxes + fees for 2 adults；MU2069 价格初次加载未显示，刷新后显示为 $544",
+     "business_note": "价格初次加载未显示，刷新后显示 $2,379"
     },
     "2026-12-10": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
      "economy_usd": 384,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2354,20 +2363,21 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
-       "price_usd": 384
+       "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞（页面显示 No nonstop flights found）",
+     "economy_note": "页面注明 Prices include required taxes + fees for 2 adults"
     },
     "2026-12-11": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2376,27 +2386,30 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       },
       {
        "airline": "China Eastern",
        "flight": "MU2069",
-       "dep": "07:20",
-       "arr": "12:55",
+       "dep": "7:20 AM",
+       "arr": "12:55 PM",
        "duration": "5h 35m",
-       "business_price_usd": 1384
+       "price_usd": 544,
+       "business_price_usd": 2018
       }
      ],
      "nonstop_count": 2,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
-     "business_usd": 1369,
-     "business_price_basis": "2成人总价"
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
+     "business_usd": 2018,
+     "business_price_basis": "2成人总价",
+     "economy_note": "页面注明 Prices include required taxes + fees for 2 adults；MU2069 价格初次加载未显示，刷新后显示为 $544",
+     "business_note": "价格初次加载未显示，刷新后显示 $2,018"
     },
     "2026-12-12": {
-     "economy_queried_at": "2026-10-05T09:32:48+00:00",
+     "economy_queried_at": "2026-10-12T09:45:44+00:00",
      "economy_usd": 333,
      "currency": "USD",
      "economy_price_basis": "2成人总价",
@@ -2405,17 +2418,18 @@
       {
        "airline": "Scoot",
        "flight": "TR135",
-       "dep": "01:55",
-       "arr": "07:50",
+       "dep": "1:55 AM",
+       "arr": "7:50 AM",
        "duration": "5h 55m",
        "price_usd": 333
       }
      ],
      "nonstop_count": 1,
-     "business_queried_at": "2026-10-05T09:32:48+00:00",
+     "business_queried_at": "2026-10-12T09:45:44+00:00",
      "business_usd": null,
      "business_price_basis": "2成人总价",
-     "business_note": "当天无直飞"
+     "business_note": "当天无直飞（页面显示 No nonstop flights found）",
+     "economy_note": "页面注明 Prices include required taxes + fees for 2 adults"
     },
     "2026-12-13": {
      "economy_queried_at": "2026-10-05T10:45:17+00:00",
