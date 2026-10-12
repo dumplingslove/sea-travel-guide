@@ -20,7 +20,7 @@ import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMod
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
-import { bookingPolicyBadge } from '../bookings/restaurantBookingStatus';
+import { bookingPolicyBadge, mustGoBadge } from '../bookings/restaurantBookingStatus';
 import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
@@ -143,14 +143,15 @@ const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','
 /** 预订入口回调：各 tab 的卡片/详情弹窗点“预订”时打开 BookingDialog */
 type OnBook=(p:BookingPreset)=>void;
 /** 当前行程（13天4城）各城入住/退房日期：预订弹窗预填优先用这张表
- * 与云端规划一致（2026-12-06～12-18：新加坡 D1-5 → 普吉 D6-8 → 清迈 D9-10 → 曼谷 D11-13，
+ * 与云端规划一致（2026-12-07～12-19：新加坡 12/07–11 → 普吉 12/12–15 → 清迈 12/16–18 → 曼谷 12/19，
  * 入住=到达当天、退房=转场航班当天；"次日飞"口径已作废）。
- * 2026-10-03 修正：此前退房日按"下一段 start"多占一晚，与航班（12-10/12-13/12-15/12-18 转场）错位。 */
+ * 2026-10-03 修正：此前退房日按"下一段 start"多占一晚，与航班错位。
+ * 2026-10-12 更新：用户调整东南亚各城天数（云端 2026-10-11 07:19Z）。 */
 const currentStayRanges:Record<string,[string,string]>={
- '新加坡':['2026-12-06','2026-12-10'],
- '普吉':['2026-12-10','2026-12-13'],
- '清迈':['2026-12-13','2026-12-15'],
- '曼谷':['2026-12-15','2026-12-18'],
+ '新加坡':['2026-12-07','2026-12-11'],
+ '普吉':['2026-12-12','2026-12-15'],
+ '清迈':['2026-12-16','2026-12-18'],
+ '曼谷':['2026-12-19','2026-12-19'],
 };
 /** 行程城市住宿日期短标签（云端现行程优先，旧20天 route 表仅作非行程城市回退） */
 const currentStayLabel=(city:string)=>{const r=currentStayRanges[city];if(!r)return undefined;const f=(s:string)=>s.slice(5).replace('-','/');return `${f(r[0])}–${f(r[1])}`;};
@@ -396,7 +397,7 @@ export function RestaurantCatalog({onBook, scopeCities, stayDates, bare, onCityC
 const [selectedKey,setSelectedKey]=useState<string|null>(null);
  useEffect(()=>{ if(!onItemSelect) return; const skey=selectedKey??expandedKey; if(skey){ const it=restaurants.find(x=>x.city+x.name===skey); onItemSelect(it?`restaurant:${it.city}:${it.name}`:null); } else onItemSelect(null); },[selectedKey,expandedKey]);const shown=restaurants.filter(x=>x.city===city);const pickCity=(c:string)=>{setCity(c);setExpandedKey(null);setSelectedKey(null)};const cityDays=days.filter(d=>d.city===city);
  const restPager=usePaged(shown,6,'个餐饮选择',defaultListExpanded);
- return <div className="page">{!bare&&<PageHero eyebrow="DINING GUIDE" title="餐厅推荐" summary="按城市浏览星级餐厅、老店与街头小吃；先看取舍与订位要点，再决定订哪一家。" image={bangkokImg}/>}<section className="sectionblock">{!hideCityTabs && <><div className="sectiontitle"><h2>按城市浏览</h2><p>{restaurants.length} 个餐饮选择 · 星级餐厅、老店与街头小吃分开判断</p></div><CityTabs city={city} setCity={pickCity} label="餐厅城市筛选" list={list}/></>}<div className="bookingbrief"><strong>{city} · {cityDays.length}天</strong><p>{cityDays.map(d=>d.food).join(' ')}</p></div><div className="catalog rich restaurants">{restPager.visible.map((it,i)=>{const rkey=it.city+it.name;const ropen=expandedKey===rkey;return <Fragment key={rkey}><article data-place-key={`restaurant:${it.city}:${it.name}`} className={"itemcard"+(selectedKey===rkey||expandedKey===rkey?" ring-2 ring-teal-600":"")} onClick={(e)=>{ if((e.target as HTMLElement).closest("button,a")) return; setSelectedKey(prev=>prev===rkey?null:rkey); }}><ItemMedia item={it} kind="餐厅" index={i}/><div><span className="citytag">{it.city} · 餐饮</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>订位 / 点单</b><span>{it.best}</span></div><div className="decision"><b>📅 预订政策</b>{(()=>{const b=bookingPolicyBadge(it.name);return <span><span title={b.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>{b.text}</span></span>})()}</div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>{setSelectedKey(null);setExpandedKey(ropen?null:rkey);}}>{ropen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'restaurant',name:it.name,city:it.city})}>预订 / 订位</button>}<FavButton name={it.name} city={it.city} type='restaurant'/><a href={mapLink(it.name,it.city)} target="_blank" rel="noreferrer">地图 App</a></div></div></article>{ropen&&<InlineDetail item={it} kind="餐厅" onBook={onBook} onCollapse={()=>setExpandedKey(null)} />}</Fragment>})}</div>{restPager.toggle}</section><ResearchStatus/></div>
+ return <div className="page">{!bare&&<PageHero eyebrow="DINING GUIDE" title="餐厅推荐" summary="按城市浏览星级餐厅、老店与街头小吃；先看取舍与订位要点，再决定订哪一家。" image={bangkokImg}/>}<section className="sectionblock">{!hideCityTabs && <><div className="sectiontitle"><h2>按城市浏览</h2><p>{restaurants.length} 个餐饮选择 · 星级餐厅、老店与街头小吃分开判断</p></div><CityTabs city={city} setCity={pickCity} label="餐厅城市筛选" list={list}/></>}<div className="bookingbrief"><strong>{city} · {cityDays.length}天</strong><p>{cityDays.map(d=>d.food).join(' ')}</p></div><div className="catalog rich restaurants">{restPager.visible.map((it,i)=>{const rkey=it.city+it.name;const ropen=expandedKey===rkey;return <Fragment key={rkey}><article data-place-key={`restaurant:${it.city}:${it.name}`} className={"itemcard"+(selectedKey===rkey||expandedKey===rkey?" ring-2 ring-teal-600":"")} onClick={(e)=>{ if((e.target as HTMLElement).closest("button,a")) return; setSelectedKey(prev=>prev===rkey?null:rkey); }}><ItemMedia item={it} kind="餐厅" index={i}/><div><span className="citytag">{it.city} · 餐饮</span><h3>{it.name}</h3><p className="meta">{it.meta}</p><p>{it.detail}</p><div className="decision"><b>订位 / 点单</b><span>{it.best}</span></div><div className="decision"><b>📅 预订政策</b>{(()=>{const b=bookingPolicyBadge(it.name);const mg=mustGoBadge(it.name);return <span><span title={b.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>{b.text}</span>{mg&&<span title={mg.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ml-1 ${mg.cls}`}>⭐{mg.text}</span>}</span>})()}</div><XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>{setSelectedKey(null);setExpandedKey(ropen?null:rkey);}}>{ropen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'restaurant',name:it.name,city:it.city})}>预订 / 订位</button>}<FavButton name={it.name} city={it.city} type='restaurant'/><a href={mapLink(it.name,it.city)} target="_blank" rel="noreferrer">地图 App</a></div></div></article>{ropen&&<InlineDetail item={it} kind="餐厅" onBook={onBook} onCollapse={()=>setExpandedKey(null)} />}</Fragment>})}</div>{restPager.toggle}</section><ResearchStatus/></div>
 }
 
 

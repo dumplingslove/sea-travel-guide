@@ -96,6 +96,28 @@ const POLICY: Record<string, { policy: BookingPolicy; reason: string }> = {
   '耀华力夜市 / T&K': { policy: 'walkup_or_queue', reason: '唐人街海鲜大排档，现场等位' },
 };
 
+
+/** 必去 / 值得专程去（研究结论：米其林星级 + 口碑双验证的顶级餐厅）。
+ * 键为 guide/data.ts 的餐厅名，值为必去理由。网站餐厅卡片与预订页展示「必去」徽章。 */
+export const MUST_GO: Record<string, string> = {
+  'Odette': '米其林三星，新加坡天花板；但仅接待9岁以上儿童',
+  'Burnt Ends': '米其林一星柴火烧烤，全城最难订之一',
+  'Gaggan': '传奇名厨 Gaggan Anand 旗舰店，表演式长菜单',
+  'Sorn': '米其林三星泰南菜，全球最难订餐厅之一',
+  'PRU': '普吉唯一米其林星级，农场直供',
+};
+
+/** 必去徽章；非必去返回 null（= 不展示徽章，不代表不好吃）。 */
+export function mustGoBadge(name: string): { text: string; cls: string; title: string } | null {
+  const reason = MUST_GO[name];
+  if (!reason) return null;
+  return {
+    text: '必去',
+    cls: 'bg-red-100 text-red-700 border-red-300',
+    title: `研究结论·值得专程去：${reason}`,
+  };
+}
+
 /** 查餐厅的预订政策研究结论；指南没覆盖的返回 null（= 没查过）。 */
 export function getRestaurantBookingPolicy(name: string): { policy: BookingPolicy; reason: string } | null {
   return POLICY[name] ?? null;

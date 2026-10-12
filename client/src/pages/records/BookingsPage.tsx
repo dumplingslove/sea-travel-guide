@@ -26,7 +26,7 @@ import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import "@/guide/theme-scoped.css";
-import { getRestaurantBookingPolicy, bookingPolicyBadge } from "@/bookings/restaurantBookingStatus";
+import { getRestaurantBookingPolicy, bookingPolicyBadge, mustGoBadge } from "@/bookings/restaurantBookingStatus";
 import { restaurants } from "@/guide/data";
 import {
   presetFromChecklist,
@@ -801,9 +801,11 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
   if (type === "restaurant") {
     // 餐厅：显示已研究的订位政策（必须明确区分"没查过"和"不需要预订"）
     const b = bookingPolicyBadge(name);
+    const mg = mustGoBadge(name);
     return (
       <div className="text-xs text-gray-600 mt-1">
         📅 <span title={b.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>{b.text}</span>
+        {mg && <span title={mg.title} className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full border ml-1 ${mg.cls}`}>⭐{mg.text}</span>}
       </div>
     );
   }
