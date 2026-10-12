@@ -22,28 +22,35 @@ export default function Planner() {
     return cleanup;
   }, [showMap]);
 
-  /* 2026-10-03 用户：planner 三个 tab（大行程/东南亚城市规划/检查确认）吸顶；top 经 CSS 变量传入 Shadow DOM。
-     2026-10-03 用户：行程规划地图也置顶吸顶（像首页一样固定在屏幕顶部）——地图条本身 sticky 在站点顶栏下方，
-     tabs 的 sticky top = 顶栏高度 + 地图条高度，避免两者重叠。 */
+  /* 2026-10-03 用户：planner tab 吸顶；top 经 CSS 变量传入 Shadow DOM。
+     2026-10-13 用户改口径：菜单在最上、地图置顶在菜单体系之下——tabs 的 sticky top = 顶栏高度，
+     地图条 sticky top = 顶栏高度 + tabs 高度（量 Shadow DOM 里的 .tabs 实际高度）。 */
   useEffect(() => {
     if (showMap || !hostRef.current) return;
     const host = hostRef.current;
     const sync = () => {
       const header = document.querySelector("header.sticky");
       const headerH = header ? Math.round(header.getBoundingClientRect().height) : 64;
-      const mapH = mapBarRef.current ? Math.round(mapBarRef.current.getBoundingClientRect().height) : 0;
+      const tabsEl = host.shadowRoot?.querySelector(".tabs") as HTMLElement | null;
+      const tabsH = tabsEl ? Math.round(tabsEl.getBoundingClientRect().height) : 52;
       document.documentElement.style.setProperty("--planner-header-h", `${headerH}px`);
-      host.style.setProperty("--planner-tabs-top", `${headerH + mapH}px`);
+      document.documentElement.style.setProperty("--planner-tabs-h", `${tabsH}px`);
+      host.style.setProperty("--planner-tabs-top", `${headerH}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
     const header = document.querySelector("header.sticky");
     if (header) ro.observe(header);
     if (mapBarRef.current) ro.observe(mapBarRef.current);
+    const tabsEl = host.shadowRoot?.querySelector(".tabs") as HTMLElement | null;
+    if (tabsEl) ro.observe(tabsEl);
     window.addEventListener("resize", sync);
+    /* Shadow DOM 里的 tabs 在 initPlanner 渲染后才有高度，延迟再校准一次 */
+    const t = window.setTimeout(sync, 800);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", sync);
+      window.clearTimeout(t);
     };
   }, [showMap]);
 
@@ -53,11 +60,12 @@ export default function Planner() {
 
   return (
     <div style={{ minWidth: 0, overflowX: "clip" }}>
-      {/* 2026-10-03 用户：行程规划地图置顶吸顶，滚动时保持可见（像首页的吸顶地图条） */}
+      {/* 2026-10-13 用户：地图置顶在菜单体系之下——菜单（planner tabs）钉在最上，这条地图 sticky 在 tabs 正下方。
+          注意 DOM 顺序仍在 tabs 之前（tabs 在下方 Shadow DOM 内容里），靠 sticky top 偏移实现视觉上的「菜单在上、地图在下」。 */}
       <div
         ref={mapBarRef}
         className="sticky z-30 bg-[#f7f4ee] border-b border-gray-200"
-        style={{ top: "var(--planner-header-h, 64px)" }}
+        style={{ top: "calc(var(--planner-header-h, 64px) + var(--planner-tabs-h, 52px))" }}
       >
         <div className="max-w-5xl mx-auto px-4 pt-3 pb-2">
           <div className="flex items-center gap-2 mb-2 flex-wrap">

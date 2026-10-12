@@ -642,3 +642,25 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 .trip-seg-nextbadge{display:inline-block;background:var(--teal-soft);color:var(--teal-dark);font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle;white-space:nowrap}
 .trip-seg-group.trip-seg-now{border-left:4px solid var(--gold);background:var(--gold-soft)}
 .trip-seg-group.trip-seg-next{border-left:4px solid var(--teal);background:var(--teal-faint)}
+
+/* —— 2026-10-13 菜单改版（用户）：与预订页同款分段控件——浅色轨道＋白底选中＋深青字，菜单简化为 2 个 —— */
+.tabs{grid-template-columns:repeat(2,1fr);background:#e9e5d8;border-color:#ddd6c2;border-radius:14px;padding:4px;gap:4px;box-shadow:none}
+.tab{border-radius:10px;color:#6b7280}
+.tab:hover{background:rgba(255,255,255,.55);color:#134e4a}
+.tab[aria-selected="true"]{background:#fff;color:#134e4a;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+/* —— 合并进大行程的夫妻东南亚细排（原向导两步合一） —— */
+.cp-wrap{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.cp-head{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.cp-head b{font-size:15px}
+.cp-sub{font-weight:700;font-size:13.5px;margin:14px 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cp-sub .micro{font-weight:400}
+.cp-sub .wz-quick{margin-left:auto;display:flex;gap:6px}
+.cp-sub .wz-quick .ghost{min-height:32px;padding:5px 10px;font-size:12px}
+/* —— 每城预订需求开关 chips —— */
+.trip-needs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px}
+.need-chips{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.need-person{font-size:12px;color:var(--muted)}
+.need-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;color:#6b7280;cursor:pointer;transition:all .15s ease}
+.need-chip.on{background:#0f766e;border-color:#0f766e;color:#fff}
+.need-chip:hover{border-color:#0f766e}
+.trip-split-lines{margin-top:8px;display:grid;gap:2px}

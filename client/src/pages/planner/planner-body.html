@@ -3,37 +3,25 @@
       <div>
         <p class="eyebrow">2026-11-28 → 2027-01-02 · 大行程</p>
         <h1>先定大行程，<br><em>再细排每一段</em></h1>
-        <p class="hero-copy">11/28 西雅图→北京已定，中间每段几天你来定：北京陪父亲、新加坡亲子（岳父母西安飞来会合）、夫妻东南亚（城市和顺序你定）、夫妻一起回西安、你一人回北京，最后北京→首尔（2天）→西雅图回家。定好天数点保存，云端同步。</p>
+        <p class="hero-copy">11/28 西雅图→北京已定，中间每段几天你来定：北京陪父亲、新加坡亲子（岳父母西安飞来会合）、夫妻东南亚（城市、天数、顺序都在本页一次定完）、从曼谷分开行动（你飞北京、老婆带娃飞西安）、最后分两路在首尔会合（2天）一起飞西雅图。每个城市还能直接设要不要订酒店、订餐厅，预订页会跟着变。定好点保存，云端同步。</p>
       </div>
     </section>
 
     <nav class="tabs" aria-label="页面区域">
-      <button class="tab active" data-tab="trip" aria-selected="true">🗺️ 大行程</button>
-      <button class="tab" data-tab="wizard" aria-selected="false">🧭 东南亚城市规划</button>
+      <button class="tab active" data-tab="trip" aria-selected="true">🗺️ 行程安排</button>
       <button class="tab" data-tab="order" aria-selected="false">🔍 检查确认</button>
     </nav>
 
     <section id="trip" class="panel active">
       <div class="section-head">
-        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>大行程，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延（北京→新加坡→夫妻东南亚→西安→北京（你一人）；最后北京→首尔（2天）→西雅图）。定好点「保存大行程」，云端同步、刷新不丢；夫妻段的城市细排去「🧭 东南亚城市规划」继续。</p></div>
+        <div><p class="eyebrow">TRIP OVERVIEW · 2026-11-28 → 2027-01-02</p><h2>行程安排，每段几天你来定</h2><p class="lede">加减天数后日期自动顺延（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→首尔汇合（2天）→西雅图）。夫妻东南亚段的城市、天数与顺序直接在本页这段下面定，不用再跳页；每个城市上的「订酒店／订餐厅」开关决定预订页要不要安排它。定好点「保存大行程」，云端同步、刷新不丢。</p></div>
       </div>
       <div id="tripBody" aria-live="polite"></div>
     </section>
 
-    <section id="wizard" class="panel">
-      <div class="section-head">
-        <div><p class="eyebrow">GUIDED PLANNER · 夫妻东南亚段</p><h2>两步定下夫妻东南亚</h2><p class="lede">只细分大行程「夫妻东南亚」段。先选城市，再定每城天数与顺序（每城附景点取舍标注，帮你判断几天够）。排完去「🔍 检查确认」看全行程日历、查直飞与适宜度；机票酒店去「预订」页落实。</p></div>
-      </div>
-      <ol class="wz-steps" id="wzSteps" aria-label="规划步骤">
-        <li data-wzstep="1"><b>①</b><span>选城市</span></li>
-        <li data-wzstep="2"><b>②</b><span>定天数与顺序</span></li>
-      </ol>
-      <div id="wzBody" aria-live="polite"></div>
-    </section>
-
     <section id="order" class="panel">
       <div class="section-head">
-        <div><p class="eyebrow">FINAL CHECK · 出发前排雷</p><h2>检查确认</h2><p class="lede">大行程＋东南亚段统一日历。点任意一天看详情（含 warning 原因）。大行程的结构性改动（各段天数、回程城市）回「🗺️ 大行程」改，这里自动同步；东南亚城市顺序去「🧭 东南亚城市规划」第 2 步调整。</p></div>
+        <div><p class="eyebrow">FINAL CHECK · 出发前排雷</p><h2>检查确认</h2><p class="lede">全行程统一日历。点任意一天看详情（含 warning 原因）。各段天数、东南亚城市与顺序、每城预订开关都在「🗺️ 行程安排」里改，这里自动同步；机票酒店去「预订」页落实。</p></div>
       </div>
       <div id="orderBody" aria-live="polite"></div>
     </section>

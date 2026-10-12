@@ -56,6 +56,48 @@ export interface PlannerPlan {
   tripFlightDay?: Record<string, "last"|"next">;
   /** 大行程总览：每段转场方式（transition.after -> "flight"|"rail"；2026-10-13 用户：转场不一定是飞机，可选高铁），可选以兼容旧保存 */
   legModes?: Record<string, string>;
+  /** 每城预订需求开关（2026-10-13 用户）：城市名 -> { hotel: 要不要订酒店, restaurant: 要不要订餐厅 }。
+   * 在大行程里逐城设置；关掉的城市在预订页不再出现待订提示（如住家里的城市不订酒店）。缺省按 defaultCityNeeds。 */
+  cityNeeds?: Record<string, { hotel?: boolean; restaurant?: boolean }>;
+}
+
+/** 城市预订需求缺省：北京/西安是家庭城市（住家里），默认不订酒店；其余城市默认都要订。餐厅默认都要订。 */
+export function defaultCityNeeds(city: string): { hotel: boolean; restaurant: boolean } {
+  const familyCity = city === "北京" || city === "西安";
+  return { hotel: !familyCity, restaurant: true };
+}
+
+/** 某城的实际预订需求（用户设置优先，缺省走 defaultCityNeeds） */
+export function cityNeedOf(
+  plan: PlannerPlan | null | undefined,
+  city: string,
+): { hotel: boolean; restaurant: boolean } {
+  const d = defaultCityNeeds(city);
+  const n = plan?.cityNeeds?.[city];
+  return {
+    hotel: typeof n?.hotel === "boolean" ? n.hotel : d.hotel,
+    restaurant: typeof n?.restaurant === "boolean" ? n.restaurant : d.restaurant,
+  };
+}
+
+/** 大行程天数归一化（2026-10-13 行程改版）：旧模型是 …→西安→北京（你一人）→… 两段串联；
+ * 新模型是曼谷后「分开行动」一段：你→北京、老婆+Dylan→西安，两边同住 split 天，最后同日去首尔汇合。
+ * 旧保存没有 split 时自动迁移：split = 旧 xian + 旧 beijing3（总天数与首尔日期不变）。 */
+export function normalizeTripDays(trip?: Record<string, number>): {
+  beijing1: number; singapore: number; couple: number; split: number; seoul: number;
+} {
+  const t = trip ?? {};
+  const split =
+    typeof t.split === "number" && t.split >= 1
+      ? t.split
+      : (typeof t.xian === "number" ? t.xian : 3) + (typeof t.beijing3 === "number" ? t.beijing3 : 8);
+  return {
+    beijing1: typeof t.beijing1 === "number" ? t.beijing1 : 8,
+    singapore: typeof t.singapore === "number" ? t.singapore : 5,
+    couple: typeof t.couple === "number" ? t.couple : 8,
+    split,
+    seoul: typeof t.seoul === "number" ? t.seoul : 2,
+  };
 }
 
 export interface LoadedPlan {

@@ -32,7 +32,7 @@ import {
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingTypes";
-import { loadPlannerPlan, type PlannerPlan } from "@/guide/plannerSchedule";
+import { loadPlannerPlan, cityNeedOf, normalizeTripDays, type PlannerPlan } from "@/guide/plannerSchedule";
 import { getDataset, useDatasetsVersion } from "@/lib/datasets";
 import {
   BOOKING_KIND_LABEL,
@@ -135,9 +135,12 @@ function LoginGate({ syncMode }: { syncMode: "cloud" | "local" | null }) {
 function FavoriteActionList({
   onAddFavorite,
   stays,
+  mapStickyTop,
 }: {
   onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
   stays: HotelStay[];
+  /** 地图置顶偏移（菜单体系之下）：站点顶栏 + 预订页吸顶菜单总高 */
+  mapStickyTop?: number;
 }) {
   const { rows, del, save } = useRecordsData(["favorite"]);
   /* 2026-10-13 用户：预定筛选要标出每项"是否已预订"——拿已确认的预订记录按名称匹配 */
@@ -423,6 +426,7 @@ function FavoriteActionList({
         flightRoutes={bookingFlightRoutes}
         title="🗺️ 价格追踪地图"
         storageKey="sticky-map-bookings"
+        stickyTop={mapStickyTop}
       />
 
       {citySections.map((sec, si) => (
@@ -980,21 +984,26 @@ function BookingsCalendar() {
       }
     }
 
-    /* ---------- 行程层：云端规划的大行程分段（与 planner 的 tripRanges/wzRanges 同算法） ---------- */
+    /* ---------- 行程层：云端规划的大行程分段（与 planner 的 tripRanges/wzRanges 同算法；
+       2026-10-13 改版：曼谷后是「分开行动」一段——你北京、老婆+娃西安，同住到首尔汇合） ---------- */
     const dayCity = new Map<string, string>();
+    const splitDays = new Set<string>();
+    const hotelNeedByDay = new Map<string, boolean>();
     const transfers = new Map<string, { label: string; mode: "flight" | "rail" }>();
     const plane = new Set<string>();
     let tripStart = "";
     let tripEnd = "";
     if (plan) {
-      const td = (plan.trip ?? {}) as Record<string, number>;
-      const segIds = ["beijing1", "singapore", "couple", "xian", "beijing3", "seoul"];
-      const segLabel: Record<string, string> = { beijing1: "北京", singapore: "新加坡", couple: "", xian: "西安", beijing3: "北京", seoul: "首尔" };
-      const segFb: Record<string, number> = { beijing1: 8, singapore: 5, couple: 8, xian: 3, beijing3: 8, seoul: 2 };
+      const nd = normalizeTripDays(plan.trip);
+      const segIds = ["beijing1", "singapore", "couple", "split", "seoul"] as const;
+      const segDays: Record<(typeof segIds)[number], number> = {
+        beijing1: nd.beijing1, singapore: nd.singapore, couple: nd.couple, split: nd.split, seoul: nd.seoul,
+      };
+      const segLabel: Record<string, string> = { beijing1: "北京", singapore: "新加坡", couple: "", split: "北京/西安", seoul: "首尔" };
       const ranges: Record<string, { from: string; to: string }> = {};
       let cur = "2026-11-29";
       for (const id of segIds) {
-        const d = typeof td[id] === "number" && td[id] >= 1 ? td[id] : segFb[id]!;
+        const d = segDays[id];
         ranges[id] = { from: cur, to: add(cur, d - 1) };
         cur = add(cur, d);
       }
@@ -1020,13 +1029,25 @@ function BookingsCalendar() {
         fill(ranges[id]!.from, ranges[id]!.to, segLabel[id]!);
       }
       for (const r of coupleRows) fill(r.from, r.to, r.city);
+      /* 分开行动的日子单独标记（详情里写清谁在哪座城市） */
+      { let k = ranges.split!.from; let g = 0; while (k <= ranges.split!.to && g++ < 40) { splitDays.add(k); k = add(k, 1); } }
+      /* 每晚是否需要订酒店（大行程里的每城开关）：分开日两边任一需要订就算需要 */
+      for (const [k, city] of dayCity) {
+        if (splitDays.has(k)) {
+          hotelNeedByDay.set(k, cityNeedOf(plan, "北京").hotel || cityNeedOf(plan, "西安").hotel);
+        } else if (city.includes("→")) {
+          hotelNeedByDay.set(k, false);
+        } else {
+          hotelNeedByDay.set(k, cityNeedOf(plan, city).hotel);
+        }
+      }
       dayCity.set("2026-11-28", "西雅图→北京");
       tripStart = "2026-11-28";
       tripEnd = ranges.seoul!.to;
 
       const lm = (after: string): "flight" | "rail" => {
         const v = plan.legModes?.[after];
-        return v === "rail" || v === "flight" ? v : after === "xian" ? "rail" : "flight";
+        return v === "rail" || v === "flight" ? v : "flight";
       };
       const APT: Record<string, string> = { "新加坡": "SIN", "普吉": "HKT", "清迈": "CNX", "曼谷": "BKK", "槟城": "PEN", "吉隆坡": "KUL", "胡志明市": "SGN", "富国岛": "PQC" };
       const firstCity = coupleRows[0]?.city ?? "普吉";
@@ -1036,9 +1057,8 @@ function BookingsCalendar() {
       transfers.set(ranges.couple!.from, { label: `新加坡→${firstCity}`, mode: lm("singapore") });
       for (let i = 1; i < coupleRows.length; i++)
         transfers.set(coupleRows[i]!.from, { label: `${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, mode: "flight" });
-      transfers.set(ranges.xian!.from, { label: `${lastCity}→西安`, mode: lm("couple") });
-      transfers.set(ranges.beijing3!.from, { label: "西安→北京", mode: lm("xian") });
-      transfers.set(ranges.seoul!.from, { label: "北京→首尔", mode: lm("beijing3") });
+      transfers.set(ranges.split!.from, { label: `${lastCity}→北京（你）＋${lastCity}→西安（老婆+娃）`, mode: "flight" });
+      transfers.set(ranges.seoul!.from, { label: "北京→首尔（你）＋西安→首尔（老婆+娃）", mode: "flight" });
       transfers.set(ranges.seoul!.to, { label: "首尔→西雅图", mode: "flight" });
 
       /* 过夜航班（那晚睡飞机上）：查航班库实查时刻，与行程安排同一判定 */
@@ -1072,8 +1092,10 @@ function BookingsCalendar() {
       checkLeg(`SIN-${APT[firstCity] ?? "HKT"}`, ranges.couple!.from, lm("singapore"));
       for (let i = 1; i < coupleRows.length; i++)
         checkLeg(`${APT[coupleRows[i - 1]!.city]}-${APT[coupleRows[i]!.city]}`, coupleRows[i]!.from, "flight");
-      checkLeg(`${APT[lastCity] ?? "BKK"}-XIY`, ranges.xian!.from, lm("couple"));
-      checkLeg("PEK-ICN", ranges.seoul!.from, lm("beijing3"));
+      checkLeg(`${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
+      checkLeg(`${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
+      checkLeg("PEK-ICN", ranges.seoul!.from, "flight");
+      checkLeg("XIY-ICN", ranges.seoul!.from, "flight");
       checkLeg("ICN-SEA", ranges.seoul!.to, "flight");
     }
 
@@ -1092,11 +1114,11 @@ function BookingsCalendar() {
         if (mo > 12) { mo = 1; y += 1; }
       }
     }
-    return { ev, nights, dayCity, transfers, plane, months };
+    return { ev, nights, dayCity, splitDays, hotelNeedByDay, transfers, plane, months };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, plan, dsVersion]);
 
-  const { ev: events, nights: hotelNights, dayCity, transfers, plane: planeNights, months } = model;
+  const { ev: events, nights: hotelNights, dayCity, splitDays, hotelNeedByDay, transfers, plane: planeNights, months } = model;
   if (!months.length) return null;
 
   const kindMeta: Record<CalEvent["kind"], { icon: string; dot: string }> = {
@@ -1112,9 +1134,11 @@ function BookingsCalendar() {
   })();
   const selEvents = selDay ? events.get(selDay) ?? [] : [];
   const selCity = selDay ? dayCity.get(selDay) : undefined;
+  const selSplit = selDay ? splitDays.has(selDay) : false;
   const selPlane = selDay ? planeNights.has(selDay) : false;
   const selTransfer = selDay ? transfers.get(selDay) : undefined;
   const selHotelBooked = selDay ? hotelNights.has(selDay) : false;
+  const selHotelNeed = selDay ? hotelNeedByDay.get(selDay) !== false : true;
 
   return (
     <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
@@ -1122,7 +1146,7 @@ function BookingsCalendar() {
         <h3 className="font-bold text-gray-900">📅 预定日历</h3>
         <span className="text-[11px] text-gray-400">点任意一天看当天明细</span>
       </div>
-      <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示。</p>
+      <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
         <span className="text-teal-800 font-medium">🏨 已订酒店</span>
         <span className="text-amber-600 font-medium">🏨 未订酒店</span>
@@ -1185,7 +1209,7 @@ function BookingsCalendar() {
                         {tr.mode === "rail" ? `🚄 ${tr.label}` : `✈️ ${tr.label}`}
                       </span>
                     )}
-                    {inTrip && !isPlane && (
+                    {inTrip && !isPlane && (booked || hotelNeedByDay.get(k) !== false) && (
                       booked
                         ? <span className="text-[9px] leading-tight text-teal-700 font-medium">🏨 已订酒店</span>
                         : <span className="text-[9px] leading-tight text-amber-600 font-medium">🏨 未订酒店</span>
@@ -1206,7 +1230,7 @@ function BookingsCalendar() {
         <div className="mt-2 rounded-lg bg-[#f7f4ee] border border-[#e5e1d6] px-3 py-2">
           <div className="text-xs font-bold text-gray-700 mb-1">
             {selDay}
-            {selCity ? ` · ${selPlane ? `🌙 当晚睡在飞机上（白天在${selCity}）` : `当晚住：${selCity}`}` : ""}
+            {selCity ? ` · ${selPlane ? `🌙 当晚睡在飞机上（白天在${selCity}）` : selSplit ? "当晚住：北京（你）/ 西安（老婆+Dylan）· 分开行动" : `当晚住：${selCity}`}` : ""}
           </div>
           {selTransfer && (
             <p className="text-xs text-gray-600">
@@ -1215,7 +1239,11 @@ function BookingsCalendar() {
           )}
           {selCity && !selPlane && (
             <p className="text-xs text-gray-600">
-              {selHotelBooked ? "🏨 酒店：已订" : "🏨 酒店：还没订"}
+              {selHotelBooked
+                ? "🏨 酒店：已订"
+                : selHotelNeed
+                  ? "🏨 酒店：还没订"
+                  : "🏠 酒店：这个城市在大行程里设了不用订酒店（住家里）"}
             </p>
           )}
           {selEvents.length === 0 ? (
@@ -1443,7 +1471,6 @@ function BookingsInner() {
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "hotels";
   });
-  const menuNavRef = useRef<HTMLDivElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   // 2026-10-04: 用 ResizeObserver 实时跟踪站点头高度，吸顶 top 永远准确，一次根治 gap
   useEffect(() => {
@@ -1470,35 +1497,32 @@ function BookingsInner() {
   }, []);
   const [mapStickyTop, setMapStickyTop] = useState<number | undefined>(undefined);
   const mapHeightsRef = useRef<Record<string, number>>({});
+  /* 2026-10-13 用户：地图必须能置顶在菜单体系之下——地图 sticky top = 站点顶栏 + 本页吸顶菜单
+     （当前可见的层级行）总高；目录内的城市页签再钉在置顶地图之下（--citytabs-top = 两者 + 当前地图高）。
+     旧「地图不吸顶滚走」口径（2026-10-04）作废。 */
   const syncCityTabsTop = (menuKey: string) => {
     const header = document.querySelector("header.sticky");
     const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
-    const nav = menuNavRef.current;
-    const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
-    // 2026-10-04 用户反馈：城市tab吸顶于分类下方（地图不吸顶，不计入）
-    document.documentElement.style.setProperty("--citytabs-top", `${headerH + navH}px`);
+    const cont = stickyContainerRef.current;
+    const menuH = cont ? Math.round(cont.getBoundingClientRect().height) : 0;
+    const top = headerH + menuH;
+    setMapStickyTop(top);
+    const mapH = mapHeightsRef.current[menuKey] ?? 0;
+    document.documentElement.style.setProperty("--citytabs-top", `${top + mapH}px`);
   };
   useLayoutEffect(() => {
-    const nav = menuNavRef.current;
-    if (!nav) return;
-    const sync = () => {
-      const header = document.querySelector("header.sticky");
-      const headerH = header ? Math.round(header.getBoundingClientRect().height) : 0;
-      // 2026-10-04 用户反馈三层吸顶打架：改为地图不吸顶（滚走），分类吸顶于顶栏下，城市吸顶于分类下
-      setMapStickyTop(undefined);
-      if (header) nav.style.top = `${headerH}px`;
-      const navH = Math.round(nav.getBoundingClientRect().height);
-      syncCityTabsTop(cat);
-    };
+    const sync = () => syncCityTabsTop(cat);
     sync();
     const ro = new ResizeObserver(sync);
     const header = document.querySelector("header.sticky");
     if (header) ro.observe(header);
-    ro.observe(nav);
+    if (stickyContainerRef.current) ro.observe(stickyContainerRef.current);
     window.addEventListener("resize", sync);
+    const t = window.setTimeout(sync, 800);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", sync);
+      window.clearTimeout(t);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section, cat]);
@@ -1543,6 +1567,25 @@ function BookingsInner() {
     }
     return all;
   }, [segments]);
+  /* 每城预订需求开关（2026-10-13 用户：在大行程里逐城设置）：关掉订酒店的城市不进酒店筛选，
+     关掉订餐厅的城市不进餐厅筛选——预订页不再为这些城市安排待订信息。 */
+  const [planState, setPlanState] = useState<PlannerPlan | null>(null);
+  useEffect(() => {
+    let alive = true;
+    loadPlannerPlan()
+      .then((l) => { if (alive && l?.plan) setPlanState(l.plan); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+  const hotelCities = useMemo(
+    () => planCities.filter((c) => cityNeedOf(planState, c).hotel),
+    [planCities, planState],
+  );
+  const restCities = useMemo(
+    () => planCities.filter((c) => cityNeedOf(planState, c).restaurant),
+    [planCities, planState],
+  );
+  const catCities = cat === "hotels" ? hotelCities : cat === "restaurants" ? restCities : planCities;
   const stayDates = useMemo(() => {
     const m: Record<string, string> = {};
     segments.forEach((s) => {
@@ -1553,12 +1596,12 @@ function BookingsInner() {
   const scoped = segments.length > 0;
   // 2026-10-04：items 用 useMemo 稳定引用，避免每次选卡 re-render 都触发地图 markers effect 的 fitBounds
   //（之前 Capella 点卡时 fitBounds 和 setView 打架，地图闪回高空）
-  const hotelMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
-    .filter((i) => (i.kind === "hotel" || i.kind === "attraction") && i.city === (hotelCity || planCities[0]))
-    .map((i) => ({ ...i, candidate: false })), [scoped, planCities, hotelCity]);
-  const restMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
-    .filter((i) => (i.kind === "restaurant" || i.kind === "attraction") && i.city === (restCity || planCities[0]))
-    .map((i) => ({ ...i, candidate: false })), [scoped, planCities, restCity]);
+  const hotelMapItems = useMemo(() => buildCandidateItems(scoped ? hotelCities : [])
+    .filter((i) => (i.kind === "hotel" || i.kind === "attraction") && i.city === (hotelCity || hotelCities[0]))
+    .map((i) => ({ ...i, candidate: false })), [scoped, hotelCities, hotelCity]);
+  const restMapItems = useMemo(() => buildCandidateItems(scoped ? restCities : [])
+    .filter((i) => (i.kind === "restaurant" || i.kind === "attraction") && i.city === (restCity || restCities[0]))
+    .map((i) => ({ ...i, candidate: false })), [scoped, restCities, restCity]);
   const attrMapItems = useMemo(() => buildCandidateItems(scoped ? planCities : [])
     .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
     .map((i) => ({ ...i, candidate: false })), [scoped, planCities, attrCity]);
@@ -1720,8 +1763,8 @@ function BookingsInner() {
         {inCatalog && (
           <div role="tablist" aria-label="城市筛选" className="mt-2">
           <div className="flex gap-1.5 overflow-x-auto">
-            {(scoped ? planCities.filter(c => allCities.includes(c)) : []).map((c) => {
-              const currentCity = (cat === "hotels" ? hotelCity : cat === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
+            {(scoped ? catCities.filter(c => allCities.includes(c)) : []).map((c) => {
+              const currentCity = (cat === "hotels" ? hotelCity : cat === "restaurants" ? restCity : attrCity) || (scoped ? catCities[0] : null);
               const setCity = cat === "hotels" ? setHotelCity : cat === "restaurants" ? setRestCity : setAttrCity;
               return (
                 <button
@@ -1745,7 +1788,7 @@ function BookingsInner() {
       </div>
 
 
-        {/* 地图（仅酒店/餐厅/景点类别；已移出吸顶层，随页面滚动） */}
+        {/* 地图（仅酒店/餐厅/景点类别）：置顶在吸顶菜单之下（stickyTop = 顶栏+菜单高，2026-10-13 用户） */}
         {inCatalog && (
           <div className="guide-scope mt-3">
           {cat === "hotels" && (
@@ -1756,7 +1799,7 @@ function BookingsInner() {
             expandSignal={hotelExpandSig}
             title="🗺️ 候选酒店位置"
             storageKey="sticky-map-booking-hotels"
-            disableSticky
+            stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("hotels")}
             onMarkerSelect={(key)=>{ setHotelSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
@@ -1770,7 +1813,7 @@ function BookingsInner() {
             expandSignal={restExpandSig}
             title="🗺️ 候选餐厅位置"
             storageKey="sticky-map-booking-restaurants"
-            disableSticky
+            stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("restaurants")}
             onMarkerSelect={(key)=>{ setRestSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
@@ -1784,7 +1827,7 @@ function BookingsInner() {
             expandSignal={attrExpandSig}
             title="🗺️ 景点位置"
             storageKey="sticky-map-booking-attractions"
-            disableSticky
+            stickyTop={mapStickyTop}
             selectZoom={false}
             onHeightChange={onMapHeight("attractions")}
             onMarkerSelect={(key)=>{ setAttrSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
@@ -1795,7 +1838,7 @@ function BookingsInner() {
 
             {section === "screen" && cat === "hotels" ? (
         <div className="guide-scope">
-          <HotelCatalog key={`hotels-${hotelCity}`} bare hideCityTabs initialCity={hotelCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
+          <HotelCatalog key={`hotels-${hotelCity}`} bare hideCityTabs initialCity={hotelCity || undefined} onBook={onBookPreset} scopeCities={scoped ? hotelCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
       ) : section === "screen" && cat === "flights" ? (
         <div className="guide-scope">
@@ -1803,7 +1846,7 @@ function BookingsInner() {
         </div>
       ) : section === "screen" && cat === "restaurants" ? (
         <div className="guide-scope">
-          <RestaurantCatalog key={`restaurants-${restCity}`} bare hideCityTabs initialCity={restCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
+          <RestaurantCatalog key={`restaurants-${restCity}`} bare hideCityTabs initialCity={restCity || undefined} onBook={onBookPreset} scopeCities={scoped ? restCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
         </div>
       ) : section === "screen" && cat === "attractions" ? (
         <div className="guide-scope">
@@ -1830,7 +1873,7 @@ function BookingsInner() {
         )}
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
       {syncMode === "cloud" ? (
-        <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
+        <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} mapStickyTop={mapStickyTop} />
       ) : (
         <LoginGate syncMode={syncMode} />
       )}
