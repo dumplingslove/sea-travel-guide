@@ -91,8 +91,10 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
   return segments.map((seg, idx) => {
     // 2026-10-05 修：与 schedule 到达口径一致——入住=本段第一天（到达当天），
     // 退房=下一段第一天（即转场航班日，当天退房当天飞）；最后一段退房=段末日。
+    // 2026-10-13 修：分开行动段是平行段（西安/北京同起同止），退房要取后面第一个
+    // 真正更晚开始的段（首尔），否则平行段会算出 0 晚。
     const checkIn = seg.start;
-    const next = segments[idx + 1];
+    const next = segments.slice(idx + 1).find((s) => s.start > seg.start);
     const checkOut = next ? next.start : seg.end;
     return {
       city: seg.city,
@@ -106,10 +108,17 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
 /**
  * 完整大行程时间线（2026-10-03 用户：改了大行程后航班日期要跟着变）。
  * 输入：东南亚城市段（来自云端 schedule，已含新加坡+向导城市精确日期）、
- * 大行程各段天数（云端 plan.trip）。
- * 输出：北京1 → 新加坡 → 东南亚城市 → 西安 → 北京3 → 首尔 全链条。
- * 链条逻辑：beijing1 紧贴新加坡之前；西安紧贴东南亚最后城市之后；
- * beijing3 紧贴西安之后；首尔紧贴北京3之后。
+ * 大行程各段天数（云端 plan.trip，原始保存值——调用方传的是未归一化的 trip）。
+ * 输出：北京1 → 新加坡 → 东南亚城市 → 分开行动（西安‖北京，平行） → 首尔 全链条。
+ * 链条逻辑：beijing1 紧贴新加坡之前；分开行动紧贴东南亚最后城市之后；
+ * 首尔紧贴分开行动之后。
+ * 2026-10-13 行程改版（用户）：东南亚结束后从曼谷分开——用户一人飞北京、
+ * 老婆带 Dylan 飞西安，两边同住 split 天后同日飞首尔汇合。旧串联模型
+ * （西安→北京3 两段）已废除；planner 保存的 trip 只有 split、没有
+ * xian/beijing3，本函数此前仍按旧键读数，新保存下整条尾巴（西安/北京/首尔）
+ * 会全部丢失——航班日期推导（曼谷→西安、北京/西安→首尔）与曼谷退房日随之失效。
+ * 旧保存兼容：没有 split 时 split = xian + beijing3（与 plannerSchedule
+ * normalizeTripDays 同口径），总时长与首尔日期与旧串联模型逐日一致。
  */
 export function buildFullTripSegments(
   seaSegments: PlanSegment[],
@@ -136,22 +145,24 @@ export function buildFullTripSegments(
     const segId = s.city === "新加坡" ? "singapore" : undefined;
     out.push(segId ? { ...s, segId } : s);
   }
-  /* 西安段：东南亚最后城市后一天开始 */
-  if (tripDays.xian) {
+  /* 分开行动段：东南亚最后城市后一天开始，用户在北京、老婆+Dylan 在西安，
+   * 两段平行同起同止（同一时间窗，不是先后串联）。两个城市都要成段：
+   * flightDateFromPlan 按目的地城市找段（曼谷→西安取西安段起点、北京/西安→首尔取首尔段起点）。 */
+  const splitDays =
+    typeof tripDays.split === "number" && tripDays.split >= 1
+      ? tripDays.split
+      : (typeof tripDays.xian === "number" ? tripDays.xian : 0) +
+        (typeof tripDays.beijing3 === "number" ? tripDays.beijing3 : 0);
+  if (splitDays >= 1) {
     const start = addDays(lastSea.end, 1);
-    const end = addDays(start, tripDays.xian - 1);
-    out.push({ segId: "xian", city: "西安", start, end, days: tripDays.xian });
-    /* 北京3段：西安后一天开始（用户一人回北京） */
-    if (tripDays.beijing3) {
-      const b3start = addDays(end, 1);
-      const b3end = addDays(b3start, tripDays.beijing3 - 1);
-      out.push({ segId: "beijing3", city: "北京", start: b3start, end: b3end, days: tripDays.beijing3 });
-      /* 首尔段：北京3后一天开始 */
-      if (tripDays.seoul) {
-        const seStart = addDays(b3end, 1);
-        const seEnd = addDays(seStart, tripDays.seoul - 1);
-        out.push({ segId: "seoul", city: "首尔", start: seStart, end: seEnd, days: tripDays.seoul });
-      }
+    const end = addDays(start, splitDays - 1);
+    out.push({ segId: "split-xian", city: "西安", start, end, days: splitDays });
+    out.push({ segId: "split-beijing", city: "北京", start, end, days: splitDays });
+    /* 首尔段：分开行动后一天开始（两路同日飞首尔汇合） */
+    if (tripDays.seoul) {
+      const seStart = addDays(end, 1);
+      const seEnd = addDays(seStart, tripDays.seoul - 1);
+      out.push({ segId: "seoul", city: "首尔", start: seStart, end: seEnd, days: tripDays.seoul });
     }
   }
   return out;

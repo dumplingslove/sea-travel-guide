@@ -1787,7 +1787,7 @@ let alive=true;
     wzRender();
   }else{
     buildDefaultScheduleFromWizard();
-    setSyncNote("☁️ 未找到云端规划，已按向导默认排期；去「🧭 东南亚城市规划」点「保存规划」同步到全站。");
+    setSyncNote("☁️ 未找到云端规划，已按默认排期；在「🗺️ 行程安排」里点「保存大行程」同步到全站。");
   }
   updateAll();
 })();

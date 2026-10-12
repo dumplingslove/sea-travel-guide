@@ -100,7 +100,7 @@ export function usePlanScope(): { segments: PlanCityScope[]; source: 'cloud'|'ca
 
 /**
  * 完整大行程时间线（2026-10-03 用户：改了大行程后航班日期要跟着变）。
- * 在 usePlanScope 的东南亚段基础上，把北京1/西安/北京3/首尔段链上，
+ * 在 usePlanScope 的东南亚段基础上，把北京1/分开行动（西安‖北京）/首尔段链上，
  * 仅供航班日期推导使用；酒店/餐厅/景点城市范围仍用 usePlanScope（不含国内城市）。
  */
 export function useFullTripSegments(): PlanSegment[] {
