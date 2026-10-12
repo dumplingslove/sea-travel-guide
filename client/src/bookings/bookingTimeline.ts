@@ -34,6 +34,15 @@ export function flightDateFromPlan(route: string, segments: PlanSegment[]): stri
     const next = idx >= 0 ? segments[idx + 1] : undefined;
     return next ? next.start : null;
   }
+  if (route === "曼谷 → 北京") {
+    /* 2026-10-13 分开行动：用户一人曼谷→北京，目的地是 split 段的北京，
+     * 不是行程开头的北京1段——按城市名 find 会命中 beijing1 首段、日期差一个多月。
+     * 优先按 segId=split-beijing 取起点；无 segId 的旧调用方退回取最后一个北京段。 */
+    const split = segments.find((s) => s.segId === "split-beijing");
+    if (split) return split.start;
+    const last = [...segments].reverse().find((s) => s.city === "北京");
+    return last ? last.start : null;
+  }
   const dest = route.split("→")[1]?.trim();
   if (!dest) return null;
   const seg = segments.find((s) => s.city === dest);
@@ -231,8 +240,9 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 11 段：去程西雅图→北京（2026-11-28）1 段、亚洲段 7 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安）、回程 3 段（北京→首尔、西安→首尔、首尔→西雅图已出票）。
- * 2026-10-02 回程定死经首尔后旧 9 段回程候选已移除；2026-10-04 起 11 段全量以本数组为准。
+/** 12 段：去程西雅图→北京（2026-11-28）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、曼谷→北京）、回程 3 段（北京→首尔、西安→首尔、首尔→西雅图已出票）。
+ * 2026-10-02 回程定死经首尔后旧 9 段回程候选已移除；2026-10-04 起全量以本数组为准；
+ * 2026-10-13 行程改版（曼谷后分开行动）新增曼谷→北京段（用户一人，flight-db 已有 BKK-PEK 实查）。
  * 用户要求：全站只看直飞（options 仅保留 stops=0；库里确认无直飞的段 options 为空并标"暂无直飞"，库里没查到的标"待查询"）。 */
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
@@ -467,13 +477,13 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "bkk-xiy",
     dbSeg: "BKK-XIY",
-    ctx: "D22：曼谷段结束，夫妻回西安",
+    ctx: "D22：曼谷段结束，老婆带 Dylan 回西安（分开行动）",
     route: "曼谷 → 西安",
     date: "2026-12-20",
     dateLabel: "12-20",
     day: 22,
     kind: "intl",
-    note: "D22：曼谷段结束，夫妻回西安；Google Flights 实查 2026-10-09 12:15 PDT（2 成人，1 班经济直飞，价格为 2 人整单总价）：Spring Airlines 9C6294 14:05→19:00 列表与展开详情价格一致 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $269，+0.4% 未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）。历史：2026-10-08 12:20 PDT 轮 $269；2026-10-07 12:25 PDT 轮 $249。注：2026-10-09 云端行程对齐，BKK→XIY 转场日由 12-18 更正为 12-19；上价格为 12-18 查询值，12-19 待 flight-refresh-daily-c 下轮重查。2026-10-10 12:17 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:35→19:30（上一轮 14:05→19:00，+30 分钟），详情页 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，±0.0%，未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-11 21:22 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:05→19:00（上一轮 14:35→19:30，-30 分钟；时长仍 3h55m），详情页 2 人整单 $241（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，-10.7%，达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。",
+    note: "D22：曼谷段结束，老婆带 Dylan 回西安（2026-10-13 分开行动口径；静态价格为旧 2 成人口径实查，DB 接管后以库内口径为准）；Google Flights 实查 2026-10-09 12:15 PDT（2 成人，1 班经济直飞，价格为 2 人整单总价）：Spring Airlines 9C6294 14:05→19:00 列表与展开详情价格一致 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $269，+0.4% 未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）。历史：2026-10-08 12:20 PDT 轮 $269；2026-10-07 12:25 PDT 轮 $249。注：2026-10-09 云端行程对齐，BKK→XIY 转场日由 12-18 更正为 12-19；上价格为 12-18 查询值，12-19 待 flight-refresh-daily-c 下轮重查。2026-10-10 12:17 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:35→19:30（上一轮 14:05→19:00，+30 分钟），详情页 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，±0.0%，未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-11 21:22 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:05→19:00（上一轮 14:35→19:30，-30 分钟；时长仍 3h55m），详情页 2 人整单 $241（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，-10.7%，达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。",
     carrier: "Spring Airlines",
     schedule: "14:05 BKK → 19:00 XIY",
     priceNote: "241 USD（2成人总价）",
@@ -486,6 +496,27 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     ],
     businessOptions: [],
     fragile: true,
+  },
+  {
+    id: "bkk-pek",
+    dbSeg: "BKK-PEK",
+    ctx: "D22：曼谷段结束，用户一人回北京陪父亲（分开行动）",
+    route: "曼谷 → 北京",
+    date: "2026-12-20",
+    dateLabel: "12-20",
+    day: 22,
+    kind: "intl",
+    note: "分开行动：曼谷段结束，用户一人曼谷→北京（1成人）；Google Flights 实查，只查直飞",
+    carrier: null,
+    schedule: null,
+    priceNote: null,
+    businessPriceNote: null,
+    direct: true,
+    fragile: false,
+    queriedAt: null,
+    priceBasis: "1成人总价",
+    options: null,
+    businessOptions: null,
   },
   {
     id: "pek-icn",
