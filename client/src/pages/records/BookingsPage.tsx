@@ -32,6 +32,8 @@ import {
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingTypes";
+import { loadPlannerPlan, type PlannerPlan } from "@/guide/plannerSchedule";
+import { getDataset, useDatasetsVersion } from "@/lib/datasets";
 import {
   BOOKING_KIND_LABEL,
   BOOKING_FIELD_LABEL,
@@ -909,21 +911,28 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
  * 数据铁律（2026-10-13 用户）：只读 DB 里已确认的预订记录（kind=booking 且 done），
  * 不许从任何代码常量拼数据——机票出票、酒店预订、餐厅订位都先进 DB 记录，再从 DB 反映到这里。
  * 点开任意一条看全部预订细节，确认号大字展示，方便直接给对方出示核对。 */
-/** 最终预定日历（2026-10-13 用户）：像行程安排的日历一样直观——
- * 酒店按入住→退房连住上色、航班日、餐厅/景点预定日一眼看清；点某天看当天明细。
- * 数据只认 DB 已确认预订记录（done），无确认记录则不渲染。 */
+/** 最终预定日历（2026-10-13 用户第二轮要求）：与行程安排的日历同风格同口径——
+ * 全行程逐日标注当晚住宿城市（云端规划分段推导，与 planner 同算法）、转场日标 ✈️/🚄
+ * 与方式（按大行程 legModes）、过夜航班标「🌙 飞机上过夜」；预订层只认 DB 已确认记录：
+ * 酒店已订/未订明确区分（有确认酒店记录覆盖的夜=已订），航班已出票/餐厅已订逐日标出。 */
 function BookingsCalendar() {
   const { rows } = useRecordsData(["booking"]);
+  const [plan, setPlan] = useState<PlannerPlan | null>(null);
   const [selDay, setSelDay] = useState<string | null>(null);
+  const dsVersion = useDatasetsVersion();
+
+  /* 行程层（每天在哪座城市、当晚睡哪、转场方式）来自云端规划，与行程安排同一套口径 */
+  useEffect(() => {
+    let alive = true;
+    loadPlannerPlan()
+      .then((l) => { if (alive && l?.plan) setPlan(l.plan); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   interface CalEvent { kind: "hotel" | "flight" | "restaurant" | "attraction" | "other"; title: string; sub: string }
-  const { events, months, hotelNights } = useMemo(() => {
-    const ev = new Map<string, CalEvent[]>();
-    const nights = new Set<string>();
-    const push = (key: string, e: CalEvent) => {
-      if (!ev.has(key)) ev.set(key, []);
-      ev.get(key)!.push(e);
-    };
+
+  const model = useMemo(() => {
     const parse = (s?: string) => {
       if (!s) return null;
       const m = s.match(/(\d{4})-(\d{2})-(\d{2})/);
@@ -931,6 +940,19 @@ function BookingsCalendar() {
     };
     const keyOf = (y: number, mo: number, d: number) =>
       `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    const add = (key: string, n: number) => {
+      const p = parse(key)!;
+      const dt = new Date(p.y, p.mo - 1, p.d + n);
+      return keyOf(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
+    };
+
+    /* ---------- 预订层：DB 已确认记录 ---------- */
+    const ev = new Map<string, CalEvent[]>();
+    const nights = new Set<string>();
+    const push = (k: string, e: CalEvent) => {
+      if (!ev.has(k)) ev.set(k, []);
+      ev.get(k)!.push(e);
+    };
     for (const r of rows) {
       if (!r.done) continue;
       const data = parseBookingBody(r.body);
@@ -939,16 +961,13 @@ function BookingsCalendar() {
       const sub = [data.time ?? "", data.guests ?? "", data.code ? `确认号 ${data.code}` : ""].filter(Boolean).join(" · ");
       if (data.bkind === "hotel") {
         const end = parse(data.dateEnd);
-        const last = end
-          ? new Date(end.y, end.mo - 1, end.d - 1)
-          : new Date(start.y, start.mo - 1, start.d);
-        const cur = new Date(start.y, start.mo - 1, start.d);
+        const last = end ? add(keyOf(end.y, end.mo, end.d), -1) : keyOf(start.y, start.mo, start.d);
+        let k = keyOf(start.y, start.mo, start.d);
         let guard = 0;
-        while (cur <= last && guard++ < 62) {
-          const k = keyOf(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+        while (k <= last && guard++ < 62) {
           nights.add(k);
           push(k, { kind: "hotel", title: r.title, sub: sub || "住宿" });
-          cur.setDate(cur.getDate() + 1);
+          k = add(k, 1);
         }
       } else if (data.bkind === "transport") {
         push(keyOf(start.y, start.mo, start.d), { kind: "flight", title: r.title, sub });
@@ -960,23 +979,122 @@ function BookingsCalendar() {
         push(keyOf(start.y, start.mo, start.d), { kind: "other", title: r.title, sub });
       }
     }
-    const keys = [...ev.keys()].sort();
-    const mos: { y: number; mo: number }[] = [];
-    if (keys.length) {
-      const first = parse(keys[0])!;
-      const lastK = parse(keys[keys.length - 1])!;
-      let y = first.y;
-      let mo = first.mo;
-      let guard = 0;
-      while ((y < lastK.y || (y === lastK.y && mo <= lastK.mo)) && guard++ < 6) {
-        mos.push({ y, mo });
+
+    /* ---------- 行程层：云端规划的大行程分段（与 planner 的 tripRanges/wzRanges 同算法） ---------- */
+    const dayCity = new Map<string, string>();
+    const transfers = new Map<string, { label: string; mode: "flight" | "rail" }>();
+    const plane = new Set<string>();
+    let tripStart = "";
+    let tripEnd = "";
+    if (plan) {
+      const td = (plan.trip ?? {}) as Record<string, number>;
+      const segIds = ["beijing1", "singapore", "couple", "xian", "beijing3", "seoul"];
+      const segLabel: Record<string, string> = { beijing1: "北京", singapore: "新加坡", couple: "", xian: "西安", beijing3: "北京", seoul: "首尔" };
+      const segFb: Record<string, number> = { beijing1: 8, singapore: 5, couple: 8, xian: 3, beijing3: 8, seoul: 2 };
+      const ranges: Record<string, { from: string; to: string }> = {};
+      let cur = "2026-11-29";
+      for (const id of segIds) {
+        const d = typeof td[id] === "number" && td[id] >= 1 ? td[id] : segFb[id]!;
+        ranges[id] = { from: cur, to: add(cur, d - 1) };
+        cur = add(cur, d);
+      }
+      const wzCities = (plan.wz?.cities ?? []) as string[];
+      const wzOrder = ((plan.wz?.order ?? []) as string[]).filter((c) => wzCities.includes(c));
+      const wzDays = (plan.wz?.days ?? {}) as Record<string, number>;
+      const order = wzOrder.length ? wzOrder : ["普吉", "清迈", "曼谷"];
+      const fbDays: Record<string, number> = { "普吉": 4, "清迈": 3, "曼谷": 1 };
+      const coupleRows: { city: string; from: string; to: string }[] = [];
+      let ccur = ranges.couple!.from;
+      for (const city of order) {
+        const d = typeof wzDays[city] === "number" && wzDays[city] >= 1 ? wzDays[city] : (fbDays[city] ?? 1);
+        coupleRows.push({ city, from: ccur, to: add(ccur, d - 1) });
+        ccur = add(ccur, d);
+      }
+      const fill = (from: string, to: string, city: string) => {
+        let k = from;
+        let g = 0;
+        while (k <= to && g++ < 40) { dayCity.set(k, city); k = add(k, 1); }
+      };
+      for (const id of segIds) {
+        if (id === "couple") continue;
+        fill(ranges[id]!.from, ranges[id]!.to, segLabel[id]!);
+      }
+      for (const r of coupleRows) fill(r.from, r.to, r.city);
+      dayCity.set("2026-11-28", "西雅图→北京");
+      tripStart = "2026-11-28";
+      tripEnd = ranges.seoul!.to;
+
+      const lm = (after: string): "flight" | "rail" => {
+        const v = plan.legModes?.[after];
+        return v === "rail" || v === "flight" ? v : after === "xian" ? "rail" : "flight";
+      };
+      const APT: Record<string, string> = { "新加坡": "SIN", "普吉": "HKT", "清迈": "CNX", "曼谷": "BKK", "槟城": "PEN", "吉隆坡": "KUL", "胡志明市": "SGN", "富国岛": "PQC" };
+      const firstCity = coupleRows[0]?.city ?? "普吉";
+      const lastCity = coupleRows[coupleRows.length - 1]?.city ?? "曼谷";
+      transfers.set("2026-11-28", { label: "西雅图→北京", mode: "flight" });
+      transfers.set(ranges.singapore!.from, { label: "北京→新加坡", mode: lm("beijing1") });
+      transfers.set(ranges.couple!.from, { label: `新加坡→${firstCity}`, mode: lm("singapore") });
+      for (let i = 1; i < coupleRows.length; i++)
+        transfers.set(coupleRows[i]!.from, { label: `${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, mode: "flight" });
+      transfers.set(ranges.xian!.from, { label: `${lastCity}→西安`, mode: lm("couple") });
+      transfers.set(ranges.beijing3!.from, { label: "西安→北京", mode: lm("xian") });
+      transfers.set(ranges.seoul!.from, { label: "北京→首尔", mode: lm("beijing3") });
+      transfers.set(ranges.seoul!.to, { label: "首尔→西雅图", mode: "flight" });
+
+      /* 过夜航班（那晚睡飞机上）：查航班库实查时刻，与行程安排同一判定 */
+      const fdb = getDataset<{ segments: Record<string, { days?: Record<string, { nonstop_flights?: { dep: string; duration: string; price_usd?: number | null }[] }> }> }>("flight_db");
+      const tparse = (t: string) => {
+        const m = t.match(/(\d{1,2}):(\d{2})/);
+        if (!m) return null;
+        let h = +m[1];
+        const ap = t.match(/(AM|PM)/i);
+        if (ap) { const pm = /pm/i.test(ap[1]); if (pm && h < 12) h += 12; if (!pm && h === 12) h = 0; }
+        return h * 60 + +m[2];
+      };
+      const checkLeg = (code: string, date: string, mode: "flight" | "rail") => {
+        if (mode === "rail") return;
+        const nfs = fdb?.segments?.[code]?.days?.[date]?.nonstop_flights ?? [];
+        if (!nfs.length) return;
+        if (code === "SEA-PEK" || code === "ICN-SEA") { plane.add(date); return; } /* 跨太平洋约 10 小时，必在机上过夜 */
+        const priced = nfs.filter((f) => f.price_usd != null);
+        const rep = priced.length ? priced.reduce((a, b) => (a.price_usd! <= b.price_usd! ? a : b)) : nfs[0]!;
+        const dep = tparse(rep.dep);
+        const dm = rep.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+        if (dep == null || !dm) return;
+        const dur = +dm[1] * 60 + (dm[2] ? +dm[2] : 0);
+        if (dep + dur >= 1440) plane.add(date);
+        if (dep < 300) plane.add(add(date, -1));
+      };
+      checkLeg("SEA-PEK", "2026-11-28", "flight");
+      checkLeg("PEK-SIN", ranges.singapore!.from, lm("beijing1"));
+      checkLeg(`SIN-${APT[firstCity] ?? "HKT"}`, ranges.couple!.from, lm("singapore"));
+      for (let i = 1; i < coupleRows.length; i++)
+        checkLeg(`${APT[coupleRows[i - 1]!.city]}-${APT[coupleRows[i]!.city]}`, coupleRows[i]!.from, "flight");
+      checkLeg(`${APT[lastCity] ?? "BKK"}-XIY`, ranges.xian!.from, lm("couple"));
+      checkLeg("PEK-ICN", ranges.seoul!.from, lm("beijing3"));
+      checkLeg("ICN-SEA", ranges.seoul!.to, "flight");
+    }
+
+    /* ---------- 渲染范围：行程全程 ∪ 预订日期 ---------- */
+    const allKeys = [...new Set([...dayCity.keys(), ...ev.keys()])].sort();
+    const months: { y: number; mo: number }[] = [];
+    if (allKeys.length) {
+      const f = parse(tripStart || allKeys[0])!;
+      const l = parse(tripEnd || allKeys[allKeys.length - 1])!;
+      let y = f.y;
+      let mo = f.mo;
+      let g = 0;
+      while ((y < l.y || (y === l.y && mo <= l.mo)) && g++ < 6) {
+        months.push({ y, mo });
         mo += 1;
         if (mo > 12) { mo = 1; y += 1; }
       }
     }
-    return { events: ev, months: mos, hotelNights: nights };
-  }, [rows]);
+    return { ev, nights, dayCity, transfers, plane, months };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, plan, dsVersion]);
 
+  const { ev: events, nights: hotelNights, dayCity, transfers, plane: planeNights, months } = model;
   if (!months.length) return null;
 
   const kindMeta: Record<CalEvent["kind"], { icon: string; dot: string }> = {
@@ -991,18 +1109,26 @@ function BookingsCalendar() {
     return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
   })();
   const selEvents = selDay ? events.get(selDay) ?? [] : [];
+  const selCity = selDay ? dayCity.get(selDay) : undefined;
+  const selPlane = selDay ? planeNights.has(selDay) : false;
+  const selTransfer = selDay ? transfers.get(selDay) : undefined;
+  const selHotelBooked = selDay ? hotelNights.has(selDay) : false;
 
   return (
     <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
       <div className="flex items-center justify-between mb-1">
         <h3 className="font-bold text-gray-900">📅 预定日历</h3>
-        <span className="text-[11px] text-gray-400">点任意一天看当天预定</span>
+        <span className="text-[11px] text-gray-400">点任意一天看当天明细</span>
       </div>
+      <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
-        <span><span className="inline-block w-2 h-2 rounded-full bg-teal-600 mr-1" />酒店（连住）</span>
-        <span><span className="inline-block w-2 h-2 rounded-full bg-indigo-600 mr-1" />航班</span>
-        <span><span className="inline-block w-2 h-2 rounded-full bg-amber-600 mr-1" />餐厅</span>
-        <span><span className="inline-block w-2 h-2 rounded-full bg-sky-600 mr-1" />景点</span>
+        <span className="text-teal-800 font-medium">🏨 已订酒店</span>
+        <span className="text-amber-600 font-medium">🏨 未订酒店</span>
+        <span>🌙 飞机上过夜</span>
+        <span>✈️ 飞机转场</span>
+        <span>🚄 高铁转场</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-amber-600 mr-1" />餐厅已订</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-indigo-600 mr-1" />航班已出票</span>
       </div>
       {months.map(({ y, mo }) => {
         const first = new Date(y, mo - 1, 1);
@@ -1015,39 +1141,56 @@ function BookingsCalendar() {
         return (
           <div key={`${y}-${mo}`} className="mb-4 last:mb-0">
             <div className="text-sm font-bold text-teal-900 mb-1.5">{y} 年 {mo} 月</div>
-            <div className="grid grid-cols-7 gap-1 text-center">
+            <div className="grid grid-cols-7 gap-1">
               {["一", "二", "三", "四", "五", "六", "日"].map((w) => (
-                <div key={w} className="text-[11px] text-gray-400 py-0.5">{w}</div>
+                <div key={w} className="text-[11px] text-gray-400 py-0.5 text-center">{w}</div>
               ))}
               {cells.map((d, i) => {
                 if (d == null) return <div key={`x-${i}`} />;
                 const k = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                const city = dayCity.get(k);
+                const inTrip = city != null;
+                const isPlane = planeNights.has(k);
+                const tr = transfers.get(k);
                 const dayEvents = events.get(k) ?? [];
-                const isNight = hotelNights.has(k);
+                const booked = hotelNights.has(k);
                 const isSel = selDay === k;
+                const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
                 return (
                   <button
                     key={k}
                     onClick={() => setSelDay(isSel ? null : k)}
-                    className={`rounded-lg py-1 min-h-[44px] flex flex-col items-center justify-start border transition-colors ${
+                    className={`rounded-lg px-1 py-1 min-h-[74px] flex flex-col items-stretch text-left border transition-colors ${
                       isSel
-                        ? "border-teal-700 bg-teal-50 ring-1 ring-teal-700"
-                        : isNight
-                          ? "border-teal-100 bg-teal-50/70"
-                          : "border-transparent hover:bg-gray-50"
+                        ? "border-teal-700 ring-1 ring-teal-700 bg-teal-50"
+                        : isPlane
+                          ? "border-indigo-100 bg-indigo-50/60"
+                          : booked
+                            ? "border-teal-100 bg-teal-50/50"
+                            : "border-[#eee9db] bg-white hover:bg-gray-50"
                     }`}
                   >
-                    <span className={`text-xs leading-none ${k === todayKey ? "bg-teal-700 text-white rounded-full w-5 h-5 inline-flex items-center justify-center font-bold" : dayEvents.length ? "font-bold text-gray-900" : "text-gray-500"}`}>
+                    <span className={`text-xs leading-none ${k === todayKey ? "bg-teal-700 text-white rounded-full w-5 h-5 inline-flex items-center justify-center font-bold" : dayEvents.length || inTrip ? "font-bold text-gray-900" : "text-gray-400"}`}>
                       {d}
                     </span>
-                    <span className="flex gap-0.5 mt-1 flex-wrap justify-center px-0.5">
-                      {dayEvents.slice(0, 3).map((e, j) => (
-                        <span key={j} className={`w-1.5 h-1.5 rounded-full ${kindMeta[e.kind].dot}`} />
-                      ))}
-                    </span>
-                    {dayEvents.length > 0 && (
-                      <span className="text-[9px] leading-tight text-gray-500 px-0.5 truncate w-full">
-                        {kindMeta[dayEvents[0]!.kind].icon} {dayEvents[0]!.title}
+                    {inTrip && (
+                      <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5 truncate">
+                        {isPlane ? "🌙 飞机上过夜" : city}
+                      </span>
+                    )}
+                    {tr && (
+                      <span className="text-[9px] leading-tight text-indigo-700 truncate">
+                        {tr.mode === "rail" ? `🚄 ${tr.label}` : `✈️ ${tr.label}`}
+                      </span>
+                    )}
+                    {inTrip && !isPlane && (
+                      booked
+                        ? <span className="text-[9px] leading-tight text-teal-700 font-medium">🏨 已订酒店</span>
+                        : <span className="text-[9px] leading-tight text-amber-600 font-medium">🏨 未订酒店</span>
+                    )}
+                    {nonHotel.length > 0 && (
+                      <span className="text-[9px] leading-tight text-gray-500 truncate">
+                        {nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}
                       </span>
                     )}
                   </button>
@@ -1059,11 +1202,24 @@ function BookingsCalendar() {
       })}
       {selDay && (
         <div className="mt-2 rounded-lg bg-[#f7f4ee] border border-[#e5e1d6] px-3 py-2">
-          <div className="text-xs font-bold text-gray-700 mb-1">{selDay} 的预定</div>
+          <div className="text-xs font-bold text-gray-700 mb-1">
+            {selDay}
+            {selCity ? ` · ${selPlane ? `🌙 当晚睡在飞机上（白天在${selCity}）` : `当晚住：${selCity}`}` : ""}
+          </div>
+          {selTransfer && (
+            <p className="text-xs text-gray-600">
+              {selTransfer.mode === "rail" ? "🚄" : "✈️"} 转场：{selTransfer.label}（{selTransfer.mode === "rail" ? "高铁" : "飞机"}）
+            </p>
+          )}
+          {selCity && !selPlane && (
+            <p className="text-xs text-gray-600">
+              {selHotelBooked ? "🏨 酒店：已订" : "🏨 酒店：还没订"}
+            </p>
+          )}
           {selEvents.length === 0 ? (
             <p className="text-xs text-gray-400">这天没有已确认的预定</p>
           ) : (
-            <ul className="space-y-1">
+            <ul className="space-y-1 mt-1">
               {selEvents.map((e, i) => (
                 <li key={i} className="text-xs text-gray-700">
                   {kindMeta[e.kind].icon} <span className="font-medium">{e.title}</span>
@@ -1077,6 +1233,7 @@ function BookingsCalendar() {
     </div>
   );
 }
+
 
 function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { rows, loading } = useRecordsData(["booking"]);
