@@ -12,7 +12,7 @@
  * 本文件底部的 applyFlightDb() 在模块加载时把库数据灌进 FLIGHT_LEGS；
  * 只看直飞，中转选项一律不保留。
  */
-import flightDbJson from "../data/flight-db-december-2026.json";
+import { getDataset, onDataset } from "../lib/datasets";
 
 /** 行程规划的城市分段（与 guide/GuideApp.tsx 的 PlanCityScope 同形，避免循环引用） */
 export interface PlanSegment { city: string; start: string; end: string; days: number; segId?: string; }
@@ -566,7 +566,7 @@ interface FlightDbDay {
 }
 
 function flightDbDay(seg: string, date: string): FlightDbDay | null {
-  const segs = (flightDbJson as { segments?: Record<string, { days?: Record<string, FlightDbDay> }> }).segments;
+  const segs = getDataset<{ segments?: Record<string, { days?: Record<string, FlightDbDay> }> }>("flight_db")?.segments;
   return segs?.[seg]?.days?.[date] ?? null;
 }
 
@@ -770,6 +770,8 @@ function applyFlightDb(): void {
   for (const leg of FLIGHT_LEGS) refreshLegFromDb(leg);
 }
 applyFlightDb();
+/* 航班库从 DB 数据集到达后重新灌入（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db） */
+onDataset("flight_db", () => applyFlightDb());
 
 /** 需提前购票的景点（研究结论驱动；空 = 尚无研究结论支撑的项目，不编造）。 */
 export interface AdvanceTicket {

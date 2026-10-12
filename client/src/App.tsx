@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link, NavLink, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
@@ -15,6 +15,7 @@ import NotesPage from "@/pages/records/NotesPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
 import ForceRefreshButton from "@/components/ForceRefreshButton";
+import { loadDatasets, useDatasetsVersion } from "@/lib/datasets";
 import {
   AttractionDetailPage,
   RestaurantDetailPage,
@@ -118,6 +119,12 @@ function Header() {
 }
 
 function AppRouter() {
+  /* 查询数据集（航班库/酒店价/餐厅政策）从 Supabase 拉取并灌入各数据模块；
+     到达后版本号自增，全站重渲染一次，界面即反映 DB 数据（2026-10-13 用户铁律） */
+  useDatasetsVersion();
+  useEffect(() => {
+    void loadDatasets();
+  }, []);
   // basename="/sea-travel-guide" because the site is served from the GitHub Pages project subpath
   return (
     <BrowserRouter basename="/sea-travel-guide">

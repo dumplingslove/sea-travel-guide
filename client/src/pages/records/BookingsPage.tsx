@@ -94,6 +94,30 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
  * 用户原话："你现在的那些酒店的收藏我都不知道你收藏到什么地方去了，完全没有用" */
 /** 2026-10-03 用户重设计：行动安排按城市+时间线分组（取代按类型的分组）。
  * 每个城市一块，时间线顺序排列；城内再分航班/酒店/餐厅/景点；实时价格+涨跌摆出来好比较。 */
+/** 未登录门禁（2026-10-13 用户）：预定筛选/最终预定含收藏与预订记录，
+ * 没有登录的人一律看不到内容，只显示空白页 + 登录提示。 */
+function LoginGate({ syncMode }: { syncMode: "cloud" | "local" | null }) {
+  return (
+    <div className="bg-white border border-dashed border-gray-300 rounded-xl px-4 py-16 text-center">
+      <p className="text-3xl mb-3">🔒</p>
+      <p className="text-sm font-medium text-gray-700">
+        {syncMode === null ? "正在确认登录状态…" : "你需要登录才能看到"}
+      </p>
+      <p className="text-xs text-gray-400 mt-1.5">
+        预定筛选和最终预定里是你的收藏与预订记录，登录后才能查看。
+      </p>
+      {syncMode === "local" && (
+        <Link
+          to="/login"
+          className="inline-block mt-4 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500"
+        >
+          去登录
+        </Link>
+      )}
+    </div>
+  );
+}
+
 function FavoriteActionList({
   onAddFavorite,
   stays,
@@ -1341,10 +1365,12 @@ function BookingsInner() {
         <>
         {/* 2026-10-04 用户：总结块（每日动态/行程日期/登录条）只放在行动安排里 */}
         <SyncBanner mode={syncMode} />
-        <DailyDigestBanner
-          scopeCities={scoped ? planCities : undefined}
-          onJump={setMenu}
-        />
+        {syncMode === "cloud" && (
+          <DailyDigestBanner
+            scopeCities={scoped ? planCities : undefined}
+            onJump={setMenu}
+          />
+        )}
         {scoped && (
           <div className="mb-4 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">
             <span className="font-bold">📅 按行程规划只看这些：</span>
@@ -1355,13 +1381,21 @@ function BookingsInner() {
           </div>
         )}
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
-      <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
+      {syncMode === "cloud" ? (
+        <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
+      ) : (
+        <LoginGate syncMode={syncMode} />
+      )}
         </>
       ) : menu === "final" ? (
         <>
         {/* 2026-10-13 用户新增：最终预定只放已确认的，点开出示全部细节 */}
         <SyncBanner mode={syncMode} />
-        <FinalBookingsList onEdit={openEdit} />
+        {syncMode === "cloud" ? (
+          <FinalBookingsList onEdit={openEdit} />
+        ) : (
+          <LoginGate syncMode={syncMode} />
+        )}
         </>
       ) : (
         <div className="guide-scope">

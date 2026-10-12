@@ -23,7 +23,7 @@ import plannerBody from "./planner-body.html?raw";
 import "../../planner-data/flight-matrix.js";
 /* 大行程转场航班库：Google Flights 实查（hidden_files/flight-db/december-2026.json
    的构建期同步副本，由 flight-db-gflights-fill 每轮填充后同步；只含直飞，价格为整单总价 USD） */
-import flightDbJson from "../../data/flight-db-december-2026.json";
+import { getDataset, onDataset } from "../../lib/datasets";
 /* 2026-10-03 site-improve：已出票航班铁律——bookingTimeline.ts 的 ticketed 腿是单一事实源，
    planner 的 tripFlightCard 直连航班库原始数据（88a81b9 起 ICN-SEA 2027-01-01 已有泛搜索结果），
    此处先判 ticketed，命中则渲染出票信息卡、不再渲染"出票前重查"的泛搜索卡（用户：以实际出票为准，绝不覆盖）。 */
@@ -679,8 +679,12 @@ interface FlightDbDay {
 interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via?:string}[]; onestopResults: number; onestopEco: number|null; onestopBiz: number|null; onestopBasis: string; onestopQueriedAt: string; onestopFlights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via:string}[] }
 /* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
    库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
-const TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
-for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<string,{days?: Record<string,FlightDbDay>}>}).segments)){
+let TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
+function rebuildTripFlights(): void {
+  TRIP_FLIGHTS = {};
+  const flightDbJson = getDataset<{ segments: Record<string, { days?: Record<string, FlightDbDay> }> }>('flight_db');
+  if (!flightDbJson) return;
+for(const [code, seg] of Object.entries(flightDbJson.segments)){
   for(const [date, d] of Object.entries(seg.days||{})){
     const nf=d.nonstop_flights||[];
     const of=d.onestop_flights||[];
@@ -703,6 +707,10 @@ for(const [code, seg] of Object.entries((flightDbJson as {segments: Record<strin
     };
   }
 }
+}
+rebuildTripFlights();
+/* 航班库从 DB 数据集到达后重建（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db） */
+onDataset('flight_db', rebuildTripFlights);
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
 interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean }
 const TRIP_TRANSITIONS: TripTransition[] = [
