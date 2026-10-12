@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-11T23:33:07+00:00",
+ "updated_at": "2026-10-12T04:38:32+00:00",
  "segments": {
   "PEK-SIN": {
    "origin": "PEK",
@@ -11,20 +11,46 @@
    "label": "北京→新加坡（2大1小）",
    "days": {
     "2026-12-08": {
-     "economy_queried_at": "2026-10-05T03:47:00+00:00",
-     "economy_usd": null,
+     "economy_queried_at": "2026-10-12T04:38:32+00:00",
+     "economy_usd": 642,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
-     "economy_note": "All 6 nonstop flights displayed 'Price unavailable' on their rows at the time of the query (checked twice, including after waiting for prices to load); price_usd set to null.",
      "nonstop_flights": [
       {
        "airline": "Singapore Airlines",
-       "flight": "SQ801",
-       "dep": "00:30",
-       "arr": "06:55",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
        "duration": "6h 35m",
+       "price_usd": 642,
        "business_price_usd": 3726
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 736,
+       "business_price_usd": 3726
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 1717,
+       "business_price_usd": 4786
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h 30m",
+       "business_price_usd": 3145
       },
       {
        "airline": "Air China",
@@ -35,68 +61,35 @@
        "business_price_usd": 3145
       },
       {
-       "airline": "Singapore Airlines",
-       "flight": "SQ805",
-       "dep": "08:45",
-       "arr": "15:20",
-       "duration": "6h 35m",
-       "business_price_usd": 3726
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA889",
-       "dep": "09:45",
-       "arr": "16:15",
-       "duration": "6h 30m",
-       "business_price_usd": 3145
-      },
-      {
        "airline": "Air China",
        "flight": "CA969",
        "dep": "15:35",
        "arr": "21:55",
        "duration": "6h 20m",
        "business_price_usd": 3145
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ807",
-       "dep": "16:40",
-       "arr": "22:55",
-       "duration": "6h 15m",
-       "business_price_usd": 4786
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-10-05T03:47:00+00:00",
-     "business_usd": 3145,
+     "business_queried_at": "2026-10-12T04:38:32+00:00",
+     "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "business_note": "Prices include required taxes + fees for 3 passengers. Cheapest tab briefly showed 'from 3055 USD' but no flight row displayed that price; lowest row price is 3145."
+     "business_note": "Google Flights 当天所有商务舱直飞均显示 Price unavailable，未提供价格"
     },
     "2026-12-09": {
-     "economy_queried_at": "2026-10-05T03:47:00+00:00",
-     "economy_usd": 537,
+     "economy_queried_at": "2026-10-12T04:38:32+00:00",
+     "economy_usd": 736,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
       {
-       "airline": "Air China",
-       "flight": "CA889",
-       "dep": "09:45",
-       "arr": "16:15",
-       "duration": "6h 30m",
-       "price_usd": 537,
-       "business_price_usd": 3145
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA969",
-       "dep": "15:35",
-       "arr": "21:55",
-       "duration": "6h 20m",
-       "price_usd": 537,
-       "business_price_usd": 3145
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 736,
+       "business_price_usd": 3726
       },
       {
        "airline": "Singapore Airlines",
@@ -104,16 +97,7 @@
        "dep": "08:45",
        "arr": "15:20",
        "duration": "6h 35m",
-       "price_usd": 721,
-       "business_price_usd": 3726
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ801",
-       "dep": "00:30",
-       "arr": "06:55",
-       "duration": "6h 35m",
-       "price_usd": 721,
+       "price_usd": 736,
        "business_price_usd": 3726
       },
       {
@@ -122,40 +106,72 @@
        "dep": "16:40",
        "arr": "22:55",
        "duration": "6h 15m",
-       "price_usd": 1262,
+       "price_usd": 1717,
        "business_price_usd": 4786
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA889",
+       "dep": "09:45",
+       "arr": "16:15",
+       "duration": "6h 30m",
+       "business_price_usd": 3145
+      },
+      {
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h 20m",
+       "business_price_usd": 3145
       }
      ],
      "nonstop_count": 5,
-     "business_queried_at": "2026-10-05T03:47:00+00:00",
-     "business_usd": 3145,
+     "business_queried_at": "2026-10-12T04:38:32+00:00",
+     "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "economy_note": "Only 5 nonstop flights this day (no 00:15 Air China CA975). Prices include required taxes + fees for 3 passengers. Cheapest tab showed 'from 512/526 USD' but no flight row displayed that price; lowest row price is 537.",
-     "business_note": "Only 5 nonstop flights this day (no 00:15 Air China CA975). Prices include required taxes + fees for 3 passengers. Cheapest tab showed 'from 3055 USD' but no flight row displayed that price; lowest row price is 3145."
+     "business_note": "Google Flights 当天所有商务舱直飞均显示 Price unavailable，未提供价格"
     },
     "2026-12-10": {
-     "economy_queried_at": "2026-10-05T03:47:00+00:00",
-     "economy_usd": 537,
+     "economy_queried_at": "2026-10-12T04:38:32+00:00",
+     "economy_usd": 1126,
      "currency": "USD",
      "economy_price_basis": "2大1小总价",
      "source": "google-flights",
      "nonstop_flights": [
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ801",
+       "dep": "00:10",
+       "arr": "06:45",
+       "duration": "6h 35m",
+       "price_usd": 1126,
+       "business_price_usd": 4786
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ807",
+       "dep": "16:40",
+       "arr": "22:55",
+       "duration": "6h 15m",
+       "price_usd": 1390,
+       "business_price_usd": 4962
+      },
+      {
+       "airline": "Singapore Airlines",
+       "flight": "SQ805",
+       "dep": "08:45",
+       "arr": "15:20",
+       "duration": "6h 35m",
+       "price_usd": 1717,
+       "business_price_usd": 3727
+      },
       {
        "airline": "Air China",
        "flight": "CA889",
        "dep": "09:45",
        "arr": "16:15",
        "duration": "6h 30m",
-       "price_usd": 537,
-       "business_price_usd": 3145
-      },
-      {
-       "airline": "Air China",
-       "flight": "CA969",
-       "dep": "15:35",
-       "arr": "21:55",
-       "duration": "6h 20m",
-       "price_usd": 537,
        "business_price_usd": 3145
       },
       {
@@ -164,43 +180,22 @@
        "dep": "00:15",
        "arr": "06:50",
        "duration": "6h 35m",
-       "price_usd": 537,
        "business_price_usd": 3145
       },
       {
-       "airline": "Singapore Airlines",
-       "flight": "SQ801",
-       "dep": "00:30",
-       "arr": "06:55",
-       "duration": "6h 35m",
-       "price_usd": 824,
-       "business_price_usd": 4786
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ805",
-       "dep": "08:45",
-       "arr": "15:20",
-       "duration": "6h 35m",
-       "price_usd": 1262,
-       "business_price_usd": 3727
-      },
-      {
-       "airline": "Singapore Airlines",
-       "flight": "SQ807",
-       "dep": "16:40",
-       "arr": "22:55",
-       "duration": "6h 15m",
-       "price_usd": 1262,
-       "business_price_usd": 4962
+       "airline": "Air China",
+       "flight": "CA969",
+       "dep": "15:35",
+       "arr": "21:55",
+       "duration": "6h 20m",
+       "business_price_usd": 3145
       }
      ],
      "nonstop_count": 6,
-     "business_queried_at": "2026-10-05T03:47:00+00:00",
-     "business_usd": 3145,
+     "business_queried_at": "2026-10-12T04:38:32+00:00",
+     "business_usd": null,
      "business_price_basis": "2大1小总价",
-     "economy_note": "Prices include required taxes + fees for 3 passengers. Cheapest tab showed 'from 512 USD' but no flight row displayed that price; lowest row price is 537.",
-     "business_note": "Prices include required taxes + fees for 3 passengers. Cheapest tab showed 'from 3055 USD' but no flight row displayed that price; lowest row price is 3145."
+     "business_note": "Google Flights 当天所有商务舱直飞均显示 Price unavailable，未提供价格"
     },
     "2026-12-11": {
      "economy_queried_at": "2026-10-05T04:54:25+00:00",
