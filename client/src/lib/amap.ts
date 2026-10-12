@@ -50,18 +50,24 @@ export function wgs84ToGcj02(lat: number, lng: number): [number, number] {
   return [lat + adjLat, lng + adjLng];
 }
 
-/** WGS-84 经纬度 → Leaflet LatLng。当前底图为 Esri（WGS-84），直接透传不做 GCJ-02 转换。 */
+/** WGS-84 经纬度 → Leaflet LatLng。高德底图按 GCJ-02 渲染，统一做坐标校正
+ *（2026-10-12 切回高德时恢复；Google 时代曾直接透传）。 */
 export function LL(lat: number, lng: number): L.LatLng {
-  return L.latLng(lat, lng);
+  const [gcjLat, gcjLng] = wgs84ToGcj02(lat, lng);
+  return L.latLng(gcjLat, gcjLng);
 }
 
-/** 地图底图：Google Maps 中文标注（hl=zh-CN）。2026-09-27 用户要求中文地图；高德 appmaptile 反爬返回空白图已废弃，Esri 为英文标注。Google 用 WGS-84，无需坐标转换。 */
+/** 地图底图：高德中文街道图。
+ * 2026-10-12 从 Google 切回高德：Google 瓦片（mt*.google.com）在
+ * 中国大陆被墙，用户在北京时行程地图完全空白。高德 2026-10-12 实测
+ * 瓦片正常（返回真实地图非空白图，中文标注）。
+ * 高德用 GCJ-02，坐标统一走 LL() 转换。 */
 export function addAmapTiles(map: L.Map): L.TileLayer {
   return new RetryTileLayer(
-    "https://mt{s}.google.com/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}",
+    "https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
     {
-      subdomains: "0123",
-      attribution: "&copy; Google Maps",
+      subdomains: "1234",
+      attribution: '&copy; <a href="https://www.amap.com/">高德地图 AutoNavi</a>',
       maxZoom: 19,
     },
   ).addTo(map);
