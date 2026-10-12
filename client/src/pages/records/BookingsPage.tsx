@@ -45,6 +45,18 @@ import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, t
 import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
+import { supabase, supabaseConfigured } from "@/lib/supabase";
+
+/** 余位状态徽标（与详情页 AvailabilityInfoPanel 同口径）：r=餐厅文案，a=景点文案 */
+const AV_BADGE: Record<string, { r: string; a: string; cls: string }> = {
+  available: { r: "有位", a: "有票", cls: "bg-green-600" },
+  mixed: { r: "部分日期有位", a: "部分日期有票", cls: "bg-amber-600" },
+  full: { r: "已订满", a: "已订满", cls: "bg-red-600" },
+  soldout: { r: "售罄", a: "售罄", cls: "bg-red-600" },
+  not_released: { r: "尚未放位", a: "尚未开售", cls: "bg-gray-500" },
+  walkin: { r: "现场排队", a: "随到随买", cls: "bg-blue-600" },
+  unverifiable: { r: "在线查不到", a: "在线查不到", cls: "bg-gray-400" },
+};
 
 const kindBadge: Record<BookingKind, string> = {
   hotel: "bg-teal-700 text-white",
@@ -154,6 +166,28 @@ function FavoriteActionList({
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
     [segments]
   );
+  /* 2026-10-13 用户：价格追踪集中呈现 live 数据——餐厅/景点余位状态来自 sea_availability（每日实查），
+     按 kind:name 一次全量拉取，收藏卡片同名命中才显示，没查到的不显示、不编造 */
+  const [availMap, setAvailMap] = useState<Map<string, { status: string; checked_at: string }>>(new Map());
+  useEffect(() => {
+    if (!supabaseConfigured || !supabase) return;
+    let live = true;
+    supabase
+      .from("sea_availability")
+      .select("kind,name,status,checked_at")
+      .eq("trip_ref", "dec2026")
+      .then(({ data }) => {
+        if (!live || !data) return;
+        const m = new Map<string, { status: string; checked_at: string }>();
+        for (const r of data as { kind: string; name: string; status: string; checked_at: string }[]) {
+          m.set(`${r.kind}:${r.name}`, { status: r.status, checked_at: r.checked_at });
+        }
+        setAvailMap(m);
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
   /* 2026-10-03 用户：详情页返回要恢复到原卡片滚动位置 */
   useLayoutEffect(() => {
     let saved: { cardId?: string; scrollY?: number; at?: number } | null = null;
@@ -207,9 +241,9 @@ function FavoriteActionList({
   if (!favs.length) {
     return (
       <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
-        <p className="text-sm text-gray-500">🔍 预定筛选是空的</p>
+        <p className="text-sm text-gray-500">📈 价格追踪是空的</p>
         <p className="text-xs text-gray-400 mt-1">
-          在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，候选会按城市+时间线出现在这里，带实时价格追踪
+          在「🔍 预定筛选」里浏览酒店/机票/餐厅/景点时点「＋ 收藏」，收藏项会按城市+时间线出现在这里，集中追踪价格、余位和可预订状态
         </p>
       </div>
     );
@@ -366,13 +400,13 @@ function FavoriteActionList({
     <div className="mb-6">
       <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-4">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="font-bold text-gray-900">🔍 预定筛选</h3>
+          <h3 className="font-bold text-gray-900">📈 价格追踪</h3>
           <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
-            {favs.length} 项候选 · {decided} 已确定
+            {favs.length} 项收藏 · {decided} 已确定
           </span>
         </div>
         <p className="text-xs text-gray-500">
-          你收藏的候选都在这里：带实时价格查询，并标注是否已预订。按行程时间线分城市排列，点卡片→地图只定位它（航班显示两机场+连线），再点一次取消；展开看详情对比，看好点「✓ 确定」锁定、再「加入预订」走正式流程。真正订好的在「✅ 最终预定」里看确认信息
+          只追踪你收藏的：实时价格、订位空位、门票余量、是否可预订都在这里，并标注是否已预订/已出票。按行程时间线分城市排列，点卡片→地图只定位它（航班显示两机场+连线），再点一次取消；展开看详情对比，看好点「✓ 确定」锁定、再「加入预订」走正式流程。真正订好的在「✅ 最终预定」里看确认信息；还没收藏的去「🔍 预定筛选」里挑
         </p>
       </div>
 
@@ -385,7 +419,7 @@ function FavoriteActionList({
         activeLabel={mapSelLabel}
         activeItemKeys={mapSelKey ? [mapSelKey] : null}
         flightRoutes={bookingFlightRoutes}
-        title="🗺️ 预定筛选地图"
+        title="🗺️ 价格追踪地图"
         storageKey="sticky-map-bookings"
       />
 
@@ -498,6 +532,25 @@ function FavoriteActionList({
                           name={f.row.title} type={f.type} city={f.city}
                           flight={f.flight} segs={segs}
                         />
+                        {/* 余位 live 状态（sea_availability 每日实查）：餐厅看订位空位、景点看门票余量 */}
+                        {(() => {
+                          if (f.type !== "restaurant" && f.type !== "attraction") return null;
+                          const av = availMap.get(`${f.type}:${f.row.title}`);
+                          if (!av) return null;
+                          const meta = AV_BADGE[av.status] ?? AV_BADGE.unverifiable!;
+                          const label = f.type === "restaurant" ? meta.r : meta.a;
+                          const when = av.checked_at
+                            ? new Date(av.checked_at).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })
+                            : "";
+                          return (
+                            <div className="mt-1">
+                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white ${meta.cls}`}>
+                                🎫 {label}
+                              </span>
+                              {when && <span className="ml-1.5 text-[10px] text-gray-400">{when} 实查</span>}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
                         {/* 2026-10-03 用户：行动安排里所有类型都就地展开看详情，不跳详情页（返回位置修不好就别跳） */}
@@ -856,6 +909,175 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
  * 数据铁律（2026-10-13 用户）：只读 DB 里已确认的预订记录（kind=booking 且 done），
  * 不许从任何代码常量拼数据——机票出票、酒店预订、餐厅订位都先进 DB 记录，再从 DB 反映到这里。
  * 点开任意一条看全部预订细节，确认号大字展示，方便直接给对方出示核对。 */
+/** 最终预定日历（2026-10-13 用户）：像行程安排的日历一样直观——
+ * 酒店按入住→退房连住上色、航班日、餐厅/景点预定日一眼看清；点某天看当天明细。
+ * 数据只认 DB 已确认预订记录（done），无确认记录则不渲染。 */
+function BookingsCalendar() {
+  const { rows } = useRecordsData(["booking"]);
+  const [selDay, setSelDay] = useState<string | null>(null);
+
+  interface CalEvent { kind: "hotel" | "flight" | "restaurant" | "attraction" | "other"; title: string; sub: string }
+  const { events, months, hotelNights } = useMemo(() => {
+    const ev = new Map<string, CalEvent[]>();
+    const nights = new Set<string>();
+    const push = (key: string, e: CalEvent) => {
+      if (!ev.has(key)) ev.set(key, []);
+      ev.get(key)!.push(e);
+    };
+    const parse = (s?: string) => {
+      if (!s) return null;
+      const m = s.match(/(\d{4})-(\d{2})-(\d{2})/);
+      return m ? { y: +m[1], mo: +m[2], d: +m[3] } : null;
+    };
+    const keyOf = (y: number, mo: number, d: number) =>
+      `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    for (const r of rows) {
+      if (!r.done) continue;
+      const data = parseBookingBody(r.body);
+      const start = parse(data.date);
+      if (!start) continue;
+      const sub = [data.time ?? "", data.guests ?? "", data.code ? `确认号 ${data.code}` : ""].filter(Boolean).join(" · ");
+      if (data.bkind === "hotel") {
+        const end = parse(data.dateEnd);
+        const last = end
+          ? new Date(end.y, end.mo - 1, end.d - 1)
+          : new Date(start.y, start.mo - 1, start.d);
+        const cur = new Date(start.y, start.mo - 1, start.d);
+        let guard = 0;
+        while (cur <= last && guard++ < 62) {
+          const k = keyOf(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+          nights.add(k);
+          push(k, { kind: "hotel", title: r.title, sub: sub || "住宿" });
+          cur.setDate(cur.getDate() + 1);
+        }
+      } else if (data.bkind === "transport") {
+        push(keyOf(start.y, start.mo, start.d), { kind: "flight", title: r.title, sub });
+      } else if (data.bkind === "restaurant") {
+        push(keyOf(start.y, start.mo, start.d), { kind: "restaurant", title: r.title, sub });
+      } else if (data.bkind === "attraction") {
+        push(keyOf(start.y, start.mo, start.d), { kind: "attraction", title: r.title, sub });
+      } else {
+        push(keyOf(start.y, start.mo, start.d), { kind: "other", title: r.title, sub });
+      }
+    }
+    const keys = [...ev.keys()].sort();
+    const mos: { y: number; mo: number }[] = [];
+    if (keys.length) {
+      const first = parse(keys[0])!;
+      const lastK = parse(keys[keys.length - 1])!;
+      let y = first.y;
+      let mo = first.mo;
+      let guard = 0;
+      while ((y < lastK.y || (y === lastK.y && mo <= lastK.mo)) && guard++ < 6) {
+        mos.push({ y, mo });
+        mo += 1;
+        if (mo > 12) { mo = 1; y += 1; }
+      }
+    }
+    return { events: ev, months: mos, hotelNights: nights };
+  }, [rows]);
+
+  if (!months.length) return null;
+
+  const kindMeta: Record<CalEvent["kind"], { icon: string; dot: string }> = {
+    hotel: { icon: "🏨", dot: "bg-teal-600" },
+    flight: { icon: "✈️", dot: "bg-indigo-600" },
+    restaurant: { icon: "🍽️", dot: "bg-amber-600" },
+    attraction: { icon: "🏛️", dot: "bg-sky-600" },
+    other: { icon: "📌", dot: "bg-gray-500" },
+  };
+  const todayKey = (() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  })();
+  const selEvents = selDay ? events.get(selDay) ?? [] : [];
+
+  return (
+    <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="font-bold text-gray-900">📅 预定日历</h3>
+        <span className="text-[11px] text-gray-400">点任意一天看当天预定</span>
+      </div>
+      <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
+        <span><span className="inline-block w-2 h-2 rounded-full bg-teal-600 mr-1" />酒店（连住）</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-indigo-600 mr-1" />航班</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-amber-600 mr-1" />餐厅</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-sky-600 mr-1" />景点</span>
+      </div>
+      {months.map(({ y, mo }) => {
+        const first = new Date(y, mo - 1, 1);
+        const offset = (first.getDay() + 6) % 7;
+        const days = new Date(y, mo, 0).getDate();
+        const cells: (number | null)[] = [
+          ...Array.from({ length: offset }, () => null),
+          ...Array.from({ length: days }, (_, i) => i + 1),
+        ];
+        return (
+          <div key={`${y}-${mo}`} className="mb-4 last:mb-0">
+            <div className="text-sm font-bold text-teal-900 mb-1.5">{y} 年 {mo} 月</div>
+            <div className="grid grid-cols-7 gap-1 text-center">
+              {["一", "二", "三", "四", "五", "六", "日"].map((w) => (
+                <div key={w} className="text-[11px] text-gray-400 py-0.5">{w}</div>
+              ))}
+              {cells.map((d, i) => {
+                if (d == null) return <div key={`x-${i}`} />;
+                const k = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                const dayEvents = events.get(k) ?? [];
+                const isNight = hotelNights.has(k);
+                const isSel = selDay === k;
+                return (
+                  <button
+                    key={k}
+                    onClick={() => setSelDay(isSel ? null : k)}
+                    className={`rounded-lg py-1 min-h-[44px] flex flex-col items-center justify-start border transition-colors ${
+                      isSel
+                        ? "border-teal-700 bg-teal-50 ring-1 ring-teal-700"
+                        : isNight
+                          ? "border-teal-100 bg-teal-50/70"
+                          : "border-transparent hover:bg-gray-50"
+                    }`}
+                  >
+                    <span className={`text-xs leading-none ${k === todayKey ? "bg-teal-700 text-white rounded-full w-5 h-5 inline-flex items-center justify-center font-bold" : dayEvents.length ? "font-bold text-gray-900" : "text-gray-500"}`}>
+                      {d}
+                    </span>
+                    <span className="flex gap-0.5 mt-1 flex-wrap justify-center px-0.5">
+                      {dayEvents.slice(0, 3).map((e, j) => (
+                        <span key={j} className={`w-1.5 h-1.5 rounded-full ${kindMeta[e.kind].dot}`} />
+                      ))}
+                    </span>
+                    {dayEvents.length > 0 && (
+                      <span className="text-[9px] leading-tight text-gray-500 px-0.5 truncate w-full">
+                        {kindMeta[dayEvents[0]!.kind].icon} {dayEvents[0]!.title}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+      {selDay && (
+        <div className="mt-2 rounded-lg bg-[#f7f4ee] border border-[#e5e1d6] px-3 py-2">
+          <div className="text-xs font-bold text-gray-700 mb-1">{selDay} 的预定</div>
+          {selEvents.length === 0 ? (
+            <p className="text-xs text-gray-400">这天没有已确认的预定</p>
+          ) : (
+            <ul className="space-y-1">
+              {selEvents.map((e, i) => (
+                <li key={i} className="text-xs text-gray-700">
+                  {kindMeta[e.kind].icon} <span className="font-medium">{e.title}</span>
+                  {e.sub && <span className="text-gray-400"> · {e.sub}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { rows, loading } = useRecordsData(["booking"]);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -1026,15 +1248,39 @@ function BookingsInner() {
   const [attrExpandSig, setAttrExpandSig] = useState(0);
   const { rows, loading, loadError, save, del, syncMode } =
     useRecordsData(["booking"]);
+  /* 一级菜单「价格追踪」的数量徽标：与 FavoriteActionList 同口径（四类收藏） */
+  const { rows: favRows } = useRecordsData(["favorite"]);
+  const favCount = useMemo(
+    () =>
+      favRows.filter((r) => {
+        try {
+          const t = (JSON.parse(r.body) as { type?: string }).type ?? "attraction";
+          return ["hotel", "flight", "restaurant", "attraction"].includes(t);
+        } catch {
+          return true;
+        }
+      }).length,
+    [favRows]
+  );
   /* 2026-10-03 用户：二级菜单像行程页日期导航一样吸顶固定，随时可切换；
    * 2026-10-04 用户：二级菜单被地图盖住、城市 tab 压在地图上——三层吸顶必须错开：
    * 顶栏(0~headerH) → 二级菜单(headerH) → 地图(headerH+navH) → 城市tab(headerH+navH+地图高)。
    * 地图高度经 onHeightChange 实时上报，城市 tab 的 --citytabs-top 跟着变。 */
   const [searchParams] = useSearchParams();
-  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "final";
-  const [menu, setMenu] = useState<MenuKey>(() => {
+  /* 2026-10-13 用户：菜单改三级结构——一级只有三个：🔍 预定筛选 / 📈 价格追踪 / ✅ 最终预定；
+   * 预定筛选里再分 酒店/机票/餐厅/景点（二级），每类再分城市（三级）。
+   * 旧 ?menu=hotels|flights|restaurants|attractions → 预定筛选+对应类别；?menu=action → 价格追踪；?menu=final → 最终预定 */
+  type SectionKey = "screen" | "track" | "final";
+  type CatKey = "hotels" | "flights" | "restaurants" | "attractions";
+  const [section, setSection] = useState<SectionKey>(() => {
     const m = searchParams.get("menu");
-    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "final") return m;
+    if (m === "final") return "final";
+    if (m === "action" || m === "track") return "track";
+    return "screen";
+  });
+  const [cat, setCat] = useState<CatKey>(() => {
+    const m = searchParams.get("menu");
+    if (m === "flights" || m === "restaurants" || m === "attractions") return m;
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "hotels";
   });
@@ -1083,7 +1329,7 @@ function BookingsInner() {
       setMapStickyTop(undefined);
       if (header) nav.style.top = `${headerH}px`;
       const navH = Math.round(nav.getBoundingClientRect().height);
-      syncCityTabsTop(menu);
+      syncCityTabsTop(cat);
     };
     sync();
     const ro = new ResizeObserver(sync);
@@ -1096,7 +1342,7 @@ function BookingsInner() {
       window.removeEventListener("resize", sync);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [menu]);
+  }, [section, cat]);
   /** 地图高度变化 → 更新城市 tab 的吸顶位置（2026-10-04 修 tab 压地图） */
   const onMapHeight = (key: string) => (h: number) => {
     mapHeightsRef.current[key] = h;
@@ -1107,10 +1353,24 @@ function BookingsInner() {
   const [preset, setPreset] = useState<BookingPreset | null>(null);
   /** 二次确认删除：用站内按钮代替 window.confirm（原生弹窗在自动化/部分移动端会被吞掉） */
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  /* 2026-10-03 用户：切换二级菜单时回到顶端，滚动位置不在不同 tab 间继承 */
-  const switchMenu = (m: MenuKey) => {
-    setMenu(m);
+  /* 2026-10-03 用户：切换菜单时回到顶端，滚动位置不在不同 tab 间继承 */
+  const switchSection = (s: SectionKey) => {
+    setSection(s);
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  };
+  const switchCat = (c: CatKey) => {
+    setCat(c);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  };
+  /** 每日动态横幅的跳转（旧菜单键 → 新三级结构）：action=价格追踪，其余=预定筛选对应类别 */
+  const goToMenu = (m: "action" | "hotels" | "restaurants" | "flights") => {
+    if (m === "action") {
+      switchSection("track");
+    } else {
+      setSection("screen");
+      setCat(m);
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    }
   };
   /** 行程规划里定好的城市+日期：预订页只看这些（机票看定好的时间，酒店/餐厅看定好的城市和日期） */
   const { segments } = usePlanScope();
@@ -1231,58 +1491,89 @@ function BookingsInner() {
     })),
   ];
 
-  const menus: { key: MenuKey; label: string }[] = [
+  /* 2026-10-13 用户：一级菜单只留三个（预定筛选/价格追踪/最终预定），整套菜单统一设计、吸顶固定不随滚动消失 */
+  const sections: { key: SectionKey; label: string; badge?: number }[] = [
+    { key: "screen", label: "🔍 预定筛选" },
+    { key: "track", label: "📈 价格追踪", badge: favCount },
+    { key: "final", label: "✅ 最终预定", badge: confirmedCount },
+  ];
+  const cats: { key: CatKey; label: string }[] = [
     { key: "hotels", label: "🏨 酒店" },
-    { key: "flights", label: "✈️ 飞机" },
+    { key: "flights", label: "✈️ 机票" },
     { key: "restaurants", label: "🍽️ 餐厅" },
     { key: "attractions", label: "🏛️ 景点" },
-    { key: "action", label: "🔍 预定筛选" },
-    { key: "final", label: "✅ 最终预定" },
   ];
+  const inCatalog = section === "screen" && cat !== "flights";
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
-      {/* 2026-10-04 用户：分类+城市+地图三层一起吸顶，统一容器不打架 */}
-      <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 py-0.5 bg-[#f7f4ee]/90 backdrop-blur border-b border-gray-200" style={{ top: 'var(--sticky-top, 0px)' }}>
-        {/* 分类导航 */}
-        <div role="tablist" aria-label="预订二级菜单">
-        <div className="booking-tabs flex gap-1.5 overflow-x-auto">
-          {menus.map((m) => (
+      {/* 吸顶菜单栈（2026-10-13 整体重做）：一级分段控件 + 二级类别下划线页签 + 三级城市胶囊，
+          一个容器、一套视觉语言，钉在站顶栏正下方，滚动时不消失；地图移出吸顶层、随页滚动 */}
+      <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 pt-2 pb-2 bg-[#f7f4ee]/95 backdrop-blur border-b border-gray-200 shadow-[0_6px_16px_-12px_rgba(0,0,0,0.35)]" style={{ top: 'var(--sticky-top, 0px)' }}>
+        {/* 一级：预定筛选 / 价格追踪 / 最终预定 */}
+        <div role="tablist" aria-label="预订一级菜单" className="flex gap-1 rounded-xl bg-[#e9e5d8] p-1">
+          {sections.map((s) => (
             <button
-              key={m.key}
+              key={s.key}
               role="tab"
-              aria-selected={menu === m.key}
-              onClick={() => switchMenu(m.key)}
-              className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
-                menu === m.key
-                  ? "bg-teal-700 text-white border-teal-700"
-                  : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+              aria-selected={section === s.key}
+              onClick={() => switchSection(s.key)}
+              className={`flex-1 px-2 py-2 rounded-lg text-sm whitespace-nowrap transition-all ${
+                section === s.key
+                  ? "bg-white text-teal-900 font-bold shadow-sm"
+                  : "text-gray-500 font-medium hover:text-teal-900"
               }`}
             >
-              {m.label}
+              {s.label}
+              {typeof s.badge === "number" && s.badge > 0 && (
+                <span className={`ml-1.5 text-[11px] px-1.5 py-0.5 rounded-full align-middle ${
+                  section === s.key ? "bg-teal-700 text-white" : "bg-gray-300 text-gray-600"
+                }`}>
+                  {s.badge}
+                </span>
+              )}
             </button>
           ))}
         </div>
-      </div>
 
+        {/* 二级：类别（仅预定筛选内） */}
+        {section === "screen" && (
+          <div role="tablist" aria-label="预定类别" className="flex gap-1 mt-1 border-b border-[#e5e1d6]">
+            {cats.map((c) => (
+              <button
+                key={c.key}
+                role="tab"
+                aria-selected={cat === c.key}
+                onClick={() => switchCat(c.key)}
+                className={`px-3 py-1.5 text-[13px] whitespace-nowrap border-b-2 -mb-px transition-colors ${
+                  cat === c.key
+                    ? "border-teal-700 text-teal-900 font-bold"
+                    : "border-transparent text-gray-500 font-medium hover:text-teal-900"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {/* 城市导航（仅酒店/餐厅/景点） */}
-        {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
-          <div role="tablist" aria-label="城市筛选" className="mt-0.5">
+        {/* 三级：城市（仅酒店/餐厅/景点类别内） */}
+        {inCatalog && (
+          <div role="tablist" aria-label="城市筛选" className="mt-2">
           <div className="flex gap-1.5 overflow-x-auto">
             {(scoped ? planCities.filter(c => allCities.includes(c)) : []).map((c) => {
-              const currentCity = (menu === "hotels" ? hotelCity : menu === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
-              const setCity = menu === "hotels" ? setHotelCity : menu === "restaurants" ? setRestCity : setAttrCity;
+              const currentCity = (cat === "hotels" ? hotelCity : cat === "restaurants" ? restCity : attrCity) || (scoped ? planCities[0] : null);
+              const setCity = cat === "hotels" ? setHotelCity : cat === "restaurants" ? setRestCity : setAttrCity;
               return (
                 <button
                   key={c}
                   role="tab"
                   aria-selected={currentCity === c}
                   onClick={() => setCity(c)}
-                  className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors whitespace-nowrap ${
                     currentCity === c
                       ? "bg-teal-700 text-white border-teal-700"
-                      : "bg-white text-gray-600 border-[#e5e1d6] hover:border-teal-600"
+                      : "bg-white text-gray-500 border-[#e5e1d6] hover:border-teal-600"
                   }`}
                 >
                   {c}
@@ -1292,12 +1583,13 @@ function BookingsInner() {
           </div>
         </div>
       )}
+      </div>
 
 
-        {/* 地图（仅酒店/餐厅/景点） */}
-        {(menu === "hotels" || menu === "restaurants" || menu === "attractions") && (
-          <div className="guide-scope">
-          {menu === "hotels" && (
+        {/* 地图（仅酒店/餐厅/景点类别；已移出吸顶层，随页面滚动） */}
+        {inCatalog && (
+          <div className="guide-scope mt-3">
+          {cat === "hotels" && (
           <SafeStickyMapBar
             items={hotelMapItems}
             activeCity={hotelCity}
@@ -1311,7 +1603,7 @@ function BookingsInner() {
             onMarkerSelect={(key)=>{ setHotelSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           )}
-          {menu === "restaurants" && (
+          {cat === "restaurants" && (
           <SafeStickyMapBar
             items={restMapItems}
             activeCity={restCity}
@@ -1325,7 +1617,7 @@ function BookingsInner() {
             onMarkerSelect={(key)=>{ setRestSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           )}
-          {menu === "attractions" && (
+          {cat === "attractions" && (
           <SafeStickyMapBar
             items={attrMapItems}
             activeCity={attrCity}
@@ -1342,33 +1634,30 @@ function BookingsInner() {
         </div>
       )}
 
-
-      </div>
-
-            {menu === "hotels" ? (
+            {section === "screen" && cat === "hotels" ? (
         <div className="guide-scope">
           <HotelCatalog key={`hotels-${hotelCity}`} bare hideCityTabs initialCity={hotelCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setHotelCity} onItemSelect={(k)=>{setHotelSel(k);}} defaultListExpanded />
         </div>
-      ) : menu === "flights" ? (
+      ) : section === "screen" && cat === "flights" ? (
         <div className="guide-scope">
           <Flights onBook={onBookPreset} />
         </div>
-      ) : menu === "restaurants" ? (
+      ) : section === "screen" && cat === "restaurants" ? (
         <div className="guide-scope">
           <RestaurantCatalog key={`restaurants-${restCity}`} bare hideCityTabs initialCity={restCity || undefined} onBook={onBookPreset} scopeCities={scoped ? planCities : undefined} stayDates={scoped ? stayDates : undefined} onCityChange={setRestCity} onItemSelect={(k)=>{setRestSel(k);}} defaultListExpanded />
         </div>
-      ) : menu === "attractions" ? (
+      ) : section === "screen" && cat === "attractions" ? (
         <div className="guide-scope">
           <AttractionCatalog key={`attractions-${attrCity}`} hideCityTabs initialCity={attrCity || undefined} scopeCities={scoped ? planCities : undefined} bookingOnly={true} onCityChange={setAttrCity} onItemSelect={(k)=>{setAttrSel(k);}} defaultListExpanded />
         </div>
-      ) : menu === "action" ? (
+      ) : section === "track" ? (
         <>
-        {/* 2026-10-04 用户：总结块（每日动态/行程日期/登录条）只放在行动安排里 */}
+        {/* 2026-10-13 用户：价格追踪 = 收藏 + 全部 live 数据（价格/余位/可预订状态）；总结块也放这里 */}
         <SyncBanner mode={syncMode} />
         {syncMode === "cloud" && (
           <DailyDigestBanner
             scopeCities={scoped ? planCities : undefined}
-            onJump={setMenu}
+            onJump={goToMenu}
           />
         )}
         {scoped && (
@@ -1387,12 +1676,15 @@ function BookingsInner() {
         <LoginGate syncMode={syncMode} />
       )}
         </>
-      ) : menu === "final" ? (
+      ) : section === "final" ? (
         <>
-        {/* 2026-10-13 用户新增：最终预定只放已确认的，点开出示全部细节 */}
+        {/* 2026-10-13 用户：最终预定 = 上方日历直观总览（酒店连住/航班日/餐厅日），下方才是预定列表 */}
         <SyncBanner mode={syncMode} />
         {syncMode === "cloud" ? (
-          <FinalBookingsList onEdit={openEdit} />
+          <>
+            <BookingsCalendar />
+            <FinalBookingsList onEdit={openEdit} />
+          </>
         ) : (
           <LoginGate syncMode={syncMode} />
         )}
