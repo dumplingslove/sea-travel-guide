@@ -573,7 +573,7 @@ function renderCalendar(){
 /* 景点取舍已并入向导 Step 2（定天数）：每城行内直接标注"优先排 / 有余力再去 / 建议舍去"，
    不再有独立 tab；旧的 coverageGrid 卡片渲染与 cityDayCounts 已删除。 */
 function openDay(date: string){modalDate=date;const plan=state.schedule[date];el("modalTitle").textContent=`${date.slice(5).replace("-","月")}日`;renderDayIntel(date);(el("modalCity") as HTMLSelectElement).value=plan?.city||"曼谷";(el("modalMode") as HTMLSelectElement).value=plan?.mode||"couple";el("dayModal").classList.add("open")}
-function closeModal(){el("dayModal").classList.remove("open")}
+function closeModal(){ const dm=elOpt("dayModal"); if(dm) dm.classList.remove("open"); if(cpModalOpen){ cpModalOpen=false; wzRender(); } }
 function saveDay(){
   if(!modalDate)return;
   const mode=inputVal("modalMode");
@@ -966,8 +966,9 @@ function renderTrip(){
   const parts: string[] = [];
   for(const s of TRIP_SEGS){
     const segHtml = segCard(s);
-    /* 2026-10-13 用户：东南亚城市规划合并进大行程——夫妻段卡片下面直接展开选城市/定天数/定顺序，不再单独开 tab */
-    const innerHtml = s.id==="couple" ? segHtml+`<div id="couplePlanner">${couplePlannerHtml()}</div>` : segHtml;
+    /* 2026-10-13 用户（二次调整）：东南亚选城市/定天数改弹窗——主界面只留干净的城市链（城市+天数+城际航班信息），
+       点「🧭 选择城市和天数」弹出窗口，在窗口里选城市、定天数、排顺序、设每城预订开关。 */
+    const innerHtml = s.id==="couple" ? segHtml+coupleSummaryHtml()+coupleModalHtml() : segHtml;
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
       /* 转场日 = 到达段第一天（2026-10-13 用户口径：当天落地、当晚睡在到达城市；
@@ -1120,6 +1121,7 @@ function wzLegCheck(from: string, to: string, date: string){
   return {level:"warn", html:`<b>⚠ 精确日期待查询</b>：Google Flights 航班库正在逐日填充，当前日期暂无实查数据；不能据此推断当天无直飞，出票前以实查为准。`};
 }
 /* 向导选择的同步指纹：用于判断是否需要重排日历 */
+let cpModalOpen=false; /* 东南亚选城市弹窗的开/关状态：重渲染（renderTrip）时保持，弹窗内每次点选都会重渲染 */
 let wzLastCalSig="";
 function wzCalSig(){
   const cities=wz.order.filter(c=>wz.cities.includes(c));
@@ -1143,6 +1145,41 @@ function wzCityCardsHtml(){
     </article>`;
   }).join("");
   return `<div class="wz-city-grid">${cards}</div>`;
+}
+/* 城际航班一句话摘要（主界面城市链用）：直飞最低价 + 最便宜那班的航司/航班号/时刻；库里没有=待查询，无直飞如实写 */
+function cpLegSummary(fromCity: string, toCity: string, date: string): string {
+  const fc=CITY_AIRPORT[fromCity], tc=CITY_AIRPORT[toCity];
+  if(!fc||!tc) return "✈️ 转场";
+  const d=TRIP_FLIGHTS[`${fc}-${tc}|${date}`];
+  if(!d) return "✈️ 待查询";
+  if(!d.direct||d.eco==null) return "✈️ 暂无直飞";
+  const cheap=(d.flights||[]).filter(f=>f.price!=null).sort((a,b)=>(a.price??0)-(b.price??0))[0];
+  return `✈️ 直飞 $${d.eco} 起${cheap?` · ${esc(cheap.airline)} ${esc(cheap.flight)} ${esc(cheap.dep)}→${esc(cheap.arr)}`:""}`;
+}
+/* 东南亚主界面（干净版，2026-10-13 用户）：只显示已选城市链（城市+天数+日期，城际之间是航班信息）+ 一个打开弹窗的按钮 */
+function coupleSummaryHtml(){
+  const rows=wzRanges();
+  const total=wzOrderTotal(), seaBudget=tripDays["couple"]||0, diff=seaBudget-total;
+  const budgetTxt=diff===0?`已分配 ${total} 天 ✓ 刚好`:diff>0?`已分配 ${total} 天，还剩 ${diff} 天没分配`:`已分配 ${total} 天，超出 ${-diff} 天`;
+  if(!rows.length){
+    return `<div class="cp-clean"><p class="micro" style="margin:0 0 10px">东南亚还没选城市。</p><button type="button" class="primary cp-open-btn" id="cpEditBtn">🧭 选择城市和天数</button></div>`;
+  }
+  const parts: string[]=[];
+  rows.forEach((r,i)=>{
+    if(i>0) parts.push(`<span class="cp-leg">${cpLegSummary(rows[i-1].city, r.city, r.from)}</span>`);
+    parts.push(`<span class="cp-city"><b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
+  });
+  return `<div class="cp-clean"><div class="cp-chain">${parts.join("")}</div><div class="cp-clean-foot"><span class="micro">大行程给这段 ${seaBudget} 天 · ${budgetTxt}</span><button type="button" class="primary cp-open-btn" id="cpEditBtn">🧭 选择城市和天数</button></div></div>`;
+}
+/* 东南亚选城市弹窗：里面就是原来的细排（选城市卡 + 每城天数/顺序/预订开关），退出后主界面保持干净 */
+function coupleModalHtml(){
+  return `<div class="cp-modal${cpModalOpen?" open":""}" id="cpModal" role="dialog" aria-modal="true" aria-label="东南亚选城市、定天数">
+    <div class="cp-modal-card">
+      <div class="modal-head"><b style="font-size:17px">🧭 东南亚：选城市、定天数</b><button type="button" class="cp-x" data-cpclose aria-label="关闭">✕</button></div>
+      ${couplePlannerHtml()}
+      <div class="modal-actions"><button type="button" class="primary" data-cpclose style="margin-top:0">完成</button></div>
+    </div>
+  </div>`;
 }
 /* 合并后的夫妻东南亚段细排：选城市 + 定每城天数与顺序 + 每城预订需求开关，全在一处 */
 function couplePlannerHtml(){
@@ -1498,7 +1535,7 @@ function wireOrderTab(){
   const qa = (s: string) => [...S2.querySelectorAll(s)] as HTMLElement[];
   const on = (id: string, fn: () => void) => { const b = q("#"+id); if(b) b.onclick = fn; };
   on("ordToTrip", ()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); });
-  on("ordToWizard", ()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); const cp=S.querySelector("#couplePlanner") as HTMLElement|null; if(cp) setTimeout(()=>cp.scrollIntoView({behavior:"smooth",block:"start"}),80); });
+  on("ordToWizard", ()=>{ (S.querySelector('[data-tab="trip"]') as HTMLElement).click(); cpModalOpen=true; wzRender(); });
   on("ordSave", wzSavePlan);
   /* 点日期 → 在日历下方原地展开详情（不弹窗，纯信息展示） */
   qa("[data-ordday]").forEach(b=>b.onclick=()=>toggleOrdDay(b.dataset.ordday!));
@@ -1648,6 +1685,10 @@ function wzWire(){
   const on=(id:string,fn:()=>void)=>{ const n=S.getElementById(id); if(n) (n as HTMLElement).onclick=fn };
   on("wzAll",()=>{ wz.cities=[...WZ_ORDER]; wz.order=[...WZ_ORDER]; Object.assign(wz.days,baselineNights); wzRender() });
   on("wzClear",()=>{ wz.cities=[]; wzRender() });
+  /* 东南亚选城市弹窗：打开/关闭（状态存 cpModalOpen，弹窗内点选触发的重渲染后仍保持打开） */
+  on("cpEditBtn",()=>{ cpModalOpen=true; wzRender(); });
+  S.querySelectorAll("[data-cpclose]").forEach(b=>(b as HTMLElement).onclick=()=>{ cpModalOpen=false; wzRender(); });
+  S.querySelectorAll(".cp-modal").forEach(m=>(m as HTMLElement).onclick=(e)=>{ if(e.target===m){ cpModalOpen=false; wzRender(); } });
   /* 旧向导的步骤导航按钮已随合并删除（选城市/定天数同页完成），不再绑定 */
   S.querySelectorAll("[data-wzordup]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzordup), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i>0){ const c=arr[i]; arr[i]=arr[i-1]; arr[i-1]=c; wz.order=[...WZ_ORDER.filter(x=>!wz.cities.includes(x)),...arr]; } cachePlannerLocal(); wzRender(); });
   S.querySelectorAll("[data-wzorddn]").forEach(b=>(b as HTMLElement).onclick=()=>{ const i=Number((b as HTMLElement).dataset.wzorddn), arr=wz.order.filter(c=>wz.cities.includes(c)); if(i<arr.length-1){ const c=arr[i]; arr[i]=arr[i+1]; arr[i+1]=c; wz.order=[...WZ_ORDER.filter(x=>!wz.cities.includes(x)),...arr]; } cachePlannerLocal(); wzRender(); });
@@ -1765,7 +1806,9 @@ function cachePlannerLocal(){
 }
 
 // init controls
-([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));if(btn.dataset.tab==="order") renderOrderTab();hostEl.scrollIntoView({behavior:"smooth",block:"start"})});
+/* 2026-10-13：可见页签已移到宿主层（Planner.tsx）固定在最上方，这里的影子 .tab 只作状态机；
+   切换时通知宿主同步高亮，并滚动到面板顶部（扣除宿主吸顶栈高度 --planner-stack-h：顶栏+页签+地图条）。 */
+([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(btn=>btn.onclick=()=>{([...S.querySelectorAll(".tab")] as HTMLElement[]).forEach(b=>b.setAttribute("aria-selected",String(b===btn)));([...S.querySelectorAll(".panel")] as HTMLElement[]).forEach(p=>p.classList.toggle("active",p.id===btn.dataset.tab));if(btn.dataset.tab==="order") renderOrderTab();hostEl.dispatchEvent(new CustomEvent("planner:tab",{detail:btn.dataset.tab}));const stackH=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--planner-stack-h"))||0;const y=hostEl.getBoundingClientRect().top+window.scrollY-stackH-6;window.scrollTo({top:Math.max(0,y),behavior:"smooth"})});
 /* 日历／景点取舍已并入向导步骤内按需渲染：开始日期、重排、复制、视图切换按钮只在 Step 3 出现，由 wzWire() 按需绑定；
    云端保存统一走向导 Step 3 的「保存规划」与大行程的「保存大行程」，不再有独立的「保存到云端」按钮。
    旧 day-modal 已删除（2026-09-28），其事件绑定一并移除。 */
