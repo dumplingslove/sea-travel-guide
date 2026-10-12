@@ -8,14 +8,20 @@ import { RestaurantCatalog, AttractionCatalog } from "../guide/GuideApp";
  * 釜山/全州都要 KTX 1.5～2.5 小时单程、至少住一晚，2 天行程里转场成本太高；
  * 水原离首尔 30～40 分钟，当日往返、不用换酒店，是时间上最合适的第二城。
  */
-function SuwonDayTrip() {
+function SuwonDayTrip({ embedded = false }: { embedded?: boolean }) {
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+    <div
+      className={`bg-amber-50 border border-amber-200 rounded-xl p-4 ${embedded ? "" : "mb-6"}`}
+    >
       <h3 className="font-bold text-gray-900 mb-1">
-        🏯 推荐第二城：水原 Suwon（首尔出发当日往返，不换酒店）
+        {embedded
+          ? "🏯 本日备选：水原一日游（当日往返，不换酒店）"
+          : "🏯 推荐第二城：水原 Suwon（首尔出发当日往返，不换酒店）"}
       </h3>
       <p className="text-xs text-gray-500 mb-3">
-        2 天韩国行程里塞不下过夜的第二城；水原 30～40 分钟即达，半天到一天刚好，带娃无压力
+        {embedded
+          ? "2 天里只有今天能抽出一整天；水原 30～40 分钟即达，半天到一天刚好，带娃无压力"
+          : "2 天韩国行程里塞不下过夜的第二城；水原 30～40 分钟即达，半天到一天刚好，带娃无压力"}
       </p>
       <div className="text-sm text-gray-700 space-y-2">
         <p>
@@ -73,8 +79,11 @@ function SeoulAttractions() {
 export default function KoreaItinerary() {
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
-      <SuwonDayTrip />
-      <ItineraryTab koreaOnly />
+      {/* 2026-10-12 用户：水原一日游不要页顶单独写，容进 D34（韩国首日）行程卡后面作备选 */}
+      <ItineraryTab
+        koreaOnly
+        renderDayExtra={(_day, i) => (i === 0 ? <SuwonDayTrip embedded /> : null)}
+      />
       <SeoulRestaurants />
       <SeoulAttractions />
     </div>

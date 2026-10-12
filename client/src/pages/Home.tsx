@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ItineraryDayCard,
   detailForPlanDay,
@@ -111,7 +111,15 @@ function FavoriteItineraryCheck({
   );
 }
 
-export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
+export function ItineraryTab({
+  koreaOnly = false,
+  renderDayExtra,
+}: {
+  koreaOnly?: boolean;
+  // 某天卡片后追加的额外内容（2026-10-12 用户：韩国页水原一日游要"容在行程里"，
+  // 不再页顶单独写；SEA 页不传，保持原样）
+  renderDayExtra?: (day: Day, index: number) => ReactNode;
+}) {
   const plan = usePlanItinerary();
   // 顶部导航拆成"东南亚行程"/"韩国行程"两个页面：
   // 东南亚行程只显示 SEA_CITY_ZH（新加坡/普吉/清迈/曼谷），北京/西安不混入；
@@ -324,19 +332,21 @@ export function ItineraryTab({ koreaOnly = false }: { koreaOnly?: boolean }) {
           const gi = allDays.findIndex((x) => x.day === d.day);
           const prevDay = gi > 0 ? allDays[gi - 1] : undefined;
           return (
-            <ItineraryDayCard
-              key={d.day}
-              day={d}
-              prevDay={prevDay}
-              detail={details[i]}
-              bookings={bookingsByDay.get(d.day) || []}
-              isCloud={isCloudPlan}
-              cityScheduledNames={cityScheduled.get(d.city_zh)}
-              favorites={favorites}
-              stay={stays.get(d.city_zh) ?? null}
-              onSelectStop={handleCardSelect}
-              selectedKey={selectedKey}
-            />
+            <Fragment key={d.day}>
+              <ItineraryDayCard
+                day={d}
+                prevDay={prevDay}
+                detail={details[i]}
+                bookings={bookingsByDay.get(d.day) || []}
+                isCloud={isCloudPlan}
+                cityScheduledNames={cityScheduled.get(d.city_zh)}
+                favorites={favorites}
+                stay={stays.get(d.city_zh) ?? null}
+                onSelectStop={handleCardSelect}
+                selectedKey={selectedKey}
+              />
+              {renderDayExtra?.(d, i)}
+            </Fragment>
           );
         })}
       </div>
