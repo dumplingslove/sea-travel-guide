@@ -34,6 +34,7 @@ import {
 } from "@/bookings/bookingTypes";
 import {
   BOOKING_KIND_LABEL,
+  BOOKING_FIELD_LABEL,
   BOOKING_KINDS,
   bookingSummary,
   parseBookingBody,
@@ -101,6 +102,17 @@ function FavoriteActionList({
   stays: HotelStay[];
 }) {
   const { rows, del, save } = useRecordsData(["favorite"]);
+  /* 2026-10-13 用户：预定筛选要标出每项"是否已预订"——拿已确认的预订记录按名称匹配 */
+  const { rows: bookingRows } = useRecordsData(["booking"]);
+  const confirmedByName = useMemo(() => {
+    const m = new Map<string, { code?: string; summary: string }>();
+    for (const r of bookingRows) {
+      if (!r.done) continue;
+      const d = parseBookingBody(r.body);
+      m.set(r.title.trim().toLowerCase(), { code: d.code, summary: bookingSummary(d) });
+    }
+    return m;
+  }, [bookingRows]);
   const { segments } = usePlanScope();
   const segs: PlanSegment[] = useMemo(
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
@@ -181,7 +193,7 @@ function FavoriteActionList({
   if (!favs.length) {
     return (
       <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
-        <p className="text-sm text-gray-500">📋 行动安排是空的</p>
+        <p className="text-sm text-gray-500">🔍 预定筛选是空的</p>
         <p className="text-xs text-gray-400 mt-1">
           在「酒店」「飞机」「餐厅」「景点」tab 浏览时点「＋ 收藏」，候选会按城市+时间线出现在这里，带实时价格追踪
         </p>
@@ -340,13 +352,13 @@ function FavoriteActionList({
     <div className="mb-6">
       <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-4">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="font-bold text-gray-900">📋 行动安排</h3>
+          <h3 className="font-bold text-gray-900">🔍 预定筛选</h3>
           <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
             {favs.length} 项候选 · {decided} 已确定
           </span>
         </div>
         <p className="text-xs text-gray-500">
-          按行程时间线分城市排列，每个城市的航班/酒店/餐厅/景点都在一块，实时价格直接比较。点任意卡片→地图只定位它（航班显示两机场+连线），再点一次取消；看好点「✓ 确定」锁定，再「加入预订」走正式流程
+          你收藏的候选都在这里：带实时价格查询，并标注是否已预订。按行程时间线分城市排列，点卡片→地图只定位它（航班显示两机场+连线），再点一次取消；展开看详情对比，看好点「✓ 确定」锁定、再「加入预订」走正式流程。真正订好的在「✅ 最终预定」里看确认信息
         </p>
       </div>
 
@@ -359,7 +371,7 @@ function FavoriteActionList({
         activeLabel={mapSelLabel}
         activeItemKeys={mapSelKey ? [mapSelKey] : null}
         flightRoutes={bookingFlightRoutes}
-        title="🗺️ 行动安排地图"
+        title="🗺️ 预定筛选地图"
         storageKey="sticky-map-bookings"
       />
 
@@ -454,6 +466,21 @@ function FavoriteActionList({
                                 ✅ 已预订{st.bookedHotelName ? ` · ${st.bookedHotelName}` : ""}
                               </span>
                             ) : null;
+                          })()}
+                          {/* 2026-10-13 用户：预定筛选要标"是否已预订"——与已确认预订记录同名即标（餐厅订位主要靠这条） */}
+                          {(() => {
+                            if (f.type === "flight" && flightLeg?.ticketed) return null;
+                            if (f.type === "hotel" && stayOf(itemCity(f))?.booked) return null;
+                            const rec = confirmedByName.get(f.row.title.trim().toLowerCase());
+                            if (!rec) return null;
+                            return (
+                              <span
+                                title={rec.summary}
+                                className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
+                              >
+                                ✅ 已预订{rec.code ? ` · 确认号 ${rec.code}` : ""}
+                              </span>
+                            );
                           })()}
                           {/* 2026-10-03 用户：时间线日期徽标 */}
                           {(() => {
@@ -825,6 +852,193 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
   return null;
 }
 
+/** 最终预定（2026-10-13 用户新增）：只放已经定下来的东西——
+ * 已确认的预订记录（kind=booking 且 done）+ 已出票航班（FLIGHT_LEGS ticketed）。
+ * 点开任意一条看全部预订细节，确认号大字展示，方便直接给对方出示核对。 */
+function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
+  const { rows, loading } = useRecordsData(["booking"]);
+  const [openKey, setOpenKey] = useState<string | null>(null);
+
+  interface FinalItem {
+    key: string;
+    kindLabel: string;
+    badgeCls: string;
+    title: string;
+    sortDate: string;
+    headLine: string;
+    code?: string;
+    lines: { label: string; value: string }[];
+    recordId?: number;
+  }
+
+  const items: FinalItem[] = [];
+  const confirmed = rows
+    .filter((r) => r.done)
+    .map((r) => ({ row: r, data: parseBookingBody(r.body) }));
+  for (const { row, data } of confirmed) {
+    const fl = BOOKING_FIELD_LABEL[data.bkind];
+    const lines: { label: string; value: string }[] = [];
+    if (data.city) lines.push({ label: "城市", value: data.city });
+    if (data.date)
+      lines.push({
+        label: fl.date,
+        value: data.dateEnd ? `${data.date} → ${data.dateEnd}` : data.date,
+      });
+    if (data.time)
+      lines.push({ label: "时间", value: data.timeEnd ? `${data.time} – ${data.timeEnd}` : data.time });
+    if (data.guests) lines.push({ label: fl.guests ?? "数量", value: data.guests });
+    if (data.extra) lines.push({ label: fl.extra ?? "补充信息", value: data.extra });
+    if (data.note) lines.push({ label: "备注", value: data.note });
+    const head = [
+      data.city,
+      data.date ? (data.dateEnd ? `${data.date} → ${data.dateEnd}` : data.date) : "",
+      data.time ?? "",
+      data.guests ?? "",
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    items.push({
+      key: `rec-${row.id}`,
+      kindLabel: BOOKING_KIND_LABEL[data.bkind],
+      badgeCls: kindBadge[data.bkind],
+      title: row.title,
+      sortDate: data.date ?? "9999",
+      headLine: head,
+      code: data.code,
+      lines,
+      recordId: row.id,
+    });
+  }
+  /* 已出票航班：预订记录里已覆盖的（同航班号）不重复列 */
+  for (const leg of FLIGHT_LEGS.filter((l) => l.ticketed)) {
+    const flightNo = leg.schedule?.split(" ")[0] ?? "";
+    const covered = confirmed.some(
+      ({ row, data }) =>
+        (flightNo !== "" && (row.title.includes(flightNo) || (data.extra ?? "").includes(flightNo))) ||
+        (data.bkind === "transport" && data.date === leg.date),
+    );
+    if (covered) continue;
+    const codeMatch = leg.note?.match(/确认号\s*([A-Za-z0-9]+)/);
+    const lines: { label: string; value: string }[] = [
+      { label: "航线", value: leg.route },
+      { label: "出发日期", value: leg.date || "待定" },
+    ];
+    if (leg.carrier || leg.schedule)
+      lines.push({ label: "航班", value: `${leg.carrier ?? ""} ${leg.schedule ?? ""}`.trim() });
+    if (leg.priceBasis) lines.push({ label: "乘客", value: leg.priceBasis });
+    if (leg.note) lines.push({ label: "出票信息", value: leg.note });
+    items.push({
+      key: `leg-${leg.id}`,
+      kindLabel: "✈️ 已出票",
+      badgeCls: "bg-indigo-600 text-white",
+      title: `${leg.route}${flightNo ? ` · ${leg.carrier ?? ""} ${flightNo}` : ""}`,
+      sortDate: leg.date || "9999",
+      headLine: `${leg.date || ""} · ${leg.schedule ?? ""}`.trim(),
+      code: codeMatch ? codeMatch[1] : undefined,
+      lines,
+    });
+  }
+  items.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
+
+  return (
+    <div className="mb-6">
+      <div className="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-4 mb-4">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-bold text-gray-900">✅ 最终预定</h3>
+          <span className="text-xs bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full font-medium">
+            {items.length} 项已确认
+          </span>
+        </div>
+        <p className="text-xs text-gray-500">
+          已经买好/订好的全在这里：机票、酒店、餐厅。点开任意一条看全部预订细节，确认号大字显示，可以直接给对方出示核对
+        </p>
+      </div>
+
+      {loading && <p className="text-sm text-gray-400 mb-4">正在同步预订记录…</p>}
+      {!loading && !items.length && (
+        <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 text-center">
+          <p className="text-sm text-gray-500">还没有最终预定</p>
+          <p className="text-xs text-gray-400 mt-1">
+            在「🔍 预定筛选」里订好后加入预订并标为已确认，或机票出票后，会自动出现在这里
+          </p>
+        </div>
+      )}
+
+      <div className="space-y-2.5">
+        {items.map((it) => {
+          const isOpen = openKey === it.key;
+          return (
+            <div
+              key={it.key}
+              className={`bg-white rounded-xl border-2 px-4 py-3 ${
+                isOpen ? "border-emerald-500" : "border-emerald-200"
+              }`}
+            >
+              <button
+                className="w-full text-left"
+                onClick={() => setOpenKey(isOpen ? null : it.key)}
+                aria-expanded={isOpen}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${it.badgeCls}`}>
+                        {it.kindLabel}
+                      </span>
+                      <span className="text-sm font-bold text-gray-900">{it.title}</span>
+                    </div>
+                    {it.headLine && (
+                      <div className="text-xs text-gray-600 mt-1">📅 {it.headLine}</div>
+                    )}
+                    {it.code && (
+                      <div className="text-xs text-gray-600 mt-0.5">
+                        确认号 <span className="font-bold text-emerald-700 tracking-wider">{it.code}</span>
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-xs font-medium text-gray-500 shrink-0 pt-0.5">
+                    {isOpen ? "▴ 收起" : "▾ 详情"}
+                  </span>
+                </div>
+              </button>
+              {isOpen && (
+                <div className="mt-3 pt-3 border-t border-emerald-100">
+                  {it.code && (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 mb-3 text-center">
+                      <div className="text-[11px] text-emerald-700 font-medium">确认号 Confirmation Code</div>
+                      <div className="text-2xl font-bold tracking-[0.2em] text-emerald-900 mt-0.5">
+                        {it.code}
+                      </div>
+                    </div>
+                  )}
+                  <dl className="space-y-1.5">
+                    {it.lines.map((ln, i) => (
+                      <div key={i} className="flex gap-2 text-sm">
+                        <dt className="text-gray-400 shrink-0 w-20">{ln.label}</dt>
+                        <dd className="text-gray-800 font-medium break-words min-w-0">{ln.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {it.recordId != null && (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => onEdit(it.recordId!)}
+                        className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
+                      >
+                        ✏️ 编辑这条预订
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function BookingsInner() {
   // 2026-10-03 用户：所有跳详情页的入口返回时恢复原卡片位置
   useDetailReturn("bookings");
@@ -845,10 +1059,10 @@ function BookingsInner() {
    * 顶栏(0~headerH) → 二级菜单(headerH) → 地图(headerH+navH) → 城市tab(headerH+navH+地图高)。
    * 地图高度经 onHeightChange 实时上报，城市 tab 的 --citytabs-top 跟着变。 */
   const [searchParams] = useSearchParams();
-  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action";
+  type MenuKey = "hotels" | "flights" | "restaurants" | "attractions" | "action" | "final";
   const [menu, setMenu] = useState<MenuKey>(() => {
     const m = searchParams.get("menu");
-    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action") return m;
+    if (m === "hotels" || m === "flights" || m === "restaurants" || m === "attractions" || m === "action" || m === "final") return m;
     if (m === "details") return searchParams.get("view") === "restaurants" ? "restaurants" : "hotels";
     return "hotels";
   });
@@ -1050,7 +1264,8 @@ function BookingsInner() {
     { key: "flights", label: "✈️ 飞机" },
     { key: "restaurants", label: "🍽️ 餐厅" },
     { key: "attractions", label: "🏛️ 景点" },
-    { key: "action", label: "📋 行动安排" },
+    { key: "action", label: "🔍 预定筛选" },
+    { key: "final", label: "✅ 最终预定" },
   ];
 
   return (
@@ -1193,6 +1408,12 @@ function BookingsInner() {
         )}
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
       <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} />
+        </>
+      ) : menu === "final" ? (
+        <>
+        {/* 2026-10-13 用户新增：最终预定只放已确认的，点开出示全部细节 */}
+        <SyncBanner mode={syncMode} />
+        <FinalBookingsList onEdit={openEdit} />
         </>
       ) : (
         <div className="guide-scope">
