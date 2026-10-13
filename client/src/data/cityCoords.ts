@@ -25,4 +25,6 @@ export const CITY_ID_BY_ZH: Record<string, string> = {
   "富国岛": "phuquoc",
   "新加坡": "singapore",
   "首尔": "seoul",
+  "北京": "beijing",
+  "西安": "xian",
 };

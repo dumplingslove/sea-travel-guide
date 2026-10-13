@@ -623,6 +623,8 @@ function cityNeed(city: string): {hotel:boolean;restaurant:boolean}{
 }
 /* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
 const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY", "首尔":"ICN" };
+/* 机场代码 → 中文城市（地图联动用：航班卡按代码反查两端城市） */
+const CODE_TO_ZH: Record<string,string> = Object.fromEntries(Object.entries(CITY_AIRPORT).map(([zh,code])=>[code,zh]));
 function coupleLastCity(){ const a=wz.order.filter(c=>wz.cities.includes(c)); return a[a.length-1] || "曼谷"; }
 function thailandToXianLeg(){
   const last = coupleLastCity(), code = CITY_AIRPORT[last] || "BKK";
@@ -832,9 +834,12 @@ function tripFlightCard(key: string, label: string){
   const segCode=key.split("|")[0];
   const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
   const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
+  /* 地图联动：两端机场都能反查到城市时，整张航班卡可点 → 顶部地图高亮这段连线并显示两城信息 */
+  const [fc0,tc0]=segCode.split("-"); const fromZh=CODE_TO_ZH[fc0], toZh=CODE_TO_ZH[tc0];
+  const legAttr=fromZh&&toZh?` data-legfocus="${fromZh}|${toZh}" title="点击在地图上看 ${fromZh} → ${toZh} 的连线"`:"";
   /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
   const wrap=(status:string,cls:string,sub:string,inner:string)=>
-    `<details class="tfi-leg"><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
+    `<details class="tfi-leg"${legAttr}><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
   /* 起飞小时解析：兼容 24h("16:10")与 12h("4:10 PM"/"12:10 AM")两种库内格式
      （2026-10-07 修复：旧 Number(dep.slice(0,2)) 在 12h 格式下对红眼航班静默漏标 🌙，
      如 SQ801 "12:10 AM"、TR135 "1:55 AM" 曾被判成非红眼） */
@@ -952,13 +957,16 @@ function renderTrip(){
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     const needs=needChipsForSeg(s.id);
+    /* 地图联动：单城市段的标题可点 → 顶部地图聚焦该城（分开行动段在下面两条路线行里分别点） */
+    const segFocus: Record<string,string> = { beijing1:"北京", singapore:"新加坡", seoul:"首尔" };
+    const focusAttr=segFocus[s.id]?` data-cityfocus="${segFocus[s.id]}" title="在地图上看${segFocus[s.id]}" role="button" tabindex="0"`:"";
     return `<div class="card trip-seg">
       <div class="trip-seg-head">
-        <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-title"${focusAttr}>${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔</p><p class="micro">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro" data-cityfocus="北京" title="在地图上看北京" role="button" tabindex="0">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔</p><p class="micro" data-cityfocus="西安" title="在地图上看西安" role="button" tabindex="0">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
       </div>
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
@@ -1166,8 +1174,8 @@ function coupleSummaryHtml(){
   }
   const parts: string[]=[];
   rows.forEach((r,i)=>{
-    if(i>0) parts.push(`<span class="cp-leg">${cpLegSummary(rows[i-1].city, r.city, r.from)}</span>`);
-    parts.push(`<span class="cp-city"><b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
+    if(i>0) parts.push(`<span class="cp-leg" data-legfocus="${esc(rows[i-1].city)}|${esc(r.city)}" title="在地图上看 ${esc(rows[i-1].city)} → ${esc(r.city)} 的连线" role="button" tabindex="0">${cpLegSummary(rows[i-1].city, r.city, r.from)}</span>`);
+    parts.push(`<span class="cp-city" data-cityfocus="${esc(r.city)}" title="在地图上看${esc(r.city)}" role="button" tabindex="0"><b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
   });
   return `<div class="cp-clean"><div class="cp-chain">${parts.join("")}</div><div class="cp-clean-foot"><span class="micro">大行程给这段 ${seaBudget} 天 · ${budgetTxt}</span><button type="button" class="primary cp-open-btn" id="cpEditBtn">🧭 选择城市和天数</button></div></div>`;
 }
@@ -1849,5 +1857,33 @@ let alive=true;
     }
   }
 
-  return () => { alive=false; document.removeEventListener("keydown", onKeyDown); };
+  /* 地图联动（2026-10-13 用户：行程里的城市/航班要能和顶部地图互动）：
+     主界面点城市名 → 地图聚焦该城；点城际航班 chip / 转场航班卡 → 地图高亮两城连线 + 弹两城信息。
+     用影子根事件委托只注册一次，重渲染不丢绑定；TripOverviewMap 监听 planner:focus-city / planner:focus-leg。 */
+  const onMapLinkClick = (e: Event) => {
+    const t = e.target as HTMLElement;
+    const legEl = t.closest?.("[data-legfocus]") as HTMLElement | null;
+    if (legEl) {
+      const [f, to] = (legEl.dataset.legfocus || "").split("|");
+      const fromId = CITY_ID_BY_ZH[f], toId = CITY_ID_BY_ZH[to];
+      if (fromId && toId) window.dispatchEvent(new CustomEvent("planner:focus-leg", { detail: { fromId, toId } }));
+      return;
+    }
+    const cityEl = t.closest?.("[data-cityfocus]") as HTMLElement | null;
+    if (cityEl) {
+      const cid = CITY_ID_BY_ZH[cityEl.dataset.cityfocus || ""];
+      if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+    }
+  };
+  const onMapLinkKey = (e: Event) => {
+    const ke = e as KeyboardEvent;
+    if (ke.key !== "Enter" && ke.key !== " ") return;
+    const t = e.target as HTMLElement;
+    if (t.closest?.("[data-legfocus],[data-cityfocus]")) { e.preventDefault(); t.click(); }
+  };
+  document.addEventListener("keydown", onKeyDown);
+  S.addEventListener("click", onMapLinkClick);
+  S.addEventListener("keydown", onMapLinkKey);
+
+  return () => { alive=false; document.removeEventListener("keydown", onKeyDown); S.removeEventListener("click", onMapLinkClick); S.removeEventListener("keydown", onMapLinkKey); };
 }
