@@ -145,8 +145,12 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       return c ? LL(c[0], c[1]) : null;
     };
     const la = coordOf(fromId);
-    const lb = coordOf(toId);
+    let lb = coordOf(toId);
     if (!la || !lb) return;
+    /* 跨太平洋航段防画反（实测首尔→西雅图的红线曾向西横跨亚洲截断）：两端经度差 >180°
+       时把另一端经度 ±360，让连线走太平洋一侧（短的那条路） */
+    if (lb.lng - la.lng > 180) lb = L.latLng(lb.lat, lb.lng - 360);
+    else if (la.lng - lb.lng > 180) lb = L.latLng(lb.lat, lb.lng + 360);
     clearHighlight();
     highlightRef.current = L.polyline([la, lb], {
       color: "#dc2626",
