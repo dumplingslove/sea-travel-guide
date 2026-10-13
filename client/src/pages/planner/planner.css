@@ -706,3 +706,6 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 .tfi-leg[data-legfocus]>.tfi-summary{cursor:pointer}
 .trip-split-lines .map-act{text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
 .ord-leg-line{cursor:pointer;color:var(--teal);font-weight:600}
+
+/* 段卡整卡可点看这一段的航班（2026-10-13 用户：不要单独的地图按钮） */
+.trip-seg[data-segfocus]{cursor:pointer}

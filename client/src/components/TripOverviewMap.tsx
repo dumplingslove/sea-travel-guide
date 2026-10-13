@@ -20,7 +20,7 @@ export interface TripStop {
   dates: string;
 }
 
-function markerIcon(order: number) {
+function markerIcon(order: number, anchor?: [number, number]) {
   return L.divIcon({
     className: "sea-route-marker",
     html: `<span style="
@@ -30,7 +30,7 @@ function markerIcon(order: number) {
       box-shadow:0 2px 8px rgba(15,118,110,.35);
     ">${order}</span>`,
     iconSize: [30, 30],
-    iconAnchor: [15, 15],
+    iconAnchor: anchor ?? [15, 15],
     popupAnchor: [0, -16],
   });
 }
@@ -168,6 +168,14 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     return [la0, lb];
   };
 
+  /** 框住一组点（2026-10-13 用户：点航线后地图要跟着平移/缩放去框住它——
+      经度已由 drawLegLine 归一到同一连续区间，取景连续，不会再整图换世界副本） */
+  const framePoints = (pts: L.LatLng[]) => {
+    const map = mapRef.current;
+    if (!map || !pts.length) return;
+    map.flyToBounds(L.latLngBounds(pts).pad(0.3), { maxZoom: 6, duration: 0.7 });
+  };
+
   const zhOf = (id: string, s?: TripStop) => s?.zh || ID_TO_ZH[id] || id;
   const stayText = (s: TripStop) => `Day ${s.days[0]}–${s.days[1]} · ${s.dates}`;
 
@@ -198,9 +206,8 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     window.setTimeout(() => el.classList.remove("map-flash"), 1150);
   };
 
-  /* 聚焦一个城市（2026-10-13 用户定稿）：地图不平移、不缩放——把这个城市的全部
-     航班一起红线高亮、两端落大头针，信息写到地图下方信息条，不再用弹窗遮地图。
-     （此前点城市飞过去、点跨洋段整图换世界副本，用户明确投诉。） */
+  /* 聚焦一个城市：相邻航班一起红线高亮、两端落大头针、信息写到下方信息条，
+     并平移/缩放框住这些航线（经度归一化，取景连续，不再整图换世界副本）。 */
   const focusCity = (cityId: string) => {
     const map = mapRef.current;
     if (!map) return;
@@ -232,6 +239,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     const self = coordOfId(cityId);
     if (!pins.length && self) addPin(self);
     placePins(map, pins);
+    if (pins.length) framePoints(pins);
     const zh = zhOf(cityId, stays[0]);
     const legText = legs
       .map((e) => `${zhOf(e.fromId, e.fromStop)} → ${zhOf(e.toId, e.toStop)}`)
@@ -246,10 +254,9 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     );
   };
 
-  /* 聚焦一段航线（2026-10-13 用户定稿）：只高亮这一段——红粗线+两端大头针，
-     信息写到地图下方信息条；地图不平移、不缩放（此前点跨洋段换世界副本取景、
-     再点下一段整图平移一个世界，用户明确投诉）。跨洋段的线从亚洲端向太平洋
-     方向伸出画面，方向正确、不再整图搬家。 */
+  /* 聚焦一段航线：红粗线+两端大头针+信息条，并平移/缩放框住这一段
+     （2026-10-13 用户：点航线地图完全不动也不对，要跟着框住；经度全程归一到
+     同一连续区间，取景连续，不再出现整图换世界副本的乱跳）。 */
   const focusLeg = (
     fromId: string,
     toId: string,
@@ -266,6 +273,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     const group = newHighlightGroup(map);
     const [pa, pb] = drawLegLine(group, la, lb, 6);
     placePins(map, [pa, pb]);
+    framePoints([pa, pb]);
     /* 站点由连线点击直接传入时优先用它：同城出现两次（如北京在行程首尾各一段）时，
        按 id find 只会命中第一段，分开行动段的北京信息会串成第一段天数 */
     let sa = fromStop;
@@ -298,6 +306,43 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     );
   };
 
+  /* 聚焦一组航线（2026-10-13 用户：点段卡=只看这一段包含的航班）：
+     planner-logic 按段算好航线清单传进来，这里统一高亮+落 pin+信息条+框住 */
+  const focusLegsList = (
+    legs: { fromId: string; toId: string }[],
+    title: string,
+  ) => {
+    const map = mapRef.current;
+    if (!map) return;
+    flashMap();
+    map.closePopup();
+    const group = newHighlightGroup(map);
+    const pinKeys = new Set<string>();
+    const pins: L.LatLng[] = [];
+    const drawn: L.LatLng[] = [];
+    const labels: string[] = [];
+    for (const leg of legs) {
+      const la = coordOfId(leg.fromId);
+      const lb = coordOfId(leg.toId);
+      if (!la || !lb) continue;
+      const [pa, pb] = drawLegLine(group, la, lb, 5);
+      drawn.push(pa, pb);
+      labels.push(`${zhOf(leg.fromId)} → ${zhOf(leg.toId)}`);
+      for (const pt of [pa, pb]) {
+        const k = `${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
+        if (!pinKeys.has(k)) {
+          pinKeys.add(k);
+          pins.push(pt);
+        }
+      }
+    }
+    placePins(map, pins);
+    if (drawn.length) framePoints(drawn);
+    setFocusInfo(
+      `<b>${title}</b>${labels.length ? `<br/>${labels.join(" · ")}` : ""}`,
+    );
+  };
+
   /* 外部聚焦事件：planner-logic.ts 里点城市/航班时 dispatch */
   useEffect(() => {
     const onFocus = (e: Event) => {
@@ -308,11 +353,26 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       const d = (e as CustomEvent<{ fromId?: string; toId?: string }>).detail;
       if (d?.fromId && d?.toId) focusLeg(d.fromId, d.toId);
     };
+    const onFocusLegs = (e: Event) => {
+      const d = (
+        e as CustomEvent<{
+          legs?: { from: string; to: string }[];
+          title?: string;
+        }>
+      ).detail;
+      if (!d?.legs?.length) return;
+      const legs = d.legs
+        .map((l) => ({ fromId: CITY_ID_BY_ZH[l.from] || "", toId: CITY_ID_BY_ZH[l.to] || "" }))
+        .filter((l) => l.fromId && l.toId) as { fromId: string; toId: string }[];
+      if (legs.length) focusLegsList(legs, d.title || "这一段的航班");
+    };
     window.addEventListener("planner:focus-city", onFocus);
     window.addEventListener("planner:focus-leg", onFocusLeg);
+    window.addEventListener("planner:focus-legs", onFocusLegs);
     return () => {
       window.removeEventListener("planner:focus-city", onFocus);
       window.removeEventListener("planner:focus-leg", onFocusLeg);
+      window.removeEventListener("planner:focus-legs", onFocusLegs);
     };
   }, []);
 
@@ -433,41 +493,49 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
         .addTo(map);
     }
 
-    /* 标记按城市合并（2026-10-13 用户：北京既是第一城、后面分开行动又回来，
-       两段同坐标各放一个编号标记会完全重叠）：一城一个标记，编号=首次出现的
-       顺序，弹窗里把该城的每一段停留都列出来（各自带行程链接）。 */
-    const byCity = new Map<string, { stays: TripStop[]; firstIdx: number }>();
+    /* 西雅图两端连线也画进默认路线（2026-10-13 用户：西雅图→北京的线在地图上要看得见）：
+       经度归一到与相邻站点同侧（太平洋方向），虚线从北京/首尔向东伸向西雅图；点线聚焦该段 */
+    if (cur.length) {
+      const seaLL = LL(CITY_COORDS.seattle[0], CITY_COORDS.seattle[1]);
+      const firstC = coordOfStop(cur[0]);
+      const lastStop = cur[cur.length - 1];
+      const lastC = coordOfStop(lastStop);
+      const endOpts = { color: "#0f766e", weight: 3, opacity: 0.85, dashArray: "8 6" };
+      L.polyline([normLngTo(firstC, seaLL), firstC], endOpts)
+        .bindTooltip(`西雅图 → ${cur[0].zh}`, { sticky: true, direction: "top" })
+        .on("click", () => focusLeg("seattle", cur[0].id, undefined, cur[0]))
+        .addTo(map);
+      L.polyline([lastC, normLngTo(lastC, seaLL)], endOpts)
+        .bindTooltip(`${lastStop.zh} → 西雅图`, { sticky: true, direction: "top" })
+        .on("click", () => focusLeg(lastStop.id, "seattle", lastStop, undefined))
+        .addTo(map);
+    }
+
+    /* 标记逐站编号（2026-10-13 用户：北京要同时看到 1 和 6——编号按站序、同城
+       两段各一个标记；同坐标的后续标记用 iconAnchor 做像素错开，两个圆并排可见、
+       不再完全重叠。弹窗只写本站这一段停留。） */
+    const coordSeen = new Map<string, number>();
     cur.forEach((s, i) => {
-      const g = byCity.get(s.id);
-      if (g) g.stays.push(s);
-      else byCity.set(s.id, { stays: [s], firstIdx: i });
-    });
-    byCity.forEach((g, cityId) => {
-      const c = CITY_COORDS[cityId];
-      const first = g.stays[0];
-      const stayRows = g.stays
-        .map(
-          (s) =>
-            `<div style="font-size:11.5px;color:#4b5563;margin-top:3px">Day ${s.days[0]}–${s.days[1]} · ${s.dates} <a href="${base}/day/${s.days[0]}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('home-map-city-${cityId}')" style="color:#0f766e;font-weight:700">行程 →</a></div>`,
-        )
-        .join("");
+      const c = CITY_COORDS[s.id];
+      const key = `${c[0]},${c[1]}`;
+      const dup = coordSeen.get(key) ?? 0;
+      coordSeen.set(key, dup + 1);
       const mk = L.marker(LL(c[0], c[1]), {
-        icon: markerIcon(g.firstIdx + 1),
+        icon: markerIcon(i + 1, dup ? [15 - dup * 24, 15 - dup * 12] : undefined),
       })
         .bindPopup(
           `<div style="font-family:inherit">
-            <div style="font-weight:800;font-size:13px;color:#134e4a">${g.firstIdx + 1}. ${first.zh}${g.stays.length > 1 ? `（共 ${g.stays.length} 段）` : ""}</div>
-            ${stayRows}
+            <div style="font-weight:800;font-size:13px;color:#134e4a">${i + 1}. ${s.zh}</div>
+            <div style="font-size:11.5px;color:#4b5563;margin-top:3px">Day ${s.days[0]}–${s.days[1]} · ${s.dates} <a href="${base}/day/${s.days[0]}" onclick="window.__saveMapDetailReturn && window.__saveMapDetailReturn('home-map-city-${s.id}')" style="color:#0f766e;font-weight:700">行程 →</a></div>
           </div>`,
           { maxWidth: 200 },
         )
-        .bindTooltip(first.zh, {
+        .bindTooltip(s.zh, {
           permanent: true,
           direction: "top",
           offset: [0, -18],
           className: "sea-zoom-label",
         })
-        // 点标记本身：在原地落大头针并弹信息（不再飞过去——与卡片聚焦同口径，地图不搬家）
         .on("click", () => {
           clearHighlight();
           setFocusInfo(null);
@@ -475,7 +543,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           mk.openPopup();
         })
         .addTo(map);
-      cityMarkersRef.current.set(cityId, mk);
+      if (!cityMarkersRef.current.has(s.id)) cityMarkersRef.current.set(s.id, mk);
     });
 
     const bounds = L.latLngBounds(latlngs).pad(0.18);
@@ -610,7 +678,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
                 </button>
               </span>
             ))}{" "}
-            · 点城市名高亮它全部航班，点航班卡只高亮那一段；地图不会乱跑，信息在地图下方看
+            · 点城市名/下面的城市卡高亮对应航线，点航班卡只看那一段；地图会平移缩放框住高亮，信息在地图下方看
           </p>
         </>
       )}

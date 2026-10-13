@@ -982,6 +982,34 @@ function needChipsForSeg(segId: string): string{
   if(segId==="seoul") return needChips("首尔");
   return ""; /* 夫妻东南亚各城的开关在下面每城一行里逐个设置 */
 }
+/* 段卡聚焦（2026-10-13 用户：点卡本身=看这一段包含的航班，按段范围取腿、
+   不是全程关联：北京第一段只含 北京→新加坡＋西安→新加坡，不含曼谷→北京） */
+function segFocusLegs(key: string): { legs: { from: string; to: string }[]; title: string } | null {
+  const zh = (code: string) => { const [f, t] = code.split("-"); return { from: CODE_TO_ZH[f] || f, to: CODE_TO_ZH[t] || t }; };
+  if (key === "beijing1") return { legs: [zh("PEK-SIN"), zh("XIY-SIN")], title: "北京（第一段）包含的航班" };
+  if (key === "singapore") return { legs: [zh(singaporeToFirstCityLeg().code), zh("SIN-XIY")], title: "新加坡这一段包含的航班" };
+  if (key === "seoul") return { legs: [zh("ICN-SEA")], title: "首尔这一段包含的航班" };
+  if (key === "split-you") return { legs: [zh(thailandToBeijingLeg().code), { from: "北京", to: "西安" }], title: "你这一路（飞北京 + 高铁汇合）" };
+  if (key === "split-wife") return { legs: [zh(thailandToXianLeg().code), zh("XIY-ICN")], title: "老婆+Dylan 这一路" };
+  return null;
+}
+function dispatchSegFocus(key: string) {
+  const r = segFocusLegs(key);
+  if (r) window.dispatchEvent(new CustomEvent("planner:focus-legs", { detail: r }));
+}
+/* 东南亚城市聚焦：只取夫妻段内与该城相关的腿（进出该城的段内航班；
+   末城再加上从它出发去分开行动的两腿） */
+function dispatchCoupleCityFocus(cityZh: string) {
+  const legs = wzLegs().filter(l => l.from === cityZh || l.to === cityZh).map(l => ({ from: l.from, to: l.to }));
+  const rows = wzRanges();
+  const lastCity = rows.length ? rows[rows.length - 1].city : "";
+  if (cityZh === lastCity && rows.length) {
+    const zh = (code: string) => { const [f, t] = code.split("-"); return { from: CODE_TO_ZH[f] || f, to: CODE_TO_ZH[t] || t }; };
+    legs.push(zh(thailandToBeijingLeg().code), zh(thailandToXianLeg().code));
+  }
+  if (legs.length) window.dispatchEvent(new CustomEvent("planner:focus-legs", { detail: { legs, title: `${cityZh}这一段的航班` } }));
+}
+
 function renderTrip(){
   const body=el("tripBody"); const ranges=tripRanges(); const total=tripTotal(); const ok=total===TRIP_MIDDLE_DAYS;
   /* 2026-10-03 用户：时间线视觉层级加强——当前段高亮。今天落在某段日期内则标"进行中"，
@@ -996,23 +1024,17 @@ function renderTrip(){
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     const needs=needChipsForSeg(s.id);
-    /* 统一交互模型（2026-10-13 用户 redesign）：卡片骨架全段一致 = 标题/日期/说明/地图行/需求/天数。
-       地图行是卡内唯一的地图入口，元素统一带 📍/🗺️ 标记（.map-act）；标题、日期、说明只是信息，点了没反应是故意的；
-       按钮（步进器/需求开关）只改数据、绝不触发地图。 */
-    const segCity: Record<string,string> = { beijing1:"北京", singapore:"新加坡", seoul:"首尔" };
-    const mapRow = segCity[s.id]
-      ? `<div class="seg-maprow"><span class="map-act map-city-link" data-cityfocus="${segCity[s.id]}" role="button" tabindex="0" title="在地图上看${segCity[s.id]}">📍 在地图上看${segCity[s.id]}</span></div>`
-      : s.id==="split"
-        ? `<div class="seg-maprow"><span class="map-act map-city-link" data-cityfocus="北京" role="button" tabindex="0" title="在地图上看北京">📍 北京（你）</span><span class="map-act map-city-link" data-cityfocus="西安" role="button" tabindex="0" title="在地图上看西安">📍 西安（老婆+Dylan）</span></div>`
-        : "";
-    return `<div class="card trip-seg">
+    /* 统一交互模型（2026-10-13 用户定稿）：不要单独的「在地图上看」按钮——点段卡本身
+       就在地图上显示这一段包含的航班（按段范围，不是全程关联）；按钮（步进器/需求
+       开关）只改数据、不触发地图（委托里有守卫）。分开行动段不整卡触发，卡内两行按人触发。 */
+    const segFocusAttr = (s.id==="beijing1"||s.id==="singapore"||s.id==="seoul") ? ` data-segfocus="${s.id}"` : "";
+    return `<div class="card trip-seg"${segFocusAttr}>
       <div class="trip-seg-head">
         <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
-        ${mapRow}
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-legfocus="${coupleLastCity()}|北京" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 北京 的连线">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-legfocus="${coupleLastCity()}|西安" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 西安 的连线">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="在地图上看你这一路">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="在地图上看老婆+Dylan 这一路">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -1931,13 +1953,19 @@ let alive=true;
     const act = t.closest?.(".map-act") as HTMLElement | null;
     if (act) {
       e.preventDefault();
-      if (act.dataset.legfocus) {
+      if (act.dataset.segfocus) {
+        dispatchSegFocus(act.dataset.segfocus);
+      } else if (act.dataset.legfocus) {
         const [f, to] = (act.dataset.legfocus || "").split("|");
         const fromId = CITY_ID_BY_ZH[f], toId = CITY_ID_BY_ZH[to];
         if (fromId && toId) window.dispatchEvent(new CustomEvent("planner:focus-leg", { detail: { fromId, toId } }));
       } else if (act.dataset.cityfocus) {
-        const cid = CITY_ID_BY_ZH[act.dataset.cityfocus || ""];
-        if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+        const zh = act.dataset.cityfocus || "";
+        if (wz.cities.includes(zh)) dispatchCoupleCityFocus(zh);
+        else {
+          const cid = CITY_ID_BY_ZH[zh];
+          if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+        }
       }
       return;
     }
@@ -1951,10 +1979,16 @@ let alive=true;
       if (fromId && toId) window.dispatchEvent(new CustomEvent("planner:focus-leg", { detail: { fromId, toId } }));
       return;
     }
+    const segEl = t.closest?.("[data-segfocus]") as HTMLElement | null;
+    if (segEl) { dispatchSegFocus(segEl.dataset.segfocus || ""); return; }
     const cityEl = t.closest?.("[data-cityfocus]") as HTMLElement | null;
     if (cityEl) {
-      const cid = CITY_ID_BY_ZH[cityEl.dataset.cityfocus || ""];
-      if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+      const zh = cityEl.dataset.cityfocus || "";
+      if (wz.cities.includes(zh)) dispatchCoupleCityFocus(zh);
+      else {
+        const cid = CITY_ID_BY_ZH[zh];
+        if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+      }
     }
   };
   const onMapLinkKey = (e: Event) => {
