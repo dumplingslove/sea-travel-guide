@@ -410,6 +410,112 @@ export function planToItinerary(plan: PlannerPlan): PlanItinerary | null {
   }
 }
 
+/** 大行程锚点：与 planner-logic 的 TRIP_ANCHOR 一致（11/28 为去程航班日，中间段 11/29 起） */
+const TRIP_ANCHOR_ISO = "2026-11-29";
+
+function addDaysIso(iso: string, n: number): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + n));
+  return dt.toISOString().slice(0, 10);
+}
+
+/**
+ * 总览地图专用：按大行程段（plan.trip + wz 夫妻城市/天数）拼全程站点。
+ * 2026-10-13 用户投诉：地图只按 schedule 画，而云端 schedule 只有东南亚 15 天
+ * （北京第一段与分开行动的北京/西安根本不在 schedule 里），导致总览地图缺了
+ * 北京/西安这些重点城市。大行程页自己的段日期算法（TRIP_ANCHOR 起累计天数）
+ * 与 schedule 在重叠段上逐日一致（新加坡 12-07 起、普吉 12-12、首尔 12-31），
+ * 地图按它拼全程：北京→新加坡→夫妻各城→（分开行动：北京/西安同段并列）→首尔。
+ * 数据不完整（无 trip / 夫妻城市天数对不上段总天数）时返回 null，调用方回退 schedule 站点。
+ */
+export function tripStopsFromPlan(
+  plan: PlannerPlan,
+): { stops: PlanCityStop[]; totalDays: number } | null {
+  try {
+    if (!plan?.trip) return null;
+    const t = normalizeTripDays(plan.trip);
+    const wz = plan.wz;
+    const coupleCities = (wz?.order ?? []).filter((c) =>
+      (wz?.cities ?? []).includes(c),
+    );
+    if (!coupleCities.length) return null;
+    for (const c of coupleCities) {
+      if (!META_BY_ZH.get(c) || !(wz!.days?.[c] >= 1)) return null;
+    }
+    if (coupleCities.reduce((a, c) => a + wz!.days[c], 0) !== t.couple)
+      return null;
+    const stops: PlanCityStop[] = [];
+    let cur = TRIP_ANCHOR_ISO;
+    let day = 1;
+    const push = (zh: string, n: number) => {
+      const meta = META_BY_ZH.get(zh)!;
+      const from = cur;
+      const to = addDaysIso(cur, n - 1);
+      stops.push({
+        id: meta.id,
+        zh: meta.zh,
+        en: meta.en,
+        country_zh: meta.country_zh,
+        days: [day, day + n - 1],
+        dates: `${fmtMD(from)} ~ ${fmtMD(to)}`,
+      });
+      cur = addDaysIso(cur, n);
+      day += n;
+    };
+    push("北京", t.beijing1);
+    push("新加坡", t.singapore);
+    for (const c of coupleCities) push(c, wz!.days[c]);
+    /* 分开行动：你（北京）与老婆+Dylan（西安）同住同一时段，两个站点共用同一 Day 范围 */
+    const splitFrom = cur;
+    const splitTo = addDaysIso(cur, t.split - 1);
+    for (const zh of ["北京", "西安"]) {
+      const meta = META_BY_ZH.get(zh)!;
+      stops.push({
+        id: meta.id,
+        zh: meta.zh,
+        en: meta.en,
+        country_zh: meta.country_zh,
+        days: [day, day + t.split - 1],
+        dates: `${fmtMD(splitFrom)} ~ ${fmtMD(splitTo)}`,
+      });
+    }
+    cur = addDaysIso(cur, t.split);
+    day += t.split;
+    push("首尔", t.seoul);
+    return { stops, totalDays: day - 1 };
+  } catch {
+    return null;
+  }
+}
+
+/** 总览地图站点 hook：先用本地缓存同步出结果，再用云端规划刷新 */
+export function usePlannerTripStops(): {
+  stops: PlanCityStop[];
+  totalDays: number;
+} | null {
+  const [val, setVal] = useState<{
+    stops: PlanCityStop[];
+    totalDays: number;
+  } | null>(() => {
+    try {
+      const cached = readPlannerCache();
+      return cached ? tripStopsFromPlan(cached.plan) : null;
+    } catch {
+      return null;
+    }
+  });
+  useEffect(() => {
+    let alive = true;
+    loadPlannerPlan().then((loaded) => {
+      if (alive && loaded) setVal(tripStopsFromPlan(loaded.plan));
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return val;
+}
+
 /**
  * 每日详情页用的攻略正文匹配：
  * - 无云端规划，或当天城市与原版一致 → 原版当天详情；

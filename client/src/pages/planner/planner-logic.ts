@@ -982,11 +982,27 @@ function renderTrip(){
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
   };
+  /* 东南亚段内航班卡（2026-10-13 用户：东南亚各城之间飞的信息也要显示在总页面上，
+     不能只藏在细排弹窗/检查确认里）：夫妻段相邻两城一卡，日期=到达城第一天，整卡可点画地图连线 */
+  const coupleInnerLegsHtml = (): string => {
+    const cities = wz.order.filter(c=>wz.cities.includes(c));
+    if (cities.length < 2 || !ranges["couple"]) return "";
+    let cur = ranges["couple"].from;
+    const cards: string[] = [];
+    for (let i = 1; i < cities.length; i++) {
+      cur = addDays(cur, wz.days[cities[i-1]] || 0);
+      const fc = CITY_AIRPORT[cities[i-1]], tc = CITY_AIRPORT[cities[i]];
+      if (!fc || !tc) continue;
+      cards.push(tripFlightCard(`${fc}-${tc}|${cur}`, `${cities[i-1]}→${cities[i]}`));
+    }
+    if (!cards.length) return "";
+    return `<div class="trip-innerlegs"><div class="micro" style="margin:12px 0 6px"><b>✈️ 东南亚段内航班</b>（点卡片看班次价格，地图同步画连线）</div><div class="trip-flightinfo">${cards.join("")}</div></div>`;
+  };
   const parts: string[] = [];
   for(const s of TRIP_SEGS){
     /* 2026-10-13 统一骨架：东南亚城市链收进夫妻段卡片内部（与其他段卡同结构），弹窗仍挂在卡外（fixed 遮罩） */
     const segHtml = segCard(s, s.id==="couple" ? coupleSummaryHtml() : "");
-    const innerHtml = s.id==="couple" ? segHtml+coupleModalHtml() : segHtml;
+    const innerHtml = s.id==="couple" ? segHtml+coupleInnerLegsHtml()+coupleModalHtml() : segHtml;
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
       /* 转场日 = 到达段第一天（2026-10-13 用户口径：当天落地、当晚睡在到达城市；

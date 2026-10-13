@@ -6,7 +6,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import TripOverviewMap from "@/components/TripOverviewMap";
-import { usePlanItinerary } from "@/guide/plannerSchedule";
+import {
+  usePlanItinerary,
+  usePlannerTripStops,
+} from "@/guide/plannerSchedule";
 import { initPlanner } from "./planner/planner-logic";
 import MapPage from "@/pages/MapPage";
 
@@ -21,10 +24,15 @@ export default function Planner() {
   const tabsBarRef = useRef<HTMLDivElement>(null);
   const mapBarRef = useRef<HTMLDivElement>(null);
   const plan = usePlanItinerary();
+  /* 总览地图按大行程全程画（北京/西安等不在 schedule 里的段也要在顺序里）；
+     大行程站点不可用时回退到 schedule 站点 */
+  const tripStops = usePlannerTripStops();
+  const mapStops = tripStops?.stops ?? plan.cityStops;
+  const mapTotalDays = tripStops?.totalDays ?? plan.totalDays;
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PlannerTab>("trip");
   const showMap = searchParams.get("view") === "map";
-  const stopsKey = plan.cityStops
+  const stopsKey = mapStops
     .map((c) => `${c.id}:${c.days[0]}-${c.days[1]}`)
     .join("|");
 
@@ -130,7 +138,7 @@ export default function Planner() {
         <div className="max-w-5xl mx-auto px-4 pt-3 pb-2">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <h2 className="text-lg font-bold">
-              {plan.totalDays}天路线总览
+              {mapTotalDays}天路线总览
             </h2>
             {plan.source === "cloud" && plan.updatedByName && (
               <span className="text-[11px] text-teal-700 bg-teal-50 border border-teal-100 rounded-full px-2 py-0.5">
@@ -138,7 +146,7 @@ export default function Planner() {
               </span>
             )}
           </div>
-          <TripOverviewMap key={stopsKey} stops={plan.cityStops} mapHeight={230} />
+          <TripOverviewMap key={stopsKey} stops={mapStops} mapHeight={230} />
         </div>
       </div>
       <div ref={hostRef} style={{ display: "block", minWidth: 0 }} />

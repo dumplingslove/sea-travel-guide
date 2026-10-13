@@ -202,13 +202,23 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       opacity: 0.95,
     }).addTo(map);
     /* 跨洋长途段（西雅图↔北京/首尔，调整后经度跨度 >90°；亚洲段内最长不过 20°，不会误伤）：
-       不用 fitBounds——它会把地图平移一整个世界、其他行程城市全飞出画面，看着像换了一张地图
-       （2026-10-13 用户投诉）。改飞到两端中点、固定 3 级缩放的太平洋视角：亚洲行程城市和
-       美洲端点同框。短段照常用 fitBounds 框住两城。 */
+       取景 = 本段两端 ∪ 全部行程站点的并集，用 fitBounds 按容器实际尺寸算缩放——
+       保证在手机窄屏上所有城市和两端大头针也在同一张地图里（2026-10-13 用户两次投诉：
+       先是 fitBounds 只框两端、其他城市飞出画面；后改固定 3 级缩放在手机上只剩一片海）。
+       站点经度先归一化到本段参照系（与 la 相差 >180° 就 ±360），避免同一城市两个世界副本把 bounds 撑爆。 */
     if (Math.abs(lb.lng - la.lng) > 90) {
-      map.flyTo(L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2), 3, {
-        duration: 1.0,
-      });
+      const norm = (ll: L.LatLng): L.LatLng => {
+        let lng = ll.lng;
+        while (lng - la.lng > 180) lng -= 360;
+        while (la.lng - lng > 180) lng += 360;
+        return L.latLng(ll.lat, lng);
+      };
+      const pts: L.LatLng[] = [la, lb];
+      for (const s of stopsRef.current) {
+        const c = CITY_COORDS[s.id];
+        if (c) pts.push(norm(LL(c[0], c[1])));
+      }
+      map.flyToBounds(L.latLngBounds(pts).pad(0.06), { duration: 1.0 });
     } else {
       map.flyToBounds(L.latLngBounds([la, lb]).pad(0.3), { duration: 0.8 });
     }
