@@ -917,8 +917,10 @@ const AIRLINE_CN: Record<string,string> = {
   "Juneyao Airlines": "吉祥航空", "Spring Airlines": "春秋航空",
   "Lucky Air": "祥鹏航空", "Tibet Airlines": "西藏航空",
 };
-/* 回西雅图航段代码（2026-10-02 用户：回程定死北京——你一人 PEK-ICN，老婆带娃 XIY-ICN，首尔会合 ICN-SEA） */
-const RETURN_SEA_CODES = new Set(["PEK-ICN", "XIY-ICN", "ICN-SEA"]);
+/* 回西雅图航段代码（2026-10-13 用户改回程：分开行动最后一天你坐高铁 北京→西安汇合，
+   全家一起 XIY-ICN、ICN-SEA；旧「你一人 PEK-ICN、老婆带娃 XIY-ICN 分两路飞首尔」已废除，
+   现行转场中不存在 PEK-ICN 航段，故不列入本集合） */
+const RETURN_SEA_CODES = new Set(["XIY-ICN", "ICN-SEA"]);
 /* 时长转中文：16h25m → 16小时25分 */
 function durationCn(d: string): string {
   if(!d) return "";

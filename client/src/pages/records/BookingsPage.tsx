@@ -1644,8 +1644,9 @@ function BookingsInner() {
     .filter((i) => i.kind === "attraction" && i.city === (attrCity || planCities[0]))
     .map((i) => ({ ...i, candidate: false })), [scoped, planCities, attrCity]);
   /** 各城酒店住宿段（入住=到达当天，退房=转场航班当天），行动安排页酒店收藏展示用
-   * 2026-10-05 修：用完整大行程链（北京1→新加坡→东南亚→西安→北京3→首尔），
-   * 否则最后一段（曼谷）退房取不到转场日，会少算一天 */
+   * 2026-10-05 修：用完整大行程链，否则最后一段（曼谷）退房取不到转场日，会少算一天；
+   * 链模型随 2026-10-13 改版更新：北京1→新加坡→东南亚→分开行动（西安‖北京并列）→首尔
+   * （旧串联「西安→北京3」已废除，buildFullTripSegments 已按分开行动模型输出） */
   const fullSegments = useFullTripSegments();
   const stays = useMemo(
     () => hotelStaysFromPlan(fullSegments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
