@@ -162,8 +162,8 @@ export default function DayDetail() {
             dayNum={day.day}
             cityId={day.city_id}
             cityZh={day.city_zh}
-            prevCityId={prevDay ? prevDay.city_id : null}
-            prevCityZh={prevDay ? prevDay.city_zh : null}
+            prevCityId={prevDay ? (day?.city_zh === "首尔" && prevDay.city_zh !== "首尔" ? "xian" : prevDay.city_id) : null}
+            prevCityZh={prevDay ? (day?.city_zh === "首尔" && prevDay.city_zh !== "首尔" ? "西安" : prevDay.city_zh) : null}
             transferLabel={transferLabel}
             isCloud={isCloud}
             cloudStops={cloudStops}

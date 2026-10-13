@@ -636,13 +636,20 @@ export function ItineraryDayCard({
     prevDay && prevDay.city_zh !== day.city_zh
       ? CITY_ID_BY_ZH[prevDay.city_zh] || prevDay.city_id
       : null;
+  // 首尔首日的进城转场出发地（2026-10-13 修复）：云端 schedule 里没有分开行动
+  // （北京/西安）的日子，prevDay 会是 12-19 曼谷，但全家实际从西安飞首尔
+  // （XIY→ICN，前一天高铁在西安汇合）——转场城市按西安算，不许显示曼谷飞首尔。
+  const transferPrevZh =
+    isCloud && day.city_zh === "首尔" && prevDay && prevDay.city_zh !== "首尔"
+      ? "西安"
+      : prevDay?.city_zh;
   const stops = detail?.stops || [];
   // 转场站点：静态天沿用静态 stop（含航班号等细节）；云端天按前后城市直接算，
   // 不用静态天的“清迈飞普吉”这类旧城市对。
   const staticTransferStop = stops.find((s) => /飞|退房|离境/.test(s.name));
   const cloudTransferName =
     isCloud && prevDay && prevDay.city_zh !== day.city_zh
-      ? `${prevDay.city_zh}飞${day.city_zh}`
+      ? `${transferPrevZh}飞${day.city_zh}`
       : undefined;
   const transferStop = isCloud
     ? cloudTransferName
@@ -704,7 +711,7 @@ export function ItineraryDayCard({
   const favRests = favs.filter((f) => f.type === "restaurant" && f.city === day.city_zh);
   const transferRoute =
     prevDay && prevDay.city_zh !== day.city_zh
-      ? `${prevDay.city_zh} → ${day.city_zh}`
+      ? `${transferPrevZh} → ${day.city_zh}`
       : null;
   const transferDate = toISODate(day.date) ?? "";
   const favFlights = transferRoute
@@ -845,7 +852,7 @@ export function ItineraryDayCard({
               ) : (
                 <p className="text-sm text-sky-800">
                   {prevDay && prevDay.city_zh !== day.city_zh
-                    ? `${prevDay.city_zh} → ${day.city_zh} 转场日`
+                    ? `${transferPrevZh} → ${day.city_zh} 转场日`
                     : "转场/离境日"}
                   ：以下为通用核对清单，具体航班以出票信息为准。
                 </p>
