@@ -869,7 +869,7 @@ function tripFlightCard(key: string, label: string){
   /* 用户 2026-10-13 再次明确：航班信息本身就是地图入口——点这张卡（摘要行）直接在地图上画连线，
      不许再另设一个「🗺️ 连线」按钮让人找。整卡带 data-legfocus，委托统一派发；展开详情与地图联动同一次点击一起发生。 */
   const [fc0,tc0]=segCode.split("-"); const fromZh=CODE_TO_ZH[fc0], toZh=CODE_TO_ZH[tc0];
-  const legAttr=fromZh&&toZh?` data-legfocus="${fromZh}|${toZh}" title="点击在地图上看 ${fromZh} → ${toZh} 的连线"`:"";
+  const legAttr=fromZh&&toZh?` data-legfocus="${fromZh}|${toZh}" title="点击只看 ${fromZh} → ${toZh} 这一段"`:"";
   /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
   const wrap=(status:string,cls:string,sub:string,inner:string)=>
     `<details class="tfi-leg"${legAttr}><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-map-hint" aria-hidden="true">🗺️</span><span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
@@ -1034,7 +1034,7 @@ function renderTrip(){
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="在地图上看你这一路">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="在地图上看老婆+Dylan 这一路">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="点击看你这一路的航班">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="点击看老婆+Dylan 这一路的航班">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -1100,7 +1100,7 @@ function renderTrip(){
       <div class="trip-flight"><span>${isRail?"🚄":"✈️"}</span><strong>${isRail?"🚄 ":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
     ${legmodeHtml}
     ${t.note?`<p class="micro">${t.note}</p>`:""}
-    ${t.railPreLeg?`<div class="trip-flight trip-rail-leg" data-legfocus="${t.railPreLeg.fromZh}|${t.railPreLeg.toZh}" title="点击在地图上看 ${t.railPreLeg.fromZh} → ${t.railPreLeg.toZh} 的连线"><span>🚄</span><strong>${dateLabel(ranges[t.after].to)} ${t.railPreLeg.label}</strong><span>高铁 · 汇合</span></div>`:""}
+    ${t.railPreLeg?`<div class="trip-flight trip-rail-leg" data-legfocus="${t.railPreLeg.fromZh}|${t.railPreLeg.toZh}" title="点击只看 ${t.railPreLeg.fromZh} → ${t.railPreLeg.toZh} 这一段"><span>🚄</span><strong>${dateLabel(ranges[t.after].to)} ${t.railPreLeg.label}</strong><span>高铁 · 汇合</span></div>`:""}
     <div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
@@ -1259,8 +1259,8 @@ function coupleSummaryHtml(){
   }
   const parts: string[]=[];
   rows.forEach((r,i)=>{
-    if(i>0) parts.push(`<span class="cp-leg map-act" data-legfocus="${esc(rows[i-1].city)}|${esc(r.city)}" title="在地图上看 ${esc(rows[i-1].city)} → ${esc(r.city)} 的连线" role="button" tabindex="0">${cpLegSummary(rows[i-1].city, r.city, r.from)} <span class="cp-map-ico">🗺️</span></span>`);
-    parts.push(`<span class="cp-city map-act map-city-link" data-cityfocus="${esc(r.city)}" title="在地图上看${esc(r.city)}" role="button" tabindex="0">📍<b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
+    if(i>0) parts.push(`<span class="cp-leg map-act" data-legfocus="${esc(rows[i-1].city)}|${esc(r.city)}" title="点击只看 ${esc(rows[i-1].city)} → ${esc(r.city)} 这一段" role="button" tabindex="0">${cpLegSummary(rows[i-1].city, r.city, r.from)} <span class="cp-map-ico">🗺️</span></span>`);
+    parts.push(`<span class="cp-city map-act map-city-link" data-cityfocus="${esc(r.city)}" title="点击看${esc(r.city)}这一段的航班" role="button" tabindex="0">📍<b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
   });
   return `<div class="cp-clean"><div class="cp-chain">${parts.join("")}</div><div class="cp-clean-foot"><span class="micro">大行程给这段 ${seaBudget} 天 · ${budgetTxt}</span><button type="button" class="primary cp-open-btn" id="cpEditBtn">🧭 选择城市和天数</button></div></div>`;
 }
@@ -1346,7 +1346,7 @@ function wzCityDayRowsHtml(){
     const cnt = wz.order.filter(c=>wz.cities.includes(c)).length;
     const upBtn = idx>0 ? `<button class="icon-btn" data-wzordup="${idx}" aria-label="${city}前移">↑</button>` : `<span class="wz-ph"></span>`;
     const dnBtn = idx<cnt-1 ? `<button class="icon-btn" data-wzorddn="${idx}" aria-label="${city}后移">↓</button>` : `<span class="wz-ph"></span>`;
-    return `<div class="card wz-dayrow"><div class="wz-move">${upBtn}${dnBtn}</div><div><b><span class="wz-cityname" data-focus-city="${city}" role="button" tabindex="0" title="在地图上看${city}" style="cursor:pointer;text-decoration:underline dotted">${idx+1}. ${city}</span></b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
+    return `<div class="card wz-dayrow"><div class="wz-move">${upBtn}${dnBtn}</div><div><b><span class="wz-cityname" data-focus-city="${city}" role="button" tabindex="0" title="点击看${city}这一段的航班" style="cursor:pointer;text-decoration:underline dotted">${idx+1}. ${city}</span></b><div class="micro">${esc(verdict)} · 实际命中 ${cov.n}/${cov.total} 个精华</div>
       ${recLine}
       ${wzCoverageChips(city,Math.min(d,5))}
       ${attrLink}
@@ -1703,10 +1703,10 @@ function toggleOrdDay(d: string){
   detail.innerHTML = `
   <div class="card ord-daydetail" style="margin:12px 0;border-left:4px solid ${crit.length?"#ef4444":warn.length?"#f59e0b":"#22c55e"}">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <b>${d.slice(5).replace("-","/")} ${wd} · ${city?`<span class="map-act map-city-link" data-cityfocus="${esc(city)}" role="button" tabindex="0" title="在地图上看${esc(city)}">📍${esc(city)}</span>`:segLabel}</b>
+      <b>${d.slice(5).replace("-","/")} ${wd} · ${city?`<span class="map-act map-city-link" data-cityfocus="${esc(city)}" role="button" tabindex="0" title="点击看${esc(city)}的航班">📍${esc(city)}</span>`:segLabel}</b>
       <button class="icon-btn" id="ordDayClose" aria-label="收起">×</button>
     </div>
-    ${leg?`<p class="map-act ord-leg-line" data-legfocus="${esc(leg.from)}|${esc(leg.to)}" role="button" tabindex="0" title="在地图上看 ${esc(leg.from)} → ${esc(leg.to)} 的连线"><b>✈️ 转场：</b>${esc(leg.from)} → ${esc(leg.to)} <span aria-hidden="true">🗺️</span></p>`:""}
+    ${leg?`<p class="map-act ord-leg-line" data-legfocus="${esc(leg.from)}|${esc(leg.to)}" role="button" tabindex="0" title="点击只看 ${esc(leg.from)} → ${esc(leg.to)} 这一段"><b>✈️ 转场：</b>${esc(leg.from)} → ${esc(leg.to)} <span aria-hidden="true">🗺️</span></p>`:""}
     ${flightCards?`<div><h4 style="margin:8px 0 4px">✈️ 航班 availability</h4>${flightCards}</div>`:""}
     ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
     ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
