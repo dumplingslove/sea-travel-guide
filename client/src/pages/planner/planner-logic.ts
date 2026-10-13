@@ -605,7 +605,7 @@ const TRIP_SEGS: TripSegDef[] = [
   /* 2026-10-13 用户改行程：东南亚结束从曼谷分开走——你一人飞北京陪父亲，老婆带 Dylan 飞西安住下，
      两边同住到分开行动最后一天，你坐高铁去西安汇合，再全家一起飞首尔。旧「夫妻一起回西安→你一人再飞北京」的串联两段合并为一段「分开行动」。 */
   { id:"split", label:"分开行动", sub:"你→北京 · 老婆+Dylan→西安", mode:"🏠 家庭", note:"从曼谷分开：你飞北京、老婆带娃飞西安；最后一天你坐高铁去西安，跟他们汇合" },
-  /* 回程（2026-10-13 用户改，取代 10-02 的分两路飞首尔）：你先坐高铁 北京→西安汇合，全家再一起西安→首尔；首尔停留2天后三人一起飞西雅图 */
+  /* 回程（2026-10-13 用户改，取代 10-02 的分两路飞首尔）：你先坐高铁 北京→西安汇合，全家再一起西安→首尔；首尔住 2 晚后三人一起飞西雅图 */
   { id:"seoul", label:"首尔", sub:"西安→首尔 · 住2晚", mode:"🏠 家庭", note:"12-30 全家从西安一起飞首尔，住 12-30、12-31 两晚；1-1 晚三人一起飞西雅图（AS120 已出票）" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, split:11, seoul:2 };
@@ -1017,7 +1017,7 @@ function tripFlightCard(key: string, label: string){
     ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}`);
 }
 /* 回西雅图卡片：2026-10-13 用户改回程——你先高铁 北京→西安汇合，全家一起西安→首尔，
-   首尔停留2天后三人一起飞西雅图；本卡只讲首尔→西雅图，西安→首尔段在上面的转场行里 */
+   首尔住 2 晚后三人一起飞西雅图；本卡只讲首尔→西雅图，西安→首尔段在上面的转场行里 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   const lastDay=ranges["seoul"].to, nextDay=addDays(lastDay,1);
   const choice=tripFlyChoice("return");

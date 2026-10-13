@@ -440,7 +440,7 @@ export default function BookingTimeline({
           ) : null;
           const staleBadge = f.stale ? (
             <span
-              title="本候选为旧方案，价格不再刷新，仅供参考；现行回程（2026-10-13 定）：分开行动最后一天高铁北京→西安汇合，全家一起西安→首尔（停留2天）→西雅图"
+              title="本候选为旧方案，价格不再刷新，仅供参考；现行回程（2026-10-13 定）：分开行动最后一天高铁北京→西安汇合，全家一起西安→首尔（住 2 晚）→西雅图"
               className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-600 text-white align-middle"
             >
               ⚠️ 旧方案 · 已停更
@@ -498,7 +498,7 @@ export default function BookingTimeline({
               headline={headline}
               sub={
                 f.stale
-                  ? `${f.note}（旧方案已停更：现行回程为高铁北京→西安汇合、全家一起西安→首尔停留2天，本候选价格不再刷新，仅供参考）`
+                  ? `${f.note}（旧方案已停更：现行回程为高铁北京→西安汇合、全家一起西安→首尔住 2 晚，本候选价格不再刷新，仅供参考）`
                   : f.note
               }
               expandLabel={
