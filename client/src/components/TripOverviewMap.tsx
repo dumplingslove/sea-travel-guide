@@ -62,6 +62,9 @@ const ZOOM_LABEL_CSS = `
 .show-labels .leaflet-tooltip.sea-zoom-label{display:block}
 .map-flash{animation:seaMapFlash 1.1s ease-out}
 @keyframes seaMapFlash{0%{box-shadow:inset 0 0 0 5px rgba(220,38,38,.9)}100%{box-shadow:inset 0 0 0 0 rgba(220,38,38,0)}}
+.sea-focus-pin{background:none;border:none}
+.sea-focus-pin span{display:block;font-size:38px;line-height:1;text-align:center;filter:drop-shadow(0 5px 6px rgba(0,0,0,.5));animation:seaPinDrop .45s ease-out}
+@keyframes seaPinDrop{0%{transform:translateY(-16px);opacity:0}60%{transform:translateY(2px);opacity:1}100%{transform:translateY(0);opacity:1}}
 `;
 function ensureZoomLabelCss() {
   if (document.querySelector("style[data-sea-zoom-labels]")) return;
@@ -88,6 +91,8 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
   const stopsRef = useRef<TripStop[]>([]);
   /** 当前高亮的航段连线（红粗线，聚焦某段时单独一层） */
   const highlightRef = useRef<L.Polyline | null>(null);
+  /** 聚焦时落下的大头针（2026-10-13 用户：飞到城市必须有 pin/标记，不能只有一个气泡） */
+  const focusPinsRef = useRef<L.Marker[]>([]);
   /** 点击展开全屏（2026-09-27 用户要求） */
   const [expanded, setExpanded] = useState(false);
   /** 点击收起（2026-10-04 用户：规划页地图也要能收起，不占屏幕空间） */
@@ -102,6 +107,23 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       highlightRef.current.remove();
       highlightRef.current = null;
     }
+  };
+
+  /** 在指定坐标落大头针（替换上一批）：城市聚焦落 1 个，航段聚焦两端各 1 个 */
+  const placePins = (map: L.Map, latlngs: L.LatLng[]) => {
+    focusPinsRef.current.forEach((p) => p.remove());
+    focusPinsRef.current = latlngs.map((ll) =>
+      L.marker(ll, {
+        icon: L.divIcon({
+          className: "sea-focus-pin",
+          html: "<span>📍</span>",
+          iconSize: [40, 40],
+          iconAnchor: [20, 38],
+        }),
+        interactive: false,
+        zIndexOffset: 1000,
+      }).addTo(map),
+    );
   };
 
   /* 联动反馈：被行程里的元素触发聚焦时，地图描边闪一下红框，告诉用户"看这里" */
@@ -122,6 +144,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     const mk = cityMarkersRef.current.get(cityId);
     if (mk) {
       const ll = mk.getLatLng();
+      placePins(map, [ll]);
       if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
       else map.flyTo(ll, 11, { duration: 0.8 });
       if (openPopup) mk.openPopup();
@@ -132,6 +155,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     const c = CITY_COORDS[cityId];
     if (!c) return;
     const ll = LL(c[0], c[1]);
+    placePins(map, [ll]);
     if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
     else map.flyTo(ll, 11, { duration: 0.8 });
     if (openPopup) {
@@ -166,6 +190,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     if (lb.lng - la.lng > 180) lb = L.latLng(lb.lat, lb.lng - 360);
     else if (la.lng - lb.lng > 180) lb = L.latLng(lb.lat, lb.lng + 360);
     clearHighlight();
+    placePins(map, [la, lb]);
     highlightRef.current = L.polyline([la, lb], {
       color: "#dc2626",
       weight: 6,
@@ -263,6 +288,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
 
     stopsRef.current = cur;
     highlightRef.current = null;
+    focusPinsRef.current = [];
     const latlngs = cur.map((s) => {
       const c = CITY_COORDS[s.id];
       return LL(c[0], c[1]);
@@ -299,10 +325,11 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           offset: [0, -18],
           className: "sea-zoom-label",
         })
-        // 点标记本身：平移到这个标记并弹它自己的天数（同城出现两次时不串到另一段）
+        // 点标记本身：平移到这个标记、落大头针并弹它自己的天数（同城出现两次时不串到另一段）
         .on("click", () => {
           clearHighlight();
           const ll = mk.getLatLng();
+          placePins(map, [ll]);
           if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
           else map.flyTo(ll, 11, { duration: 0.8 });
           mk.openPopup();

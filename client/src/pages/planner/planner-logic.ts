@@ -834,13 +834,13 @@ function tripFlightCard(key: string, label: string){
   const segCode=key.split("|")[0];
   const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
   const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
-  /* 统一交互模型：航班卡里只有「🗺️ 连线」按钮动地图（委托里 preventDefault，不会顺带展开卡片）；
-     点摘要其余部分只展开/收起详情，两件事彻底分开，不再靠猜。 */
+  /* 用户 2026-10-13 再次明确：航班信息本身就是地图入口——点这张卡（摘要行）直接在地图上画连线，
+     不许再另设一个「🗺️ 连线」按钮让人找。整卡带 data-legfocus，委托统一派发；展开详情与地图联动同一次点击一起发生。 */
   const [fc0,tc0]=segCode.split("-"); const fromZh=CODE_TO_ZH[fc0], toZh=CODE_TO_ZH[tc0];
-  const legBtn=fromZh&&toZh?`<span class="map-act tfi-map-btn" data-legfocus="${fromZh}|${toZh}" role="button" tabindex="0" title="在地图上看 ${fromZh} → ${toZh} 的连线">🗺️ 连线</span>`:"";
+  const legAttr=fromZh&&toZh?` data-legfocus="${fromZh}|${toZh}" title="点击在地图上看 ${fromZh} → ${toZh} 的连线"`:"";
   /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
   const wrap=(status:string,cls:string,sub:string,inner:string)=>
-    `<details class="tfi-leg"><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}${legBtn}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
+    `<details class="tfi-leg"${legAttr}><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-map-hint" aria-hidden="true">🗺️</span><span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
   /* 起飞小时解析：兼容 24h("16:10")与 12h("4:10 PM"/"12:10 AM")两种库内格式
      （2026-10-07 修复：旧 Number(dep.slice(0,2)) 在 12h 格式下对红眼航班静默漏标 🌙，
      如 SQ801 "12:10 AM"、TR135 "1:55 AM" 曾被判成非红眼） */
@@ -974,7 +974,7 @@ function renderTrip(){
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${mapRow}
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔</p><p class="micro">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-legfocus="${coupleLastCity()}|北京" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 北京 的连线">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔 🗺️</p><p class="micro map-act" data-legfocus="${coupleLastCity()}|西安" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 西安 的连线">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -1632,7 +1632,7 @@ function toggleOrdDay(d: string){
       <b>${d.slice(5).replace("-","/")} ${wd} · ${city?`<span class="map-act map-city-link" data-cityfocus="${esc(city)}" role="button" tabindex="0" title="在地图上看${esc(city)}">📍${esc(city)}</span>`:segLabel}</b>
       <button class="icon-btn" id="ordDayClose" aria-label="收起">×</button>
     </div>
-    ${leg?`<p><b>✈️ 转场：</b>${leg.from} → ${leg.to}</p>`:""}
+    ${leg?`<p class="map-act ord-leg-line" data-legfocus="${esc(leg.from)}|${esc(leg.to)}" role="button" tabindex="0" title="在地图上看 ${esc(leg.from)} → ${esc(leg.to)} 的连线"><b>✈️ 转场：</b>${esc(leg.from)} → ${esc(leg.to)} <span aria-hidden="true">🗺️</span></p>`:""}
     ${flightCards?`<div><h4 style="margin:8px 0 4px">✈️ 航班 availability</h4>${flightCards}</div>`:""}
     ${crit.length?`<div class="wz-risk-sec crit"><h4>🚫 严重（${crit.length}）</h4>${crit.map(x=>`<p>🚫 ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
     ${warn.length?`<div class="wz-risk-sec"><h4>⚠️ 提醒（${warn.length}）</h4>${warn.map(x=>`<p class="micro">⚠️ ${esc(x.text)}${x.link?` <a href="${x.link}">${esc(x.linkText||"查看详情 →")}</a>`:""}${x.why?`<br><span class="micro">💡 ${esc(x.why)}</span>`:""}</p>`).join("")}</div>`:""}
