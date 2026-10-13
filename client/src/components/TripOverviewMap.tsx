@@ -428,7 +428,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
                 </button>
               </span>
             ))}{" "}
-            · 点城市标记看天数，点连线看两城信息；行程里的城市名和航班也能点，地图会跟着动
+            · 点城市标记看天数，点连线看两城信息；行程里带 📍 的城市、带 🗺️ 的航班点了地图会跟着动
           </p>
         </>
       )}
