@@ -447,14 +447,15 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
 
 export function Flights({onBook}:{onBook?:OnBook}){
  const segments = useFullTripSegments();
- /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 18 段全量：去程西雅图→北京 1 段、亚洲段 8 段、回程三城三天 9 段）：
+ /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 11 段全量：去程西雅图→北京 1 段、亚洲段 8 段、
+  * 回程 2 段——西安→首尔、首尔→西雅图 AS120 已出票；段数以 bookingTimeline.ts 头注为准）：
   * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
   * 与「预订行动」时间线、页顶每日动态横幅同一来源。
   * 旧逻辑按行程规划的城市对推导航段，硬编码了旧 13 天行程的 6 段结构
   * （西安→新加坡出境 + 城市对城际 + 清迈→北京/西安回程、日期写死 last.end），
   * 丢了北京→新加坡与新加坡→西安（TR0134）两段家庭分流航段——这就是横幅写 8 段、列表只显示 6 段的原因。
-  * 2026-09-29 用户裁决：回程改为北京→首尔（停留2天）→西雅图；回程 9 段（PEK/PVG/CKG-SEA
-  * 三城三天旧候选）标记 stale，不再刷新、诚实标注，不计入"已实查"与最低价统计。 */
+  * 历史：2026-09-29 曾定回程北京→首尔并设 9 段 stale 旧候选，现已随 2026-10-13 回程改版
+  * （高铁北京→西安汇合、全家一起西安→首尔）全部移除，FLIGHT_LEGS 现无 stale 段。 */
  const legs:{id:string;title:string;kind:string;desc:string;date:string;day:number;leg:FlightLegInfo}[]=useMemo(
    ()=>{
      /* 2026-10-03 用户：改了大行程后航班日期要跟着变。城际段日期按行程规划推导
