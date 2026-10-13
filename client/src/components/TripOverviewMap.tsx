@@ -60,6 +60,8 @@ const ZOOM_LABEL_CSS = `
 .leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .leaflet-tooltip.sea-zoom-label::before{display:none}
 .show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+.map-flash{animation:seaMapFlash 1.1s ease-out}
+@keyframes seaMapFlash{0%{box-shadow:inset 0 0 0 5px rgba(220,38,38,.9)}100%{box-shadow:inset 0 0 0 0 rgba(220,38,38,0)}}
 `;
 function ensureZoomLabelCss() {
   if (document.querySelector("style[data-sea-zoom-labels]")) return;
@@ -102,9 +104,20 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     }
   };
 
+  /* 联动反馈：被行程里的元素触发聚焦时，地图描边闪一下红框，告诉用户"看这里" */
+  const flashMap = () => {
+    const el = mapEl.current;
+    if (!el) return;
+    el.classList.remove("map-flash");
+    void el.offsetWidth;
+    el.classList.add("map-flash");
+    window.setTimeout(() => el.classList.remove("map-flash"), 1150);
+  };
+
   const focusCity = (cityId: string, openPopup: boolean) => {
     const map = mapRef.current;
     if (!map) return;
+    flashMap();
     clearHighlight();
     const mk = cityMarkersRef.current.get(cityId);
     if (mk) {
@@ -147,6 +160,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     const la = coordOf(fromId);
     let lb = coordOf(toId);
     if (!la || !lb) return;
+    flashMap();
     /* 跨太平洋航段防画反（实测首尔→西雅图的红线曾向西横跨亚洲截断）：两端经度差 >180°
        时把另一端经度 ±360，让连线走太平洋一侧（短的那条路） */
     if (lb.lng - la.lng > 180) lb = L.latLng(lb.lat, lb.lng - 360);

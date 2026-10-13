@@ -686,6 +686,17 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 /* 2026-10-13 用户：行程里的城市/航班与顶部地图联动——可点元素给指针与悬停反馈 */
 [data-cityfocus]{cursor:pointer}
 [data-cityfocus]:hover{color:var(--teal)}
-.cp-city[data-cityfocus]:hover b,.trip-seg[data-cityfocus]:hover .trip-seg-title,.trip-split-lines [data-cityfocus]:hover{text-decoration:underline}
+.cp-city[data-cityfocus]:hover b{text-decoration:underline}
 .cp-leg[data-legfocus]{cursor:pointer}
 .cp-leg[data-legfocus]:hover{background:#dff0ea}
+
+/* 2026-10-13 redesign 统一交互模型：带 📍/🗺️ 的 .map-act 是唯一的地图入口，全站一个样 */
+.map-act{cursor:pointer}
+.map-city-link{color:var(--teal);font-weight:700;text-decoration:underline dotted;text-underline-offset:3px}
+.map-city-link:hover{text-decoration:underline}
+.seg-maprow{margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+.tfi-map-btn{flex:none;align-self:center;font-size:12px;font-weight:700;color:var(--teal);border:1.5px solid var(--teal);border-radius:999px;padding:2px 10px;background:#eef7f3;white-space:nowrap}
+.tfi-map-btn:hover{background:#dff0ea}
+.cp-leg .cp-map-ico{font-size:11px}
+.stepper-label{font-size:12px;color:var(--muted);font-weight:700;margin-right:2px}
+.trip-seg .cp-clean{border-top:1px dashed var(--line);margin-top:10px;padding-top:10px}

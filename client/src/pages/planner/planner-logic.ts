@@ -834,12 +834,13 @@ function tripFlightCard(key: string, label: string){
   const segCode=key.split("|")[0];
   const isReturnSea=RETURN_SEA_CODES.has(segCode); /* 回西雅图三段：中文显示 */
   const airlineName=(en: string)=>isReturnSea?(AIRLINE_CN[en]||en):en;
-  /* 地图联动：两端机场都能反查到城市时，整张航班卡可点 → 顶部地图高亮这段连线并显示两城信息 */
+  /* 统一交互模型：航班卡里只有「🗺️ 连线」按钮动地图（委托里 preventDefault，不会顺带展开卡片）；
+     点摘要其余部分只展开/收起详情，两件事彻底分开，不再靠猜。 */
   const [fc0,tc0]=segCode.split("-"); const fromZh=CODE_TO_ZH[fc0], toZh=CODE_TO_ZH[tc0];
-  const legAttr=fromZh&&toZh?` data-legfocus="${fromZh}|${toZh}" title="点击在地图上看 ${fromZh} → ${toZh} 的连线"`:"";
+  const legBtn=fromZh&&toZh?`<span class="map-act tfi-map-btn" data-legfocus="${fromZh}|${toZh}" role="button" tabindex="0" title="在地图上看 ${fromZh} → ${toZh} 的连线">🗺️ 连线</span>`:"";
   /* 折叠外壳：summary 一行摘要，div.tfi-detail 放完整详情（默认收起） */
   const wrap=(status:string,cls:string,sub:string,inner:string)=>
-    `<details class="tfi-leg"${legAttr}><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
+    `<details class="tfi-leg"><summary class="tfi-summary"><span class="tfi-sum-main"><b>${label}</b><span class="tfi-status ${cls}">${status}</span></span>${sub?`<span class="tfi-sum-sub">${sub}</span>`:""}${legBtn}<span class="tfi-sum-caret">▸</span></summary><div class="tfi-detail">${inner}</div></details>`;
   /* 起飞小时解析：兼容 24h("16:10")与 12h("4:10 PM"/"12:10 AM")两种库内格式
      （2026-10-07 修复：旧 Number(dep.slice(0,2)) 在 12h 格式下对红眼航班静默漏标 🌙，
      如 SQ801 "12:10 AM"、TR135 "1:55 AM" 曾被判成非红眼） */
@@ -950,34 +951,40 @@ function renderTrip(){
   const todayIso=(()=>{const t=new Date();return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;})();
   const nowId=(()=>{for(const s of TRIP_SEGS){const r=ranges[s.id];if(r&&todayIso>=r.from&&todayIso<=r.to)return s.id;}return "";})();
   const nextId=nowId?"":(()=>{for(const s of TRIP_SEGS){const r=ranges[s.id];if(r&&todayIso<r.from)return s.id;}return "";})();
-  const segCard=(s: TripSegDef)=>{
+  const segCard=(s: TripSegDef, extra="")=>{
     const r=ranges[s.id], d=tripDays[s.id]||0;
     const isNow=s.id===nowId, isNext=s.id===nextId;
     /* 北京（你一人）是独立的一段，永远按原样显示；回程集结城市是它之后单独的卡片，不许把这段改名成上海/重庆 */
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     const needs=needChipsForSeg(s.id);
-    /* 地图联动：单城市段整张卡可点 → 顶部地图聚焦该城（卡内的按钮/步进器由委托守卫排除，不误触）；
-       分开行动段在下面两条路线行里分别点北京/西安 */
-    const segFocus: Record<string,string> = { beijing1:"北京", singapore:"新加坡", seoul:"首尔" };
-    const focusAttr=segFocus[s.id]?` data-cityfocus="${segFocus[s.id]}" title="点卡片在地图上看${segFocus[s.id]}"`:"";
-    return `<div class="card trip-seg"${focusAttr}>
+    /* 统一交互模型（2026-10-13 用户 redesign）：卡片骨架全段一致 = 标题/日期/说明/地图行/需求/天数。
+       地图行是卡内唯一的地图入口，元素统一带 📍/🗺️ 标记（.map-act）；标题、日期、说明只是信息，点了没反应是故意的；
+       按钮（步进器/需求开关）只改数据、绝不触发地图。 */
+    const segCity: Record<string,string> = { beijing1:"北京", singapore:"新加坡", seoul:"首尔" };
+    const mapRow = segCity[s.id]
+      ? `<div class="seg-maprow"><span class="map-act map-city-link" data-cityfocus="${segCity[s.id]}" role="button" tabindex="0" title="在地图上看${segCity[s.id]}">📍 在地图上看${segCity[s.id]}</span></div>`
+      : s.id==="split"
+        ? `<div class="seg-maprow"><span class="map-act map-city-link" data-cityfocus="北京" role="button" tabindex="0" title="在地图上看北京">📍 北京（你）</span><span class="map-act map-city-link" data-cityfocus="西安" role="button" tabindex="0" title="在地图上看西安">📍 西安（老婆+Dylan）</span></div>`
+        : "";
+    return `<div class="card trip-seg">
       <div class="trip-seg-head">
         <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
+        ${mapRow}
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro" data-cityfocus="北京" title="在地图上看北京" role="button" tabindex="0">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔</p><p class="micro" data-cityfocus="西安" title="在地图上看西安" role="button" tabindex="0">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔</p><p class="micro">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
       </div>
-      <div class="stepper trip-stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
+      ${extra}
+      <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
   };
   const parts: string[] = [];
   for(const s of TRIP_SEGS){
-    const segHtml = segCard(s);
-    /* 2026-10-13 用户（二次调整）：东南亚选城市/定天数改弹窗——主界面只留干净的城市链（城市+天数+城际航班信息），
-       点「🧭 选择城市和天数」弹出窗口，在窗口里选城市、定天数、排顺序、设每城预订开关。 */
-    const innerHtml = s.id==="couple" ? segHtml+coupleSummaryHtml()+coupleModalHtml() : segHtml;
+    /* 2026-10-13 统一骨架：东南亚城市链收进夫妻段卡片内部（与其他段卡同结构），弹窗仍挂在卡外（fixed 遮罩） */
+    const segHtml = segCard(s, s.id==="couple" ? coupleSummaryHtml() : "");
+    const innerHtml = s.id==="couple" ? segHtml+coupleModalHtml() : segHtml;
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
     if(t){
       /* 转场日 = 到达段第一天（2026-10-13 用户口径：当天落地、当晚睡在到达城市；
@@ -1175,8 +1182,8 @@ function coupleSummaryHtml(){
   }
   const parts: string[]=[];
   rows.forEach((r,i)=>{
-    if(i>0) parts.push(`<span class="cp-leg" data-legfocus="${esc(rows[i-1].city)}|${esc(r.city)}" title="在地图上看 ${esc(rows[i-1].city)} → ${esc(r.city)} 的连线" role="button" tabindex="0">${cpLegSummary(rows[i-1].city, r.city, r.from)}</span>`);
-    parts.push(`<span class="cp-city" data-cityfocus="${esc(r.city)}" title="在地图上看${esc(r.city)}" role="button" tabindex="0"><b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
+    if(i>0) parts.push(`<span class="cp-leg map-act" data-legfocus="${esc(rows[i-1].city)}|${esc(r.city)}" title="在地图上看 ${esc(rows[i-1].city)} → ${esc(r.city)} 的连线" role="button" tabindex="0">${cpLegSummary(rows[i-1].city, r.city, r.from)} <span class="cp-map-ico">🗺️</span></span>`);
+    parts.push(`<span class="cp-city map-act map-city-link" data-cityfocus="${esc(r.city)}" title="在地图上看${esc(r.city)}" role="button" tabindex="0">📍<b>${esc(r.city)}</b> <span class="micro">${wz.days[r.city]||1} 天 · ${dateLabel(r.from)}–${dateLabel(r.to)}</span></span>`);
   });
   return `<div class="cp-clean"><div class="cp-chain">${parts.join("")}</div><div class="cp-clean-foot"><span class="micro">大行程给这段 ${seaBudget} 天 · ${budgetTxt}</span><button type="button" class="primary cp-open-btn" id="cpEditBtn">🧭 选择城市和天数</button></div></div>`;
 }
@@ -1622,7 +1629,7 @@ function toggleOrdDay(d: string){
   detail.innerHTML = `
   <div class="card ord-daydetail" style="margin:12px 0;border-left:4px solid ${crit.length?"#ef4444":warn.length?"#f59e0b":"#22c55e"}">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <b>${d.slice(5).replace("-","/")} ${wd} · ${city||segLabel}</b>
+      <b>${d.slice(5).replace("-","/")} ${wd} · ${city?`<span class="map-act map-city-link" data-cityfocus="${esc(city)}" role="button" tabindex="0" title="在地图上看${esc(city)}">📍${esc(city)}</span>`:segLabel}</b>
       <button class="icon-btn" id="ordDayClose" aria-label="收起">×</button>
     </div>
     ${leg?`<p><b>✈️ 转场：</b>${leg.from} → ${leg.to}</p>`:""}
@@ -1867,8 +1874,24 @@ let alive=true;
      用影子根事件委托只注册一次，重渲染不丢绑定；TripOverviewMap 监听 planner:focus-city / planner:focus-leg。 */
   const onMapLinkClick = (e: Event) => {
     const t = e.target as HTMLElement;
-    /* 守卫：点在按钮/链接/输入控件上时不触发地图聚焦（调天数、开关需求、展开详情等操作不被地图抢戏） */
+    /* 统一交互模型：带 .map-act 标记（📍城市/🗺️连线）的元素是唯一的地图入口。
+       在这里 preventDefault：航班卡里的「🗺️ 连线」在 summary 内，取消默认行为可防止卡片被顺带展开。 */
+    const act = t.closest?.(".map-act") as HTMLElement | null;
+    if (act) {
+      e.preventDefault();
+      if (act.dataset.legfocus) {
+        const [f, to] = (act.dataset.legfocus || "").split("|");
+        const fromId = CITY_ID_BY_ZH[f], toId = CITY_ID_BY_ZH[to];
+        if (fromId && toId) window.dispatchEvent(new CustomEvent("planner:focus-leg", { detail: { fromId, toId } }));
+      } else if (act.dataset.cityfocus) {
+        const cid = CITY_ID_BY_ZH[act.dataset.cityfocus || ""];
+        if (cid) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: cid } }));
+      }
+      return;
+    }
+    /* 守卫：点在按钮/链接/输入控件上时不触发地图聚焦（调天数、开关需求等操作不被地图抢戏） */
     if (t.closest?.("a,button,input,select,textarea")) return;
+    /* 兜底：个别没挂 .map-act 的旧标记元素仍可点 */
     const legEl = t.closest?.("[data-legfocus]") as HTMLElement | null;
     if (legEl) {
       const [f, to] = (legEl.dataset.legfocus || "").split("|");
