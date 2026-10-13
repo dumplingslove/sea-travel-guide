@@ -201,10 +201,11 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       weight: 6,
       opacity: 0.95,
     }).addTo(map);
-    /* 跨洋长途段（西雅图↔北京/首尔，调整后经度跨度 >120°）：不用 fitBounds——它会把地图平移一整个
-       世界、其他行程城市全飞出画面，看着像换了一张地图（2026-10-13 用户投诉）。改飞到两端中点、
-       固定 3 级缩放的太平洋视角：亚洲行程城市和美洲端点同框。短段照常用 fitBounds 框住两城。 */
-    if (Math.abs(lb.lng - la.lng) > 120) {
+    /* 跨洋长途段（西雅图↔北京/首尔，调整后经度跨度 >90°；亚洲段内最长不过 20°，不会误伤）：
+       不用 fitBounds——它会把地图平移一整个世界、其他行程城市全飞出画面，看着像换了一张地图
+       （2026-10-13 用户投诉）。改飞到两端中点、固定 3 级缩放的太平洋视角：亚洲行程城市和
+       美洲端点同框。短段照常用 fitBounds 框住两城。 */
+    if (Math.abs(lb.lng - la.lng) > 90) {
       map.flyTo(L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2), 3, {
         duration: 1.0,
       });
