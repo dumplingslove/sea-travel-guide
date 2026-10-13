@@ -282,8 +282,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     day: 9,
     kind: "intl",
     note: "Google Flights 实查 2026-10-06 06:24 PDT（2大1小，6 班直飞；货币 USD）：本轮 6 班直飞（SQ801/CA975/SQ805/CA889/CA969/SQ807）详情页全部显示 \"Total price is unavailable\"（2026-12 日期较远，航司尚未公布票价），未确认到新价格，价格保留上一轮值作参考（SQ805 $640 / SQ801 $909 / SQ807 $1,388 / CA889 $525 / CA969 $568 / CA975 $514）；商务舱 6 班本轮同样无价格，保留上一轮值作参考；2026-10-07 06:13 PDT 本轮：浏览器 Google Flights 查询因模型服务故障连续 3 次中断，未取得新数据，价格/班次沿用 2026-10-06 轮值；2026-10-08 06:21 PDT 本轮：6 次查询全部成功，6 班直飞航班号全部从详情面板核实无误，详情页价格依旧全部隐藏未确认（与 10-06 轮相同）；价格保留上一轮值作参考，商务舱同；2026-10-09 06:28 PDT 本轮：6 次查询全部成功；国航 3 班详情页价格本轮全部确认（CA975 $512 / CA889 $515 / CA969 $564，3人整单含税；抓取期间曾小幅波动后稳定）；新航 3 班确认（SQ805 $627 / SQ801 $721 / SQ807 $1,263）；推荐切换为 CA975 $512（上一轮推荐 SQ805 $640，-20.0%，达通报线）；商务舱 6 班本轮同样价格隐藏未确认，保留上一轮值作参考；2026-10-10 06:32 PDT 本轮：6 次查询全部成功，6 班直飞航班号全部从详情面板核实无误；新航 3 班详情页确认新价（SQ805 $642 / SQ801 $736 / SQ807 $1,390，3人整单含税）；国航 3 班详情页价格本轮隐藏，保留上一轮确认值作参考（CA975 $512 / CA889 $515 / CA969 $564）；商务舱 6 班本轮全部价格隐藏，保留上一轮值作参考；另经 1 人对照实验验证：Google Flights 列表价即全部旅客整单总价（含税）；推荐维持 CA975 $512（上一轮推荐，无变动）；2026-10-11 15:30 PDT 本轮：6 次查询全部成功，6 班直飞航班号全部从详情面板核实无误（与昨日基线一致，无增减）；新航 3 班详情页确认 SQ805 $642 / SQ801 $736 / SQ807 $1,390（3人整单含税，均与上一轮持平）；国航 3 班详情页价格隐藏（Price hidden because it might be incorrect），保留上一轮确认值作参考（CA975 $512 / CA889 $515 / CA969 $564）；商务舱 6 班全部价格隐藏，保留上一轮值作参考；推荐维持 CA975 $512（上一轮推荐，无变动）。；2026-10-11 16:25 PDT 本轮：6 次查询全部成功（PEK→SIN 2026-12-07，2大1小）；本轮 Nonstop 仅 5 条——CA969（15:35→21:55）从列表消失（页面 \"5 results returned\"，无展开按钮，复核确认移除，直飞 6→5）；其余 5 班航班号从详情面板核实无误；5 班详情页价格本轮全部隐藏（\"Total price is unavailable\"），价格保留上一轮确认值作参考（SQ805 $642 / SQ801 $736 / SQ807 $1,390 / CA975 $512 / CA889 $515）；商务舱 5 班本轮同样价格隐藏未确认，保留上一轮值作参考（CA889/CA975 $3,055；SQ805/SQ801 $3,666；SQ807 $4,747）；推荐维持 CA975 $512（上一轮推荐，无变动；CA969 移除属直飞增减，已通报）。；2026-10-12 15:23 PDT 本轮：6 次查询全部成功（PEK→SIN 2026-12-07，2大1小）；Nonstop 仍 5 班（页面「5 results returned」，CA969 仍不在列表，直飞 5→5 无增减），5 班航班号全部从详情面板核实无误；经济舱新航 3 班详情页确认价：SQ805 $642（上一轮 $642，无变动）/ SQ801 $736（上一轮 $736，无变动）/ SQ807 $1,717（上一轮 $1,390，+23.5%，非推荐班）；国航 2 班（CA975 / CA889）详情页价格本轮隐藏，保留上一轮确认值作参考（CA975 $512 / CA889 $515）；商务舱 5 班本轮全部价格隐藏未确认，保留上一轮值作参考（CA889/CA975 $3,055；SQ805/SQ801 $3,666；SQ807 $4,747）；推荐维持 CA975 $512（上一轮推荐，保留确认价，无变动）。",
-    carrier: "Air China CA975",
-    schedule: "00:15→06:50",
+    carrier: "Singapore Airlines SQ805",
+    schedule: "08:45→15:20",
     priceNote: "3人 $512 起（CA975 00:15→06:50 红眼班，本轮详情页价格隐藏，保留上一轮确认价 $512；含税；新航 SQ807 本轮涨至 $1,717）",
     businessPriceNote: "3人 $3,055 起（国航 CA889/CA975，上一轮沿用值；本轮 5 班商务舱详情页价格全部隐藏未确认）",
     direct: true,
@@ -291,16 +291,16 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     queriedAt: "2026-10-12 15:23 PDT",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Air China", flight: "CA975", depart: "00:15", arrive: "06:50", stops: 0, bags: "待定", price: 512.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "本轮详情页价格隐藏未确认，保留上一轮确认值 3 人整单 $512（含税）；00:15 红眼出发、06:50 凌晨抵达，带2岁娃太折腾；按上一轮确认价仍为全组最低" },
+      { carrier: "Air China", flight: "CA975", depart: "00:15", arrive: "06:50", stops: 0, bags: "待定", price: 512.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页价格隐藏未确认，保留上一轮确认值 3 人整单 $512（含税），为全组最低价；但 00:15 红眼出发、06:50 凌晨抵达，带2岁娃太折腾，按推荐规则（上午出发优先）不置顶" },
       { carrier: "Air China", flight: "CA889", depart: "09:45", arrive: "16:15", stops: 0, bags: "待定", price: 515.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页价格隐藏未确认，保留上一轮确认值 3 人整单 $515（含税）；09:45 出发、16:15 抵达，白天航班带2岁娃不折腾" },
-      { carrier: "Singapore Airlines", flight: "SQ805", depart: "08:45", arrive: "15:20", stops: 0, bags: "待定", price: 642.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页确认 3 人整单 $642（含税，上一轮 $642，无变动）；08:45 出发、15:20 抵达，白天航班带2岁娃不折腾" },
+      { carrier: "Singapore Airlines", flight: "SQ805", depart: "08:45", arrive: "15:20", stops: 0, bags: "待定", price: 642.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "按推荐规则（不过夜＋上午出发最早）置顶：08:45 出发、15:20 抵达，白天航班带2岁娃不折腾；本轮详情页确认 3 人整单 $642（含税，上一轮 $642，无变动）；最低价是 00:15 红眼班 CA975 $512，按规则不优先价格" },
       { carrier: "Singapore Airlines", flight: "SQ801", depart: "00:10", arrive: "06:45", stops: 0, bags: "待定", price: 736.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页确认 3 人整单 $736（含税，上一轮 $736，无变动）；00:10 红眼出发、06:45 凌晨抵达，带2岁娃太折腾" },
       { carrier: "Singapore Airlines", flight: "SQ807", depart: "16:40", arrive: "22:55", stops: 0, bags: "待定", price: 1717.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页确认 3 人整单 $1,717（含税，上一轮 $1,390，+23.5%）；16:40 出发、22:55 较晚抵达；价格最高，不推荐" },
     ],
     businessOptions: [
-      { carrier: "Air China", flight: "CA889", depart: "09:45", arrive: "16:15", stops: 0, bags: "待定", price: 3055.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "同班商务舱；上一轮沿用值 3 人整单 $3,055（本轮价格隐藏未确认）；白天航班带2岁娃不折腾" },
+      { carrier: "Air China", flight: "CA889", depart: "09:45", arrive: "16:15", stops: 0, bags: "待定", price: 3055.00, refundable: "not stated", changeable: "not stated", recommendReason: "同班商务舱；上一轮沿用值 3 人整单 $3,055（本轮价格隐藏未确认）；白天航班带2岁娃不折腾；出发 09:45 晚于 SQ805 的 08:45，按推荐规则（出发越早越优先）不置顶" },
       { carrier: "Air China", flight: "CA975", depart: "00:15", arrive: "06:50", stops: 0, bags: "待定", price: 3055.00, refundable: "not stated", changeable: "not stated", recommendReason: "同班商务舱；上一轮沿用值 3 人整单 $3,055（本轮价格隐藏未确认）；00:15 红眼" },
-      { carrier: "Singapore Airlines", flight: "SQ805", depart: "08:45", arrive: "15:20", stops: 0, bags: "待定", price: 3666.00, refundable: "not stated", changeable: "not stated", recommendReason: "上一轮沿用值 3 人整单 $3,666（本轮价格隐藏未确认）；比国航贵 $611" },
+      { carrier: "Singapore Airlines", flight: "SQ805", depart: "08:45", arrive: "15:20", stops: 0, bags: "待定", price: 3666.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "按推荐规则（不过夜＋上午出发最早）置顶：08:45 出发、15:20 抵达；上一轮沿用值 3 人整单 $3,666（本轮价格隐藏未确认）；比国航 CA889 贵 $611，但出发更早，按规则不优先价格" },
       { carrier: "Singapore Airlines", flight: "SQ801", depart: "00:10", arrive: "06:45", stops: 0, bags: "待定", price: 3666.00, refundable: "not stated", changeable: "not stated", recommendReason: "上一轮沿用值 3 人整单 $3,666（本轮价格隐藏未确认）；00:10 红眼" },
       { carrier: "Singapore Airlines", flight: "SQ807", depart: "16:40", arrive: "22:55", stops: 0, bags: "待定", price: 4747.00, refundable: "not stated", changeable: "not stated", recommendReason: "上一轮沿用值 3 人整单 $4,747（本轮价格隐藏未确认）；价格最高" },
     ],
@@ -315,8 +315,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     day: 9,
     kind: "intl",
     note: "Google Flights 实查 2026-10-06 06:24 PDT（2 成人，2 班直飞；货币 USD）：酷航 TR135 01:55→07:50 列表确认 2 人整单 $470（含税，上一轮 $470，无变动）；东航 MU2069 07:20→12:55 本轮详情页价格仍隐藏，保留上一轮值 $431 作参考（仍推荐白天班）；商务舱本轮仅 MU2069（价格隐藏，Scoot 无商务舱价格），保留上一轮 $1,385 作参考；2026-10-07 06:13 PDT 本轮：浏览器 Google Flights 查询因模型服务故障连续 3 次中断，未取得新数据，价格/班次沿用 2026-10-06 轮值；2026-10-08 06:21 PDT 本轮：酷航 TR135 01:55→07:50 列表确认 2 人整单 $470（含税，上一轮 $470，无变动）；东航 MU2069 07:20→12:55 本轮详情页价格仍隐藏，保留上一轮值 $431 作参考（仍推荐白天班）；商务舱仅 MU2069（Scoot 无商务舱），价格隐藏，保留上一轮 $1,385 作参考；2026-10-09 06:28 PDT 本轮：酷航 TR135 01:55→07:50 列表确认 2 人整单 $470（含税，连续三轮无变动）；东航 MU2069 07:20→12:55 详情页价格仍隐藏，保留上一轮值 $431 作参考（仍推荐白天班）；商务舱仅 MU2069（价格隐藏，Scoot 无商务舱），保留上一轮 $1,385 作参考；2026-10-10 06:32 PDT 本轮：酷航 TR135 01:55→07:50 列表确认 2 人整单 $471（含税，上一轮 $470，+0.2%，未达通报线）；东航 MU2069 07:20→12:55 详情页价格仍隐藏，保留上一轮值 $431 作参考（仍推荐白天班）；商务舱仅 MU2069（价格隐藏，Scoot 无商务舱），保留上一轮 $1,385 作参考；2026-10-11 15:30 PDT 本轮：酷航 TR135 01:55→07:50 列表/详情确认 2 人整单 $471（含税，上一轮 $471，无变动）；东航 MU2069 07:20→12:55 详情页价格仍隐藏，保留上一轮值 $431 作参考（仍推荐白天班）；商务舱仅 MU2069（价格隐藏，Scoot 无商务舱），保留上一轮 $1,385 作参考。；2026-10-11 16:25 PDT 本轮：6 次查询全部成功（XIY→SIN 2026-12-07，2 成人）；酷航 TR135 01:55→07:50 详情页确认 2 人整单 $333（含税，上一轮 $471，-29.3%，达通报线；经 1 人/2 人对照验证为两人总价非人均）；东航 MU2069 07:20→12:55 详情页价格仍隐藏，保留上一轮值 $431 作参考（当前实际价未知）；商务舱仅 MU2069（Scoot 无商务舱），价格隐藏，保留上一轮 $1,385 作参考；推荐切换为 TR135 $333（按确认价为全组最低；上一轮推荐 MU2069 $431；01:55 红眼班带老人孩子太折腾，已在推荐理由中提示）。；2026-10-12 15:23 PDT 本轮：6 次查询全部成功（XIY→SIN 2026-12-07，2 成人）；直飞仍 2 班无增减；酷航 TR135 01:55→07:50 详情页确认 2 人整单 $333（含税，上一轮 $333，无变动）；东航 MU2069 07:20→12:55 详情页价格仍隐藏，保留上一轮值 $431 作参考（当前实际价未知）；商务舱仅 MU2069（Scoot 无商务舱），价格隐藏，保留上一轮 $1,385 作参考；推荐维持 TR135 $333（上一轮推荐，无变动）。",
-    carrier: "Scoot TR135",
-    schedule: "01:55→07:50",
+    carrier: "China Eastern Airlines MU2069",
+    schedule: "07:20→12:55",
     priceNote: "2人 $333 起（酷航 TR135 01:55→07:50 红眼班，本轮详情页确认价，上一轮 $333，无变动；东航 MU2069 白天班本轮价格隐藏，上一轮参考值 $431）",
     businessPriceNote: "2人 $1,385 起（东航 MU2069 07:20→12:55；上一轮沿用值，本轮价格隐藏未确认；酷航为廉航无商务舱）",
     direct: true,
@@ -324,8 +324,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     queriedAt: "2026-10-12 15:23 PDT",
     priceBasis: "2成人总价",
     options: [
-      { carrier: "Scoot", flight: "TR135", depart: "01:55", arrive: "07:50", stops: 0, bags: "待定", price: 333.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "本轮详情页确认 2 人整单 $333（含税，上一轮 $333，无变动）；01:55 红眼出发、07:50 凌晨抵达，带老人孩子太折腾；按确认价为全组最低" },
-      { carrier: "China Eastern Airlines", flight: "MU2069", depart: "07:20", arrive: "12:55", stops: 0, bags: "待定", price: 431.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页价格隐藏未确认，保留上一轮确认值 2 人整单 $431 作参考（含税；当前实际价未知）；07:20 出发、12:55 抵达，白天航班不折腾" },
+      { carrier: "Scoot", flight: "TR135", depart: "01:55", arrive: "07:50", stops: 0, bags: "待定", price: 333.00, refundable: "not stated", changeable: "not stated", recommendReason: "本轮详情页确认 2 人整单 $333（含税，上一轮 $333，无变动），为全组最低价；但 01:55 红眼出发、07:50 凌晨抵达，带老人孩子太折腾，按推荐规则（上午出发优先）不置顶" },
+      { carrier: "China Eastern Airlines", flight: "MU2069", depart: "07:20", arrive: "12:55", stops: 0, bags: "待定", price: 431.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "按推荐规则（不过夜＋上午出发）置顶：07:20 出发、12:55 抵达，白天航班不折腾，不选 01:55 红眼班；价格为上一轮确认值 2 人整单 $431（本轮详情页价格隐藏未确认，作参考；当前实际价未知）" },
     ],
     businessOptions: [
       { carrier: "China Eastern Airlines", flight: "MU2069", depart: "07:20", arrive: "12:55", stops: 0, bags: "待定", price: 1385.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "同班商务舱；上一轮沿用值 2 人整单 $1,385（本轮价格隐藏未确认；Scoot 无商务舱）；07:20 出发" },
@@ -341,19 +341,19 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     day: 14,
     kind: "intercity",
     note: "Google Flights 实查 2026-10-13 03:20 PDT（2 成人，SIN→HKT 2026-12-12，9 班经济直飞 + 0 班商务直飞，价格为 2 人整单总价，页面确认含税）：Scoot 3 班（$247.00 起）、Singapore Airlines 6 班（$414.00 起）；与上一轮基本持平：推荐 TR652 $247.00 持平、SQ726 $1,317.00→$1,005.00（-23.7%，非推荐班）、SQ728 $1,004.00→$1,005.00；商务舱仍无直飞（页面明确 \"No nonstop flights found\" / \"No results returned\"，与上一轮一致）；推荐维持 TR652 18:15→19:20（当天最低价 2 人整单 $247.00，上一轮 $247.00，持平）",
-    carrier: "Scoot TR652",
-    schedule: "18:15→19:20",
+    carrier: "Singapore Airlines SQ724",
+    schedule: "06:55→07:50",
     priceNote: "2人 $247.00 起（Scoot TR652 18:15→19:20，上一轮 $247.00，持平）",
     businessPriceNote: "无商务舱直飞（本轮页面明确 \"No nonstop flights found\"，与上一轮一致）",
     direct: true,
     queriedAt: "2026-10-13 03:20 PDT",
     priceBasis: "2成人总价",
     options: [
-      { carrier: "Scoot", flight: "TR652", depart: "18:15", arrive: "19:20", arrivePlusDay: false, stops: 0, bags: "待定", price: 247.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价直飞（2人整单 $247.00，上一轮 $247.00，持平）；18:15 出发、19:20 抵达" },
+      { carrier: "Scoot", flight: "TR652", depart: "18:15", arrive: "19:20", arrivePlusDay: false, stops: 0, bags: "待定", price: 247.00, refundable: "not stated", changeable: "not stated", recommendReason: "当天最低价直飞（2人整单 $247.00，上一轮 $247.00，持平）；18:15 出发、19:20 抵达；按推荐规则（上午出发优先）不置顶" },
       { carrier: "Scoot", flight: "TR644", depart: "12:55", arrive: "14:00", arrivePlusDay: false, stops: 0, bags: "待定", price: 292.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Singapore Airlines", flight: "SQ740", depart: "18:35", arrive: "19:35", arrivePlusDay: false, stops: 0, bags: "待定", price: 414.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Singapore Airlines", flight: "SQ736", depart: "16:10", arrive: "17:10", arrivePlusDay: false, stops: 0, bags: "待定", price: 501.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Singapore Airlines", flight: "SQ724", depart: "06:55", arrive: "07:50", arrivePlusDay: false, stops: 0, bags: "待定", price: 601.00, refundable: "not stated", changeable: "not stated" },
+      { carrier: "Singapore Airlines", flight: "SQ724", depart: "06:55", arrive: "07:50", arrivePlusDay: false, stops: 0, bags: "待定", price: 601.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "按推荐规则（不过夜＋上午出发最早）置顶：06:55 出发、07:50 一早抵达普吉；2 人整单 $601.00（本轮确认价）；当天最低价是傍晚班 TR652 $247.00，按规则不优先价格" },
       { carrier: "Scoot", flight: "TR658", depart: "08:40", arrive: "09:40", arrivePlusDay: false, stops: 0, bags: "待定", price: 628.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Singapore Airlines", flight: "SQ732", depart: "12:50", arrive: "13:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 845.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Singapore Airlines", flight: "SQ726", depart: "08:15", arrive: "09:15", arrivePlusDay: false, stops: 0, bags: "待定", price: 1005.00, refundable: "not stated", changeable: "not stated" },
@@ -427,8 +427,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     day: 21,
     kind: "intercity",
     note: "Google Flights 实查 2026-10-13 03:20 PDT（2 成人，CNX→BKK 2026-12-19，27 班经济直飞 + 9 班商务直飞，全部到达 BKK，价格为 2 人整单总价，页面确认含税；Thai AirAsia 5 班经济舱本轮价格隐藏，沿用上一轮确认值作参考：FD4101/FD4097/FD4103 $103.00、FD4109 $116.00、FD4105 $128.00）：Thai VietJet 10 班（$110.00 起，与上一轮持平）、Thai Airways 9 班（$141.00 起）、Bangkok Airways 3 班（$161.00 起）；商务舱：仅 Thai Airways 9 班（$405.00 起，上一轮最低 $360.00，+12.5% 达通报线），Bangkok Airways 商务直飞本轮消失（商务直飞 12→9 班，属直飞增减，已通报）；推荐维持 VZ119 22:35→23:55（2人整单 $110.00，上一轮 $110.00，持平）、商务舱推荐改为 TG101 08:05→09:30（2人整单 $405.00，上一轮商务最低 $360.00，+12.5% 达通报线）",
-    carrier: "Thai VietJet VZ119",
-    schedule: "22:35→23:55",
+    carrier: "Thai VietJet VZ2105",
+    schedule: "06:35→07:55",
     priceNote: "2人 $110.00 起（Thai VietJet VZ119 22:35→23:55，上一轮 $110.00，持平；Thai AirAsia 5 班本轮价格隐藏，沿用上一轮确认值作参考）",
     businessPriceNote: "2人 $405.00 起（Thai Airways TG101 08:05→09:30 商务舱，2人整单；上一轮 $360.00，+12.5% 达通报线；Bangkok Airways 商务直飞本轮消失，商务直飞 12→9 班）",
     direct: true,
@@ -437,8 +437,8 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     options: [
       { carrier: "Thai VietJet", flight: "VZ123", depart: "19:35", arrive: "20:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 110.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Thai VietJet", flight: "VZ2107", depart: "20:50", arrive: "22:10", arrivePlusDay: false, stops: 0, bags: "待定", price: 110.00, refundable: "not stated", changeable: "not stated" },
-      { carrier: "Thai VietJet", flight: "VZ119", depart: "22:35", arrive: "23:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 110.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天最低价直飞（2人整单 $110.00，上一轮 $110.00，持平；$110 同价 3 班中维持上一轮推荐，22:35 出发、23:55 深夜抵达）" },
-      { carrier: "Thai VietJet", flight: "VZ2105", depart: "06:35", arrive: "07:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 122.00, refundable: "not stated", changeable: "not stated" },
+      { carrier: "Thai VietJet", flight: "VZ119", depart: "22:35", arrive: "23:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 110.00, refundable: "not stated", changeable: "not stated", recommendReason: "当天最低价直飞（2人整单 $110.00，上一轮 $110.00，持平）；22:35 出发、23:55 深夜抵达，按推荐规则（上午出发优先）不置顶" },
+      { carrier: "Thai VietJet", flight: "VZ2105", depart: "06:35", arrive: "07:55", arrivePlusDay: false, stops: 0, bags: "待定", price: 122.00, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "按推荐规则（不过夜＋上午出发最早）置顶：06:35 出发、07:55 抵达；2 人整单 $122.00（本轮确认价）；同为上午班的 FD4101 $103.00 出发更晚（08:55），按出发越早越优先选这班" },
       { carrier: "Thai VietJet", flight: "VZ111", depart: "14:20", arrive: "15:40", arrivePlusDay: false, stops: 0, bags: "待定", price: 122.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Thai VietJet", flight: "VZ109", depart: "17:20", arrive: "18:40", arrivePlusDay: false, stops: 0, bags: "待定", price: 122.00, refundable: "not stated", changeable: "not stated" },
       { carrier: "Thai VietJet", flight: "VZ101", depart: "08:25", arrive: "09:45", arrivePlusDay: false, stops: 0, bags: "待定", price: 133.00, refundable: "not stated", changeable: "not stated" },
@@ -637,6 +637,49 @@ function toPDT(iso: string): string {
 function fmtUSD(x: number): string {
   return Number.isInteger(x) ? `$${x}` : `$${x.toFixed(2)}`;
 }
+/* 「推荐航班」规则与 planner 同口径（2026-10-13 用户）：不过夜优先 → 上午出发（06:00–12:00）优先
+   → 出发越早越优先 → 价格越低越优先；过夜 = 起飞+时长跨午夜或时长 ≥8h；全天都过夜才推过夜班。
+   此前本文件按「最低价」选推荐，与 planner 口径不一致（红眼/深夜班被标推荐），2026-10-13 裁决统一。 */
+function dbDepMinutes(dep: string): number | null {
+  const m = String(dep || "").match(/(\d{1,2}):(\d{2})/);
+  return m ? +m[1] * 60 + +m[2] : null;
+}
+function dbDurMinutes(d: string): number | null {
+  const dm = String(d || "").match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+  return dm ? +dm[1] * 60 + (dm[2] ? +dm[2] : 0) : null;
+}
+function dbFlightOvernight(f: FlightDbFlight): boolean {
+  const dep = dbDepMinutes(f.dep), dur = dbDurMinutes(f.duration || "");
+  if (dep == null || dur == null) return false;
+  return dep + dur >= 1440 || dur >= 480;
+}
+function pickDbRecommend(flights: FlightDbFlight[], cabin: "eco" | "biz"): FlightDbFlight | null {
+  let best: FlightDbFlight | null = null;
+  let bestKey: [number, number, number, number] | null = null;
+  for (const f of flights) {
+    const price = cabin === "eco" ? f.price_usd : f.business_price_usd;
+    if (price == null) continue;
+    const dep = dbDepMinutes(f.dep);
+    if (dep == null) continue;
+    const key: [number, number, number, number] = [
+      dbFlightOvernight(f) ? 1 : 0,
+      dep >= 360 && dep < 720 ? 0 : 1,
+      dep,
+      price,
+    ];
+    if (!bestKey || key[0] < bestKey[0] || (key[0] === bestKey[0] && (key[1] < bestKey[1] || (key[1] === bestKey[1] && (key[2] < bestKey[2] || (key[2] === bestKey[2] && key[3] < bestKey[3])))))) {
+      best = f; bestKey = key;
+    }
+  }
+  return best;
+}
+function dbRecommendReason(f: FlightDbFlight): string {
+  const dep = dbDepMinutes(f.dep) ?? 0;
+  if (dbFlightOvernight(f)) return "当天直飞均过夜，按推荐规则选出发最早的一班";
+  if (dep >= 360 && dep < 720) return "按推荐规则：不过夜、上午出发优先（早上飞、白天到）";
+  return "按推荐规则：不过夜班次中出发最早";
+}
+
 function basisToPax(basis: string): string {
   if (basis.includes("2大1小")) return "3人";
   if (basis.includes("2成人")) return "2人";
@@ -753,14 +796,15 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
 
     const ecoOpts = nf.map((f) => dbFlightOption(f, "eco")).filter((o): o is FlightOption => !!o);
     const bizOpts = nf.map((f) => dbFlightOption(f, "biz")).filter((o): o is FlightOption => !!o);
-    if (ecoOpts.length > 0) {
-      const cheapest = ecoOpts.reduce((a, b) => (b.price < a.price ? b : a));
-      cheapest.recommend = true;
-      cheapest.recommendReason = "当天直飞最低价";
-    } else if (bizOpts.length > 0) {
-      const cheapest = bizOpts.reduce((a, b) => (b.price < a.price ? b : a));
-      cheapest.recommend = true;
-      cheapest.recommendReason = "当天唯一直飞（商务舱）";
+    const recEcoF = pickDbRecommend(nf, "eco");
+    if (recEcoF) {
+      const o = ecoOpts.find((x) => x.flight === (recEcoF.flight ?? "") && x.depart === recEcoF.dep);
+      if (o) { o.recommend = true; o.recommendReason = dbRecommendReason(recEcoF); }
+    }
+    const recBizF = pickDbRecommend(nf, "biz");
+    if (recBizF) {
+      const o = bizOpts.find((x) => x.flight === (recBizF.flight ?? "") && x.depart === recBizF.dep);
+      if (o) { o.recommend = true; o.recommendReason = dbRecommendReason(recBizF); }
     }
     const carrierSummary = (() => {
       const m = new Map<string, number>();
