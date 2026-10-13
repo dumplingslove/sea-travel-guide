@@ -604,9 +604,9 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"couple", label:"夫妻东南亚", sub:"", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩继续东南亚", cta:true },
   /* 2026-10-13 用户改行程：东南亚结束从曼谷分开走——你一人飞北京陪父亲，老婆带 Dylan 飞西安住下，
      两边各待到回程日，再分别飞首尔汇合。旧「夫妻一起回西安→你一人再飞北京」的串联两段合并为一段「分开行动」。 */
-  { id:"split", label:"分开行动", sub:"你→北京 · 老婆+Dylan→西安", mode:"🏠 家庭", note:"从曼谷分开：你飞北京、老婆带娃飞西安，两边一直待到去首尔汇合那天" },
-  /* 2026-10-02 用户：回程分两路在首尔会合——用户一人北京→首尔，老婆带娃西安→首尔；首尔停留2天后三人一起飞西雅图 */
-  { id:"seoul", label:"首尔", sub:"回程中转停留2天（会合）", mode:"🏠 家庭", note:"你一人北京→首尔，老婆带娃西安→首尔；会合玩2天后三人一起飞西雅图" },
+  { id:"split", label:"分开行动", sub:"你→北京 · 老婆+Dylan→西安", mode:"🏠 家庭", note:"从曼谷分开：你飞北京、老婆带娃飞西安；最后一天你坐高铁去西安，跟他们汇合" },
+  /* 回程（2026-10-13 用户改，取代 10-02 的分两路飞首尔）：你先坐高铁 北京→西安汇合，全家再一起西安→首尔；首尔停留2天后三人一起飞西雅图 */
+  { id:"seoul", label:"首尔", sub:"回程中转停留2天（会合）", mode:"🏠 家庭", note:"全家从西安一起飞首尔；会合玩2天后三人一起飞西雅图" },
 ];
 let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, split:11, seoul:2 };
 /* 每城预订需求开关（2026-10-13 用户）：在大行程每个城市上设置「要不要订酒店 / 要不要订餐厅」，
@@ -686,32 +686,59 @@ function bigTripFlightDates(): Set<string>{
   if(ranges["seoul"]) dates.add(ranges["seoul"].to); /* 首尔→西雅图 AS120 01-01 晚飞 */
   return dates;
 }
-/* 某航段在某天是否「过夜航班」。
-   2026-10-13 用户纠正：检查确认阶段还没选定航班，不能拿某一个航班替用户做主——
-   只有当天全部直飞都是过夜班（起飞+时长跨午夜，或时长 ≥8 小时的长程）时，
-   才断定那晚睡在飞机上；有红眼也有白天班的航段不标，由选定的航班决定。
-   凌晨出发同理：全部直飞都在 00:00–05:00 起飞时，才算占了前一晚。 */
+/* 航班时刻解析（12h/24h 兼容） */
+function depMinutesOf(t: string): number | null {
+  const m24=t.match(/(\d{1,2}):(\d{2})/);
+  if(!m24) return null;
+  let h=+m24[1]; const mi=+m24[2];
+  const ap=t.match(/(AM|PM)/i);
+  if(ap){ const pm=/pm/i.test(ap[1]); if(pm&&h<12)h+=12; if(!pm&&h===12)h=0; }
+  return h*60+mi;
+}
+function durMinutesOf(d: string): number | null {
+  const dm=d.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
+  return dm?+dm[1]*60+(dm[2]?+dm[2]:0):null;
+}
+interface RecFlightLike { dep: string; duration: string; price?: number|null }
+/* 单个航班是否「飞机上过夜」：起飞+时长跨午夜，或时长 ≥8 小时的长程（跨洋必然过夜） */
+function flightOvernightOf(f: RecFlightLike): boolean {
+  const dep=depMinutesOf(f.dep), dur=durMinutesOf(f.duration);
+  if(dep==null||dur==null) return false;
+  return dep+dur>=1440||dur>=480;
+}
+/* 「推荐航班」规则（2026-10-13 用户）：所有城市间航班优先推荐早上飞、白天到、不过夜的——
+   排序键：不过夜优先 → 上午出发（06:00–12:00）优先 → 出发越早越优先 → 价格越低越优先。
+   只有当天班次全部过夜时才推荐过夜班（首尔→西雅图 AS120 已出票是既定事实，不走推荐）。 */
+function recommendedFlight<T extends RecFlightLike>(flights: T[]): T | null {
+  let best: T | null = null;
+  let bestKey: [number, number, number, number] | null = null;
+  for(const f of flights){
+    const dep=depMinutesOf(f.dep);
+    if(dep==null) continue;
+    const key: [number, number, number, number]=[
+      flightOvernightOf(f)?1:0,
+      dep>=360&&dep<720?0:1,
+      dep,
+      f.price!=null?f.price:Number.MAX_SAFE_INTEGER,
+    ];
+    if(!bestKey||key[0]<bestKey[0]||(key[0]===bestKey[0]&&(key[1]<bestKey[1]||(key[1]===bestKey[1]&&(key[2]<bestKey[2]||(key[2]===bestKey[2]&&key[3]<bestKey[3])))))){
+      best=f; bestKey=key;
+    }
+  }
+  return best;
+}
+/* 某航段在某天是否「过夜航班」——按推荐航班判定（2026-10-13 用户新口径，取代早上「全部直飞都过夜才标」：
+   推荐规则已定为早上飞优先，所以按推荐航班走基本都住城市；只有推荐航班本身过夜（或凌晨红眼）时，
+   才标那晚睡飞机上——功能上完整支持过夜显示，不再拿「全部班次」替用户做主、也不拿任意一班吓人。） */
 function legOvernightInfo(code: string, date: string): { overnight: boolean; earlyRedeye: boolean }{
   const d=TRIP_FLIGHTS[`${code}|${date}`];
   if(!d||!d.flights.length) return { overnight:false, earlyRedeye:false };
-  const tparse=(t: string)=>{
-    const m24=t.match(/(\d{1,2}):(\d{2})/);
-    if(!m24) return null;
-    let h=+m24[1]; const mi=+m24[2];
-    const ap=t.match(/(AM|PM)/i);
-    if(ap){ const pm=/pm/i.test(ap[1]); if(pm&&h<12)h+=12; if(!pm&&h===12)h=0; }
-    return h*60+mi;
-  };
-  const infos=d.flights.map(f=>{
-    const dep=tparse(f.dep);
-    const dm=f.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
-    if(dep==null||!dm) return null;
-    return { dep, dur:+dm[1]*60+(dm[2]?+dm[2]:0) };
-  }).filter((x): x is {dep:number;dur:number}=>x!=null);
-  if(!infos.length) return { overnight:false, earlyRedeye:false };
+  const rec=recommendedFlight(d.flights);
+  if(!rec) return { overnight:false, earlyRedeye:false };
+  const dep=depMinutesOf(rec.dep);
   return {
-    overnight: infos.every(x=>x.dep+x.dur>=1440||x.dur>=480),
-    earlyRedeye: infos.every(x=>x.dep<300),
+    overnight: flightOvernightOf(rec),
+    earlyRedeye: dep!=null&&dep<300,
   };
 }
 /* 日历上「睡在飞机上」的日期集合：过夜航班的起飞日 + 红眼航班的前一晚 */
@@ -792,7 +819,7 @@ rebuildTripFlights();
    之后一直不刷新；检查确认页签是点击时才渲染所以显示真实班次，两处自相矛盾。数据集到达后必须 wzRender。 */
 onDataset('flight_db', () => { rebuildTripFlights(); wzRender(); });
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
-interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean; noModeChoice?: boolean }
+interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean; noModeChoice?: boolean; railPreLeg?: { fromZh: string; toZh: string; label: string } }
 const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"beijing1", before:"singapore", title:"北京→新加坡（2大1小）＋ 西安→新加坡（岳父母2人）",
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
@@ -803,9 +830,12 @@ const TRIP_TRANSITIONS: TripTransition[] = [
   { after:"couple", before:"split", title:"__COUPLE_SPLIT__（分开行动）", noModeChoice:true,
     note:"从东南亚末城分开：你飞北京陪父亲，老婆带 Dylan 飞西安；两边一直待到回程日，再分别飞首尔汇合。",
     legs:[{code:"__COUPLE_PEK_CODE__",label:"__COUPLE_PEK_LABEL__（你一人）"},{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__（老婆带娃）"}] },
-  /* 2026-10-02 用户：回程分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔；航段代码随回程城市动态变 */
-  { after:"split", before:"seoul", title:"__RETURN_SEOUL__（分两路汇合）", noModeChoice:true,
-    legs:[{code:"__RETURN_ICN_CODE__",label:"__RETURN_ICN_LABEL__（你一人）"},{code:"XIY-ICN",label:"西安→首尔（老婆带娃）"}] },
+  /* 2026-10-13 用户改回程：不再分两路飞首尔——你在分开行动最后一天坐高铁 北京→西安
+     跟老婆孩子汇合（他们行李多、要帮忙拿），第二天全家一起西安→首尔。 */
+  { after:"split", before:"seoul", title:"西安→首尔（全家一起）", noModeChoice:true,
+    note:"你在分开行动最后一天坐高铁 北京→西安，跟老婆孩子汇合；第二天全家一起飞首尔。",
+    railPreLeg:{ fromZh:"北京", toZh:"西安", label:"北京 → 西安（你一人 · 高铁汇合）" },
+    legs:[{code:"XIY-ICN",label:"西安→首尔（全家 2大1小）"}] },
 ];
 /* 航司英文名→中文名（2026-09-28 用户：回西雅图三段航班信息中文显示） */
 const AIRLINE_CN: Record<string,string> = {
@@ -894,40 +924,46 @@ function tripFlightCard(key: string, label: string){
   const prices: string[]=[];
   if(d.eco!=null) prices.push(`<span class="tfi-price">经济 <b>$${d.eco}</b></span>`);
   if(d.biz!=null) prices.push(`<span class="tfi-price">商务 <b>$${d.biz}</b></span>`);
-  const rows=d.flights.map(f=>{
+  /* 推荐航班（2026-10-13 用户规则：早上飞+不过夜优先）：置顶 + ⭐ 标记，摘要里直接写推荐结论 */
+  const rec=recommendedFlight(d.flights);
+  const recBadge=rec?(flightOvernightOf(rec)
+    ? `<span class="tfi-sum-bad">🌙 推荐 ${rec.dep} 出发 · 飞机上过夜</span>`
+    : (depMinutesOf(rec.dep)!=null&&depMinutesOf(rec.dep)!<300
+      ? `<span class="tfi-sum-bad">🌙 推荐 ${rec.dep} 红眼出发</span>`
+      : `<span class="tfi-sum-good">⭐ 推荐 ${rec.dep} 出发 · 不过夜</span>`)):"";
+  const ordered=rec?[...d.flights].sort((a,b)=>(a===rec?0:1)-(b===rec?0:1)):d.flights;
+  const rows=ordered.map(f=>{
     const dh=depHour(f.dep);
     const redeye=!isNaN(dh)&&dh<6;
     const pe=f.price!=null?`<span class="tfi-fprice">经济 $${f.price}</span>`:`<span class="tfi-fprice na">经济 —</span>`;
     const pb=f.bizPrice!=null?`<span class="tfi-fprice biz">商务 $${f.bizPrice}</span>`:`<span class="tfi-fprice na">商务 —</span>`;
     const al=isReturnSea&&f.airline?`<span class="tfi-airline">${airlineName(f.airline)}</span>`:"";
     const dur=f.duration?`<span class="tfi-dur">${isReturnSea?durationCn(f.duration):f.duration}</span>`:"";
-    return `<li>${al}<span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${dur}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
+    return `<li${f===rec?` class="rec"`:""}>${f===rec?`<span class="tfi-rec">⭐ 推荐</span>`:""}${al}<span class="tfi-no">${f.flight}</span><span class="tfi-nonstop">✈️ 直飞</span><span class="tfi-times">${f.dep} → ${f.arr.replace("+1","+1天")}</span>${dur}${redeye?`<span class="tfi-redeye">🌙 红眼</span>`:""}<span class="tfi-fprices">${pe}${pb}</span></li>`;
   }).join("");
-  return wrap(`🟢 ${d.results}班直飞`,"ok",`${timeRange(d.flights)} ${fitBadge(d.flights)}`,
+  return wrap(`🟢 ${d.results}班直飞`,"ok",`${timeRange(d.flights)} ${rec?recBadge:fitBadge(d.flights)}`,
     `<div class="tfi-prices">${prices.join("")||"价格待查"}${d.basis?`<span class="tfi-basis">（${d.basis}）</span>`:""}</div>
     ${d.carriers.length?`<div class="tfi-carriers">${d.carriers.map(c=>airlineName(c)).join(" / ")}</div>`:""}
     <div class="tfi-flcap">各航班整单价（经济 / 商务）</div>
     <ul class="tfi-flights">${rows}</ul>
     ${d.queriedAt?`<div class="tfi-src">Google Flights ${d.queriedAt} 实查 · 非实时价，出票前重查</div>`:""}${onestopHtml}`);
 }
-/* 回西雅图卡片：2026-10-02 用户定为分两路在首尔会合——用户一人北京→首尔、老婆带娃西安→首尔，首尔停留2天后三人一起飞西雅图；
-   出发城市仍可在大行程里改（北京 / 上海 / 重庆），中转首尔逻辑不变 */
+/* 回西雅图卡片：2026-10-13 用户改回程——你先高铁 北京→西安汇合，全家一起西安→首尔，
+   首尔停留2天后三人一起飞西雅图；本卡只讲首尔→西雅图，西安→首尔段在上面的转场行里 */
 function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
   const lastDay=ranges["seoul"].to, nextDay=addDays(lastDay,1);
   const choice=tripFlyChoice("return");
   const flyDate=choice==="last"?lastDay:nextDay;
-  /* 2026-10-02 用户定：回程已定为北京→首尔→西雅图，卡片只讲首尔→西雅图；
-     北京→首尔段在上面的转场行里，不在这里重复；集结行和城市按钮已删 */
   const returnCards=tripFlightCard(`ICN-SEA|${flyDate}`,`首尔 → 西雅图`);
   return `<div class="card trip-seg">
     <div class="trip-seg-head">
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} 首尔 → 西雅图</span></div>
       <div class="micro trip-flydays">起飞日：${dateLabel(lastDay)}（按排定日期）
       </div>
-      <p class="micro">北京 → 首尔段的航班卡在上面的转场行里；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
+      <p class="micro">西安 → 首尔段的航班卡在上面的转场行里（你先坐高铁到西安跟老婆孩子汇合）；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
       <div class="micro" style="margin-top:10px"><b>✈️ 首尔 → 西雅图</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
       <div class="trip-flightinfo">${returnCards}</div>
-      <p class="micro">航班库正在按新行程查北京→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
+      <p class="micro">航班库正在按新行程查西安→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
     </div>
   </div>`;
 }
@@ -1042,6 +1078,7 @@ function renderTrip(){
       <div class="trip-flight"><span>${isRail?"🚄":"✈️"}</span><strong>${isRail?"🚄 ":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
     ${legmodeHtml}
     ${t.note?`<p class="micro">${t.note}</p>`:""}
+    ${t.railPreLeg?`<div class="trip-flight trip-rail-leg" data-legfocus="${t.railPreLeg.fromZh}|${t.railPreLeg.toZh}" title="点击在地图上看 ${t.railPreLeg.fromZh} → ${t.railPreLeg.toZh} 的连线"><span>🚄</span><strong>${dateLabel(ranges[t.after].to)} ${t.railPreLeg.label}</strong><span>高铁 · 汇合</span></div>`:""}
     <div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
@@ -1055,7 +1092,7 @@ function renderTrip(){
     <div class="trip-flightinfo">${tripFlightCard("SEA-PEK|2026-11-28","西雅图 → 北京")}</div>
     ${parts.join("\n    ")}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→首尔汇合（2天）→西雅图）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→高铁汇合后一起去首尔（2天）→西雅图）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
@@ -1428,28 +1465,25 @@ function wzDayIssues(date: string, city: string, legLabel?: string): DayIssue[] 
 /* 🔍 检查确认 tab：日历置顶纯展示，点日期原地展开看详情（含原因+跳转）；
    调整入口放日历下方；本 tab 不做任何编辑。 */
 let ordExpandedDay: string | null = null;
-/* 检查确认 tab 的回程摘要（2026-10-02 用户：检查确认里要有北京→首尔、首尔→西雅图的航班信息和日期） */
+/* 检查确认 tab 的回程摘要（2026-10-02 用户：检查确认里要有去首尔、首尔→西雅图的航班信息和日期；
+   2026-10-13 用户改回程：先高铁 北京→西安汇合，再全家一起飞首尔） */
 function ordReturnSummary(): string {
   const ranges = tripRanges();
   const sp = ranges["split"], seoul = ranges["seoul"];
   if(!sp || !seoul) return "";
-  const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
-  const rm = RETURN_CITY_META[rc];
-  /* 分两路去首尔：起飞日 = 首尔段第一天（2026-10-13 口径：当天落地、当晚睡首尔）；
-     你一人 北京→首尔、老婆带娃 西安→首尔（2026-10-13 分开行动模型） */
+  /* 全家一起去首尔：起飞日 = 首尔段第一天（2026-10-13 口径：当天落地、当晚睡首尔）；
+     你在分开行动最后一天（sp.to）先坐高铁 北京→西安汇合 */
   const flyDate = seoul.from;
-  const bjCard = tripFlightCard(`${rc}-ICN|${flyDate}`, `${rm.city}→首尔（你一人）`);
-  const xaCard = tripFlightCard(`XIY-ICN|${flyDate}`, `西安→首尔（老婆带娃）`);
+  const xaCard = tripFlightCard(`XIY-ICN|${flyDate}`, `西安→首尔（全家 2大1小）`);
   /* 首尔→西雅图：起飞日二选一（seoul最后一天 或 次日） */
   const seaChoice = tripFlyChoice("return");
   const seaFlyDate = seaChoice==="last" ? seoul.to : addDays(seoul.to, 1);
   const seaCard = tripFlightCard(`ICN-SEA|${seaFlyDate}`, `首尔 → 西雅图（2大1小）`);
   return `<div class="card" style="margin:16px 0">
-    <div class="trip-seg-head"><div class="trip-seg-title">✈️ 回程：分两路 → 首尔汇合 → 西雅图</div>
-    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆+娃西安），${dateLabel(flyDate)} 分别飞首尔；首尔停留 2 天（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
-    <div style="margin:8px 0"><b>${rm.city} → 首尔</b> · 📅 ${dateLabel(flyDate)} 起飞 · 你一人
-      <div class="trip-flightinfo" style="margin-top:6px">${bjCard}</div></div>
-    <div style="margin:8px 0"><b>西安 → 首尔</b> · 📅 ${dateLabel(flyDate)} 起飞 · 老婆带娃（1大1小）
+    <div class="trip-seg-head"><div class="trip-seg-title">✈️ 回程：高铁汇合 → 一起飞首尔 → 西雅图</div>
+    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆+娃西安）；${dateLabel(sp.to)} 你坐高铁 北京→西安汇合，${dateLabel(flyDate)} 全家一起飞首尔；首尔停留 2 天（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
+    <div style="margin:8px 0"><b>北京 → 西安</b> · 📅 ${dateLabel(sp.to)} · 🚄 高铁 · 你一人（去跟老婆孩子汇合，帮着拿行李）</div>
+    <div style="margin:8px 0"><b>西安 → 首尔</b> · 📅 ${dateLabel(flyDate)} 起飞 · 全家（2大1小）
       <div class="trip-flightinfo" style="margin-top:6px">${xaCard}</div></div>
     <div style="margin:8px 0"><b>首尔 → 西雅图</b> · 📅 ${dateLabel(seaFlyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）
       <div class="trip-flightinfo" style="margin-top:6px">${seaCard}</div></div>

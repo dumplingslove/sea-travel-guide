@@ -1058,7 +1058,8 @@ function BookingsCalendar() {
       for (let i = 1; i < coupleRows.length; i++)
         transfers.set(coupleRows[i]!.from, { label: `${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, mode: "flight" });
       transfers.set(ranges.split!.from, { label: `${lastCity}→北京（你）＋${lastCity}→西安（老婆+娃）`, mode: "flight" });
-      transfers.set(ranges.seoul!.from, { label: "北京→首尔（你）＋西安→首尔（老婆+娃）", mode: "flight" });
+      transfers.set(ranges.split!.to, { label: "北京→西安（你 · 🚄 高铁汇合）", mode: "rail" });
+      transfers.set(ranges.seoul!.from, { label: "西安→首尔（全家）", mode: "flight" });
       transfers.set(ranges.seoul!.to, { label: "首尔→西雅图", mode: "flight" });
 
       /* 过夜航班（那晚睡飞机上）：查航班库实查时刻，与行程安排同一判定 */
@@ -1075,17 +1076,25 @@ function BookingsCalendar() {
         if (mode === "rail") return;
         const nfs = fdb?.segments?.[code]?.days?.[date]?.nonstop_flights ?? [];
         if (!nfs.length) return;
-        /* 与行程安排同一规则（2026-10-13 用户纠正）：没选定航班前，只有当天全部直飞
-           都是过夜班才标「飞机上过夜」；有红眼也有白天班时不替用户做主。 */
-        const infos = nfs.map((f) => {
+        /* 与行程安排同一规则（2026-10-13 用户新口径）：按「推荐航班」判定——
+           推荐规则不过夜优先、上午出发优先；推荐航班过夜才标「飞机上过夜」，推荐红眼才占前一晚。 */
+        const cand = nfs.map((f) => {
           const dep = tparse(f.dep);
           const dm = f.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
           if (dep == null || !dm) return null;
-          return { dep, dur: +dm[1] * 60 + (dm[2] ? +dm[2] : 0) };
-        }).filter((x): x is { dep: number; dur: number } => x != null);
-        if (!infos.length) return;
-        if (infos.every((x) => x.dep + x.dur >= 1440 || x.dur >= 480)) plane.add(date);
-        if (infos.every((x) => x.dep < 300)) plane.add(add(date, -1));
+          return { dep, dur: +dm[1] * 60 + (dm[2] ? +dm[2] : 0), price: f.price_usd ?? Number.MAX_SAFE_INTEGER };
+        }).filter((x): x is { dep: number; dur: number; price: number } => x != null);
+        if (!cand.length) return;
+        cand.sort((a, b) => {
+          const onA = a.dep + a.dur >= 1440 || a.dur >= 480 ? 1 : 0;
+          const onB = b.dep + b.dur >= 1440 || b.dur >= 480 ? 1 : 0;
+          const moA = a.dep >= 360 && a.dep < 720 ? 0 : 1;
+          const moB = b.dep >= 360 && b.dep < 720 ? 0 : 1;
+          return onA - onB || moA - moB || a.dep - b.dep || a.price - b.price;
+        });
+        const rec = cand[0]!;
+        if (rec.dep + rec.dur >= 1440 || rec.dur >= 480) plane.add(date);
+        if (rec.dep < 300) plane.add(add(date, -1));
       };
       checkLeg("SEA-PEK", "2026-11-28", "flight");
       checkLeg("PEK-SIN", ranges.singapore!.from, lm("beijing1"));
@@ -1094,7 +1103,6 @@ function BookingsCalendar() {
         checkLeg(`${APT[coupleRows[i - 1]!.city]}-${APT[coupleRows[i]!.city]}`, coupleRows[i]!.from, "flight");
       checkLeg(`${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
       checkLeg(`${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
-      checkLeg("PEK-ICN", ranges.seoul!.from, "flight");
       checkLeg("XIY-ICN", ranges.seoul!.from, "flight");
       checkLeg("ICN-SEA", ranges.seoul!.to, "flight");
     }

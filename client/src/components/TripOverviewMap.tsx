@@ -395,7 +395,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     for (let k = 0; k + 1 < cur.length; k++) {
       if (!sameDays(cur[k], cur[k + 1])) continue;
       if (k > 0) edges.push({ from: cur[k - 1], to: cur[k + 1] });
-      if (k + 2 < cur.length) edges.push({ from: cur[k], to: cur[k + 2] });
+      /* 并列段之后先汇合再同行（2026-10-13 用户改回程：分开行动后你在北京坐高铁去西安
+         跟老婆孩子汇合，全家从西安一起走）——画「北京→西安」汇合线，不再画北京→下一站；
+         下一站由并列对的后一个城市（汇合点）连出（第一遍循环已生成）。 */
+      if (k + 2 < cur.length) edges.push({ from: cur[k], to: cur[k + 1] });
     }
     /* 边表存 ref（含出发/回程西雅图端点腿），供点城市时查它的全部相邻航班 */
     edgesRef.current = [
