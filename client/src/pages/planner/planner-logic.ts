@@ -1028,7 +1028,7 @@ function renderReturnCard(ranges: Record<string,{from:string;to:string}>){
       <div class="trip-seg-title">✈️ 回西雅图 <span class="trip-seg-sub">· ${dateLabel(flyDate)} 首尔 → 西雅图</span></div>
       <div class="micro trip-flydays">起飞日：${dateLabel(lastDay)}（按排定日期）
       </div>
-      <p class="micro">西安 → 首尔段的航班卡在上面的转场行里（你先坐高铁到西安跟老婆孩子汇合）；首尔停留 2 天，当地怎么玩见「旅行研究 · 首尔」。</p>
+      <p class="micro">西安 → 首尔段的航班卡在上面的转场行里（你先坐高铁到西安跟老婆孩子汇合）；首尔住 2 晚，当地怎么玩见「旅行研究 · 首尔」。</p>
       <div class="micro" style="margin-top:10px"><b>✈️ 首尔 → 西雅图</b> · ${dateLabel(flyDate)} 起飞 · 2大1小整单价（USD，Google Flights 实查）</div>
       <div class="trip-flightinfo">${returnCards}</div>
       <p class="micro">航班库正在按新行程查西安→首尔、首尔→西雅图的实查价；上面天数凑满后，这里会自动出价对比。</p>
