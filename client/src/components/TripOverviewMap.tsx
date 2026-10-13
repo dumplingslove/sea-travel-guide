@@ -175,7 +175,12 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
 
   /* 聚焦一段航线（2026-10-13 用户：航班要显示两个城市信息以及连线）：
      红粗线高亮这段连线，视野框住两城，并在连线中点弹一个同时写明两城天数/日期的信息框。 */
-  const focusLeg = (fromId: string, toId: string) => {
+  const focusLeg = (
+    fromId: string,
+    toId: string,
+    fromStop?: TripStop,
+    toStop?: TripStop,
+  ) => {
     const map = mapRef.current;
     if (!map) return;
     /* 两端坐标：优先用行程标记；标记不存在（如西雅图不在住宿站点里、新选城市还没存进行程）
@@ -222,8 +227,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     } else {
       map.flyToBounds(L.latLngBounds([la, lb]).pad(0.3), { duration: 0.8 });
     }
-    const sa = stopsRef.current.find((s) => s.id === fromId);
-    const sb = stopsRef.current.find((s) => s.id === toId);
+    /* 站点由连线点击直接传入时优先用它：同城出现两次（如北京在行程首尾各一段）时，
+       按 id find 只会命中第一段，分开行动段的北京弹窗会串成第一段天数 */
+    const sa = fromStop ?? stopsRef.current.find((s) => s.id === fromId);
+    const sb = toStop ?? stopsRef.current.find((s) => s.id === toId);
     const nameOf = (id: string, s?: TripStop) => s?.zh || ID_TO_ZH[id] || id;
     const infoLine = (id: string, s?: TripStop) =>
       s
@@ -319,18 +326,36 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       return LL(c[0], c[1]);
     });
     /* 每段航线单独一条连线（2026-10-13 用户：航班显示两城信息+连线）：
-       线上悬停显示「A → B」，点线直接高亮这段并弹两城信息（focusLeg）。 */
+       线上悬停显示「A → B」，点线直接高亮这段并弹两城信息（focusLeg）。
+       分开行动的北京/西安是同一时段并列两地（天数区间完全相同）：两人从上一城
+       分别前往、之后分别前往下一城，彼此之间没有转场——逐顺序连线会画出一条
+       不存在的「北京 → 西安」，且漏掉「上一城 → 西安」与「北京 → 下一城」。
+       故并列对之间不连线，改由前后站点向并列两地各连一条分支线。 */
+    const sameDays = (a: TripStop, b: TripStop) =>
+      a.days[0] === b.days[0] && a.days[1] === b.days[1];
+    const coordOfStop = (s: TripStop) => {
+      const c = CITY_COORDS[s.id];
+      return LL(c[0], c[1]);
+    };
+    const edges: { from: TripStop; to: TripStop }[] = [];
     for (let i = 1; i < cur.length; i++) {
-      const from = cur[i - 1];
-      const to = cur[i];
-      L.polyline([latlngs[i - 1], latlngs[i]], {
+      if (sameDays(cur[i - 1], cur[i])) continue;
+      edges.push({ from: cur[i - 1], to: cur[i] });
+    }
+    for (let k = 0; k + 1 < cur.length; k++) {
+      if (!sameDays(cur[k], cur[k + 1])) continue;
+      if (k > 0) edges.push({ from: cur[k - 1], to: cur[k + 1] });
+      if (k + 2 < cur.length) edges.push({ from: cur[k], to: cur[k + 2] });
+    }
+    for (const { from, to } of edges) {
+      L.polyline([coordOfStop(from), coordOfStop(to)], {
         color: "#0f766e",
         weight: 3,
         opacity: 0.85,
         dashArray: "8 6",
       })
         .bindTooltip(`${from.zh} → ${to.zh}`, { sticky: true, direction: "top" })
-        .on("click", () => focusLeg(from.id, to.id))
+        .on("click", () => focusLeg(from.id, to.id, from, to))
         .addTo(map);
     }
 
