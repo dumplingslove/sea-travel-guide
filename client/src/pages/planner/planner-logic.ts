@@ -786,6 +786,17 @@ function calDayLegs(): Record<string, CalDayLeg[]> {
   const push = (date: string, leg: CalDayLeg) => { (out[date] ||= []).push(leg); };
   const flight = (code: string, label: string, date: string) => {
     const info = legOvernightInfo(code, date);
+    /* 红眼口径与 planeNightDates / 预订页 regLeg 统一（2026-10-13 用户定）：推荐航班凌晨
+       00:00–05:00 出发且本身不过夜的，占的是出发日前一晚——腿行记到前一天，
+       不许留在出发日把出发日整格标成飞机上过夜（旧 calDayLegs 未移位，与另两处日历
+       自相矛盾；现行日期下推荐航班多为上午班不触发，用户在规划里换到只有凌晨班的
+       日期即爆，如 XIY→SIN 只有 Scoot TR135 01:55 的日子）。行程首日之前不移位，
+       避免去程腿行移出行程范围直接消失。 */
+    if (info.earlyRedeye && !info.overnight) {
+      const prev = addDays(date, -1);
+      const tripStart = Object.values(ranges).map(r => r?.from).filter(Boolean).sort()[0];
+      if (!tripStart || prev >= tripStart) { push(prev, { icon: "✈️", label, overnight: false, redeye: true }); return; }
+    }
     push(date, { icon: "✈️", label, overnight: info.overnight, redeye: info.earlyRedeye });
   };
   /* 去程 */
@@ -1468,7 +1479,6 @@ function wzUnifiedCalendar(){
     const dayLegs=legsByDate[d]||[];
     const dayFlights=dayLegs.filter(l=>l.icon==="✈️");
     const allOvernight=dayFlights.length>0&&dayFlights.every(l=>l.overnight||l.redeye)&&!dayLegs.some(l=>l.icon==="🚄");
-    const prevCity=dayCity[addDays(d,-1)]?.city;
     const cityLabel=allOvernight?"🌙 飞机上过夜":info.city;
     /* 小字口径：主标换成🌙后不带城市名，白天在哪必须补出来——就是当天所属城市 info.city
        （如 1/1 白天在首尔、晚上飞西雅图）。旧条件 prevCity!==info.city 会把这种同城情况吞掉，已废。 */
