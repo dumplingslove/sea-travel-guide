@@ -989,8 +989,18 @@ function BookingsCalendar() {
     const dayCity = new Map<string, string>();
     const splitDays = new Set<string>();
     const hotelNeedByDay = new Map<string, boolean>();
-    const transfers = new Map<string, { label: string; mode: "flight" | "rail" }>();
+    /* 逐腿模型（2026-10-13 用户，与行程安排检查日历同口径）：同一天可以有两条腿，
+       每条腿单独记 label/方式/是否过夜，不再一天只记一条、更不许漏腿 */
+    interface CalLeg { label: string; mode: "flight" | "rail"; overnight: boolean }
+    const transfers = new Map<string, CalLeg[]>();
+    const pushLeg = (date: string, leg: CalLeg) => {
+      const a = transfers.get(date) ?? [];
+      a.push(leg);
+      transfers.set(date, a);
+    };
     const plane = new Set<string>();
+    /* 每日期属哪一段（格子顶边段色，与行程规划 wzUnifiedCalendar 的 segColor 同口径） */
+    const segOf = new Map<string, string>();
     let tripStart = "";
     let tripEnd = "";
     if (plan) {
@@ -1029,6 +1039,18 @@ function BookingsCalendar() {
         fill(ranges[id]!.from, ranges[id]!.to, segLabel[id]!);
       }
       for (const r of coupleRows) fill(r.from, r.to, r.city);
+      /* 段色归属：先按大行程段，再用东南亚城市覆盖 couple 段（与 planner 同算法） */
+      segOf.set("2026-11-28", "outbound");
+      for (const id of segIds) {
+        let k = ranges[id]!.from;
+        let g = 0;
+        while (k <= ranges[id]!.to && g++ < 40) { segOf.set(k, id); k = add(k, 1); }
+      }
+      for (const r of coupleRows) {
+        let k = r.from;
+        let g = 0;
+        while (k <= r.to && g++ < 40) { segOf.set(k, "couple"); k = add(k, 1); }
+      }
       /* 分开行动的日子单独标记（详情里写清谁在哪座城市） */
       { let k = ranges.split!.from; let g = 0; while (k <= ranges.split!.to && g++ < 40) { splitDays.add(k); k = add(k, 1); } }
       /* 每晚是否需要订酒店（大行程里的每城开关）：分开日两边任一需要订就算需要 */
@@ -1052,17 +1074,12 @@ function BookingsCalendar() {
       const APT: Record<string, string> = { "新加坡": "SIN", "普吉": "HKT", "清迈": "CNX", "曼谷": "BKK", "槟城": "PEN", "吉隆坡": "KUL", "胡志明市": "SGN", "富国岛": "PQC" };
       const firstCity = coupleRows[0]?.city ?? "普吉";
       const lastCity = coupleRows[coupleRows.length - 1]?.city ?? "曼谷";
-      transfers.set("2026-11-28", { label: "西雅图→北京", mode: "flight" });
-      transfers.set(ranges.singapore!.from, { label: "北京→新加坡", mode: lm("beijing1") });
-      transfers.set(ranges.couple!.from, { label: `新加坡→${firstCity}`, mode: lm("singapore") });
-      for (let i = 1; i < coupleRows.length; i++)
-        transfers.set(coupleRows[i]!.from, { label: `${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, mode: "flight" });
-      transfers.set(ranges.split!.from, { label: `${lastCity}→北京（你）＋${lastCity}→西安（老婆+娃）`, mode: "flight" });
-      transfers.set(ranges.split!.to, { label: "北京→西安（你 · 🚄 高铁汇合）", mode: "rail" });
-      transfers.set(ranges.seoul!.from, { label: "西安→首尔（全家）", mode: "flight" });
-      transfers.set(ranges.seoul!.to, { label: "首尔→西雅图", mode: "flight" });
-
-      /* 过夜航班（那晚睡飞机上）：查航班库实查时刻，与行程安排同一判定 */
+      /* 🌙 过夜判定 —— 与行程安排同口径（2026-10-13 用户定「按推荐航班判定」）：
+         推荐航班（排序：不过夜→上午出发→越早越优先→越便宜）过夜
+         （起飞+时长跨午夜或时长≥8 小时）→ 那一晚在飞机上；
+         推荐航班凌晨 00:00–05:00 出发（红眼）→ 占出发日前一晚。
+         逐腿版：返回 { overnight, redeye } 供 regLeg 逐腿登记；
+         null = 航班库暂无该腿数据（格子照常显示这条腿，只是不标过夜状态）。 */
       const fdb = getDataset<{ segments: Record<string, { days?: Record<string, { nonstop_flights?: { dep: string; duration: string; price_usd?: number | null }[] }> }> }>("flight_db");
       const tparse = (t: string) => {
         const m = t.match(/(\d{1,2}):(\d{2})/);
@@ -1072,19 +1089,17 @@ function BookingsCalendar() {
         if (ap) { const pm = /pm/i.test(ap[1]); if (pm && h < 12) h += 12; if (!pm && h === 12) h = 0; }
         return h * 60 + +m[2];
       };
-      const checkLeg = (code: string, date: string, mode: "flight" | "rail") => {
-        if (mode === "rail") return;
+      const checkLeg = (code: string, date: string, mode: "flight" | "rail"): { overnight: boolean; redeye: boolean } | null => {
+        if (mode === "rail") return null;
         const nfs = fdb?.segments?.[code]?.days?.[date]?.nonstop_flights ?? [];
-        if (!nfs.length) return;
-        /* 与行程安排同一规则（2026-10-13 用户新口径）：按「推荐航班」判定——
-           推荐规则不过夜优先、上午出发优先；推荐航班过夜才标「飞机上过夜」，推荐红眼才占前一晚。 */
+        if (!nfs.length) return null;
         const cand = nfs.map((f) => {
           const dep = tparse(f.dep);
           const dm = f.duration.match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
           if (dep == null || !dm) return null;
           return { dep, dur: +dm[1] * 60 + (dm[2] ? +dm[2] : 0), price: f.price_usd ?? Number.MAX_SAFE_INTEGER };
         }).filter((x): x is { dep: number; dur: number; price: number } => x != null);
-        if (!cand.length) return;
+        if (!cand.length) return null;
         cand.sort((a, b) => {
           const onA = a.dep + a.dur >= 1440 || a.dur >= 480 ? 1 : 0;
           const onB = b.dep + b.dur >= 1440 || b.dur >= 480 ? 1 : 0;
@@ -1093,18 +1108,34 @@ function BookingsCalendar() {
           return onA - onB || moA - moB || a.dep - b.dep || a.price - b.price;
         });
         const rec = cand[0]!;
-        if (rec.dep + rec.dur >= 1440 || rec.dur >= 480) plane.add(date);
-        if (rec.dep < 300) plane.add(add(date, -1));
+        return { overnight: rec.dep + rec.dur >= 1440 || rec.dur >= 480, redeye: rec.dep < 300 };
       };
-      checkLeg("SEA-PEK", "2026-11-28", "flight");
-      checkLeg("PEK-SIN", ranges.singapore!.from, lm("beijing1"));
-      checkLeg(`SIN-${APT[firstCity] ?? "HKT"}`, ranges.couple!.from, lm("singapore"));
+      /* 逐腿登记（2026-10-13 用户）：一天多腿各自登记、各自判定过夜；
+         红眼腿（凌晨出发、本身不过夜）登记在前一天——那一晚人在飞机上，
+         与行程安排 calDayLegs 同规则 */
+      const regLeg = (label: string, code: string, date: string, mode: "flight" | "rail") => {
+        if (mode === "rail") { pushLeg(date, { label, mode: "rail", overnight: false }); return; }
+        const r = checkLeg(code, date, mode);
+        if (r?.redeye && !r.overnight) pushLeg(add(date, -1), { label, mode: "flight", overnight: true });
+        else pushLeg(date, { label, mode: "flight", overnight: !!r?.overnight });
+      };
+      regLeg("西雅图→北京", "SEA-PEK", "2026-11-28", "flight");
+      regLeg("北京→新加坡", "PEK-SIN", ranges.singapore!.from, lm("beijing1"));
+      regLeg("西安→新加坡", "XIY-SIN", ranges.singapore!.from, lm("beijing1"));
+      regLeg(`新加坡→${firstCity}`, `SIN-${APT[firstCity] ?? "HKT"}`, ranges.couple!.from, lm("singapore"));
+      regLeg("新加坡→西安", "SIN-XIY", ranges.couple!.from, lm("singapore"));
       for (let i = 1; i < coupleRows.length; i++)
-        checkLeg(`${APT[coupleRows[i - 1]!.city]}-${APT[coupleRows[i]!.city]}`, coupleRows[i]!.from, "flight");
-      checkLeg(`${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
-      checkLeg(`${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
-      checkLeg("XIY-ICN", ranges.seoul!.from, "flight");
-      checkLeg("ICN-SEA", ranges.seoul!.to, "flight");
+        regLeg(`${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, `${APT[coupleRows[i - 1]!.city] ?? ""}-${APT[coupleRows[i]!.city] ?? ""}`, coupleRows[i]!.from, "flight");
+      regLeg(`${lastCity}→北京（你）`, `${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
+      regLeg(`${lastCity}→西安（老婆+娃）`, `${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
+      regLeg("北京→西安", "", ranges.split!.to, "rail");
+      regLeg("西安→首尔", "XIY-ICN", ranges.seoul!.from, lm("split"));
+      regLeg("首尔→西雅图", "ICN-SEA", ranges.seoul!.to, "flight");
+      /* plane 派生：当天全部航班腿都过夜、且当天没有高铁腿 → 主标「🌙 飞机上过夜」 */
+      for (const [date, legs] of transfers) {
+        const fl = legs.filter((l) => l.mode === "flight");
+        if (fl.length && fl.every((l) => l.overnight) && !legs.some((l) => l.mode === "rail")) plane.add(date);
+      }
     }
 
     /* ---------- 渲染范围：行程全程 ∪ 预订日期 ---------- */
@@ -1122,11 +1153,16 @@ function BookingsCalendar() {
         if (mo > 12) { mo = 1; y += 1; }
       }
     }
-    return { ev, nights, dayCity, splitDays, hotelNeedByDay, transfers, plane, months };
+    return { ev, nights, dayCity, splitDays, hotelNeedByDay, transfers, plane, months, segOf, rangeStart: tripStart || allKeys[0] || "", rangeEnd: tripEnd || allKeys[allKeys.length - 1] || "" };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, plan, dsVersion]);
 
-  const { ev: events, nights: hotelNights, dayCity, splitDays, hotelNeedByDay, transfers, plane: planeNights, months } = model;
+  const { ev: events, nights: hotelNights, dayCity, splitDays, hotelNeedByDay, transfers, plane: planeNights, months, segOf, rangeStart, rangeEnd } = model;
+  const addDayStr = (key: string, n: number) => {
+    const [yy, mm, dd] = key.split("-").map(Number);
+    const dt = new Date(yy!, mm! - 1, dd! + n);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  };
   if (!months.length) return null;
 
   const kindMeta: Record<CalEvent["kind"], { icon: string; dot: string }> = {
@@ -1164,68 +1200,60 @@ function BookingsCalendar() {
         <span><span className="inline-block w-2 h-2 rounded-full bg-amber-600 mr-1" />餐厅已订</span>
         <span><span className="inline-block w-2 h-2 rounded-full bg-indigo-600 mr-1" />航班已出票</span>
       </div>
-      {months.map(({ y, mo }) => {
-        const first = new Date(y, mo - 1, 1);
-        const offset = (first.getDay() + 6) % 7;
-        const days = new Date(y, mo, 0).getDate();
-        const cells: (number | null)[] = [
-          ...Array.from({ length: offset }, () => null),
-          ...Array.from({ length: days }, (_, i) => i + 1),
-        ];
+      {/* 2026-10-13 样式统一（用户第二次要求）：与行程规划检查日历同款连续网格——
+          单个网格跨全部月份、星期头只一行、格子带段色顶边；不再逐月分块 */}
+      {(() => {
+        const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+        const [fy, fmo] = rangeStart.split("-").map(Number);
+        const [ly, lmo] = rangeEnd.split("-").map(Number);
+        const rangeHead = fy === ly ? `${fy}年${monthNames[fmo! - 1]} – ${monthNames[lmo! - 1]}` : `${fy}年${monthNames[fmo! - 1]} – ${ly}年${monthNames[lmo! - 1]}`;
+        const dowOf = (k: string) => (new Date(k + "T12:00:00Z").getUTCDay() + 6) % 7;
+        const gridStart = addDayStr(rangeStart, -dowOf(rangeStart));
+        const gridEnd = addDayStr(rangeEnd, 6 - dowOf(rangeEnd));
+        const segColor: Record<string, string> = { beijing1: "#3b82f6", singapore: "#22c55e", couple: "#f59e0b", split: "#8b5cf6", seoul: "#ec4899", outbound: "#0ea5e9" };
+        const cells: string[] = [];
+        for (let k = gridStart; k <= gridEnd; k = addDayStr(k, 1)) cells.push(k);
         return (
-          <div key={`${y}-${mo}`} className="mb-4 last:mb-0">
-            <div className="text-sm font-bold text-teal-900 mb-1.5">{y} 年 {mo} 月</div>
-            <div className="grid grid-cols-7 gap-1">
+          <div className="wz-calmonth">
+            <h4>{rangeHead}</h4>
+            <div className="wz-calgrid">
               {["一", "二", "三", "四", "五", "六", "日"].map((w) => (
-                <div key={w} className="text-[11px] text-gray-400 py-0.5 text-center">{w}</div>
+                <div key={w} className="wz-calwd">{w}</div>
               ))}
-              {cells.map((d, i) => {
-                if (d == null) return <div key={`x-${i}`} />;
-                const k = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+              {cells.map((k) => {
+                const dom = Number(k.slice(8));
+                const mo2 = Number(k.slice(5, 7));
+                const dateNum = dom === 1 ? `${mo2}/${dom}` : `${dom}`;
                 const city = dayCity.get(k);
-                const inTrip = city != null;
                 const isPlane = planeNights.has(k);
                 const tr = transfers.get(k);
                 const dayEvents = events.get(k) ?? [];
+                if (city == null && dayEvents.length === 0 && !tr) {
+                  return (
+                    <div key={k} className="wz-calday off">
+                      <span className="wz-caldate">{dateNum}</span>
+                    </div>
+                  );
+                }
                 const booked = hotelNights.has(k);
                 const isSel = selDay === k;
                 const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
+                const prevCity = dayCity.get(addDayStr(k, -1));
                 return (
-                  <button
-                    key={k}
-                    onClick={() => setSelDay(isSel ? null : k)}
-                    className={`rounded-lg px-1 py-1 min-h-[74px] flex flex-col items-stretch text-left border transition-colors ${
-                      isSel
-                        ? "border-teal-700 ring-1 ring-teal-700 bg-teal-50"
-                        : isPlane
-                          ? "border-indigo-100 bg-indigo-50/60"
-                          : booked
-                            ? "border-teal-100 bg-teal-50/50"
-                            : "border-[#eee9db] bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    <span className={`text-xs leading-none ${k === todayKey ? "bg-teal-700 text-white rounded-full w-5 h-5 inline-flex items-center justify-center font-bold" : dayEvents.length || inTrip ? "font-bold text-gray-900" : "text-gray-400"}`}>
-                      {d}
-                    </span>
-                    {inTrip && (
-                      <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5 truncate">
-                        {isPlane ? "🌙 飞机上过夜" : city}
-                      </span>
-                    )}
-                    {tr && (
-                      <span className="text-[9px] leading-tight text-indigo-700 truncate">
-                        {tr.mode === "rail" ? `🚄 ${tr.label}` : `✈️ ${tr.label}`}
-                      </span>
-                    )}
-                    {inTrip && !isPlane && (booked || hotelNeedByDay.get(k) !== false) && (
-                      booked
-                        ? <span className="text-[9px] leading-tight text-teal-700 font-medium">🏨 已订酒店</span>
-                        : <span className="text-[9px] leading-tight text-amber-600 font-medium">🏨 未订酒店</span>
+                  <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
+                    <span className="wz-caldate">{dateNum}</span>
+                    {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
+                    {isPlane && prevCity && prevCity !== city && <span className="wz-calnote">白天在{prevCity}</span>}
+                    {tr && tr.map((l, li) => l.mode === "rail" ? (
+                      <span key={li} className="wz-calleg rail">🚄 {l.label}</span>
+                    ) : (
+                      <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>
+                    ))}
+                    {city != null && !isPlane && (booked || hotelNeedByDay.get(k) !== false) && (
+                      <span className="wz-calleg" style={{ color: booked ? "#0f766e" : "#d97706", fontWeight: 600 }}>{booked ? "🏨 已订酒店" : "🏨 未订酒店"}</span>
                     )}
                     {nonHotel.length > 0 && (
-                      <span className="text-[9px] leading-tight text-gray-500 truncate">
-                        {nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}
-                      </span>
+                      <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}</span>
                     )}
                   </button>
                 );
@@ -1233,18 +1261,20 @@ function BookingsCalendar() {
             </div>
           </div>
         );
-      })}
+      })()}
       {selDay && (
         <div className="mt-2 rounded-lg bg-[#f7f4ee] border border-[#e5e1d6] px-3 py-2">
           <div className="text-xs font-bold text-gray-700 mb-1">
             {selDay}
             {selCity ? ` · ${selPlane ? `🌙 当晚睡在飞机上（白天在${selCity}）` : selSplit ? "当晚住：北京（你）/ 西安（老婆+Dylan）· 分开行动" : `当晚住：${selCity}`}` : ""}
           </div>
-          {selTransfer && (
-            <p className="text-xs text-gray-600">
-              {selTransfer.mode === "rail" ? "🚄" : "✈️"} 转场：{selTransfer.label}（{selTransfer.mode === "rail" ? "高铁" : "飞机"}）
+          {selTransfer && selTransfer.map((l, li) => (
+            <p key={li} className="text-xs text-gray-600">
+              {l.mode === "rail"
+                ? `🚄 转场：${l.label}（高铁）`
+                : `✈️ 转场：${l.label}（飞机）· ${l.overnight ? "🌙 这班要在飞机上过夜" : "落地过夜，不用睡飞机"}`}
             </p>
-          )}
+          ))}
           {selCity && !selPlane && (
             <p className="text-xs text-gray-600">
               {selHotelBooked
@@ -1796,9 +1826,13 @@ function BookingsInner() {
       </div>
 
 
-        {/* 地图（仅酒店/餐厅/景点类别）：置顶在吸顶菜单之下（stickyTop = 顶栏+菜单高，2026-10-13 用户） */}
+        {/* 地图（仅酒店/餐厅/景点类别）：置顶在吸顶菜单之下（stickyTop = 顶栏+菜单高，2026-10-13 用户）。
+            ⚠️ 不许再包一层矮 div（2026-10-13 用户投诉「地图没拼在最上面，一滚就消失」）：
+            sticky 只能在父容器高度内移动，矮包裹会把地图困死——三个地图必须直接挂页面根，
+            靠下面的目录内容撑出全页高度，地图才能全程吸顶。间距用 spacer 补。 */}
         {inCatalog && (
-          <div className="guide-scope mt-3">
+          <>
+          <div aria-hidden="true" style={{ height: 12 }} />
           {cat === "hotels" && (
           <SafeStickyMapBar
             items={hotelMapItems}
@@ -1841,7 +1875,7 @@ function BookingsInner() {
             onMarkerSelect={(key)=>{ setAttrSel(key); setTimeout(()=>{ const el=document.querySelector(`[data-place-key="${CSS.escape(key)}"]`); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }}
           />
           )}
-        </div>
+          </>
       )}
 
             {section === "screen" && cat === "hotels" ? (

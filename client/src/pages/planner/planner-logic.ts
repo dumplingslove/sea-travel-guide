@@ -769,6 +769,54 @@ function planeNightDates(): Set<string>{
   if(ranges["seoul"]) addLeg("ICN-SEA", ranges["seoul"].to);
   return out;
 }
+/* 日历逐腿事件（2026-10-13 用户）：同一天有两班航班时，每条腿在日历格里单独一行标注——
+   过夜的腿标「🌙 飞机上过夜」、凌晨红眼标「🌙 红眼过夜」、不过夜的标「落地过夜」，高铁腿标 🚄。
+   不再用任意一条腿的过夜与否给整天盖章（实例：12/12 新加坡→普吉落地过夜、新加坡→西安飞机上过夜，
+   旧逻辑整格只写「飞机上过夜」，把飞普吉那班也误标了）。 */
+interface CalDayLeg { icon: "✈️" | "🚄"; label: string; overnight: boolean; redeye: boolean }
+function resolveLegCode(code: string): string {
+  return code.replace("__COUPLE_XIY_CODE__", thailandToXianLeg().code).replace("__COUPLE_PEK_CODE__", thailandToBeijingLeg().code).replace("__SIN_FIRST_CODE__", singaporeToFirstCityLeg().code);
+}
+function resolveLegLabel(label: string): string {
+  return label.replace("__COUPLE_XIY_LABEL__", thailandToXianLeg().label).replace("__COUPLE_PEK_LABEL__", thailandToBeijingLeg().label).replace("__SIN_FIRST_LABEL__", singaporeToFirstCityLeg().label);
+}
+function calDayLegs(): Record<string, CalDayLeg[]> {
+  const ranges = tripRanges();
+  const out: Record<string, CalDayLeg[]> = {};
+  const push = (date: string, leg: CalDayLeg) => { (out[date] ||= []).push(leg); };
+  const flight = (code: string, label: string, date: string) => {
+    const info = legOvernightInfo(code, date);
+    push(date, { icon: "✈️", label, overnight: info.overnight, redeye: info.earlyRedeye });
+  };
+  /* 去程 */
+  flight("SEA-PEK", "西雅图→北京", "2026-11-28");
+  /* 大行程转场：日期 = 到达段第一天；选了高铁的转场整段按 🚄 记 */
+  for (const t of TRIP_TRANSITIONS) {
+    const date = ranges[t.before]?.from;
+    if (date) {
+      const mode = legMode(t.after);
+      for (const l of t.legs) {
+        const label = resolveLegLabel(l.label);
+        if (mode === "rail") push(date, { icon: "🚄", label, overnight: false, redeye: false });
+        else flight(resolveLegCode(l.code), label, date);
+      }
+    }
+    /* 转场前置高铁腿（如分开行动最后一天 北京→西安 高铁汇合）：记在出发段最后一天 */
+    if (t.railPreLeg) {
+      const railDate = ranges[t.after]?.to;
+      if (railDate) push(railDate, { icon: "🚄", label: `${t.railPreLeg.fromZh}→${t.railPreLeg.toZh}`, overnight: false, redeye: false });
+    }
+  }
+  /* 夫妻段内部转场 */
+  for (const leg of wzLegs()) {
+    const code = `${CITY_AIRPORT[leg.from] || ""}-${CITY_AIRPORT[leg.to] || ""}`;
+    if (code.length > 1) flight(code, `${leg.from}→${leg.to}`, leg.date);
+  }
+  /* 回程首尔→西雅图 */
+  const sl = ranges["seoul"];
+  if (sl) flight("ICN-SEA", "首尔→西雅图", sl.to);
+  return out;
+}
 interface FlightDbFlight { airline: string; flight: string|null; dep: string; arr: string; duration: string; price_usd?: number|null; business_price_usd?: number|null; via?: string }
 interface FlightDbDay {
   economy_usd?: number|null; business_usd?: number|null;
@@ -784,6 +832,9 @@ interface FlightDbDay {
 interface TripFlightLeg { results: number; eco: number|null; biz: number|null; basis: string; carriers: string[]; direct: boolean; queriedAt: string; flights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via?:string}[]; onestopResults: number; onestopEco: number|null; onestopBiz: number|null; onestopBasis: string; onestopQueriedAt: string; onestopFlights: {airline:string;flight:string;dep:string;arr:string;duration:string;price:number|null;bizPrice:number|null;via:string}[] }
 /* 大行程转场航班实查（只看直飞）：从 Google Flights 航班库按 "<航段代码>|<日期>" 构建。
    库里没有该日期 = 还没查过 → "待查询"；库里有但直飞为 0 = 实查确认无直飞 → "暂无直飞"。 */
+/* 规划逻辑就绪标志：init 执行到末尾才置 true。在此之前数据集回调不许触发重渲染
+   （下方 onDataset 注册点在 init 中段，wz 等状态尚未初始化，同步回调重渲染必抛错）。 */
+let plannerReady = false;
 let TRIP_FLIGHTS: Record<string, TripFlightLeg> = {};
 function rebuildTripFlights(): void {
   TRIP_FLIGHTS = {};
@@ -817,7 +868,11 @@ rebuildTripFlights();
 /* 航班库从 DB 数据集到达后重建并重渲染（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db）。
    2026-10-13 修复：此前只重建数据不重渲染——行程安排页首屏在数据到达前已渲染成「⏳ 航班待查询」，
    之后一直不刷新；检查确认页签是点击时才渲染所以显示真实班次，两处自相矛盾。数据集到达后必须 wzRender。 */
-onDataset('flight_db', () => { rebuildTripFlights(); wzRender(); });
+/* 就绪守卫（2026-10-13 白屏修复）：本注册点在 init 中段，此时 wz 等核心状态（下方才声明）
+   尚未初始化。数据集已在缓存时 onDataset 会同步调用回调，若直接 wzRender 就会摸到
+   未初始化的 wz 抛错、init 崩掉、整页白屏（从预订页返回规划页必现，刷新则无事）。
+   未就绪时只重建航班数据（首屏渲染自会用到），就绪后才允许回调触发重渲染。 */
+const offFlightDb = onDataset('flight_db', () => { rebuildTripFlights(); if (plannerReady) wzRender(); });
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
 interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean; noModeChoice?: boolean; railPreLeg?: { fromZh: string; toZh: string; label: string } }
 const TRIP_TRANSITIONS: TripTransition[] = [
@@ -1384,18 +1439,8 @@ function wzUnifiedCalendar(){
   const legs=wzLegs();
   const legByDate: Record<string,string> = {};
   legs.forEach(l=>legByDate[l.date]=`${l.from}→${l.to}`);
-  /* 大行程转场日也打 ✈️ 徽标（2026-09-28 用户：北京/新加坡/西安的转场也要有标识，不只东南亚内部） */
-  const flightByDate: Record<string,string> = {};
-  /* 去程 11/28 西雅图→北京：TRIP_TRANSITIONS 里没有去程段，单独加徽标 */
-  flightByDate["2026-11-28"]="西雅图→北京（去程）";
-  for(const t of TRIP_TRANSITIONS){
-    if(legMode(t.after)==="rail") continue; /* 高铁转场不打 ✈️（2026-10-13：方式可选，默认西安→北京高铁） */
-    const tdate = ranges[t.before]?.from; /* 转场日 = 到达段第一天（2026-10-13 口径） */
-    if(tdate) flightByDate[tdate]=t.title;
-  }
-  const sl2 = ranges["seoul"];
-  if(sl2) flightByDate[sl2.to]="首尔→西雅图";
-  const planeNightsOrd = planeNightDates();
+  /* 逐腿事件（2026-10-13 用户）：每条腿单独一行标注过夜/落地/高铁，不再整天一个 ✈️ 徽标带过 */
+  const legsByDate = calDayLegs();
   /* 按月分组 */
   const dates=Object.keys(dayCity).sort();
   if(!dates.length) return '<p class="micro">暂无行程日期。</p>';
@@ -1416,11 +1461,20 @@ function wzUnifiedCalendar(){
     if(!info){ html+=`<div class="wz-calday off"><span class="wz-caldate">${dateNum}</span></div>`; continue; }
     const issues=wzDayIssues(d, info.city, legByDate[d]);
     const sev=issues.some(x=>x.severity==="critical")?"critical":issues.length?"warn":"ok";
-    const badges=[(legByDate[d]||flightByDate[d])?'<span class="wz-badge fly" title="转场日">✈️</span>':"", sev==="critical"?'<span class="wz-badge crit" title="有严重问题">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
+    const badges=[sev==="critical"?'<span class="wz-badge crit" title="有严重问题">🚫</span>':sev==="warn"?'<span class="wz-badge warn" title="有提醒">⚠️</span>':""].join("");
     const color=segColor[info.seg]||"#94a3b8";
-    /* 2026-10-13 用户：城市按当晚住宿标——过夜航班那天显示「🌙 飞机上过夜」 */
-    const cityLabel=planeNightsOrd.has(d)?"🌙 飞机上过夜":info.city;
-    html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dateNum}</span><span class="wz-calcity">${cityLabel}</span><span class="wz-calbadges">${badges}</span></button>`;
+    /* 2026-10-13 用户（逐腿标注）：城市仍按当晚住宿标；每条腿单独一行说清过夜/落地/高铁。
+       只有当天全部航班腿都过夜、且没有高铁腿时（那晚全员睡飞机上），主标才换成「🌙 飞机上过夜」+ 小字白天在哪。 */
+    const dayLegs=legsByDate[d]||[];
+    const dayFlights=dayLegs.filter(l=>l.icon==="✈️");
+    const allOvernight=dayFlights.length>0&&dayFlights.every(l=>l.overnight||l.redeye)&&!dayLegs.some(l=>l.icon==="🚄");
+    const prevCity=dayCity[addDays(d,-1)]?.city;
+    const cityLabel=allOvernight?"🌙 飞机上过夜":info.city;
+    const dayNote=allOvernight&&prevCity&&prevCity!==info.city?`<span class="wz-calnote">白天在${esc(prevCity)}</span>`:"";
+    const legsHtml=dayLegs.map(l=>l.icon==="🚄"
+      ?`<span class="wz-calleg rail">🚄 ${esc(l.label)}</span>`
+      :`<span class="wz-calleg">✈️ ${esc(l.label)} <em class="${l.overnight||l.redeye?"on":""}">${l.overnight?"🌙 飞机上过夜":l.redeye?"🌙 红眼过夜":"落地过夜"}</em></span>`).join("");
+    html+=`<button class="wz-calday ${sev}" data-ordday="${d}" style="border-top:3px solid ${color}"><span class="wz-caldate">${dateNum}</span><span class="wz-calcity">${cityLabel}</span>${dayNote}${legsHtml}<span class="wz-calbadges">${badges}</span></button>`;
   }
   html+=`</div></div>`;
   return html;
@@ -1914,6 +1968,13 @@ let alive=true;
 (async()=>{
   let loaded: LoadedPlan|null=null;
   try{ loaded=await loadPlannerPlan(); }catch{ loaded=null; }
+  /* 首查为空时延迟重试一次：移动端会话恢复可能晚于首查，
+     一次落空就走默认排期会把未保存的默认行程（全部东南亚城市）当成用户的规划展示 */
+  if(!loaded){
+    await new Promise(r=>setTimeout(r,1500));
+    if(!alive) return;
+    try{ loaded=await loadPlannerPlan(); }catch{ loaded=null; }
+  }
   if(!alive) return;
   if(loaded&&loaded.plan&&Object.keys(loaded.plan.schedule||{}).length){
     applyLoadedPlan(loaded.plan);
@@ -1927,6 +1988,14 @@ let alive=true;
     setSyncNote("☁️ 未找到云端规划，已按默认排期；在「🗺️ 行程安排」里点「保存大行程」同步到全站。");
   }
   updateAll();
+  /* 2026-10-13 刷新 bug：检查确认日历只在点页签时渲染——用户在云端规划加载完成前
+     就点开检查确认，日历会停在默认排期（全部东南亚城市）上且加载完成后没人重渲染它。
+     加载收尾时若正停在检查确认，按真实规划重渲染一次（保留已展开的日期）。 */
+  if(S.getElementById("order")?.classList.contains("active")){
+    const exp=ordExpandedDay; ordExpandedDay=null;
+    renderOrderTab();
+    if(exp) toggleOrdDay(exp);
+  }
 })();
 
   /* ---- 研究数据来源说明（原生集成追加） ---- */
@@ -2001,5 +2070,6 @@ let alive=true;
   S.addEventListener("click", onMapLinkClick);
   S.addEventListener("keydown", onMapLinkKey);
 
-  return () => { alive=false; document.removeEventListener("keydown", onKeyDown); S.removeEventListener("click", onMapLinkClick); S.removeEventListener("keydown", onMapLinkKey); };
+  plannerReady = true;
+  return () => { alive=false; plannerReady=false; offFlightDb(); document.removeEventListener("keydown", onKeyDown); S.removeEventListener("click", onMapLinkClick); S.removeEventListener("keydown", onMapLinkKey); };
 }

@@ -33,10 +33,27 @@ function subscribe(fn: () => void): () => void {
   };
 }
 
-/** 数据模块在加载时注册：数据集到达（或已在缓存）时把数据灌进模块自己的存储。 */
-export function onDataset(key: DatasetKey, apply: (data: unknown) => void): void {
+/** 数据模块在加载时注册：数据集到达（或已在缓存）时把数据灌进模块自己的存储。
+ *  返回退订函数，组件卸载时必须调用，避免回调累积和旧闭包打已销毁的 DOM。
+ *  缓存命中时的同步灌入套 try/catch：回调抛错不许穿透调用方的初始化
+ *  （2026-10-13 白屏事故：规划页二次挂载时同步回调在状态就绪前触发重渲染，
+ *   摸到未初始化变量抛错，整个应用白屏）。 */
+export function onDataset(key: DatasetKey, apply: (data: unknown) => void): () => void {
   (appliers[key] ??= []).push(apply);
-  if (cache[key] !== undefined) apply(cache[key]);
+  if (cache[key] !== undefined) {
+    try {
+      apply(cache[key]);
+    } catch {
+      /* 同步灌入失败不拖垮调用方初始化；数据本身已在缓存里，调用方可自行读取 */
+    }
+  }
+  return () => {
+    const arr = appliers[key];
+    if (arr) {
+      const i = arr.indexOf(apply);
+      if (i >= 0) arr.splice(i, 1);
+    }
+  };
 }
 
 /** 同步读取当前缓存（未加载完成时返回 undefined，调用方按无数据处理）。 */

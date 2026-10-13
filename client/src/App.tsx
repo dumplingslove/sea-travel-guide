@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Link, NavLink, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Link, NavLink, Navigate, useLocation } from "react-router-dom";
+import { Component, useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import Home from "@/pages/Home";
 import DayDetail from "@/pages/DayDetail";
@@ -118,21 +118,52 @@ function Header() {
   );
 }
 
-function AppRouter() {
-  /* 查询数据集（航班库/酒店价/餐厅政策）从 Supabase 拉取并灌入各数据模块；
-     到达后版本号自增，全站重渲染一次，界面即反映 DB 数据（2026-10-13 用户铁律） */
-  useDatasetsVersion();
-  useEffect(() => {
-    void loadDatasets();
-  }, []);
-  // basename="/sea-travel-guide" because the site is served from the GitHub Pages project subpath
+/* 崩溃兜底（2026-10-13 白屏事故后加）：任何页面渲染/初始化抛错时显示错误信息和
+   刷新入口，而不是整页白屏让用户无路可走。用当前路径做 key：导航到别的页面自动恢复。 */
+class RouteErrorBoundary extends Component<
+  { routeKey: string; children: ReactNode },
+  { error: Error | null }
+> {
+  state: { error: Error | null } = { error: null };
+  static getDerivedStateFromError(error: Error): { error: Error } {
+    return { error };
+  }
+  componentDidUpdate(prev: { routeKey: string }): void {
+    if (prev.routeKey !== this.props.routeKey && this.state.error) {
+      this.setState({ error: null });
+    }
+  }
+  render(): ReactNode {
+    if (this.state.error) {
+      return (
+        <div className="max-w-xl mx-auto px-4 py-16 text-center">
+          <p className="text-lg font-bold text-red-800">这一页出了点问题，没能打开</p>
+          <p className="text-sm text-gray-500 mt-2 break-all">
+            {this.state.error.message}
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="mt-5 rounded-[10px] bg-[#134e4a] text-white px-5 py-2.5 text-sm font-bold"
+          >
+            点这里刷新重试
+          </button>
+          <p className="text-xs text-gray-400 mt-3">
+            如果刷新后还是这样，把这页截图发我，我来修。
+          </p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function AppRoutes() {
+  const location = useLocation();
   return (
-    <BrowserRouter basename="/sea-travel-guide">
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
+    <RouteErrorBoundary routeKey={location.pathname}>
+      <Routes>
+        <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
             <Route path="/korea" element={<RecordsProvider><KoreaItinerary /></RecordsProvider>} />
             <Route path="/day/:n" element={<RecordsProvider><DayDetail /></RecordsProvider>} />
             <Route path="/attraction/:slug" element={<AttractionDetailPage />} />
@@ -180,7 +211,25 @@ function AppRouter() {
               }
             />
             <Route path="*" element={<NotFound />} />
-          </Routes>
+      </Routes>
+    </RouteErrorBoundary>
+  );
+}
+
+function AppRouter() {
+  /* 查询数据集（航班库/酒店价/餐厅政策）从 Supabase 拉取并灌入各数据模块；
+     到达后版本号自增，全站重渲染一次，界面即反映 DB 数据（2026-10-13 用户铁律） */
+  useDatasetsVersion();
+  useEffect(() => {
+    void loadDatasets();
+  }, []);
+  // basename="/sea-travel-guide" because the site is served from the GitHub Pages project subpath
+  return (
+    <BrowserRouter basename="/sea-travel-guide">
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <AppRoutes />
         </main>
         <SiteFooter />
         {/* 2026-10-03 用户：调试期间一键强制刷新（清缓存+硬重载），放右下角 */}

@@ -612,6 +612,11 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
 .wz-calday.warn{background:#fffbeb;border-color:#fcd34d}
 .wz-caldate{font-weight:700;font-size:14px}
 .wz-calcity{font-size:11px;color:#475569;line-height:1.2;text-align:center}
+.wz-calnote{font-size:9px;color:#94a3b8;line-height:1.2;text-align:center}
+.wz-calleg{display:block;font-size:10px;line-height:1.35;color:#334155;text-align:center}
+.wz-calleg em{font-style:normal;font-size:9px;color:#64748b;background:#f1f5f9;border-radius:4px;padding:0 3px;white-space:nowrap}
+.wz-calleg em.on{color:#4338ca;background:#e0e7ff;font-weight:700}
+.wz-calleg.rail{color:#065f46;font-weight:600}
 .wz-calbadges{display:flex;gap:2px;font-size:12px}
 .wz-badge{line-height:1}
 .wz-risk-sec{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px}

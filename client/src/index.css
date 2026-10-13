@@ -24,3 +24,36 @@ body {
 .page-fade-in {
   animation: page-fade-in 160ms ease-out;
 }
+
+/* ============ 统一日历样式（2026-10-13 用户：最终预定日历必须与行程规划日历同款） ============
+   与 client/src/pages/planner/planner.css 的 .wz-cal* 规则保持一致（那边在 Shadow DOM 内、
+   这边在主文档，类名相同互不干扰）。改一处必须同步另一处。
+   差异只有两点：--line 在主文档未定义、写死 #e5e1d6；多了 .sel 选中描边
+   （最终预定日历是点选展开详情，行程规划是点开弹窗）。 */
+.wz-unical-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;font-size:13px;color:#475569}
+.wz-segdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.wz-unical{display:flex;flex-direction:column;gap:20px;margin-bottom:8px}
+.wz-calmonth h4{margin:0 0 8px;font-size:15px}
+.wz-calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wz-calwd{text-align:center;font-size:12px;color:#94a3b8;padding:4px 0}
+.wz-calday{position:relative;min-height:64px;border:1px solid #e5e1d6;border-radius:8px;background:#fff;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:12px;text-align:center}
+.wz-calday.empty{border:none;background:transparent;cursor:default}
+.wz-calday.off{border-style:dashed;background:#f8fafc;cursor:default}
+.wz-calday.off .wz-caldate{color:#cbd5e1;font-weight:400}
+.wz-calday.critical{background:#fef2f2;border-color:#fca5a5}
+.wz-calday.warn{background:#fffbeb;border-color:#fcd34d}
+.wz-calday.sel{box-shadow:0 0 0 2px #0f766e inset;border-color:#0f766e}
+.wz-caldate{font-weight:700;font-size:14px}
+.wz-calcity{font-size:11px;color:#475569;line-height:1.2;text-align:center}
+.wz-calnote{font-size:9px;color:#94a3b8;line-height:1.2;text-align:center}
+.wz-calleg{display:block;font-size:10px;line-height:1.35;color:#334155;text-align:center}
+.wz-calleg em{font-style:normal;font-size:9px;color:#64748b;background:#f1f5f9;border-radius:4px;padding:0 3px;white-space:nowrap}
+.wz-calleg em.on{color:#4338ca;background:#e0e7ff;font-weight:700}
+.wz-calleg.rail{color:#065f46;font-weight:600}
+.wz-calbadges{display:flex;gap:2px;font-size:12px}
+.wz-badge{line-height:1}
+@media (max-width:480px){
+  .wz-calday{min-height:56px}
+  .wz-caldate{font-size:13px}
+  .wz-calcity{font-size:10px}
+}
