@@ -38,8 +38,10 @@ import {
   RESEARCH_META,
   type ResearchStatus,
 } from "../../planner-data/research-items";
-/* 景点详细信息：攻略站 8 城 69 个景点的完整条目（名称/关键信息/游览重点/怎么安排），
-   供分步规划 Step1 选城时直接结合决策，不再只看城市名。 */
+/* 景点详细信息：攻略站景点完整条目（名称/关键信息/游览重点/怎么安排），
+   供分步规划 Step1 选城时直接结合决策，不再只看城市名。
+   计数口径（2026-10-13 程序实算复核）：attractions 共 107 条（8 研究城市 A() 92 条 + 首尔 SA() 15 条）；
+   选城卡实际经 wzCityAttractions 按 WZ_ORDER 7 城过滤、曼谷剔除 2 个城外项后展示 76 条。 */
 import { attractions } from "../../guide/data";
 import { CITY_ID_BY_ZH } from "../../data/cityCoords";
 import {
