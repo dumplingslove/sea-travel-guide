@@ -1,6 +1,6 @@
 /**
  * 独立详情页的 slug 工具（对标意大利站 /attraction/:id）。
- * slug = {city-code}-{name-slug}，全站 222 个点位（91 景点 + 80 餐厅 + 51 酒店）零冲突（2026-09-26 核验）。
+ * slug = {city-code}-{name-slug}，全站 262 个点位（107 景点 + 90 餐厅 + 65 酒店）零冲突（2026-10-13 复核：程序实算 placeSlug 全量去重，含首尔段加入后的新增点位）。
  */
 import { attractions, restaurants, hotels, type Item } from "@/guide/data";
 
