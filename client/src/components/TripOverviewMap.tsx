@@ -65,6 +65,11 @@ const ZOOM_LABEL_CSS = `
 .sea-focus-pin{background:none;border:none}
 .sea-focus-pin span{display:block;font-size:38px;line-height:1;text-align:center;filter:drop-shadow(0 5px 6px rgba(0,0,0,.5));animation:seaPinDrop .45s ease-out}
 @keyframes seaPinDrop{0%{transform:translateY(-16px);opacity:0}60%{transform:translateY(2px);opacity:1}100%{transform:translateY(0);opacity:1}}
+/* 2026-10-13 用户：地图信息框太占地——弹窗整体收紧（小内边距/小字号/限宽） */
+.leaflet-popup-content-wrapper{border-radius:10px}
+.leaflet-popup-content{margin:7px 10px;font-size:12px;line-height:1.45;max-width:210px}
+.leaflet-popup-content b{font-size:12.5px}
+.leaflet-popup-close-button{font-size:14px !important;padding:2px 4px 0 0 !important}
 `;
 function ensureZoomLabelCss() {
   if (document.querySelector("style[data-sea-zoom-labels]")) return;
@@ -159,10 +164,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
     else map.flyTo(ll, 11, { duration: 0.8 });
     if (openPopup) {
-      L.popup({ offset: [0, -4] })
+      L.popup({ offset: [0, -4], maxWidth: 220, autoPan: false })
         .setLatLng(ll)
         .setContent(
-          `<div style="font-family:inherit"><div style="font-weight:800;font-size:14px;color:#134e4a">${ID_TO_ZH[cityId] || cityId}</div><div style="font-size:12px;color:#4b5563;margin-top:2px">（还没排进已保存的行程天数）</div></div>`,
+          `<div style="font-family:inherit"><div style="font-weight:800;font-size:13px;color:#134e4a">${ID_TO_ZH[cityId] || cityId}</div><div style="font-size:12px;color:#4b5563;margin-top:2px">（还没排进已保存的行程天数）</div></div>`,
         )
         .openOn(map);
     }
@@ -196,7 +201,16 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       weight: 6,
       opacity: 0.95,
     }).addTo(map);
-    map.flyToBounds(L.latLngBounds([la, lb]).pad(0.3), { duration: 0.8 });
+    /* 跨洋长途段（西雅图↔北京/首尔，调整后经度跨度 >120°）：不用 fitBounds——它会把地图平移一整个
+       世界、其他行程城市全飞出画面，看着像换了一张地图（2026-10-13 用户投诉）。改飞到两端中点、
+       固定 3 级缩放的太平洋视角：亚洲行程城市和美洲端点同框。短段照常用 fitBounds 框住两城。 */
+    if (Math.abs(lb.lng - la.lng) > 120) {
+      map.flyTo(L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2), 3, {
+        duration: 1.0,
+      });
+    } else {
+      map.flyToBounds(L.latLngBounds([la, lb]).pad(0.3), { duration: 0.8 });
+    }
     const sa = stopsRef.current.find((s) => s.id === fromId);
     const sb = stopsRef.current.find((s) => s.id === toId);
     const nameOf = (id: string, s?: TripStop) => s?.zh || ID_TO_ZH[id] || id;
@@ -205,10 +219,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
         ? `<div style="font-size:12px;color:#374151;margin-top:4px"><b>${s.zh}</b>：Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>`
         : `<div style="font-size:12px;color:#374151;margin-top:4px"><b>${nameOf(id)}</b></div>`;
     const mid = L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2);
-    L.popup({ offset: [0, -4] })
+    L.popup({ offset: [0, -4], maxWidth: 220, autoPan: false })
       .setLatLng(mid)
       .setContent(
-        `<div style="min-width:180px;font-family:inherit">
+        `<div style="min-width:150px;font-family:inherit">
           <div style="font-weight:800;font-size:13px;color:#134e4a">✈️ ${nameOf(fromId, sa)} → ${nameOf(toId, sb)}</div>
           ${infoLine(fromId, sa)}
           ${infoLine(toId, sb)}
