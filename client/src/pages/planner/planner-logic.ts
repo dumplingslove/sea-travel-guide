@@ -1470,7 +1470,9 @@ function wzUnifiedCalendar(){
     const allOvernight=dayFlights.length>0&&dayFlights.every(l=>l.overnight||l.redeye)&&!dayLegs.some(l=>l.icon==="🚄");
     const prevCity=dayCity[addDays(d,-1)]?.city;
     const cityLabel=allOvernight?"🌙 飞机上过夜":info.city;
-    const dayNote=allOvernight&&prevCity&&prevCity!==info.city?`<span class="wz-calnote">白天在${esc(prevCity)}</span>`:"";
+    /* 小字口径：主标换成🌙后不带城市名，白天在哪必须补出来——就是当天所属城市 info.city
+       （如 1/1 白天在首尔、晚上飞西雅图）。旧条件 prevCity!==info.city 会把这种同城情况吞掉，已废。 */
+    const dayNote=allOvernight&&info.city?`<span class="wz-calnote">白天在${esc(info.city)}</span>`:"";
     const legsHtml=dayLegs.map(l=>l.icon==="🚄"
       ?`<span class="wz-calleg rail">🚄 ${esc(l.label)}</span>`
       :`<span class="wz-calleg">✈️ ${esc(l.label)} <em class="${l.overnight||l.redeye?"on":""}">${l.overnight?"🌙 飞机上过夜":l.redeye?"🌙 红眼过夜":"落地过夜"}</em></span>`).join("");

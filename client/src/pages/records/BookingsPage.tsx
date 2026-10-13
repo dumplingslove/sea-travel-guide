@@ -1243,7 +1243,7 @@ function BookingsCalendar() {
                   <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
                     <span className="wz-caldate">{dateNum}</span>
                     {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
-                    {isPlane && prevCity && prevCity !== city && <span className="wz-calnote">白天在{prevCity}</span>}
+                    {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
                     {tr && tr.map((l, li) => l.mode === "rail" ? (
                       <span key={li} className="wz-calleg rail">🚄 {l.label}</span>
                     ) : (
