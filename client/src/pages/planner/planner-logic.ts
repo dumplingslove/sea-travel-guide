@@ -1012,7 +1012,7 @@ function renderTrip(){
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${mapRow}
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-legfocus="${coupleLastCity()}|北京" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 北京 的连线">🧑 你：${coupleLastCity()} → 北京（陪父亲），之后 北京 → 首尔 🗺️</p><p class="micro map-act" data-legfocus="${coupleLastCity()}|西安" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 西安 的连线">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天，最后一天在首尔汇合（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-legfocus="${coupleLastCity()}|北京" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 北京 的连线">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-legfocus="${coupleLastCity()}|西安" role="button" tabindex="0" title="在地图上看 ${coupleLastCity()} → 西安 的连线">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
