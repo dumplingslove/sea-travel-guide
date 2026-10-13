@@ -20,7 +20,7 @@ function SuwonDayTrip({ embedded = false }: { embedded?: boolean }) {
       </h3>
       <p className="text-xs text-gray-500 mb-3">
         {embedded
-          ? "2 天里只有今天能抽出一整天；水原 30～40 分钟即达，半天到一天刚好，带娃无压力"
+          ? "首尔只有一个整天（12-31）：去水原就替换今天的市区行程，二选一；水原 30～40 分钟即达，带娃无压力"
           : "2 天韩国行程里塞不下过夜的第二城；水原 30～40 分钟即达，半天到一天刚好，带娃无压力"}
       </p>
       <div className="text-sm text-gray-700 space-y-2">
@@ -38,7 +38,7 @@ function SuwonDayTrip({ embedded = false }: { embedded?: boolean }) {
           水原华城博物馆、行宫室内展馆。八达门市场有热食，娃的加餐好解决。
         </p>
         <p>
-          <b>时间安排建议：</b>占首尔 2 天中的一整天（约 6～7 小时含往返），当天回首尔住，
+          <b>时间安排建议：</b>占首尔唯一的整天（12-31，约 6～7 小时含往返），当天回首尔住，
           不影响第二天去仁川机场飞西雅图。
         </p>
         <p className="text-xs text-gray-500">
@@ -79,10 +79,10 @@ function SeoulAttractions() {
 export default function KoreaItinerary() {
   return (
     <div className="max-w-5xl mx-auto px-4 pb-8">
-      {/* 2026-10-12 用户：水原一日游不要页顶单独写，容进 D34（韩国首日）行程卡后面作备选 */}
+      {/* 水原一日游不页顶单独写，容进首尔唯一的整天（12-31）行程卡后面作二选一备选 */}
       <ItineraryTab
         koreaOnly
-        renderDayExtra={(_day, i) => (i === 0 ? <SuwonDayTrip embedded /> : null)}
+        renderDayExtra={(_day, i) => (i === 1 ? <SuwonDayTrip embedded /> : null)}
       />
       <SeoulRestaurants />
       <SeoulAttractions />
