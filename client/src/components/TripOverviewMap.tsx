@@ -229,8 +229,29 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     }
     /* 站点由连线点击直接传入时优先用它：同城出现两次（如北京在行程首尾各一段）时，
        按 id find 只会命中第一段，分开行动段的北京弹窗会串成第一段天数 */
-    const sa = fromStop ?? stopsRef.current.find((s) => s.id === fromId);
-    const sb = toStop ?? stopsRef.current.find((s) => s.id === toId);
+    let sa = fromStop;
+    let sb = toStop;
+    if (!sa || !sb) {
+      /* 外部 planner:focus-leg 事件只带城市 id（planner-logic 侧无站点上下文）：
+         同城多段时按「到达段紧接出发段结束」在候选对里选衔接最紧的一对——
+         如 曼谷→北京 应命中分开行动段的北京（紧接曼谷段结束次日开始），
+         而不是行程首段北京；单段城市退化为唯一候选，行为不变。 */
+      const fromCands = sa ? [sa] : stopsRef.current.filter((s) => s.id === fromId);
+      const toCands = sb ? [sb] : stopsRef.current.filter((s) => s.id === toId);
+      let best = Infinity;
+      for (const a of fromCands) {
+        for (const b of toCands) {
+          const score = Math.abs(b.days[0] - a.days[1] - 1);
+          if (score < best) {
+            best = score;
+            sa = a;
+            sb = b;
+          }
+        }
+      }
+      sa = sa ?? fromCands[0];
+      sb = sb ?? toCands[0];
+    }
     const nameOf = (id: string, s?: TripStop) => s?.zh || ID_TO_ZH[id] || id;
     const infoLine = (id: string, s?: TripStop) =>
       s
