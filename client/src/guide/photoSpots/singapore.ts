@@ -6,11 +6,11 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "环球影城": [
     { name:"旋转地球仪广场", where:"一进园就是好莱坞区的地球仪广场，站在地球仪正前方。", how:"入园入口的地球环形牌是公认的经典标志，进园必拍（据 Trip.com 攻略）。", sampleIndex:2, sampleCaption:"标志性地球仪与入口广场" },
-    { name:"Far Far Away 梦幻城堡", where:"Far Far Away 园区，城堡正前方的广场一带。", how:"红白色城堡童话感十足，两家攻略都把它列为必拍点（据 Trip.com、Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"城堡正前方仰拍红白童话城堡" },
-    { name:"小小兵乐园", where:"小小兵乐园（Minion Land），格鲁家街区一带。", how:"2025 年 2 月新开的园区，七彩街头风建筑被攻略作者评为全园最好拍的区域（据 Follow Us To Travel 攻略）。", sampleIndex:6, sampleCaption:"Silly Swirly 七彩游乐设施与小小兵雕塑" }
+    { name:"Far Far Away 梦幻城堡", where:"Far Far Away 园区，城堡正前方的广场一带。", how:"红白色城堡童话感十足，两家攻略都把它列为必拍点（据 Trip.com、Follow Us To Travel 攻略）。", sampleIndex:99, sampleCaption:"城堡正前方仰拍红白童话城堡" },
+    { name:"小小兵乐园", where:"小小兵乐园（Minion Land），格鲁家街区一带。", how:"2025 年 2 月新开的园区，七彩街头风建筑被攻略作者评为全园最好拍的区域（据 Follow Us To Travel 攻略）。", sampleIndex:99, sampleCaption:"Silly Swirly 七彩游乐设施与小小兵雕塑" }
   ],
   "Singapore Oceanarium": [
-    { name:"Ocean Wonders 月亮水母缸", where:"Ocean Wonders 展区中央的大型水母缸前。", how:"缸里有数千只月亮水母，随灯光变幻漂浮；多数展区可拍照，按现场规定开关闪光灯（据 Tickyourlist 攻略）。", sampleIndex:5, sampleCaption:"两座大型水母缸中漂浮的月亮水母" },
+    { name:"Ocean Wonders 月亮水母缸", where:"Ocean Wonders 展区中央的大型水母缸前。", how:"缸里有数千只月亮水母，随灯光变幻漂浮；多数展区可拍照，按现场规定开关闪光灯（据 Tickyourlist 攻略）。", sampleIndex:99, sampleCaption:"两座大型水母缸中漂浮的月亮水母" },
     { name:"Open Ocean 巨型观景窗", where:"Open Ocean 展区，馆内最大的观景窗前。", how:"隔窗看魔鬼鱼、鹰鳐和斑马鲨从眼前游过；在窗前多等一会儿，等大鱼群游过再按快门（据 Tickyourlist 攻略）。", sampleIndex:1, sampleCaption:"巨型观景窗前，鳐鱼群与鱼群游过" }
   ],
   "夜间动物园": [
@@ -20,8 +20,8 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "新加坡动物园与Bird Paradise": [
     { name:"Bird Paradise 企鹅湾水下窗", where:"飞禽公园企鹅湾（Penguin Cove），走到水下观景窗前。", how:"水族箱从一楼延伸到二楼，是看企鹅游泳的最佳视角；等企鹅游过玻璃的瞬间连拍（据 BringYou 攻略）。", sampleIndex:4, sampleCaption:"企鹅在企鹅湾水下观景窗前游过" },
-    { name:"动物园红毛猩猩自由活动区", where:"动物园红毛猩猩自由活动区（Free Ranging Orangutan Island），站在观景步道上。", how:"半开放式展区，猩猩会在上方的空中走道行走，近距离看它们觅食嬉戏；抬头就能拍到（据 Girlstyle 指南）。", sampleIndex:5, sampleCaption:"红毛猩猩群在树干上攀爬，背景有新加坡动物园标牌" },
-    { name:"猩红湿地火烈鸟", where:"飞禽公园绯红湿地（Crimson Wetlands），地标大瀑布前。", how:"火烈鸟、粉红琵鹭、金刚鹦鹉群聚在瀑布前，没有围栏阻隔；自由飞翔的鸟群是拍生态大片的绝佳题材（据 BringYou 攻略）。", sampleIndex:6, sampleCaption:"火烈鸟群聚瀑布前，金刚鹦鹉在空中飞翔" }
+    { name:"动物园红毛猩猩自由活动区", where:"动物园红毛猩猩自由活动区（Free Ranging Orangutan Island），站在观景步道上。", how:"半开放式展区，猩猩会在上方的空中走道行走，近距离看它们觅食嬉戏；抬头就能拍到（据 Girlstyle 指南）。", sampleIndex:99, sampleCaption:"红毛猩猩群在树干上攀爬，背景有新加坡动物园标牌" },
+    { name:"猩红湿地火烈鸟", where:"飞禽公园绯红湿地（Crimson Wetlands），地标大瀑布前。", how:"火烈鸟、粉红琵鹭、金刚鹦鹉群聚在瀑布前，没有围栏阻隔；自由飞翔的鸟群是拍生态大片的绝佳题材（据 BringYou 攻略）。", sampleIndex:99, sampleCaption:"火烈鸟群聚瀑布前，金刚鹦鹉在空中飞翔" }
   ],
   "鱼尾狮公园": [
     { name:"鱼尾狮与金沙同框", where:"站在鱼尾狮公园的观景平台上，面向高 8.8 米、重 70 吨的鱼尾狮，把鱼尾狮和隔湾相望的滨海湾金沙收进同一个画面。", how:"鱼尾狮面向东部滨海湾，上午脸部受光好；用超广角横拍，两边都收得下（据滨海湾金沙官网指南）。", sampleIndex:2, sampleCaption:"鱼尾狮喷水，隔湾同框滨海湾金沙" },
@@ -35,7 +35,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "ArtScience Museum": [
     { name:"莲花馆外观", where:"在博物馆外的莲花池一带，面向这朵“莲花”，退到能把它和池水一起收进来的距离。", how:"博物馆外观像一朵盛开的巨大莲花，莲花池围绕着它；必拍莲花造型外观，可以同时拍下池水和博物馆的特殊造型，很多人喜欢在这里拍照（据 Follow Us To Travel 攻略）。", sampleIndex:0, sampleCaption:"仰拍莲花造型的博物馆外观" },
-    { name:"馆内 teamLab“未来世界”", where:"馆内的 teamLab“未来世界”常设展区（需另购票，可现场或线上买）。", how:"“水晶宇宙”（Crystal Universe）是全馆最多人拍照打卡的装置，光条闪烁变色，拍剪影效果最好。展览内可以拍照，但禁用闪光灯，也不能带自拍棒和脚架入场（据 Follow Us To Travel 攻略）。", sampleIndex:5, sampleCaption:"teamLab 未来世界展区内的数字花卉投影与参观者" }
+    { name:"馆内 teamLab“未来世界”", where:"馆内的 teamLab“未来世界”常设展区（需另购票，可现场或线上买）。", how:"“水晶宇宙”（Crystal Universe）是全馆最多人拍照打卡的装置，光条闪烁变色，拍剪影效果最好。展览内可以拍照，但禁用闪光灯，也不能带自拍棒和脚架入场（据 Follow Us To Travel 攻略）。", sampleIndex:99, sampleCaption:"teamLab 未来世界展区内的数字花卉投影与参观者" }
   ],
   "牛车水": [
     { name:"宝塔街一带市集街景", where:"逛宝塔街、史密斯街、丁加奴街一带的露天市集街道，面向店铺、摊位和店屋拍。", how:"几百个摊位卖丝绸长袍、招财猫等货品，还有街头美食车（点心、脆皮烤鸭）；市集每日约 09:30–20:00 营业，黄昏后街灯亮起更热闹（据 Go Guides 攻略）。", sampleIndex:0, sampleCaption:"店屋立面、街边摊位与灯笼" },
@@ -49,7 +49,7 @@ export const spots: Record<string, Array<{name:string;where:string;how:string;sa
   ],
   "Kampong Glam": [
     { name:"苏丹回教堂金色穹顶", where:"站在苏丹回教堂（Sultan Mosque）前的布索拉步行街（Bussorah Street）一带，面向清真寺的金色洋葱圆顶。", how:"金色洋葱圆顶是甘榜格南天际线的标志，圆顶上嵌有玻璃瓶底装饰。站在布索拉步行街上取景，可把街道与圆顶一起收进画面（据 Klook 攻略）。", sampleIndex:0, sampleCaption:"布索拉步行街尽头，苏丹回教堂金色穹顶" },
-    { name:"哈芝巷壁画", where:"钻进哈芝巷（Haji Lane），站在巷子中段，面向两边店屋外墙上的大幅壁画与街头涂鸦。", how:"哈芝巷墙面布满生动的街头艺术和涂鸦，是甘榜格南最出片的街拍背景；巷子本身也是精品店和咖啡馆聚集的时髦街区，适合边逛边拍（据 Klook 攻略）。", sampleIndex:5, sampleCaption:"哈芝巷 26 号外墙上的巨幅人物壁画" }
+    { name:"哈芝巷壁画", where:"钻进哈芝巷（Haji Lane），站在巷子中段，面向两边店屋外墙上的大幅壁画与街头涂鸦。", how:"哈芝巷墙面布满生动的街头艺术和涂鸦，是甘榜格南最出片的街拍背景；巷子本身也是精品店和咖啡馆聚集的时髦街区，适合边逛边拍（据 Klook 攻略）。", sampleIndex:99, sampleCaption:"哈芝巷 26 号外墙上的巨幅人物壁画" }
   ],
   "乌节路": [
     { name:"Orchard Gateway 纯白天桥", where:"乌节路上连接 Somerset 与 Orchard Gateway 的过街人行天桥，走到桥上。", how:"纯白柱体配两侧整面玻璃窗：白天日系小清新，夜晚灯光倒影如科幻片场景；傍晚夕阳直穿玻璃时最出片，是拍人像的好地方（据新加坡省钱皇后情报局）。" },

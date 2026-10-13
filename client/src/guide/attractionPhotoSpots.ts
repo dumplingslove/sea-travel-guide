@@ -14,7 +14,9 @@ export interface PhotoSpot{
   where:string;
   /** 拍摄建议：最佳时间、手机技巧、构图 */
   how:string;
-  /** 样片下标：getPlaceGallery('景点',{city,name}) 数组下标；只有视角对得上的才填 */
+  /** 样片下标：getPlaceGallery('景点',{city,name}) 数组下标；只有视角对得上的才填。
+   * 暂无样片必须显式填 99（越界占位），不许用刚好越界的 5/6/7 当占位——图库追加照片后
+   * 这类下标会撞上别人的图（2026-10-02 占位索引复活事故）；2026-10-13 已把全部越界占位统一改为 99。 */
   sampleIndex?:number;
   /** 样片说明 */
   sampleCaption?:string;
