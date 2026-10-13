@@ -686,6 +686,6 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 /* 2026-10-13 用户：行程里的城市/航班与顶部地图联动——可点元素给指针与悬停反馈 */
 [data-cityfocus]{cursor:pointer}
 [data-cityfocus]:hover{color:var(--teal)}
-.cp-city[data-cityfocus]:hover b,.trip-seg-title[data-cityfocus]:hover,.trip-split-lines [data-cityfocus]:hover{text-decoration:underline}
+.cp-city[data-cityfocus]:hover b,.trip-seg[data-cityfocus]:hover .trip-seg-title,.trip-split-lines [data-cityfocus]:hover{text-decoration:underline}
 .cp-leg[data-legfocus]{cursor:pointer}
 .cp-leg[data-legfocus]:hover{background:#dff0ea}

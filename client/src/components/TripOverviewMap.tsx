@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useDetailReturn, saveDetailReturn } from "@/components/DetailReturn";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { CITY_COORDS } from "@/data/cityCoords";
+import { CITY_COORDS, CITY_ID_BY_ZH } from "@/data/cityCoords";
+
+/** 城市 id → 中文名（兜底弹框/未入行程城市用） */
+const ID_TO_ZH: Record<string, string> = Object.fromEntries(
+  Object.entries(CITY_ID_BY_ZH).map(([zh, id]) => [id, zh]),
+);
 import { airportForCity } from "@/data/airportCoords";
 import { LL, addAmapTiles } from "@/lib/amap";
 import cities from "@/data/cities.json";
@@ -99,25 +104,50 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
 
   const focusCity = (cityId: string, openPopup: boolean) => {
     const map = mapRef.current;
-    const mk = cityMarkersRef.current.get(cityId);
-    if (!map || !mk) return;
+    if (!map) return;
     clearHighlight();
-    const ll = mk.getLatLng();
+    const mk = cityMarkersRef.current.get(cityId);
+    if (mk) {
+      const ll = mk.getLatLng();
+      if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
+      else map.flyTo(ll, 11, { duration: 0.8 });
+      if (openPopup) mk.openPopup();
+      return;
+    }
+    /* 兜底（2026-10-13 用户要求覆盖所有城市）：该城不在已保存行程里、地图上还没有标记时，
+       直接按坐标飞过去并弹名字——保证任何已知城市点了一定有反应，不再静默无响应。 */
+    const c = CITY_COORDS[cityId];
+    if (!c) return;
+    const ll = LL(c[0], c[1]);
     if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
     else map.flyTo(ll, 11, { duration: 0.8 });
-    if (openPopup) mk.openPopup();
+    if (openPopup) {
+      L.popup({ offset: [0, -4] })
+        .setLatLng(ll)
+        .setContent(
+          `<div style="font-family:inherit"><div style="font-weight:800;font-size:14px;color:#134e4a">${ID_TO_ZH[cityId] || cityId}</div><div style="font-size:12px;color:#4b5563;margin-top:2px">（还没排进已保存的行程天数）</div></div>`,
+        )
+        .openOn(map);
+    }
   };
 
   /* 聚焦一段航线（2026-10-13 用户：航班要显示两个城市信息以及连线）：
      红粗线高亮这段连线，视野框住两城，并在连线中点弹一个同时写明两城天数/日期的信息框。 */
   const focusLeg = (fromId: string, toId: string) => {
     const map = mapRef.current;
-    const a = cityMarkersRef.current.get(fromId);
-    const b = cityMarkersRef.current.get(toId);
-    if (!map || !a || !b) return;
+    if (!map) return;
+    /* 两端坐标：优先用行程标记；标记不存在（如西雅图不在住宿站点里、新选城市还没存进行程）
+       就按城市坐标兜底——任何一段航班点了一定画得出连线（2026-10-13 用户要求覆盖所有）。 */
+    const coordOf = (id: string): L.LatLng | null => {
+      const mk = cityMarkersRef.current.get(id);
+      if (mk) return mk.getLatLng();
+      const c = CITY_COORDS[id];
+      return c ? LL(c[0], c[1]) : null;
+    };
+    const la = coordOf(fromId);
+    const lb = coordOf(toId);
+    if (!la || !lb) return;
     clearHighlight();
-    const la = a.getLatLng();
-    const lb = b.getLatLng();
     highlightRef.current = L.polyline([la, lb], {
       color: "#dc2626",
       weight: 6,
@@ -126,19 +156,22 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
     map.flyToBounds(L.latLngBounds([la, lb]).pad(0.3), { duration: 0.8 });
     const sa = stopsRef.current.find((s) => s.id === fromId);
     const sb = stopsRef.current.find((s) => s.id === toId);
-    if (sa && sb) {
-      const mid = L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2);
-      L.popup({ offset: [0, -4] })
-        .setLatLng(mid)
-        .setContent(
-          `<div style="min-width:180px;font-family:inherit">
-            <div style="font-weight:800;font-size:13px;color:#134e4a">✈️ ${sa.zh} → ${sb.zh}</div>
-            <div style="font-size:12px;color:#374151;margin-top:4px"><b>${sa.zh}</b>：Day ${sa.days[0]}–${sa.days[1]} · ${sa.dates}</div>
-            <div style="font-size:12px;color:#374151;margin-top:2px"><b>${sb.zh}</b>：Day ${sb.days[0]}–${sb.days[1]} · ${sb.dates}</div>
-          </div>`,
-        )
-        .openOn(map);
-    }
+    const nameOf = (id: string, s?: TripStop) => s?.zh || ID_TO_ZH[id] || id;
+    const infoLine = (id: string, s?: TripStop) =>
+      s
+        ? `<div style="font-size:12px;color:#374151;margin-top:4px"><b>${s.zh}</b>：Day ${s.days[0]}–${s.days[1]} · ${s.dates}</div>`
+        : `<div style="font-size:12px;color:#374151;margin-top:4px"><b>${nameOf(id)}</b></div>`;
+    const mid = L.latLng((la.lat + lb.lat) / 2, (la.lng + lb.lng) / 2);
+    L.popup({ offset: [0, -4] })
+      .setLatLng(mid)
+      .setContent(
+        `<div style="min-width:180px;font-family:inherit">
+          <div style="font-weight:800;font-size:13px;color:#134e4a">✈️ ${nameOf(fromId, sa)} → ${nameOf(toId, sb)}</div>
+          ${infoLine(fromId, sa)}
+          ${infoLine(toId, sb)}
+        </div>`,
+      )
+      .openOn(map);
   };
 
   /* 外部聚焦事件：planner-logic.ts 里点城市/航班时 dispatch */
@@ -364,8 +397,20 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
             ▴ 收起
           </button>
           <p className="text-xs text-gray-500 px-4 py-2 border-t border-gray-100">
-            {totalDays}天路线总览 · {mapStops.map((s) => s.zh).join(" → ")} ·
-            点城市标记看天数，点连线看两城信息；行程里的城市名和航班也能点，地图会跟着动
+            {totalDays}天路线总览 ·{" "}
+            {mapStops.map((s, i) => (
+              <span key={`${s.id}-${i}`}>
+                {i > 0 && " → "}
+                <button
+                  type="button"
+                  onClick={() => focusCity(s.id, true)}
+                  className="font-semibold text-teal-800 underline decoration-dotted underline-offset-2"
+                >
+                  {s.zh}
+                </button>
+              </span>
+            ))}{" "}
+            · 点城市标记看天数，点连线看两城信息；行程里的城市名和航班也能点，地图会跟着动
           </p>
         </>
       )}

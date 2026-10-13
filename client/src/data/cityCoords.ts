@@ -12,6 +12,7 @@ export const CITY_COORDS: Record<string, [number, number]> = {
   seoul: [37.5667, 126.9783],
   beijing: [39.9042, 116.4074],
   xian: [34.3416, 108.9398],
+  seattle: [47.4502, -122.3088],
 };
 
 /** 中文城市名 → 城市 id（与 itinerary.json / cities.json 一致） */
@@ -27,4 +28,5 @@ export const CITY_ID_BY_ZH: Record<string, string> = {
   "首尔": "seoul",
   "北京": "beijing",
   "西安": "xian",
+  "西雅图": "seattle",
 };

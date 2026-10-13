@@ -622,7 +622,7 @@ function cityNeed(city: string): {hotel:boolean;restaurant:boolean}{
   };
 }
 /* 夫妻东南亚段城市顺序统一用 wz.order（向导里可调）；最后一段飞西安的航班跟着末城动态变 */
-const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY", "首尔":"ICN" };
+const CITY_AIRPORT: Record<string,string> = { "普吉":"HKT", "清迈":"CNX", "曼谷":"BKK", "槟城":"PEN", "吉隆坡":"KUL", "胡志明市":"SGN", "富国岛":"PQC", "新加坡":"SIN", "北京":"PEK", "西安":"XIY", "首尔":"ICN", "西雅图":"SEA" };
 /* 机场代码 → 中文城市（地图联动用：航班卡按代码反查两端城市） */
 const CODE_TO_ZH: Record<string,string> = Object.fromEntries(Object.entries(CITY_AIRPORT).map(([zh,code])=>[code,zh]));
 function coupleLastCity(){ const a=wz.order.filter(c=>wz.cities.includes(c)); return a[a.length-1] || "曼谷"; }
@@ -957,12 +957,13 @@ function renderTrip(){
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
     const needs=needChipsForSeg(s.id);
-    /* 地图联动：单城市段的标题可点 → 顶部地图聚焦该城（分开行动段在下面两条路线行里分别点） */
+    /* 地图联动：单城市段整张卡可点 → 顶部地图聚焦该城（卡内的按钮/步进器由委托守卫排除，不误触）；
+       分开行动段在下面两条路线行里分别点北京/西安 */
     const segFocus: Record<string,string> = { beijing1:"北京", singapore:"新加坡", seoul:"首尔" };
-    const focusAttr=segFocus[s.id]?` data-cityfocus="${segFocus[s.id]}" title="在地图上看${segFocus[s.id]}" role="button" tabindex="0"`:"";
-    return `<div class="card trip-seg">
+    const focusAttr=segFocus[s.id]?` data-cityfocus="${segFocus[s.id]}" title="点卡片在地图上看${segFocus[s.id]}"`:"";
+    return `<div class="card trip-seg"${focusAttr}>
       <div class="trip-seg-head">
-        <div class="trip-seg-title"${focusAttr}>${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
+        <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
@@ -1597,6 +1598,10 @@ function toggleOrdDay(d: string){
   const detail = el("ordDayDetail");
   if(ordExpandedDay === d){ ordExpandedDay = null; detail.innerHTML = ""; return; }
   ordExpandedDay = d;
+  /* 地图联动：检查确认里点某一天 → 顶部地图聚焦那天当晚住的城市 */
+  const sleepCity = state.schedule[d]?.city;
+  const sleepId = sleepCity ? CITY_ID_BY_ZH[sleepCity] : undefined;
+  if(sleepId) window.dispatchEvent(new CustomEvent("planner:focus-city", { detail: { cityId: sleepId } }));
   const rows = wzRanges(), ranges = tripRanges();
   let city = "", segLabel = "";
   for(const s of TRIP_SEGS){
@@ -1862,6 +1867,8 @@ let alive=true;
      用影子根事件委托只注册一次，重渲染不丢绑定；TripOverviewMap 监听 planner:focus-city / planner:focus-leg。 */
   const onMapLinkClick = (e: Event) => {
     const t = e.target as HTMLElement;
+    /* 守卫：点在按钮/链接/输入控件上时不触发地图聚焦（调天数、开关需求、展开详情等操作不被地图抢戏） */
+    if (t.closest?.("a,button,input,select,textarea")) return;
     const legEl = t.closest?.("[data-legfocus]") as HTMLElement | null;
     if (legEl) {
       const [f, to] = (legEl.dataset.legfocus || "").split("|");
