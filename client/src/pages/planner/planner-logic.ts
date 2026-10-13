@@ -787,8 +787,10 @@ for(const [code, seg] of Object.entries(flightDbJson.segments)){
 }
 }
 rebuildTripFlights();
-/* 航班库从 DB 数据集到达后重建（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db） */
-onDataset('flight_db', rebuildTripFlights);
+/* 航班库从 DB 数据集到达后重建并重渲染（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db）。
+   2026-10-13 修复：此前只重建数据不重渲染——行程安排页首屏在数据到达前已渲染成「⏳ 航班待查询」，
+   之后一直不刷新；检查确认页签是点击时才渲染所以显示真实班次，两处自相矛盾。数据集到达后必须 wzRender。 */
+onDataset('flight_db', () => { rebuildTripFlights(); wzRender(); });
 /* 段间转场航班：在 after 段之后、before 段之前插入一行；legs 的 key = "<航段代码>|<转场日期ISO>"（例 "PEK-SIN|2026-12-12"） */
 interface TripTransition { after: string; before: string; title: string; legs: { code: string; label: string }[]; note?: string; noFlight?: boolean; noModeChoice?: boolean }
 const TRIP_TRANSITIONS: TripTransition[] = [
