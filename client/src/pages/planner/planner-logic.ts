@@ -1571,7 +1571,7 @@ function ordReturnSummary(): string {
   const seaCard = tripFlightCard(`ICN-SEA|${seaFlyDate}`, `首尔 → 西雅图（2大1小）`);
   return `<div class="card" style="margin:16px 0">
     <div class="trip-seg-head"><div class="trip-seg-title">✈️ 回程：高铁汇合 → 一起飞首尔 → 西雅图</div>
-    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆+娃西安）；${dateLabel(sp.to)} 你坐高铁 北京→西安汇合，${dateLabel(flyDate)} 全家一起飞首尔；首尔停留 2 天（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
+    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆+娃西安）；${dateLabel(sp.to)} 你坐高铁 北京→西安汇合，${dateLabel(flyDate)} 全家一起飞首尔；首尔住 2 晚（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
     <div style="margin:8px 0"><b>北京 → 西安</b> · 📅 ${dateLabel(sp.to)} · 🚄 高铁 · 你一人（去跟老婆孩子汇合，帮着拿行李）</div>
     <div style="margin:8px 0"><b>西安 → 首尔</b> · 📅 ${dateLabel(flyDate)} 起飞 · 全家（2大1小）
       <div class="trip-flightinfo" style="margin-top:6px">${xaCard}</div></div>
