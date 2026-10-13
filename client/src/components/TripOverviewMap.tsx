@@ -248,10 +248,18 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           offset: [0, -18],
           className: "sea-zoom-label",
         })
-        // 2026-10-04 用户：地图联动——点标记平移到该城市并缩放到合理大小（城市级 11）
-        .on("click", () => focusCity(s.id, true))
+        // 点标记本身：平移到这个标记并弹它自己的天数（同城出现两次时不串到另一段）
+        .on("click", () => {
+          clearHighlight();
+          const ll = mk.getLatLng();
+          if (map.getZoom() >= 11) map.panTo(ll, { animate: true, duration: 0.8 });
+          else map.flyTo(ll, 11, { duration: 0.8 });
+          mk.openPopup();
+        })
         .addTo(map);
-      cityMarkersRef.current.set(s.id, mk);
+      /* 外部聚焦（点行程里的城市名/卡片）按城市 id 找标记：同城多次出现时取第一段
+         （如北京先落 11-28 第一段；实测旧逻辑被后一段覆盖，点第一张北京卡弹的却是第二段天数） */
+      if (!cityMarkersRef.current.has(s.id)) cityMarkersRef.current.set(s.id, mk);
     });
 
     const bounds = L.latLngBounds(latlngs).pad(0.18);
