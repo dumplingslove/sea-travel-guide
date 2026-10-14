@@ -137,7 +137,7 @@ function FavoriteActionList({
   stays,
   mapStickyTop,
 }: {
-  onAddFavorite: (name: string, city: string, bkind: BookingKind) => void;
+  onAddFavorite: (name: string, city: string, bkind: BookingKind, dates?: { date?: string; dateEnd?: string }) => void;
   stays: HotelStay[];
   /** 地图置顶偏移（菜单体系之下）：站点顶栏 + 预订页吸顶菜单总高 */
   mapStickyTop?: number;
@@ -613,7 +613,15 @@ function FavoriteActionList({
                                 <button
                                   onClick={() => {
                                     setMenuId(null);
-                                    onAddFavorite(f.row.title, itemCity(f), bkindFor(f.type));
+                                    /* 预填日期与卡片/详情同口径：酒店=入住→退房整段、餐厅/景点=到城首日单日、
+                                       航班=航班日期（itemTimelineDate 已按此口径算好，酒店另取 stay 的退房日） */
+                                    const bk = bkindFor(f.type);
+                                    const st = bk === "hotel" ? stayOf(itemCity(f)) : undefined;
+                                    const d0 = itemTimelineDate(f);
+                                    onAddFavorite(f.row.title, itemCity(f), bk, {
+                                      ...(d0 ? { date: d0 } : {}),
+                                      ...(st ? { dateEnd: st.checkOut } : {}),
+                                    });
                                   }}
                                   className="w-full text-left px-3 py-2 text-xs font-medium text-teal-700 hover:bg-teal-50"
                                 >
@@ -1682,9 +1690,15 @@ function BookingsInner() {
     setPreset({ bkind, name: "" });
     setDialogOpen(true);
   };
-  /** 收藏 → 预订：把收藏的酒店/餐厅直接带入预订弹窗 */
-  const addFavoriteToBooking = (name: string, city: string, bkind: BookingKind) => {
-    setPreset({ bkind, name, city });
+  /** 收藏 → 预订：把收藏的酒店/餐厅直接带入预订弹窗，并按与卡片/详情、清单预填相同的
+   *  日期口径预填（酒店入住→退房，餐厅/景点/交通单日）；dateEnd 仅酒店透传，
+   *  与 presetFromChecklist / formatBookingBody 的类型契约一致，防非酒店误带区间 */
+  const addFavoriteToBooking = (name: string, city: string, bkind: BookingKind, dates?: { date?: string; dateEnd?: string }) => {
+    setPreset({
+      bkind, name, city,
+      ...(dates?.date ? { date: dates.date } : {}),
+      ...(bkind === "hotel" && dates?.dateEnd ? { dateEnd: dates.dateEnd } : {}),
+    });
     setDialogOpen(true);
   };
   /** 清单项 → 已加入的记录：先按 sourceId（改名后依然对得上），再按名称回退 */
