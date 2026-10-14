@@ -5,7 +5,7 @@
 import { useMemo, useState } from "react";
 import { hotels, restaurants } from "@/guide/data";
 import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
-import { usePlanScope } from "@/guide/GuideApp";
+import { usePlanScope, useFullTripSegments } from "@/guide/GuideApp";
 import {
   getRestaurantBookingPolicy,
   bookingPolicyBadge,
@@ -297,19 +297,34 @@ export default function BookingTimeline({
     days: s.days,
   }));
   const firstStart = segs[0]?.start ?? FALLBACK_STAYS[0]!.checkIn;
+  /* 航班日期须走完整大行程链（2026-10-14 site-improve，与 GuideApp 航班页 /
+   * FavoriteActionList 同口径）：schedule 段表没有分开行动的西安/北京段，
+   * 曼谷→西安、曼谷→北京用 segs 算 flightDateFromPlan 恒返回 null、只能停在
+   * 静态日期上（行程改了不跟随）；day 重算的锚点也要用完整链首日（北京段首日，
+   * 与 FLIGHT_LEGS 静态 day 的 D1 口径一致），用 schedule 首日（新加坡）会差 8 天。
+   * 酒店住宿段仍用 segs：城市范围口径不变（北京/西安住家里不进酒店组）。 */
+  const fullSegments = useFullTripSegments();
+  const flightSegs: PlanSegment[] = fullSegments.map((s) => ({
+    city: s.city,
+    start: s.start,
+    end: s.end,
+    days: s.days,
+    segId: s.segId,
+  }));
+  const tripFirstStart = flightSegs[0]?.start ?? firstStart;
   const legs: FlightLegInfo[] = useMemo(
     () =>
       FLIGHT_LEGS.map((f) => {
-        if (!f.stale && segs.length > 0) {
-          const planDate = flightDateFromPlan(f.route, segs);
+        if (!f.stale && flightSegs.length > 0) {
+          const planDate = flightDateFromPlan(f.route, flightSegs);
           if (planDate && planDate !== f.date) {
             // 深拷贝一条再按正确日期重查库，不污染静态 FLIGHT_LEGS
             const leg: FlightLegInfo = JSON.parse(JSON.stringify(f));
             refreshLegFromDb(leg, planDate);
-            if (firstStart) {
+            if (tripFirstStart) {
               const d =
                 Math.round(
-                  (new Date(leg.date).getTime() - new Date(firstStart).getTime()) / 86400000,
+                  (new Date(leg.date).getTime() - new Date(tripFirstStart).getTime()) / 86400000,
                 ) + 1;
               if (d >= 1) leg.day = d;
             }
@@ -319,7 +334,7 @@ export default function BookingTimeline({
         return f;
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [segments],
+    [segments, fullSegments],
   );
   const stays: HotelStay[] = useMemo(
     () => (segs.length > 0 ? hotelStaysFromPlan(segs) : FALLBACK_STAYS),

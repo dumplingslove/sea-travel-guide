@@ -116,9 +116,14 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
     // 退房=下一段第一天（即转场航班日，当天退房当天飞）；最后一段退房=段末日。
     // 2026-10-13 修：分开行动段是平行段（西安/北京同起同止），退房要取后面第一个
     // 真正更晚开始的段（首尔），否则平行段会算出 0 晚。
+    // 2026-10-14 修（与 hotelStayFromPlan 单城版同口径）：调用方只给 schedule 段表时，
+    // 曼谷段与首尔段之间隔着不在 schedule 里的分开行动 10 天，直接取下一段首日会把
+    // 曼谷退房算成 12-30（11 晚）；下一段首日晚于本段末日次日（段间有空档）时，
+    // 退房 = 本段末日次日（离开本城的转场日）。完整链调用方下一段首日即末日次日，不受影响。
     const checkIn = seg.start;
     const next = segments.slice(idx + 1).find((s) => s.start > seg.start);
-    const checkOut = next ? next.start : seg.end;
+    const dayAfterEnd = new Date(new Date(seg.end).getTime() + 86400000).toISOString().slice(0, 10);
+    const checkOut = next ? (next.start > dayAfterEnd ? dayAfterEnd : next.start) : seg.end;
     return {
       city: seg.city,
       checkIn,
