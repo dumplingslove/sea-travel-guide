@@ -681,6 +681,7 @@ export default function BookingTimeline({
                     const act = actionFor(
                       mk(`tl-hotel-pick-${s.city}-${h.name}`, "hotel", h.name, s.city, {
                         date: s.checkIn,
+                        dateEnd: s.checkOut,
                         note: `${checkInLabel}入住 ${s.nights}晚${
                           (() => { const r = liveDisplayRate(p); return r ? ` · $${r.perNightUSD}/晚${p && !p.base ? "（套房）" : ""}` : ""; })()
                         }`,
@@ -750,6 +751,7 @@ export default function BookingTimeline({
               {...actionFor(
                 mk(`tl-hotel-${s.city}`, "hotel", `${s.city}酒店（待选定）`, s.city, {
                   date: s.checkIn,
+                  dateEnd: s.checkOut,
                   note: `${s.nights}晚 · ${cands.length}家候选`,
                 }),
               )}

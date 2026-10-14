@@ -139,12 +139,17 @@ export interface ChecklistItem {
 }
 
 export function presetFromChecklist(item: ChecklistItem): BookingPreset {
+  // dateEnd 是退房日、仅酒店有此字段（见 BookingData 注释）：与 formatBookingBody
+  // 同契约，非酒店一律不带——2026-10-14 预填审计：清单条目此前全不传 dateEnd，
+  // 酒店条目因此只有入住日、退房要手填；现酒店条目已传 checkOut，这里按类型把关，
+  // 防止将来某个非酒店条目误带 dateEnd 又重演「用餐日显示成日期区间」。
+  const dateEnd = item.bkind === "hotel" ? item.dateEnd : undefined;
   const data: BookingData = {
     bkind: item.bkind,
     city: item.city,
     sourceId: item.id,
     date: item.date,
-    dateEnd: item.dateEnd,
+    dateEnd,
     time: item.time,
     timeEnd: item.timeEnd,
     guests: item.guests,
@@ -156,7 +161,7 @@ export function presetFromChecklist(item: ChecklistItem): BookingPreset {
     name: item.name,
     city: item.city,
     date: item.date,
-    dateEnd: item.dateEnd,
+    dateEnd,
     day: item.day ?? null,
     data,
   };
