@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { CITY_COORDS } from "@/data/cityCoords";
+import { CITY_ID_BY_ZH } from "@/data/cityCoords";
 import { airportForCity } from "@/data/airportCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord } from "@/data/stopCoords";
@@ -112,18 +112,11 @@ export default function ActionMapView({
       if (!byCity.has(f.city)) byCity.set(f.city, []);
       byCity.get(f.city)!.push({ name: f.name, type: f.type });
     }
-    /* 城市中文名 -> cityId 映射 */
-    const cityIdOf = (zh: string): string | null => {
-      for (const [id, c] of Object.entries(CITY_COORDS)) {
-        if ((c as unknown as { zh?: string }).zh === zh) return id;
-      }
-      /* 兜底：常见映射 */
-      const m: Record<string, string> = {
-        "新加坡": "singapore", "曼谷": "bangkok", "清迈": "chiangmai",
-        "普吉": "phuket", "首尔": "seoul", "北京": "beijing", "西安": "xian",
-      };
-      return m[zh] ?? null;
-    };
+    /* 城市中文名 -> cityId 映射（2026-10-14 修复：旧实现遍历 CITY_COORDS 读 .zh，
+       但其值是 [lat,lng] 元组、.zh 恒为 undefined，第一段恒不命中；手写兜底表又缺
+       槟城/吉隆坡/胡志明市/富国岛——这四城的收藏整组被跳过、静默缺钉。改用
+       cityCoords.ts 全站共用的 CITY_ID_BY_ZH，12 城全覆盖） */
+    const cityIdOf = (zh: string): string | null => CITY_ID_BY_ZH[zh] ?? null;
 
     for (const [cityZh, list] of byCity) {
       const cityId = cityIdOf(cityZh);
