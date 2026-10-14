@@ -81,8 +81,12 @@ export function parseBookingBody(body: string): BookingData {
 }
 
 export function formatBookingBody(d: BookingData): string {
+  // dateEnd 是退房日、仅酒店有此字段（见 BookingData 注释）：非酒店一律不落盘。
+  // 2026-10-14：详情页预订曾把整段住宿区间（入住→退房）塞进餐厅/景点预设，
+  // 弹窗不渲染退房字段却照样存下，列表摘要因此把用餐/参观日显示成日期区间。
   const clean: BookingData = { bkind: d.bkind };
   (["city", "sourceId", "date", "dateEnd", "time", "timeEnd", "guests", "extra", "code", "note"] as const).forEach((k) => {
+    if (k === "dateEnd" && d.bkind !== "hotel") return;
     const v = d[k]?.trim();
     if (v) clean[k] = v;
   });
