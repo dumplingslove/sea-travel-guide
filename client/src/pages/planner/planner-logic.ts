@@ -599,7 +599,7 @@ function updateAll(){renderCalendar();renderTrip();cachePlannerLocal()}
 /* ================= 🗺️ 大行程总览（11/28 去程＋中间各段；回程城市三选一待定） ================= */
 interface TripSegDef { id: string; label: string; sub: string; mode: string; note: string; cta?: boolean }
 const TRIP_ANCHOR = "2026-11-29";   /* 中间段起始日（11/28 为去程航班日） */
-const TRIP_MIDDLE_DAYS = 36;        /* 11/29–1/3（2026-09-29 用户：回程加首尔停留2天） */
+const TRIP_MIDDLE_DAYS = 34;        /* 11/29–1/1 共 34 天（2026-10-13 订正：旧值 36 是 9-29 旧行程回程 1/3 的残留，与现行 1/1 回程对不上，页面曾误报「还差 2 天」） */
 const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
@@ -610,7 +610,7 @@ const TRIP_SEGS: TripSegDef[] = [
   /* 回程（2026-10-13 用户改，取代 10-02 的分两路飞首尔）：你先坐高铁 北京→西安汇合，全家再一起西安→首尔；首尔住 2 晚后三人一起飞西雅图 */
   { id:"seoul", label:"首尔", sub:"西安→首尔 · 住2晚", mode:"🏠 家庭", note:"12-30 全家从西安一起飞首尔，住 12-30、12-31 两晚；1-1 晚三人一起飞西雅图（AS120 已出票）" },
 ];
-let tripDays: Record<string, number> = { beijing1:7, singapore:5, couple:8, split:11, seoul:2 };
+let tripDays: Record<string, number> = { beijing1:8, singapore:5, couple:8, split:10, seoul:3 }; /* 缺省与云端现行规划一致（2026-10-13 对齐 schedule：北京 8 天 11/29–12/6、首尔 3 天 2 晚） */
 /* 每城预订需求开关（2026-10-13 用户）：在大行程每个城市上设置「要不要订酒店 / 要不要订餐厅」，
    直接影响预订页（关掉的城市不再出现待订信息、最终预定日历不再标未订酒店）。
    缺省：北京/西安住家里不订酒店，其余都要订；餐厅默认都要订。 */
@@ -1194,7 +1194,7 @@ function renderTrip(){
     <div class="trip-flightinfo">${tripFlightCard("SEA-PEK|2026-11-28","西雅图 → 北京")}</div>
     ${parts.join("\n    ")}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→高铁汇合后一起去首尔（2天）→西雅图）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→高铁汇合后一起去首尔（住2晚）→西雅图）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
