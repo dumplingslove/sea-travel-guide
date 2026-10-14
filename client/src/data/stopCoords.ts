@@ -363,6 +363,13 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "南山首尔塔夜景", time: "17:30", lat: 37.55127, lng: 126.9882805 },
   ],
   35: [
+    // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
+    // 云端天地图 findStopCoord 精确匹配永不命中（图钉静默缺失，2026-10-14 补）。
+    // 景福宫坐标与 StickyMapBar EXTRA 表同源（Nominatim 경복궁，2026-10-14 实查）；
+    // 土俗村与 placeCoords exact 条目逐字一致（Nominatim Tosokchon Samgyetang，
+    // Jahamun-ro 5-gil，restaurant 本体命中）。
+    { name: "景福宫", time: "09:30", lat: 37.579754, lng: 126.9766818 },
+    { name: "土俗村参鸡汤", time: "12:00", lat: 37.5776803, lng: 126.9715276 },
     { name: "星空图书馆", time: "10:00", lat: 37.5101676, lng: 127.0600884 },
     {
       // 时间线站点名是合并名「北村韩屋村 · 仁寺洞」（静态 Day22），findStopCoord
