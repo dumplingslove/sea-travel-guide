@@ -28,6 +28,13 @@ export interface PlanSegment { city: string; start: string; end: string; days: n
  * 目的城市在行程里只出现一次，按目的地匹配无歧义（原 ROUTE_DATE_MAP 不再需要）。
  */
 export function flightDateFromPlan(route: string, segments: PlanSegment[]): string | null {
+  if (route === "西雅图 → 北京") {
+    /* 跨太平洋去程段：起飞日（11-28）是北京段首日（抵达日 11-29）的前一天。
+     * 完整行程链里目的地「北京」第一段就是 beijing1，按目的地通用规则会误取
+     * 段首日、把起飞日推晚一天（2026-10-14 site-improve 实测复现）。返回 null
+     * 保留静态/时间线日期——本段日期已由 applyPlanTimeline 按 timeline.legs 定死。 */
+    return null;
+  }
   if (route === "新加坡 → 西安") {
     /* 岳父母带娃回西安：跟夫妻同一天离开新加坡 = 新加坡段结束的次日（即下一段的第一天） */
     const idx = segments.findIndex((s) => s.city === "新加坡");
@@ -123,7 +130,8 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
 
 /**
  * 完整大行程时间线（2026-10-03 用户：改了大行程后航班日期要跟着变）。
- * 输入：东南亚城市段（来自云端 schedule，已含新加坡+向导城市精确日期）、
+ * 输入：云端 schedule 城市段（新加坡+东南亚城市+首尔，16 天；首尔段在链里
+ * 位于分开行动之后，函数内先摘出再回插链尾，见函数内 2026-10-14 修注）、
  * 大行程各段天数（云端 plan.trip，原始保存值——调用方传的是未归一化的 trip）。
  * 输出：北京1 → 新加坡 → 东南亚城市 → 分开行动（西安‖北京，平行） → 首尔 全链条。
  * 链条逻辑：beijing1 紧贴新加坡之前；分开行动紧贴东南亚最后城市之后；
@@ -147,7 +155,16 @@ export function buildFullTripSegments(
     return dt.toISOString().slice(0, 10);
   };
   const sg = seaSegments.find((s) => s.city === "新加坡");
-  const lastSea = seaSegments[seaSegments.length - 1]!;
+  /* 2026-10-14 site-improve 修：云端 schedule（16 天）含首尔段（timeline 的
+   * singapore/couple/seoul 三段都在 schedule 里），首尔在行程链里位于分开行动
+   * 之后、不是东南亚段的末段。此前直接拿 seaSegments 末段当 lastSea，分开行动
+   * 被推到首尔段之后（2027-01-02 起、整链多出一段假首尔 01-12 起），连带
+   * 曼谷→西安/曼谷→北京的航班日期与 day 全错、曼谷住宿被算成 11 晚。
+   * 现先把首尔段摘出：东南亚链以最后一个非首尔段（曼谷）收尾，分开行动接其后，
+   * 首尔段以 schedule 原日期回插到链尾（无首尔段时才按 tripDays.seoul 合成）。 */
+  const seoulSeg = seaSegments.find((s) => s.city === "首尔");
+  const seaOnly = seaSegments.filter((s) => s.city !== "首尔");
+  const lastSea = seaOnly[seaOnly.length - 1] ?? seaSegments[seaSegments.length - 1]!;
   const out: PlanSegment[] = [];
 
   /* 北京1段：新加坡开始前一天结束 */
@@ -156,8 +173,8 @@ export function buildFullTripSegments(
     const start = addDays(end, -(tripDays.beijing1 - 1));
     out.push({ segId: "beijing1", city: "北京", start, end, days: tripDays.beijing1 });
   }
-  /* 新加坡 + 东南亚城市（带 segId） */
-  for (const s of seaSegments) {
+  /* 新加坡 + 东南亚城市（带 segId；首尔段已摘出、链尾回插） */
+  for (const s of seaOnly) {
     const segId = s.city === "新加坡" ? "singapore" : undefined;
     out.push(segId ? { ...s, segId } : s);
   }
@@ -174,12 +191,19 @@ export function buildFullTripSegments(
     const end = addDays(start, splitDays - 1);
     out.push({ segId: "split-xian", city: "西安", start, end, days: splitDays });
     out.push({ segId: "split-beijing", city: "北京", start, end, days: splitDays });
-    /* 首尔段：分开行动后一天开始（全家已在西安汇合、同日一起飞首尔） */
-    if (tripDays.seoul) {
+    /* 首尔段：分开行动后一天开始（全家已在西安汇合、同日一起飞首尔）。
+     * schedule 已含首尔段时用其原日期（与 timeline 逐日一致，12-30 起 3 天）；
+     * 只有旧规划 schedule 没有首尔段时，才按 tripDays.seoul 在分开行动后合成。 */
+    if (seoulSeg) {
+      out.push({ ...seoulSeg, segId: "seoul" });
+    } else if (tripDays.seoul) {
       const seStart = addDays(end, 1);
       const seEnd = addDays(seStart, tripDays.seoul - 1);
       out.push({ segId: "seoul", city: "首尔", start: seStart, end: seEnd, days: tripDays.seoul });
     }
+  } else if (seoulSeg) {
+    /* 无分开行动段时首尔段也不能丢（西安→首尔等转场日期靠它推导） */
+    out.push({ ...seoulSeg, segId: "seoul" });
   }
   return out;
 }
