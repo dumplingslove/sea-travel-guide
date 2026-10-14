@@ -1,5 +1,8 @@
 /** 8 城 + 首尔坐标（WGS84），行程详情小地图与顶级地图页共用同一套数据
- *  2026-09-29 新增 seoul：回程经首尔中转停留2天（2大1小），首尔市中心行政坐标 Nominatim 核验 */
+ *  2026-09-29 新增 seoul：回程经首尔中转停留2天（2大1小），首尔市中心行政坐标 Nominatim 核验
+ *  2026-10-14 订正 seattle：此前误填 SEA 机场坐标（与 airportCoords 的 SEA 条目逐字
+ *  相同，城市图钉落在 SeaTac 机场、市中心图钉与机场图钉完全重叠），改回西雅图
+ *  市中心坐标 47.6062,-122.3321（MapQuest 城市坐标）；机场坐标只留 airportCoords。 */
 export const CITY_COORDS: Record<string, [number, number]> = {
   bangkok: [13.7563, 100.5018],
   chiangmai: [18.7883, 98.9853],
@@ -12,7 +15,7 @@ export const CITY_COORDS: Record<string, [number, number]> = {
   seoul: [37.5667, 126.9783],
   beijing: [39.9042, 116.4074],
   xian: [34.3416, 108.9398],
-  seattle: [47.4502, -122.3088],
+  seattle: [47.6062, -122.3321],
 };
 
 /** 中文城市名 → 城市 id（与 itinerary.json / cities.json 一致） */
