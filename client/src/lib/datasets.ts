@@ -9,16 +9,34 @@ import { supabase } from "./supabase";
  * - flight_db：Google Flights 航班库（flight-db-gflights-fill 管线写入）
  * - hotel_live_prices：酒店实查价（hotel-price-watch 管线写入）
  * - restaurant_booking_status：餐厅订位政策/必去（availability-watch 管线写入）
- * 页面打开时 loadDatasets() 拉取一次并灌入各数据模块（模块通过 onDataset 注册回调）；
- * 数据到达后 version 自增，订阅组件重渲染，价格/政策随即从 DB 反映出来。
- * 拉取失败（离线/表不可达）时各模块保持空数据，界面显示"待查/无实时价"，不编造。
+ *
+ * 2026-10-13 晚重构（用户手机实测：航班卡长时间显示「⏳ 航班待查询」，但库里明明有数据）：
+ * 根因是旧实现把 3 个数据集塞进同一次请求、且失败后永不重试（started 闩锁），
+ * 手机上那一次请求慢/失败，整页就一直按「没数据」渲染，还把「加载中」误标成「还没查」。
+ * 现改为：
+ * 1. 每个数据集单独拉取、并行进行，flight_db 不被其他数据集拖住；
+ * 2. 失败自动重试（最多 3 次，退避），全部失败也不闩死，后续调用还能再拉；
+ * 3. localStorage 持久缓存：再次打开先用上次的数据立即渲染（过期数据也比空白强），
+ *    新数据到达后再刷新——首屏不再出现整页「待查询」窗口；
+ * 4. 每个数据集有明确状态（loading/ready/error），界面可以把「正在加载」
+ *    与「库里确实没查过」区分开，不许再混为一谈。
  */
 export type DatasetKey = "flight_db" | "hotel_live_prices" | "restaurant_booking_status";
+export type DatasetStatus = "idle" | "loading" | "ready" | "error";
+
+const KEYS: DatasetKey[] = ["flight_db", "hotel_live_prices", "restaurant_booking_status"];
+const LS_PREFIX = "sgds:v1:";
 
 const cache: Partial<Record<DatasetKey, unknown>> = {};
+const statuses: Record<DatasetKey, DatasetStatus> = {
+  flight_db: "idle",
+  hotel_live_prices: "idle",
+  restaurant_booking_status: "idle",
+};
 const appliers: Partial<Record<DatasetKey, ((data: unknown) => void)[]>> = {};
 let version = 0;
-let started = false;
+let hydrated = false;
+let inflight: Promise<void> | null = null;
 const listeners = new Set<() => void>();
 
 function emit(): void {
@@ -33,12 +51,57 @@ function subscribe(fn: () => void): () => void {
   };
 }
 
+/** 首次调用任何公开 API 时，先把 localStorage 里的上次数据灌进缓存（同步、立即渲染用）。 */
+function ensureHydrated(): void {
+  if (hydrated) return;
+  hydrated = true;
+  try {
+    for (const key of KEYS) {
+      const raw = window.localStorage.getItem(LS_PREFIX + key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw) as { data?: unknown };
+      if (parsed && parsed.data !== undefined) {
+        cache[key] = parsed.data;
+        statuses[key] = "ready";
+      }
+    }
+  } catch {
+    /* localStorage 不可用（隐私模式/配额）：忽略，照常走网络拉取 */
+  }
+}
+
+function persist(key: DatasetKey, data: unknown): void {
+  try {
+    window.localStorage.setItem(
+      LS_PREFIX + key,
+      JSON.stringify({ saved_at: new Date().toISOString(), data }),
+    );
+  } catch {
+    /* 配额满/不可用：不影响内存缓存与本次渲染 */
+  }
+}
+
+function applyData(key: DatasetKey, data: unknown): void {
+  cache[key] = data;
+  statuses[key] = "ready";
+  persist(key, data);
+  for (const apply of appliers[key] ?? []) {
+    try {
+      apply(data);
+    } catch {
+      /* 单个模块灌入失败不拖垮其他数据集 */
+    }
+  }
+  emit();
+}
+
 /** 数据模块在加载时注册：数据集到达（或已在缓存）时把数据灌进模块自己的存储。
  *  返回退订函数，组件卸载时必须调用，避免回调累积和旧闭包打已销毁的 DOM。
  *  缓存命中时的同步灌入套 try/catch：回调抛错不许穿透调用方的初始化
  *  （2026-10-13 白屏事故：规划页二次挂载时同步回调在状态就绪前触发重渲染，
  *   摸到未初始化变量抛错，整个应用白屏）。 */
 export function onDataset(key: DatasetKey, apply: (data: unknown) => void): () => void {
+  ensureHydrated();
   (appliers[key] ??= []).push(apply);
   if (cache[key] !== undefined) {
     try {
@@ -58,7 +121,14 @@ export function onDataset(key: DatasetKey, apply: (data: unknown) => void): () =
 
 /** 同步读取当前缓存（未加载完成时返回 undefined，调用方按无数据处理）。 */
 export function getDataset<T>(key: DatasetKey): T | undefined {
+  ensureHydrated();
   return cache[key] as T | undefined;
+}
+
+/** 数据集状态：界面据此区分「正在加载/加载失败」与「确实没有数据」。 */
+export function getDatasetStatus(key: DatasetKey): DatasetStatus {
+  ensureHydrated();
+  return statuses[key];
 }
 
 /** React 订阅：数据集到达后触发重渲染（在 App 根部调用一次即可带动全站）。 */
@@ -66,29 +136,52 @@ export function useDatasetsVersion(): number {
   return useSyncExternalStore(subscribe, () => version, () => version);
 }
 
-/** 拉取全部数据集（幂等，只真正执行一次）。 */
-export async function loadDatasets(): Promise<void> {
-  if (started) return;
-  started = true;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** 单个数据集的拉取：独立请求 + 最多 3 次重试（退避 0.8s / 2.5s）。 */
+async function fetchOne(key: DatasetKey): Promise<void> {
   if (!supabase) return;
-  try {
-    const { data, error } = await supabase.from("sea_guide_datasets").select("key,data");
-    if (error || !data) return;
-    for (const row of data as { key: string; data: unknown }[]) {
-      const key = row.key as DatasetKey;
-      if (key === "flight_db" || key === "hotel_live_prices" || key === "restaurant_booking_status") {
-        cache[key] = row.data;
-        for (const apply of appliers[key] ?? []) {
-          try {
-            apply(row.data);
-          } catch {
-            /* 单个模块灌入失败不拖垮其他数据集 */
-          }
-        }
+  if (cache[key] === undefined) statuses[key] = "loading";
+  let lastError: unknown = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      if (attempt > 0) await sleep(attempt === 1 ? 800 : 2500);
+      const { data, error } = await supabase
+        .from("sea_guide_datasets")
+        .select("data")
+        .eq("key", key)
+        .single();
+      if (error) throw error;
+      if (data && (data as { data?: unknown }).data !== undefined) {
+        applyData(key, (data as { data: unknown }).data);
+        return;
       }
+      throw new Error(`dataset ${key} empty`);
+    } catch (e) {
+      lastError = e;
     }
+  }
+  /* 三次都失败：有缓存就继续用缓存（状态保持 ready），没缓存才标 error；
+     不闩死——下一次 loadDatasets() 调用会重新拉。 */
+  if (cache[key] === undefined) {
+    statuses[key] = "error";
     emit();
-  } catch {
-    /* 数据集不可达：保持空数据，界面按无数据展示 */
+  }
+  console.warn(`[datasets] ${key} 拉取失败（已重试 3 次）`, lastError);
+}
+
+/** 拉取全部数据集（三个独立请求并行）。可重复调用：正在拉取时复用同一 Promise，
+ *  失败后再次调用会重试，不再像旧实现那样一次失败终身不拉。 */
+export async function loadDatasets(): Promise<void> {
+  ensureHydrated();
+  if (!supabase) return;
+  if (inflight) return inflight;
+  inflight = (async () => {
+    await Promise.all(KEYS.map((k) => fetchOne(k)));
+  })();
+  try {
+    await inflight;
+  } finally {
+    inflight = null;
   }
 }

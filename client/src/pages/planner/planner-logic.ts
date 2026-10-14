@@ -23,7 +23,7 @@ import plannerBody from "./planner-body.html?raw";
 import "../../planner-data/flight-matrix.js";
 /* 大行程转场航班库：Google Flights 实查（hidden_files/flight-db/december-2026.json
    的构建期同步副本，由 flight-db-gflights-fill 每轮填充后同步；只含直飞，价格为整单总价 USD） */
-import { getDataset, onDataset } from "../../lib/datasets";
+import { getDataset, getDatasetStatus, onDataset } from "../../lib/datasets";
 /* 2026-10-03 site-improve：已出票航班铁律——bookingTimeline.ts 的 ticketed 腿是单一事实源，
    planner 的 tripFlightCard 直连航班库原始数据（88a81b9 起 ICN-SEA 2027-01-01 已有泛搜索结果），
    此处先判 ticketed，命中则渲染出票信息卡、不再渲染"出票前重查"的泛搜索卡（用户：以实际出票为准，绝不覆盖）。 */
@@ -965,8 +965,14 @@ function tripFlightCard(key: string, label: string){
       `<div class="tfi-prices"><span class="tfi-price">${tk.carrier} <b>${tk.schedule}</b></span>${tk.priceBasis?`<span class="tfi-basis">（${tk.priceBasis}）</span>`:""}</div>
       <p class="tfi-note">${tk.note}</p>`);
   }
-  if(!d) return wrap("⏳ 航班待查询","pending","",
-    `<p class="tfi-note">Google Flights 库正在逐日填充，该日期还没查到，不能据此推断当天无直飞。</p>`);
+  if(!d){
+    /* 「没数据」分两种，文案不许混（2026-10-13 晚用户手机实测：库里明明有价却整页挂「待查询」）：
+       数据集还没加载完/加载失败 → 是加载问题，写「加载中」；数据集已就绪但该日期确实没查过 → 才是「待查询」。 */
+    if(getDatasetStatus("flight_db")!=="ready") return wrap("⏳ 航班数据加载中","pending","",
+      `<p class="tfi-note">正在从数据库加载航班数据，到了会自动刷新，不用重进页面——这不等于还没查到。</p>`);
+    return wrap("⏳ 航班待查询","pending","",
+      `<p class="tfi-note">航班库里还没有这个日期的实查数据，已列入自动缺口清单，定时任务会补查；不能据此推断当天无直飞。</p>`);
+  }
   /* 一次转机分区（有就显示） */
   const onestopHtml=(()=>{
     if(!d.onestopQueriedAt && !d.onestopResults) return "";
@@ -1314,7 +1320,7 @@ function cpLegSummary(fromCity: string, toCity: string, date: string): string {
   const fc=CITY_AIRPORT[fromCity], tc=CITY_AIRPORT[toCity];
   if(!fc||!tc) return "✈️ 转场";
   const d=TRIP_FLIGHTS[`${fc}-${tc}|${date}`];
-  if(!d) return "✈️ 待查询";
+  if(!d) return getDatasetStatus("flight_db")!=="ready" ? "✈️ 加载中" : "✈️ 待查询";
   if(!d.direct||d.eco==null) return "✈️ 暂无直飞";
   const cheap=(d.flights||[]).filter(f=>f.price!=null).sort((a,b)=>(a.price??0)-(b.price??0))[0];
   return `✈️ 直飞 $${d.eco} 起${cheap?` · ${esc(cheap.airline)} ${esc(cheap.flight)} ${esc(cheap.dep)}→${esc(cheap.arr)}`:""}`;
