@@ -171,6 +171,16 @@ function FavoriteActionList({
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
     [segments]
   );
+  /* 航班日期须走完整大行程链（2026-10-14 site-improve）：schedule 段表只有
+   * 新加坡/东南亚/首尔，没有分开行动的西安/北京段——曼谷→西安、曼谷→北京用
+   * segs 算 flightDateFromPlan 必然返回 null、只能靠收藏快照日期兜底，行程改了
+   * 也不跟随（与 GuideApp 航班页 useFullTripSegments 口径不一致）。分组与
+   * 餐厅/景点到城日仍用 segs（城市范围口径不变），航班日期三处统一走 flightSegs。 */
+  const fullSegments = useFullTripSegments();
+  const flightSegs: PlanSegment[] = useMemo(
+    () => fullSegments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days, segId: s.segId })),
+    [fullSegments]
+  );
   /* 2026-10-13 用户：价格追踪集中呈现 live 数据——餐厅/景点余位状态来自 sea_availability（每日实查），
      按 kind:name 一次全量拉取，收藏卡片同名命中才显示，没查到的不显示、不编造 */
   const [availMap, setAvailMap] = useState<Map<string, { status: string; checked_at: string }>>(new Map());
@@ -332,7 +342,7 @@ function FavoriteActionList({
   const itemTimelineDate = (f: (typeof favs)[number]): string => {
     if (f.type === "flight" && f.flight) {
       const route = f.flight.route || "";
-      const planDate = route ? flightDateFromPlan(route, segs) : null;
+      const planDate = route ? flightDateFromPlan(route, flightSegs) : null;
       return planDate || f.flight.date || "";
     }
     if (f.type === "hotel") {
@@ -536,7 +546,7 @@ function FavoriteActionList({
                         {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策 */}
                         <FavoritePriceLine
                           name={f.row.title} type={f.type} city={f.city}
-                          flight={f.flight} segs={segs}
+                          flight={f.flight} segs={flightSegs}
                         />
                         {/* 余位 live 状态（sea_availability 每日实查）：餐厅看订位空位、景点看门票余量 */}
                         {(() => {
@@ -655,7 +665,7 @@ function FavoriteActionList({
                               date={(() => {
                                 const route = f.flight!.route || "";
                                 const leg = FLIGHT_LEGS.find((l) => l.route === route);
-                                const planDate = route ? flightDateFromPlan(route, segs) : null;
+                                const planDate = route ? flightDateFromPlan(route, flightSegs) : null;
                                 return planDate || f.flight!.date || "";
                               })()}
                               flightNo={f.flight.flight || ""}
@@ -664,7 +674,7 @@ function FavoriteActionList({
                               livePrice={(() => {
                                 const route = f.flight!.route || "";
                                 const leg = FLIGHT_LEGS.find((l) => l.route === route);
-                                const planDate = route ? flightDateFromPlan(route, segs) : null;
+                                const planDate = route ? flightDateFromPlan(route, flightSegs) : null;
                                 const qDate = planDate || f.flight!.date || "";
                                 const flightNo = f.flight!.flight || "";
                                 const live = leg?.dbSeg && qDate && flightNo ? liveFlightQuote(leg.dbSeg, qDate, flightNo) : null;
