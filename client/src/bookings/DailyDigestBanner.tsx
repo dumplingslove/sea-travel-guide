@@ -13,7 +13,7 @@ import { useMemo } from "react";
 import { hotels, restaurants, attractions } from "@/guide/data";
 import { getLiveHotelPrice, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
-import { useAvailability, fmtChecked } from "@/components/DayPlaceDetails";
+import { useAvailabilityWithStatus, fmtChecked } from "@/components/DayPlaceDetails";
 import { useDatasetsVersion } from "@/lib/datasets";
 
 /** 无保存行程时的回退城市（与 BookingStatusSummary 保持一致） */
@@ -40,7 +40,7 @@ export default function DailyDigestBanner({
   scopeCities?: string[];
   onJump: (m: MenuKey) => void;
 }) {
-  const av = useAvailability();
+  const { map: av, status: avStatus } = useAvailabilityWithStatus();
   // 数据集到达后横幅必须重算：hotel_live_prices / flight_db 都是先空后灌入的
   // 可变存储，只按城市列表 memo 会把首屏的空结果冻住不刷新（2026-10-13 审计）。
   const dsVersion = useDatasetsVersion();
@@ -113,7 +113,12 @@ export default function DailyDigestBanner({
     const rows = scoped
       .map((r) => av.get(r.name))
       .filter((x): x is NonNullable<typeof x> => !!x);
-    if (!rows.length) return `${scoped.length}家 · 空位数据读取中…`;
+    if (!rows.length) {
+      // 未就绪不许冒充「读取中」：加载失败与还在加载、已加载无数据分开写
+      if (avStatus === "error") return `${scoped.length}家 · 空位数据加载失败，刷新页面重试`;
+      if (avStatus !== "ready") return `${scoped.length}家 · 空位数据读取中…`;
+      return `${scoped.length}家 · 暂无空位数据`;
+    }
     const n = (ss: string[]) => rows.filter((r) => ss.includes(r.status)).length;
     const parts = [
       `${rows.length}/${scoped.length}家已查`,
@@ -133,14 +138,18 @@ export default function DailyDigestBanner({
     parts.push(`更新于 ${latest ? fmtChecked(latest) : "—"}`);
     return parts.join(" · ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [av, list.join("|")]);
+  }, [av, avStatus, list.join("|")]);
 
   const ticketLine = useMemo(() => {
     const scoped = attractions.filter((a) => inScope(a.city));
     const rows = scoped
       .map((a) => av.get(a.name))
       .filter((x): x is NonNullable<typeof x> => !!x);
-    if (!rows.length) return `${scoped.length}个 · 余票数据读取中…`;
+    if (!rows.length) {
+      if (avStatus === "error") return `${scoped.length}个 · 余票数据加载失败，刷新页面重试`;
+      if (avStatus !== "ready") return `${scoped.length}个 · 余票数据读取中…`;
+      return `${scoped.length}个 · 暂无余票数据`;
+    }
     const n = (ss: string[]) => rows.filter((r) => ss.includes(r.status)).length;
     const parts = [
       `${rows.length}/${scoped.length}个已查`,
@@ -158,7 +167,7 @@ export default function DailyDigestBanner({
     parts.push(`更新于 ${latest ? fmtChecked(latest) : "—"}`);
     return parts.join(" · ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [av, list.join("|")]);
+  }, [av, avStatus, list.join("|")]);
 
   const rows: { icon: string; label: string; text: string; jump: MenuKey }[] = [
     { icon: "🏨", label: "酒店", text: hotelLine, jump: "hotels" },

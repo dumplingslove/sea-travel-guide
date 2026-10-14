@@ -26,27 +26,52 @@ export interface AvRow {
   checked_at: string;
 }
 
-/** 拉取整张空位余票表（约30条），行程页各处共用 */
-export function useAvailability(): Map<string, AvRow> {
+export type AvLoadStatus = "loading" | "ready" | "error";
+
+/** 拉取整张空位余票表（约30条），行程页各处共用。
+ * 带加载状态版本：拉取失败/未配置时 status="error"，界面据此区分
+ * 「加载失败」与「还在加载」和「已加载但确实没有数据」——旧版只返回 Map，
+ * 失败时 Map 永远为空，消费方只能一直显示「读取中…」（2026-10-13 审计实锤，
+ * 与 datasets.ts「『加载中』不许冒充『没数据』」铁律同类）。 */
+export function useAvailabilityWithStatus(): {
+  map: Map<string, AvRow>;
+  status: AvLoadStatus;
+} {
   const [map, setMap] = useState<Map<string, AvRow>>(new Map());
+  const [status, setStatus] = useState<AvLoadStatus>(
+    supabaseConfigured && supabase ? "loading" : "error",
+  );
   useEffect(() => {
-    if (!supabaseConfigured || !supabase) return;
+    if (!supabaseConfigured || !supabase) {
+      setStatus("error");
+      return;
+    }
     let live = true;
     supabase
       .from("sea_availability")
       .select("*")
       .eq("trip_ref", "dec2026")
-      .then(({ data }) => {
-        if (!live || !data) return;
+      .then(({ data, error }) => {
+        if (!live) return;
+        if (error || !data) {
+          setStatus("error");
+          return;
+        }
         const m = new Map<string, AvRow>();
         for (const r of data as AvRow[]) m.set(r.name, r);
         setMap(m);
+        setStatus("ready");
       });
     return () => {
       live = false;
     };
   }, []);
-  return map;
+  return { map, status };
+}
+
+/** 兼容旧签名：只需要数据的调用方继续用这个（内部走带状态版本）。 */
+export function useAvailability(): Map<string, AvRow> {
+  return useAvailabilityWithStatus().map;
 }
 
 const AV_STYLE: Record<AvStatus, { r: string; a: string; cls: string }> = {
