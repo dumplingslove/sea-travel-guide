@@ -11,7 +11,7 @@
  */
 import { useState } from "react";
 import { hotels, restaurants, attractions } from "@/guide/data";
-import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import {
   useAvailability,
   AvBadge,
@@ -103,6 +103,14 @@ function CityBlock({ cityZh }: { cityZh: string }) {
                             ${rate.perNightUSD}/晚起{p && !p.base ? "（套房）" : ""}
                           </b>{" "}
                           · 查询于 {p!.checkedAt}
+                        </span>
+                      ) : !p && livePriceDatasetStatus() === "error" ? (
+                        <span className="text-xs text-red-500 shrink-0">
+                          价格加载失败
+                        </span>
+                      ) : !p && livePriceDatasetStatus() !== "ready" ? (
+                        <span className="text-xs text-gray-400 shrink-0">
+                          价格加载中…
                         </span>
                       ) : (
                         <span className="text-xs text-gray-400 shrink-0">

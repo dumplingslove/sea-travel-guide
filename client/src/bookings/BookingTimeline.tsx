@@ -4,7 +4,7 @@
  */
 import { useMemo, useState } from "react";
 import { hotels, restaurants } from "@/guide/data";
-import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import { usePlanScope } from "@/guide/GuideApp";
 import {
   getRestaurantBookingPolicy,
@@ -669,7 +669,7 @@ export default function BookingTimeline({
                     {cands.length} 家候选 · <b className="text-teal-700">{min}</b>
                   </span>
                 ) : (
-                  <span className="text-gray-400">{bookedBadge}{cands.length} 家候选 · 暂无实时价</span>
+                  <span className="text-gray-400">{bookedBadge}{cands.length} 家候选 · {livePriceDatasetStatus() === "error" ? "价格加载失败，刷新页面会重新加载" : livePriceDatasetStatus() !== "ready" ? "价格加载中…" : "暂无实时价"}</span>
                 )
               }
               sub="点「看候选」直接对比选定；价格按行程日期查询，仅供参考"
@@ -718,6 +718,10 @@ export default function BookingTimeline({
                                 · 查于{fmtChecked(p!.checkedAt)}
                               </span>
                             </div>
+                          ) : !p && livePriceDatasetStatus() === "error" ? (
+                            <div className="text-xs text-red-500 mt-0.5">价格加载失败，刷新页面会重新加载</div>
+                          ) : !p && livePriceDatasetStatus() !== "ready" ? (
+                            <div className="text-xs text-gray-400 mt-0.5">价格加载中…</div>
                           ) : (
                             <div className="text-xs text-gray-400 mt-0.5">暂无实时价</div>
                           ); })()}

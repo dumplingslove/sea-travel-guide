@@ -59,6 +59,50 @@ export interface PlannerPlan {
   /** 每城预订需求开关（2026-10-13 用户）：城市名 -> { hotel: 要不要订酒店, restaurant: 要不要订餐厅 }。
    * 在大行程里逐城设置；关掉的城市在预订页不再出现待订提示（如住家里的城市不订酒店）。缺省按 defaultCityNeeds。 */
   cityNeeds?: Record<string, { hotel?: boolean; restaurant?: boolean }>;
+  /** 全站日期单一事实源（2026-10-13 用户裁决）：行程形成时由 buildPlanTimeline 一次性生成、
+   * 随规划一起保存的完整时间线（逐日归属 + 全部转场日期 + 酒店窗口）。
+   * 所有页面/脚本只许读这份存好的时间线，不许各自按段天数再推导——
+   * 此前 planner 推导与逐日表差一天、反复出事的根源就是多处推导。 */
+  timeline?: PlanTimeline;
+}
+
+export interface PlanTimelineDay {
+  /** 段 id：beijing1 / singapore / couple / split / seoul */
+  seg: string;
+  /** 当天所在城市（分开行动段为 ["北京","西安"] 两城同日） */
+  cities: string[];
+}
+export interface PlanTimelineLeg {
+  /** 与预订页 FLIGHT_LEGS 的 id 对齐（高铁段为 pek-xiy-rail） */
+  id: string;
+  kind: "flight" | "rail";
+  from: string;
+  to: string;
+  fromCity: string;
+  toCity: string;
+  /** YYYY-MM-DD */
+  date: string;
+}
+export interface PlanTimelineStay {
+  city: string;
+  seg: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+}
+export interface PlanTimeline {
+  v: 1;
+  /** 中间段起始日（大行程第一段首日） */
+  anchor: string;
+  days: Record<string, PlanTimelineDay>;
+  legs: PlanTimelineLeg[];
+  stays: PlanTimelineStay[];
+  /** 生成时的输入快照：消费方据此判断时间线与当前段天数是否仍一致（编辑中不一致则回退现场推导） */
+  source: {
+    trip: { beijing1: number; singapore: number; couple: number; split: number; seoul: number };
+    wzOrder: string[];
+    wzDays: Record<string, number>;
+  };
 }
 
 /** 城市预订需求缺省：北京/西安是家庭城市（住家里），默认不订酒店；其余城市默认都要订。餐厅默认都要订。 */
@@ -97,6 +141,104 @@ export function normalizeTripDays(trip?: Record<string, number>): {
     couple: typeof t.couple === "number" ? t.couple : 8,
     split,
     seoul: typeof t.seoul === "number" ? t.seoul : 2,
+  };
+}
+
+const AIRPORT_CODE_BY_ZH: Record<string, string> = {
+  "北京": "PEK", "西安": "XIY", "新加坡": "SIN", "普吉": "HKT", "清迈": "CNX", "曼谷": "BKK",
+  "槟城": "PEN", "吉隆坡": "KUL", "胡志明市": "SGN", "富国岛": "PQC", "首尔": "ICN", "西雅图": "SEA",
+};
+
+/**
+ * 【全站唯一的日期推导实现】由大行程段天数（plan.trip + plan.wz）一次性生成完整时间线：
+ * 全部逐日归属、全部转场（航班/高铁）日期、每城酒店入住/退房窗口。
+ * 保存规划时由 planner 的 serializePlan 调用并存入 plan.timeline；
+ * 其余所有消费方（地图站点、预订页航班日期、缺口检测脚本、一致性守卫）只读存好的时间线，
+ * 不许再各自推导。推导规则变了只改这一处。
+ */
+export function buildPlanTimeline(plan: PlannerPlan): PlanTimeline {
+  const t = normalizeTripDays(plan?.trip);
+  const wz = plan?.wz ?? { cities: [] as string[], days: {} as Record<string, number>, order: [] as string[], start: "", modes: {} as Record<string, string> };
+  const wzCities = (wz.order ?? []).filter((c) => (wz.cities ?? []).includes(c));
+  const anchor = TRIP_ANCHOR_ISO;
+  const days: Record<string, PlanTimelineDay> = {};
+  const ranges: Record<string, { from: string; to: string }> = {};
+  let cur = anchor;
+  const lay = (seg: string, cities: string[], n: number) => {
+    const from = cur;
+    for (let i = 0; i < n; i++) days[addDaysIso(cur, i)] = { seg, cities };
+    const to = addDaysIso(cur, Math.max(0, n - 1));
+    ranges[seg] = { from, to };
+    cur = addDaysIso(cur, n);
+    return { from, to };
+  };
+  lay("beijing1", ["北京"], t.beijing1);
+  const sg = lay("singapore", ["新加坡"], t.singapore);
+  const coupleFrom = cur;
+  const wzRanges: { city: string; from: string; to: string }[] = [];
+  if (wzCities.length) {
+    for (const c of wzCities) {
+      const r = lay("couple", [c], Math.max(1, wz.days?.[c] ?? 1));
+      wzRanges.push({ city: c, from: r.from, to: r.to });
+    }
+  } else {
+    lay("couple", [], t.couple);
+  }
+  ranges["couple"] = { from: coupleFrom, to: addDaysIso(cur, -1) };
+  const split = lay("split", ["北京", "西安"], t.split);
+  const seoul = lay("seoul", ["首尔"], t.seoul);
+
+  const code = (zh: string) => AIRPORT_CODE_BY_ZH[zh] ?? "";
+  const legs: PlanTimelineLeg[] = [];
+  const F = (id: string, fromCity: string, toCity: string, date: string) =>
+    legs.push({ id, kind: "flight" as const, from: code(fromCity), to: code(toCity), fromCity, toCity, date });
+  F("sea-pek", "西雅图", "北京", addDaysIso(anchor, -1));
+  F("intl-out-bj", "北京", "新加坡", sg.from);
+  F("intl-out", "西安", "新加坡", sg.from);
+  if (wzRanges.length) {
+    const first = wzRanges[0]!;
+    const last = wzRanges[wzRanges.length - 1]!;
+    F(`sin-${code(first.city).toLowerCase()}`, "新加坡", first.city, first.from);
+    F("sin-xiy", "新加坡", "西安", first.from);
+    for (let i = 1; i < wzRanges.length; i++) {
+      const a = wzRanges[i - 1]!;
+      const b = wzRanges[i]!;
+      F(`${code(a.city).toLowerCase()}-${code(b.city).toLowerCase()}`, a.city, b.city, b.from);
+    }
+    F(`${code(last.city).toLowerCase()}-xiy`, last.city, "西安", split.from);
+    F(`${code(last.city).toLowerCase()}-pek`, last.city, "北京", split.from);
+  }
+  /* 分开行动最后一天：你一人高铁 北京→西安汇合（不是航班，但日期同样以时间线为准） */
+  legs.push({ id: "pek-xiy-rail", kind: "rail", from: "PEK", to: "XIY", fromCity: "北京", toCity: "西安", date: split.to });
+  F("xiy-icn", "西安", "首尔", seoul.from);
+  F("icn-sea", "首尔", "西雅图", seoul.to);
+
+  /* 酒店窗口与预订页 hotelStaysFromPlan 同规则：入住=本段第一天，
+   * 退房=后面第一个更晚开始的段的第一天（转场日）；无后续段时=本段最后一天。 */
+  const segList: { city: string; seg: string; start: string; end: string }[] = [
+    { city: "北京", seg: "beijing1", start: ranges["beijing1"]!.from, end: ranges["beijing1"]!.to },
+    { city: "新加坡", seg: "singapore", start: sg.from, end: sg.to },
+    ...wzRanges.map((r) => ({ city: r.city, seg: "couple", start: r.from, end: r.to })),
+    { city: "西安", seg: "split", start: split.from, end: split.to },
+    { city: "北京", seg: "split", start: split.from, end: split.to },
+    { city: "首尔", seg: "seoul", start: seoul.from, end: seoul.to },
+  ];
+  const stays: PlanTimelineStay[] = segList.map((s, i) => {
+    const next = segList.slice(i + 1).find((x) => x.start > s.start);
+    const checkOut = next ? next.start : s.end;
+    const nights = Math.max(0, Math.round((Date.parse(checkOut) - Date.parse(s.start)) / 86400000));
+    return { city: s.city, seg: s.seg, checkIn: s.start, checkOut, nights };
+  });
+
+  const wzDays: Record<string, number> = {};
+  for (const c of wzCities) wzDays[c] = Math.max(1, wz.days?.[c] ?? 1);
+  return {
+    v: 1,
+    anchor,
+    days,
+    legs,
+    stays,
+    source: { trip: t, wzOrder: [...wzCities], wzDays },
   };
 }
 
@@ -429,10 +571,56 @@ function addDaysIso(iso: string, n: number): string {
  * 地图按它拼全程：北京→新加坡→夫妻各城→（分开行动：北京/西安同段并列）→首尔。
  * 数据不完整（无 trip / 夫妻城市天数对不上段总天数）时返回 null，调用方回退 schedule 站点。
  */
+/** 由 plan.timeline 逐日表拼站点（单一事实源路径：日期直接读存好的时间线，不再推导）。
+ * 分开行动段同一日期两城（北京/西安）各出一个站点、共用同一 Day 范围。 */
+function stopsFromTimeline(
+  tl: PlanTimeline,
+): { stops: PlanCityStop[]; totalDays: number } | null {
+  const dates = Object.keys(tl.days ?? {}).sort();
+  if (!dates.length) return null;
+  const order: string[] = [];
+  const acc = new Map<string, { zh: string; dayFrom: number; dayTo: number; from: string; to: string }>();
+  dates.forEach((iso, i) => {
+    const d = tl.days[iso];
+    if (!d) return;
+    for (const zh of d.cities) {
+      const key = `${d.seg}|${zh}`;
+      const curA = acc.get(key);
+      if (curA) {
+        curA.dayTo = i + 1;
+        curA.to = iso;
+      } else {
+        acc.set(key, { zh, dayFrom: i + 1, dayTo: i + 1, from: iso, to: iso });
+        order.push(key);
+      }
+    }
+  });
+  const stops: PlanCityStop[] = [];
+  for (const key of order) {
+    const a = acc.get(key)!;
+    const meta = META_BY_ZH.get(a.zh);
+    if (!meta) return null;
+    stops.push({
+      id: meta.id,
+      zh: meta.zh,
+      en: meta.en,
+      country_zh: meta.country_zh,
+      days: [a.dayFrom, a.dayTo],
+      dates: `${fmtMD(a.from)} ~ ${fmtMD(a.to)}`,
+    });
+  }
+  return { stops, totalDays: dates.length };
+}
+
 export function tripStopsFromPlan(
   plan: PlannerPlan,
 ): { stops: PlanCityStop[]; totalDays: number } | null {
   try {
+    /* 单一事实源优先：规划里存有 timeline 就直接读它拼站点（日期不再二次推导） */
+    if (plan?.timeline?.days && Object.keys(plan.timeline.days).length) {
+      const fromTl = stopsFromTimeline(plan.timeline);
+      if (fromTl) return fromTl;
+    }
     if (!plan?.trip) return null;
     const t = normalizeTripDays(plan.trip);
     const wz = plan.wz;

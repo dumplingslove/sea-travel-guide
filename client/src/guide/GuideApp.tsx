@@ -21,12 +21,12 @@ import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
 import { bookingPolicyBadge, mustGoBadge } from '../bookings/restaurantBookingStatus';
-import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
+import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, applyPlanTimeline, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
 import { getGuideFacts, getXhsAssessment, guideFactsCount, strictResearchLinkCount, secondaryEvidence, xhsEvidence } from './research';
-import { getLiveHotelPrice, liveDisplayRate, type LiveRoomRate } from './hotelLivePrices';
+import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveRoomRate } from './hotelLivePrices';
 import { getPlaceGallery, placeGalleryPhotoCount, placeGalleryPlaceCount, type PlacePhoto } from './placeGalleries';
 import { bangkokOta } from './bangkokOta';
 import { ResearchProgressPage } from './ResearchProgressPage';
@@ -109,9 +109,12 @@ export function useFullTripSegments(): PlanSegment[] {
   useEffect(() => {
     let live = true;
     const cached = readPlannerCache();
+    if (cached?.plan) applyPlanTimeline(cached.plan);
     if (cached?.plan?.trip) setTripDays(cached.plan.trip as Record<string, number>);
     loadPlannerPlan().then((p) => {
-      if (live && p?.plan?.trip) setTripDays(p.plan.trip as Record<string, number>);
+      if (!live || !p?.plan) return;
+      applyPlanTimeline(p.plan); /* 日期单一事实源：航班日期以规划里存好的时间线为准 */
+      if (p.plan.trip) setTripDays(p.plan.trip as Record<string, number>);
     }).catch(() => {});
     return () => { live = false; };
   }, []);
@@ -316,7 +319,7 @@ const isNonItineraryPriceCity=(city:string)=>NON_ITINERARY_PRICE_CITIES.includes
 const shortDate=(iso:string)=>iso&&iso.length>=10?iso.slice(5).replace('-','/'):iso;
 function LivePricePanel({name,city}:{name:string;city:string}){
  const p=getLiveHotelPrice(name);
- if(!p) return null;
+ if(!p){const st=livePriceDatasetStatus();if(st==='error') return <section className="detailsection livepriceblock" aria-label="实时房价"><span>LIVE RATES · USD</span><h3>实时房价</h3><p className="livepricenone">价格加载失败，刷新页面会重新加载——这不等于暂无实时价。</p></section>;if(st!=='ready') return <section className="detailsection livepriceblock" aria-label="实时房价"><span>LIVE RATES · USD</span><h3>实时房价</h3><p className="livepricenone">价格加载中…</p></section>;return null;}
  const refOnly=isNonItineraryPriceCity(city);
  const priceTitle=refOnly?`参考房价（查询日期${shortDate(p.checkIn)}–${shortDate(p.checkOut)}）`:'按行程日期实时房价';
  const row=(label:string,rate:LiveRoomRate|null,note?:string)=>(
@@ -378,7 +381,7 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
  useEffect(()=>{ if(!onItemSelect) return; const skey=selectedKey??expandedKey; if(skey){ const it=hotels.find(x=>x.city+x.name===skey); onItemSelect(it?`hotel:${it.city}:${it.name}`:null); } else onItemSelect(null); },[selectedKey,expandedKey]);const [listExpanded,setListExpanded]=useState(!!defaultListExpanded);const [compare,setCompare]=useState<Item[]>([]);const shown=orderHotelsByResearch(hotels.filter(x=>x.city===city),hotelEntries,city);const dates=stayDates?.[city] ?? currentStayLabel(city) ?? route.find(x=>x[0]===city)?.[2];
  const toggle=(it:Item)=>setCompare(x=>x.some(y=>y.name===it.name)?x.filter(y=>y.name!==it.name):x.length<3?[...x,it]:x);
  const visibleHotels=listExpanded?shown:shown.slice(0,4);const listToggle=shown.length>4?<div className="showmore"><button type="button" className="secondary" onClick={()=>setListExpanded(v=>!v)} aria-expanded={listExpanded}>{listExpanded?'收起':'展开全部'} · {visibleHotels.length}/{shown.length} 家酒店</button></div>:null;const pickCity=(c:string)=>{setCity(c);setExpandedKey(null);setSelectedKey(null);/* 2026-10-04 用户：列表默认全显示，切城市不收起 */};const openHotelDetail=(it:Item)=>{const key=it.city+it.name;if(!visibleHotels.some(x=>x.city+x.name===key))setListExpanded(true);setExpandedKey(prev=>prev===key?null:key)};
- return <div className="page">{!bare&&<PageHero eyebrow="STAY COLLECTION" title="酒店推荐" summary={list.length!==cities.length?`按行程规划的${list.length}个城市比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`:`沿${cities.length}城路线比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`} image={singaporeImg}/>}<section className="sectionblock">{!hideCityTabs && <><div className="sectiontitle"><h2>按城市浏览</h2><p>{hotels.length} 家候选 · 最多选择 3 家并排比较 · 🏆 标记为该城 Marriott / Hyatt 顶级选择</p></div><CityTabs city={city} setCity={pickCity} label="酒店城市筛选" list={list}/></>}<div className="citycover"><img src={cityImages[city]} alt={`${city}城市实景`}/><div><span>建议住宿日期 {dates??"待定"}</span><h3>{city}</h3><p>{shown.length} 家酒店候选</p></div></div>{compare.length>0&&<section className="comparepanel"><header><h3>酒店对比 <span>{compare.length}/3</span></h3><button onClick={()=>setCompare([])}>清空</button></header><div>{compare.map(x=><article key={x.name}><HotelBadges chain={chainFor(x)} tier={tierFor(x)} topPick={topPickGroupOf(x)}/><b>{x.name}</b><span>{x.meta}</span><p>{x.best}</p><button onClick={()=>openHotelDetail(x)}>查看详情</button></article>)}</div></section>}<div className="catalog rich">{visibleHotels.map((it,i)=>{const hkey=it.city+it.name;const hopen=expandedKey===hkey;return <Fragment key={hkey}><article data-place-key={`hotel:${it.city}:${it.name}`} className={"itemcard"+(selectedKey===hkey||expandedKey===hkey?" ring-2 ring-teal-600":"")} onClick={(e)=>{ if((e.target as HTMLElement).closest("button,a")) return; setSelectedKey(prev=>prev===hkey?null:hkey); }}><ItemMedia item={it} kind="酒店" index={i}/><div><HotelBadges chain={chainFor(it)} tier={tierFor(it)} topPick={topPickGroupOf(it)}/><span className="citytag">{it.city} · 住宿</span><h3>{it.name}</h3><p className="meta">{it.meta}</p>{it.hotelHighlight&&<div className="decision highlight"><b>✨ 亮点</b><span>{it.hotelHighlight}</span></div>}<p>{it.detail}</p>{it.hotelAcclaim&&<div className="decision"><b>🏆 公认口碑</b><span>{it.hotelAcclaim}</span></div>}<div className="decision"><b>怎么选</b><span>{it.best}</span></div>{(()=>{const p=getLiveHotelPrice(it.name);if(!p) return null;const rate=liveDisplayRate(p);
+ return <div className="page">{!bare&&<PageHero eyebrow="STAY COLLECTION" title="酒店推荐" summary={list.length!==cities.length?`按行程规划的${list.length}个城市比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`:`沿${cities.length}城路线比较位置、风格、硬件与明确短板；先看取舍，再决定住哪一家。`} image={singaporeImg}/>}<section className="sectionblock">{!hideCityTabs && <><div className="sectiontitle"><h2>按城市浏览</h2><p>{hotels.length} 家候选 · 最多选择 3 家并排比较 · 🏆 标记为该城 Marriott / Hyatt 顶级选择</p></div><CityTabs city={city} setCity={pickCity} label="酒店城市筛选" list={list}/></>}<div className="citycover"><img src={cityImages[city]} alt={`${city}城市实景`}/><div><span>建议住宿日期 {dates??"待定"}</span><h3>{city}</h3><p>{shown.length} 家酒店候选</p></div></div>{compare.length>0&&<section className="comparepanel"><header><h3>酒店对比 <span>{compare.length}/3</span></h3><button onClick={()=>setCompare([])}>清空</button></header><div>{compare.map(x=><article key={x.name}><HotelBadges chain={chainFor(x)} tier={tierFor(x)} topPick={topPickGroupOf(x)}/><b>{x.name}</b><span>{x.meta}</span><p>{x.best}</p><button onClick={()=>openHotelDetail(x)}>查看详情</button></article>)}</div></section>}<div className="catalog rich">{visibleHotels.map((it,i)=>{const hkey=it.city+it.name;const hopen=expandedKey===hkey;return <Fragment key={hkey}><article data-place-key={`hotel:${it.city}:${it.name}`} className={"itemcard"+(selectedKey===hkey||expandedKey===hkey?" ring-2 ring-teal-600":"")} onClick={(e)=>{ if((e.target as HTMLElement).closest("button,a")) return; setSelectedKey(prev=>prev===hkey?null:hkey); }}><ItemMedia item={it} kind="酒店" index={i}/><div><HotelBadges chain={chainFor(it)} tier={tierFor(it)} topPick={topPickGroupOf(it)}/><span className="citytag">{it.city} · 住宿</span><h3>{it.name}</h3><p className="meta">{it.meta}</p>{it.hotelHighlight&&<div className="decision highlight"><b>✨ 亮点</b><span>{it.hotelHighlight}</span></div>}<p>{it.detail}</p>{it.hotelAcclaim&&<div className="decision"><b>🏆 公认口碑</b><span>{it.hotelAcclaim}</span></div>}<div className="decision"><b>怎么选</b><span>{it.best}</span></div>{(()=>{const p=getLiveHotelPrice(it.name);if(!p){const st=livePriceDatasetStatus();if(st==='error') return <div className="decision"><b>💰 价格</b><span>加载失败，刷新页面会重新加载</span></div>;if(st!=='ready') return <div className="decision"><b>💰 价格</b><span>加载中…</span></div>;return null;}const rate=liveDisplayRate(p);
  if(p.unavailable) return <div className="decision"><b>💰 价格</b><span title={p.unavailable}>⚠️ 该日期暂无可订房</span></div>;
  if(!rate) return <div className="decision"><b>💰 价格</b><span>暂无实时价</span></div>;
  const tax=rate.totalInclTax===true?'含税':rate.totalInclTax===false?'不含税':'税费未明确';

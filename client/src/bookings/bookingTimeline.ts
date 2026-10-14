@@ -839,6 +839,31 @@ function applyFlightDb(): void {
   for (const leg of FLIGHT_LEGS) refreshLegFromDb(leg);
 }
 applyFlightDb();
+
+/**
+ * 【日期单一事实源】用云端规划里存好的 plan.timeline 覆盖 FLIGHT_LEGS 的日期。
+ * 2026-10-13 用户裁决：行程时间一处定死、存下来，其他地方严格照抄——
+ * FLIGHT_LEGS 的写死日期只作离线兜底；规划一加载，日期以时间线为准
+ * （dateLabel / day 都是 date 的纯函数，随之重算）。已出票段（icn-sea）的
+ * 时间线日期与出票日期同为 2027-01-01，覆盖不改变事实。
+ * 由 GuideApp / BookingsPage 在 loadPlannerPlan 后调用。
+ */
+export function applyPlanTimeline(plan: { timeline?: { legs?: { id: string; date: string }[] } } | null | undefined): void {
+  const legs = plan?.timeline?.legs;
+  if (!legs?.length) return;
+  const byId = new Map(legs.map((l) => [l.id, l.date]));
+  const anchorMs = new Date("2026-11-29T00:00:00").getTime();
+  for (const leg of FLIGHT_LEGS) {
+    const d = byId.get(leg.id);
+    if (d && d !== leg.date) {
+      leg.date = d;
+      leg.dateLabel = d.slice(5);
+      leg.day = Math.round((new Date(d + "T00:00:00").getTime() - anchorMs) / 86400000) + 1;
+    }
+  }
+  /* 日期变了，航班库选项要按新日期重新灌一次（数据集在缓存里时同步可得） */
+  applyFlightDb();
+}
 /* 航班库从 DB 数据集到达后重新灌入（2026-10-13：数据在 Supabase sea_guide_datasets.flight_db） */
 onDataset("flight_db", () => applyFlightDb());
 

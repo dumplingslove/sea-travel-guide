@@ -48,8 +48,10 @@ import {
   savePlannerPlan,
   loadPlannerPlan,
   cachePlannerPlanLocally,
+  buildPlanTimeline,
   type PlannerPlan,
   type LoadedPlan,
+  type PlanTimeline,
 } from "../../guide/plannerSchedule";
 
 /* ---------------- 类型 ---------------- */
@@ -611,6 +613,24 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"seoul", label:"首尔", sub:"西安→首尔 · 住2晚", mode:"🏠 家庭", note:"12-30 全家从西安一起飞首尔，住 12-30、12-31 两晚；1-1 晚三人一起飞西雅图（AS120 已出票）" },
 ];
 let tripDays: Record<string, number> = { beijing1:8, singapore:5, couple:8, split:10, seoul:3 }; /* 缺省与云端现行规划一致（2026-10-13 对齐 schedule：北京 8 天 11/29–12/6、首尔 3 天 2 晚） */
+/* 全站日期单一事实源（2026-10-13 用户裁决）：云端规划里存好的时间线。
+   加载后 tripRanges/wzRanges 直接读它，不再各自按段天数推导；
+   用户在页面上改了天数（与时间线的 source 快照对不上）才回退现场推导，
+   保存时 serializePlan 用 buildPlanTimeline 按新天数重生成时间线存回云端。 */
+let loadedTimeline: PlanTimeline | null = null;
+function timelineActive(): boolean {
+  const tl = loadedTimeline;
+  if (!tl?.days || !tl.source?.trip) return false;
+  const st = tl.source.trip;
+  if ((tripDays["beijing1"] || 0) !== st.beijing1 || (tripDays["singapore"] || 0) !== st.singapore ||
+      (tripDays["couple"] || 0) !== st.couple || (tripDays["split"] || 0) !== st.split ||
+      (tripDays["seoul"] || 0) !== st.seoul) return false;
+  const order = wz.order.filter((c) => wz.cities.includes(c));
+  const so = tl.source.wzOrder || [];
+  if (order.length !== so.length || order.some((c, i) => c !== so[i])) return false;
+  for (const c of order) { if ((wz.days[c] || 1) !== (tl.source.wzDays?.[c] ?? 1)) return false; }
+  return true;
+}
 /* 每城预订需求开关（2026-10-13 用户）：在大行程每个城市上设置「要不要订酒店 / 要不要订餐厅」，
    直接影响预订页（关掉的城市不再出现待订信息、最终预定日历不再标未订酒店）。
    缺省：北京/西安住家里不订酒店，其余都要订；餐厅默认都要订。 */
@@ -671,6 +691,16 @@ function transferModeForDate(date: string): "flight"|"rail"{
 }
 function tripTotal(){ return TRIP_SEGS.reduce((a,s)=>a+(tripDays[s.id]||0),0); }
 function tripRanges(){
+  /* 单一事实源优先：已加载的时间线与当前段天数一致时，段边界直接读时间线，不再推导 */
+  if(timelineActive() && loadedTimeline){
+    const out: Record<string,{from:string;to:string}> = {};
+    for(const [iso,d] of Object.entries(loadedTimeline.days)){
+      const r = out[d.seg] ?? (out[d.seg]={from:iso,to:iso});
+      if(iso<r.from) r.from=iso;
+      if(iso>r.to) r.to=iso;
+    }
+    if(out["beijing1"]&&out["singapore"]&&out["couple"]&&out["split"]&&out["seoul"]) return out;
+  }
   const out: Record<string,{from:string;to:string}> = {}; let cur = TRIP_ANCHOR;
   for(const s of TRIP_SEGS){ const d=tripDays[s.id]||0; const from=cur; const to=addDays(cur,d-1); out[s.id]={from,to}; cur=addDays(cur,d); }
   return out;
@@ -1255,7 +1285,20 @@ const wz: WzState = { step:1, cities:[...WZ_ORDER], days:{...baselineNights}, or
 function syncWzStart(){ const c=tripRanges().couple; if(c&&c.from) wz.start=c.from; }
 syncWzStart();
 function wzDirectCount(city: string){ let n=0; for(const to of WZ_ORDER){ if(to===city)continue; const r=routeForCities(city,to); if(r&&r.direct!=="no")n++ } return n }
-function wzRanges(){ const rows: {city:string;from:string;to:string;mode:string}[] = []; let cur=wz.start; for(const city of wz.order){ if(!wz.cities.includes(city))continue; const d=wz.days[city]||1, from=cur, to=addDays(cur,d-1); rows.push({city,from,to,mode:wz.modes[city]||"couple"}); cur=addDays(to,1) } return rows }
+function wzRanges(){
+  /* 单一事实源优先：夫妻段各城边界直接读时间线 */
+  if(timelineActive() && loadedTimeline){
+    const rows: {city:string;from:string;to:string;mode:string}[] = []; const byCity = new Map<string,{city:string;from:string;to:string;mode:string}>();
+    for(const iso of Object.keys(loadedTimeline.days).sort()){
+      const d = loadedTimeline.days[iso]; if(!d || d.seg!=="couple") continue;
+      const city = d.cities[0]; if(!city) continue;
+      const r = byCity.get(city);
+      if(r) r.to = iso;
+      else { const row = {city, from: iso, to: iso, mode: wz.modes[city]||"couple"}; byCity.set(city,row); rows.push(row); }
+    }
+    if(rows.length) return rows;
+  }
+  const rows: {city:string;from:string;to:string;mode:string}[] = []; let cur=wz.start; for(const city of wz.order){ if(!wz.cities.includes(city))continue; const d=wz.days[city]||1, from=cur, to=addDays(cur,d-1); rows.push({city,from,to,mode:wz.modes[city]||"couple"}); cur=addDays(to,1) } return rows }
 /* 日历排期 = 大行程「新加坡」固定阶段（亲子）＋ 向导细分的「夫妻东南亚」城市。
    向导不再单独含新加坡，也不再自带可编辑日期（日期继承大行程），两者不可能各选一次、产生不一致。 */
 function buildMergedSchedule(){
@@ -1975,6 +2018,10 @@ function initWizard(){ wzRender() }
 
 /* ---- 云端规划持久化（Supabase sea_planner_schedules + 本地缓存回退） ---- */
 function serializePlan(): PlannerPlan{
+  /* 单一事实源：每次保存都用全站唯一的 buildPlanTimeline 按当前段天数重生成时间线，
+     与规划一起存回云端——其他页面/脚本只读这份存好的时间线，不再各自推导日期。 */
+  const timeline = buildPlanTimeline({ trip:{...tripDays}, wz:{cities:[...wz.cities],days:{...wz.days},order:[...wz.order],start:wz.start,modes:{...wz.modes}} } as PlannerPlan);
+  loadedTimeline = timeline;
   return {
     version:2, /* v2: 向导不再含新加坡、日期继承大行程夫妻段；v1 旧规划加载时按新模型迁移重排 */
     selected:[],
@@ -1983,6 +2030,7 @@ function serializePlan(): PlannerPlan{
     pace:"standard",
     start:state.start,
     schedule:Object.fromEntries(Object.entries(state.schedule).map(([k,v])=>[k,{city:v.city,mode:v.mode}])),
+    timeline,
     wz:{cities:[...wz.cities],days:{...wz.days},order:[...wz.order],start:wz.start,modes:{...wz.modes}},
     hotelSelections:{},
     flightSelections:{},
@@ -1996,6 +2044,8 @@ function serializePlan(): PlannerPlan{
 function applyLoadedPlan(p: PlannerPlan){
   if(p.start) state.start=p.start;
   if(p.schedule&&typeof p.schedule==="object") state.schedule=JSON.parse(JSON.stringify(p.schedule));
+  /* 单一事实源：收下规划里存好的时间线（旧规划没有则保持 null，保存时自动生成补上） */
+  loadedTimeline = (p.timeline&&typeof p.timeline==="object"&&p.timeline.days) ? p.timeline : null;
   if(p.wz){
     /* 兼容迁移：旧规划的向导可能含新加坡、带独立起始日；新模型里新加坡归大行程、日期继承夫妻段 */
     if(Array.isArray(p.wz.cities)&&p.wz.cities.length) wz.cities=p.wz.cities.filter(c=>c!=="新加坡"&&WZ_ORDER.includes(c));

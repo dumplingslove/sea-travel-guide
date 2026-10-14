@@ -43,7 +43,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
@@ -931,7 +931,7 @@ function BookingsCalendar() {
   useEffect(() => {
     let alive = true;
     loadPlannerPlan()
-      .then((l) => { if (alive && l?.plan) setPlan(l.plan); })
+      .then((l) => { if (alive && l?.plan) { applyPlanTimeline(l.plan); setPlan(l.plan); } })
       .catch(() => {});
     return () => { alive = false; };
   }, []);
@@ -1613,7 +1613,7 @@ function BookingsInner() {
   useEffect(() => {
     let alive = true;
     loadPlannerPlan()
-      .then((l) => { if (alive && l?.plan) setPlanState(l.plan); })
+      .then((l) => { if (alive && l?.plan) { applyPlanTimeline(l.plan); setPlanState(l.plan); } })
       .catch(() => {});
     return () => { alive = false; };
   }, []);
