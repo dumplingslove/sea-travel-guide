@@ -1224,7 +1224,7 @@ function renderTrip(){
     <div class="trip-flightinfo">${tripFlightCard("SEA-PEK|2026-11-28","西雅图 → 北京")}</div>
     ${parts.join("\n    ")}
     ${renderReturnCard(ranges)}
-    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆+娃西安）→高铁汇合后一起去首尔（住2晚）→西雅图）</p>
+    <p class="micro trip-summary" role="status">已分配 <b>${total}</b> / ${TRIP_MIDDLE_DAYS} 天（北京→新加坡→夫妻东南亚→分开行动（你北京／老婆一人西安）→高铁汇合后一起去首尔（住2晚）→西雅图）</p>
     ${ok?"":`<p class="micro" role="alert">⚠️ <span class="mismatch">${total<TRIP_MIDDLE_DAYS?`还差 <b>${TRIP_MIDDLE_DAYS-total}</b> 天`:`多了 <b>${total-TRIP_MIDDLE_DAYS}</b> 天`}</span>：11/29–1/1 共 ${TRIP_MIDDLE_DAYS} 天，建议用上面各段的 ＋ / － 凑满；当前为草稿，也可以先保存。</p>`}
     <p class="micro" id="tripSaveNote" role="status" aria-live="polite"></p>
     <div class="wz-nav"><span class="micro">改天数后点保存，同步到云端</span><button class="primary" id="tripSave">💾 保存大行程</button></div>`;
@@ -1626,7 +1626,7 @@ function ordReturnSummary(): string {
   const seaCard = tripFlightCard(`ICN-SEA|${seaFlyDate}`, `首尔 → 西雅图（2大1小）`);
   return `<div class="card" style="margin:16px 0">
     <div class="trip-seg-head"><div class="trip-seg-title">✈️ 回程：高铁汇合 → 一起飞首尔 → 西雅图</div>
-    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆+娃西安）；${dateLabel(sp.to)} 你坐高铁 北京→西安汇合，${dateLabel(flyDate)} 全家一起飞首尔；首尔住 2 晚（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
+    <div class="micro">分开行动 ${dateLabel(sp.from)} – ${dateLabel(sp.to)}（你北京／老婆一人西安）；${dateLabel(sp.to)} 你坐高铁 北京→西安汇合，${dateLabel(flyDate)} 全家一起飞首尔；首尔住 2 晚（${dateLabel(seoul.from)} – ${dateLabel(seoul.to)}）</div></div>
     <div style="margin:8px 0"><b>北京 → 西安</b> · 📅 ${dateLabel(sp.to)} · 🚄 高铁 · 你一人（去跟老婆孩子汇合，帮着拿行李）</div>
     <div style="margin:8px 0"><b>西安 → 首尔</b> · 📅 ${dateLabel(flyDate)} 起飞 · 全家（2大1小）
       <div class="trip-flightinfo" style="margin-top:6px">${xaCard}</div></div>

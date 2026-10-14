@@ -987,7 +987,7 @@ function BookingsCalendar() {
     }
 
     /* ---------- 行程层：云端规划的大行程分段（与 planner 的 tripRanges/wzRanges 同算法；
-       2026-10-13 改版：曼谷后是「分开行动」一段——你北京、老婆+娃西安，同住到首尔汇合） ---------- */
+       2026-10-13 改版：曼谷后是「分开行动」一段——你北京、老婆一人西安（娃已随岳父母先回西安），同住到首尔汇合） ---------- */
     const dayCity = new Map<string, string>();
     const splitDays = new Set<string>();
     const hotelNeedByDay = new Map<string, boolean>();
@@ -1129,7 +1129,7 @@ function BookingsCalendar() {
       for (let i = 1; i < coupleRows.length; i++)
         regLeg(`${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, `${APT[coupleRows[i - 1]!.city] ?? ""}-${APT[coupleRows[i]!.city] ?? ""}`, coupleRows[i]!.from, "flight");
       regLeg(`${lastCity}→北京（你）`, `${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
-      regLeg(`${lastCity}→西安（老婆+娃）`, `${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
+      regLeg(`${lastCity}→西安（老婆一人）`, `${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
       regLeg("北京→西安", "", ranges.split!.to, "rail");
       regLeg("西安→首尔", "XIY-ICN", ranges.seoul!.from, lm("split"));
       regLeg("首尔→西雅图", "ICN-SEA", ranges.seoul!.to, "flight");
