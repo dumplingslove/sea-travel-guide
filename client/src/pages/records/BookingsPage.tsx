@@ -44,7 +44,7 @@ import {
   type BookingPreset,
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
-import { getLiveHotelPrice, liveDisplayRate } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
@@ -882,6 +882,8 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
       );
     }
     if (p && p.unavailable) return <div className="text-xs text-gray-400 mt-1">💰 该日期暂无可订房</div>;
+    if (!p && livePriceDatasetStatus() === "error") return <div className="text-xs text-red-500 mt-1">💰 价格：加载失败，刷新页面会重新加载</div>;
+    if (!p && livePriceDatasetStatus() !== "ready") return <div className="text-xs text-gray-400 mt-1">💰 价格：加载中…</div>;
     return <div className="text-xs text-gray-400 mt-1">💰 价格：暂无实时价</div>;
   }
   if (type === "restaurant") {

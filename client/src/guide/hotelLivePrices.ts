@@ -21,7 +21,7 @@
  * 2026-10-09 2026-10-09T13:45:00Z–2026-10-09T14:00:00Z（31 家行程酒店全量重查：新加坡 12/06–12/10、普吉 12/10–12/13、清迈 12/13–12/15、曼谷 12/15–12/18；4 浏览器任务并行、全程未登录；页面未显示数字总价的不做机械相乘（totalUSD=null、totalInclTax='unknown'））
 */
 
-import { onDataset } from "@/lib/datasets";
+import { getDatasetStatus, onDataset, type DatasetStatus } from "@/lib/datasets";
 
 export interface LiveRoomRate {
   /** 房型名称（OTA 原文） */
@@ -78,6 +78,11 @@ export interface LiveHotelPrice {
 }
 
 export const hotelLivePrices: Record<string, LiveHotelPrice> = {};
+
+/** 酒店实查价数据集状态：消费方据此区分「加载中/加载失败」与「确实暂无实时价」，不许混为一谈。 */
+export function livePriceDatasetStatus(): DatasetStatus {
+  return getDatasetStatus("hotel_live_prices");
+}
 
 export function getLiveHotelPrice(name: string): LiveHotelPrice | undefined {
  return hotelLivePrices[name];

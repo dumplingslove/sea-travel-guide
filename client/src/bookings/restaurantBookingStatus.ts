@@ -11,7 +11,7 @@
  * “没有空位数据”的情况。
  */
 
-import { onDataset } from "@/lib/datasets";
+import { getDatasetStatus, onDataset } from "@/lib/datasets";
 
 export type BookingPolicy = 'must_book' | 'peak_recommended' | 'walkup_or_queue' | 'free_no_booking';
 
@@ -43,6 +43,24 @@ export function getRestaurantBookingPolicy(name: string): { policy: BookingPolic
 export function bookingPolicyBadge(name: string): { text: string; cls: string; title: string } {
   const hit = getRestaurantBookingPolicy(name);
   if (!hit) {
+    /* 数据集未就绪时不许冒充「未查询」（2026-10-14 site-improve，承上轮 flight_db error 态修复）：
+       restaurant_booking_status 三次重试全失败且无缓存 = 加载失败；还在拉 = 加载中；
+       只有 ready 后仍无记录，才是真的没查过。 */
+    const ds = getDatasetStatus("restaurant_booking_status");
+    if (ds === "error") {
+      return {
+        text: "预定状态加载失败",
+        cls: "bg-red-100 text-red-700 border-red-300",
+        title: "餐厅预订政策数据加载失败（已自动重试 3 次），刷新页面会重新加载——这不等于还没查过",
+      };
+    }
+    if (ds !== "ready") {
+      return {
+        text: "预定状态加载中",
+        cls: "bg-gray-100 text-gray-500 border-gray-200",
+        title: "餐厅预订政策数据正在加载，加载完成后会自动刷新显示",
+      };
+    }
     return {
       text: "预定状态未查询",
       cls: "bg-gray-100 text-gray-500 border-gray-200",
