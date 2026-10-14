@@ -312,6 +312,24 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   "Baan Kang Wat": { lat: 18.77631, lng: 98.94836 }, // mapcarta/OSM
   "乌蒙寺": { lat: 18.7831833, lng: 98.9513083 }, // Wikipedia Wat Umong
   "瓦洛洛市场": { lat: 18.790239, lng: 99.000628 }, // place listing，Wichayanon Rd
+  // —— 首尔（2026-10-14 site-improve-hourly 补：覆盖率审计实锤首尔 15 个景点仅
+  // 星空图书馆靠模糊匹配命中、其余 14 个在候选/收藏地图上全缺钉。坐标来源分两类：
+  // ① 复用 stopCoords.ts 里已核验的行程站点坐标（同地异名）；
+  // ② 2026-10-14 经 OSM Nominatim 实查，display_name 逐条核对为景点/街区本体） ——
+  "明洞 Myeongdong": { lat: 37.5608977, lng: 126.9863762 }, // ① 复用行程站点"明洞逛街"已核验坐标
+  "南山首尔塔 N Seoul Tower": { lat: 37.55127, lng: 126.9882805 }, // ① 复用行程站点"南山首尔塔夜景"已核验坐标
+  "仁寺洞 Insadong": { lat: 37.5732303, lng: 126.9869357 }, // ① 复用行程站点"北村韩屋村 · 仁寺洞"已核验坐标（图示仁寺洞）
+  "景福宫 Gyeongbokgung": { lat: 37.579754, lng: 126.9766818 }, // ② Nominatim 경복궁（historic/castle，钟路区宫廷洞）
+  "北村韩屋村 Bukchon": { lat: 37.5823919, lng: 126.9858648 }, // ② Nominatim 북촌한옥마을（tourism/attraction，嘉会洞北村路12街）
+  "三清洞 Samcheong-dong": { lat: 37.58964, lng: 126.98112 }, // ② Nominatim 삼청동（place/quarter，钟路区）
+  "益善洞 Ikseon-dong": { lat: 37.5728498, lng: 126.9895151 }, // ② Nominatim Ikseondong Hanok Village（tourism/attraction，水票路28街）
+  "东大门设计广场 DDP": { lat: 37.5670686, lng: 127.009899 }, // ② Nominatim 동대문디자인플라자（building，乙支路281号）
+  "弘大 Hongdae": { lat: 37.5544418, lng: 126.9225125 }, // ② Nominatim 홍대거리（place/neighbourhood，西桥洞）
+  "圣水洞 Seongsu-dong": { lat: 37.54541, lng: 127.05359 }, // ② Nominatim 성수역（圣水站，峨嵯山路；景点条目以圣水站为逛街起点，同条目正文口径）
+  "汝矣岛汉江公园": { lat: 37.5256731, lng: 126.9360586 }, // ② Nominatim 여의도한강공원（leisure/park，永登浦区）
+  "广藏市场 Gwangjang Market": { lat: 37.5697826, lng: 127.0006548 }, // ② Nominatim Gwangjang Market（amenity/marketplace，昌庆宫路12街）
+  "梨泰院 Itaewon": { lat: 37.53842, lng: 126.992 }, // ② Nominatim 이태원동（place/quarter，龙山区梨泰院洞）
+  "乐天世界 Lotte World": { lat: 37.5111041, lng: 127.0982333 }, // ② Nominatim 롯데월드（tourism/theme_park，奥林匹克路240号）
   // 诚实跳过（不编造）：皮皮岛（群岛无单点）、湄南河游船（线路无单点）
 };
 
