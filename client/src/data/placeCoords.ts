@@ -42,6 +42,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Mandarin Oriental Singapore 文华东方", lat: 1.2906606, lng: 103.8583240, precision: "exact" },
       { name: "Shangri-La Singapore 香格里拉", lat: 1.3114790, lng: 103.8264448, precision: "exact", note: "22 Orange Grove Road" },
       { name: "The Fullerton Hotel Singapore 新加坡富丽敦酒店", lat: 1.2862019, lng: 103.8530726, precision: "exact" },
+      { name: "Andaz Singapore 新加坡安达仕酒店", lat: 1.29916, lng: 103.85786, precision: "exact", note: "5 Fraser Street（2026-10-14 新增：map.geocode FULL_ADDRESS relevance 100 命中，补此前 data.ts 有条目却无坐标、收藏地图静默缺钉）" },
     ],
     restaurants: [
       { name: "Odette", lat: 1.2899467, lng: 103.851523, precision: "exact" },
@@ -77,6 +78,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "JW Marriott Phuket Resort & Spa 普吉JW万豪", lat: 8.1661545, lng: 98.2952039, precision: "exact", note: "Mai Khao" },
       { name: "The Surin Phuket", lat: 7.981145, lng: 98.278123, precision: "exact", note: "118 Moo 3 Pansea Beach" },
       { name: "Keemala", lat: 7.9431911, lng: 98.2788779, precision: "exact", note: "Kamala" },
+      { name: "Hyatt Regency Phuket Resort 普吉凯悦度假酒店", lat: 7.94717, lng: 98.27113, precision: "exact", note: "16/12 Moo 6, Kamala（2026-10-14 新增：map.geocode 命中酒店内 One80 Pool Bar 同址 FULL_ADDRESS，补此前无坐标缺钉）" },
     ],
     restaurants: [
       { name: "PRU", lat: 8.0384118, lng: 98.2765486, precision: "exact" },
@@ -108,6 +110,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Four Seasons Bangkok", lat: 13.7117012, lng: 100.5099107, precision: "exact" },
       { name: "The Siam", lat: 13.7814475, lng: 100.5053826, precision: "exact" },
       { name: "The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店", lat: 13.7411701, lng: 100.5481877, precision: "exact", note: "61 Wireless Road" },
+      { name: "Park Hyatt Bangkok 曼谷柏悦酒店", lat: 13.743801, lng: 100.547379, precision: "exact", note: "Central Embassy, 88 Wireless Road（2026-10-14 新增：Places 精确位置与 map.geocode Ploenchit 街点相差约 11m 交叉吻合，补此前无坐标缺钉）" },
     ],
     restaurants: [
       { name: "Sühring", lat: 13.7108224, lng: 100.5455239, precision: "exact" },
@@ -123,6 +126,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "耀华力夜市 / T&K", lat: 13.7401179, lng: 100.5106666, precision: "exact", note: "T&K Seafood" },
       { name: "通思密 Thong Smith", lat: 13.7465769, lng: 100.5390414, precision: "building", note: "CentralWorld 店（3F #B302，页面实读）；借用 CentralWorld exact 坐标，building 级（2026-09-29 新增；鲁通船面胜利纪念碑店无可验证坐标，待补）" },
       { name: "Or Tor Kor Market", lat: 13.7971301, lng: 100.5475746, precision: "exact" },
+      { name: "鲁通船面 Ruathong Noodle", lat: 13.765801, lng: 100.539369, precision: "area", note: "船面一条街 Boat Noodle Alley 内，1/7 Ratchawithi Rd（2026-10-14 新增：店面无独立地理编码点，以 Places 的 Boat Noodle Alley 精确位置作区域级标注，补此前无坐标缺钉）" },
     ],
     malls: [
       { name: "ICONSIAM 暹罗天地", lat: 13.7268227, lng: 100.5102940, precision: "exact" },
