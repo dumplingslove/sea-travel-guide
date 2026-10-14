@@ -122,7 +122,7 @@ export function hotelStaysFromPlan(segments: PlanSegment[]): HotelStay[] {
  * 链条逻辑：beijing1 紧贴新加坡之前；分开行动紧贴东南亚最后城市之后；
  * 首尔紧贴分开行动之后。
  * 2026-10-13 行程改版（用户）：东南亚结束后从曼谷分开——用户一人飞北京、
- * 老婆带 Dylan 飞西安，两边同住 split 天后同日飞首尔汇合。旧串联模型
+ * 老婆一人飞西安（Dylan 已随岳父母从新加坡回西安），两边同住 split 天后同日飞首尔汇合。旧串联模型
  * （西安→北京3 两段）已废除；planner 保存的 trip 只有 split、没有
  * xian/beijing3，本函数此前仍按旧键读数，新保存下整条尾巴（西安/北京/首尔）
  * 会全部丢失——航班日期推导（曼谷→西安、北京/西安→首尔）与曼谷退房日随之失效。
@@ -480,22 +480,22 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "bkk-xiy",
     dbSeg: "BKK-XIY",
-    ctx: "D22：曼谷段结束，老婆带 Dylan 回西安（分开行动）",
+    ctx: "D22：曼谷段结束，老婆一人回西安（分开行动）",
     route: "曼谷 → 西安",
     date: "2026-12-20",
     dateLabel: "12-20",
     day: 22,
     kind: "intl",
-    note: "D22：曼谷段结束，老婆带 Dylan 回西安（2026-10-13 分开行动口径；乘员 1 成人+1 儿童，自 2026-10-13 起按 1大1小口径实查）；Google Flights 实查 2026-10-09 12:15 PDT（2 成人，1 班经济直飞，价格为 2 人整单总价）：Spring Airlines 9C6294 14:05→19:00 列表与展开详情价格一致 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $269，+0.4% 未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）。历史：2026-10-08 12:20 PDT 轮 $269；2026-10-07 12:25 PDT 轮 $249。注：2026-10-09 云端行程对齐，BKK→XIY 转场日由 12-18 更正为 12-19；上价格为 12-18 查询值，12-19 待 flight-refresh-daily-c 下轮重查。2026-10-10 12:17 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:35→19:30（上一轮 14:05→19:00，+30 分钟），详情页 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，±0.0%，未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-11 21:22 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:05→19:00（上一轮 14:35→19:30，-30 分钟；时长仍 3h55m），详情页 2 人整单 $241（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，-10.7%，达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-12 21:18 PDT 本轮：Spring Airlines 9C6294 14:05→19:00（与上一轮一致，时长仍 3h55m），详情页 2 人整单 $242（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $241，+0.4%，未达通报线）；商务舱当天仍无直飞（Nonstop 筛选 No results returned，Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-13 21:11 PDT 本轮（乘员口径纠正后首查：1 成人+1 儿童 2 岁）：Spring Airlines 9C6294 14:05→19:00（与上一轮一致，时长 3h55m），详情页 1大1小整单 $242（含税，页面确认 Prices include required taxes + fees for 2 passengers）；商务舱当天仍无直飞（Nonstop 筛选 No results returned；清除 Stops 筛选后商务舱 15 条结果全为 1 次中转且无 Spring 航班，即 Spring 该日期无商务舱价格）；推荐维持 9C6294。本轮乘员口径（1大1小）与上一轮（2 成人）不同，价格不作直接比较。",
+    note: "D22：曼谷段结束，老婆一人回西安（Dylan 已在新加坡之后随姥姥姥爷飞回西安、不在曼谷；乘员 1 成人。此前按 2 成人、1大1小口径实查的记录均为错口径）；Google Flights 实查 2026-10-09 12:15 PDT（2 成人，1 班经济直飞，价格为 2 人整单总价）：Spring Airlines 9C6294 14:05→19:00 列表与展开详情价格一致 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $269，+0.4% 未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）。历史：2026-10-08 12:20 PDT 轮 $269；2026-10-07 12:25 PDT 轮 $249。注：2026-10-09 云端行程对齐，BKK→XIY 转场日由 12-18 更正为 12-19；上价格为 12-18 查询值，12-19 待 flight-refresh-daily-c 下轮重查。2026-10-10 12:17 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:35→19:30（上一轮 14:05→19:00，+30 分钟），详情页 2 人整单 $270（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，±0.0%，未达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-11 21:22 PDT 本轮：Spring Airlines 9C6294 班次时间调整为 14:05→19:00（上一轮 14:35→19:30，-30 分钟；时长仍 3h55m），详情页 2 人整单 $241（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $270，-10.7%，达通报线）；商务舱当天仍无直飞（Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-12 21:18 PDT 本轮：Spring Airlines 9C6294 14:05→19:00（与上一轮一致，时长仍 3h55m），详情页 2 人整单 $242（含税，页面确认 Prices include required taxes + fees for 2 adults；上一轮 $241，+0.4%，未达通报线）；商务舱当天仍无直飞（Nonstop 筛选 No results returned，Spring 该日期无商务舱价格）；推荐维持 9C6294。2026-10-13 21:11 PDT 本轮（乘员口径纠正后首查：1 成人+1 儿童 2 岁）：Spring Airlines 9C6294 14:05→19:00（与上一轮一致，时长 3h55m），详情页 1大1小整单 $242（含税，页面确认 Prices include required taxes + fees for 2 passengers）；商务舱当天仍无直飞（Nonstop 筛选 No results returned；清除 Stops 筛选后商务舱 15 条结果全为 1 次中转且无 Spring 航班，即 Spring 该日期无商务舱价格）；推荐维持 9C6294。本轮乘员口径（1大1小）与上一轮（2 成人）不同，价格不作直接比较。",
     carrier: "Spring Airlines",
     schedule: "14:05 BKK → 19:00 XIY",
-    priceNote: "242 USD（1大1小整单总价，含税）",
+    priceNote: "242 USD（旧口径含税价，仅参考；待按 1 成人重查）",
     businessPriceNote: "无商务舱直飞",
     direct: true,
     queriedAt: "2026-10-13 21:11 PDT",
-    priceBasis: "1大1小总价",
+    priceBasis: "1成人总价",
     options: [
-      { carrier: "Spring Airlines", flight: "9C6294", depart: "14:05", arrive: "19:00", arrivePlusDay: false, stops: 0, bags: "随身行李免费，托运行李收费", price: 242, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞、不过夜；14:05 出发、19:00 抵达，白天到达不折腾；1大1小整单 $242（含税）" },
+      { carrier: "Spring Airlines", flight: "9C6294", depart: "14:05", arrive: "19:00", arrivePlusDay: false, stops: 0, bags: "随身行李免费，托运行李收费", price: 242, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞、不过夜；14:05 出发、19:00 抵达，白天到达不折腾；整单 $242（含税，旧口径，待按 1 成人重查）" },
     ],
     businessOptions: [],
     fragile: true,

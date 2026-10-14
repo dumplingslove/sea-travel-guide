@@ -606,9 +606,9 @@ const TRIP_SEGS: TripSegDef[] = [
   { id:"beijing1", label:"北京", sub:"陪父亲＋倒时差（带娃）", mode:"🏠 家庭", note:"11/28落地北京；末段飞新加坡（日期随天数自动算）" },
   { id:"singapore", label:"新加坡", sub:"亲子段（2大1小＋岳父母）", mode:"👨‍👩‍👧 亲子慢节奏", note:"每天最多 2 个大点，中午留午睡" },
   { id:"couple", label:"夫妻东南亚", sub:"", mode:"⚡ 特种兵", note:"岳父母带娃回西安，你俩继续东南亚", cta:true },
-  /* 2026-10-13 用户改行程：东南亚结束从曼谷分开走——你一人飞北京陪父亲，老婆带 Dylan 飞西安住下，
+  /* 2026-10-13 用户改行程：东南亚结束从曼谷分开走——你一人飞北京陪父亲，老婆一人飞西安住下，
      两边同住到分开行动最后一天，你坐高铁去西安汇合，再全家一起飞首尔。旧「夫妻一起回西安→你一人再飞北京」的串联两段合并为一段「分开行动」。 */
-  { id:"split", label:"分开行动", sub:"你→北京 · 老婆+Dylan→西安", mode:"🏠 家庭", note:"从曼谷分开：你飞北京、老婆带娃飞西安；最后一天你坐高铁去西安，跟他们汇合" },
+  { id:"split", label:"分开行动", sub:"你→北京 · 老婆→西安", mode:"🏠 家庭", note:"从曼谷分开：你飞北京、老婆一人飞西安（Dylan 已在西安跟姥姥姥爷住）；最后一天你坐高铁去西安，跟他们汇合" },
   /* 回程（2026-10-13 用户改，取代 10-02 的分两路飞首尔）：你先坐高铁 北京→西安汇合，全家再一起西安→首尔；首尔住 2 晚后三人一起飞西雅图 */
   { id:"seoul", label:"首尔", sub:"西安→首尔 · 住2晚", mode:"🏠 家庭", note:"12-30 全家从西安一起飞首尔，住 12-30、12-31 两晚；1-1 晚三人一起飞西雅图（AS120 已出票）" },
 ];
@@ -923,11 +923,11 @@ const TRIP_TRANSITIONS: TripTransition[] = [
     legs:[{code:"PEK-SIN",label:"北京→新加坡"},{code:"XIY-SIN",label:"西安→新加坡"}] },
   { after:"singapore", before:"couple", title:"__SIN_FIRST__（2人）＋ 新加坡→西安（岳父母带娃 2大1小）",
     legs:[{code:"__SIN_FIRST_CODE__",label:"__SIN_FIRST_LABEL__"},{code:"SIN-XIY",label:"新加坡→西安"}] },
-  /* 2026-10-13 用户改行程：东南亚结束从末城分开走——你一人飞北京、老婆带 Dylan 飞西安，
+  /* 2026-10-13 用户改行程：东南亚结束从末城分开走——你一人飞北京、老婆一人飞西安，
      不再有「夫妻一起回西安、你再转北京」的串联段，旧 couple→xian 与 xian→beijing3（高铁）两条转场一并废除。 */
   { after:"couple", before:"split", title:"__COUPLE_SPLIT__（分开行动）", noModeChoice:true,
-    note:"从东南亚末城分开：你飞北京陪父亲，老婆带 Dylan 飞西安；分开行动最后一天你坐高铁去西安汇合，第二天全家一起飞首尔。",
-    legs:[{code:"__COUPLE_PEK_CODE__",label:"__COUPLE_PEK_LABEL__（你一人）"},{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__（老婆带娃）"}] },
+    note:"从东南亚末城分开：你飞北京陪父亲，老婆一人飞西安；分开行动最后一天你坐高铁去西安汇合，第二天全家一起飞首尔。",
+    legs:[{code:"__COUPLE_PEK_CODE__",label:"__COUPLE_PEK_LABEL__（你一人）"},{code:"__COUPLE_XIY_CODE__",label:"__COUPLE_XIY_LABEL__（老婆一人）"}] },
   /* 2026-10-13 用户改回程：不再分两路飞首尔——你在分开行动最后一天坐高铁 北京→西安
      跟老婆孩子汇合（他们行李多、要帮忙拿），第二天全家一起西安→首尔。 */
   { after:"split", before:"seoul", title:"西安→首尔（全家一起）", noModeChoice:true,
@@ -1100,7 +1100,7 @@ function segFocusLegs(key: string): { legs: { from: string; to: string }[]; titl
   if (key === "singapore") return { legs: [zh(singaporeToFirstCityLeg().code), zh("SIN-XIY")], title: "新加坡这一段包含的航班" };
   if (key === "seoul") return { legs: [zh("ICN-SEA")], title: "首尔这一段包含的航班" };
   if (key === "split-you") return { legs: [zh(thailandToBeijingLeg().code), { from: "北京", to: "西安" }], title: "你这一路（飞北京 + 高铁汇合）" };
-  if (key === "split-wife") return { legs: [zh(thailandToXianLeg().code), zh("XIY-ICN")], title: "老婆+Dylan 这一路" };
+  if (key === "split-wife") return { legs: [zh(thailandToXianLeg().code), zh("XIY-ICN")], title: "老婆这一路" };
   return null;
 }
 function dispatchSegFocus(key: string) {
@@ -1144,7 +1144,7 @@ function renderTrip(){
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
         ${needs?`<div class="trip-needs">${needs}</div>`:""}
-        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="点击看你这一路的航班">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="点击看老婆+Dylan 这一路的航班">👩‍👧 老婆+Dylan：${coupleLastCity()} → 西安（住下），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
+        ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="点击看你这一路的航班">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="点击看老婆这一路的航班">👩 老婆：${coupleLastCity()} → 西安（住下，跟 Dylan 和姥姥姥爷汇合），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
       <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
@@ -1187,7 +1187,7 @@ function renderTrip(){
       const rm = RETURN_CITY_META[rc];
       const title = t.title
         .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
-        .replace("__COUPLE_SPLIT__", `${pekLeg.label}（你一人） ＋ ${xiyLeg.label}（老婆带娃）`)
+        .replace("__COUPLE_SPLIT__", `${pekLeg.label}（你一人） ＋ ${xiyLeg.label}（老婆一人）`)
         .replace("__SIN_FIRST__", `${sinLeg.label}`)
         .replace("__RETURN_SEOUL__", `${rm.city}→首尔`);
       const legs = t.legs.map(l=>({
@@ -1573,7 +1573,7 @@ function tripTransitionFlightIssues(date: string): DayIssue[] {
     if(firstCity && cityCode[firstCity]) check(`SIN-${cityCode[firstCity]}`, `新加坡→${firstCity}`);
     check("SIN-XIY", "新加坡→西安（岳父母带娃）");
   }
-  /* 东南亚段→分开行动：split 第一天，两条线都查（2026-10-13：你→北京、老婆带娃→西安） */
+  /* 东南亚段→分开行动：split 第一天，两条线都查（2026-10-13：你→北京、老婆一人→西安） */
   const sp = ranges["split"];
   if(cp && sp && date === sp.from && legMode("couple")==="flight"){
     const cities = wz.order.filter(c=>wz.cities.includes(c));
@@ -1581,7 +1581,7 @@ function tripTransitionFlightIssues(date: string): DayIssue[] {
     const cityCode: Record<string,string> = {"普吉":"HKT","清迈":"CNX","曼谷":"BKK","槟城":"PEN","吉隆坡":"KUL","胡志明市":"SGN","富国岛":"PQC"};
     if(lastCity && cityCode[lastCity]){
       check(`${cityCode[lastCity]}-PEK`, `${lastCity}→北京（你）`);
-      check(`${cityCode[lastCity]}-XIY`, `${lastCity}→西安（老婆带娃）`);
+      check(`${cityCode[lastCity]}-XIY`, `${lastCity}→西安（老婆一人）`);
     }
   }
   return out;
@@ -1659,7 +1659,7 @@ function ordAllFlights(): string {
     if(!date) continue;
     const title = t.title
       .replace("__COUPLE_XIY__", `${xiyLeg.label}（2人）`)
-      .replace("__COUPLE_SPLIT__", `${pekLeg.label}（你一人） ＋ ${xiyLeg.label}（老婆带娃）`)
+      .replace("__COUPLE_SPLIT__", `${pekLeg.label}（你一人） ＋ ${xiyLeg.label}（老婆一人）`)
       .replace("__SIN_FIRST__", `${sinLeg.label}`)
       .replace("__RETURN_SEOUL__", `${rm.city}→首尔`);
     for(const l of t.legs){

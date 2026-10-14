@@ -125,7 +125,7 @@ export function cityNeedOf(
 }
 
 /** 大行程天数归一化（2026-10-13 行程改版）：旧模型是 …→西安→北京（你一人）→… 两段串联；
- * 新模型是曼谷后「分开行动」一段：你→北京、老婆+Dylan→西安，两边同住 split 天，最后同日去首尔汇合。
+ * 新模型是曼谷后「分开行动」一段：你→北京、老婆→西安，两边同住 split 天，最后同日去首尔汇合。
  * 旧保存没有 split 时自动迁移：split = 旧 xian + 旧 beijing3（总天数与首尔日期不变）。 */
 export function normalizeTripDays(trip?: Record<string, number>): {
   beijing1: number; singapore: number; couple: number; split: number; seoul: number;
