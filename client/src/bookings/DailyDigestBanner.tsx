@@ -11,9 +11,10 @@
  */
 import { useMemo } from "react";
 import { hotels, restaurants, attractions } from "@/guide/data";
-import { getLiveHotelPrice } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
 import { useAvailability, fmtChecked } from "@/components/DayPlaceDetails";
+import { useDatasetsVersion } from "@/lib/datasets";
 
 /** 无保存行程时的回退城市（与 BookingStatusSummary 保持一致） */
 const FALLBACK_CITIES = [
@@ -40,6 +41,9 @@ export default function DailyDigestBanner({
   onJump: (m: MenuKey) => void;
 }) {
   const av = useAvailability();
+  // 数据集到达后横幅必须重算：hotel_live_prices / flight_db 都是先空后灌入的
+  // 可变存储，只按城市列表 memo 会把首屏的空结果冻住不刷新（2026-10-13 审计）。
+  const dsVersion = useDatasetsVersion();
   const list = scopeCities && scopeCities.length ? scopeCities : FALLBACK_CITIES;
   const inScope = (city: string) => list.includes(city);
 
@@ -49,7 +53,13 @@ export default function DailyDigestBanner({
       const p = getLiveHotelPrice(h.name);
       return p && !p.unavailable && p.base;
     });
-    if (!priced.length) return `0/${scoped.length}家有实时价`;
+    if (!priced.length) {
+      // 未就绪不许冒充「0 家有价」：加载中/加载失败与 ready 后确实无价分开写
+      const st = livePriceDatasetStatus();
+      if (st === "error") return "价格加载失败，刷新页面会重新加载";
+      if (st !== "ready") return "价格加载中…";
+      return `0/${scoped.length}家有实时价`;
+    }
     const min = Math.min(
       ...priced.map((h) => getLiveHotelPrice(h.name)!.base!.perNightUSD)
     );
@@ -60,7 +70,7 @@ export default function DailyDigestBanner({
       .pop();
     return `${priced.length}/${scoped.length}家有实时价 · 最低 $${min}/晚起 · 更新于 ${shortT(latest) ?? "—"}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list.join("|")]);
+  }, [list.join("|"), dsVersion]);
 
   const flightLine = useMemo(() => {
     // 2026-09-30 site-improve 口径②：stale 旧方案段不计入最低价/直飞段数/更新时间
@@ -95,7 +105,8 @@ export default function DailyDigestBanner({
       staleCount > 0 ? `（旧方案${staleCount}段已停更，未计入）` : null,
     ].filter(Boolean);
     return parts.join(" · ");
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dsVersion]);
 
   const diningLine = useMemo(() => {
     const scoped = restaurants.filter((r) => inScope(r.city));
