@@ -60,9 +60,16 @@ export function hotelStayFromPlan(city: string, segments: PlanSegment[]): [strin
   const idx = segments.findIndex((s) => s.city === city);
   if (idx < 0) return null;
   const seg = segments[idx]!;
-  const next = segments[idx + 1];
   // 2026-10-05 修：与 schedule 到达口径一致——入住=本段第一天，退房=下一段第一天（转场航班日）
-  return [seg.start, next ? next.start : seg.end];
+  // 2026-10-14 修：GuideApp 按云端 schedule 拼的段表里，曼谷段与首尔段之间隔着不在
+  // schedule 里的分开行动 10 天（12-20–12-29），直接取下一段首日会把曼谷退房日算成
+  // 12-30（11 晚）；且平行段（分开行动北京/西安同起）会算出 0 晚。与 hotelStaysFromPlan
+  // 同口径：取其后第一个更晚开始的段；其首日若晚于本段末日次日（段间有空档），
+  // 退房日 = 本段末日次日（离开本城的转场日）。
+  const next = segments.slice(idx + 1).find((s) => s.start > seg.start);
+  if (!next) return [seg.start, seg.end];
+  const dayAfterEnd = new Date(new Date(seg.end).getTime() + 86400000).toISOString().slice(0, 10);
+  return [seg.start, next.start > dayAfterEnd ? dayAfterEnd : next.start];
 }
 
 export interface HotelStay {
@@ -154,7 +161,7 @@ export function buildFullTripSegments(
     const segId = s.city === "新加坡" ? "singapore" : undefined;
     out.push(segId ? { ...s, segId } : s);
   }
-  /* 分开行动段：东南亚最后城市后一天开始，用户在北京、老婆+Dylan 在西安，
+  /* 分开行动段：东南亚最后城市后一天开始，用户在北京、老婆一人在西安（Dylan 已随岳父母先回西安），
    * 两段平行同起同止（同一时间窗，不是先后串联）。两个城市都要成段：
    * flightDateFromPlan 按目的地城市找段（曼谷→西安取西安段起点、北京/西安→首尔取首尔段起点）。 */
   const splitDays =
@@ -167,7 +174,7 @@ export function buildFullTripSegments(
     const end = addDays(start, splitDays - 1);
     out.push({ segId: "split-xian", city: "西安", start, end, days: splitDays });
     out.push({ segId: "split-beijing", city: "北京", start, end, days: splitDays });
-    /* 首尔段：分开行动后一天开始（两路同日飞首尔汇合） */
+    /* 首尔段：分开行动后一天开始（全家已在西安汇合、同日一起飞首尔） */
     if (tripDays.seoul) {
       const seStart = addDays(end, 1);
       const seEnd = addDays(seStart, tripDays.seoul - 1);

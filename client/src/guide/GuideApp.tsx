@@ -145,11 +145,13 @@ const cityImages:Record<string,string>={'曼谷':bangkokImg,'清迈':chiangmaiIm
 const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','2天','12/15–16'],['普吉','3天','12/17–19'],['槟城','2天','12/20–21'],['吉隆坡','2天','12/22–23'],['胡志明市','2天','12/24–25'],['富国岛','3天','12/26–28'],['新加坡','3天','12/29–31']];
 /** 预订入口回调：各 tab 的卡片/详情弹窗点“预订”时打开 BookingDialog */
 type OnBook=(p:BookingPreset)=>void;
-/** 当前行程（13天4城）各城入住/退房日期：预订弹窗预填优先用这张表
+/** 当前行程（13天4城）各城住宿首/末日（末日=在该城的最后一晚，不是退房日）：
  * 与云端规划一致（2026-12-07～12-19：新加坡 12/07–11 → 普吉 12/12–15 → 清迈 12/16–18 → 曼谷 12/19，
  * 入住=到达当天、退房=转场航班当天；"次日飞"口径已作废）。
  * 2026-10-03 修正：此前退房日按"下一段 start"多占一晚，与航班错位。
- * 2026-10-12 更新：用户调整东南亚各城天数（云端 2026-10-11 07:19Z）。 */
+ * 2026-10-12 更新：用户调整东南亚各城天数（云端 2026-10-11 07:19Z）。
+ * 2026-10-14 修：cityStayRange 兜底分支此前把末日直接当退房日（dateEnd），每城少 1 晚、
+ * 曼谷更成 0 晚；退房日须为末日次日（与本函数 route 兜底分支既有 +1 口径一致）。 */
 const currentStayRanges:Record<string,[string,string]>={
  '新加坡':['2026-12-07','2026-12-11'],
  '普吉':['2026-12-12','2026-12-15'],
@@ -186,7 +188,7 @@ function cityStayRange(city:string, segments?: PlanSegment[]):{date?:string;date
    if (stay) return {date: stay[0], dateEnd: stay[1]};
  }
  const cur=currentStayRanges[city];
- if(cur)return {date:cur[0],dateEnd:cur[1]};
+ if(cur)return {date:cur[0],dateEnd:new Date(new Date(cur[1]).getTime()+86400000).toISOString().slice(0,10)};
  const r=route.find(x=>x[0]===city)?.[2];
  const m=r?.match(/(\d+)\/(\d+)[–-](\d+)/);
  if(!m)return {};
