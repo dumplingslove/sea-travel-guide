@@ -966,8 +966,12 @@ function tripFlightCard(key: string, label: string){
       <p class="tfi-note">${tk.note}</p>`);
   }
   if(!d){
-    /* 「没数据」分两种，文案不许混（2026-10-13 晚用户手机实测：库里明明有价却整页挂「待查询」）：
-       数据集还没加载完/加载失败 → 是加载问题，写「加载中」；数据集已就绪但该日期确实没查过 → 才是「待查询」。 */
+    /* 「没数据」分三种，文案不许混（2026-10-13 晚用户手机实测：库里明明有价却整页挂「待查询」）：
+       还在加载 → 写「加载中」；三次重试全失败且无缓存（status=error，loadDatasets 全站只在
+       App 挂载时调一次、之后无人再拉）→ 必须写「加载失败」，不许继续冒充「加载中、到了会自动刷新」
+       （2026-10-13 site-improve 审计补）；数据集已就绪但该日期确实没查过 → 才是「待查询」。 */
+    if(getDatasetStatus("flight_db")==="error") return wrap("⚠️ 航班数据加载失败","pending","",
+      `<p class="tfi-note">数据库连接失败（已自动重试 3 次），刷新页面会重新加载——这不等于还没查到。</p>`);
     if(getDatasetStatus("flight_db")!=="ready") return wrap("⏳ 航班数据加载中","pending","",
       `<p class="tfi-note">正在从数据库加载航班数据，到了会自动刷新，不用重进页面——这不等于还没查到。</p>`);
     return wrap("⏳ 航班待查询","pending","",
@@ -1320,7 +1324,7 @@ function cpLegSummary(fromCity: string, toCity: string, date: string): string {
   const fc=CITY_AIRPORT[fromCity], tc=CITY_AIRPORT[toCity];
   if(!fc||!tc) return "✈️ 转场";
   const d=TRIP_FLIGHTS[`${fc}-${tc}|${date}`];
-  if(!d) return getDatasetStatus("flight_db")!=="ready" ? "✈️ 加载中" : "✈️ 待查询";
+  if(!d) return getDatasetStatus("flight_db")==="error" ? "✈️ 加载失败" : getDatasetStatus("flight_db")!=="ready" ? "✈️ 加载中" : "✈️ 待查询";
   if(!d.direct||d.eco==null) return "✈️ 暂无直飞";
   const cheap=(d.flights||[]).filter(f=>f.price!=null).sort((a,b)=>(a.price??0)-(b.price??0))[0];
   return `✈️ 直飞 $${d.eco} 起${cheap?` · ${esc(cheap.airline)} ${esc(cheap.flight)} ${esc(cheap.dep)}→${esc(cheap.arr)}`:""}`;
@@ -1675,6 +1679,9 @@ function flightGapPanel(): string {
   }
   const head = `<div class="trip-seg-head"><div class="trip-seg-title">🧭 航班数据完整性</div>
     <div class="micro">按当前行程自动比对航班库：缺的、过期的统一列在这里。定时任务每小时扫同一口径的缺口清单自动补查/刷新，行程改了清单自动跟着变；前后 ±1 天备选日期由后台清单一并覆盖。</div></div>`;
+  if(getDatasetStatus("flight_db")==="error"){
+    return `<div class="card" style="margin:16px 0">${head}<p class="micro" style="margin-top:8px">⚠️ 航班数据加载失败（已自动重试 3 次），刷新页面会重新加载；缺口清单暂时列不出来，这不等于没有缺口。</p></div>`;
+  }
   if(getDatasetStatus("flight_db")!=="ready"){
     return `<div class="card" style="margin:16px 0">${head}<p class="micro" style="margin-top:8px">⏳ 航班数据加载中，加载完这里会自动列出缺口。</p></div>`;
   }
