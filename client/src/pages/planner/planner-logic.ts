@@ -1631,6 +1631,70 @@ function ordAllFlights(): string {
     <div class="micro">所有转场日的航班卡都在这里，不用逐天点开；点每行展开看班次和价格。回程首尔段见下方「回程」卡。</div></div>
     ${groups.map(g=>`<div style="margin:10px 0"><div class="micro" style="margin-bottom:6px"><b>📅 ${dateLabel(g.date)}</b> · ${esc(g.title)}</div><div class="trip-flightinfo">${g.cards.join("")}</div></div>`).join("")}</div>`;
 }
+/* 🧭 航班数据完整性（2026-10-13 晚用户要求：缺口要自动检测、统一列在一处，
+   定时任务扫清单自动补）：按当前行程枚举全部转场航段（与 ordAllFlights 同源），
+   逐条比对航班库——没查过的列「待查询」、实查日期超过 1 天的列「待刷新」。
+   后台 detect-gaps.py 用同一口径（双口径日期 + ±1 备选 + 回程备选）生成统一清单，
+   flight-db 定时任务每小时扫清单补缺失、刷过期；这里展示的是行程正日子的缺口。 */
+function flightGapPanel(): string {
+  const ranges = tripRanges();
+  const items: {key:string; label:string; date:string}[] = [];
+  const seen = new Set<string>();
+  const push = (code:string, date:string|undefined, label:string) => {
+    if(!code || !date) return;
+    const key = `${code}|${date}`;
+    if(seen.has(key)) return;
+    seen.add(key);
+    items.push({key, label, date});
+  };
+  push("SEA-PEK", "2026-11-28", "西雅图→北京");
+  const rc = (returnCity || "PEK") as Exclude<ReturnCityCode,"">;
+  const rm = RETURN_CITY_META[rc];
+  const xiyLeg = thailandToXianLeg();
+  const pekLeg = thailandToBeijingLeg();
+  const sinLeg = singaporeToFirstCityLeg();
+  for(const t of TRIP_TRANSITIONS){
+    if(legMode(t.after)==="rail") continue;
+    const date = ranges[t.before]?.from;
+    if(!date) continue;
+    for(const l of t.legs){
+      const code = l.code.replace("__COUPLE_XIY_CODE__", xiyLeg.code).replace("__COUPLE_PEK_CODE__", pekLeg.code).replace("__SIN_FIRST_CODE__", sinLeg.code).replace("__RETURN_ICN_CODE__", `${rc}-ICN`);
+      const label = l.label.replace("__COUPLE_XIY_LABEL__", xiyLeg.label).replace("__COUPLE_PEK_LABEL__", pekLeg.label).replace("__SIN_FIRST_LABEL__", sinLeg.label).replace("__RETURN_ICN_LABEL__", `${rm.city}→首尔`);
+      push(code, date, label);
+    }
+  }
+  for(const leg of wzLegs()){
+    const fc = CITY_AIRPORT[leg.from], tc = CITY_AIRPORT[leg.to];
+    if(fc && tc) push(`${fc}-${tc}`, leg.date, `${leg.from}→${leg.to}`);
+  }
+  const seoul = ranges["seoul"];
+  if(seoul){
+    push("XIY-ICN", seoul.from, "西安→首尔");
+    const seaChoice = tripFlyChoice("return");
+    push("ICN-SEA", seaChoice==="last" ? seoul.to : addDays(seoul.to, 1), "首尔→西雅图");
+  }
+  const head = `<div class="trip-seg-head"><div class="trip-seg-title">🧭 航班数据完整性</div>
+    <div class="micro">按当前行程自动比对航班库：缺的、过期的统一列在这里。定时任务每小时扫同一口径的缺口清单自动补查/刷新，行程改了清单自动跟着变；前后 ±1 天备选日期由后台清单一并覆盖。</div></div>`;
+  if(getDatasetStatus("flight_db")!=="ready"){
+    return `<div class="card" style="margin:16px 0">${head}<p class="micro" style="margin-top:8px">⏳ 航班数据加载中，加载完这里会自动列出缺口。</p></div>`;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  const gaps: string[] = [];
+  let fresh = 0;
+  for(const it of items){
+    if(TICKETED_LEG_BY_KEY(it.key)) { fresh++; continue; } /* 已出票是事实，不算缺口 */
+    const d = TRIP_FLIGHTS[it.key];
+    if(!d){ gaps.push(`<p class="micro" style="margin:4px 0">⏳ <b>${esc(it.label)}</b> · ${dateLabel(it.date)} · 待查询（库里还没有实查数据）</p>`); continue; }
+    const q = d.queriedAt ? new Date(d.queriedAt + "T00:00:00") : null;
+    const ageDays = q ? Math.floor((today.getTime() - q.getTime()) / 86400000) : 99;
+    if(ageDays >= 2){ gaps.push(`<p class="micro" style="margin:4px 0">🔄 <b>${esc(it.label)}</b> · ${dateLabel(it.date)} · 待刷新（实查于 ${d.queriedAt || "未知"}）</p>`); }
+    else fresh++;
+  }
+  const summary = gaps.length
+    ? `<p class="micro" style="margin:8px 0 4px">共 ${items.length} 段：✅ ${fresh} 段有新鲜数据 · ⚠️ ${gaps.length} 段待处理（不用你管，定时任务会自动补）：</p>${gaps.join("")}`
+    : `<p class="micro" style="margin-top:8px">✅ 共 ${items.length} 段，全部有实查数据且在 1 天内刷新过，没有缺口。</p>`;
+  return `<div class="card" style="margin:16px 0">${head}${summary}</div>`;
+}
 function renderOrderTab(){
   const body = el("orderBody");
   body.innerHTML = `
@@ -1648,6 +1712,7 @@ function renderOrderTab(){
     </div>
     <div class="wz-unical">${wzUnifiedCalendar()}</div>
     <div id="ordDayDetail"></div>
+    ${flightGapPanel()}
     ${ordAllFlights()}
     ${ordReturnSummary()}
     ${buildCityTaboos()}
