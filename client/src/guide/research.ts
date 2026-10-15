@@ -1075,7 +1075,8 @@ const transitByCity:Record<string,string>={
  '吉隆坡':'轨道交通与Grab组合，雨天优先商场连廊',
  '胡志明市':'第一郡步行与Grab组合，过街保持稳定速度',
  '富国岛':'Grab或酒店车；南北岛不要同日反复折返',
- '新加坡':'MRT与步行；带娃时减少换乘'
+ '新加坡':'MRT与步行；带娃时减少换乘',
+ '首尔':'地铁与步行优先，T-money卡刷地铁公交都方便；仁川机场用AREX或机场巴士进城'
 };
 
 const daysForCity=(city:string)=>days.filter(d=>d.city===city).map(d=>`Day ${d.day}`).join('–');
