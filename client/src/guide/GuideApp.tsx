@@ -791,8 +791,8 @@ function Practical({onBook}:{onBook?:OnBook}){
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
-const shopRouteOrder=['新加坡','普吉','清迈','曼谷'];
-const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-07～12-11','普吉':'D6–D9 · 12-12～12-15','清迈':'D10–D12 · 12-16～12-18','曼谷':'D13 · 12-19'};
+const shopRouteOrder=['新加坡','普吉','清迈','曼谷','首尔'];
+const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-07～12-11','普吉':'D6–D9 · 12-12～12-15','清迈':'D10–D12 · 12-16～12-18','曼谷':'D13 · 12-19','首尔':'D24–D26 · 12-30～01-01'};
 const shopCities=[...shopRouteOrder,...cities.filter(c=>!shopRouteOrder.includes(c))];
 function MallCard({m,defaultOpen}:{m:MallDetail;defaultOpen?:boolean}){
  const [open,setOpen]=useState(!!defaultOpen);
