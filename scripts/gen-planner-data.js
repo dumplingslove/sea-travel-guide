@@ -2,7 +2,9 @@
 /**
  * 行程规划器研究数据生成器（P3 原生集成）
  * ============================================================
- * 唯一事实源：东南亚 20 天旅行网站的研究状态 JSON（193 项，8 城）。
+ * 唯一事实源：东南亚 20 天旅行网站的研究状态 JSON（223 项，9 城；2026-10-15 更新：
+ * 首尔 25 项与曼谷 Park Hyatt/普吉 Hyatt Regency/新加坡 Andaz 3 项为旧快照后新增，
+ * EXPECTED_TOTALS 与总数守卫已同步到当前 JSON，防静默漂移口径不变）。
  * 本脚本程序化读取该 JSON，生成 client/src/planner-data/research-items.ts。
  *
  * 铁律：规划器消费的地点数据只允许由本脚本生成，禁止手写或猜测。
@@ -34,7 +36,7 @@ const SRC =
   process.env.PLANNER_RESEARCH_JSON ||
   "/home/hatch/workspace/goals/southeast-asia-20-day-travel-website/hidden_files/research-status.json";
 
-// 城市顺序：与规划器 detailCityOrder / 经典路线顺序一致
+// 城市顺序：与规划器 detailCityOrder / 经典路线顺序一致；首尔为行程末段、列末位
 const CITY_ORDER = [
   ["bangkok", "曼谷"],
   ["chiangmai", "清迈"],
@@ -44,11 +46,16 @@ const CITY_ORDER = [
   ["hcmc", "胡志明市"],
   ["phuquoc", "富国岛"],
   ["singapore", "新加坡"],
+  ["seoul", "首尔"],
 ];
 const EXPECTED_TOTALS = {
-  bangkok: 32, chiangmai: 20, phuket: 24, penang: 24,
-  kualalumpur: 22, hcmc: 23, phuquoc: 22, singapore: 28,
+  bangkok: 33, chiangmai: 20, phuket: 25, penang: 24,
+  kualalumpur: 22, hcmc: 23, phuquoc: 22, singapore: 29, seoul: 25,
 };
+// 不入 PLANNER_CITY_SPOTS 的城市：首尔段是固定家庭段、不进分步规划向导的经典路线
+// 覆盖率体系（planner-logic 的 classicRoutes/classicSpotHits 只有东南亚 8 城），
+// 其 15 个景点不入精华清单；研究条目本身仍全量进入 RESEARCH_CITIES / RESEARCH_META。
+const SPOTS_EXCLUDED_SLUGS = ["seoul"];
 // 曼谷城外项：classicOutsideDayNote 已注记「不在曼谷 9 精华清单内，不计入覆盖」
 const BANGKOK_OUTSIDE_SPOTS = ["大城府 Ayutthaya 古城遗迹", "丹嫩沙多水上市场+美功铁道"];
 
@@ -104,7 +111,9 @@ function main() {
         throw new Error(`城外项「${name}」在研究 JSON 的曼谷景点中找不到，拒绝生成（防静默漂移）`);
       }
     }
-    citySpots[zh] = attractions.filter((n) => !outside.includes(n));
+    if (!SPOTS_EXCLUDED_SLUGS.includes(slug)) {
+      citySpots[zh] = attractions.filter((n) => !outside.includes(n));
+    }
     if (outside.length) citySpotsOutside[zh] = outside;
 
     if (slug === "kualalumpur") {
@@ -123,8 +132,8 @@ function main() {
   }
 
   const totalItems = allItems.length;
-  if (totalItems !== 195) {
-    throw new Error(`总条目数 ${totalItems} 与预期 195 不符，拒绝生成（防静默漂移）`);
+  if (totalItems !== 223) {
+    throw new Error(`总条目数 ${totalItems} 与预期 223 不符，拒绝生成（防静默漂移）`);
   }
   const totalSpots = Object.values(citySpots).reduce((a, l) => a + l.length, 0);
   if (totalSpots !== 67) {
@@ -142,9 +151,10 @@ function main() {
  * 事实源 updated_at：${updatedAt}
  * 生成时间：${generatedAt}
  *
- * 193 项研究条目（8 城）＋规划器直接消费的派生数据：
- * - PLANNER_CITY_SPOTS：8 城精华景点清单（共 67；曼谷 9，已剔除 2 个城外项，
- *   与 classicOutsideDayNote「不计入覆盖」注记一致）
+ * ${totalItems} 项研究条目（9 城）＋规划器直接消费的派生数据：
+ * - PLANNER_CITY_SPOTS：8 城精华景点清单（共 ${totalSpots}；曼谷 9，已剔除 2 个城外项，
+ *   与 classicOutsideDayNote「不计入覆盖」注记一致；首尔不入清单——固定家庭段、
+ *   不进向导经典路线覆盖率，见生成脚本 SPOTS_EXCLUDED_SLUGS 注记）
  * - PLANNER_CITY_SPOTS_OUTSIDE：被剔除的城外项（曼谷 2）
  * - PLANNER_KL_HOTELS：吉隆坡酒店研究记录（仅研究状态参考；规划器验收仍要求保留「研究报告未给出候选酒店」缺口提示）
  */
