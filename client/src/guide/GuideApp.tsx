@@ -610,6 +610,7 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "因他农国家公园",         // 清迈：一日团建议提前报
   "VinWonders",             // 富国岛：主题乐园建议提前买票
   "Vinpearl Safari",        // 富国岛：建议提前买票
+  "乐天世界 Lotte World",   // 首尔：主题乐园需买票入园，热门项目建议买快速通道（2026-10-15 site-improve 补：此前首尔在预订页景点 tab 整城为空、收藏徽章误标「现场买票即可」；条目原文「周边需买票入园才能买」「热门项目建议买快速通道」，与 VinWonders 同口径；首尔其余 14 景点逐项核对均为免费街区/免门票/「免费无需预约」，不入）
 ];
 
 /** 需提前订票景点 → 原因（行动安排页展示用） */
@@ -628,6 +629,7 @@ export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "因他农国家公园": "一日团建议提前报",
   "VinWonders": "主题乐园建议提前买票",
   "Vinpearl Safari": "建议提前买票",
+  "乐天世界 Lotte World": "主题乐园建议提前买票，热门项目买快速通道",
 };
 
 export function AttractionCatalog({onBook, scopeCities, bookingOnly, onCityChange, onItemSelect, defaultListExpanded, initialCity:propInitialCity, hideCityTabs}:{onBook?:OnBook;scopeCities?:string[];bookingOnly?:boolean;onCityChange?:(city:string)=>void;onItemSelect?:(key:string|null)=>void;defaultListExpanded?:boolean;initialCity?:string;hideCityTabs?:boolean}){
