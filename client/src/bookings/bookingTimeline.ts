@@ -289,24 +289,28 @@ export interface FlightOption {
 export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "sea-pek",
+    dbSeg: "SEA-PEK",
+    ctx: "去程国际段（一家三口）",
     route: "西雅图 → 北京",
     date: "2026-11-28",
     dateLabel: "11-28",
     day: 0,
     kind: "intl",
-    note: "去程国际段（一家三口）；Duffel 实查 2026-09-27 18:35 PDT（2大1小，当天仅1班直飞）",
+    note: "去程国际段（一家三口）；Google Flights 实查 2026-10-14 08:43 PDT（2大1小，当天仅1班直飞；此前本段未接 dbSeg、静态值停在 2026-09-27 旧查价，2026-10-15 site-improve 接线航班库 SEA-PEK 并同步静态兜底）",
     carrier: "Hainan Airlines HU496",
     schedule: "10:20→15:50+1",
-    priceNote: "3人 $1,913.50 起",
-    businessPriceNote: null,
+    priceNote: "3人 $1,631 起",
+    businessPriceNote: "3人 $12,534 起",
     direct: true,
     fragile: true,
-    queriedAt: "2026-09-27 18:35 PDT",
+    queriedAt: "2026-10-14 08:43 PDT",
     priceBasis: "2大1小总价",
     options: [
-      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "2件", price: 1913.50, refundable: "yes", changeable: "yes", recommend: true, recommendReason: "当天唯一去程直飞；13h30m，白天出发、当地傍晚到；2件托运；可退改（有罚金），出票前重查退改" },
+      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "待定", price: 1631, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞；13h30m，白天出发、当地次日傍晚到；价格为 Google Flights 2026-10-14 实查 3 人整单 $1,631（含税）" },
     ],
-    businessOptions: null,
+    businessOptions: [
+      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "待定", price: 12534, refundable: "not stated", changeable: "not stated", recommendReason: "同班商务舱；Google Flights 2026-10-14 实查 3 人整单 $12,534（含税）" },
+    ],
   },
   {
     id: "intl-out-bj",
@@ -770,7 +774,7 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
       leg.dateLabel = dateOverride.slice(5).replace("-", "-");
     }
     if (!seg || !date) {
-      // 不在库覆盖范围（如去程 SEA-PEK）：静态直飞即全部
+      // 不在库覆盖范围（无 dbSeg 的腿）：静态直飞即全部
       leg.flightState = leg.options && leg.options.length > 0 ? "ok" : "pending";
       return;
     }
