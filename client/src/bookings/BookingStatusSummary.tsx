@@ -21,8 +21,8 @@ import { bookingPolicyBadge } from "./restaurantBookingStatus";
 import { placeDetailPath } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 
-/** 预订页未传 scopeCities（无保存行程）时的回退：全部 8 城 */
-const ALL_CITIES = ["新加坡", "普吉", "曼谷", "清迈", "槟城", "吉隆坡", "胡志明市", "富国岛"];
+/** 预订页未传 scopeCities（无保存行程）时的回退：全部 9 城（与 data.ts cities 一致，含首尔） */
+const ALL_CITIES = ["新加坡", "普吉", "曼谷", "清迈", "首尔", "槟城", "吉隆坡", "胡志明市", "富国岛"];
 
 /** 需要提前订票的景点（无余票数据时显示"建议提前订票"，其余显示"无需提前订票"） */
 const NEEDS_ADVANCE_BOOKING = new Set([
