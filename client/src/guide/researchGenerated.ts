@@ -409,18 +409,6 @@ export const generatedSecondaryEvidence:Record<string,SecondaryEvidence[]>={
       title: "Four Seasons Resort Chiang Mai · 辅助来源",
       url: "https://www.tripadvisor.co.za/Hotel_Feature-g1766192-d301886-zft6217-Four_Seasons_Resort_Chiang_Mai.html",
       note: "清迈研究记录中用于事实或旅行者反馈交叉核对"
-    },
-    {
-      group: "官方与专业来源",
-      title: "Anantara Chiang Mai Resort · 辅助来源",
-      url: "https://www.oyster.com/chiang-mai/hotels/anantara-chiang-mai-resort-and-spa/",
-      note: "清迈研究记录中用于事实或旅行者反馈交叉核对"
-    },
-    {
-      group: "官方与专业来源",
-      title: "Anantara Chiang Mai Resort · 辅助来源",
-      url: "https://uk.hotels.com/ho226504/anantara-chiang-mai-resort-chiang-mai-thailand/?chkin=2024-7-5&chkout=2024-7-6&rm1=a2&expediaPropertyId=1159643&regionId=6056197",
-      note: "清迈研究记录中用于事实或旅行者反馈交叉核对"
     }
   ],
   "Raya Heritage": [
@@ -1146,24 +1134,6 @@ export const generatedSecondaryEvidence:Record<string,SecondaryEvidence[]>={
     }
   ],
   "Four Seasons Kuala Lumpur": [
-    {
-      group: "官方与专业来源",
-      title: "The St. Regis Kuala Lumpur · 辅助来源",
-      url: "https://www.tatlerasia.com/places/the-st-regis-kuala-lumpur",
-      note: "吉隆坡研究记录中用于事实或旅行者反馈交叉核对"
-    },
-    {
-      group: "官方与专业来源",
-      title: "The St. Regis Kuala Lumpur · 辅助来源",
-      url: "https://www.tatlerasia.com/lifestyle/travel/hotels-to-stay-in-kuala-lumpur",
-      note: "吉隆坡研究记录中用于事实或旅行者反馈交叉核对"
-    },
-    {
-      group: "中文旅游网站",
-      title: "The St. Regis Kuala Lumpur · 辅助来源",
-      url: "https://hk.trip.com/hotels/kuala-lumpur-hotel-detail-5095621/the-st-regis-kuala-lumpur/",
-      note: "吉隆坡研究记录中用于事实或旅行者反馈交叉核对"
-    },
     {
       group: "中文旅游网站",
       title: "Four Seasons Hotel Kuala Lumpur · 辅助来源",
