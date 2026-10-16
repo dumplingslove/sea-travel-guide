@@ -1066,7 +1066,12 @@ export const xhsAssessments:Record<string,XhsAssessment>={
  'Old Airport Road':S('推荐',4,0,0,'2026-10-11老窗口新深读2篇（70赞/17赞）+此前2篇：本地人食堂实锤——新美香卤面、老夫子炒粿条（黑酱油加辣）、同心咖啡木薯咖啡、南星福建面高频被点名；兴利蚝煎"没有腥味又肥美"。Dakota地铁B口步行4分钟。','兴利蚝煎只能付现金；各摊位营业时间不一，下午四五点部分已收；福建炒虾面偏酸辣可略过。'),
 };
 
-Object.assign(xhsEvidence,extraXhsEvidence);
+/* xhsEvidence 并集合并（2026-10-16 类别2 修复）：主表∩extra 共 4 键（ArtScience Museum/Capella Bangkok/Phuket Elephant Sanctuary/神仙半岛），
+   此前 Object.assign 整键替换会把主表已深读的原帖链接整组吞掉（ArtScience 3→1、神仙半岛 3→2、大象营 3→2，详情页核验进度与严格链接数随之缩水）。
+   改为与 secondaryEvidence 同口径的 concat + URL 去重（主表在先：重叠 URL 的主表 note 与 extra 相同或更详，保留主表不丢信息）。 */
+for(const [name,links] of Object.entries(extraXhsEvidence)){
+ xhsEvidence[name]=[...(xhsEvidence[name]||[]),...links].filter((link,index,all)=>all.findIndex(x=>x.url===link.url)===index);
+}
 Object.assign(xhsAssessments,extraXhsAssessments);
 
 export function getXhsAssessment(item:Item){return xhsAssessments[item.name]}
