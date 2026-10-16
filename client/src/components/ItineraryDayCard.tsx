@@ -105,6 +105,8 @@ export interface ParsedFavorite {
   name: string;
   city: string;
   type: string;
+  /** 收藏景点「排入某天」的指定日期（ISO，存收藏记录 body.assignDate；2026-10-16 新增） */
+  assignDate?: string;
   flight?: {
     carrier?: string;
     flight?: string;
@@ -125,9 +127,10 @@ export function parseFavoriteRow(r: { title: string; body: string }): ParsedFavo
     const d = JSON.parse(r.body || "{}") as {
       city?: string;
       type?: string;
+      assignDate?: string;
       flight?: ParsedFavorite["flight"];
     };
-    return { name: r.title, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
+    return { name: r.title, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight, assignDate: d.assignDate };
   } catch {
     return { name: r.title, city: "", type: "attraction" };
   }
@@ -612,6 +615,7 @@ export function ItineraryDayCard({
   isCloud,
   cityScheduledNames,
   favorites,
+  assignedAttractions,
   stay,
   onSelectStop,
   selectedKey,
@@ -626,6 +630,8 @@ export function ItineraryDayCard({
   cityScheduledNames?: Set<string>;
   /** 用户收藏（酒店/餐厅/航班）：每天卡片里展示当天城市的收藏 */
   favorites?: ParsedFavorite[];
+  /** 我排入这一天的必去景点名（收藏景点在行程页指定了 assignDate=当天） */
+  assignedAttractions?: string[];
   /** 本城住宿区间（入住/退房），"今晚住哪"用 */
   stay?: { checkIn: string; checkOut: string } | null;
   /** 点选（2026-10-04 用户）：点卡片 → 顶栏固定地图显示这一天，被点的跳动 */
@@ -734,6 +740,7 @@ export function ItineraryDayCard({
    */
   // memo 签名：收藏/推荐/预订变化时重算当天地图数据
   const favSigCheck = favRests.map((f) => f.name).join("|");
+  const assignedSigCheck = (assignedAttractions ?? []).join("|");
   const restSigCheck = restPicks.map((r) => r.name).join("|");
   const hotelSigCheck = hotelBookings.map((b) => `${b.title}:${b.done}`).join("|");
   const dayRoute: DayRoute = useMemo(() => {
@@ -759,6 +766,11 @@ export function ItineraryDayCard({
       ? (cloudStops ?? []).map((x) => ({ name: x.name, lat: x.lat, lng: x.lng }))
       : (stopCoordsForDay(day.day) ?? []).map((x) => ({ name: x.name, lat: x.lat, lng: x.lng }));
     tl.forEach((t) => push(t.name, "attraction", t.lat, t.lng));
+    // 我排入这一天的必去景点：按名查核实坐标进当天路线（查不到坐标就不进地图、只在卡片里列名）
+    for (const n of assignedAttractions ?? []) {
+      const c = cloudStopsForTimeline([{ name: n, time: "" }])?.[0];
+      if (c) push(n, "attraction", c.lat, c.lng);
+    }
     // 餐厅 / 酒店按名查坐标
     const cityPlaces = placesForCity(cityId);
     const restNames = [...favRests.map((f) => f.name), ...restPicks.map((r) => r.name)];
@@ -778,7 +790,7 @@ export function ItineraryDayCard({
     }
     return { day: day.day, city: day.city_zh, label: `D${day.day} · ${day.city_zh}`, stops };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck, transferRoute]);
+  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck, transferRoute, assignedSigCheck]);
 
   /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */
   const handleSelect = (kind: "attraction" | "restaurant" | "hotel", name: string) => {
@@ -921,6 +933,30 @@ export function ItineraryDayCard({
           onSelect={onSelectStop ? (kind, name) => handleSelect(kind, name) : undefined}
           selectedKey={selectedKey}
         />
+
+        {/* 我排入这一天的必去景点（2026-10-16：收藏景点指定日期后落到当天卡片，不再只是警告没排入） */}
+        {assignedAttractions && assignedAttractions.length > 0 && (
+          <section className="mb-6">
+            <h4 className="text-lg font-bold mb-3 text-violet-800">⭐ 我排入这一天的必去景点</h4>
+            <div className="flex flex-wrap gap-2">
+              {assignedAttractions.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => handleSelect("attraction", n)}
+                  className={`text-sm px-3 py-1.5 rounded-full border font-medium ${
+                    selectedKey === stickyItemKey("attraction", day.city_zh, n)
+                      ? "bg-violet-700 text-white border-violet-700"
+                      : "bg-violet-50 text-violet-900 border-violet-200 hover:border-violet-500"
+                  }`}
+                >
+                  ⭐ {n}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-2">在行程页顶部的「我的必去景点」里指定日期；点景点名可在上方地图定位。</p>
+          </section>
+        )}
 
         {/* 上午 / 下午 / 晚上 */}
         {morning.length > 0 && (

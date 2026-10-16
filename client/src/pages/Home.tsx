@@ -39,28 +39,39 @@ function shortDate(d: string): string {
   return d;
 }
 
-/** 收藏的景点 → 行程排入检查：收藏的必去景点是否已在行程中 */
+/** 收藏的景点 → 行程排入检查 + 排入某天（2026-10-16 改版）：
+ * 此前没排入的只写「建议手动加入某天」，但全站没有这个功能，是断头路。
+ * 现在每项可以直接选本城的一天排入：指定日期存进收藏记录 body.assignDate（云端同步），
+ * 那天的行程卡会出现「⭐ 我排入这一天的必去景点」，本地图有坐标时同步进当天路线。 */
 function FavoriteItineraryCheck({
   cityScheduled,
+  dayOptions,
 }: {
   cityScheduled: Map<string, Set<string>>;
+  /** 本页显示的天（可选排入目标）：day=天号，iso=ISO 日期，city_zh=城市，label=展示文案 */
+  dayOptions: { day: number; iso: string; city_zh: string; label: string }[];
 }) {
-  const { rows } = useRecordsData(["favorite"]);
+  const { rows, save } = useRecordsData(["favorite"]);
+  const [pick, setPick] = useState<Record<string, string>>({});
   const favs = rows
     .map((r) => {
+      let body: Record<string, unknown> = {};
       try {
-        const d = JSON.parse(r.body) as {
-          city?: string;
-          type?: string;
-        };
-        return {
-          name: r.title,
-          city: d.city ?? "",
-          type: d.type ?? "attraction",
-        };
+        body = JSON.parse(r.body || "{}") as Record<string, unknown>;
       } catch {
-        return { name: r.title, city: "", type: "attraction" };
+        body = {};
       }
+      return {
+        id: r.id,
+        kind: r.kind,
+        rowDay: r.day,
+        done: r.done,
+        bodyRaw: body,
+        name: r.title,
+        city: (body.city as string) ?? "",
+        type: (body.type as string) ?? "attraction",
+        assignDate: typeof body.assignDate === "string" ? body.assignDate : undefined,
+      };
     })
     .filter((f) => f.type === "attraction");
 
@@ -78,33 +89,91 @@ function FavoriteItineraryCheck({
     return false;
   };
 
-  const unscheduled = favs.filter((f) => !checkScheduled(f.name, f.city));
+  const assignedDayOf = (f: (typeof favs)[number]) =>
+    f.assignDate ? dayOptions.find((d) => d.iso === f.assignDate) : undefined;
+  const isOk = (f: (typeof favs)[number]) =>
+    checkScheduled(f.name, f.city) || !!assignedDayOf(f);
+  const unscheduled = favs.filter((f) => !isOk(f));
+
+  const doAssign = (f: (typeof favs)[number], iso: string | null) => {
+    const body = { ...f.bodyRaw };
+    if (iso) body.assignDate = iso;
+    else delete body.assignDate;
+    save.mutate({
+      id: f.id, kind: f.kind, title: f.name,
+      body: JSON.stringify(body), day: f.rowDay, done: f.done,
+    });
+  };
 
   return (
     <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-6">
       <h3 className="font-bold text-gray-900 mb-1">⭐ 我的必去景点</h3>
       <p className="text-xs text-gray-500 mb-3">
-        在景点页收藏的必去项，系统会检查是否已排入行程
+        在景点页收藏的必去项，系统会检查是否已排入行程；没排入的可以在这里直接选一天排进去
       </p>
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         {favs.map((f) => {
-          const ok = checkScheduled(f.name, f.city);
+          const ok = isOk(f);
+          const ad = assignedDayOf(f);
+          const cityDays = dayOptions.filter((d) => d.city_zh === f.city);
+          const chosen = pick[f.name] ?? cityDays[0]?.iso ?? "";
           return (
-            <div key={f.name} className="flex items-center gap-2 text-sm">
+            <div key={f.name} className="flex items-center gap-2 text-sm flex-wrap">
               <span>{ok ? "✅" : "⚠️"}</span>
               <span className="font-medium text-gray-900">{f.name}</span>
               <span className="text-xs text-gray-400">{f.city}</span>
-              <span className="text-xs text-gray-500">
-                {ok ? "已排入行程" : "未排入行程，建议手动加入某天"}
-              </span>
+              {ad ? (
+                <>
+                  <span className="text-xs text-violet-700 font-medium">
+                    已由我排入 {ad.label}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => doAssign(f, null)}
+                    className="text-xs px-2 py-1 rounded-lg bg-white border border-violet-200 text-gray-500 hover:text-red-600"
+                  >
+                    取消排入
+                  </button>
+                </>
+              ) : ok ? (
+                <span className="text-xs text-gray-500">已排入行程</span>
+              ) : (
+                <>
+                  <span className="text-xs text-gray-500">未排入行程</span>
+                  {cityDays.length > 0 && (
+                    <>
+                      <select
+                        value={chosen}
+                        onChange={(e) => setPick((p) => ({ ...p, [f.name]: e.target.value }))}
+                        className="text-xs px-2 py-1.5 rounded-lg border border-violet-300 bg-white text-gray-700"
+                        aria-label={`给${f.name}选择排入哪一天`}
+                      >
+                        {cityDays.map((d) => (
+                          <option key={d.iso} value={d.iso}>
+                            {d.label}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        disabled={!chosen || save.isPending}
+                        onClick={() => chosen && doAssign(f, chosen)}
+                        className="text-xs px-2.5 py-1.5 rounded-lg bg-violet-700 text-white font-medium disabled:opacity-50"
+                      >
+                        排入这一天
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           );
         })}
       </div>
       {unscheduled.length > 0 && (
         <p className="text-xs text-amber-700 mt-3">
-          有 {unscheduled.length}{" "}
-          个收藏未排入：{unscheduled.map((f) => f.name).join("、")}。可在对应城市找空闲半天手动加入。
+          还有 {unscheduled.length}{" "}
+          个收藏未排入：{unscheduled.map((f) => f.name).join("、")}。在上面选好日期点「排入这一天」，就会出现在那天的行程卡里。
         </p>
       )}
     </div>
@@ -130,6 +199,13 @@ export function ItineraryTab({
     ? allDays.filter((d) => KOREA_CITY_ZH.has(d.city_zh))
     : allDays.filter((d) => SEA_CITY_ZH.has(d.city_zh));
   const scrollKey = koreaOnly ? KOREA_SCROLL_KEY : SEA_SCROLL_KEY;
+  /* 收藏景点「排入某天」的目标天（本页显示的天）与已排入映射（ISO 日期 → 天号在下方 dayByDate 里查） */
+  const dayOptions = days
+    .map((d) => {
+      const iso = toISODate(d.date);
+      return iso ? { day: d.day, iso, city_zh: d.city_zh, label: `D${d.day} · ${shortDate(d.date)} ${d.city_zh}` } : null;
+    })
+    .filter((x): x is { day: number; iso: string; city_zh: string; label: string } => !!x);
   // 从详情页返回时恢复离开时的滚动位置，不再跳回页面顶部。
   // 位置在卸载时写入 sessionStorage，恢复后立即清除，避免刷新页面时误恢复。
   useLayoutEffect(() => {
@@ -221,6 +297,17 @@ export function ItineraryTab({
     list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
     bookingsByDay.set(dayNum, list);
   });
+  // 我排入的必去景点：收藏景点带 assignDate 的，按日期挂到对应天（assignedAttractions 传给当天卡片）
+  const assignedByDay = new Map<number, string[]>();
+  favRows.forEach((r) => {
+    const f = parseFavoriteRow({ title: r.title, body: r.body || "" });
+    if (f.type !== "attraction" || !f.assignDate) return;
+    const dn = dayByDate.get(f.assignDate);
+    if (dn == null) return;
+    const list = assignedByDay.get(dn) ?? [];
+    list.push(f.name);
+    assignedByDay.set(dn, list);
+  });
   // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池；云端13天再叠加逐日修正）
   const isCloud = plan.source === "cloud";
   const details = days.map((d) => {
@@ -305,8 +392,8 @@ export function ItineraryTab({
         </div>
       </div>
 
-      {/* 收藏的景点：检查是否已排入行程 */}
-      <FavoriteItineraryCheck cityScheduled={cityScheduled} />
+      {/* 收藏的景点：检查是否已排入行程 + 直接排入某天 */}
+      <FavoriteItineraryCheck cityScheduled={cityScheduled} dayOptions={dayOptions} />
 
       {/* 每日完整行程卡（意大利站逻辑：一天一卡，信息全在卡里） */}
       {/* 空状态（days.length===0）时不渲染"X 0 天详细行程"标题，
@@ -341,6 +428,7 @@ export function ItineraryTab({
                 isCloud={isCloudPlan}
                 cityScheduledNames={cityScheduled.get(d.city_zh)}
                 favorites={favorites}
+                assignedAttractions={assignedByDay.get(d.day)}
                 stay={stays.get(d.city_zh) ?? null}
                 onSelectStop={handleCardSelect}
                 selectedKey={selectedKey}

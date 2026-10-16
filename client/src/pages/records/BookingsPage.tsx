@@ -32,7 +32,7 @@ import {
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingTypes";
-import { loadPlannerPlan, cityNeedOf, normalizeTripDays, type PlannerPlan } from "@/guide/plannerSchedule";
+import { loadPlannerPlan, cityNeedOf, buildPlanTimeline, type PlannerPlan } from "@/guide/plannerSchedule";
 import { getDataset, useDatasetsVersion } from "@/lib/datasets";
 import {
   BOOKING_KIND_LABEL,
@@ -97,6 +97,248 @@ function ActionStrip({ confirmedCount }: { confirmedCount: number }) {
           {s.label} <b>{s.n}</b>
         </span>
       ))}
+    </div>
+  );
+}
+
+/** ISO 日期加减（行动队列算酒店夜用） */
+function isoAddDays(iso: string, n: number): string {
+  const d = new Date(`${iso}T12:00:00`);
+  d.setDate(d.getDate() + n);
+  const p2 = (x: number) => String(x).padStart(2, "0");
+  return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+}
+
+/** 统一行动队列（2026-10-16 审计改进）：把原本散在首页警告、每日横幅、价格追踪卡、
+ * 最终预定日历四处的「现在该处理什么」汇总到预订页顶部，按紧迫度排，每条带原因和直达入口。
+ * 数据只用现成的：已确认预订记录（与最终预定同口径）、收藏流水线状态、sea_availability
+ * 每日实查、航班库实时价 vs 收藏价、timeline 酒店窗口 vs 已订夜。查不到的就不写、不编。 */
+function NextActionQueue({
+  plan,
+  stays,
+  flightSegs,
+  onGoTrackCard,
+  onGoFinal,
+  onGoScreen,
+}: {
+  plan: PlannerPlan | null;
+  stays: HotelStay[];
+  flightSegs: PlanSegment[];
+  onGoTrackCard: (id: number) => void;
+  onGoFinal: () => void;
+  onGoScreen: (cat: "hotels" | "flights" | "restaurants" | "attractions", city?: string) => void;
+}) {
+  const { rows: bkRows, loading } = useRecordsData(["booking"]);
+  const { rows: fvRows } = useRecordsData(["favorite"]);
+  useDatasetsVersion();
+  const [availMap, setAvailMap] = useState<Map<string, { status: string; checked_at: string }>>(new Map());
+  useEffect(() => {
+    if (!supabaseConfigured || !supabase) return;
+    let live = true;
+    supabase
+      .from("sea_availability")
+      .select("kind,name,status,checked_at")
+      .eq("trip_ref", "dec2026")
+      .then(({ data }) => {
+        if (!live || !data) return;
+        const m = new Map<string, { status: string; checked_at: string }>();
+        for (const r of data as { kind: string; name: string; status: string; checked_at: string }[]) {
+          m.set(`${r.kind}:${r.name}`, { status: r.status, checked_at: r.checked_at });
+        }
+        setAvailMap(m);
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  if (loading) return null;
+
+  interface Action {
+    sev: number;
+    icon: string;
+    text: string;
+    btn: string;
+    go: () => void;
+  }
+  const actions: Action[] = [];
+
+  /* 已确认预订：按名索引 + 酒店覆盖夜（与最终预定日历同口径：date..dateEnd 前一晚） */
+  const confirmedNames = new Set<string>();
+  const bookingTitles = new Set<string>();
+  const coveredNights = new Set<string>();
+  for (const r of bkRows) {
+    bookingTitles.add(r.title.trim().toLowerCase());
+    if (!r.done) continue;
+    confirmedNames.add(r.title.trim().toLowerCase());
+    const d = parseBookingBody(r.body);
+    if (d.bkind === "hotel" && d.date) {
+      if (!d.dateEnd) {
+        coveredNights.add(d.date);
+      } else {
+        let cur = d.date;
+        let g = 0;
+        while (cur < d.dateEnd && g++ < 62) {
+          coveredNights.add(cur);
+          cur = isoAddDays(cur, 1);
+        }
+      }
+    }
+  }
+
+  /* 酒店未订夜：timeline 酒店窗口里还没被已确认酒店记录覆盖的夜（关掉订酒店的城市不算） */
+  if (plan) {
+    for (const st of stays) {
+      if (!cityNeedOf(plan, st.city).hotel) continue;
+      let missing = 0;
+      let cur = st.checkIn;
+      let g = 0;
+      while (cur < st.checkOut && g++ < 62) {
+        if (!coveredNights.has(cur)) missing++;
+        cur = isoAddDays(cur, 1);
+      }
+      if (missing > 0) {
+        actions.push({
+          sev: 2,
+          icon: "🏨",
+          text: `${st.city}还有 ${missing} 晚酒店没订（${planDateShort(st.checkIn)} 入住 · 这段共 ${st.nights} 晚）`,
+          btn: "去选酒店",
+          go: () => onGoScreen("hotels", st.city),
+        });
+      }
+    }
+  }
+
+  /* 收藏流水线：余位异常 / 必订未订 / 已确定没加入预订 / 航班涨价 */
+  const favsQ = fvRows
+    .map((r) => {
+      try {
+        const d = JSON.parse(r.body || "{}") as {
+          city?: string;
+          type?: string;
+          flight?: {
+            carrier?: string; flight?: string; price?: number; cabin?: string; route?: string;
+          };
+        };
+        return { row: r, city: d.city ?? "", type: d.type ?? "attraction", flight: d.flight };
+      } catch {
+        return { row: r, city: "", type: "attraction", flight: undefined };
+      }
+    })
+    .filter((f) => ["hotel", "flight", "restaurant", "attraction"].includes(f.type));
+
+  for (const f of favsQ) {
+    const title = f.row.title;
+    const confirmed = confirmedNames.has(title.trim().toLowerCase());
+    if ((f.type === "restaurant" || f.type === "attraction") && !confirmed) {
+      const av = availMap.get(`${f.type}:${title}`);
+      const when = av?.checked_at
+        ? new Date(av.checked_at).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })
+        : "";
+      if (av && (av.status === "full" || av.status === "soldout")) {
+        actions.push({
+          sev: 3,
+          icon: "🔴",
+          text: `${title} 已经订满/售罄${when ? `（${when} 实查）` : ""}，得换备选或改时间`,
+          btn: "去看这项",
+          go: () => onGoTrackCard(f.row.id),
+        });
+      } else if (av && av.status === "not_released") {
+        actions.push({
+          sev: 1,
+          icon: "⏳",
+          text: `${title} 还没放位/开售${when ? `（${when} 实查）` : ""}，先盯着，放出来第一时间订`,
+          btn: "去看这项",
+          go: () => onGoTrackCard(f.row.id),
+        });
+      } else if (
+        f.type === "restaurant" &&
+        getRestaurantBookingPolicy(title)?.policy === "must_book"
+      ) {
+        actions.push({
+          sev: 2,
+          icon: "🍽️",
+          text: `必订餐厅 ${title} 还没订位`,
+          btn: "去看这项",
+          go: () => onGoTrackCard(f.row.id),
+        });
+      }
+    }
+    if (f.type === "flight" && f.flight?.flight && f.flight.price != null && f.flight.price > 0 && !confirmed) {
+      const leg = FLIGHT_LEGS.find((l) => l.route === f.flight!.route);
+      const qDate = f.flight.route ? flightDateFromPlan(f.flight.route, flightSegs) : null;
+      const live = leg?.dbSeg && qDate ? liveFlightQuote(leg.dbSeg, qDate, f.flight.flight) : null;
+      const lp = live ? (f.flight.cabin === "biz" ? live.bizPrice : live.price) : null;
+      if (lp != null && lp >= f.flight.price * 1.1) {
+        const pct = Math.round((lp / f.flight.price - 1) * 100);
+        actions.push({
+          sev: 3,
+          icon: "✈️",
+          text: `${f.flight.route ?? ""} ${f.flight.flight} 涨到 $${Math.round(lp)}（收藏时 $${f.flight.price}，+${pct}%），要锁趁早`,
+          btn: "去看这项",
+          go: () => onGoTrackCard(f.row.id),
+        });
+      }
+    }
+    if (f.row.done && !confirmed && !bookingTitles.has(title.trim().toLowerCase())) {
+      actions.push({
+        sev: 1,
+        icon: "📌",
+        text: `「${title}」已经确定了，还没加入预订`,
+        btn: "去加入预订",
+        go: () => onGoTrackCard(f.row.id),
+      });
+    }
+  }
+
+  /* 待确认的预订记录 */
+  const pending = bkRows.filter((r) => !r.done);
+  if (pending.length) {
+    actions.push({
+      sev: 1,
+      icon: "📝",
+      text: `有 ${pending.length} 条预订记录还没标确认：${pending.slice(0, 2).map((r) => r.title).join("、")}${pending.length > 2 ? " 等" : ""}`,
+      btn: "去最终预定",
+      go: onGoFinal,
+    });
+  }
+
+  actions.sort((a, b) => b.sev - a.sev);
+  const shown = actions.slice(0, 8);
+
+  if (!shown.length) {
+    return (
+      <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-4 text-sm text-emerald-900">
+        ✅ <b>现在没有要处理的</b>：该订的酒店夜都订上了，收藏的余位和机票价格也没有异常。
+      </div>
+    );
+  }
+  return (
+    <div className="bg-white border-2 border-teal-700 rounded-xl p-4 mb-4">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="font-bold text-gray-900">🧭 现在该处理</h3>
+        <span className="text-xs bg-teal-700 text-white px-2 py-0.5 rounded-full font-medium">
+          {actions.length} 件
+        </span>
+      </div>
+      <div className="space-y-1.5">
+        {shown.map((a, i) => (
+          <div key={i} className="flex items-center gap-2 text-sm">
+            <span className="shrink-0">{a.icon}</span>
+            <span className="flex-1 min-w-0 text-gray-800">{a.text}</span>
+            <button
+              type="button"
+              onClick={a.go}
+              className="shrink-0 text-xs px-2.5 py-1.5 rounded-lg bg-teal-700 text-white font-medium hover:bg-teal-800"
+            >
+              {a.btn} →
+            </button>
+          </div>
+        ))}
+      </div>
+      {actions.length > shown.length && (
+        <p className="text-xs text-gray-400 mt-2">还有 {actions.length - shown.length} 件在下面的价格追踪里。</p>
+      )}
     </div>
   );
 }
@@ -936,7 +1178,7 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
  * 不许从任何代码常量拼数据——机票出票、酒店预订、餐厅订位都先进 DB 记录，再从 DB 反映到这里。
  * 点开任意一条看全部预订细节，确认号大字展示，方便直接给对方出示核对。 */
 /** 最终预定日历（2026-10-13 用户第二轮要求）：与行程安排的日历同风格同口径——
- * 全行程逐日标注当晚住宿城市（云端规划分段推导，与 planner 同算法）、转场日标 ✈️/🚄
+ * 全行程逐日标注当晚住宿城市（只读云端规划存好的 plan.timeline，不再本地推导）、转场日标 ✈️/🚄
  * 与方式（按大行程 legModes）、过夜航班标「🌙 飞机上过夜」；预订层只认 DB 已确认记录：
  * 酒店已订/未订明确区分（有确认酒店记录覆盖的夜=已订），航班已出票/餐厅已订逐日标出。 */
 function BookingsCalendar() {
@@ -1004,8 +1246,11 @@ function BookingsCalendar() {
       }
     }
 
-    /* ---------- 行程层：云端规划的大行程分段（与 planner 的 tripRanges/wzRanges 同算法；
-       2026-10-13 改版：曼谷后是「分开行动」一段——你北京、老婆一人西安（娃已随岳父母先回西安），同住到首尔汇合） ---------- */
+    /* ---------- 行程层：只读云端规划存好的 plan.timeline（2026-10-16 审计修复） ----------
+       此前本日历自己从硬编码 "2026-11-29" 起、按段天数重推 ranges/coupleRows（还带
+       fbDays 兜底值），违反 plannerSchedule 明文的单一事实源规则：出发日/段天数一变
+       就会静默漂移。现在逐日归属、段色、转场腿全部直接读 timeline.days / timeline.legs；
+       旧规划没存 timeline 时，用全站唯一的 buildPlanTimeline 现算一份，不本地另推。 */
     const dayCity = new Map<string, string>();
     const splitDays = new Set<string>();
     const hotelNeedByDay = new Map<string, boolean>();
@@ -1019,81 +1264,24 @@ function BookingsCalendar() {
       transfers.set(date, a);
     };
     const plane = new Set<string>();
-    /* 每日期属哪一段（格子顶边段色，与行程规划 wzUnifiedCalendar 的 segColor 同口径） */
+    /* 每日期属哪一段（格子顶边段色，与行程规划检查日历 segColor 同口径；timeline.seg 原样） */
     const segOf = new Map<string, string>();
     let tripStart = "";
     let tripEnd = "";
     if (plan) {
-      const nd = normalizeTripDays(plan.trip);
-      const segIds = ["beijing1", "singapore", "couple", "split", "seoul"] as const;
-      const segDays: Record<(typeof segIds)[number], number> = {
-        beijing1: nd.beijing1, singapore: nd.singapore, couple: nd.couple, split: nd.split, seoul: nd.seoul,
-      };
-      const segLabel: Record<string, string> = { beijing1: "北京", singapore: "新加坡", couple: "", split: "北京/西安", seoul: "首尔" };
-      const ranges: Record<string, { from: string; to: string }> = {};
-      let cur = "2026-11-29";
-      for (const id of segIds) {
-        const d = segDays[id];
-        ranges[id] = { from: cur, to: add(cur, d - 1) };
-        cur = add(cur, d);
+      const tl = plan.timeline ?? buildPlanTimeline(plan);
+      const dayKeys = Object.keys(tl.days).sort();
+      for (const k of dayKeys) {
+        const d = tl.days[k]!;
+        dayCity.set(k, d.cities.join("/"));
+        segOf.set(k, d.seg);
+        if (d.seg === "split") splitDays.add(k);
       }
-      const wzCities = (plan.wz?.cities ?? []) as string[];
-      const wzOrder = ((plan.wz?.order ?? []) as string[]).filter((c) => wzCities.includes(c));
-      const wzDays = (plan.wz?.days ?? {}) as Record<string, number>;
-      const order = wzOrder.length ? wzOrder : ["普吉", "清迈", "曼谷"];
-      const fbDays: Record<string, number> = { "普吉": 4, "清迈": 3, "曼谷": 1 };
-      const coupleRows: { city: string; from: string; to: string }[] = [];
-      let ccur = ranges.couple!.from;
-      for (const city of order) {
-        const d = typeof wzDays[city] === "number" && wzDays[city] >= 1 ? wzDays[city] : (fbDays[city] ?? 1);
-        coupleRows.push({ city, from: ccur, to: add(ccur, d - 1) });
-        ccur = add(ccur, d);
+      /* 每晚是否需要订酒店（大行程里的每城开关）：分开日两城任一需要订就算需要 */
+      for (const k of dayKeys) {
+        const d = tl.days[k]!;
+        hotelNeedByDay.set(k, d.cities.some((c) => cityNeedOf(plan, c).hotel));
       }
-      const fill = (from: string, to: string, city: string) => {
-        let k = from;
-        let g = 0;
-        while (k <= to && g++ < 40) { dayCity.set(k, city); k = add(k, 1); }
-      };
-      for (const id of segIds) {
-        if (id === "couple") continue;
-        fill(ranges[id]!.from, ranges[id]!.to, segLabel[id]!);
-      }
-      for (const r of coupleRows) fill(r.from, r.to, r.city);
-      /* 段色归属：先按大行程段，再用东南亚城市覆盖 couple 段（与 planner 同算法） */
-      segOf.set("2026-11-28", "outbound");
-      for (const id of segIds) {
-        let k = ranges[id]!.from;
-        let g = 0;
-        while (k <= ranges[id]!.to && g++ < 40) { segOf.set(k, id); k = add(k, 1); }
-      }
-      for (const r of coupleRows) {
-        let k = r.from;
-        let g = 0;
-        while (k <= r.to && g++ < 40) { segOf.set(k, "couple"); k = add(k, 1); }
-      }
-      /* 分开行动的日子单独标记（详情里写清谁在哪座城市） */
-      { let k = ranges.split!.from; let g = 0; while (k <= ranges.split!.to && g++ < 40) { splitDays.add(k); k = add(k, 1); } }
-      /* 每晚是否需要订酒店（大行程里的每城开关）：分开日两边任一需要订就算需要 */
-      for (const [k, city] of dayCity) {
-        if (splitDays.has(k)) {
-          hotelNeedByDay.set(k, cityNeedOf(plan, "北京").hotel || cityNeedOf(plan, "西安").hotel);
-        } else if (city.includes("→")) {
-          hotelNeedByDay.set(k, false);
-        } else {
-          hotelNeedByDay.set(k, cityNeedOf(plan, city).hotel);
-        }
-      }
-      dayCity.set("2026-11-28", "西雅图→北京");
-      tripStart = "2026-11-28";
-      tripEnd = ranges.seoul!.to;
-
-      const lm = (after: string): "flight" | "rail" => {
-        const v = plan.legModes?.[after];
-        return v === "rail" || v === "flight" ? v : "flight";
-      };
-      const APT: Record<string, string> = { "新加坡": "SIN", "普吉": "HKT", "清迈": "CNX", "曼谷": "BKK", "槟城": "PEN", "吉隆坡": "KUL", "胡志明市": "SGN", "富国岛": "PQC" };
-      const firstCity = coupleRows[0]?.city ?? "普吉";
-      const lastCity = coupleRows[coupleRows.length - 1]?.city ?? "曼谷";
       /* 🌙 过夜判定 —— 与行程安排同口径（2026-10-13 用户定「按推荐航班判定」）：
          推荐航班（排序：不过夜→上午出发→越早越优先→越便宜）过夜
          （起飞+时长跨午夜或时长≥8 小时）→ 那一晚在飞机上；
@@ -1139,23 +1327,41 @@ function BookingsCalendar() {
         if (r?.redeye && !r.overnight) pushLeg(add(date, -1), { label, mode: "flight", overnight: true });
         else pushLeg(date, { label, mode: "flight", overnight: !!r?.overnight });
       };
-      regLeg("西雅图→北京", "SEA-PEK", "2026-11-28", "flight");
-      regLeg("北京→新加坡", "PEK-SIN", ranges.singapore!.from, lm("beijing1"));
-      regLeg("西安→新加坡", "XIY-SIN", ranges.singapore!.from, lm("beijing1"));
-      regLeg(`新加坡→${firstCity}`, `SIN-${APT[firstCity] ?? "HKT"}`, ranges.couple!.from, lm("singapore"));
-      regLeg("新加坡→西安", "SIN-XIY", ranges.couple!.from, lm("singapore"));
-      for (let i = 1; i < coupleRows.length; i++)
-        regLeg(`${coupleRows[i - 1]!.city}→${coupleRows[i]!.city}`, `${APT[coupleRows[i - 1]!.city] ?? ""}-${APT[coupleRows[i]!.city] ?? ""}`, coupleRows[i]!.from, "flight");
-      regLeg(`${lastCity}→北京（你）`, `${APT[lastCity] ?? "BKK"}-PEK`, ranges.split!.from, "flight");
-      regLeg(`${lastCity}→西安（老婆一人）`, `${APT[lastCity] ?? "BKK"}-XIY`, ranges.split!.from, "flight");
-      regLeg("北京→西安", "", ranges.split!.to, "rail");
-      regLeg("西安→首尔", "XIY-ICN", ranges.seoul!.from, lm("split"));
-      regLeg("首尔→西雅图", "ICN-SEA", ranges.seoul!.to, "flight");
+      /* 转场方式：timeline.legs 的 kind 是保存规划时的缺省（北京→西安汇合腿已是 rail）；
+         用户在大行程里改选的 legModes 按「某段之后的转场」覆盖（与 planner 日历 lm() 同口径） */
+      const modeOf = (leg: (typeof tl.legs)[number]): "flight" | "rail" => {
+        if (leg.kind === "rail") return "rail";
+        let after: string | null = null;
+        if (leg.id === "intl-out-bj" || leg.id === "intl-out") after = "beijing1";
+        else if (leg.id.startsWith("sin-")) after = "singapore";
+        else if (leg.id === "xiy-icn") after = "split";
+        const v = after ? plan.legModes?.[after] : undefined;
+        return v === "rail" ? "rail" : "flight";
+      };
+      const coupleCities = new Set(
+        dayKeys.filter((k) => tl.days[k]!.seg === "couple").flatMap((k) => tl.days[k]!.cities),
+      );
+      for (const leg of tl.legs) {
+        let label = `${leg.fromCity}→${leg.toCity}`;
+        /* 分开行动的两条腿按人标注（与旧日历文案一致）：曼谷→西安是老婆一人、曼谷→北京是你一人 */
+        if (leg.toCity === "西安" && coupleCities.has(leg.fromCity)) label += "（老婆一人）";
+        if (leg.toCity === "北京" && coupleCities.has(leg.fromCity)) label += "（你）";
+        if (leg.id === "sea-pek") {
+          /* 出行日不在 timeline 逐日表里（逐日表从北京第一段起）：格子主标写路线、不需要订酒店 */
+          dayCity.set(leg.date, label);
+          segOf.set(leg.date, "outbound");
+          hotelNeedByDay.set(leg.date, false);
+        }
+        regLeg(label, `${leg.from}-${leg.to}`, leg.date, modeOf(leg));
+      }
       /* plane 派生：当天全部航班腿都过夜、且当天没有高铁腿 → 主标「🌙 飞机上过夜」 */
       for (const [date, legs] of transfers) {
         const fl = legs.filter((l) => l.mode === "flight");
         if (fl.length && fl.every((l) => l.overnight) && !legs.some((l) => l.mode === "rail")) plane.add(date);
       }
+      const allDayKeys = [...dayCity.keys()].sort();
+      tripStart = allDayKeys[0] ?? "";
+      tripEnd = allDayKeys[allDayKeys.length - 1] ?? "";
     }
 
     /* ---------- 渲染范围：行程全程 ∪ 预订日期 ---------- */
@@ -1672,6 +1878,28 @@ function BookingsInner() {
     () => hotelStaysFromPlan(fullSegments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days }))),
     [fullSegments]
   );
+  /* 行动队列查航班实时价用的完整大行程链（与 FavoriteActionList 的 flightSegs 同口径） */
+  const flightSegsQ: PlanSegment[] = useMemo(
+    () => fullSegments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days, segId: s.segId })),
+    [fullSegments]
+  );
+  /* 行动队列的直达跳转：去价格追踪某张收藏卡 / 去最终预定 / 去预定筛选某类别某城 */
+  const goTrackCard = (id: number) => {
+    switchSection("track");
+    window.setTimeout(() => {
+      document.getElementById(`booking-card-${id}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }, 300);
+  };
+  const goScreen = (c: CatKey, city?: string) => {
+    setSection("screen");
+    setCat(c);
+    if (city) {
+      if (c === "hotels") setHotelCity(city);
+      else if (c === "restaurants") setRestCity(city);
+      else if (c === "attractions") setAttrCity(city);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  };
   /** 酒店/餐厅详情里的"预订"按钮：直接打开同一页的预订弹窗 */
   const onBookPreset = (p: BookingPreset) => {
     setPreset(p);
@@ -1852,6 +2080,20 @@ function BookingsInner() {
       )}
       </div>
 
+
+      {/* 统一行动队列：三个视图都置顶显示（登录云端才有数据） */}
+      {syncMode === "cloud" && (
+        <div className="pt-3">
+          <NextActionQueue
+            plan={planState}
+            stays={stays}
+            flightSegs={flightSegsQ}
+            onGoTrackCard={goTrackCard}
+            onGoFinal={() => switchSection("final")}
+            onGoScreen={goScreen}
+          />
+        </div>
+      )}
 
         {/* 地图（仅酒店/餐厅/景点类别）：置顶在吸顶菜单之下（stickyTop = 顶栏+菜单高，2026-10-13 用户）。
             ⚠️ 不许再包一层矮 div（2026-10-13 用户投诉「地图没拼在最上面，一滚就消失」）：
