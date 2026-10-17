@@ -35,6 +35,22 @@ function markerIcon(order: number, anchor?: [number, number]) {
   });
 }
 
+/** 西雅图端点标记（2026-10-16 用户：路线图两端的西雅图也要有标记和地名，
+ * 此前只有虚线伸过去、端点什么都没有）：深青实心圆 + ✈，与编号站点的白圈区分。 */
+function seattleIcon() {
+  return L.divIcon({
+    className: "sea-route-marker",
+    html: `<span style="
+      display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
+      background:#134e4a;color:#ffffff;
+      border:3px solid #ffffff;font-size:14px;
+      box-shadow:0 2px 8px rgba(19,78,74,.45);
+    ">✈</span>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+  });
+}
+
 /** 机场标记：✈️ 紫色徽章（2026-10-03 用户：所有地图都标机场，用不同图标区分） */
 function airportIcon() {
   return L.divIcon({
@@ -520,6 +536,20 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
         .bindTooltip(`${lastStop.zh} → 西雅图`, { sticky: true, direction: "top" })
         .on("click", () => focusLeg(lastStop.id, "seattle", lastStop, undefined))
         .addTo(map);
+      /* 西雅图端点标记+地名（2026-10-16 用户）：出发端/回程端各一个（归一化经度
+         可能落在不同世界副本）；两端重合时只放一个，避免标签叠字。 */
+      const seaEnds = [normLngTo(firstC, seaLL), normLngTo(lastC, seaLL)];
+      seaEnds.forEach((pt, idx) => {
+        if (idx > 0 && Math.abs(pt.lat - seaEnds[0].lat) < 1e-6 && Math.abs(pt.lng - seaEnds[0].lng) < 1e-6) return;
+        L.marker(pt, { icon: seattleIcon(), interactive: false, keyboard: false })
+          .bindTooltip("西雅图", {
+            permanent: true,
+            direction: "top",
+            offset: [0, -18],
+            className: "sea-city-label",
+          })
+          .addTo(map);
+      });
     }
 
     /* 标记逐站编号（2026-10-13 用户：北京要同时看到 1 和 6——编号按站序、同城
@@ -541,7 +571,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           </div>`,
           { maxWidth: 200 },
         )
-        .bindTooltip(s.zh, {
+        .bindTooltip(`${i + 1} · ${s.zh}`, {
           permanent: true,
           direction: "top",
           offset: [0, -18],
