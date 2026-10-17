@@ -484,6 +484,12 @@
 .guide-scope .flightpointsline{font-size:12px;line-height:1.6;color:#4c1d95;background:#f5f3ff;border:1px solid #ede9fe;border-radius:6px;padding:7px 10px;margin:8px 0 0}
 .guide-scope .pointsmodal-rec{display:block;font-size:13px;font-weight:700;line-height:1.6;color:#4c1d95;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px}
 .guide-scope .pointsmodal-strategyline{display:block;font-size:12.5px;line-height:1.65;color:#374151}
+.guide-scope .pointsmodal-pathname .points-verdict{font-size:10px;font-weight:800;color:#fff;border-radius:3px;padding:2px 6px}
+.guide-scope .pointsmodal-pathname .points-verdict.yes{background:#059669;color:#fff}
+.guide-scope .pointsmodal-pathname .points-verdict.mid{background:#d97706;color:#fff}
+.guide-scope .pointsmodal-pathname .points-verdict.no{background:#dc2626;color:#fff}
+.guide-scope .pointsmodal-pathname .points-verdict.na{background:#9ca3af;color:#fff}
+.guide-scope .pointsmodal-verdicttext{color:#4c1d95;font-weight:600}
 .guide-scope .flightgrid .forecwhy{font-size:12px;line-height:1.65;color:#17634d;background:#eef7f5;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
 .guide-scope .flightgrid .stalewhy{font-size:12px;line-height:1.65;color:#9f1239;background:#fff1f2;border:1px solid #fecdd3;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
 /* 航班页改版：状态徽章 + 舱位 tab + 时间轴 */

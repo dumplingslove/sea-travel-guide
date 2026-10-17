@@ -614,7 +614,68 @@ export const POINTS_STRATEGY: string[] = [
  '万豪分这一程一分别转航司：3:1 全线亏（转 SKYPASS 折合约 0.55¢/分最亏），万豪分留着订酒店。',
  'Bilt 分留给 Atmos（唯一能转进 Atmos 的银行分）；Citi 分留给 AA（唯一能转进 AAdvantage 的银行分）。',
  '标尺：≥1.5¢/分 才值得转；1.0–1.5 看情况；<1.0 付现金。',
+ '付现金买机票：航司官网直订首选 Amex Platinum（机票 5x MR）；境外航司网站付款可用 Atmos Summit（境外消费 3x，顺便攒订大韩的里程）；CSR 直订 4x UR、延误险门槛低（6 小时）也可。Citi Double Cash 有境外交易费，买境外航司票别用。',
 ];
+/** 每条兑换路径的值不值徽标（2026-10-17 用户抓包补做：此前只有对照表页面有，网站弹窗漏了）。
+ * 按（航司指南键，路径名关键词）匹配；评价均为本行程口径，来自逐段积分价调研，未核实的标 na 不给结论。 */
+export const PATH_VERDICTS: Record<string, { match: string; level: 'yes'|'mid'|'no'|'na'; label: string; text: string }[]> = {
+ 'Singapore Airlines': [ { match:'KrisFlyer', level:'mid', label:'一般', text:'本程新航自家票性价比一般：北京→新加坡 0.71¢/分别换，新加坡→普吉 1.12¢/分勉强；KrisFlyer 的价值主要在换酷航' } ],
+ 'Scoot': [ { match:'KrisFlyer', level:'yes', label:'值得', text:'本程最稳的兑换之一：去新加坡 1.60¢/分、回西安 2.54¢/分、去普吉 2,500 分/人超值' } ],
+ 'Air China': [
+   { match:'星盟伙伴', level:'no', label:'不值', text:'本程实测 0.48–0.97¢/分：北京→新加坡、曼谷→北京都不划算，付现金' },
+   { match:'凤凰知音', level:'no', label:'不值', text:'万豪 3:1 折损大，除非清仓零散万豪分' } ],
+ 'THAI': [
+   { match:'Royal Orchid', level:'na', label:'未核实', text:'ROP 自家价未逐段核实，不给结论；泰航泰国国内线现金太便宜，一般不换' },
+   { match:'星盟伙伴', level:'no', label:'不值', text:'清迈→曼谷约 0.88¢/分、曼谷→北京多在 1¢/分以下；仅最贵的 TG614 那班勉强' } ],
+ 'Thai Airways': [
+   { match:'Royal Orchid', level:'na', label:'未核实', text:'ROP 自家价未逐段核实，不给结论；泰航泰国国内线现金太便宜，一般不换' },
+   { match:'星盟伙伴', level:'no', label:'不值', text:'清迈→曼谷约 0.88¢/分、曼谷→北京多在 1¢/分以下；仅最贵的 TG614 那班勉强' } ],
+ 'Asiana': [
+   { match:'星盟伙伴', level:'na', label:'未核实', text:'本程无韩亚直飞（西安→首尔已核实无班），价格未核实' },
+   { match:'Asiana Club', level:'no', label:'不值', text:'万豪 3:1，且韩亚 2026-12-17 并入大韩，不推荐新转入' } ],
+ 'Asiana Airlines': [
+   { match:'星盟伙伴', level:'na', label:'未核实', text:'本程无韩亚直飞，价格未核实' } ],
+ 'Korean Air': [
+   { match:'Atmos', level:'yes', label:'值得', text:'西安→首尔约 3.31¢/分，本程第二值；唯一风险是积分位少，先查位' },
+   { match:'SKYPASS', level:'no', label:'不值', text:'万豪 3:1 折合约 0.55¢/分，全场最亏，别走这条' } ],
+ 'China Eastern': [
+   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分全程最值；去新加坡约 1.23¢/分勉强' },
+   { match:'Flying Blue', level:'mid', label:'一般', text:'动态价浮动大：西安→首尔段约 1.35–2.81¢ 可看，去新加坡段约 0.71–1.05¢ 不值，下单前和 Virgin 比价' },
+   { match:'Delta', level:'na', label:'未核实', text:'达美订东航未核实到可靠价格，不给结论；另有幽灵位问题' } ],
+ 'China Eastern Airlines': [
+   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分全程最值' },
+   { match:'Flying Blue', level:'mid', label:'一般', text:'动态价，下单前和 Virgin 比价' } ],
+ 'Delta': [ { match:'SkyMiles', level:'na', label:'未核实', text:'本程无达美自营待订航段，价格未核实' } ],
+ 'Alaska': [
+   { match:'Atmos', level:'yes', label:'值得', text:'首尔→西雅图约 2.44–3.01¢/分（本程已出票，供将来参考）' },
+   { match:'AAdvantage', level:'yes', label:'值得', text:'兑换表 35,000 分/人，约 3.66¢/分，长途最划算之一' } ],
+ 'Alaska Airlines': [
+   { match:'Atmos', level:'yes', label:'值得', text:'首尔→西雅图约 2.44–3.01¢/分（本程已出票，供将来参考）' },
+   { match:'AAdvantage', level:'yes', label:'值得', text:'兑换表 35,000 分/人，约 3.66¢/分' } ],
+ 'Hainan': [
+   { match:'Atmos', level:'mid', label:'一般', text:'参考曼谷线约 0.70–1.17¢/分；西雅图→北京未逐班核价' },
+   { match:'金鹏', level:'no', label:'不值', text:'万豪 3:1，折损大' },
+   { match:'Etihad', level:'mid', label:'一般', text:'兑换表是下限价、另有燃油费，约 0.62–1.04¢/分，且只能电话订' } ],
+ 'Hainan Airlines': [
+   { match:'Atmos', level:'mid', label:'一般', text:'参考曼谷线约 0.70–1.17¢/分；西雅图→北京未逐班核价' },
+   { match:'金鹏', level:'no', label:'不值', text:'万豪 3:1，折损大' } ],
+ 'Bangkok Airways': [
+   { match:'Etihad', level:'mid', label:'一般', text:'约 1.31¢/分，接近打平：有 Etihad 存量分可用，专门新转分不必' },
+   { match:'Flying Blue', level:'no', label:'不值', text:'约 12,000 分换 $158，约 0.66¢/分，不值' } ],
+};
+/** 付现金时用哪张卡（按用户自有卡组合核对的费率：Amex Platinum 机票直订 5x MR、
+ * CSR 直订 4x UR、Atmos Summit 境外消费 3x Atmos；Citi Double Cash 有境外交易费别用） */
+export const SEGMENT_CASH_TIP: Record<string, string> = {
+ 'PEK-SIN': '首选 Amex Platinum（航司官网直订 5x MR，保障最全）；想攒 Atmos 里程就用 Atmos Summit（境外消费 3x）',
+ 'XIY-SIN': '若付现金：Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
+ 'SIN-XIY': '若付现金（东航现金价高）：Amex Platinum 5x MR 最厚，大额票的延误/取消保障也靠它',
+ 'SIN-HKT': '付现金（新航）：Amex Platinum 5x MR；酷航金额小随意，但别用有境外交易费的卡',
+ 'HKT-CNX': '金额小：Amex Platinum 或 Atmos Summit 均可；别用 Citi Double Cash（境外交易费）',
+ 'CNX-BKK': 'Amex Platinum 直订 5x MR，或 Atmos Summit 境外 3x；别用有境外交易费的卡',
+ 'BKK-XIY': '春秋官网按人民币计价：Atmos Summit（境外 3x、无境外交易费）或 Amex Platinum 5x；别用有境外交易费的卡',
+ 'BKK-PEK': 'Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
+ 'XIY-ICN': '若付现金（东航）：Amex Platinum 直订 5x MR',
+};
 export function pointsGuideFor(text: string): { key: string; paths: PointsPath[] } | null {
  if (!text) return null;
  const keys = Object.keys(CARRIER_POINTS_GUIDE).sort((a, b) => b.length - a.length);
@@ -647,17 +708,19 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
          <b className="pointsmodal-sec">本航段积分价（{seg}）</b>
          {segInfo.rows.map((r, i) => <span key={i} className="pointsmodal-row"><span>{r.program}：<b>{r.miles}</b></span><em className={`points-verdict ${r.good}`}>{r.verdict}</em></span>)}
          <span className="pointsmodal-bottom">{segInfo.bottom}</span>
+         {seg && SEGMENT_CASH_TIP[seg] && <span className="pointsmodal-row"><span>💳 付现金用卡：{SEGMENT_CASH_TIP[seg]}</span></span>}
        </span>}
        <span className="pointsmodal-block">
          <b className="pointsmodal-sec">怎么操作</b>
-         {guide ? guide.paths.map((p, i) => <span key={i} className="pointsmodal-path">
-           <span className="pointsmodal-pathname">{p.program}<em className={`points-diff ${p.difficulty}`}>{p.difficulty}</em></span>
+         {guide ? guide.paths.map((p, i) => { const pv = (PATH_VERDICTS[guide.key] ?? []).find(v => p.program.includes(v.match)); return <span key={i} className="pointsmodal-path">
+           <span className="pointsmodal-pathname">{p.program}<em className={`points-diff ${p.difficulty}`}>{p.difficulty}</em>{pv && <em className={`points-verdict ${pv.level}`}>{pv.label}</em>}</span>
+           {pv && <span className="pointsmodal-verdicttext">值不值：{pv.text}</span>}
            <span>转分来源：{p.fund}</span>
            <span>到账：{p.speed}</span>
            <span>步骤：{p.steps}</span>
            {p.note && <span className="pointsmodal-note">注意：{p.note}</span>}
            {p.link && <a href={p.link} target="_blank" rel="noreferrer">打开官网 ↗</a>}
-         </span>) : <span className="pointsmodal-note">{POINTS_NO_PATH_NOTE}</span>}
+         </span>; }) : <span className="pointsmodal-note">{POINTS_NO_PATH_NOTE}</span>}
        </span>
        <span className="pointsmodal-block">
          <b className="pointsmodal-sec">用分总策略（这一程）</b>
