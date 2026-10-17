@@ -16,7 +16,7 @@ class SectionErrorBoundary extends Component<{children:ReactNode;label:string},{
   return this.props.children;
  }
 }
-import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, type GuideRecord } from './records';
+import { listRecords, saveRecord, deleteRecord, getResearchStatus, recordSyncMode, favoriteIdentityKey, favoriteIdentityOfRecord, type GuideRecord } from './records';
 import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
@@ -879,11 +879,20 @@ export function FavButton({name,city,type,extra}:{name:string;city:string;type:'
   const qc=useQueryClient();
   /* 2026-10-03 修：订阅 records 缓存，页面加载时自动显示已收藏状态（之前只在点击时查一次，刷新后按钮变回"＋ 收藏"） */
   const { data } = useQuery({ queryKey: ["records"], queryFn: listRecords });
-  const done = (data?.records ?? []).some(r=>r.kind==='favorite'&&r.title===name);
+  /* 2026-10-17 用户：判重不许再用显示标题（标题写法随数据源变，同一航班两种标题就漏检出重复收藏）。
+     一律按语义身份（favoriteIdentityKey：航班=航线+航班号+舱位，地点=类型+城市+名称）判重。 */
+  const myKey = favoriteIdentityKey(type, city, name, type === 'flight' ? (extra?.flight as { flight?: string; route?: string; cabin?: string } | undefined) ?? null : null);
+  const done = (data?.records ?? []).some(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
   const onClick=async()=>{
     if(saving||done)return;setSaving(true);setErrMsg(null);
     try{
-      await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+      /* 保存前现查一次最新记录再判重：缓存还没加载完就点收藏也不会重复存
+         （2026-10-17 实祸：RYSE 酒店因缓存未就绪被存了两份） */
+      const fresh = await listRecords().catch(() => null);
+      const exists = (fresh?.records ?? []).some(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
+      if(!exists){
+        await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+      }
       /* 2026-10-02 修：收藏后立即刷新 records 缓存，否则行动安排页看不到新收藏 */
       qc.invalidateQueries({queryKey:["records"]});
     }catch(e){setErrMsg(e instanceof Error?e.message:'保存失败，请重试');}finally{setSaving(false);}

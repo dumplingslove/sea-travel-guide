@@ -24,6 +24,7 @@ import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport,
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
+import { favoriteIdentityKey } from "@/guide/records";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import "@/guide/theme-scoped.css";
 import { getRestaurantBookingPolicy, bookingPolicyBadge, mustGoBadge } from "@/bookings/restaurantBookingStatus";
@@ -538,7 +539,31 @@ function FavoriteActionList({
 
   /* 2026-10-13 用户铁律：预定筛选只显示 DB 里的收藏记录，不许再从代码常量（FLIGHT_LEGS）
      自动注入已出票航班。出票信息先进 DB 预订记录，再由下面的已出票匹配从 DB 反映出来 */
-  const favs = manualFavs;
+  /* 2026-10-17 用户：价格追踪必须与收藏完全一致、不许有重复——同一航班/地点被不同入口
+     重复收藏的（标题写法不同、旧判重漏检），在这里按语义身份合并成一条再展示：
+     航班优先留快照日期与当前行程日期一致的那条，其次留最新建的那条。
+     身份由收藏数据本身推导（favoriteIdentityKey），不硬编码任何名单。 */
+  const favs = ((): typeof manualFavs => {
+    const best = new Map<string, (typeof manualFavs)[number]>();
+    for (const f of manualFavs) {
+      const k = favoriteIdentityKey(f.type, f.city, f.row.title, f.flight ?? null);
+      const cur = best.get(k);
+      if (!cur) {
+        best.set(k, f);
+        continue;
+      }
+      const planDate =
+        f.type === "flight" && f.flight?.route ? flightDateFromPlan(f.flight.route, flightSegs) : null;
+      const score = (x: (typeof manualFavs)[number]) =>
+        planDate && x.flight?.date === planDate ? 1 : 0;
+      if (score(f) > score(cur) || (score(f) === score(cur) && f.row.id > cur.row.id)) {
+        best.set(k, f);
+      }
+    }
+    return manualFavs.filter(
+      (f) => best.get(favoriteIdentityKey(f.type, f.city, f.row.title, f.flight ?? null)) === f,
+    );
+  })();
 
   if (!favs.length) {
     return (

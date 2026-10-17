@@ -34,6 +34,54 @@ export interface GuideRecord {
   userId: string | null;
 }
 
+/** 收藏的语义身份（2026-10-17 用户立规矩：不许再用显示标题判重、不许 hard code 名单）。
+ * 背景：航班收藏的标题是拼出来的展示串，写法随数据源变——同一班会出现
+ * "Scoot TR 644 …12:55 PM→2:00 PM" 与 "Scoot TR644 …12:55→14:00"、
+ * "China Eastern" 与 "China Eastern Airlines" 等变体，按标题判重必然漏检、产生重复收藏
+ * （实祸：MU2069 与 TR644 各存了两份、RYSE 酒店存了两份）。
+ * 身份只由收藏数据本身推导：航班 = 航线 + 规范化航班号（去空格大写）+ 舱位；
+ * 地点 = 类型 + 城市 + 规范化名称。收藏入口判重与价格追踪列表去重共用这一份实现。 */
+export interface FavoriteFlightPart {
+  carrier?: string;
+  flight?: string;
+  route?: string;
+  cabin?: string;
+}
+
+export function favoriteIdentityKey(
+  type: string,
+  city: string,
+  title: string,
+  flight?: FavoriteFlightPart | null,
+): string {
+  if (type === "flight" && flight?.flight) {
+    const no = flight.flight.replace(/\s+/g, "").toUpperCase();
+    const route = (flight.route ?? "").replace(/\s+/g, "");
+    if (no) return `flight|${route}|${no}|${flight.cabin ?? "eco"}`;
+  }
+  const name = (title ?? "").replace(/[\s　]+/g, "").toLowerCase();
+  return `${type}|${city ?? ""}|${name}`;
+}
+
+export function favoriteIdentityOfRecord(r: { title: string; body: string }): string {
+  let type = "attraction";
+  let city = "";
+  let flight: FavoriteFlightPart | null = null;
+  try {
+    const b = JSON.parse(r.body || "{}") as {
+      type?: string;
+      city?: string;
+      flight?: FavoriteFlightPart;
+    };
+    type = b.type ?? type;
+    city = b.city ?? "";
+    flight = b.flight ?? null;
+  } catch {
+    /* body 不是 JSON 时按标题兜底 */
+  }
+  return favoriteIdentityKey(type, city, r.title, flight);
+}
+
 const TABLE = "sea_guide_records";
 
 /** 家庭共享的两个登录邮箱：登录后可互看互改对方记录。 */
