@@ -481,6 +481,9 @@
 .guide-scope .pointsmodal-note{color:#92400e}
 .guide-scope .pointsmodal-path a{color:#7c3aed;font-weight:700}
 .guide-scope .pointsmodal-foot{font-size:11.5px;color:#6b7280;line-height:1.6;border-top:1px dashed #e5e7eb;padding-top:8px}
+.guide-scope .flightpointsline{font-size:12px;line-height:1.6;color:#4c1d95;background:#f5f3ff;border:1px solid #ede9fe;border-radius:6px;padding:7px 10px;margin:8px 0 0}
+.guide-scope .pointsmodal-rec{display:block;font-size:13px;font-weight:700;line-height:1.6;color:#4c1d95;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px}
+.guide-scope .pointsmodal-strategyline{display:block;font-size:12.5px;line-height:1.65;color:#374151}
 .guide-scope .flightgrid .forecwhy{font-size:12px;line-height:1.65;color:#17634d;background:#eef7f5;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
 .guide-scope .flightgrid .stalewhy{font-size:12px;line-height:1.65;color:#9f1239;background:#fff1f2;border:1px solid #fecdd3;border-radius:5px;padding:8px 10px;margin:8px 0 0;min-height:0}
 /* 航班页改版：状态徽章 + 舱位 tab + 时间轴 */

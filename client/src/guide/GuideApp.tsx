@@ -596,6 +596,25 @@ export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: stri
    { program:'Atmos 订阿拉斯加（动态）', miles:'约 42,500–52,500 分/人', verdict:'约 2.44–3.01¢/分', good:'yes' } ],
    bottom:'参考：本程已现金出票（AS120）；将来再飞这条线，AA 兑换表价最划算，AA 只有 Citi 能 1:1 转入。' },
 };
+/** 每段一句话积分推荐（2026-10-17 用户：别只给单独表格，要整合进预定筛选——
+ * 在每段航班列表上方直接显示，扫一眼就知道这段该用分还是付现金；明细在弹窗里） */
+export const SEGMENT_POINTS_HINT: Record<string, string> = {
+ 'PEK-SIN': '积分参考：这段别换、付现金（最好的换法也仅约 0.97¢/分，现金票才 $436）',
+ 'XIY-SIN': '积分参考：KrisFlyer 订酷航 12,000 分/人，约 1.60¢/分，值得换',
+ 'SIN-XIY': '积分参考：Virgin 订东航白天班 15,000 分/人，约 3.86¢/分，全程最值（先查位）',
+ 'SIN-HKT': '积分参考：坐酷航 2,500 分/人超值；坐新航付现金',
+ 'CNX-BKK': '积分参考：付现金为主（当天最低才 $82，积分换全亏）',
+ 'BKK-PEK': '积分参考：多数班次付现金；只有最贵的泰航 TG614 才值得用 United 里程',
+ 'XIY-ICN': '积分参考：Atmos 订大韩 7,500 分/人起，约 3.31¢/分，很值（先查位）',
+ 'ICN-SEA': '积分参考：本程已现金出票；将来再飞，AA 订阿拉斯加 35,000 分/人最划算',
+};
+/** 用分总策略（2026-10-17 调研结论，弹窗底部常驻）：跨航段的钱包级推荐 */
+export const POINTS_STRATEGY: string[] = [
+ '首选三笔：Virgin 订东航回西安（3.86¢/分）、Atmos 订大韩去首尔（3.31¢/分）、KrisFlyer 订酷航去新加坡（1.60¢/分）。',
+ '万豪分这一程一分别转航司：3:1 全线亏（转 SKYPASS 折合约 0.55¢/分最亏），万豪分留着订酒店。',
+ 'Bilt 分留给 Atmos（唯一能转进 Atmos 的银行分）；Citi 分留给 AA（唯一能转进 AAdvantage 的银行分）。',
+ '标尺：≥1.5¢/分 才值得转；1.0–1.5 看情况；<1.0 付现金。',
+];
 export function pointsGuideFor(text: string): { key: string; paths: PointsPath[] } | null {
  if (!text) return null;
  const keys = Object.keys(CARRIER_POINTS_GUIDE).sort((a, b) => b.length - a.length);
@@ -623,6 +642,7 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
    {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="积分兑换指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💠 积分兑换指南{carrierName ? ` · ${carrierName}` : ''}</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
+       {seg && SEGMENT_POINTS_HINT[seg] && <span className="pointsmodal-rec">本段推荐：{SEGMENT_POINTS_HINT[seg].replace(/^积分参考：/, '')}</span>}
        {segInfo && <span className="pointsmodal-block">
          <b className="pointsmodal-sec">本航段积分价（{seg}）</b>
          {segInfo.rows.map((r, i) => <span key={i} className="pointsmodal-row"><span>{r.program}：<b>{r.miles}</b></span><em className={`points-verdict ${r.good}`}>{r.verdict}</em></span>)}
@@ -638,6 +658,10 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
            {p.note && <span className="pointsmodal-note">注意：{p.note}</span>}
            {p.link && <a href={p.link} target="_blank" rel="noreferrer">打开官网 ↗</a>}
          </span>) : <span className="pointsmodal-note">{POINTS_NO_PATH_NOTE}</span>}
+       </span>
+       <span className="pointsmodal-block">
+         <b className="pointsmodal-sec">用分总策略（这一程）</b>
+         {POINTS_STRATEGY.map((s, i) => <span key={i} className="pointsmodal-strategyline">· {s}</span>)}
        </span>
        <span className="pointsmodal-foot">积分价为兑换表/公开口径（2026-10-17 调研）；具体日期有没有积分票，必须登录对应官网查。铁律：先查到有位、再转分——转分不可逆。</span>
      </span>
@@ -724,6 +748,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
+  {leg.dbSeg&&SEGMENT_POINTS_HINT[leg.dbSeg]&&<p className="flightpointsline">💠 {SEGMENT_POINTS_HINT[leg.dbSeg]}（点任意航班的紫色积分标签看明细）</p>}
   {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
     <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/></div>
