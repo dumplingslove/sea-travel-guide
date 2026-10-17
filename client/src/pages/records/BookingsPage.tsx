@@ -32,7 +32,7 @@ import {
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingTypes";
-import { loadPlannerPlan, cityNeedOf, buildPlanTimeline, railFeasiblePair, type PlannerPlan } from "@/guide/plannerSchedule";
+import { loadPlannerPlan, cityNeedOf, buildPlanTimeline, railFeasiblePair, type PlannerPlan, type PlanTimelineLeg } from "@/guide/plannerSchedule";
 import { getDataset, useDatasetsVersion } from "@/lib/datasets";
 import {
   BOOKING_KIND_LABEL,
@@ -419,10 +419,13 @@ function LoginGate({ syncMode }: { syncMode: "cloud" | "local" | null }) {
 function FavoriteActionList({
   onAddFavorite,
   stays,
+  plan,
   mapStickyTop,
 }: {
   onAddFavorite: (name: string, city: string, bkind: BookingKind, dates?: { date?: string; dateEnd?: string }) => void;
   stays: HotelStay[];
+  /** 云端规划（行程骨架只读它的 timeline，不本地推导） */
+  plan: PlannerPlan | null;
   /** 地图置顶偏移（菜单体系之下）：站点顶栏 + 预订页吸顶菜单总高 */
   mapStickyTop?: number;
 }) {
@@ -638,49 +641,115 @@ function FavoriteActionList({
     return seg ? seg.start : "";
   };
 
-  /** 按时间线城市分组；不在行程里的城市收到"其他" */
-  const cityOrder = segs.map((s) => s.city);
-  const grouped = new Map<string, typeof favs>();
-  const other: typeof favs = [];
-  for (const f of favs) {
-    let c = itemCity(f);
-    /* 2026-10-03 用户：航班按行程相关城市归类——出发地在行程里用出发地（如首尔→西雅图归首尔），
-       出发地不在行程里但到达地在行程里用到达地（如西雅图→北京归北京） */
-    if (f.type === "flight" && f.flight?.route) {
-      const parts = f.flight.route.split("→").map((s) => s.trim());
-      const origin = parts[0] || "";
-      const dest = parts[1] || "";
-      if (origin && cityOrder.includes(origin)) {
-        c = origin;
-      } else if (dest && cityOrder.includes(dest)) {
-        c = dest;
+  /* ---------- 行程骨架（2026-10-16 用户：价格追踪先以行程时间轴为骨架） ----------
+   * 路段（✈️ 北京 → 新加坡 · 12-06）与住段（新加坡 · 12-06→12-11）按 plan.timeline 交错成一条旅程：
+   * 航班收藏挂到它所属的路段下，酒店/餐厅/景点挂到所在城市的住段下，
+   * 一眼看清每件追踪属于哪一段行程。骨架只读 timeline 的 legs/days，不本地推导日期。 */
+  interface JourneySection {
+    key: string;
+    kind: "leg" | "stay" | "other";
+    leg?: PlanTimelineLeg;
+    label: string;
+    cities: string[];
+    start?: string;
+    end?: string;
+    days?: number;
+    items: typeof favs;
+  }
+  const journeySections: JourneySection[] = (() => {
+    const tl = plan ? (plan.timeline ?? buildPlanTimeline(plan)) : null;
+    if (!tl) {
+      return favs.length
+        ? [{ key: "all", kind: "other" as const, label: "全部收藏", cities: [], items: favs }]
+        : [];
+    }
+    /* 住段：timeline.days 按 (seg, cities) 连续分组 */
+    interface StayNode { start: string; end: string; cities: string[]; seg: string }
+    const stayNodes: StayNode[] = [];
+    for (const d of Object.keys(tl.days).sort()) {
+      const day = tl.days[d]!;
+      const lastN = stayNodes[stayNodes.length - 1];
+      if (lastN && lastN.seg === day.seg && lastN.cities.join("/") === day.cities.join("/")) {
+        lastN.end = d;
+      } else {
+        stayNodes.push({ start: d, end: d, cities: day.cities, seg: day.seg });
       }
     }
-    if (c && cityOrder.includes(c)) {
-      if (!grouped.has(c)) grouped.set(c, []);
-      grouped.get(c)!.push(f);
-    } else {
-      other.push(f);
+    const dayCount = (a: string, b: string) =>
+      Math.round((new Date(`${b}T12:00:00`).getTime() - new Date(`${a}T12:00:00`).getTime()) / 86400000) + 1;
+    /* 收藏归段：航班先按路线挂路段；其余按城市挂住段；都挂不上进「其他」 */
+    const legItems = new Map<string, typeof favs>();
+    const stayItems = new Map<number, typeof favs>();
+    const otherItems: typeof favs = [];
+    const pushTo = <K,>(m: Map<K, typeof favs>, k: K, f: (typeof favs)[number]) => {
+      if (!m.has(k)) m.set(k, []);
+      m.get(k)!.push(f);
+    };
+    for (const f of favs) {
+      let placed = false;
+      if (f.type === "flight" && f.flight?.route) {
+        const parts = f.flight.route.split("→").map((s) => s.trim());
+        const leg = tl.legs.find((l) => l.fromCity === parts[0] && l.toCity === parts[1]);
+        if (leg) {
+          pushTo(legItems, leg.id, f);
+          placed = true;
+        } else {
+          const idx = stayNodes.findIndex((s) => s.cities.includes(parts[1] ?? ""));
+          if (idx >= 0) {
+            pushTo(stayItems, idx, f);
+            placed = true;
+          }
+        }
+      }
+      if (!placed) {
+        const idx = stayNodes.findIndex((s) => s.cities.includes(itemCity(f)));
+        if (idx >= 0) {
+          pushTo(stayItems, idx, f);
+          placed = true;
+        }
+      }
+      if (!placed) otherItems.push(f);
     }
-  }
-  // 2026-10-04 Bug 6：大行程里同一城市可出现多次（如北京 11/28–12/5 和 12/22–12/30 两段），
-  // cityOrder 会带重名，直接 map 会把同一批 items 渲染两次。按城市去重，每城只保留一段（首段）。
-  const citySections: { city: string; seg: PlanSegment; items: typeof favs }[] = [];
-  {
-    const seenCity = new Set<string>();
-    for (const c of cityOrder) {
-      if (!grouped.has(c) || seenCity.has(c)) continue;
-      seenCity.add(c);
-      citySections.push({
-        city: c,
-        seg: segs.find((s) => s.city === c)!,
-        items: grouped.get(c)!,
+    /* 交错成旅程：每个住段之前，先排出日期不晚于它开始日的路段 */
+    const out: JourneySection[] = [];
+    const emitted = new Set<string>();
+    const legSection = (l: PlanTimelineLeg): JourneySection => ({
+      key: `leg-${l.id}`,
+      kind: "leg",
+      leg: l,
+      label: `${l.fromCity} → ${l.toCity}`,
+      cities: [],
+      items: legItems.get(l.id) ?? [],
+    });
+    stayNodes.forEach((s, i) => {
+      for (const l of tl.legs) {
+        if (emitted.has(l.id) || l.date > s.start) continue;
+        emitted.add(l.id);
+        out.push(legSection(l));
+      }
+      out.push({
+        key: `stay-${s.seg}-${s.start}`,
+        kind: "stay",
+        label: s.cities.join(" · "),
+        cities: s.cities,
+        start: s.start,
+        end: s.end,
+        days: dayCount(s.start, s.end),
+        items: stayItems.get(i) ?? [],
       });
+    });
+    for (const l of tl.legs) {
+      if (emitted.has(l.id)) continue;
+      emitted.add(l.id);
+      out.push(legSection(l));
     }
-  }
-  if (other.length) {
-    citySections.push({ city: "其他", seg: null as unknown as PlanSegment, items: other });
-  }
+    if (otherItems.length) {
+      out.push({ key: "other", kind: "other", label: "其他收藏", cities: [], items: otherItems });
+    }
+    return out;
+  })();
+  const weekdayOf = (iso: string) =>
+    ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][new Date(`${iso}T12:00:00`).getDay()] ?? "";
 
   const decided = favs.filter((f) => f.row.done).length;
   /* 2026-10-03 用户：行动安排的 item 要能展开看详情，方便对比 */
@@ -694,7 +763,7 @@ function FavoriteActionList({
       confirmedByName.has(f.row.title.trim().toLowerCase()) ||
       (f.type === "flight" && !!f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)),
   ).length;
-  const anyVisible = citySections.some((sec) =>
+  const anyVisible = journeySections.some((sec) =>
     sec.items.some((f) => typeFilter === "all" || f.type === typeFilter),
   );
   /** 按名称找攻略详情（酒店/餐厅/景点） */
@@ -719,7 +788,7 @@ function FavoriteActionList({
           </div>
         </div>
         <p className="text-xs text-gray-400 mt-1.5">
-          只看你收藏的实时价格、余位和预订状态，按行程时间线分城市排列；点卡片在地图上定位它，看好后从 ⋯ 菜单「确定 / 加入预订」。
+          只看你收藏的实时价格、余位和预订状态，沿行程时间轴排列：航班挂在它所属的那一段路上，酒店、餐厅、景点挂在住的那一段里；点卡片在地图上定位它，看好后从 ⋯ 菜单「确定 / 加入预订」。
         </p>
         <div className="flex gap-1.5 mt-2.5 flex-wrap" role="tablist" aria-label="价格追踪类别筛选">
           {(
@@ -767,31 +836,67 @@ function FavoriteActionList({
           这一类还没有收藏，去「🔍 预定筛选」里点「＋ 收藏」添加。
         </p>
       )}
-      {citySections.map((sec, si) => {
-        if (!sec.items.some((f) => typeFilter === "all" || f.type === typeFilter)) return null;
-        return (
-        <div key={sec.city} data-city-section={sec.city} className="mb-5">
-          {/* 城市头：时间线节点 */}
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex flex-col items-center">
-              <div className="w-3 h-3 rounded-full bg-teal-600 shrink-0" />
-              {si < citySections.length - 1 && <div className="w-0.5 h-4 bg-teal-200" />}
-            </div>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <h4 className="text-lg font-bold text-gray-900">{sec.city}</h4>
-              {sec.seg && (
-                <span className="text-xs text-gray-500">
-                  {planDateShort(sec.seg.start)} → {planDateShort(sec.seg.end)} · {sec.seg.days} 天
+      {journeySections.map((sec, si) => {
+        const matching = sec.items.filter((f) => typeFilter === "all" || f.type === typeFilter);
+        if (!matching.length) {
+          /* 空骨架节点：全部模式下留一行细字让时间轴读得连贯；按类别筛选时直接隐藏 */
+          if (typeFilter !== "all" || sec.kind === "other") return null;
+          return (
+            <div key={sec.key} className="mb-2.5 flex items-center gap-3 text-gray-400">
+              <div className={`w-3 h-3 rounded-full shrink-0 ${sec.kind === "leg" ? "bg-sky-300" : "bg-teal-200"}`} />
+              {sec.kind === "leg" ? (
+                <span className="text-sm">
+                  {sec.leg!.kind === "rail" ? "🚄" : "✈️"} <span className="font-medium">{sec.label}</span>
+                  <span className="text-xs ml-2">
+                    {planDateShort(sec.leg!.date)} {weekdayOf(sec.leg!.date)} · {sec.leg!.kind === "rail" ? "高铁，无需追踪" : "暂无追踪航班"}
+                  </span>
+                </span>
+              ) : (
+                <span className="text-sm">
+                  <span className="font-medium">{sec.label}</span>
+                  <span className="text-xs ml-2">{planDateShort(sec.start!)} → {planDateShort(sec.end!)} · 暂无追踪项</span>
                 </span>
               )}
-              {(() => {
-                const st = stayOf(sec.city);
-                return st ? (
-                  <span className="text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">
-                    🛏️ {planDateShort(st.checkIn)} 入住 · {planDateShort(st.checkOut)} 退房 · {st.nights} 晚
+            </div>
+          );
+        }
+        return (
+        <div key={sec.key} data-city-section={sec.label} className="mb-5">
+          {/* 骨架节点头：路段=蓝点（路线+日期），住段=青点（城市+日期范围） */}
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex flex-col items-center">
+              <div className={`w-3 h-3 rounded-full shrink-0 ${sec.kind === "leg" ? "bg-sky-500" : "bg-teal-600"}`} />
+              {si < journeySections.length - 1 && <div className="w-0.5 h-4 bg-teal-200" />}
+            </div>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              {sec.kind === "leg" ? (
+                <>
+                  <h4 className="text-lg font-bold text-gray-900">{sec.leg!.kind === "rail" ? "🚄" : "✈️"} {sec.label}</h4>
+                  <span className="text-xs text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full font-medium">
+                    {planDateShort(sec.leg!.date)} {weekdayOf(sec.leg!.date)}
                   </span>
-                ) : null;
-              })()}
+                  {sec.leg!.kind === "rail" && (
+                    <span className="text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">高铁</span>
+                  )}
+                </>
+              ) : sec.kind === "stay" ? (
+                <>
+                  <h4 className="text-lg font-bold text-gray-900">{sec.label}</h4>
+                  <span className="text-xs text-gray-500">
+                    {planDateShort(sec.start!)} → {planDateShort(sec.end!)} · {sec.days} 天
+                  </span>
+                  {sec.cities.length === 1 && (() => {
+                    const st = stayOf(sec.cities[0]!);
+                    return st ? (
+                      <span className="text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">
+                        🛏️ {planDateShort(st.checkIn)} 入住 · {planDateShort(st.checkOut)} 退房 · {st.nights} 晚
+                      </span>
+                    ) : null;
+                  })()}
+                </>
+              ) : (
+                <h4 className="text-lg font-bold text-gray-900">{sec.label}</h4>
+              )}
             </div>
           </div>
 
@@ -804,10 +909,12 @@ function FavoriteActionList({
             if (!items.length) return null;
             return (
               <div key={t} className="ml-6 mb-4">
-                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-100 px-2.5 py-1 rounded-full mb-2">
-                  {typeLabel(t)}
-                  <span className="text-teal-600 font-medium">{items.length} 项</span>
-                </div>
+                {sec.kind !== "leg" && (
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-100 px-2.5 py-1 rounded-full mb-2">
+                    {typeLabel(t)}
+                    <span className="text-teal-600 font-medium">{items.length} 项</span>
+                  </div>
+                )}
                 <div className="grid gap-2.5 lg:grid-cols-2">
                   {items.map((f) => {
                     const isOpen = expandedId === f.row.id;
@@ -2371,7 +2478,7 @@ function BookingsInner() {
         )}
       {/* 2026-10-02 用户：行动安排只放收藏的，不再单独列收藏区+其他内容；整个页面就是收藏清单 */}
       {syncMode === "cloud" ? (
-        <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} mapStickyTop={mapStickyTop} />
+        <FavoriteActionList onAddFavorite={addFavoriteToBooking} stays={stays} plan={planState} mapStickyTop={mapStickyTop} />
       ) : (
         <LoginGate syncMode={syncMode} />
       )}
