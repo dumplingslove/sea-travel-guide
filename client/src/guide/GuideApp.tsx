@@ -420,7 +420,7 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
  const tax=rate.totalInclTax===true?'含税':rate.totalInclTax===false?'不含税':'税费未明确';
  const dateStr=isNonItineraryPriceCity(it.city)?'参考房价':`${p.checkIn}→${p.checkOut}（${p.nights}晚）`;
  return <div className="decision"><b>💰 价格</b><span>${rate.perNightUSD}/晚起（{p.source}实查{rate.totalUSD!=null?` · 整段约 ${rate.totalUSD}（${tax}）`:''}）{p.baselineUSD!=null&&<> · 基准 ${p.baselineUSD}/晚（Google）</>} · Amex {p.amexUSD!=null?`$${p.amexUSD}/晚`:'未明确'} · Chase {p.chaseUSD!=null?`$${p.chaseUSD}/晚`:'未明确'}<small> · {dateStr} · {p.checkedAt} · 展开看房型明细</small></span></div>;
-})()}<XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>{setSelectedKey(null);setExpandedKey(hopen?null:hkey);}}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)} />}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
+})()}<XhsMini item={it}/><div className="cardactions"><button className="solid" onClick={()=>{setSelectedKey(null);setExpandedKey(hopen?null:hkey);}}>{hopen?'收起 ▲':'展开完整攻略 ▾'}</button>{onBook&&<button onClick={()=>onBook({bkind:'hotel',name:it.name,city:it.city,...cityStayRange(it.city)})}>预订</button>}<FavButton name={it.name} city={it.city} type='hotel'/><HotelPayTag name={it.name} city={it.city} chain={chainFor(it)}/><button className={compare.some(x=>x.name===it.name)?'selected':''} disabled={!compare.some(x=>x.name===it.name)&&compare.length>=3} onClick={()=>toggle(it)}>{compare.some(x=>x.name===it.name)?'✓ 已加入对比':'＋ 加入对比'}</button></div></div></article>{hopen&&<InlineDetail item={it} kind="酒店" onBook={onBook} onCollapse={()=>setExpandedKey(null)} />}</Fragment>})}</div>{listToggle}</section><ResearchStatus/></div>
 }
 
 export function RestaurantCatalog({onBook, scopeCities, stayDates, bare, onCityChange, onItemSelect, defaultListExpanded, initialCity, hideCityTabs}:{onBook?:OnBook;scopeCities?:string[];stayDates?:Record<string,string>;bare?:boolean;onCityChange?:(city:string)=>void;onItemSelect?:(key:string|null)=>void;defaultListExpanded?:boolean;initialCity?:string;hideCityTabs?:boolean}){
@@ -599,14 +599,17 @@ export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: stri
 /** 每段一句话积分推荐（2026-10-17 用户：别只给单独表格，要整合进预定筛选——
  * 在每段航班列表上方直接显示，扫一眼就知道这段该用分还是付现金；明细在弹窗里） */
 export const SEGMENT_POINTS_HINT: Record<string, string> = {
- 'PEK-SIN': '积分参考：这段别换、付现金（最好的换法也仅约 0.97¢/分，现金票才 $436）',
- 'XIY-SIN': '积分参考：KrisFlyer 订酷航 12,000 分/人，约 1.60¢/分，值得换',
- 'SIN-XIY': '积分参考：Virgin 订东航白天班 15,000 分/人，约 3.86¢/分，全程最值（先查位）',
- 'SIN-HKT': '积分参考：坐酷航 2,500 分/人超值；坐新航付现金',
- 'CNX-BKK': '积分参考：付现金为主（当天最低才 $82，积分换全亏）',
- 'BKK-PEK': '积分参考：多数班次付现金；只有最贵的泰航 TG614 才值得用 United 里程',
- 'XIY-ICN': '积分参考：Atmos 订大韩 7,500 分/人起，约 3.31¢/分，很值（先查位）',
- 'ICN-SEA': '积分参考：本程已现金出票；将来再飞，AA 订阿拉斯加 35,000 分/人最划算',
+ 'SEA-PEK': '怎么买：付现金 · 刷 Amex Platinum（海航官网直订 5x MR）；积分换这段不划算',
+ 'PEK-SIN': '怎么买：付现金 · 刷 Amex Platinum（直订 5x MR）；积分最好的换法也仅约 0.97¢/分，别换',
+ 'XIY-SIN': '怎么买：用积分 · 转 KrisFlyer 订酷航 12,000 分/人（约 1.60¢/分）；付现金则刷 Amex Platinum',
+ 'SIN-XIY': '怎么买：用积分 · 转 Virgin 订东航白天班 15,000 分/人（约 3.86¢/分，全程最值，先查位）；无位再付现金刷 Amex Platinum',
+ 'SIN-HKT': '怎么买：坐酷航用积分（2,500 分/人超值）；坐新航付现金 · 刷 Amex Platinum',
+ 'HKT-CNX': '怎么买：付现金 · 刷 Amex Platinum 或 Atmos Summit（金额小）；这段无积分路径',
+ 'CNX-BKK': '怎么买：付现金 · 刷 Amex Platinum；积分换全亏（当天现金最低才 $82）',
+ 'BKK-XIY': '怎么买：付现金 · 刷 Atmos Summit（春秋官网人民币计价、境外 3x）或 Amex Platinum；这段无积分路径',
+ 'BKK-PEK': '怎么买：付现金 · 刷 Amex Platinum；只有最贵的泰航 TG614 才值得用 United 里程',
+ 'XIY-ICN': '怎么买：用积分 · Atmos 订大韩 7,500 分/人起（约 3.31¢/分，先查位）；无位则东航付现金刷 Amex Platinum',
+ 'ICN-SEA': '怎么买：本程已现金出票；将来再飞这条线，用 AA 里程订阿拉斯加（35,000 分/人）最划算',
 };
 /** 用分总策略（2026-10-17 调研结论，弹窗底部常驻）：跨航段的钱包级推荐 */
 export const POINTS_STRATEGY: string[] = [
@@ -666,6 +669,7 @@ export const PATH_VERDICTS: Record<string, { match: string; level: 'yes'|'mid'|'
 /** 付现金时用哪张卡（按用户自有卡组合核对的费率：Amex Platinum 机票直订 5x MR、
  * CSR 直订 4x UR、Atmos Summit 境外消费 3x Atmos；Citi Double Cash 有境外交易费别用） */
 export const SEGMENT_CASH_TIP: Record<string, string> = {
+ 'SEA-PEK': '海航官网直订：Amex Platinum 5x MR 最厚；海航境外站付款也可用 Atmos Summit（境外 3x）',
  'PEK-SIN': '首选 Amex Platinum（航司官网直订 5x MR，保障最全）；想攒 Atmos 里程就用 Atmos Summit（境外消费 3x）',
  'XIY-SIN': '若付现金：Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
  'SIN-XIY': '若付现金（东航现金价高）：Amex Platinum 5x MR 最厚，大额票的延误/取消保障也靠它',
@@ -676,6 +680,13 @@ export const SEGMENT_CASH_TIP: Record<string, string> = {
  'BKK-PEK': 'Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
  'XIY-ICN': '若付现金（东航）：Amex Platinum 直订 5x MR',
 };
+/** 无航段上下文（最终预定弹窗）或该段无专属提示时的用卡推荐：按航司属地给默认。
+ * 2026-10-17 用户抓包：用卡提示此前嵌在「本航段积分价」区块里，纯现金航段
+ * （普吉→清迈、曼谷→西安等无积分价数据的段）和最终预定弹窗根本不显示——改为独立标签区、恒显示。 */
+export function carrierCashTip(text: string): string {
+ if (/Alaska|Delta/.test(text)) return '美国航司、美元计价：Amex Platinum 直订 5x MR 最厚；在阿拉斯加官网买票也可用 Atmos Summit（Alaska 消费 3x Atmos 分）';
+ return '首选 Amex Platinum（航司官网直订 5x MR，保障最全）；境外航司网站付款（外币计价）可用 Atmos Summit（境外消费 3x Atmos 分，顺便攒订大韩的里程）；别用有境外交易费的卡（如 Citi Double Cash）';
+}
 export function pointsGuideFor(text: string): { key: string; paths: PointsPath[] } | null {
  if (!text) return null;
  const keys = Object.keys(CARRIER_POINTS_GUIDE).sort((a, b) => b.length - a.length);
@@ -703,13 +714,16 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
    {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="积分兑换指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💠 积分兑换指南{carrierName ? ` · ${carrierName}` : ''}</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
-       {seg && SEGMENT_POINTS_HINT[seg] && <span className="pointsmodal-rec">本段推荐：{SEGMENT_POINTS_HINT[seg].replace(/^积分参考：/, '')}</span>}
+       {seg && SEGMENT_POINTS_HINT[seg] && <span className="pointsmodal-rec">本段推荐：{SEGMENT_POINTS_HINT[seg].replace(/^怎么买：/, '')}</span>}
        {segInfo && <span className="pointsmodal-block">
          <b className="pointsmodal-sec">本航段积分价（{seg}）</b>
          {segInfo.rows.map((r, i) => <span key={i} className="pointsmodal-row"><span>{r.program}：<b>{r.miles}</b></span><em className={`points-verdict ${r.good}`}>{r.verdict}</em></span>)}
          <span className="pointsmodal-bottom">{segInfo.bottom}</span>
-         {seg && SEGMENT_CASH_TIP[seg] && <span className="pointsmodal-row"><span>💳 付现金用卡：{SEGMENT_CASH_TIP[seg]}</span></span>}
        </span>}
+       <span className="pointsmodal-block">
+         <b className="pointsmodal-sec">💳 付现金用哪张卡</b>
+         <span className="pointsmodal-cashtip">{(seg && SEGMENT_CASH_TIP[seg]) || carrierCashTip(text)}</span>
+       </span>
        <span className="pointsmodal-block">
          <b className="pointsmodal-sec">怎么操作</b>
          {guide ? guide.paths.map((p, i) => { const pv = (PATH_VERDICTS[guide.key] ?? []).find(v => p.program.includes(v.match)); return <span key={i} className="pointsmodal-path">
@@ -741,6 +755,53 @@ function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})\s*([AP]M)?/i.exec((t|
    没有真实时长才用起降钟面差兜底（跨时区航段钟面差会差 ±1h，仅作兜底） */
 function flightDur(o:FlightOption){if(o.durationMins&&o.durationMins>0){const h=Math.floor(o.durationMins/60),m=o.durationMins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
 function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
+/** 酒店用卡指南（2026-10-17 用户：酒店也要同样的弹窗，告诉我用哪张信用卡付最合适）。
+ * 按酒店所属链（findHotelChain 的数据推导）给订法：渠道 + 用卡 + 积分选项 + 避雷。
+ * 费率口径同用户信用卡站：Brilliant 万豪渠道 6x、CSR 酒店直购 4x UR / Chase Travel 8x、
+ * Amex 预付酒店 5x、Atmos Summit 境外 3x、Smartly 4% 现金兜底。 */
+export function hotelPayGuide(chain: string): { title: string; rows: { label: string; text: string }[] } {
+ const c = chain || '';
+ if (/marriott|万豪/i.test(c)) return { title: '万豪系 · 直订 + Brilliant', rows: [
+   { label: '首选订法', text: '官网/App 直订，刷 Marriott Bonvoy Brilliant：万豪渠道 6x 分；你的 Titanium 升级、酒廊、早餐礼遇只在直订渠道完整生效。下单前和 Google Hotels 基准价对一遍，直订贵太多再议。' },
+   { label: '积分选项', text: '先查万豪分订每晚要多少分：旺季现金价高时用分常更划算；Brilliant 的 85K 周年房券能覆盖的房晚优先用券，别让券过期。' },
+   { label: '避雷', text: '别走第三方平台订万豪（礼遇和积分/房晚都可能不认）；别用其他卡付（浪费 6x 连锁加成）。' } ] };
+ if (/hyatt|凯悦/i.test(c)) return { title: '凯悦系 · 先查积分房', rows: [
+   { label: '首选订法', text: '先查积分房：Chase UR 1:1 转 Hyatt 是公认最值的酒店转分，每晚分价合理就优先转分订（用 CSR 的分）。' },
+   { label: '现金订法', text: '官网直订刷 Chase Sapphire Reserve：酒店直购 4x UR，攒的分又能转回 Hyatt。' },
+   { label: '避雷', text: '别用 Amex 付凯悦攒分（转不进 Hyatt）；第三方平台订不攒凯悦积分/房晚。' } ] };
+ if (c) return { title: `${c} 系 · 直订刷 CSR/Platinum`, rows: [
+   { label: '首选订法', text: '官网直订刷 Chase Sapphire Reserve（酒店直购 4x UR）或 Amex Platinum（保障全）；境外酒店官网付款可用 Atmos Summit（境外消费 3x Atmos 分）。' },
+   { label: '平台比价', text: '若携程/Google Hotels 整段总价明显更低，走平台时用 U.S. Bank Smartly（4% 现金兜底）；注意平台订多数连锁不攒积分/房晚。' },
+   { label: '积分选项', text: '这家所属计划与你的六类积分没有高值转分路径，以现金订为主，别专门为它转分。' } ] };
+ return { title: '独立酒店 · 比价后选卡', rows: [
+   { label: '首选订法', text: '直订刷 Chase Sapphire Reserve（酒店直购 4x UR）；走 OTA/平台订用 U.S. Bank Smartly（4% 现金返现兜底）；境外付款可用 Atmos Summit（境外 3x）。' },
+   { label: '比价要点', text: '独立酒店重点看整段含税总价和取消政策：用 Google Hotels 基准价对齐口径再比，别被每晚价误导。' },
+   { label: '积分选项', text: '无连锁积分可攒，现金订就是最优；别为了这家转任何分。' } ] };
+}
+export function HotelPayTag({ name, city, chain }: { name: string; city: string; chain: string }) {
+ const [open, setOpen] = useState(false);
+ useEffect(() => {
+   if (!open) return;
+   const f = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+   window.addEventListener('keydown', f);
+   return () => window.removeEventListener('keydown', f);
+ }, [open ]);
+ const g = hotelPayGuide(chain);
+ return <span className="pointstagwrap">
+   <button type="button" className="hotelpaytag" onClick={() => setOpen(true)} aria-label={`查看${name}用卡指南`}>💳 用卡指南</button>
+   {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
+     <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="酒店用卡指南" onClick={e => e.stopPropagation()}>
+       <span className="pointsmodal-head"><b>💳 {name} · 怎么订最划算</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
+       <span className="pointsmodal-rec">{g.title}{city ? ` · ${city}` : ''}</span>
+       <span className="pointsmodal-block">
+         {g.rows.map((r, i) => <span key={i} className="pointsmodal-path"><span className="pointsmodal-pathname">{r.label}</span><span>{r.text}</span></span>)}
+       </span>
+       <span className="pointsmodal-foot">口径：价格先对 Google Hotels 整段基准价；连锁酒店礼遇与积分只认官方直订渠道；境外付款别用有境外交易费的卡（Citi Double Cash）。</span>
+     </span>
+   </span>}
+ </span>;
+}
+
 /** 本段机场地图（2026-10-17 用户：预定筛选要能看到两边机场的位置，
  * 同城多机场必须区分开——北京首都 PEK vs 大兴 PKX、曼谷素万那普 BKK vs 廊曼 DMK）。
  * 机场点与航线对全部由本段航班选项的 dep/arrAirport 推导；选项没带机场时
@@ -811,7 +872,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
-  {leg.dbSeg&&SEGMENT_POINTS_HINT[leg.dbSeg]&&<p className="flightpointsline">💠 {SEGMENT_POINTS_HINT[leg.dbSeg]}（点任意航班的紫色积分标签看明细）</p>}
+  {leg.dbSeg&&SEGMENT_POINTS_HINT[leg.dbSeg]&&<p className="flightpointsline">🧾 {SEGMENT_POINTS_HINT[leg.dbSeg]}（点任意航班的紫色积分标签看明细）</p>}
   {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
     <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/></div>
