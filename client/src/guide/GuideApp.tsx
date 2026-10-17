@@ -884,20 +884,28 @@ export function FavButton({name,city,type,extra}:{name:string;city:string;type:'
   const myKey = favoriteIdentityKey(type, city, name, type === 'flight' ? (extra?.flight as { flight?: string; route?: string; cabin?: string } | undefined) ?? null : null);
   const done = (data?.records ?? []).some(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
   const onClick=async()=>{
-    if(saving||done)return;setSaving(true);setErrMsg(null);
+    if(saving)return;setSaving(true);setErrMsg(null);
     try{
-      /* 保存前现查一次最新记录再判重：缓存还没加载完就点收藏也不会重复存
-         （2026-10-17 实祸：RYSE 酒店因缓存未就绪被存了两份） */
-      const fresh = await listRecords().catch(() => null);
-      const exists = (fresh?.records ?? []).some(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
-      if(!exists){
-        await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+      if(done){
+        /* 2026-10-17 用户：要能取消收藏——按语义身份现查最新记录，命中的收藏全删
+           （历史遗留的重复收藏也一并清干净），删完价格追踪里同步消失 */
+        const fresh = await listRecords().catch(() => null);
+        const targets = (fresh?.records ?? []).filter(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
+        for(const t of targets){ await deleteRecord({id:t.id}); }
+      }else{
+        /* 保存前现查一次最新记录再判重：缓存还没加载完就点收藏也不会重复存
+           （2026-10-17 实祸：RYSE 酒店因缓存未就绪被存了两份） */
+        const fresh = await listRecords().catch(() => null);
+        const exists = (fresh?.records ?? []).some(r=>r.kind==='favorite'&&favoriteIdentityOfRecord(r)===myKey);
+        if(!exists){
+          await saveRecord({kind:'favorite',title:name,body:JSON.stringify({city,note:'',type,...(extra||{})}),day:null,done:false});
+        }
       }
       /* 2026-10-02 修：收藏后立即刷新 records 缓存，否则行动安排页看不到新收藏 */
       qc.invalidateQueries({queryKey:["records"]});
-    }catch(e){setErrMsg(e instanceof Error?e.message:'保存失败，请重试');}finally{setSaving(false);}
+    }catch(e){setErrMsg(e instanceof Error?e.message:'操作失败，请重试');}finally{setSaving(false);}
   };
-  return <span style={{display:'inline-flex',flexDirection:'column',gap:4}}><button className={done?'selected':''} onClick={onClick} disabled={saving||done} aria-label={`收藏${name}`}>{done?'✓ 已收藏':saving?'保存中…':'＋ 收藏'}</button>{errMsg&&<span style={{fontSize:12,color:'#b91c1c'}}>{errMsg}</span>}</span>;
+  return <span style={{display:'inline-flex',flexDirection:'column',gap:4}}><button className={done?'selected':''} onClick={onClick} disabled={saving} aria-label={done?`取消收藏${name}`:`收藏${name}`}>{done?'✓ 已收藏 · 取消收藏':saving?'处理中…':'＋ 收藏'}</button>{errMsg&&<span style={{fontSize:12,color:'#b91c1c'}}>{errMsg}</span>}</span>;
 }
 
 function RecordsPage({kind,title,summary,image}:{kind:RecordKind;title:string;summary:string;image:string}){
