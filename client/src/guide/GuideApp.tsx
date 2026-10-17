@@ -421,6 +421,11 @@ const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航�
  * site-audit-daily 会点名缺口，必须同步补进这张表，不许再留待核验。 */
 const CARRIER_REPUTATION:Record<string,string>={'Singapore Airlines':'全服务标杆，星空联盟，含餐含行李；小福利多，要主动问空姐要','Scoot':'新航旗下廉航；托运提前官网买便宜（柜台贵），水餐全自费，座椅偏挤','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','China Eastern':'全服务航司，天合联盟成员','Hainan Airlines':'全服务，Skytrax 五星，含餐含行李，国内口碑好','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','Korean Air':'韩国最大全服务，天合联盟，含餐含行李','Asiana Airlines':'韩国全服务，星空联盟，含餐含行李，服务细致','THAI':'泰国国家航司，全服务，星空联盟成员，含餐含行李','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Thai AirAsia':'亚航系廉航，行李餐食另付，班次多、价格低','Thai Lion Air':'狮航系廉航，价格低，行李额按下单票价档确认','Thai VietJet Air':'越捷系廉航，行李餐食另付，价格低，延误口碑一般','Nok Air':'泰国本土廉航（皇雀），短途为主，行李按票价档','Spring Airlines':'国内最大廉航，票价低但税费加价多；随身行李查得严，座位窄、机上推销多','Alaska Airlines':'寰宇一家成员，西雅图主场，服务稳，托运多另付','Delta':'美国全服务，天合联盟，含餐，国际线口碑稳',"T'way Air":'韩国低成本航司（德威航空），首尔出发热门廉航选择'};
 
+/* 航司特色（2026-10-17 用户要求）：座椅宽敞度、商务舱值不值得——只写小红书乘客实测支持的结论，
+ * 证据在 research_notes/sea-guide-2026/airline-reputation/；没查到的不写，不许凭常识编。
+ * 与 CARRIER_REPUTATION 同键，在机票页「航司口碑与特色」折叠里一并展示，帮用户挑航班。 */
+const CARRIER_FEATURES:Record<string,string>={'Scoot':'经济舱座椅偏窄、腿部空间小，长途久坐累','Spring Airlines':'腿部间距意外宽过部分全服务航司，但座椅窄、靠背不可调'};
+
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
 function flightDur(o:FlightOption){const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
@@ -438,7 +443,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const bizMin=biz&&biz.length?minOf(biz):null;
  const rec=sorted.find(o=>o.recommend);
  const seen:string[]=[];const reps:string[]=[];
- sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}`);}});
+ sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}${CARRIER_FEATURES[k]?`｜特色：${CARRIER_FEATURES[k]}`:''}`);}});
  const unknown=[...new Set(sorted.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
  const curState=cabin==='eco'?ecoState:bizState;
  return <div className="flightoptions">
@@ -454,7 +459,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
-  {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</p></details>}
+  {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</p></details>}
   <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>
  </div>;
 }
