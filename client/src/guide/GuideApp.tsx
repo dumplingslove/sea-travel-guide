@@ -26,7 +26,7 @@ import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
 import { getGuideFacts, getXhsAssessment, guideFactsCount, strictResearchLinkCount, secondaryEvidence, xhsEvidence } from './research';
-import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveRoomRate } from './hotelLivePrices';
+import { getLiveHotelPrice, getHotelPriceHistory, liveDisplayRate, livePriceDatasetStatus, type LiveRoomRate } from './hotelLivePrices';
 import { getPlaceGallery, placeGalleryPhotoCount, placeGalleryPlaceCount, type PlacePhoto } from './placeGalleries';
 import { bangkokOta } from './bangkokOta';
 import { ResearchProgressPage } from './ResearchProgressPage';
@@ -324,6 +324,27 @@ function PhotoSpotPanel({item}:{item:Item}){
 const NON_ITINERARY_PRICE_CITIES=['槟城','吉隆坡','胡志明市','富国岛'];
 const isNonItineraryPriceCity=(city:string)=>NON_ITINERARY_PRICE_CITIES.includes(city);
 const shortDate=(iso:string)=>iso&&iso.length>=10?iso.slice(5).replace('-','/'):iso;
+/* 酒店价格趋势线（2026-10-17 用户要求：酒店价格也要画趋势线，像机票一样）。
+ * 数据来自 price_history 数据集的酒店序列：优先基础房每晚价，其次 Google 基准价；不足 2 次实查不画。 */
+function HotelTrend({name}:{name:string}){
+ const h=getHotelPriceHistory(name);
+ if(!h) return null;
+ const pick=h.base&&h.base.length>=2?{pts:h.base,cap:'基础房每晚价走势'}:h.baseline&&h.baseline.length>=2?{pts:h.baseline,cap:'Google 基准价走势'}:null;
+ if(!pick) return null;
+ const pts=pick.pts,W=132,H=30,PAD=3;
+ const prices=pts.map(p=>p[1]); const min=Math.min(...prices),max=Math.max(...prices); const span=(max-min)||1;
+ const x=(i:number)=>PAD+(i*(W-PAD*2))/(pts.length-1); const y=(v:number)=>H-PAD-((v-min)/span)*(H-PAD*2);
+ const line=pts.map((p,i)=>`${x(i)},${y(p[1])}`).join(' ');
+ const first=prices[0]!,last=prices[prices.length-1]!; const diff=last-first; const pct=first?Math.round((diff/first)*100):0;
+ return <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
+  <svg width={W} height={H} aria-hidden="true" style={{flexShrink:0}}><polyline points={line} fill="none" stroke="#0f766e" strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round"/><circle cx={x(pts.length-1)} cy={y(last)} r={2.6} fill="#0f766e"/><circle cx={x(prices.indexOf(min))} cy={y(min)} r={2.2} fill="#94a3b8"/><circle cx={x(prices.indexOf(max))} cy={y(max)} r={2.2} fill="#94a3b8"/></svg>
+  <div style={{fontSize:11,lineHeight:1.4,color:'#64748b',minWidth:0}}>
+   <div>📈 {pick.cap}：最低 <b style={{color:'#334155'}}>${Math.round(min)}</b> · 最高 <b style={{color:'#334155'}}>${Math.round(max)}</b>{diff!==0&&<span style={{color:diff>0?'#dc2626':'#15803d',fontWeight:600}}> · 期间{diff>0?'▲':'▼'} {Math.abs(pct)}%</span>}</div>
+   <div style={{color:'#94a3b8'}}>{pts[0]![0].slice(5)} 起共 {pts.length} 次实查 · 最近 {pts[pts.length-1]![0].slice(5)}</div>
+  </div>
+ </div>;
+}
+
 function LivePricePanel({name,city}:{name:string;city:string}){
  const p=getLiveHotelPrice(name);
  if(!p){const st=livePriceDatasetStatus();if(st==='error') return <section className="detailsection livepriceblock" aria-label="实时房价"><span>LIVE RATES · USD</span><h3>实时房价</h3><p className="livepricenone">价格加载失败，刷新页面会重新加载——这不等于暂无实时价。</p></section>;if(st!=='ready') return <section className="detailsection livepriceblock" aria-label="实时房价"><span>LIVE RATES · USD</span><h3>实时房价</h3><p className="livepricenone">价格加载中…</p></section>;return null;}
@@ -331,7 +352,7 @@ function LivePricePanel({name,city}:{name:string;city:string}){
  const priceTitle=refOnly?`参考房价（查询日期${shortDate(p.checkIn)}–${shortDate(p.checkOut)}）`:'按行程日期实时房价';
  const row=(label:string,rate:LiveRoomRate|null,note?:string)=>(
   <div className="livepricerow"><b>{label}</b>{rate?<span><span className="livepriceroom">{rate.room}</span><span className="livepricevals">${rate.perNightUSD}/晚{rate.totalUSD!=null?` · 整段 $${rate.totalUSD}${rate.totalInclTax===true?'（含税）':rate.totalInclTax===false?'（税前）':'（税费情况页面未说明）'}`:''}</span>{rate.memberDeal&&<span className="livepricedeal">🏷️ {rate.memberDeal}</span>}<small>{rate.cancel}；{rate.breakfast}{rate.note?`；${rate.note}`:''}</small></span>:<span className="livepricenone">{note||'该日期未找到可订房型'}</span>}</div>);
- return <section className="detailsection livepriceblock" aria-label={priceTitle}><span>LIVE RATES · USD</span><h3>{priceTitle}</h3><p className="livepricedates">{p.checkIn} → {p.checkOut}（{p.nights} 晚）· 2 成人 1 间</p>{p.dateMismatch&&<p className="livepricedatewarn">⚠️ 行程日期有调整：此价格按上方日期查询，可能与你当前行程日期不一致，仅供参考</p>}{p.unavailable?<p className="livepricenone">{p.unavailable}</p>:<>{row('基础房',p.base,p.baseNote)}{row('套房',p.suite,p.suiteNote)}</>}<small className="livepricefoot">来源 {p.source} · 查询于 {p.checkedAt} · 房价实时波动，以下单时为准</small>{p.baselineUSD!=null&&<div className="baselineblock"><h4>📊 基准价对比</h4><div className="baselinerow"><span><b>Google Hotels</b> ${p.baselineUSD}/晚<small>（不含税）</small></span>{p.baselineUrl&&<a href={p.baselineUrl} target="_blank" rel="noreferrer">验证↗</a>}</div><p className="baselinenote">查询于 {p.baselineCheckedAt||'—'} · 仅为 Google 搜索页每晚参考价，用于横向对比各酒店价格水平</p><ul className="baselineunknown"><li>税费：不含税（总价需另加税费）</li><li>房型、早餐、退改政策：基准价未收录，以上方实查为准</li></ul><p className="baselinewarn">口径不同，不直接计算差价：上方 {p.source} 为实查完整报价（含税口径见各房型），基准价为不含税参考价。</p></div>}</section>;
+ return <section className="detailsection livepriceblock" aria-label={priceTitle}><span>LIVE RATES · USD</span><h3>{priceTitle}</h3><p className="livepricedates">{p.checkIn} → {p.checkOut}（{p.nights} 晚）· 2 成人 1 间</p>{p.dateMismatch&&<p className="livepricedatewarn">⚠️ 行程日期有调整：此价格按上方日期查询，可能与你当前行程日期不一致，仅供参考</p>}{p.unavailable?<p className="livepricenone">{p.unavailable}</p>:<>{row('基础房',p.base,p.baseNote)}{row('套房',p.suite,p.suiteNote)}</>}<small className="livepricefoot">来源 {p.source} · 查询于 {p.checkedAt} · 房价实时波动，以下单时为准</small>{p.baselineUSD!=null&&<div className="baselineblock"><h4>📊 基准价对比</h4><div className="baselinerow"><span><b>Google Hotels</b> ${p.baselineUSD}/晚<small>（不含税）</small>{p.baselineTotalUSD!=null&&<> · 整段{p.nights}晚 <b>${p.baselineTotalUSD}</b><small>（Google 页面显示总价）</small></>}</span>{p.baselineUrl&&<a href={p.baselineUrl} target="_blank" rel="noreferrer">验证↗</a>}</div><p className="baselinenote">查询于 {p.baselineCheckedAt||'—'} · 仅为 Google 搜索页每晚参考价，用于横向对比各酒店价格水平</p><ul className="baselineunknown"><li>税费：每晚价不含税；整段总价为 Google 页面显示值，口径以验证链接页面为准</li><li>房型、早餐、退改政策：基准价未收录，以上方实查为准</li></ul><p className="baselinewarn">口径不同，不直接计算差价：上方 {p.source} 为实查完整报价（含税口径见各房型），基准价为不含税参考价。</p></div>}<HotelTrend name={name}/></section>;
 }
 
 type AvStatus='available'|'mixed'|'full'|'soldout'|'not_released'|'walkin'|'unverifiable';

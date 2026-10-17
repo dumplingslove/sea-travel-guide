@@ -1417,7 +1417,7 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
           </div>
           {p!.baselineUSD != null && (
             <div className="text-gray-500 mt-0.5">
-              📊 Baseline (Google Hotels): ${p!.baselineUSD}/晚（不含税）
+              📊 Baseline (Google Hotels): ${p!.baselineUSD}/晚（不含税）{p!.baselineTotalUSD != null && <span> · 整段共 ${p!.baselineTotalUSD}（Google 显示总价）</span>}
               <span className="text-gray-400" title="Google baseline 不含税，Trip.com 每晚价税费口径未明确，口径不一致时不直接计算差额"> · 口径不同，未算差价</span>
             </div>
           )}

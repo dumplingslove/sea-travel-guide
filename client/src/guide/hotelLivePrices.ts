@@ -63,6 +63,8 @@ export interface LiveHotelPrice {
   checkedAt: string;
   /** Google Hotels 基准价（每晚 USD），横向对比用 baseline；未查到则不填 */
   baselineUSD?: number;
+  /** Google Hotels 按整段住宿日期（入住→退房）显示的总价（USD，页面原样显示值，不做每晚×晚数推算）；页面只给每晚价时不填 */
+  baselineTotalUSD?: number;
   /** baseline 查询时间 */
   baselineCheckedAt?: string;
   /** Google Hotels 可验证链接（搜索页，用户可点过去核对） */
@@ -100,6 +102,27 @@ export function liveDisplayRate(p: LiveHotelPrice | undefined): LiveRoomRate | n
 
 /** 当前价格数据覆盖的行程住宿日期快照（行程变化检测用） */
 export const livePriceStayDates: Record<string, { checkIn: string; checkOut: string }> = {};
+
+/* 酒店价格历史（2026-10-17 用户要求：酒店价格也要画趋势线）。
+ * 数据来自 price_history 数据集（由 build-price-history.py 从历轮实查汇成时间序列），
+ * 键与 BookingsPage 价格追踪一致：normHotelKey(酒店名) → { baseline?: [日期,价][], base?: [日期,价][] }。 */
+export type HotelPricePoint = [string, number];
+export interface HotelPriceSeries { baseline?: HotelPricePoint[]; base?: HotelPricePoint[] }
+const hotelPriceHistory: Record<string, HotelPriceSeries> = {};
+
+export function normHotelKey(s: string): string {
+  return s.replace(/[一-鿿]+/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+export function getHotelPriceHistory(name: string): HotelPriceSeries | undefined {
+  return hotelPriceHistory[normHotelKey(name)];
+}
+
+onDataset("price_history", (data) => {
+  const rec = ((data ?? {}) as { hotels?: Record<string, HotelPriceSeries> }).hotels ?? {};
+  for (const k of Object.keys(hotelPriceHistory)) delete hotelPriceHistory[k];
+  Object.assign(hotelPriceHistory, rec);
+});
 
 /* 数据来源（2026-10-13 起）：Supabase sea_guide_datasets 的 hotel_live_prices 行，
  * 由 hotel-price-watch 管线实查后写入 DB；本文件不再内嵌价格字面量。
