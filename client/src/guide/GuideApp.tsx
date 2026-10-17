@@ -415,7 +415,11 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
 /** 航司口碑速览（历史研究结论，来源：git 历史交通页已删内容）。 */
 const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
 /** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
-const CARRIER_REPUTATION:Record<string,string>={'Scoot':'新航旗下，全球最佳长途廉航，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','China Eastern':'全服务航司，天合联盟成员',"T'way Air":'韩国低成本航司（德威航空），首尔出发热门廉航选择'};
+/* 航司口碑：一句短评，只写定性事实（全服务/廉航、联盟、行李餐食要点）。
+ * 2026-10-16 用户抓包补齐：此前只有 9 家，本行程实际出现的 17 家里大半显示「口碑待核验」
+ * （含新加坡航空、韩亚、大韩、海南、春秋、亚航等主力）。新增航司出现在航班库时，
+ * site-audit-daily 会点名缺口，必须同步补进这张表，不许再留待核验。 */
+const CARRIER_REPUTATION:Record<string,string>={'Singapore Airlines':'全服务标杆，星空联盟，含餐含行李，口碑顶级','Scoot':'新航旗下长途廉航，行李餐食另付，新加坡进出首选','Bangkok Airways':'精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务','Air China':'中国载旗航司，全服务，星空联盟成员','China Southern':'全服务航司，机队规模亚洲前列','China Eastern':'全服务航司，天合联盟成员','Hainan Airlines':'全服务，Skytrax 五星，含餐含行李，国内口碑好','Shenzhen Airlines':'全服务航司，星空联盟成员','Xiamen Airlines':'全服务航司，天合联盟成员，服务口碑好','Korean Air':'韩国最大全服务，天合联盟，含餐含行李','Asiana Airlines':'韩国全服务，星空联盟，含餐含行李，服务细致','THAI':'泰国国家航司，全服务，星空联盟成员，含餐含行李','Thai Airways':'泰国国家航司，全服务，星空联盟成员','Thai AirAsia':'亚航系廉航，行李餐食另付，班次多、价格低','Thai Lion Air':'狮航系廉航，价格低，行李额按下单票价档确认','Thai VietJet Air':'越捷系廉航，行李餐食另付，价格低，延误口碑一般','Nok Air':'泰国本土廉航（皇雀），短途为主，行李按票价档','Spring Airlines':'国内最大廉航，免费行李额小，票价低，规矩多','Alaska Airlines':'寰宇一家成员，西雅图主场，服务稳，托运多另付','Delta':'美国全服务，天合联盟，含餐，国际线口碑稳',"T'way Air":'韩国低成本航司（德威航空），首尔出发热门廉航选择'};
 
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
