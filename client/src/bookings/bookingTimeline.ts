@@ -267,6 +267,9 @@ export interface FlightOption {
   /** 真实飞行时长（分钟，航班库 Google Flights 原值，已含时区换算）；
    * 展示时长优先用它，不许再拿起降钟面差冒充（跨时区会差 ±1h，2026-10-17 实祸） */
   durationMins?: number;
+  /** 起降机场代码（航班库全机场重查后才有）：多机场城市区分 PKX 大兴 / DMK 廊曼等 */
+  depAirport?: string;
+  arrAirport?: string;
   /** 中转次数；0=直飞（全站只允许 0） */
   stops?: number;
   /** 中转城市，如 "北京"；直飞时不填 */
@@ -630,6 +633,7 @@ const CARRIER_FULLNAME: Record<string, string> = {
 interface FlightDbFlight {
   airline: string; flight: string | null; dep: string; arr: string;
   duration?: string; price_usd?: number | null; business_price_usd?: number | null;
+  dep_airport?: string; arr_airport?: string;
 }
 interface FlightDbDay {
   economy_usd?: number | null; business_usd?: number | null;
@@ -772,6 +776,8 @@ function dbFlightOption(f: FlightDbFlight, cabin: "eco" | "biz"): FlightOption |
     arrive: arrRaw.replace("+1", "").trim(),
     arrivePlusDay: plusDay || undefined,
     durationMins: durMins ?? undefined,
+    depAirport: f.dep_airport,
+    arrAirport: f.arr_airport,
     stops: 0,
     price: price ?? null,
     refundable: "not stated",
