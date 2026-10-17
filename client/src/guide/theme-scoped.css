@@ -547,11 +547,15 @@
 @media(min-width:1024px){
   .guide-scope .itemcard{grid-template-columns:290px minmax(0,1fr)}
   .guide-scope .itemmedia{min-height:0}
+  /* rich 目录（酒店/餐厅/景点卡）：侧栏图会被卡片正文撑成竖长条——桌面改顶部横幅图 */
+  .guide-scope .catalog.rich .itemcard{grid-template-columns:1fr;grid-template-rows:230px auto}
+  .guide-scope .catalog.rich .itemmedia{height:230px;min-height:0}
 }
 @media(min-width:1280px){
   .guide-scope .maincontent,.guide-scope .page{max-width:80rem}
   .guide-scope .research-page{max-width:80rem}
   .guide-scope .catalog.rich{grid-template-columns:1fr 1fr}
-  .guide-scope .catalog.rich .itemcard{grid-template-columns:235px minmax(0,1fr)}
+  .guide-scope .catalog.rich .itemcard{grid-template-rows:190px auto}
+  .guide-scope .catalog.rich .itemmedia{height:190px}
   .guide-scope .catalog.rich>.detail-inline{grid-column:1/-1}
 }
