@@ -1110,6 +1110,9 @@ function segFocusLegs(key: string): { legs: { from: string; to: string }[]; titl
   const zh = (code: string) => { const [f, t] = code.split("-"); return { from: CODE_TO_ZH[f] || f, to: CODE_TO_ZH[t] || t }; };
   if (key === "beijing1") return { legs: [zh("PEK-SIN"), zh("XIY-SIN")], title: "北京（第一段）包含的航班" };
   if (key === "singapore") return { legs: [zh(singaporeToFirstCityLeg().code), zh("SIN-XIY")], title: "新加坡这一段包含的航班" };
+  /* 夫妻东南亚（2026-10-16 用户：点这段要把东南亚几个航班串起来显示，此前没给
+     这段配聚焦腿、点了没反应）：新加坡→首城 + 段内逐城转场，整段串起来 */
+  if (key === "couple") return { legs: [zh(singaporeToFirstCityLeg().code), ...wzLegs().map(l => ({ from: l.from, to: l.to }))], title: "夫妻东南亚这一段的航班" };
   if (key === "seoul") return { legs: [zh("ICN-SEA")], title: "首尔这一段包含的航班" };
   if (key === "split-you") return { legs: [zh(thailandToBeijingLeg().code), { from: "北京", to: "西安" }], title: "你这一路（飞北京 + 高铁汇合）" };
   if (key === "split-wife") return { legs: [zh(thailandToXianLeg().code), zh("XIY-ICN")], title: "老婆这一路" };
@@ -1148,7 +1151,7 @@ function renderTrip(){
     /* 统一交互模型（2026-10-13 用户定稿）：不要单独的「在地图上看」按钮——点段卡本身
        就在地图上显示这一段包含的航班（按段范围，不是全程关联）；按钮（步进器/需求
        开关）只改数据、不触发地图（委托里有守卫）。分开行动段不整卡触发，卡内两行按人触发。 */
-    const segFocusAttr = (s.id==="beijing1"||s.id==="singapore"||s.id==="seoul") ? ` data-segfocus="${s.id}"` : "";
+    const segFocusAttr = (s.id==="beijing1"||s.id==="singapore"||s.id==="couple"||s.id==="seoul") ? ` data-segfocus="${s.id}"` : "";
     return `<div class="card trip-seg"${segFocusAttr}>
       <div class="trip-seg-head">
         <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>

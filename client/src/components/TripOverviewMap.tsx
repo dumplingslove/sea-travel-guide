@@ -589,15 +589,23 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
       if (!cityMarkersRef.current.has(s.id)) cityMarkersRef.current.set(s.id, mk);
     });
 
-    const bounds = L.latLngBounds(latlngs).pad(0.18);
-    map.fitBounds(bounds);
+    const bounds = L.latLngBounds(latlngs);
+    /* 默认总览要把西雅图也框进来（2026-10-16 用户：进页面第一眼的全图不含西雅图）：
+       用与虚线端点相同的经度归一化点扩展边界，两端都算 */
+    if (cur.length) {
+      const seaLL = LL(CITY_COORDS.seattle[0], CITY_COORDS.seattle[1]);
+      bounds.extend(normLngTo(latlngs[0], seaLL));
+      bounds.extend(normLngTo(latlngs[latlngs.length - 1], seaLL));
+    }
+    const paddedBounds = bounds.pad(0.18);
+    map.fitBounds(paddedBounds);
     // 首次加载偶发空白修复（backlog P1）：L.map 在 React commit 时创建，
     // 此时容器尺寸尚未稳定（字体/布局仍在结算），Leaflet 会记住错误的 0×N 尺寸。
     // 在 paint 完成后强制刷新尺寸并重算视野，再加一次延迟兜底。
     let raf = 0;
     const fixSize = () => {
       map.invalidateSize();
-      map.fitBounds(bounds, { animate: false });
+      map.fitBounds(paddedBounds, { animate: false });
     };
     raf = requestAnimationFrame(() => {
       raf = requestAnimationFrame(fixSize);
