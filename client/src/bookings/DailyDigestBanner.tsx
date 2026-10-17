@@ -84,7 +84,7 @@ export default function DailyDigestBanner({
         .filter((l) => l.kind === kind)
         .flatMap((l) => l.options ?? [])
         .map((o) => o.price)
-        .filter((p) => Number.isFinite(p));
+        .filter((p): p is number => p != null && Number.isFinite(p));
       return ps.length ? Math.min(...ps) : null;
     };
     const directLegs = active.filter((l) =>

@@ -449,8 +449,13 @@ const CARRIER_REPUTATION:Record<string,string>={'Singapore Airlines':'全服务�
 const CARRIER_FEATURES:Record<string,string>={'Scoot':'经济舱座椅偏窄、腿部空间小，长途久坐累；ScootPlus（超级经济舱）能半躺、包餐，bid 升舱 50–95 新币时划算、长途有人首选，正价差价小则不值；选第一排、避最后一排（椅背可能放不平）','Spring Airlines':'腿部间距意外宽过部分全服务航司，但座椅窄、靠背不可调','Hainan Airlines':'座位比东航略宽、高个子友好（乘客实测），但也有腿部空间不足的吐槽，看机型；商务舱服务好、有铺床服务，特价时值','Thai VietJet Air':'经济舱椅距意外宽敞（1米8乘客膝前还剩一个半拳头，比国内不少航司大），短板是椅背可调幅度小','Alaska Airlines':'新787商务舱座椅带门、中间座隔板可放低方便同行；但跨洋商务服务被实测批评，里程票（75k）换才值、现金票不值','Singapore Airlines':'商务舱可完全躺平；777 第一排脚部空间大最值得抢（多留给 PPS 会员，可提前 96 小时打客服选），普通排脚部空间小、要斜着躺；Book the Cook 提前点餐是特色','THAI':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型','Thai Airways':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型'};
 
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
-function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
-function flightDur(o:FlightOption){const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
+/* 时刻解析（2026-10-17 修）：必须认 AM/PM——旧实现只读 H:MM、把 "3:50 PM" 当 3:50，
+   起降一端 AM 一端 PM 时长算错 12 小时（实祸：TG614 显示 17h40m），排序与红眼判断同受影响。
+   数据侧已统一归一化为 24h 入库（merge _norm_time），此处兼容两种格式兜底。 */
+function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})\s*([AP]M)?/i.exec((t||'').trim());if(!m)return 0;let h=+m[1];const mi=+m[2];if(m[3]){const pm=/p/i.test(m[3]);if(pm&&h<12)h+=12;if(!pm&&h===12)h=0;}return h*60+mi;}
+/* 飞行时长：优先用航班库的真实时长（Google Flights 原值，含时区换算）；
+   没有真实时长才用起降钟面差兜底（跨时区航段钟面差会差 ±1h，仅作兜底） */
+function flightDur(o:FlightOption){if(o.durationMins&&o.durationMins>0){const h=Math.floor(o.durationMins/60),m=o.durationMins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
 function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
 function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const eco=leg.options??null;                 /* null/空 = 未查询；查过但无直飞用 queriedAt 区分 */
@@ -473,7 +478,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    return cb==='eco'?q.price:q.bizPrice;
  };
  const priceOf=(o:FlightOption,cb:'eco'|'biz')=>livePriceOf(o,cb)??o.price;
- const minOf=(os:FlightOption[],cb:'eco'|'biz')=>os.length?Math.round(Math.min(...os.map(o=>priceOf(o,cb)))):null;
+ const minOf=(os:FlightOption[],cb:'eco'|'biz')=>{const ps=os.map(o=>priceOf(o,cb)).filter((p):p is number=>p!=null);return ps.length?Math.round(Math.min(...ps)):null;};
  const ecoMin=eco&&eco.length?minOf(eco,'eco'):null;
  const bizMin=biz&&biz.length?minOf(biz,'biz'):null;
  const rec=sorted.find(o=>o.recommend);
@@ -490,7 +495,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
   {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;return <li key={oi} className={o.recommend?'rec':''}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
     <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}</div>
-    <div className="ft-side"><b className="fo-price">${Math.round(shownPrice)}</b>{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:Math.round(shownPrice),cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
+    <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}

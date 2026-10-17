@@ -264,13 +264,19 @@ export interface FlightOption {
   arrive: string;
   /** 到达为次日时 true，展示为 06:50+1 */
   arrivePlusDay?: boolean;
+  /** 真实飞行时长（分钟，航班库 Google Flights 原值，已含时区换算）；
+   * 展示时长优先用它，不许再拿起降钟面差冒充（跨时区会差 ±1h，2026-10-17 实祸） */
+  durationMins?: number;
   /** 中转次数；0=直飞（全站只允许 0） */
   stops?: number;
   /** 中转城市，如 "北京"；直飞时不填 */
   via?: string;
   /** 托运行李，如 "1件"/"2件"；无依据不填 */
   bags?: string;
-  price: number;
+  /** 价格（整单总价口径见 leg.priceBasis）；null = Google Flights 未显示价（「查询价格」）——
+   * 航班本身真实存在，必须照样列出并标「价格待查」，不许因无价把航班吞掉
+   * （2026-10-17 用户抓包：国航 3 班被吞，含 CA969/MU2069/MU2070 同类风险） */
+  price: number | null;
   refundable: string; // "yes" | "no" | "not stated"
   changeable: string;
   recommend?: boolean;
@@ -691,8 +697,18 @@ function fmtUSD(x: number): string {
    → 出发越早越优先 → 价格越低越优先；过夜 = 起飞+时长跨午夜或时长 ≥8h；全天都过夜才推过夜班。
    此前本文件按「最低价」选推荐，与 planner 口径不一致（红眼/深夜班被标推荐），2026-10-13 裁决统一。 */
 function dbDepMinutes(dep: string): number | null {
-  const m = String(dep || "").match(/(\d{1,2}):(\d{2})/);
-  return m ? +m[1] * 60 + +m[2] : null;
+  /* 2026-10-17 修：必须认 AM/PM——旧实现把 "11:40 PM" 当 11:40，推荐航班的
+     上午出发/过夜判断对 12h 格式行全错。数据侧已统一 24h 入库，此处兼容兜底。 */
+  const m = String(dep || "").match(/(\d{1,2}):(\d{2})\s*([AP]M)?/i);
+  if (!m) return null;
+  let h = +m[1];
+  const mi = +m[2];
+  if (m[3]) {
+    const pm = /p/i.test(m[3]);
+    if (pm && h < 12) h += 12;
+    if (!pm && h === 12) h = 0;
+  }
+  return h * 60 + mi;
 }
 function dbDurMinutes(d: string): number | null {
   const dm = String(d || "").match(/(\d+)\s*h(?:r)?\s*(?:(\d+)\s*m)?/i);
@@ -742,17 +758,22 @@ function fullCarrier(short: string): string {
 
 function dbFlightOption(f: FlightDbFlight, cabin: "eco" | "biz"): FlightOption | null {
   const price = cabin === "eco" ? f.price_usd : f.business_price_usd;
-  if (price == null) return null;
+  /* 经济舱：无价也不能丢航班——行在库里就证明这班在经济舱实查里出现过，
+     price_usd 为空只是 Google 未在列表显示价（「查询价格」），保留并标待查。
+     商务舱：business_price_usd 为空 = 商务舱查询里没这班（多为无商务舱），维持不列。 */
+  if (cabin === "biz" && price == null) return null;
   const arrRaw = String(f.arr || "");
   const plusDay = arrRaw.includes("+1");
+  const durMins = dbDurMinutes(f.duration ?? "");
   return {
     carrier: fullCarrier(f.airline),
     flight: f.flight ?? '',
     depart: f.dep,
     arrive: arrRaw.replace("+1", "").trim(),
     arrivePlusDay: plusDay || undefined,
+    durationMins: durMins ?? undefined,
     stops: 0,
-    price,
+    price: price ?? null,
     refundable: "not stated",
     changeable: "not stated",
   };
@@ -869,11 +890,15 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
     leg.flightState = "ok";
     leg.priceBasis = basis || null;
     leg.queriedAt = queriedAt || null;
-    leg.priceNote = ecoOpts.length > 0
-      ? `${pax ? pax + " " : ""}${fmtUSD(day.economy_usd ?? Math.min(...ecoOpts.map((o) => o.price)))} 起`
+    /* 起价：优先用库里该日汇总价；没有汇总价时取有价航班里的最低价（无价航班不参与，
+       全部无价时不写起价，不许拿无价航班凑数） */
+    const ecoPriced = ecoOpts.map((o) => o.price).filter((p): p is number => p != null);
+    const bizPriced = bizOpts.map((o) => o.price).filter((p): p is number => p != null);
+    leg.priceNote = ecoOpts.length > 0 && (day.economy_usd != null || ecoPriced.length > 0)
+      ? `${pax ? pax + " " : ""}${fmtUSD(day.economy_usd ?? Math.min(...ecoPriced))} 起`
       : null;
-    leg.businessPriceNote = bizOpts.length > 0
-      ? `${pax ? pax + " " : ""}${fmtUSD(day.business_usd ?? Math.min(...bizOpts.map((o) => o.price)))} 起`
+    leg.businessPriceNote = bizOpts.length > 0 && (day.business_usd != null || bizPriced.length > 0)
+      ? `${pax ? pax + " " : ""}${fmtUSD(day.business_usd ?? Math.min(...bizPriced))} 起`
       : null;
     const rec = ecoOpts.find((o) => o.recommend) || ecoOpts[0] || bizOpts[0] || null;
     if (rec) {
