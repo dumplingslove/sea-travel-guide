@@ -21,7 +21,8 @@ import { supabase, supabaseConfigured } from '../lib/supabase';
 import { fetchProfileMap } from '../lib/profiles';
 import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shopping, shoppingGuides, countryShoppingAdvice, legs, cityMobility, mallAnchorId, type Item, type MallDetail } from './data';
 import { bookingPolicyBadge, mustGoBadge } from '../bookings/restaurantBookingStatus';
-import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, applyPlanTimeline, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
+import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, applyPlanTimeline, liveFlightQuote, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
+import { onDataset } from '../lib/datasets';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -459,9 +460,22 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const bizState=!biz?'pending':(!biz.length?'none':'ok');
  const opts=(cabin==='eco'?eco:biz)??[];
  const sorted=[...opts].sort((a,b)=>depMinutes(a.depart)-depMinutes(b.depart));
- const minOf=(os:FlightOption[])=>os.length?Math.round(Math.min(...os.map(o=>o.price))):null;
- const ecoMin=eco&&eco.length?minOf(eco):null;
- const bizMin=biz&&biz.length?minOf(biz):null;
+ /* 2026-10-17 用户：预定这边也要提供最新价格——与价格追踪同源同口径：
+    每个航班选项先按（航段，日期，航班号）查航班库最新实查价（liveFlightQuote），
+    查到就用库价展示，查不到才用静态快照价；订阅 flight_db 数据集，
+    库数据到达/更新后本组件立即重渲染，不停留在旧快照上 */
+ const [,setDbTick]=useState(0);
+ useEffect(()=>onDataset('flight_db',()=>setDbTick(t=>t+1)),[]);
+ const livePriceOf=(o:FlightOption,cb:'eco'|'biz'):number|null=>{
+   if(!leg.dbSeg||!leg.date)return null;
+   const q=liveFlightQuote(leg.dbSeg,leg.date,o.flight)??liveFlightQuote(leg.dbSeg,leg.date,o.flight.replace(/\s+/g,''));
+   if(!q)return null;
+   return cb==='eco'?q.price:q.bizPrice;
+ };
+ const priceOf=(o:FlightOption,cb:'eco'|'biz')=>livePriceOf(o,cb)??o.price;
+ const minOf=(os:FlightOption[],cb:'eco'|'biz')=>os.length?Math.round(Math.min(...os.map(o=>priceOf(o,cb)))):null;
+ const ecoMin=eco&&eco.length?minOf(eco,'eco'):null;
+ const bizMin=biz&&biz.length?minOf(biz,'biz'):null;
  const rec=sorted.find(o=>o.recommend);
  const seen:string[]=[];const reps:string[]=[];
  sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}${CARRIER_FEATURES[k]?`｜特色：${CARRIER_FEATURES[k]}`:''}`);}});
@@ -473,10 +487,10 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
-  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;return <li key={oi} className={o.recommend?'rec':''}>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;return <li key={oi} className={o.recommend?'rec':''}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
     <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}</div>
-    <div className="ft-side"><b className="fo-price">${Math.round(o.price)}</b>{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:Math.round(o.price),cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
+    <div className="ft-side"><b className="fo-price">${Math.round(shownPrice)}</b>{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:Math.round(shownPrice),cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
@@ -534,7 +548,7 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const midCount=legs.filter(l=>l.kind==='城际直飞').length;
  const countryLabel=countries.join('、');
  const legPager=usePaged(legs,5,'个航段');
- const sourceLine='航段与直飞选项由 Google Flights 每日实查维护（非实时价，出票前重查退改）；实时价格与推荐见「预订行动」时间线';
+ const sourceLine='航段与直飞选项由 Google Flights 实查维护；每条航班优先显示航班库最新实查价（与价格追踪同源），出票前重查退改';
  const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
