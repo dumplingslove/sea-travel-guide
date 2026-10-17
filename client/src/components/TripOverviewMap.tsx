@@ -573,8 +573,10 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
         )
         .bindTooltip(`${i + 1} · ${s.zh}`, {
           permanent: true,
-          direction: "top",
-          offset: [0, -18],
+          /* 同城两站（如北京 1 与 6）：标签锚点同为城市坐标，第二个改挂下方，
+             否则两块牌完全重叠、只看得见一块（2026-10-16 截图验证发现） */
+          direction: dup ? "bottom" : "top",
+          offset: dup ? [0, 18] : [0, -18],
           className: "sea-city-label",
         })
         .on("click", () => {
