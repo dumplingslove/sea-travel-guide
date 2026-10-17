@@ -1104,7 +1104,7 @@ export default function StickyMapBar({
       <div
         ref={mapEl}
         className="rounded-lg overflow-hidden border border-gray-200 mb-2"
-        style={{ display: collapsed ? "none" : "block", height: wide ? 340 : 180, width: "100%", zIndex: 0 }}
+        style={{ display: collapsed ? "none" : "block", height: wide ? 480 : 180, width: "100%", zIndex: 0 }}
       />
     </div>
   );

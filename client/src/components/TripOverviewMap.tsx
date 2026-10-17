@@ -682,7 +682,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           style={
             expanded
               ? { flex: "1 1 0%", minHeight: 0 }
-              : { height: wide ? Math.max(mapHeight ?? 300, 430) : (mapHeight ?? 300) }
+              : { height: wide ? Math.max(mapHeight ?? 300, 480) : (mapHeight ?? 300) }
           }
         />
       </div>
