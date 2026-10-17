@@ -778,7 +778,9 @@ export function hotelPayGuide(chain: string): { title: string; rows: { label: st
    { label: '比价要点', text: '独立酒店重点看整段含税总价和取消政策：用 Google Hotels 基准价对齐口径再比，别被每晚价误导。' },
    { label: '积分选项', text: '无连锁积分可攒，现金订就是最优；别为了这家转任何分。' } ] };
 }
-export function HotelPayTag({ name, city, chain }: { name: string; city: string; chain: string }) {
+export function HotelPayTag({ name, city, chain: chainProp }: { name: string; city: string; chain?: string }) {
+ const entries = useHotelEntries();
+ const chain = chainProp ?? findHotelChain(entries, name, city);
  const [open, setOpen] = useState(false);
  useEffect(() => {
    if (!open) return;

@@ -20,7 +20,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -1068,6 +1068,14 @@ function FavoriteActionList({
                             </div>
                           );
                         })()}
+                        {/* 2026-10-17 用户：价格追踪是付款 checklist——积分/用卡弹窗也要在这里能打开，
+                            不许只在预定筛选有；点标签当前页弹窗，不跳页 */}
+                        {f.type === "flight" && (
+                          <div className="mt-1.5"><PointsTag text={f.row.title} seg={flightLeg?.dbSeg} /></div>
+                        )}
+                        {f.type === "hotel" && (
+                          <div className="mt-1.5"><HotelPayTag name={f.row.title} city={itemCity(f)} /></div>
+                        )}
                         </div>
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
@@ -1160,6 +1168,9 @@ function FavoriteActionList({
                           <p className="font-medium text-gray-500 mb-1.5">
                             ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
                           </p>
+                          {flightLeg.dbSeg && SEGMENT_POINTS_HINT[flightLeg.dbSeg] && (
+                            <p className="mb-1.5 font-medium text-violet-900 bg-violet-50 border border-violet-100 rounded-lg px-2 py-1.5">🧾 {SEGMENT_POINTS_HINT[flightLeg.dbSeg]}</p>
+                          )}
                           {/* 2026-10-03 用户：机票要有价格变动时间线（含每次涨跌的发生时间） */}
                           {f.flight?.price != null && (
                             <FlightPriceTimeline
@@ -1229,19 +1240,9 @@ function FavoriteActionList({
                           })()}
                           {/* 2026-10-17 用户：酒店详情就在本页展开看全（房价明细/走势），不许再跳页 */}
                           {f.type === "hotel" && <HotelTrackDetail name={f.row.title} />}
-                          <p className="text-gray-400">
-                            <DetailLink
-                              to={placeDetailPath(
-                                f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction",
-                                f.city, f.row.title
-                              )}
-                              pageKey="bookings"
-                              cardId={`booking-card-${f.row.id}`}
-                              className="text-teal-700 hover:underline"
-                            >
-                              看完整详情页（含照片/评论）→
-                            </DetailLink>
-                          </p>
+                          {/* 2026-10-17 用户再次明确：不要「看完整详情页 →」这种跳出去的 link——
+                              价格追踪是付款 checklist，详情就在当前页展开/收起里看完，链接已移除。
+                              完整详情页（含照片/评论）仍可从「🔍 预定筛选」进入。 */}
                         </div>
                       )}
                     </div>
