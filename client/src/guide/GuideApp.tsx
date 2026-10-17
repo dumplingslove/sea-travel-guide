@@ -445,7 +445,7 @@ const CARRIER_REPUTATION:Record<string,string>={'Singapore Airlines':'全服务�
 /* 航司特色（2026-10-17 用户要求）：座椅宽敞度、商务舱值不值得——只写小红书乘客实测支持的结论，
  * 证据在 research_notes/sea-guide-2026/airline-reputation/；没查到的不写，不许凭常识编。
  * 与 CARRIER_REPUTATION 同键，在机票页「航司口碑与特色」折叠里一并展示，帮用户挑航班。 */
-const CARRIER_FEATURES:Record<string,string>={'Scoot':'经济舱座椅偏窄、腿部空间小，长途久坐累','Spring Airlines':'腿部间距意外宽过部分全服务航司，但座椅窄、靠背不可调','Hainan Airlines':'座位比东航略宽、高个子友好（乘客实测），但也有腿部空间不足的吐槽，看机型；商务舱服务好、有铺床服务，特价时值','Thai VietJet Air':'经济舱椅距意外宽敞（1米8乘客膝前还剩一个半拳头，比国内不少航司大），短板是椅背可调幅度小','Alaska Airlines':'新787商务舱座椅带门、中间座隔板可放低方便同行；但跨洋商务服务被实测批评，里程票（75k）换才值、现金票不值'};
+const CARRIER_FEATURES:Record<string,string>={'Scoot':'经济舱座椅偏窄、腿部空间小，长途久坐累；ScootPlus（超级经济舱）能半躺、包餐，bid 升舱 50–95 新币时划算、长途有人首选，正价差价小则不值；选第一排、避最后一排（椅背可能放不平）','Spring Airlines':'腿部间距意外宽过部分全服务航司，但座椅窄、靠背不可调','Hainan Airlines':'座位比东航略宽、高个子友好（乘客实测），但也有腿部空间不足的吐槽，看机型；商务舱服务好、有铺床服务，特价时值','Thai VietJet Air':'经济舱椅距意外宽敞（1米8乘客膝前还剩一个半拳头，比国内不少航司大），短板是椅背可调幅度小','Alaska Airlines':'新787商务舱座椅带门、中间座隔板可放低方便同行；但跨洋商务服务被实测批评，里程票（75k）换才值、现金票不值','Singapore Airlines':'商务舱可完全躺平；777 第一排脚部空间大最值得抢（多留给 PPS 会员，可提前 96 小时打客服选），普通排脚部空间小、要斜着躺；Book the Cook 提前点餐是特色','THAI':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型','Thai Airways':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型'};
 
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})/.exec(t||'');return m?(+m[1])*60+(+m[2]):0;}
