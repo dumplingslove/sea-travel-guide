@@ -541,3 +541,17 @@
 .guide-scope .placegallery>div{grid-template-rows:170px 170px}
 .guide-scope .detailhero.with-photo{height:420px}
 }
+
+/* ===== 桌面端优化（2026-10-16 用户：电脑上内容列太窄、空间浪费、卡片图是竖长条）=====
+   只在宽屏生效，手机/平板规则一律不动。 */
+@media(min-width:1024px){
+  .guide-scope .itemcard{grid-template-columns:290px minmax(0,1fr)}
+  .guide-scope .itemmedia{min-height:0}
+}
+@media(min-width:1280px){
+  .guide-scope .maincontent,.guide-scope .page{max-width:80rem}
+  .guide-scope .research-page{max-width:80rem}
+  .guide-scope .catalog.rich{grid-template-columns:1fr 1fr}
+  .guide-scope .catalog.rich .itemcard{grid-template-columns:235px minmax(0,1fr)}
+  .guide-scope .catalog.rich>.detail-inline{grid-column:1/-1}
+}

@@ -60,6 +60,8 @@ const ZOOM_LABEL_CSS = `
 .leaflet-tooltip.sea-zoom-label{display:none;background:rgba(255,255,255,.95);border:1px solid #d1d5db;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;color:#1f2937;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .leaflet-tooltip.sea-zoom-label::before{display:none}
 .show-labels .leaflet-tooltip.sea-zoom-label{display:block}
+.leaflet-tooltip.sea-city-label{display:block;background:rgba(19,78,74,.93);border:none;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.leaflet-tooltip.sea-city-label::before{display:none}
 .map-flash{animation:seaMapFlash 1.1s ease-out}
 @keyframes seaMapFlash{0%{box-shadow:inset 0 0 0 5px rgba(220,38,38,.9)}100%{box-shadow:inset 0 0 0 0 rgba(220,38,38,0)}}
 .sea-focus-pin{background:none;border:none}
@@ -109,6 +111,15 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
   const [expanded, setExpanded] = useState(false);
   /** 点击收起（2026-10-04 用户：规划页地图也要能收起，不占屏幕空间） */
   const [collapsed, setCollapsed] = useState(false);
+  /** 桌面端地图加高（2026-10-16 用户：电脑上地图又窄又矮） */
+  const [wide, setWide] = useState<boolean>(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024,
+  );
+  useEffect(() => {
+    const onR = () => setWide(window.innerWidth >= 1024);
+    window.addEventListener("resize", onR);
+    return () => window.removeEventListener("resize", onR);
+  }, []);
   /** 2026-10-03 用户：跳 /day 详情页回来要恢复原位置 */
   useDetailReturn("home-map");
   /** 地图 popup 原生 <a> 跳转前存返回位置（DayMap 同款兜底） */
@@ -534,7 +545,7 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
           permanent: true,
           direction: "top",
           offset: [0, -18],
-          className: "sea-zoom-label",
+          className: "sea-city-label",
         })
         .on("click", () => {
           clearHighlight();
@@ -628,7 +639,11 @@ export default function TripOverviewMap({ stops, mapHeight }: { stops?: TripStop
         <div
           ref={mapEl}
           className="leaflet-container w-full z-0"
-          style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: mapHeight ?? 300 }}
+          style={
+            expanded
+              ? { flex: "1 1 0%", minHeight: 0 }
+              : { height: wide ? Math.max(mapHeight ?? 300, 430) : (mapHeight ?? 300) }
+          }
         />
       </div>
       {/* 聚焦信息条：点城市/航班后的信息显示在这里（地图下方），不遮地图 */}

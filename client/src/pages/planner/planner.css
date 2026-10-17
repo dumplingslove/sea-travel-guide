@@ -714,3 +714,8 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 
 /* 段卡整卡可点看这一段的航班（2026-10-13 用户：不要单独的地图按钮） */
 .trip-seg[data-segfocus]{cursor:pointer}
+
+/* 桌面端加宽（2026-10-16 用户：电脑上规划页太窄、空间没利用） */
+@media(min-width:1280px){
+  .shell{width:min(80rem,100%)}
+}

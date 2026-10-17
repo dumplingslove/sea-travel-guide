@@ -173,6 +173,15 @@ export default function DayMap({
   const [expanded, setExpanded] = useState(false);
   /** 点击收起（2026-10-04 用户：所有地图都要能收起） */
   const [collapsed, setCollapsed] = useState(false);
+  /** 桌面端地图加高（2026-10-16 用户：电脑上地图太矮） */
+  const [wide, setWide] = useState<boolean>(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024,
+  );
+  useEffect(() => {
+    const onR = () => setWide(window.innerWidth >= 1024);
+    window.addEventListener("resize", onR);
+    return () => window.removeEventListener("resize", onR);
+  }, []);
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const coord = CITY_COORDS[cityId];
@@ -532,7 +541,7 @@ export default function DayMap({
       <div
         ref={mapEl}
         className="leaflet-container w-full z-0"
-        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: 280 }}
+        style={expanded ? { flex: "1 1 0%", minHeight: 0 } : { height: wide ? 400 : 280 }}
       />
       </div>
       {!expanded && !collapsed && (

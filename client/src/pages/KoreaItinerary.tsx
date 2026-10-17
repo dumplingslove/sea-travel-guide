@@ -78,7 +78,7 @@ function SeoulAttractions() {
 
 export default function KoreaItinerary() {
   return (
-    <div className="max-w-5xl mx-auto px-4 pb-8">
+    <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 pb-8">
       {/* 水原一日游不页顶单独写，容进首尔唯一的整天（12-31）行程卡后面作二选一备选 */}
       <ItineraryTab
         koreaOnly

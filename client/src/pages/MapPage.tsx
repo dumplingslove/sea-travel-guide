@@ -366,7 +366,7 @@ function MapCanvas({
 
   return (
     <div className="bg-[#f7f4ee] min-h-[calc(100vh-64px)]">
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-6xl xl:max-w-[1500px] mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-teal-900">
           {totalDays} 天行程地图
         </h1>

@@ -3,7 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { LL, addAmapTiles } from "@/lib/amap";
 import { airportForCity, type AirportInfo } from "@/data/airportCoords";
-import { CITY_ID_BY_ZH } from "@/data/cityCoords";
+import { CITY_COORDS, CITY_ID_BY_ZH } from "@/data/cityCoords";
 import { placesForCity } from "@/data/placeCoords";
 import { findStopCoord, STOP_COORDS } from "@/data/stopCoords";
 import { days, attractions } from "@/guide/data";
@@ -427,6 +427,19 @@ interface StickyMapBarProps {
   keepAirportsInSelect?: boolean;
 }
 
+/** 城市名标签样式（2026-10-16 用户：地图上要把每个城市显示出来）——常显，不受景点名开关影响 */
+const CITY_PIN_CSS = `
+.sea-city-pin{background:none;border:none}
+.sea-city-pin span{display:block;transform:translateY(-26px);background:rgba(19,78,74,.93);color:#fff;font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);text-align:center}
+`;
+function ensureCityPinCss() {
+  if (document.querySelector("style[data-sea-city-pin]")) return;
+  const el = document.createElement("style");
+  el.setAttribute("data-sea-city-pin", "");
+  el.textContent = CITY_PIN_CSS;
+  document.head.appendChild(el);
+}
+
 export default function StickyMapBar({
   items,
   activeCity,
@@ -449,6 +462,8 @@ export default function StickyMapBar({
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
+  /** 城市名标签标记（常显，与景点标记分开管理） */
+  const cityLabelsRef = useRef<L.Marker[]>([]);
   const onMarkerSelectRef = useRef<((key: string) => void) | undefined>(undefined);
   onMarkerSelectRef.current = onMarkerSelect;
   const selKindRef = useRef<string | null>(null);
@@ -495,6 +510,15 @@ export default function StickyMapBar({
   // 地图懒初始化：折叠模式下首次展开时才创建 Leaflet（display:none 容器里初始化会导致首展视图错乱）；
   // 常显模式直接初始化（容器初始即有尺寸）
   const [mapReady, setMapReady] = useState(!collapsed);
+  /** 桌面端地图加高（2026-10-16 用户：电脑上吸顶地图只有 180px 一条，太窄太矮） */
+  const [wide, setWide] = useState<boolean>(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024,
+  );
+  useEffect(() => {
+    const onR = () => setWide(window.innerWidth >= 1024);
+    window.addEventListener("resize", onR);
+    return () => window.removeEventListener("resize", onR);
+  }, []);
   // 景点名称标签开关（2026-10-04 用户：默认不显示，标题栏开关控制；状态持久化）
   const labelStorageKey = storageKey ? `${storageKey}:labels` : "stickymap:labels";
   const [showLabels, setShowLabels] = useState<boolean>(() => {
@@ -642,6 +666,8 @@ export default function StickyMapBar({
     if (!map) return;
     markersRef.current.forEach((m) => m.remove());
     markersRef.current.clear();
+    cityLabelsRef.current.forEach((m) => m.remove());
+    cityLabelsRef.current = [];
     itemByKeyRef.current.clear();
     const latlngs: L.LatLng[] = [];
     const seen = new Set<string>();
@@ -680,6 +706,30 @@ export default function StickyMapBar({
       itemByKeyRef.current.set(key, it);
     };
     for (const it of items) addMarker(it);
+    // 城市名标签（2026-10-16 用户：地图上要显示每个城市）——每个所涉城市在市中心放一个常显地名牌，
+    // 不受景点名开关影响；纯展示、不可点，避免和景点标记抢交互。
+    ensureCityPinCss();
+    {
+      const citySeen = new Set<string>();
+      for (const it of items) {
+        if (citySeen.has(it.city)) continue;
+        citySeen.add(it.city);
+        const cid = CITY_ID_BY_ZH[it.city];
+        const cc = cid ? CITY_COORDS[cid] : undefined;
+        if (!cc) continue;
+        const lm = L.marker(LL(cc[0], cc[1]), {
+          interactive: false,
+          keyboard: false,
+          zIndexOffset: 900,
+          icon: L.divIcon({
+            className: "sea-city-pin",
+            html: `<span>${it.city}</span>`,
+            iconSize: [0, 0],
+          }),
+        }).addTo(map);
+        cityLabelsRef.current.push(lm);
+      }
+    }
     // 2026-10-04 用户：其他地图都不需要自动标注机场。只有每日行程有坐飞机才标机场
     // （走 activeDayRoute.stops，由 ItineraryDayCard 按转场日显式加入），航班走 flightRoutes 航线层。
     // 此处不再自动加机场。
@@ -1054,7 +1104,7 @@ export default function StickyMapBar({
       <div
         ref={mapEl}
         className="rounded-lg overflow-hidden border border-gray-200 mb-2"
-        style={{ display: collapsed ? "none" : "block", height: 180, width: "100%", zIndex: 0 }}
+        style={{ display: collapsed ? "none" : "block", height: wide ? 340 : 180, width: "100%", zIndex: 0 }}
       />
     </div>
   );

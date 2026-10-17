@@ -39,7 +39,7 @@ function Header() {
   const [confirmLogout, setConfirmLogout] = useState(false);
   return (
     <header className="sticky top-0 z-10 bg-[#f7f4ee]/90 backdrop-blur border-b border-gray-200">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-5xl xl:max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between py-3">
           <Link to="/" className="flex items-center gap-2">
             <img

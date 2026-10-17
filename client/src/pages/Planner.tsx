@@ -109,7 +109,7 @@ export default function Planner() {
         className="sticky z-40 bg-[#f7f4ee]"
         style={{ top: "var(--planner-header-h, 64px)" }}
       >
-        <div className="max-w-5xl mx-auto px-4 pt-3">
+        <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 pt-3">
           <div className="grid grid-cols-2 gap-1 rounded-[14px] border border-[#ddd6c2] bg-[#e9e5d8] p-1">
             {PLANNER_TABS.map((t) => (
               <button
@@ -135,7 +135,7 @@ export default function Planner() {
         className="sticky z-30 bg-[#f7f4ee] border-b border-gray-200"
         style={{ top: "calc(var(--planner-header-h, 64px) + var(--planner-tabs-h, 52px))" }}
       >
-        <div className="max-w-5xl mx-auto px-4 pt-3 pb-2">
+        <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 pt-3 pb-2">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <h2 className="text-lg font-bold">
               {mapTotalDays}天路线总览

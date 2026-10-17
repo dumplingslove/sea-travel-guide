@@ -2001,7 +2001,7 @@ function BookingsInner() {
   const inCatalog = section === "screen" && cat !== "flights";
 
   return (
-    <div className="max-w-5xl mx-auto px-4 pb-8">
+    <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 pb-8">
       {/* 吸顶菜单栈（2026-10-13 整体重做）：一级分段控件 + 二级类别下划线页签 + 三级城市胶囊，
           一个容器、一套视觉语言，钉在站顶栏正下方，滚动时不消失；地图移出吸顶层、随页滚动 */}
       <div ref={stickyContainerRef} className="sticky z-[5] -mx-4 px-4 pt-2 pb-2 bg-[#f7f4ee]/95 backdrop-blur border-b border-gray-200 shadow-[0_6px_16px_-12px_rgba(0,0,0,0.35)]" style={{ top: 'var(--sticky-top, 0px)' }}>
