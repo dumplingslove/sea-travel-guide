@@ -45,7 +45,7 @@ import {
   type BookingPreset,
 } from "@/bookings/bookingTypes";
 import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
-import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
+import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveHotelPrice, type LiveRoomRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
@@ -604,6 +604,10 @@ function FavoriteActionList({
   const bookingItemKey = (f: (typeof favs)[number]) =>
     stickyItemKey(f.type, itemCity(f), f.row.title);
   const [mapSelKey, setMapSelKey] = useState<string | null>(null);
+  /* 2026-10-17 用户：追踪地图要能按城市聚焦看——选一个城市，地图只框这座城：
+     收藏+候选酒店全标注、该城全部景点也标注，方便比较酒店在岛上/城里的分布、离景点远近 */
+  const [mapCity, setMapCity] = useState<string | null>(null);
+  const mapCities = useMemo(() => [...new Set(segs.map((s) => s.city))], [segs]);
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
   const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
   const segSig = segs.map((s) => s.city).join(",");
@@ -845,12 +849,40 @@ function FavoriteActionList({
       {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点，看位置合不合适、离酒店远近；
           只显示大行程定下的城市；2026-10-04 用户裁决：点卡片高亮——点哪张卡地图高亮它，其他正常显示
           （航班卡=两机场+连线），不点显示全部，再点一次取消 */}
+      {/* 2026-10-17 用户：地图按城市聚焦——选城市后只显示这座城的酒店（含候选）+ 全部景点，
+          框住全城看分布（比如普吉几家酒店分散在岛上不同位置、各自离哪些景点近） */}
+      <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+        <span className="text-xs text-gray-500 font-medium">🗺️ 地图聚焦城市：</span>
+        {([null, ...mapCities] as (string | null)[]).map((c) => (
+          <button
+            key={c ?? "all"}
+            onClick={() => {
+              setMapCity(c);
+              setMapSelKey(null);
+            }}
+            className={`px-2.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+              mapCity === c
+                ? "bg-teal-700 text-white border-teal-700"
+                : "bg-white text-gray-500 border-gray-200 hover:border-teal-600"
+            }`}
+          >
+            {c ?? "全部"}
+          </button>
+        ))}
+      </div>
+      <p className="text-[11px] text-gray-400 mb-2">
+        地图上 🏨 是收藏与候选酒店、🏛️ 是该城全部景点、🍽️ 是餐厅——挑酒店时对照位置分布和离景点的远近看。
+      </p>
       <SafeStickyMapBar
-        items={bookingMapItems}
-        activeCity={null}
+        items={mapCity ? bookingMapItems.filter((it) => it.city === mapCity) : bookingMapItems}
+        activeCity={mapCity}
         activeLabel={mapSelLabel}
         activeItemKeys={mapSelKey ? [mapSelKey] : null}
-        flightRoutes={bookingFlightRoutes}
+        flightRoutes={
+          mapCity
+            ? bookingFlightRoutes.filter((r) => r.fromCity === mapCity || r.toCity === mapCity)
+            : bookingFlightRoutes
+        }
         title="🗺️ 价格追踪地图"
         storageKey="sticky-map-bookings"
         stickyTop={mapStickyTop}
@@ -1195,6 +1227,8 @@ function FavoriteActionList({
                               {d.best && <p className="text-teal-700">💡 {d.best}</p>}
                             </>);
                           })()}
+                          {/* 2026-10-17 用户：酒店详情就在本页展开看全（房价明细/走势），不许再跳页 */}
+                          {f.type === "hotel" && <HotelTrackDetail name={f.row.title} />}
                           <p className="text-gray-400">
                             <DetailLink
                               to={placeDetailPath(
@@ -1344,6 +1378,106 @@ function PriceSpark({ points, caption }: { points: PricePoint[]; caption: string
           {points[0]![0].slice(5)} 起共 {points.length} 次实查 · 最近 {points[points.length - 1]![0].slice(5)}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** 酒店房型行（页内详情用）：房型名、每晚价、整段总价（含税口径）、取消、早餐、会员价、备注 */
+function HotelRoomRow({ label, r, emptyNote }: { label: string; r: LiveRoomRate | null; emptyNote: string }) {
+  return (
+    <div>
+      <p className="font-medium text-gray-700">{label}</p>
+      {r ? (
+        <>
+          <p>
+            {r.room} · <b>${r.perNightUSD}</b>/晚
+            {r.totalUSD != null && (
+              <>
+                {" "}· 整段 <b>${r.totalUSD}</b>
+                {r.totalInclTax === true ? "（含税）" : r.totalInclTax === false ? "（未含税）" : ""}
+              </>
+            )}
+          </p>
+          <p className="text-gray-500">取消：{r.cancel} · 早餐：{r.breakfast}</p>
+          {r.memberDeal && <p className="text-teal-700">💳 会员价：{r.memberDeal}</p>}
+          {r.note && <p className="text-gray-400">{r.note}</p>}
+        </>
+      ) : (
+        <p className="text-gray-400">{emptyNote}</p>
+      )}
+    </div>
+  );
+}
+
+/** 酒店详情页内展开（2026-10-17 用户：价格追踪里点「详情」要直接在本页看全，不许再跳详情页）。
+ * 与酒店详情页「实时房价」同源同口径：基础房/套房逐项、Google 基准价（含整段总价）、
+ * Amex/Chase 渠道价、历史走势折线。照片与评论仍从展开区底部的完整详情页链接看。 */
+function HotelTrackDetail({ name }: { name: string }) {
+  const live: LiveHotelPrice | undefined = getLiveHotelPrice(name);
+  const series = priceHistory()?.hotels[normHotelKey(name)];
+  const trendPts =
+    series?.base && series.base.length >= 2
+      ? series.base
+      : series?.baseline && series.baseline.length >= 2
+        ? series.baseline
+        : null;
+  if (!live) {
+    const st = livePriceDatasetStatus();
+    return (
+      <div className="rounded-lg border border-gray-100 bg-white px-2.5 py-2 space-y-1.5">
+        <p className="font-medium text-gray-700">🏨 实时房价</p>
+        <p className="text-gray-400">
+          {st === "ready" ? "暂无这家酒店的实时房价数据（每日监听会持续补）" : "实时房价加载中…"}
+        </p>
+        {trendPts && <PriceSpark points={trendPts} caption="历史价格走势（每晚）" />}
+      </div>
+    );
+  }
+  return (
+    <div className="rounded-lg border border-gray-100 bg-white px-2.5 py-2 space-y-1.5">
+      <p className="font-medium text-gray-700">
+        🏨 实时房价 · {live.checkIn} → {live.checkOut}（{live.nights} 晚）
+        {live.dateMismatch && <span className="ml-1 text-amber-600">行程改期前查的价，仅供参考</span>}
+      </p>
+      {live.unavailable ? (
+        <p className="text-gray-500">{live.unavailable}</p>
+      ) : (
+        <>
+          <HotelRoomRow label="基础房（最便宜可订）" r={live.base} emptyNote={live.baseNote ?? "该日期无可订基础房"} />
+          <HotelRoomRow label="套房（最便宜可订）" r={live.suite} emptyNote={live.suiteNote ?? "该日期未找到可订套房"} />
+        </>
+      )}
+      {live.baselineUSD != null && (
+        <p className="text-gray-500">
+          Google 基准价 <b className="text-gray-700">${live.baselineUSD}</b>/晚
+          {live.baselineTotalUSD != null && (
+            <>
+              {" "}· 整段总价 <b className="text-gray-700">${live.baselineTotalUSD}</b>
+            </>
+          )}
+          {live.baselineUrl && (
+            <>
+              {" "}·{" "}
+              <a className="text-teal-700 hover:underline" href={live.baselineUrl} target="_blank" rel="noreferrer">
+                去核对 ↗
+              </a>
+            </>
+          )}
+        </p>
+      )}
+      {(live.amexUSD != null || live.chaseUSD != null) && (
+        <p className="text-gray-500">
+          积分渠道：
+          {live.amexUSD != null && <>Amex Travel ${live.amexUSD}/晚</>}
+          {live.amexUSD != null && live.chaseUSD != null && " · "}
+          {live.chaseUSD != null && <>Chase Travel ${live.chaseUSD}/晚</>}
+        </p>
+      )}
+      {trendPts && <PriceSpark points={trendPts} caption="历史价格走势（每晚）" />}
+      <p className="text-gray-400">
+        {live.source} · 实查于{" "}
+        {new Date(live.checkedAt).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })}
+      </p>
     </div>
   );
 }
