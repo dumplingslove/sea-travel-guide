@@ -719,3 +719,15 @@ details.tfi-leg[open] > summary .tfi-sum-caret{transform:rotate(90deg)}
 @media(min-width:1280px){
   .shell{width:min(80rem,100%)}
 }
+
+/* 统一设置表（2026-10-16 用户：要选的地方排布太乱）——天数/预订安排/转场方式逐段同格式：
+   固定标签列 + 控件行，行与行之间细线分隔，全页对齐一致 */
+.trip-settings{margin:2px 0 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.ts-row{display:grid;grid-template-columns:84px minmax(0,1fr);gap:6px 12px;align-items:center;padding:8px 14px;border-top:1px solid var(--line)}
+.ts-row:first-child{border-top:0}
+.ts-label{font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.ts-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.ts-note{font-size:12px;color:var(--muted)}
+.ts-fixed{font-size:13px;font-weight:600;color:var(--ink)}
+.ts-controls .trip-legmode{display:inline-flex;gap:6px;margin:0}
+@media(max-width:520px){.ts-row{grid-template-columns:72px minmax(0,1fr);padding:8px 10px}}

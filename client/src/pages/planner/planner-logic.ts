@@ -49,6 +49,7 @@ import {
   loadPlannerPlan,
   cachePlannerPlanLocally,
   buildPlanTimeline,
+  railFeasiblePair,
   type PlannerPlan,
   type LoadedPlan,
   type PlanTimeline,
@@ -678,9 +679,20 @@ function tripFlyChoice(key: string): "last"|"next"{ return "last"; }
 /* 每段转场方式（2026-10-13 用户：转场不一定是飞机，也可以是高铁；在大行程里逐段选，存云端）。
    key = transition.after；西安→北京默认高铁（用户 2026-09-28 已定不坐飞机），其余默认飞机。 */
 let legModes: Record<string,"flight"|"rail"> = {};
+/* 高铁可行性（2026-10-16 用户：北京→新加坡这种根本没有高铁，不许给高铁选项，系统自己判断）：
+   转场的每条腿两端城市都同属一个高铁网（中国大陆网 / 韩国 KTX）才可行；
+   含占位代码的动态腿（如新加坡→夫妻首城）起点不在网内，恒不可行。 */
+function transitionRailFeasible(t: TripTransition): boolean{
+  if(!t.legs.length) return false;
+  return t.legs.every(l=>{
+    if(l.code.includes("__")) return false;
+    const [f,tt]=l.code.split("-");
+    return railFeasiblePair(CODE_TO_ZH[f]||"", CODE_TO_ZH[tt]||"");
+  });
+}
 function legMode(after: string): "flight"|"rail"{
-  if(legModes[after]) return legModes[after];
   const t=TRIP_TRANSITIONS.find(x=>x.after===after);
+  if(legModes[after]) return t && transitionRailFeasible(t) ? legModes[after] : "flight";
   return t?.noFlight ? "rail" : "flight";
 }
 /* 日历上某个转场日（= 目的段第一天）的转场方式：按目的段反查出发段 */
@@ -1133,7 +1145,6 @@ function renderTrip(){
     /* 北京（你一人）是独立的一段，永远按原样显示；回程集结城市是它之后单独的卡片，不许把这段改名成上海/重庆 */
     const wzCities = wz.order.filter(c=>wz.cities.includes(c));
     const coupleSub = s.id==="couple" ? (wzCities.length?wzCities.join("→")+"（两人）":"待选") : s.sub;
-    const needs=needChipsForSeg(s.id);
     /* 统一交互模型（2026-10-13 用户定稿）：不要单独的「在地图上看」按钮——点段卡本身
        就在地图上显示这一段包含的航班（按段范围，不是全程关联）；按钮（步进器/需求
        开关）只改数据、不触发地图（委托里有守卫）。分开行动段不整卡触发，卡内两行按人触发。 */
@@ -1143,11 +1154,9 @@ function renderTrip(){
         <div class="trip-seg-title">${s.label}${isNow?`<span class="trip-seg-nowbadge">📍 进行中</span>`:isNext?`<span class="trip-seg-nextbadge">➡️ 下一段</span>`:""} <span class="trip-seg-sub">· ${coupleSub}</span></div>
         <div class="trip-seg-dates">📅 ${dateLabel(r.from)} – ${dateLabel(r.to)}<span class="trip-seg-days">共 ${d} 天</span></div>
         <div class="trip-seg-meta">${s.mode} · ${s.note}</div>
-        ${needs?`<div class="trip-needs">${needs}</div>`:""}
         ${s.id==="split"?`<div class="trip-split-lines"><p class="micro map-act" data-segfocus="split-you" role="button" tabindex="0" title="点击看你这一路的航班">🧑 你：${coupleLastCity()} → 北京（陪父亲），最后一天坐高铁去西安汇合 🗺️</p><p class="micro map-act" data-segfocus="split-wife" role="button" tabindex="0" title="点击看老婆这一路的航班">👩 老婆：${coupleLastCity()} → 西安（住下，跟 Dylan 和姥姥姥爷汇合），之后全家一起 西安 → 首尔 🗺️</p><p class="micro">两边同住这 ${d} 天；最后一天你坐高铁去西安汇合，第二天全家一起飞首尔（见下面回程转场）。</p></div>`:""}
       </div>
       ${extra}
-      <div class="stepper trip-stepper" aria-label="${s.label}天数"><span class="stepper-label">天数</span><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${d} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></div>
     </div>`;
   };
   /* 东南亚段内航班卡（2026-10-13 用户：东南亚各城之间飞的信息也要显示在总页面上，
@@ -1172,6 +1181,23 @@ function renderTrip(){
     const segHtml = segCard(s, s.id==="couple" ? coupleSummaryHtml() : "");
     const innerHtml = s.id==="couple" ? segHtml+coupleInnerLegsHtml()+coupleModalHtml() : segHtml;
     const t=TRIP_TRANSITIONS.find(x=>x.after===s.id);
+    /* 统一设置表（2026-10-16 用户：要选的地方排布太乱——天数/预订安排/转场方式
+       全部收进同一张对齐的设置表：固定标签列 + 控件行，逐段同格式）。
+       转场方式只在真有高铁时给切换按钮；没有高铁的段只显示「✈️ 飞机」纯文本。 */
+    const settingsHtml = (()=> {
+      const rows: string[] = [];
+      rows.push(`<div class="ts-row"><span class="ts-label">天数</span><span class="ts-controls"><span class="stepper" aria-label="${s.label}天数"><button data-tripday="${s.id}|-1" aria-label="减少一天">−</button><output>${tripDays[s.id]||0} 天</output><button data-tripday="${s.id}|1" aria-label="增加一天">＋</button></span></span></div>`);
+      const needsHtml = needChipsForSeg(s.id);
+      if(needsHtml) rows.push(`<div class="ts-row"><span class="ts-label">预订安排</span><span class="ts-controls">${needsHtml}</span></div>`);
+      if(t){
+        const railOk = !t.noModeChoice && transitionRailFeasible(t);
+        const isR = legMode(t.after)==="rail";
+        rows.push(`<div class="ts-row"><span class="ts-label">转场方式</span><span class="ts-controls">${railOk
+          ? `<span class="trip-legmode"><button data-legmode="${t.after}|flight" class="${isR?"":"active"}" aria-pressed="${!isR}">✈️ 飞机</button><button data-legmode="${t.after}|rail" class="${isR?"active":""}" aria-pressed="${isR}">🚄 高铁</button></span>`
+          : `<span class="ts-fixed">✈️ 飞机</span><span class="ts-note">${t.noModeChoice?"这段已定坐飞机":"这段没有高铁可坐"}</span>`}</span></div>`);
+      }
+      return `<div class="trip-settings">${rows.join("")}</div>`;
+    })();
     if(t){
       /* 转场日 = 到达段第一天（2026-10-13 用户口径：当天落地、当晚睡在到达城市；
          旧口径用出发段最后一天，与航班库/预订页的实际航班日期差一天，已废止）。
@@ -1201,21 +1227,17 @@ function renderTrip(){
       /* 视觉分组：段卡片+它的转场包在同一个容器里，左边一条竖线连起来，一眼看出按钮归谁；
          2026-10-03 用户：当前段整组高亮 */
       const grpCls=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
-      /* 2026-10-13：分开行动两条转场线都是飞机，不需要选方式（曼谷→北京/西安没有高铁选项） */
-      const legmodeHtml=t.noModeChoice?"":`<div class="micro trip-legmode">转场方式：
-      <button data-legmode="${t.after}|flight" class="${isRail?"":"active"}" aria-pressed="${!isRail}">✈️ 飞机</button>
-      <button data-legmode="${t.after}|rail" class="${isRail?"active":""}" aria-pressed="${isRail}">🚄 高铁</button>
-    </div>`;
       parts.push(`<div class="${grpCls}">${innerHtml}
+      ${settingsHtml}
       <div class="trip-flight"><span>${isRail?"🚄":"✈️"}</span><strong>${isRail?"🚄 ":"✈ "}${dateLabel(date)} ${title}</strong><span>转场</span></div>
-    ${legmodeHtml}
     ${t.note?`<p class="micro">${t.note}</p>`:""}
     ${t.railPreLeg?`<div class="trip-flight trip-rail-leg" data-legfocus="${t.railPreLeg.fromZh}|${t.railPreLeg.toZh}" title="点击只看 ${t.railPreLeg.fromZh} → ${t.railPreLeg.toZh} 这一段"><span>🚄</span><strong>${dateLabel(ranges[t.after].to)} ${t.railPreLeg.label}</strong><span>高铁 · 汇合</span></div>`:""}
     <div class="micro trip-flydays">${dayWord}：${dateLabel(date)}（按排定日期）</div>
     ${cards?`<div class="trip-flightinfo">${cards}</div>`:""}</div>`);
     }else{
       const grpCls2=s.id===nowId?"trip-seg-group trip-seg-now":s.id===nextId?"trip-seg-group trip-seg-next":"trip-seg-group";
-      parts.push(`<div class="${grpCls2}">${innerHtml}</div>`);
+      parts.push(`<div class="${grpCls2}">${innerHtml}
+      ${settingsHtml}</div>`);
     }
   }
   body.innerHTML=`

@@ -66,6 +66,26 @@ export interface PlannerPlan {
   timeline?: PlanTimeline;
 }
 
+/** 高铁可行性（2026-10-16 用户：很远的/跨海跨国的转场根本没有高铁，不许再给高铁选项；
+ * 系统应自己判断）。规则：两城同属一个已通高铁的网络才算可行——中国大陆高铁网城市之间、
+ * 或韩国 KTX 的首尔↔釜山；跨国、跨海、任一城不在网内，一律不可行。 */
+const HSR_CN = new Set([
+  "北京", "天津", "石家庄", "太原", "大同", "呼和浩特", "西安", "郑州", "洛阳", "开封",
+  "武汉", "长沙", "岳阳", "广州", "深圳", "汕头", "潮州", "揭阳", "珠海", "佛山", "东莞", "惠州",
+  "上海", "南京", "杭州", "宁波", "温州", "台州", "金华", "绍兴", "嘉兴", "无锡", "苏州", "常州", "徐州",
+  "合肥", "南昌", "九江", "福州", "厦门", "泉州", "漳州", "济南", "青岛", "烟台", "潍坊",
+  "成都", "重庆", "贵阳", "昆明", "南宁", "桂林", "柳州", "兰州", "银川", "西宁", "乌鲁木齐",
+  "沈阳", "大连", "长春", "哈尔滨", "海口", "三亚",
+]);
+const HSR_KR = new Set(["首尔", "釜山"]);
+export function railFeasiblePair(fromZh: string, toZh: string): boolean {
+  if (!fromZh || !toZh || fromZh === toZh) return false;
+  return (
+    (HSR_CN.has(fromZh) && HSR_CN.has(toZh)) ||
+    (HSR_KR.has(fromZh) && HSR_KR.has(toZh))
+  );
+}
+
 export interface PlanTimelineDay {
   /** 段 id：beijing1 / singapore / couple / split / seoul */
   seg: string;

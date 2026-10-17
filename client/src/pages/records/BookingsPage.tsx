@@ -32,7 +32,7 @@ import {
   presetFromChecklist,
   type ChecklistItem,
 } from "@/bookings/bookingTypes";
-import { loadPlannerPlan, cityNeedOf, buildPlanTimeline, type PlannerPlan } from "@/guide/plannerSchedule";
+import { loadPlannerPlan, cityNeedOf, buildPlanTimeline, railFeasiblePair, type PlannerPlan } from "@/guide/plannerSchedule";
 import { getDataset, useDatasetsVersion } from "@/lib/datasets";
 import {
   BOOKING_KIND_LABEL,
@@ -1336,7 +1336,8 @@ function BookingsCalendar() {
         else if (leg.id.startsWith("sin-")) after = "singapore";
         else if (leg.id === "xiy-icn") after = "split";
         const v = after ? plan.legModes?.[after] : undefined;
-        return v === "rail" ? "rail" : "flight";
+        /* 没有高铁的城市对不许被存量 legModes 带成高铁（2026-10-16 用户） */
+        return v === "rail" && railFeasiblePair(leg.fromCity, leg.toCity) ? "rail" : "flight";
       };
       const coupleCities = new Set(
         dayKeys.filter((k) => tl.days[k]!.seg === "couple").flatMap((k) => tl.days[k]!.cities),
