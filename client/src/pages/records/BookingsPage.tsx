@@ -113,10 +113,13 @@ function isoAddDays(iso: string, n: number): string {
  * 最终预定日历四处的「现在该处理什么」汇总到预订页顶部，按紧迫度排，每条带原因和直达入口。
  * 数据只用现成的：已确认预订记录（与最终预定同口径）、收藏流水线状态、sea_availability
  * 每日实查、航班库实时价 vs 收藏价、timeline 酒店窗口 vs 已订夜。查不到的就不写、不编。 */
+type QueueCat = "hotels" | "flights" | "restaurants" | "attractions";
+
 function NextActionQueue({
   plan,
   stays,
   flightSegs,
+  category,
   onGoTrackCard,
   onGoFinal,
   onGoScreen,
@@ -124,9 +127,11 @@ function NextActionQueue({
   plan: PlannerPlan | null;
   stays: HotelStay[];
   flightSegs: PlanSegment[];
+  /** 只显示当前类别页签的事项（2026-10-16 用户：在看酒店就只写酒店的） */
+  category: QueueCat;
   onGoTrackCard: (id: number) => void;
   onGoFinal: () => void;
-  onGoScreen: (cat: "hotels" | "flights" | "restaurants" | "attractions", city?: string) => void;
+  onGoScreen: (cat: QueueCat, city?: string) => void;
 }) {
   const { rows: bkRows, loading } = useRecordsData(["booking"]);
   const { rows: fvRows } = useRecordsData(["favorite"]);
@@ -156,6 +161,7 @@ function NextActionQueue({
 
   interface Action {
     sev: number;
+    cat: QueueCat;
     icon: string;
     text: string;
     btn: string;
@@ -200,6 +206,7 @@ function NextActionQueue({
       if (missing > 0) {
         actions.push({
           sev: 2,
+          cat: "hotels",
           icon: "🏨",
           text: `${st.city}还有 ${missing} 晚酒店没订（${planDateShort(st.checkIn)} 入住 · 这段共 ${st.nights} 晚）`,
           btn: "去选酒店",
@@ -238,6 +245,7 @@ function NextActionQueue({
       if (av && (av.status === "full" || av.status === "soldout")) {
         actions.push({
           sev: 3,
+          cat: f.type === "restaurant" ? "restaurants" : "attractions",
           icon: "🔴",
           text: `${title} 已经订满/售罄${when ? `（${when} 实查）` : ""}，得换备选或改时间`,
           btn: "去看这项",
@@ -246,6 +254,7 @@ function NextActionQueue({
       } else if (av && av.status === "not_released") {
         actions.push({
           sev: 1,
+          cat: f.type === "restaurant" ? "restaurants" : "attractions",
           icon: "⏳",
           text: `${title} 还没放位/开售${when ? `（${when} 实查）` : ""}，先盯着，放出来第一时间订`,
           btn: "去看这项",
@@ -257,6 +266,7 @@ function NextActionQueue({
       ) {
         actions.push({
           sev: 2,
+          cat: "restaurants",
           icon: "🍽️",
           text: `必订餐厅 ${title} 还没订位`,
           btn: "去看这项",
@@ -273,6 +283,7 @@ function NextActionQueue({
         const pct = Math.round((lp / f.flight.price - 1) * 100);
         actions.push({
           sev: 3,
+          cat: "flights",
           icon: "✈️",
           text: `${f.flight.route ?? ""} ${f.flight.flight} 涨到 $${Math.round(lp)}（收藏时 $${f.flight.price}，+${pct}%），要锁趁早`,
           btn: "去看这项",
@@ -283,6 +294,7 @@ function NextActionQueue({
     if (f.row.done && !confirmed && !bookingTitles.has(title.trim().toLowerCase())) {
       actions.push({
         sev: 1,
+        cat: (f.type === "hotel" ? "hotels" : f.type === "flight" ? "flights" : f.type === "restaurant" ? "restaurants" : "attractions") as QueueCat,
         icon: "📌",
         text: `「${title}」已经确定了，还没加入预订`,
         btn: "去加入预订",
@@ -291,34 +303,61 @@ function NextActionQueue({
     }
   }
 
-  /* 待确认的预订记录 */
-  const pending = bkRows.filter((r) => !r.done);
-  if (pending.length) {
+  /* 待确认的预订记录：按类别拆开，只进对应类别的队列 */
+  const BKIND_CAT: Record<string, QueueCat> = {
+    hotel: "hotels",
+    transport: "flights",
+    restaurant: "restaurants",
+    attraction: "attractions",
+  };
+  const pendByCat = new Map<QueueCat, string[]>();
+  for (const r of bkRows) {
+    if (r.done) continue;
+    const c = BKIND_CAT[parseBookingBody(r.body).bkind];
+    if (!c) continue;
+    if (!pendByCat.has(c)) pendByCat.set(c, []);
+    pendByCat.get(c)!.push(r.title);
+  }
+  for (const [c, titles] of pendByCat) {
     actions.push({
       sev: 1,
+      cat: c,
       icon: "📝",
-      text: `有 ${pending.length} 条预订记录还没标确认：${pending.slice(0, 2).map((r) => r.title).join("、")}${pending.length > 2 ? " 等" : ""}`,
+      text: `有 ${titles.length} 条预订记录还没标确认：${titles.slice(0, 2).join("、")}${titles.length > 2 ? " 等" : ""}`,
       btn: "去最终预定",
       go: onGoFinal,
     });
   }
 
-  actions.sort((a, b) => b.sev - a.sev);
-  const shown = actions.slice(0, 8);
+  /* 按当前类别页签过滤（2026-10-16 用户：在哪个菜单就只写哪个类别的） */
+  const CAT_LABEL: Record<QueueCat, string> = {
+    hotels: "酒店",
+    flights: "机票",
+    restaurants: "餐厅",
+    attractions: "景点",
+  };
+  const scoped = actions
+    .filter((a) => a.cat === category)
+    .sort((a, b) => b.sev - a.sev);
+  const shown = scoped.slice(0, 8);
+  const otherCount = actions.length - scoped.length;
 
   if (!shown.length) {
     return (
       <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-4 text-sm text-emerald-900">
-        ✅ <b>现在没有要处理的</b>：该订的酒店夜都订上了，收藏的余位和机票价格也没有异常。
+        ✅ <b>{CAT_LABEL[category]}这边没有要处理的</b>
+        {otherCount > 0
+          ? `：其他类别还有 ${otherCount} 件，切过去就能看到。`
+          : "：该订的都订上了，收藏的余位和价格也没有异常。"}
       </div>
     );
   }
   return (
     <div className="bg-white border-2 border-teal-700 rounded-xl p-4 mb-4">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-bold text-gray-900">🧭 现在该处理</h3>
+        <h3 className="font-bold text-gray-900">🧭 现在该处理 · {CAT_LABEL[category]}</h3>
         <span className="text-xs bg-teal-700 text-white px-2 py-0.5 rounded-full font-medium">
-          {actions.length} 件
+          {scoped.length} 件
         </span>
       </div>
       <div className="space-y-1.5">
@@ -336,8 +375,11 @@ function NextActionQueue({
           </div>
         ))}
       </div>
-      {actions.length > shown.length && (
-        <p className="text-xs text-gray-400 mt-2">还有 {actions.length - shown.length} 件在下面的价格追踪里。</p>
+      {scoped.length > shown.length && (
+        <p className="text-xs text-gray-400 mt-2">本类还有 {scoped.length - shown.length} 件没显示完。</p>
+      )}
+      {otherCount > 0 && (
+        <p className="text-xs text-gray-400 mt-2">其他类别还有 {otherCount} 件要处理，切到对应页签看。</p>
       )}
     </div>
   );
@@ -645,6 +687,16 @@ function FavoriteActionList({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   // 2026-10-10 用户：卡片按钮太占空间，确定/加入预订/移除收进 ⋯ 菜单
   const [menuId, setMenuId] = useState<number | null>(null);
+  /* 价格追踪类别筛选（2026-10-16 redesign）：页头 chips 按类型过滤，与预定筛选的类别口径一致 */
+  const [typeFilter, setTypeFilter] = useState<"all" | "flight" | "hotel" | "restaurant" | "attraction">("all");
+  const bookedCount = favs.filter(
+    (f) =>
+      confirmedByName.has(f.row.title.trim().toLowerCase()) ||
+      (f.type === "flight" && !!f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)),
+  ).length;
+  const anyVisible = citySections.some((sec) =>
+    sec.items.some((f) => typeFilter === "all" || f.type === typeFilter),
+  );
   /** 按名称找攻略详情（酒店/餐厅/景点） */
   const findDetail = (name: string, type: string) => {
     if (type === "hotel") return hotels.find((h) => h.name === name);
@@ -655,16 +707,45 @@ function FavoriteActionList({
 
   return (
     <div className="mb-6">
-      <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-4">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="font-bold text-gray-900">📈 价格追踪</h3>
-          <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">
-            {favs.length} 项收藏 · {decided} 已确定
-          </span>
+      {/* 页头（2026-10-16 用户要求 redesign）：白卡 + 数据 chips + 类别筛选，
+          不再用琥珀色横幅和整段说明文字墙；细则收进一行小字 */}
+      <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3.5 mb-4 shadow-[0_1px_3px_rgba(16,47,62,0.06)]">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <h3 className="text-base font-bold text-gray-900">📈 价格追踪</h3>
+          <div className="flex gap-1.5 flex-wrap">
+            <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full font-medium">⭐ 收藏 {favs.length}</span>
+            <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">✓ 已确定 {decided}</span>
+            <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-medium">✅ 已订上 {bookedCount}</span>
+          </div>
         </div>
-        <p className="text-xs text-gray-500">
-          只追踪你收藏的：实时价格、订位空位、门票余量、是否可预订都在这里，并标注是否已预订/已出票。按行程时间线分城市排列，点卡片→地图只定位它（航班显示两机场+连线），再点一次取消；展开看详情对比，看好点「✓ 确定」锁定、再「加入预订」走正式流程。真正订好的在「✅ 最终预定」里看确认信息；还没收藏的去「🔍 预定筛选」里挑
+        <p className="text-xs text-gray-400 mt-1.5">
+          只看你收藏的实时价格、余位和预订状态，按行程时间线分城市排列；点卡片在地图上定位它，看好后从 ⋯ 菜单「确定 / 加入预订」。
         </p>
+        <div className="flex gap-1.5 mt-2.5 flex-wrap" role="tablist" aria-label="价格追踪类别筛选">
+          {(
+            [
+              { k: "all", label: "全部", n: favs.length },
+              { k: "flight", label: "✈️ 航班", n: favs.filter((f) => f.type === "flight").length },
+              { k: "hotel", label: "🏨 酒店", n: favs.filter((f) => f.type === "hotel").length },
+              { k: "restaurant", label: "🍽️ 餐厅", n: favs.filter((f) => f.type === "restaurant").length },
+              { k: "attraction", label: "🏛️ 景点", n: favs.filter((f) => f.type === "attraction").length },
+            ] as const
+          ).map((c) => (
+            <button
+              key={c.k}
+              role="tab"
+              aria-selected={typeFilter === c.k}
+              onClick={() => setTypeFilter(c.k)}
+              className={`px-2.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                typeFilter === c.k
+                  ? "bg-teal-700 text-white border-teal-700"
+                  : "bg-white text-gray-500 border-gray-200 hover:border-teal-600"
+              }`}
+            >
+              {c.label} <span className={typeFilter === c.k ? "text-teal-100" : "text-gray-400"}>{c.n}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 2026-10-03 用户：吸顶可折叠地图——收藏的酒店/餐厅/景点，看位置合不合适、离酒店远近；
@@ -681,7 +762,14 @@ function FavoriteActionList({
         stickyTop={mapStickyTop}
       />
 
-      {citySections.map((sec, si) => (
+      {!anyVisible && (
+        <p className="text-sm text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-xl px-4 py-6 text-center mb-5">
+          这一类还没有收藏，去「🔍 预定筛选」里点「＋ 收藏」添加。
+        </p>
+      )}
+      {citySections.map((sec, si) => {
+        if (!sec.items.some((f) => typeFilter === "all" || f.type === typeFilter)) return null;
+        return (
         <div key={sec.city} data-city-section={sec.city} className="mb-5">
           {/* 城市头：时间线节点 */}
           <div className="flex items-center gap-3 mb-2">
@@ -690,7 +778,7 @@ function FavoriteActionList({
               {si < citySections.length - 1 && <div className="w-0.5 h-4 bg-teal-200" />}
             </div>
             <div className="flex items-baseline gap-2 flex-wrap">
-              <h4 className="text-base font-bold text-gray-900">{sec.city}</h4>
+              <h4 className="text-lg font-bold text-gray-900">{sec.city}</h4>
               {sec.seg && (
                 <span className="text-xs text-gray-500">
                   {planDateShort(sec.seg.start)} → {planDateShort(sec.seg.end)} · {sec.seg.days} 天
@@ -709,16 +797,18 @@ function FavoriteActionList({
 
           {/* 城内按类型分组，组内按时间线日期排序 */}
           {(["flight", "hotel", "restaurant", "attraction"] as const).map((t) => {
+            if (typeFilter !== "all" && t !== typeFilter) return null;
             const items = sec.items
               .filter((f) => f.type === t)
               .sort((a, b) => itemTimelineDate(a).localeCompare(itemTimelineDate(b)));
             if (!items.length) return null;
             return (
-              <div key={t} className="ml-6 mb-3">
-                <div className="text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
-                  {typeLabel(t)} · {items.length} 项
+              <div key={t} className="ml-6 mb-4">
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-900 bg-teal-50 border border-teal-100 px-2.5 py-1 rounded-full mb-2">
+                  {typeLabel(t)}
+                  <span className="text-teal-600 font-medium">{items.length} 项</span>
                 </div>
-                <div className="space-y-2">
+                <div className="grid gap-2.5 lg:grid-cols-2">
                   {items.map((f) => {
                     const isOpen = expandedId === f.row.id;
                     const detail = f.type !== "flight" ? findDetail(f.row.title, f.type) : undefined;
@@ -737,17 +827,20 @@ function FavoriteActionList({
                         if ((e.target as HTMLElement).closest("button, a")) return;
                         setMapSelKey((prev) => (prev === cardKey ? null : cardKey));
                       }}
-                      className={`bg-white rounded-lg border px-3 py-2.5 cursor-pointer ${
+                      className={`bg-white rounded-xl border border-l-4 px-4 py-3 cursor-pointer shadow-[0_1px_2px_rgba(16,47,62,0.05)] ${
                         cardSelected
-                          ? "ring-2 ring-teal-600 border-teal-600"
-                          : f.row.done
-                            ? "border-green-200 bg-green-50/50"
-                            : "border-gray-200"
+                          ? "ring-2 ring-teal-600 border-teal-600 border-l-teal-600"
+                          : confirmedByName.has(f.row.title.trim().toLowerCase()) ||
+                              (f.type === "flight" && !!f.flight?.flight && ticketedByFlightNo.has(f.flight.flight))
+                            ? "border-gray-200 border-l-emerald-500"
+                            : f.row.done
+                              ? "border-gray-200 border-l-amber-400"
+                              : "border-gray-200 border-l-gray-300"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-[15px] font-semibold text-gray-900 leading-snug">
                           {f.row.title}
                           {f.type === "flight" && f.flight?.route && (
                             <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
@@ -785,7 +878,9 @@ function FavoriteActionList({
                             ) : null;
                           })()}
                         </div>
-                        {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策 */}
+                        {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策；
+                            价格/余位收进浅灰面板区，和标题区拉开层级（2026-10-16 redesign） */}
+                        <div className="mt-2 rounded-lg bg-gray-50 border border-gray-100 px-2.5 py-2">
                         <FavoritePriceLine
                           name={f.row.title} type={f.type} city={f.city}
                           flight={f.flight} segs={flightSegs}
@@ -809,6 +904,7 @@ function FavoriteActionList({
                             </div>
                           );
                         })()}
+                        </div>
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
                         {/* 2026-10-03 用户：行动安排里所有类型都就地展开看详情，不跳详情页（返回位置修不好就别跳） */}
@@ -990,7 +1086,8 @@ function FavoriteActionList({
             );
           })}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -2082,13 +2179,15 @@ function BookingsInner() {
       </div>
 
 
-      {/* 统一行动队列：三个视图都置顶显示（登录云端才有数据） */}
-      {syncMode === "cloud" && (
+      {/* 统一行动队列：只在「预定筛选」里显示、且只显示当前类别页签的事项
+          （2026-10-16 用户：价格追踪和最终预定里不要这个；在看酒店就只写酒店的） */}
+      {syncMode === "cloud" && section === "screen" && (
         <div className="pt-3">
           <NextActionQueue
             plan={planState}
             stays={stays}
             flightSegs={flightSegsQ}
+            category={cat}
             onGoTrackCard={goTrackCard}
             onGoFinal={() => switchSection("final")}
             onGoScreen={goScreen}
