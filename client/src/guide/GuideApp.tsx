@@ -447,6 +447,40 @@ const CARRIER_REPUTATION:Record<string,string>={'Singapore Airlines':'全服务�
  * 证据在 research_notes/sea-guide-2026/airline-reputation/；没查到的不写，不许凭常识编。
  * 与 CARRIER_REPUTATION 同键，在机票页「航司口碑与特色」折叠里一并展示，帮用户挑航班。 */
 const CARRIER_FEATURES:Record<string,string>={'Scoot':'经济舱座椅偏窄、腿部空间小，长途久坐累；ScootPlus（超级经济舱）能半躺、包餐，bid 升舱 50–95 新币时划算、长途有人首选，正价差价小则不值；选第一排、避最后一排（椅背可能放不平）','Spring Airlines':'腿部间距意外宽过部分全服务航司，但座椅窄、靠背不可调','Hainan Airlines':'座位比东航略宽、高个子友好（乘客实测），但也有腿部空间不足的吐槽，看机型；商务舱服务好、有铺床服务，特价时值','Thai VietJet Air':'经济舱椅距意外宽敞（1米8乘客膝前还剩一个半拳头，比国内不少航司大），短板是椅背可调幅度小','Alaska Airlines':'新787商务舱座椅带门、中间座隔板可放低方便同行；但跨洋商务服务被实测批评，里程票（75k）换才值、现金票不值','Singapore Airlines':'商务舱可完全躺平；777 第一排脚部空间大最值得抢（多留给 PPS 会员，可提前 96 小时打客服选），普通排脚部空间小、要斜着躺；Book the Cook 提前点餐是特色','THAI':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型','Thai Airways':'商务舱看机型：A350 可完全躺平（190cm 实测）、餐食味道好于卖相；老 A330 是「洗脚城」式座椅被群嘲，还有临换机型抽中老座椅的风险，订前先查执飞机型'};
+/* 航司积分兑换标签（2026-10-17 用户要求 + 当日专项调研核实）：按用户实际持有的六类积分
+   （Amex MR / Chase UR / Bilt / Citi ThankYou / 万豪 Bonvoy / Atmos）标每家航司的兑换路径。
+   全文对照与来源见调研报告 airline-points-redemption-map；时效项（韩亚并入大韩、海航×Atmos）已在标签内注明。 */
+const CARRIER_POINTS:Record<string,string>={
+ 'Singapore Airlines':'积分：Amex/Chase/Citi/万豪 直转 KrisFlyer',
+ 'Scoot':'积分：KrisFlyer 可换（Amex/Chase/Citi/万豪转）',
+ 'Air China':'积分：星盟可换 · 万豪直转凤凰知音，或经 United/Aeroplan',
+ 'THAI':'积分：星盟可换 · Citi/万豪直转，或经 United/Aeroplan',
+ 'Thai Airways':'积分：星盟可换 · Citi/万豪直转，或经 United/Aeroplan',
+ 'Asiana':'积分：星盟可换 · 万豪直转（2026-12-17 并入大韩后失效）',
+ 'Asiana Airlines':'积分：星盟可换 · 万豪直转（2026-12-17 并入大韩后失效）',
+ 'Korean Air':'积分：Atmos 可直订 · 万豪转 SKYPASS，或经达美/蓝翔',
+ 'China Eastern':'积分：经达美/蓝翔/Virgin/Qantas 订（无直转）',
+ 'China Eastern Airlines':'积分：经达美/蓝翔/Virgin/Qantas 订（无直转）',
+ 'Delta':'积分：Amex 直转 SkyMiles · 万豪可转',
+ 'Alaska':'积分：Atmos 直订 · Bilt/万豪可转入',
+ 'Alaska Airlines':'积分：Atmos 直订 · Bilt/万豪可转入',
+ 'Hainan':'积分：万豪直转金鹏 · Atmos 可换（订前确认）',
+ 'Hainan Airlines':'积分：万豪直转金鹏 · Atmos 可换（订前确认）',
+ 'Bangkok Airways':'积分：经蓝翔/Etihad/国泰/Qantas 订（无直转）',
+ 'Spring Airlines':'积分：不可换（现金票）',
+ 'Thai AirAsia':'积分：不可换（现金票）',
+ 'Thai Lion Air':'积分：不可换（现金票）',
+ 'Nok Air':'积分：不可换（现金票）',
+ 'Thai Vietjet Air':'积分：不可换（现金票）',
+ 'Thai VietJet Air':'积分：不可换（现金票）',
+};
+/** 从航司名或含航司名的文本里取积分兑换标签（预定筛选航班行与最终预定共用同一实现） */
+export function carrierPointsTag(text:string):string|null{
+ if(!text)return null;
+ const keys=Object.keys(CARRIER_POINTS).sort((a,b)=>b.length-a.length);
+ const k=keys.find(x=>text.indexOf(x)===0)??keys.find(x=>text.includes(x));
+ return k?CARRIER_POINTS[k]:null;
+}
 
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 /* 时刻解析（2026-10-17 修）：必须认 AM/PM——旧实现只读 H:MM、把 "3:50 PM" 当 3:50，
@@ -483,7 +517,7 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const bizMin=biz&&biz.length?minOf(biz,'biz'):null;
  const rec=sorted.find(o=>o.recommend);
  const seen:string[]=[];const reps:string[]=[];
- sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}${CARRIER_FEATURES[k]?`｜特色：${CARRIER_FEATURES[k]}`:''}`);}});
+ sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}${CARRIER_FEATURES[k]?`｜特色：${CARRIER_FEATURES[k]}`:''}${carrierPointsTag(o.carrier)?`｜${carrierPointsTag(o.carrier)}`:''}`);}});
  const unknown=[...new Set(sorted.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
  const curState=cabin==='eco'?ecoState:bizState;
  return <div className="flightoptions">
@@ -492,9 +526,9 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
-  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;return <li key={oi} className={o.recommend?'rec':''}>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const pt=carrierPointsTag(o.carrier);return <li key={oi} className={o.recommend?'rec':''}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
-    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}</div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{pt&&<span style={{color:'#7c3aed',fontWeight:600}}>💠 {pt}</span>}</div>
     <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
