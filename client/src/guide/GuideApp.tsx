@@ -486,6 +486,165 @@ export function carrierPointsTag(text:string):string|null{
  return k?CARRIER_POINTS[k]:null;
 }
 
+/** 积分兑换操作指南（2026-10-17 用户：点 💠 标签弹窗看怎么转分、难易、链接、积分价、值不值）。
+ * 数据来自 2026-10-17 两轮专项调研（兑换路径 + 逐段积分价/性价比），报告在
+ * research_notes/airline-points-redemption-map-20261017-1742/ 与 airline-award-prices-value-20261017-1915/。
+ * 难易口径：简单=银行App内转分、官网自助订；中等=要先查位/等到账/动态价需比价；
+ * 较难=电话订票、位极少、或要绕多步。铁律：先查到有位再转分——转分不可逆。 */
+export interface PointsPath { program: string; fund: string; difficulty: '简单'|'中等'|'较难'; speed: string; steps: string; link?: string; note?: string; }
+export const CARRIER_POINTS_GUIDE: Record<string, PointsPath[]> = {
+ 'Singapore Airlines': [
+   { program:'KrisFlyer（新航自家）订新航', fund:'Amex 1:1 · Chase 1:1 · Citi 1:1 · 万豪 3:1', difficulty:'简单', speed:'Chase/Citi 约 1–2 天，Amex 数小时至 2 天', steps:'新航官网登录 KrisFlyer 账号 → 用里程搜本航班、确认 Saver 有位 → 在银行 App 里把分转到 KrisFlyer → 回官网订票', link:'https://www.singaporeair.com', note:'里程 3 年硬过期；新航自家长途/高端舱的票优先放给 KrisFlyer，伙伴计划常看不到' },
+ ],
+ 'Scoot': [
+   { program:'KrisFlyer 订酷航（固定兑换表）', fund:'Amex 1:1 · Chase 1:1 · Citi 1:1 · 万豪 3:1', difficulty:'简单', speed:'同 KrisFlyer 转分时效', steps:'新航官网登录 KrisFlyer → 搜里程票时选酷航航班 → 转分 → 订票', link:'https://www.singaporeair.com', note:'酷航积分票只有座位：行李、餐食要现金另购，且不可退改' },
+ ],
+ 'Air China': [
+   { program:'星盟伙伴订国航（United / Aeroplan）', fund:'Chase/Bilt → United 1:1（即时）；Amex/Chase/Bilt → Aeroplan 1:1（即时）；万豪 3:1 亦可', difficulty:'中等', speed:'银行转分多为即时；Aeroplan 订伙伴票每张另收 CA$39', steps:'在 United 或 Aeroplan 官网选「里程订票」搜本航班 → 确认有位 → 转分 → 订票', link:'https://www.united.com', note:'国航放给伙伴的位以官网搜到为准' },
+   { program:'凤凰知音直订（万豪转入）', fund:'万豪 3:1（60,000 分一组另送 5,000 里程）', difficulty:'较难', speed:'万豪转分要数天、不可逆', steps:'万豪官网转分到凤凰知音 → 国航官网/ App 用里程订票', link:'https://travel-partner.marriott.com/en-us', note:'比例吃亏，一般只在已有凤凰里程存量时考虑' },
+ ],
+ 'THAI': [
+   { program:'Royal Orchid Plus 直订（Citi/万豪转入）', fund:'Citi 1:1 · 万豪 3:1', difficulty:'中等', speed:'Citi 约 1–2 天；万豪数天', steps:'泰航官网登录 ROP → 搜奖励票有位 → 转分 → 订票', link:'https://www.thaiairways.com' },
+   { program:'星盟伙伴订泰航（United / Aeroplan）', fund:'Chase/Bilt → United 1:1；Amex/Chase/Bilt → Aeroplan 1:1', difficulty:'中等', speed:'多为即时', steps:'United 或 Aeroplan 官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.aircanada.com' },
+ ],
+ 'Thai Airways': [
+   { program:'Royal Orchid Plus 直订（Citi/万豪转入）', fund:'Citi 1:1 · 万豪 3:1', difficulty:'中等', speed:'Citi 约 1–2 天；万豪数天', steps:'泰航官网登录 ROP → 搜奖励票有位 → 转分 → 订票', link:'https://www.thaiairways.com' },
+   { program:'星盟伙伴订泰航（United / Aeroplan）', fund:'Chase/Bilt → United 1:1；Amex/Chase/Bilt → Aeroplan 1:1', difficulty:'中等', speed:'多为即时', steps:'United 或 Aeroplan 官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.aircanada.com' },
+ ],
+ 'Asiana': [
+   { program:'星盟伙伴订韩亚（United / Aeroplan 等）', fund:'Chase/Bilt → United 1:1；Amex/Chase/Bilt → Aeroplan 1:1；万豪 3:1 亦可', difficulty:'中等', speed:'多为即时', steps:'伙伴官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.united.com', note:'时效警告：韩亚 2026-12-17 并入大韩、退出星盟，此后星盟路径失效' },
+   { program:'Asiana Club 直订（万豪转入）', fund:'万豪 3:1', difficulty:'较难', speed:'万豪转分要数天', steps:'万豪转分到 Asiana Club → 韩亚官网订票', note:'并入大韩后里程计划如何过渡以官方公告为准' },
+ ],
+ 'Asiana Airlines': [
+   { program:'星盟伙伴订韩亚（United / Aeroplan 等）', fund:'Chase/Bilt → United 1:1；Amex/Chase/Bilt → Aeroplan 1:1；万豪 3:1 亦可', difficulty:'中等', speed:'多为即时', steps:'伙伴官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.united.com', note:'时效警告：韩亚 2026-12-17 并入大韩、退出星盟，此后星盟路径失效' },
+ ],
+ 'Korean Air': [
+   { program:'Atmos Rewards 直订大韩', fund:'直接用 Atmos 里程；不够时 Bilt 1:1 / 万豪 3:1 转入 Atmos', difficulty:'中等', speed:'Bilt 转 Atmos 即时；万豪约 4 天', steps:'Alaska/Atmos 官网搜里程票（伙伴选 Korean Air）→ 确认有位 → 缺里程再转分 → 订票', link:'https://www.alaskaair.com', note:'大韩放给 Atmos 的积分位出了名地少，先查位再转分' },
+   { program:'SKYPASS 直订（万豪转入）', fund:'只有万豪能转：3:1', difficulty:'较难', speed:'万豪转分要数天', steps:'万豪转分到 SKYPASS → 大韩官网订票', link:'https://www.koreanair.com', note:'西安→首尔 3 人淡季要 45,000 里程 ≈ 135,000 万豪分，攒分成本高' },
+ ],
+ 'China Eastern': [
+   { program:'Virgin Atlantic 订东航（兑换表价）', fund:'Amex/Chase/Citi/Bilt 1:1', difficulty:'中等', speed:'多为即时', steps:'Virgin Atlantic 官网里程搜票（天合联盟伙伴）→ 有位 → 转分 → 订票', link:'https://www.virginatlantic.com', note:'价格按距离兑换表、相对稳定；东航没有直转路径，只能经伙伴订' },
+   { program:'Flying Blue（法航/荷航）订东航', fund:'Amex/Chase/Citi/Bilt 1:1 · 万豪 3:1', difficulty:'中等', speed:'多为即时', steps:'法航或荷航官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.airfrance.com', note:'动态定价，同一航线 6,000–26,000 分都出现过，下单前和 Virgin 比一比' },
+   { program:'Delta SkyMiles 订东航', fund:'Amex 1:1 直转', difficulty:'较难', speed:'即时', steps:'Delta 官网里程搜票 → 转分 → 订票', note:'delta.com 上东航常有「幽灵位」（显示有位、订不了），订前务必走到付款前一步确认' },
+ ],
+ 'China Eastern Airlines': [
+   { program:'Virgin Atlantic 订东航（兑换表价）', fund:'Amex/Chase/Citi/Bilt 1:1', difficulty:'中等', speed:'多为即时', steps:'Virgin Atlantic 官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.virginatlantic.com', note:'东航没有直转路径，只能经伙伴订' },
+   { program:'Flying Blue（法航/荷航）订东航', fund:'Amex/Chase/Citi/Bilt 1:1 · 万豪 3:1', difficulty:'中等', speed:'多为即时', steps:'法航或荷航官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.airfrance.com', note:'动态定价，下单前和 Virgin 比一比' },
+ ],
+ 'Delta': [
+   { program:'SkyMiles 直订达美', fund:'Amex 1:1（另有每分 $0.0006 消费税）· 万豪 3:1', difficulty:'简单', speed:'Amex 转分即时', steps:'Delta 官网里程搜票 → Amex App 转分 → 订票', link:'https://www.delta.com' },
+ ],
+ 'Alaska': [
+   { program:'Atmos Rewards 直订阿拉斯加', fund:'直接用 Atmos 里程；Bilt 1:1 / 万豪 3:1 可转入', difficulty:'简单', speed:'Bilt 即时；万豪约 4 天', steps:'Alaska/Atmos 官网搜里程票 → 缺里程再转分 → 订票', link:'https://www.alaskaair.com' },
+   { program:'AAdvantage 订阿拉斯加（兑换表价）', fund:'Citi 1:1 转 AA（唯一银行路径）· 万豪 3:1', difficulty:'中等', speed:'Citi 约 1–2 天', steps:'AA 官网里程搜票（伙伴 Alaska）→ 有位 → Citi 转分 → 订票', link:'https://www.aa.com', note:'首尔→西雅图兑换表价 35,000 分/人，长途很划算' },
+ ],
+ 'Alaska Airlines': [
+   { program:'Atmos Rewards 直订阿拉斯加', fund:'直接用 Atmos 里程；Bilt 1:1 / 万豪 3:1 可转入', difficulty:'简单', speed:'Bilt 即时；万豪约 4 天', steps:'Alaska/Atmos 官网搜里程票 → 缺里程再转分 → 订票', link:'https://www.alaskaair.com' },
+   { program:'AAdvantage 订阿拉斯加（兑换表价）', fund:'Citi 1:1 转 AA（唯一银行路径）· 万豪 3:1', difficulty:'中等', speed:'Citi 约 1–2 天', steps:'AA 官网里程搜票 → 有位 → Citi 转分 → 订票', link:'https://www.aa.com', note:'首尔→西雅图兑换表价 35,000 分/人，长途很划算' },
+ ],
+ 'Hainan': [
+   { program:'Atmos Rewards 订海航', fund:'直接用 Atmos 里程；Bilt 1:1 / 万豪 3:1 转入', difficulty:'中等', speed:'—', steps:'Alaska/Atmos 官网搜伙伴里程票（Hainan Airlines）→ 有位 → 订票', link:'https://www.alaskaair.com', note:'海航×Atmos 2026 年中曾暂停、后传恢复，下单前先确认合作在有效期内' },
+   { program:'金鹏俱乐部直订（万豪转入）', fund:'万豪 3:1', difficulty:'较难', speed:'万豪转分要数天', steps:'万豪转分到金鹏 → 海航官网/ App 订票', link:'https://www.hnair.com' },
+   { program:'Etihad Guest 订海航', fund:'Amex/Citi/Bilt 1:1', difficulty:'较难', speed:'—', steps:'只能打 Etihad 客服电话订伙伴票', note:'另有燃油附加费，价格是兑换表下限' },
+ ],
+ 'Hainan Airlines': [
+   { program:'Atmos Rewards 订海航', fund:'直接用 Atmos 里程；Bilt 1:1 / 万豪 3:1 转入', difficulty:'中等', speed:'—', steps:'Alaska/Atmos 官网搜伙伴里程票 → 有位 → 订票', link:'https://www.alaskaair.com', note:'海航×Atmos 2026 年中曾暂停、后传恢复，下单前先确认' },
+   { program:'金鹏俱乐部直订（万豪转入）', fund:'万豪 3:1', difficulty:'较难', speed:'万豪转分要数天', steps:'万豪转分到金鹏 → 海航官网/ App 订票', link:'https://www.hnair.com' },
+ ],
+ 'Bangkok Airways': [
+   { program:'Etihad Guest 订曼谷航空', fund:'Amex/Citi/Bilt 1:1 · 万豪 3:1', difficulty:'中等', speed:'—', steps:'Etihad 官网/客服搜伙伴票 → 转分 → 订票', link:'https://www.etihad.com', note:'2026 年新合作；清迈↔曼谷实测约 6,050 分/人 + 约 130 泰铢税费' },
+   { program:'Flying Blue 订曼谷航空', fund:'Amex/Chase/Citi/Bilt 1:1', difficulty:'中等', speed:'多为即时', steps:'法航/荷航官网里程搜票 → 有位 → 转分 → 订票', link:'https://www.airfrance.com', note:'2025-10-01 起的新伙伴；曼谷→普吉同类航线约 12,000 分/人' },
+ ],
+};
+export const POINTS_NO_PATH_NOTE = '这家不在任何联盟、和你持有的六类积分（Amex/Chase/Bilt/Citi/万豪/Atmos）没有任何转分或伙伴订票关系，只能现金购买。票价本身便宜，现金买就是最优解。';
+
+/** 逐航段积分价与性价比（2026-10-17 调研口径：兑换表价或公开典型价；
+ * 实时余位必须登录各计划官网查——弹窗给价、官网验位，两步缺一不可） */
+export interface SegmentAward { program: string; miles: string; verdict: string; good: 'yes'|'mid'|'no'; }
+export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: string }> = {
+ 'PEK-SIN': { rows: [
+   { program:'KrisFlyer 订新航', miles:'20,500 分/人（3 人 61,500）', verdict:'换 $436 现金票仅约 0.71¢/分', good:'no' },
+   { program:'Aeroplan 订国航', miles:'30,000 分/人', verdict:'约 0.48¢/分', good:'no' },
+   { program:'United 订国航', miles:'约 15,000 分/人', verdict:'约 0.97¢/分，勉强打平', good:'mid' } ],
+   bottom:'结论：付现金。这一段现金价太低，积分换了亏。' },
+ 'XIY-SIN': { rows: [
+   { program:'KrisFlyer 订酷航', miles:'12,000 分/人（2 人 24,000）', verdict:'换 $384 约 1.60¢/分', good:'yes' },
+   { program:'Virgin 订东航', miles:'15,000 分/人（2 人 30,000）', verdict:'换 $368 约 1.23¢/分，勉强', good:'mid' } ],
+   bottom:'结论：坐酷航就用 KrisFlyer 换，值；东航现金价已经便宜，付现金更省事。' },
+ 'SIN-XIY': { rows: [
+   { program:'Virgin 订东航 MU2070（白天班）', miles:'15,000 分/人（3 人 45,000）', verdict:'换 $1,736 约 3.86¢/分，全程最值', good:'yes' },
+   { program:'KrisFlyer 订酷航 TR134（过夜班）', miles:'12,000 分/人（3 人 36,000）', verdict:'换 $916 约 2.54¢/分', good:'yes' } ],
+   bottom:'结论：这一段优先用积分——东航白天班积分价尤其划算，前提是 Virgin 官网查得到位。' },
+ 'SIN-HKT': { rows: [
+   { program:'KrisFlyer 订酷航', miles:'2,500 分/人（2 人 5,000）', verdict:'短途固定表价，超值', good:'yes' },
+   { program:'KrisFlyer 订新航', miles:'13,000 分/人（2 人 26,000）', verdict:'换 $291 约 1.12¢/分，勉强', good:'mid' } ],
+   bottom:'结论：坐酷航用积分换是白捡；坐新航就付现金。' },
+ 'CNX-BKK': { rows: [
+   { program:'Etihad 订曼谷航空', miles:'约 6,050 分/人', verdict:'换 $158 约 1.31¢/分，勉强', good:'mid' },
+   { program:'Aeroplan 订泰航', miles:'8,000 分/人', verdict:'换 $141 约 0.88¢/分', good:'no' } ],
+   bottom:'结论：付现金为主（当天现金最低才 $82）；除非正好坐曼谷航空且 Etihad 里程有存量。' },
+ 'BKK-PEK': { rows: [
+   { program:'United 订国航/泰航', miles:'约 15,000 分/人', verdict:'对 $292 的泰航班约 1.95¢/分可以；对 $174–228 的班次不值', good:'mid' },
+   { program:'Aeroplan 订国航/泰航', miles:'30,000 分/人', verdict:'约 0.58–0.97¢/分', good:'no' } ],
+   bottom:'结论：多数班次付现金；只有坐最贵的泰航 TG614 时才值得考虑 United 里程。' },
+ 'XIY-ICN': { rows: [
+   { program:'Atmos 订大韩 KE138', miles:'7,500 分/人起（3 人 22,500 起）', verdict:'换 $744 约 3.31¢/分，很值', good:'yes' },
+   { program:'Flying Blue 订东航 MU853', miles:'约 6,000–12,500 分/人（动态区间）', verdict:'换 $505 约 1.35–2.81¢/分', good:'mid' } ],
+   bottom:'结论：优先查 Atmos 有没有大韩的位——有位就是全程最划算的兑换之一；没位再看蓝翔订东航。' },
+ 'ICN-SEA': { rows: [
+   { program:'AAdvantage 订阿拉斯加', miles:'35,000 分/人（3 人 105,000）', verdict:'对 $3,840 现金价约 3.66¢/分', good:'yes' },
+   { program:'Atmos 订阿拉斯加（动态）', miles:'约 42,500–52,500 分/人', verdict:'约 2.44–3.01¢/分', good:'yes' } ],
+   bottom:'参考：本程已现金出票（AS120）；将来再飞这条线，AA 兑换表价最划算，AA 只有 Citi 能 1:1 转入。' },
+};
+export function pointsGuideFor(text: string): { key: string; paths: PointsPath[] } | null {
+ if (!text) return null;
+ const keys = Object.keys(CARRIER_POINTS_GUIDE).sort((a, b) => b.length - a.length);
+ const k = keys.find(x => text.indexOf(x) === 0) ?? keys.find(x => text.includes(x));
+ return k ? { key: k, paths: CARRIER_POINTS_GUIDE[k] } : null;
+}
+
+/** 💠 积分标签（可点）：点击弹窗显示转分操作、难易、链接、本航段积分价与性价比。
+ * 预定筛选、最终预定共用；seg 传航段代码（如 PEK-SIN）时弹窗带本段积分价。 */
+export function PointsTag({ text, seg }: { text: string; seg?: string }) {
+ const tag = carrierPointsTag(text);
+ const [open, setOpen] = useState(false);
+ useEffect(() => {
+   if (!open) return;
+   const f = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+   window.addEventListener('keydown', f);
+   return () => window.removeEventListener('keydown', f);
+ }, [open ]);
+ if (!tag) return null;
+ const guide = pointsGuideFor(text);
+ const segInfo = seg ? SEGMENT_POINTS[seg] : undefined;
+ const carrierName = text.length <= 40 ? text : '';
+ return <span className="pointstagwrap">
+   <button type="button" className="pointstag" onClick={() => setOpen(true)} aria-label={`查看${carrierName || '该航司'}积分兑换指南`}>💠 {tag}</button>
+   {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
+     <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="积分兑换指南" onClick={e => e.stopPropagation()}>
+       <span className="pointsmodal-head"><b>💠 积分兑换指南{carrierName ? ` · ${carrierName}` : ''}</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
+       {segInfo && <span className="pointsmodal-block">
+         <b className="pointsmodal-sec">本航段积分价（{seg}）</b>
+         {segInfo.rows.map((r, i) => <span key={i} className="pointsmodal-row"><span>{r.program}：<b>{r.miles}</b></span><em className={`points-verdict ${r.good}`}>{r.verdict}</em></span>)}
+         <span className="pointsmodal-bottom">{segInfo.bottom}</span>
+       </span>}
+       <span className="pointsmodal-block">
+         <b className="pointsmodal-sec">怎么操作</b>
+         {guide ? guide.paths.map((p, i) => <span key={i} className="pointsmodal-path">
+           <span className="pointsmodal-pathname">{p.program}<em className={`points-diff ${p.difficulty}`}>{p.difficulty}</em></span>
+           <span>转分来源：{p.fund}</span>
+           <span>到账：{p.speed}</span>
+           <span>步骤：{p.steps}</span>
+           {p.note && <span className="pointsmodal-note">注意：{p.note}</span>}
+           {p.link && <a href={p.link} target="_blank" rel="noreferrer">打开官网 ↗</a>}
+         </span>) : <span className="pointsmodal-note">{POINTS_NO_PATH_NOTE}</span>}
+       </span>
+       <span className="pointsmodal-foot">积分价为兑换表/公开口径（2026-10-17 调研）；具体日期有没有积分票，必须登录对应官网查。铁律：先查到有位、再转分——转分不可逆。</span>
+     </span>
+   </span>}
+ </span>;
+}
+
 /** 单个航段的 Google Flights 实查选项：状态徽章 + 经济/商务舱位 tab + 时间轴列表；全站只看直飞。 */
 /* 时刻解析（2026-10-17 修）：必须认 AM/PM——旧实现只读 H:MM、把 "3:50 PM" 当 3:50，
    起降一端 AM 一端 PM 时长算错 12 小时（实祸：TG614 显示 17h40m），排序与红眼判断同受影响。
@@ -565,9 +724,9 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
-  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const pt=carrierPointsTag(o.carrier);const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
-    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}{pt&&<span style={{color:'#7c3aed',fontWeight:600}}>💠 {pt}</span>}</div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/></div>
     <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}

@@ -20,7 +20,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -1970,7 +1970,7 @@ function BookingsCalendar() {
                   {kindMeta[e.kind].icon} <span className="font-medium">{e.title}</span>
                   {e.sub && <span className="text-gray-400"> · {e.sub}</span>}
                   {e.kind === "flight" && carrierPointsTag(e.title) && (
-                    <span style={{ color: "#7c3aed" }}> · 💠 {carrierPointsTag(e.title)}</span>
+                    <span> · <PointsTag text={e.title} /></span>
                   )}
                 </li>
               ))}
@@ -1998,6 +1998,7 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
     lines: { label: string; value: string }[];
     recordId?: number;
     pointsTag?: string | null;
+    pointsText?: string | null;
   }
 
   const items: FinalItem[] = [];
@@ -2041,6 +2042,10 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
       pointsTag:
         data.bkind === "transport"
           ? carrierPointsTag([row.title, data.extra ?? "", data.note ?? ""].join(" "))
+          : null,
+      pointsText:
+        data.bkind === "transport"
+          ? [row.title, data.extra ?? "", data.note ?? ""].join(" ")
           : null,
     });
   }
@@ -2097,8 +2102,8 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
                       <div className="text-xs text-gray-600 mt-1">📅 {it.headLine}</div>
                     )}
                     {it.pointsTag && (
-                      <div className="text-xs mt-0.5 font-medium" style={{ color: "#7c3aed" }}>
-                        💠 {it.pointsTag}
+                      <div className="mt-0.5">
+                        <PointsTag text={it.pointsText ?? it.title} />
                       </div>
                     )}
                     {it.code && (
