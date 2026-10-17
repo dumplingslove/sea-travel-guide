@@ -23,6 +23,10 @@ import { attractions, cities, days, hotelCityChecks, hotels, restaurants, shoppi
 import { bookingPolicyBadge, mustGoBadge } from '../bookings/restaurantBookingStatus';
 import { FLIGHT_LEGS, buildFullTripSegments, flightDateFromPlan, hotelStayFromPlan, refreshLegFromDb, applyPlanTimeline, liveFlightQuote, type FlightLegInfo, type FlightOption, type PlanSegment } from '../bookings/bookingTimeline';
 import { onDataset } from '../lib/datasets';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { LL, addAmapTiles } from '@/lib/amap';
+import { airportByCode, type AirportInfo } from '@/data/airportCoords';
 import { attractionGuides } from './attractionGuides';
 import { getInfographics, getCrossCityInfographics, type Infographic } from './infographics';
 import { getPhotoSpots, getPortraitSpots, photoSpotAttractionCount, photoSpotCount } from './attractionPhotoSpots';
@@ -491,6 +495,35 @@ function depMinutes(t?:string){const m=/^(\d{1,2}):(\d{2})\s*([AP]M)?/i.exec((t|
    没有真实时长才用起降钟面差兜底（跨时区航段钟面差会差 ±1h，仅作兜底） */
 function flightDur(o:FlightOption){if(o.durationMins&&o.durationMins>0){const h=Math.floor(o.durationMins/60),m=o.durationMins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}const d=depMinutes(o.depart),a=depMinutes(o.arrive);let mins=a-d;if(o.arrivePlusDay||mins<0)mins+=24*60;if(mins<=0||mins>24*60)return '';const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${String(m).padStart(2,'0')}m`:`${h}h`;}
 function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
+/** 本段机场地图（2026-10-17 用户：预定筛选要能看到两边机场的位置，
+ * 同城多机场必须区分开——北京首都 PEK vs 大兴 PKX、曼谷素万那普 BKK vs 廊曼 DMK）。
+ * 机场点与航线对全部由本段航班选项的 dep/arrAirport 推导；选项没带机场时
+ * 回退到航段两端机场。容器 className 静态（Leaflet 会往上加类，React 不许重写）。 */
+function SegmentAirportMap({leg}:{leg:FlightLegInfo}){
+ const ref=useRef<HTMLDivElement|null>(null);
+ const opts=[...(leg.options??[]),...(leg.businessOptions??[])];
+ const segCodes=leg.dbSeg?leg.dbSeg.split('-'):[];
+ const defDep=segCodes[0]; const defArr=segCodes[1];
+ const codes=new Set<string>(); const pairs=new Set<string>();
+ opts.forEach(o=>{const d=o.depAirport??defDep;const a=o.arrAirport??defArr;if(d)codes.add(d);if(a)codes.add(a);if(d&&a)pairs.add(`${d}|${a}`);});
+ if(!pairs.size&&defDep&&defArr){codes.add(defDep);codes.add(defArr);pairs.add(`${defDep}|${defArr}`);}
+ const pts=[...codes].map(c=>airportByCode(c)).filter((a):a is AirportInfo=>!!a);
+ const pairList=[...pairs].map(p=>p.split('|') as [string,string]).filter(([d,a])=>airportByCode(d)&&airportByCode(a));
+ const mapKey=pts.map(p=>p.code).join(',')+'#'+pairList.map(p=>p.join('-')).join(',');
+ useEffect(()=>{
+   if(!ref.current||pts.length<2)return;
+   const map=L.map(ref.current,{scrollWheelZoom:false});
+   addAmapTiles(map);
+   pairList.forEach(([d,a])=>{const A=airportByCode(d)!;const B=airportByCode(a)!;L.polyline([LL(A.lat,A.lng),LL(B.lat,B.lng)],{color:'#7c3aed',weight:2,dashArray:'6 5',opacity:.7}).addTo(map);});
+   pts.forEach(p=>{L.marker(LL(p.lat,p.lng),{icon:L.divIcon({className:'apicon',html:`<span class="ap-plate"><b>✈️ ${p.code}</b><i>${p.name.replace(/国际机场|机场/g,'')}</i></span>`,iconSize:[92,36],iconAnchor:[46,18]})}).addTo(map);});
+   map.fitBounds(L.latLngBounds(pts.map(p=>LL(p.lat,p.lng))).pad(0.3));
+   return ()=>{map.remove();};
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ },[mapKey]);
+ if(pts.length<2)return null;
+ return <div ref={ref} className="segapmap" style={{height:230}} aria-label="本段起降机场地图"/>;
+}
+
 function FlightLegOptions({leg}:{leg:FlightLegInfo}){
  const eco=leg.options??null;                 /* null/空 = 未查询；查过但无直飞用 queriedAt 区分 */
  const biz=leg.businessOptions??null;         /* null = 未查询；[] = 查过但无商务舱直飞 */
@@ -505,6 +538,12 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
     库数据到达/更新后本组件立即重渲染，不停留在旧快照上 */
  const [,setDbTick]=useState(0);
  useEffect(()=>onDataset('flight_db',()=>setDbTick(t=>t+1)),[]);
+ /* 2026-10-17 用户：收藏过的航班要在预定筛选里高亮（不只高亮推荐）。
+    判重与 FavButton 同一份语义身份实现；航线写法有中文（leg.route）与代码（leg.dbSeg）两种，
+    收藏可能从不同入口存入，两个写法都查。 */
+ const { data: favData } = useQuery({ queryKey: ["records"], queryFn: listRecords });
+ const favKeys = useMemo(() => new Set((favData?.records ?? []).filter(r => r.kind === 'favorite').map(r => favoriteIdentityOfRecord(r))), [favData]);
+ const isFavOf = (o: FlightOption) => [leg.route, leg.dbSeg].filter(Boolean).some(rt => favKeys.has(favoriteIdentityKey('flight', '', '', { flight: o.flight, route: rt as string, cabin })));
  const livePriceOf=(o:FlightOption,cb:'eco'|'biz'):number|null=>{
    if(!leg.dbSeg||!leg.date)return null;
    const q=liveFlightQuote(leg.dbSeg,leg.date,o.flight)??liveFlightQuote(leg.dbSeg,leg.date,o.flight.replace(/\s+/g,''));
@@ -526,12 +565,13 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='eco'} className={cabin==='eco'?'active':''} onClick={()=>setCabin('eco')}>经济舱{ecoMin!=null?` · $${ecoMin}起`:ecoState==='none'?' · 无':' · 待查'}</button>
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
-  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const pt=carrierPointsTag(o.carrier);return <li key={oi} className={o.recommend?'rec':''}>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const pt=carrierPointsTag(o.carrier);const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
-    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{pt&&<span style={{color:'#7c3aed',fontWeight:600}}>💠 {pt}</span>}</div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}{pt&&<span style={{color:'#7c3aed',fontWeight:600}}>💠 {pt}</span>}</div>
     <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
+  <SegmentAirportMap leg={leg}/>
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</p></details>}
   <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>

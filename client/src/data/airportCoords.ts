@@ -15,10 +15,12 @@ export interface AirportInfo {
 
 export const AIRPORTS: AirportInfo[] = [
   { cityZh: "北京", name: "北京首都国际机场", code: "PEK", lat: 40.0799, lng: 116.6031 },
+  { cityZh: "北京", name: "北京大兴国际机场", code: "PKX", lat: 39.5098, lng: 116.4105 },
   { cityZh: "新加坡", name: "新加坡樟宜机场", code: "SIN", lat: 1.3644, lng: 103.9915 },
   { cityZh: "普吉", name: "普吉国际机场", code: "HKT", lat: 8.1132, lng: 98.3168 },
   { cityZh: "清迈", name: "清迈国际机场", code: "CNX", lat: 18.7669, lng: 98.9629 },
   { cityZh: "曼谷", name: "素万那普国际机场", code: "BKK", lat: 13.69, lng: 100.7501 },
+  { cityZh: "曼谷", name: "廊曼国际机场", code: "DMK", lat: 13.9126, lng: 100.6067 },
   { cityZh: "西安", name: "西安咸阳国际机场", code: "XIY", lat: 34.4384, lng: 108.757 },
   { cityZh: "首尔", name: "首尔仁川国际机场", code: "ICN", lat: 37.4602, lng: 126.4407 },
   { cityZh: "西雅图", name: "西雅图-塔科马国际机场", code: "SEA", lat: 47.4502, lng: -122.3088 },
@@ -34,4 +36,9 @@ export const AIRPORTS: AirportInfo[] = [
 /** 按中文城市名查机场 */
 export function airportForCity(cityZh: string): AirportInfo | undefined {
   return AIRPORTS.find((a) => a.cityZh === cityZh);
+}
+
+/** 按 IATA 代码查机场（2026-10-17：同城多机场区分首都/大兴、素万那普/廊曼用） */
+export function airportByCode(code: string): AirportInfo | undefined {
+  return AIRPORTS.find((a) => a.code === code);
 }
