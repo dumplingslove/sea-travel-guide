@@ -21,10 +21,10 @@ import { supabase } from "./supabase";
  * 4. 每个数据集有明确状态（loading/ready/error），界面可以把「正在加载」
  *    与「库里确实没查过」区分开，不许再混为一谈。
  */
-export type DatasetKey = "flight_db" | "hotel_live_prices" | "restaurant_booking_status";
+export type DatasetKey = "flight_db" | "hotel_live_prices" | "restaurant_booking_status" | "price_history";
 export type DatasetStatus = "idle" | "loading" | "ready" | "error";
 
-const KEYS: DatasetKey[] = ["flight_db", "hotel_live_prices", "restaurant_booking_status"];
+const KEYS: DatasetKey[] = ["flight_db", "hotel_live_prices", "restaurant_booking_status", "price_history"];
 const LS_PREFIX = "sgds:v1:";
 
 const cache: Partial<Record<DatasetKey, unknown>> = {};
@@ -32,6 +32,7 @@ const statuses: Record<DatasetKey, DatasetStatus> = {
   flight_db: "idle",
   hotel_live_prices: "idle",
   restaurant_booking_status: "idle",
+  price_history: "idle",
 };
 const appliers: Partial<Record<DatasetKey, ((data: unknown) => void)[]>> = {};
 let version = 0;

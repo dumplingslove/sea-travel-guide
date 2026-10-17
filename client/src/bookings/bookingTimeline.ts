@@ -633,6 +633,14 @@ function flightDbDay(seg: string, date: string): FlightDbDay | null {
   return segs?.[seg]?.days?.[date] ?? null;
 }
 
+/** 某航段某天是否已实查过（区分「还没查」与「查了但没有这班」）。 */
+export function flightDbQueriedAt(dbSeg: string, date: string): string | null {
+  const day = flightDbDay(dbSeg, date);
+  if (!day) return null;
+  const raw = day.economy_queried_at || day.business_queried_at || "";
+  return raw ? toPDT(raw) : null;
+}
+
 /**
  * 行动安排页：收藏航班的实时价格重查（2026-10-03 用户：收藏后价格涨跌要能追踪，什么时候该买）。
  * 按（航段代码，日期，航班号）在 Google Flights 航班库里找最新实查价；

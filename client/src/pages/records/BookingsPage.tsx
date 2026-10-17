@@ -43,7 +43,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
@@ -1156,6 +1156,66 @@ function FlightPriceTimeline({ route, date, flightNo, cabin, favPrice, livePrice
 
 
 /** 收藏项的实时价格行：航班查航班库最新实查价（带涨跌），酒店查实查房价，餐厅/景点显示预订政策 */
+/* ---------- 价格走势（2026-10-16 用户：每天都在查，为什么不画历史趋势） ----------
+ * 数据来自 price_history 数据集：航班=历轮 Google Flights 批次按 (航段|日期|航班号|舱位) 汇成，
+ * 酒店=历轮查价的基础房每晚价 / Google 基准价。点位粒度为自然日，≥2 点才画。 */
+type PricePoint = [string, number];
+
+interface PriceHistoryData {
+  flights: Record<string, PricePoint[]>;
+  hotels: Record<string, { baseline?: PricePoint[]; base?: PricePoint[] }>;
+}
+
+function priceHistory(): PriceHistoryData | null {
+  return getDataset<PriceHistoryData>("price_history") ?? null;
+}
+
+function normHotelKey(s: string): string {
+  return s.replace(/[一-鿿]+/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function PriceSpark({ points, caption }: { points: PricePoint[]; caption: string }) {
+  if (points.length < 2) return null;
+  const W = 132;
+  const H = 30;
+  const PAD = 3;
+  const prices = points.map((p) => p[1]);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const span = max - min || 1;
+  const x = (i: number) => PAD + (i * (W - PAD * 2)) / (points.length - 1);
+  const y = (v: number) => H - PAD - ((v - min) / span) * (H - PAD * 2);
+  const line = points.map((p, i) => `${x(i)},${y(p[1])}`).join(" ");
+  const first = prices[0]!;
+  const last = prices[prices.length - 1]!;
+  const diff = last - first;
+  const pct = first ? Math.round((diff / first) * 100) : 0;
+  return (
+    <div className="mt-1.5 flex items-center gap-2">
+      <svg width={W} height={H} className="shrink-0" aria-hidden="true">
+        <polyline points={line} fill="none" stroke="#0f766e" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
+        <circle cx={x(points.length - 1)} cy={y(last)} r="2.6" fill="#0f766e" />
+        <circle cx={x(prices.indexOf(min))} cy={y(min)} r="2.2" fill="#94a3b8" />
+        <circle cx={x(prices.indexOf(max))} cy={y(max)} r="2.2" fill="#94a3b8" />
+      </svg>
+      <div className="text-[11px] leading-tight text-gray-500 min-w-0">
+        <div>
+          {caption}：最低 <span className="font-semibold text-gray-700">${Math.round(min)}</span> · 最高{" "}
+          <span className="font-semibold text-gray-700">${Math.round(max)}</span>
+          {diff !== 0 && (
+            <span className={diff > 0 ? "text-red-600 font-medium" : "text-green-700 font-medium"}>
+              {" "}· 期间{diff > 0 ? "▲" : "▼"} {Math.abs(pct)}%
+            </span>
+          )}
+        </div>
+        <div className="text-gray-400">
+          {points[0]![0].slice(5)} 起共 {points.length} 次实查 · 最近 {points[points.length - 1]![0].slice(5)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; type: string; city: string; segs: PlanSegment[]; flight?: {
   carrier?: string; flight?: string; depart?: string; arrive?: string; arrivePlusDay?: boolean;
   price?: number; cabin?: string; route?: string; date?: string; priceBasis?: string; queriedAt?: string;
@@ -1171,6 +1231,18 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
       const snapPrice = flight.price;
       const livePrice = live ? (flight.cabin === "biz" ? live.bizPrice : live.price) : null;
       const delta = livePrice != null && snapPrice != null ? Math.round(livePrice - snapPrice) : null;
+      /* 历史走势：优先这班自己的序列，不够点时退本段最低价序列 */
+      const spark = (() => {
+        const hist = priceHistory();
+        if (!hist || !leg?.dbSeg || !qDate) return null;
+        const cabinKey = flight.cabin === "biz" ? "business" : "economy";
+        const fnoKey = (flight.flight || "").replace(/\s+/g, "").toUpperCase();
+        const own = hist.flights[`${leg.dbSeg}|${qDate}|${fnoKey}|${cabinKey}`];
+        if (own && own.length >= 2) return <PriceSpark points={own} caption="这班的历史价" />;
+        const segMin = hist.flights[`${leg.dbSeg}|${qDate}|*|${cabinKey}`];
+        if (segMin && segMin.length >= 2) return <PriceSpark points={segMin} caption="本段最低价走势" />;
+        return null;
+      })();
       return (
         <div className="text-xs text-gray-600 mt-1">
           ✈️ <span className="font-semibold">{flight.carrier} {flight.flight}</span>
@@ -1192,8 +1264,15 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
             </span>
           )}
           {qDate && <span className="text-gray-400"> · {qDate}</span>}
-          {dateMoved && <span className="text-amber-600"> · 行程已调，按新日期重查</span>}
+          {dateMoved && livePrice == null && (
+            <span className="text-amber-600">
+              {" "}· {leg?.dbSeg && qDate && flightDbQueriedAt(leg.dbSeg, qDate)
+                ? "新日期已实查，暂未见这班"
+                : "行程已调，按新日期重查"}
+            </span>
+          )}
           <span className="text-gray-400"> · Google Flights</span>
+          {spark}
         </div>
       );
     }
@@ -1235,6 +1314,14 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
               <span className="text-gray-400" title="Google baseline 不含税，Trip.com 每晚价税费口径未明确，口径不一致时不直接计算差额"> · 口径不同，未算差价</span>
             </div>
           )}
+          {(() => {
+            const hist = priceHistory();
+            const hk = hist?.hotels[normHotelKey(name)];
+            if (!hk) return null;
+            if (hk.base && hk.base.length >= 2) return <PriceSpark points={hk.base} caption="基础房每晚价走势" />;
+            if (hk.baseline && hk.baseline.length >= 2) return <PriceSpark points={hk.baseline} caption="Google 基准价走势" />;
+            return null;
+          })()}
         </div>
       );
     }
