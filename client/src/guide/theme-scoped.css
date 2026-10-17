@@ -548,11 +548,11 @@
   .guide-scope .itemcard{grid-template-columns:290px minmax(0,1fr)}
   .guide-scope .itemmedia{min-height:0}
   /* rich 目录（酒店/餐厅/景点卡）：侧栏图会被卡片正文撑成竖长条——桌面改顶部横幅图 */
-  .guide-scope .catalog.rich .itemcard{grid-template-columns:1fr;grid-template-rows:auto auto}
-  .guide-scope .catalog.rich .itemmedia{height:auto;min-height:0}
-  /* 图片按原始比例整图显示，不再定高裁切（2026-10-16 用户：矮横幅把图切得看不全）；
-     只有超高图才封顶 460px 并用 contain 保证整图可见 */
-  .guide-scope .catalog.rich .itemmedia img{height:auto;max-height:460px;object-fit:contain}
+  .guide-scope .catalog.rich .itemcard{grid-template-columns:1fr;grid-template-rows:360px auto}
+  .guide-scope .catalog.rich .itemmedia{height:360px;min-height:0}
+  /* 图片定高填充显示（2026-10-16 用户定稿）：要有固定高度保证卡片等高，但不能
+     用很窄的矮条（此前 190/230px 把图切得看不全），也不要按原图高度撑得卡片
+     高高低低、更不要 contain 留黑边——定高 360/320px + 基础 cover 填充即可 */
   /* 横幅布局下正文占整行，原「18px 18px 18px 0」是给左侧图栏留的、左边距为 0——
      文字贴边快出框（2026-10-16 用户指出）；改四边均匀内边距 */
   .guide-scope .catalog.rich .itemcard>div:last-child{padding:18px 20px 20px}
@@ -561,7 +561,7 @@
   .guide-scope .maincontent,.guide-scope .page{max-width:80rem}
   .guide-scope .research-page{max-width:80rem}
   .guide-scope .catalog.rich{grid-template-columns:1fr 1fr}
-  .guide-scope .catalog.rich .itemcard{grid-template-rows:auto auto}
-  .guide-scope .catalog.rich .itemmedia{height:auto}
+  .guide-scope .catalog.rich .itemcard{grid-template-rows:320px auto}
+  .guide-scope .catalog.rich .itemmedia{height:320px}
   .guide-scope .catalog.rich>.detail-inline{grid-column:1/-1}
 }
