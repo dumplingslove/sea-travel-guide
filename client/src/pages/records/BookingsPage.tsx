@@ -1981,6 +1981,7 @@ function BookingsCalendar() {
       </div>
       <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
+        <span><span className="inline-block w-2.5 h-2.5 rounded-sm mr-1" style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", verticalAlign: "-1px" }} />绿底 = 这天有已确认的预定</span>
         <span className="text-teal-800 font-medium">🏨 已订酒店</span>
         <span className="text-amber-600 font-medium">🏨 未订酒店</span>
         <span>🌙 飞机上过夜</span>
@@ -2027,22 +2028,25 @@ function BookingsCalendar() {
                 const booked = hotelNights.has(k);
                 const isSel = selDay === k;
                 const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
+                /* 已订高亮（2026-10-17 用户）：这天有已确认预订 → 格子绿底；有已出票航班 → 航班腿靛蓝加粗带 ✅ */
+                const hasBooking = dayEvents.length > 0;
+                const hasFlight = dayEvents.some((e) => e.kind === "flight");
                 const prevCity = dayCity.get(addDayStr(k, -1));
                 return (
-                  <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
+                  <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}${hasBooking ? " booked" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
                     <span className="wz-caldate">{dateNum}</span>
                     {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
                     {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
                     {tr && tr.map((l, li) => l.mode === "rail" ? (
                       <span key={li} className="wz-calleg rail">🚄 {l.label}</span>
                     ) : (
-                      <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>
+                      <span key={li} className="wz-calleg" style={hasFlight ? { color: "#4338ca", fontWeight: 700 } : undefined}>✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em>{hasFlight ? " · ✅ 已出票" : ""}</span>
                     ))}
                     {city != null && !isPlane && (booked || hotelNeedByDay.get(k) !== false) && (
                       <span className="wz-calleg" style={{ color: booked ? "#0f766e" : "#d97706", fontWeight: 600 }}>{booked ? "🏨 已订酒店" : "🏨 未订酒店"}</span>
                     )}
                     {nonHotel.length > 0 && (
-                      <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}</span>
+                      <span className="wz-calleg" style={hasFlight ? { color: "#4338ca", fontWeight: 600 } : { color: "#64748b" }}>{nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}</span>
                     )}
                   </button>
                 );
@@ -2111,6 +2115,8 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
     recordId?: number;
     pointsTag?: string | null;
     pointsText?: string | null;
+    /* 机票卡特殊颜色高亮（2026-10-17 用户）：已出票的航班一眼区分 */
+    isFlight?: boolean;
   }
 
   const items: FinalItem[] = [];
@@ -2149,6 +2155,7 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
       code: data.code,
       lines,
       recordId: row.id,
+      isFlight: data.bkind === "transport",
       /* 航班类最终预定带积分兑换标签（2026-10-17 用户）：从标题/补充/备注里认航司，
          与预定筛选同一套标签实现（GuideApp.carrierPointsTag） */
       pointsTag:
@@ -2196,6 +2203,7 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
               className={`bg-white rounded-xl border-2 px-4 py-3 ${
                 isOpen ? "border-emerald-500" : "border-emerald-200"
               }`}
+              style={it.isFlight ? { borderLeft: "6px solid #6366f1" } : undefined}
             >
               <button
                 className="w-full text-left"
@@ -2208,6 +2216,9 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${it.badgeCls}`}>
                         {it.kindLabel}
                       </span>
+                      {it.isFlight && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">✅ 已出票</span>
+                      )}
                       <span className="text-sm font-bold text-gray-900">{it.title}</span>
                     </div>
                     {it.headLine && (
