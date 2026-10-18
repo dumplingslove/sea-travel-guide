@@ -6,7 +6,7 @@
  * - title = 预订名称，body = BookingData JSON，done = 已确认，day = 关联天数。
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -2067,9 +2067,12 @@ function BookingsCalendar() {
                     ) : (
                       <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>
                     ))}
-                    {dayEvents.filter((e) => e.kind === "flight").map((e, fi) => (
-                      <span key={`fe${fi}`} className="wz-calleg" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
-                    ))}
+                    {dayEvents.filter((e) => e.kind === "flight").map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
+                      <Fragment key={`fe${fi}`}>
+                        <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
+                        {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
+                      </Fragment>
+                    ); })}
                     {nonHotel.filter((e) => e.kind !== "flight").length > 0 && (
                       <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.filter((e) => e.kind !== "flight").map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel.find((e) => e.kind !== "flight")!.title}</span>
                     )}

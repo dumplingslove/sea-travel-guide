@@ -602,9 +602,9 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
 .wz-legbadge{font-size:13px}
 .wz-unical{display:flex;flex-direction:column;gap:20px;margin-bottom:8px}
 .wz-calmonth h4{margin:0 0 8px;font-size:15px}
-.wz-calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wz-calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .wz-calwd{text-align:center;font-size:12px;color:#94a3b8;padding:4px 0}
-.wz-calday{position:relative;min-height:64px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:12px}
+.wz-calday{position:relative;min-height:64px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:12px;min-width:0;overflow:hidden}
 .wz-calday.empty{border:none;background:transparent;cursor:default}
 .wz-calday.off{border-style:dashed;background:#f8fafc;cursor:default}
 .wz-calday.off .wz-caldate{color:#cbd5e1;font-weight:400}
@@ -613,7 +613,7 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
 .wz-caldate{font-weight:700;font-size:14px}
 .wz-calcity{font-size:11px;color:#475569;line-height:1.2;text-align:center}
 .wz-calnote{font-size:9px;color:#94a3b8;line-height:1.2;text-align:center}
-.wz-calleg{display:block;font-size:10px;line-height:1.35;color:#334155;text-align:center}
+.wz-calleg{display:block;font-size:10px;line-height:1.35;color:#334155;text-align:center;overflow-wrap:anywhere;max-width:100%}
 .wz-calleg em{font-style:normal;font-size:9px;color:#64748b;background:#f1f5f9;border-radius:4px;padding:0 3px;white-space:nowrap}
 .wz-calleg em.on{color:#4338ca;background:#e0e7ff;font-weight:700}
 .wz-calleg.rail{color:#065f46;font-weight:600}
@@ -627,6 +627,12 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
   .wz-calday{min-height:56px}
   .wz-caldate{font-size:13px}
   .wz-calcity{font-size:10px}
+  .wz-calleg{font-size:9px;line-height:1.3}
+  .wz-calleg em{font-size:8px}
+  /* 2026-10-18 用户抓包：手机上日历少一列——nowrap 的签（❗机票未订/🌙飞机上过夜）
+     把格子最小宽度撑过屏宽，第七列被挤出屏幕。窄屏允许签内换行，不许撑宽网格 */
+  .wz-catchip{white-space:normal;overflow-wrap:anywhere;text-align:center}
+  .wz-calleg em{white-space:normal;overflow-wrap:anywhere}
 }
 
 /* ============ 2026-10-03 用户：转场航班卡默认折叠（一行摘要，点开展开详情） ============ */
