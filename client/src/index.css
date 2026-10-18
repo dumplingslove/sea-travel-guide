@@ -42,7 +42,8 @@ body {
 .wz-calday.off .wz-caldate{color:#cbd5e1;font-weight:400}
 .wz-calday.critical{background:#fef2f2;border-color:#fca5a5}
 .wz-calday.warn{background:#fffbeb;border-color:#fcd34d}
-.wz-calday.booked{background:#ecfdf5;border-color:#6ee7b7}
+.wz-catchips{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:1px}
+.wz-catchip{font-size:10px;line-height:1.2;padding:1px 4px;border-radius:999px;font-weight:600;white-space:nowrap}
 .wz-calday.sel{box-shadow:0 0 0 2px #0f766e inset;border-color:#0f766e}
 .wz-caldate{font-weight:700;font-size:14px}
 .wz-calcity{font-size:11px;color:#475569;line-height:1.2;text-align:center}

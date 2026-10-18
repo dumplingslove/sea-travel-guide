@@ -27,6 +27,9 @@ export function applyCloudDayOverride(
     return {
       ...base,
       title: "抵达新加坡 · 滨海湾",
+      tip:
+        base.tip +
+        "雨天室内备选再加一个：亚洲文明博物馆敦煌特展（四座复制洞窟，展期 2026-09-25 至 2027-03-07，正覆盖这几天），就在滨海湾一带。（2026-10-17 发现轮换）",
       stops: base.stops.map((s) =>
         s.name === "富国岛飞新加坡"
           ? {
@@ -40,8 +43,10 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 新加坡第2天（12/8）：Candlenut 盯放号提醒
-  if (cityZh === "新加坡" && ordinalInCity === 1) {
+  // 新加坡 12/8（ordinal 2）：Candlenut 盯放号提醒
+  // （2026-10-17 主 agent 修正：旧版按新加坡 12-07 起算写的 ordinal 1/2，与现行 schedule
+  //  12-06 起算差一天，Candlenut/Jumbo 两条注记此前都落在提前一天的页面上）
+  if (cityZh === "新加坡" && ordinalInCity === 2) {
     return {
       ...base,
       food:
@@ -50,8 +55,8 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 新加坡第3天（12/9）：Jumbo Seafood 已订位
-  if (cityZh === "新加坡" && ordinalInCity === 2) {
+  // 新加坡 12/9（ordinal 3）：Jumbo Seafood 已订位
+  if (cityZh === "新加坡" && ordinalInCity === 3) {
     return {
       ...base,
       food:
@@ -94,8 +99,9 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 普吉首日（12/12）：PRU 晚餐已订
-  if (cityZh === "普吉" && ordinalInCity === 0) {
+  // 普吉 12/12（ordinal 1）：PRU 晚餐已订
+  // （2026-10-17 修正：旧版 ordinal 0 按普吉 12-12 起算，与现行 schedule 12-11 起算差一天）
+  if (cityZh === "普吉" && ordinalInCity === 1) {
     return {
       ...base,
       food:
@@ -111,7 +117,29 @@ export function applyCloudDayOverride(
       ...base,
       tip:
         base.tip +
-        "研究建议攀牙湾与皮皮岛二选一即可：连排两天跳岛强度大（今日 06:30 出海），体力不够可把今天换成普吉老镇深度＋海滩休息。",
+        "研究建议攀牙湾与皮皮岛二选一即可：连排两天跳岛强度大（今日 06:30 出海），体力不够可把今天换成普吉老镇深度＋海滩休息。" +
+        "另：今天是周日，普吉镇老街有周日夜市（2026 年初新铺了步行街面）；但今晚入住岛北 Mai Khao 的 JW 万豪，往返车程远，不顺路就别专程跑。（2026-10-17 发现轮换）",
+    };
+  }
+
+  // 首尔 12/31（ordinal 1）：冬季庆典清溪川灯节（2026-10-17 发现轮换 round 332 实读）
+  if (cityZh === "首尔" && ordinalInCity === 1) {
+    const stops = [...base.stops];
+    const idx = stops.findIndex((s) => s.name.includes("北村"));
+    const lantern = {
+      time: "15:45",
+      name: "清溪川 · 首尔灯节",
+      detail:
+        "首尔冬季庆典（2026-12-04 至 2027-01-31）的主场之一：清溪川沿岸整段灯饰与灯光作品，户外免费、路面平坦可推车，傍晚早场人最少，正好接在光化门/北村动线后面。灯节确切场次以官方临行公告为准。",
+    };
+    if (idx >= 0) stops.splice(idx + 1, 0, lantern);
+    else stops.push(lantern);
+    return {
+      ...base,
+      stops,
+      tip:
+        base.tip +
+        "【冬季庆典】12-31 晚普信阁有跨年敲钟，人极密又严寒，带娃别去挤；看灯走清溪川傍晚场即可。若不想上南山排队，备选石村湖灯光庆典（蚕室，10 月至次年 2 月整季，湖边平坦好推车，紧邻乐天世界塔可进室内取暖）。（2026-10-17 发现轮换）",
     };
   }
 
