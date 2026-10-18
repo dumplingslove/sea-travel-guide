@@ -2062,12 +2062,36 @@ function BookingsCalendar() {
                     <span className="wz-caldate">{dateNum}</span>
                     {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
                     {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
-                    {tr && tr.map((l, li) => l.mode === "rail" ? (
-                      <span key={li} className="wz-calleg rail">🚄 {l.label}</span>
-                    ) : (
-                      <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>
-                    ))}
-                    {dayEvents.filter((e) => e.kind === "flight").map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
+                    {tr && (() => {
+                      /* 精简（2026-10-18 用户）：已订的腿只显示航班号一行，原来的「哪到哪」路线行不再重复；
+                         未订的腿保留路线行（下方红色 ❗ 签会说明未订）。过夜标注是睡觉信息、保留不删。
+                         记录标题对不上路线的兜底情形维持旧显示（腿行+事件行都在），不丢信息。 */
+                      const flightEvs = dayEvents.filter((e) => e.kind === "flight");
+                      const usedEv = new Set<number>();
+                      const legRows = tr.map((l, li) => {
+                        if (l.mode === "rail") return <span key={li} className="wz-calleg rail">🚄 {l.label}</span>;
+                        const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
+                        const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
+                        if (ei >= 0 && fm) {
+                          usedEv.add(ei);
+                          return <span key={li} className="wz-calleg" style={{ color: "#4f46e5" }}>✈️ {fm[0]} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>;
+                        }
+                        return <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>;
+                      });
+                      const extraEvs = flightEvs.filter((_, i) => !usedEv.has(i));
+                      return (
+                        <>
+                          {legRows}
+                          {extraEvs.map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
+                            <Fragment key={`fe${fi}`}>
+                              <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
+                              {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
+                            </Fragment>
+                          ); })}
+                        </>
+                      );
+                    })()}
+                    {!tr && dayEvents.filter((e) => e.kind === "flight").map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
                       <Fragment key={`fe${fi}`}>
                         <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
                         {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
@@ -2106,10 +2130,10 @@ function BookingsCalendar() {
             </p>
           ))}
           {(() => {
+            /* 精简（2026-10-18 用户）：已出票的腿下方明细里有带航班号的记录，不再单列「已出票」状态行；
+               只有还没订的腿保留这一行，红色叹号提醒 */
             const st = dayFlightState(selTransfer, selEvents);
-            return st.fl.map((l, li) => st.booked[li] ? (
-              <p key={li} className="text-xs text-gray-600">✈️ {l.label}：已出票（见下方明细）</p>
-            ) : (
+            return st.fl.map((l, li) => st.booked[li] ? null : (
               <p key={li} className="text-xs font-semibold text-red-600">❗ {l.label}：还没订</p>
             ));
           })()}
