@@ -170,6 +170,35 @@ export default function Login() {
             >
               {loading ? "发送中..." : "发送登录链接"}
             </button>
+
+            {/* 2026-10-17 用户在 iPad 上找不到粘贴框（此前只在「已发送」视图里出现，
+                没点发送就看不到）——改为登录页常显：已有登录邮件的人直接粘贴登录 */}
+            <div className="border-t border-gray-100 pt-3">
+              <p className="text-xs text-gray-500">
+                已经收到过登录邮件？在邮件里<b>长按登录链接 → 拷贝</b>（不要点开），粘贴到这里直接登录（桌面 App 必须用这个方式）：
+              </p>
+              {pasteError && (
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 text-red-700 text-sm mt-2">
+                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                  <span>{pasteError}</span>
+                </div>
+              )}
+              <textarea
+                value={pasted}
+                onChange={(e) => setPasted(e.target.value)}
+                placeholder="把拷贝的登录链接粘贴到这里"
+                rows={3}
+                className="w-full mt-2 px-3 py-2 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-600 break-all"
+              />
+              <button
+                type="button"
+                onClick={handlePasteLogin}
+                disabled={pasting}
+                className="w-full py-2 mt-2 rounded-lg bg-white border border-teal-700 text-teal-800 text-sm font-medium hover:bg-teal-50 disabled:opacity-60"
+              >
+                {pasting ? "登录中..." : "用粘贴的链接登录"}
+              </button>
+            </div>
           </form>
         )}
 

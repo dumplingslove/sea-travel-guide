@@ -607,6 +607,22 @@ function FavoriteActionList({
   /* 2026-10-17 用户：追踪地图要能按城市聚焦看——选一个城市，地图只框这座城：
      收藏+候选酒店全标注、该城全部景点也标注，方便比较酒店在岛上/城里的分布、离景点远近 */
   const [mapCity, setMapCity] = useState<string | null>(null);
+  /* 2026-10-17 用户：价格追踪页顶部要有城市导航（吸顶、跟其他页面类似的 chips UI），
+     点城市直接跳到该城在时间线上的区块，不用自己划半天。 */
+  const [navCity, setNavCity] = useState<string | null>(null);
+  const CITYNAV_H = 46;
+  const stickyBase = mapStickyTop ?? 0;
+  const jumpToCity = (c: string) => {
+    setNavCity(c);
+    setMapCity(c);
+    requestAnimationFrame(() => {
+      const els = Array.from(document.querySelectorAll<HTMLElement>("[data-city-section]"));
+      const el =
+        els.find((e) => e.dataset.citySection === c) ??
+        els.find((e) => (e.dataset.citySection || "").includes(c));
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
   const mapCities = useMemo(() => [...new Set(segs.map((s) => s.city))], [segs]);
   // favs 每 render 都是新数组引用，用内容签名做 memo key，避免地图 markers 无意义重建
   const favSig = favs.map((f) => `${f.type}:${f.row.title}:${itemCity(f)}:${f.flight?.route ?? ""}`).join("|");
@@ -795,16 +811,56 @@ function FavoriteActionList({
   const anyVisible = journeySections.some((sec) =>
     sec.items.some((f) => typeFilter === "all" || f.type === typeFilter),
   );
-  /** 按名称找攻略详情（酒店/餐厅/景点） */
+  /** 按名称找攻略详情（酒店/餐厅/景点）。2026-10-17 修：此前只做全名精确匹配，
+   * 收藏标题写法稍有出入（标点/空格/中英文名）就匹配不到、酒店卡连「详情」按钮都不出现，
+   * 用户只能跑去详情页看——改为精确优先、规范化（去标点空格大小写）兜底、包含关系再兜底，
+   * 身份由名称本身推导，不写死名单。 */
   const findDetail = (name: string, type: string) => {
-    if (type === "hotel") return hotels.find((h) => h.name === name);
-    if (type === "restaurant") return restaurants.find((r) => r.name === name);
-    if (type === "attraction") return attractions.find((a) => a.name === name);
-    return undefined;
+    const list = type === "hotel" ? hotels : type === "restaurant" ? restaurants : type === "attraction" ? attractions : null;
+    if (!list) return undefined;
+    const exact = list.find((h) => h.name === name);
+    if (exact) return exact;
+    const norm = (s: string) => s.toLowerCase().replace(/[\s·・—–\-_,，.。&＆()（）「」'']/g, "");
+    const n = norm(name);
+    return (
+      list.find((h) => norm(h.name) === n) ??
+      list.find((h) => norm(h.name).includes(n) || n.includes(norm(h.name)))
+    );
   };
 
   return (
     <div className="mb-6">
+      {/* 城市导航（2026-10-17 用户）：吸在页面最顶部（预订菜单之下），点城市跳到该城区块，
+          同时联动地图聚焦；chips 样式与本页地图聚焦/类别筛选一致 */}
+      <div
+        className="sticky z-30 bg-[#f7f4ee]/95 backdrop-blur-sm py-1.5 -mt-1 mb-2"
+        style={{ top: stickyBase }}
+      >
+        <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap">
+          <span className="text-xs text-gray-500 font-medium shrink-0">🧭 城市</span>
+          {mapCities.map((c) => (
+            <button
+              key={c}
+              onClick={() => jumpToCity(c)}
+              className={`px-2.5 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap shrink-0 ${
+                navCity === c
+                  ? "bg-teal-700 text-white border-teal-700"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-teal-600"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+          {navCity && (
+            <button
+              onClick={() => { setNavCity(null); setMapCity(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              className="px-2.5 py-1.5 rounded-full text-xs font-medium border border-gray-200 bg-white text-gray-400 whitespace-nowrap shrink-0"
+            >
+              ↑ 回顶部
+            </button>
+          )}
+        </div>
+      </div>
       {/* 页头（2026-10-16 用户要求 redesign）：白卡 + 数据 chips + 类别筛选，
           不再用琥珀色横幅和整段说明文字墙；细则收进一行小字 */}
       <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3.5 mb-4 shadow-[0_1px_3px_rgba(16,47,62,0.06)]">
@@ -885,7 +941,7 @@ function FavoriteActionList({
         }
         title="🗺️ 价格追踪地图"
         storageKey="sticky-map-bookings"
-        stickyTop={mapStickyTop}
+        stickyTop={stickyBase + CITYNAV_H}
       />
 
       {!anyVisible && (
@@ -899,7 +955,7 @@ function FavoriteActionList({
           /* 空骨架节点：全部模式下留一行细字让时间轴读得连贯；按类别筛选时直接隐藏 */
           if (typeFilter !== "all" || sec.kind === "other") return null;
           return (
-            <div key={sec.key} className="mb-2.5 flex items-center gap-3 text-gray-400">
+            <div key={sec.key} data-city-section={sec.label} className="mb-2.5 flex items-center gap-3 text-gray-400" style={{ scrollMarginTop: stickyBase + CITYNAV_H + 8 }}>
               <div className={`w-3 h-3 rounded-full shrink-0 ${sec.kind === "leg" ? "bg-sky-300" : "bg-teal-200"}`} />
               {sec.kind === "leg" ? (
                 <span className="text-sm">
@@ -918,7 +974,7 @@ function FavoriteActionList({
           );
         }
         return (
-        <div key={sec.key} data-city-section={sec.label} className="mb-5">
+        <div key={sec.key} data-city-section={sec.label} className="mb-5" style={{ scrollMarginTop: stickyBase + CITYNAV_H + 8 }}>
           {/* 骨架节点头：路段=蓝点（路线+日期），住段=青点（城市+日期范围） */}
           <div className="flex items-center gap-3 mb-2">
             <div className="flex flex-col items-center">
@@ -1080,7 +1136,7 @@ function FavoriteActionList({
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
                         {/* 2026-10-03 用户：行动安排里所有类型都就地展开看详情，不跳详情页（返回位置修不好就别跳） */}
-                        {detail && f.type !== "flight" && (
+                        {(detail || f.type === "hotel") && f.type !== "flight" && (
                           <button
                             onClick={() => setExpandedId(isOpen ? null : f.row.id)}
                             className="px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200"
@@ -1228,13 +1284,15 @@ function FavoriteActionList({
                         </div>
                       )}
                       {/* 2026-10-03 用户：酒店/餐厅/景点也在行动安排里就地展开看详情，不跳页 */}
-                      {isOpen && f.type !== "flight" && detail && (
+                      {isOpen && f.type !== "flight" && (detail || f.type === "hotel") && (
                         <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
-                          {(() => {
-                            const d = detail as { meta?: string; detail?: string; best?: string };
+                          {detail && (() => {
+                            const d = detail as { meta?: string; detail?: string; best?: string; hotelHighlight?: string; hotelAcclaim?: string };
                             return (<>
+                              {d.hotelHighlight && <p><b className="text-gray-700">✨ 亮点</b> {d.hotelHighlight}</p>}
                               {d.detail && <p>{d.detail}</p>}
                               {d.meta && <p className="text-gray-500">{d.meta}</p>}
+                              {d.hotelAcclaim && <p><b className="text-gray-700">🏆 公认口碑</b> {d.hotelAcclaim}</p>}
                               {d.best && <p className="text-teal-700">💡 {d.best}</p>}
                             </>);
                           })()}
