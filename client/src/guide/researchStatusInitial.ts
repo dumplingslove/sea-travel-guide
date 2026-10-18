@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T02:30:52Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T03:30Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -5957,7 +5957,7 @@ export const initialResearchStatus = {
    "total": 22
   },
   "singapore": {
-   "complete": 26,
+   "complete": 31,
    "items": [
     {
      "name": "Raffles Singapore 莱佛士",
@@ -6966,10 +6966,195 @@ export const initialResearchStatus = {
        "note": "2026-10-08 data.ts detail 已更新全套研究结论（小红书倾向/OTA评分/奖项/早餐政策/短板），结论定调：谨慎选择（避雷向）"
       }
      }
+    },
+    {
+     "name": "Grand Hyatt Singapore 新加坡君悦酒店",
+     "note": "凯悦旗舰，10 Scotts Road，1971 年开业、2025-07-01 全店翻新完成重开（2026-10-17 新增；全套研究完成：小红书 3 篇/TA/GM/Trip.com/照片 14 张/价格实查均已上站）",
+     "type": "酒店",
+     "chain": "Hyatt",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：4.5/5，新加坡第 72/365；证据：hidden_files/grand-hyatt-singapore-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 实查：4.4/5、2,384 条（place_id 625895295469687）；Google Hotels 4.5/约 6,800 条"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17：Trip.com 9.3/10、1,240 条，含带日期中文住客评价；证据见研究包 §4"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 避雷）：高热量小杨《新加坡乌节路君悦 避雷！！》（2025-07-22，避雷）、窝补药住宿舍啊！！《大学生酒店测评：新加坡君悦》（2026-09-01，推荐）、Y2K去哪里《新加坡Grand Hyatt重装后首住体验》（2026-08-16，推荐）。结论：谨慎选择（地段/酒廊/早餐强，清扫推门闯入与押金问题两帖互证）。证据：hidden_files/grand-hyatt-singapore-research/xhs-evidence.md",
+       "posts": 3,
+       "target": 3
+      },
+      "photos": {
+       "status": "done",
+       "note": "2026-10-17 逐张目验+来源页归属核对后选 14 张（候选池跨酒店污染严重，凑数图全弃），已接线 placeGalleries.ts g1777–g1790",
+       "target": 15,
+       "verified": 14
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（两翼结构/Grand Club/泳池/交通/避雷点）"
+      }
+     }
+    },
+    {
+     "name": "JW Marriott Hotel Singapore South Beach 新加坡南滩JW万豪酒店",
+     "note": "万豪 JW 品牌，30 Beach Road，2016 年更名开业，Foster + Starck 设计（2026-10-17 新增；全套研究完成：小红书 3 篇/TA/GM/Trip.com/照片 15 张/价格实查均已上站）",
+     "type": "酒店",
+     "chain": "Marriott",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：4.6/5、3,826 条，Best of the Best 新加坡奢华榜第 25；证据：hidden_files/jw-marriott-singapore-south-beach-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 实查 4.6/5（place_id 735177097568254）；Google Hotels 4.5/约 4,000 条"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17：Trip.com 9.3/10、417 条，含带日期中文评价回译；证据见研究包"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：yang🍓《新加坡JW万豪〰️小鱼尾狮》（2026-04-28）、七彩包《钛金实测｜新加坡南岸South Beach JW万豪》（2026-04-08）、么么哒《千万不要住新加坡jw万豪》（2026-10-08）。结论：推荐（酒廊与泳池强，房间小与保洁/服务稳定性是槽点）。证据：hidden_files/jw-marriott-singapore-south-beach-research/xhs-evidence.md",
+       "posts": 3,
+       "target": 3
+      },
+      "photos": {
+       "status": "done",
+       "note": "2026-10-17 逐张目验+来源页归属核对后选 15 张，已接线 placeGalleries.ts g1791–g1805",
+       "target": 15,
+       "verified": 15
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（酒廊/双泳池/交通/Titanium 预期管理）"
+      }
+     }
+    },
+    {
+     "name": "The St. Regis Singapore 新加坡瑞吉酒店",
+     "note": "万豪瑞吉品牌，29 Tanglin Rd，2008 年开业、2025 年底全面翻新完成（2026-10-17 新增；全套研究完成：小红书 3 篇/TA/GM/Trip.com/照片 15 张/价格实查均已上站）",
+     "type": "酒店",
+     "chain": "Marriott",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：4.5/5、约 4,230 条（TA 主页 403，数据取自区域站，已在研究包注明）；证据：hidden_files/st-regis-singapore-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 实查：4.4/5、1,719 条（place_id 5184919954954234）；Google Hotels 4.5/约 4,000 条"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17：Trip.com 9.0/10、266 条，8 条带日期中文评价回译（含批评面）；大众点评/马蜂窝未查到公开页；证据见研究包"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：王骁PIL《出差PLOG｜新加坡瑞吉》（2026-09-17，1030 赞）、小红薯64030D91《入住奢华酒店，但家人差点出人命》（2025-05-17，2292 赞，翻新前事故帖）、Liuxiaoyi《新加坡瑞吉🇸🇬翻新之后太好住了》（2026-07-24）。结论：推荐（翻新后性价比突出，事故帖与工地噪音如实标注）。证据：hidden_files/st-regis-singapore-research/xhs-evidence.md",
+       "posts": 3,
+       "target": 3
+      },
+      "photos": {
+       "status": "done",
+       "note": "2026-10-17 逐张目验+来源页归属核对后选 15 张，已接线 placeGalleries.ts g1821–g1835",
+       "target": 15,
+       "verified": 15
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（翻新/管家/无酒廊早餐口径/餐饮新名单/工地噪音）"
+      }
+     }
+    },
+    {
+     "name": "The Singapore EDITION 新加坡艾迪逊酒店",
+     "note": "万豪 EDITION 品牌，38 Cuscaden Rd，2023-11 开业，东南亚首店（2026-10-17 新增；全套研究完成：小红书 3 篇/TA/GM/Trip.com/照片 15 张/价格实查均已上站）",
+     "type": "酒店",
+     "chain": "Marriott",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：4.8/5、约 273 条（TA 直达 403，数据取自地区站页面，研究包已注明）；证据：hidden_files/singapore-edition-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 记录（place_id 964399288018487）评分字段为空、GM 原生评分未核实；Google Hotels 4.4/492 条为现行口径，已在网站如实标注"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17：Trip.com 9.1/10、约 510 条（子分 整洁 9.4/位置 9.2/设施 8.9/服务 8.8），含带日期中文差评（工地噪音/隔音/早餐）；大众点评/马蜂窝未查到公开页；证据见研究包"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "note": "2026-10-17 已登录老窗口实读 3 篇（1 推荐/2 中立偏负面）：谷大胖《🇸🇬被新加坡艾迪逊震撼到》（2026-02-08，586 赞）、希希李李李✨《小心‼️新加坡EDITION真的会乱收费‼️》（2025-08-11）、KFC在逃蛋挞《新加坡艾迪逊edition｜这次是真的天塌了》（2025-06-13，264 赞）。结论：谨慎选择（设计强，账单出错与无景观/隔音为槽点）。证据：hidden_files/singapore-edition-research/xhs-evidence.md",
+       "posts": 3,
+       "target": 3
+      },
+      "photos": {
+       "status": "done",
+       "note": "2026-10-17 逐张目验+来源页归属核对后选 15 张，已接线 placeGalleries.ts g1806–g1820",
+       "target": 15,
+       "verified": 15
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（Tanica 换牌/精英早餐缺失/账单提醒）"
+      }
+     }
+    },
+    {
+     "name": "W Singapore – Sentosa Cove 新加坡圣淘沙湾W酒店",
+     "note": "万豪 W 品牌，21 Ocean Way 圣淘沙湾，2012 年开业、2025 年翻新完成（2026-10-17 新增；全套研究完成：小红书 3 篇/TA/GM/Trip.com/照片 15 张/价格实查均已上站）",
+     "type": "酒店",
+     "chain": "Marriott",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：圣淘沙第 12/15；证据：hidden_files/w-singapore-sentosa-cove-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 实查：4.4/5、2,421 条（place_id 1411415109364981）；Google Hotels 4.5/约 3,600 条"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17：Trip.com 9.1/10、693 条，含带日期中文评价；证据见研究包"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "note": "2026-10-17 已登录老窗口实读 3 篇（1 推荐/2 不推荐）：涵《新加坡 W 酒店测评｜避开坑，你也能丝滑度假》（03-14）、YY行记《新加坡圣淘沙W的不太开心的staycation》（2025-05-12）、罗霸天🦖《圣淘沙W hotel 避雷》（2025-08-29，后两篇作于翻新完成前）。结论：谨慎选择（泳池与早餐强，位置与会员待遇为槽点）。证据：hidden_files/w-singapore-sentosa-cove-research/xhs-evidence.md",
+       "posts": 3,
+       "target": 3
+      },
+      "photos": {
+       "status": "done",
+       "note": "2026-10-17 逐张目验+来源页归属核对后选 15 张，已接线 placeGalleries.ts g1836–g1850",
+       "target": 15,
+       "verified": 15
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（WET 泳池/无酒廊/接驳/翻新时点标注）"
+      }
+     }
     }
    ],
    "name": "新加坡",
-   "total": 29
+   "total": 34
   },
   "seoul": {
    "name": "首尔",
@@ -8009,7 +8194,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 136,
+ "complete_items": 141,
  "summary": {
   "bangkok": {
    "total": 33,
@@ -8124,20 +8309,20 @@ export const initialResearchStatus = {
    "all_done": 0
   },
   "singapore": {
-   "total": 29,
-   "tripadvisor": 29,
-   "ta": 29,
-   "google_maps": 28,
-   "gm": 28,
-   "chinese_sites": 27,
-   "cs": 27,
-   "xiaohongshu": 29,
-   "xhs_done": 29,
-   "photos": 29,
-   "ph": 29,
-   "details": 29,
-   "de": 29,
-   "all_done": 26
+   "total": 34,
+   "tripadvisor": 34,
+   "ta": 34,
+   "google_maps": 33,
+   "gm": 33,
+   "chinese_sites": 32,
+   "cs": 32,
+   "xiaohongshu": 34,
+   "xhs_done": 34,
+   "photos": 34,
+   "ph": 34,
+   "details": 34,
+   "de": 34,
+   "all_done": 31
   },
   "seoul": {
    "total": 26,
@@ -8164,6 +8349,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 224,
- "updated_at": "2026-10-18T02:30:52Z"
+ "total_locations": 229,
+ "updated_at": "2026-10-18T03:30Z"
 };

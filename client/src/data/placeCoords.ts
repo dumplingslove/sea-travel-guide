@@ -43,6 +43,11 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Shangri-La Singapore 香格里拉", lat: 1.3114790, lng: 103.8264448, precision: "exact", note: "22 Orange Grove Road" },
       { name: "The Fullerton Hotel Singapore 新加坡富丽敦酒店", lat: 1.2862019, lng: 103.8530726, precision: "exact" },
       { name: "Andaz Singapore 新加坡安达仕酒店", lat: 1.29916, lng: 103.85786, precision: "exact", note: "5 Fraser Street（2026-10-14 新增：map.geocode FULL_ADDRESS relevance 100 命中，补此前 data.ts 有条目却无坐标、收藏地图静默缺钉）" },
+      { name: "Grand Hyatt Singapore 新加坡君悦酒店", lat: 1.30663, lng: 103.8331, precision: "exact", note: "10 Scotts Road（2026-10-17 新增：places 详情 place_id 625895295469687 核对）" },
+      { name: "JW Marriott Hotel Singapore South Beach 新加坡南滩JW万豪酒店", lat: 1.294533, lng: 103.855944, precision: "exact", note: "30 Beach Road（2026-10-17 新增：places 详情 place_id 735177097568254 核对）" },
+      { name: "The St. Regis Singapore 新加坡瑞吉酒店", lat: 1.305843, lng: 103.826025, precision: "exact", note: "29 Tanglin Road（2026-10-17 新增：places 详情 place_id 5184919954954234 核对）" },
+      { name: "The Singapore EDITION 新加坡艾迪逊酒店", lat: 1.3055, lng: 103.8273, precision: "exact", note: "38 Cuscaden Road（2026-10-17 新增：places 详情 place_id 964399288018487 核对）" },
+      { name: "W Singapore – Sentosa Cove 新加坡圣淘沙湾W酒店", lat: 1.246214, lng: 103.842424, precision: "exact", note: "21 Ocean Way（2026-10-17 新增：places 详情 place_id 1411415109364981 核对）" },
     ],
     restaurants: [
       { name: "Odette", lat: 1.2899467, lng: 103.851523, precision: "exact" },
