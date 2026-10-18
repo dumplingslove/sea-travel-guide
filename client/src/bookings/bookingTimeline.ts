@@ -286,7 +286,7 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
-/** 11 段：去程西雅图→北京（2026-11-28）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、曼谷→北京）、回程 2 段（西安→首尔、首尔→西雅图已出票）。
+/** 11 段：去程西雅图→北京（2026-11-28，已出票 HU496）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、曼谷→北京）、回程 2 段（西安→首尔、首尔→西雅图已出票）。
  * 2026-10-02 回程定死经首尔后旧 9 段回程候选已移除；2026-10-04 起全量以本数组为准；
  * 2026-10-13 行程改版（曼谷后分开行动）新增曼谷→北京段（用户一人，flight-db 已有 BKK-PEK 实查）；
  * 同日回程再改：不再分两路飞首尔——分开行动最后一天高铁 北京→西安汇合（非航班段、不入本数组）、
@@ -305,21 +305,18 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "11-28",
     day: 0,
     kind: "intl",
-    note: "去程国际段 · 一家三口（2大1小）",
-    carrier: "Hainan Airlines HU496",
-    schedule: "10:20→15:50+1",
-    priceNote: "3人 $1,631 起",
-    businessPriceNote: "3人 $12,534 起",
+    note: "✅ 已出票：Hainan Airlines HU496，确认号 NXK8WE，以出票邮件为准",
+    ticketed: true,
+    carrier: "Hainan Airlines",
+    schedule: "HU496 10:20 → 15:50+1",
+    priceNote: null,
+    businessPriceNote: null,
     direct: true,
-    fragile: true,
-    queriedAt: "2026-10-14 08:43 PDT",
+    fragile: false,
+    queriedAt: null,
     priceBasis: "2大1小总价",
-    options: [
-      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "待定", price: 1631, refundable: "not stated", changeable: "not stated", recommend: true, recommendReason: "当天唯一去程直飞；13h30m，白天出发、当地次日傍晚到；价格为 Google Flights 2026-10-14 实查 3 人整单 $1,631（含税）" },
-    ],
-    businessOptions: [
-      { carrier: "Hainan Airlines", flight: "HU496", depart: "10:20", arrive: "15:50", arrivePlusDay: true, stops: 0, bags: "待定", price: 12534, refundable: "not stated", changeable: "not stated", recommendReason: "同班商务舱；Google Flights 2026-10-14 实查 3 人整单 $12,534（含税）" },
-    ],
+    options: null,
+    businessOptions: null,
   },
   {
     id: "intl-out-bj",
