@@ -30,6 +30,10 @@ export interface BookingData {
   /** 确认号 */
   code?: string;
   note?: string;
+  /** 结构化明细（有序标签→值）：出票/订房的关键事实逐项存放（航线/机型/座位/行李/
+   * 总价/价格构成/订单号/客票号…），展开区按表格逐行渲染；note 只留真正的补充说明。
+   * 2026-10-18 用户：票的信息不要再是一段散文备注，要表格化、有 structure。 */
+  details?: Record<string, string>;
 }
 
 export const BOOKING_KIND_LABEL: Record<BookingKind, string> = {
@@ -90,6 +94,14 @@ export function formatBookingBody(d: BookingData): string {
     const v = d[k]?.trim();
     if (v) clean[k] = v;
   });
+  /* 结构化明细必须在编辑保存时原样保留，否则用户在弹窗里改个日期就会把整张票的明细冲掉 */
+  if (d.details && typeof d.details === "object") {
+    const det: Record<string, string> = {};
+    for (const [k, v] of Object.entries(d.details)) {
+      if (typeof v === "string" && v.trim()) det[k] = v.trim();
+    }
+    if (Object.keys(det).length) clean.details = det;
+  }
   return JSON.stringify(clean);
 }
 
@@ -100,7 +112,9 @@ export function bookingSummary(d: BookingData): string {
   if (d.date) parts.push(d.dateEnd ? `${d.date} → ${d.dateEnd}` : d.date);
   if (d.time) parts.push(d.timeEnd ? `${d.time}–${d.timeEnd}` : d.time);
   if (d.guests) parts.push(d.guests);
-  if (d.extra) parts.push(d.extra);
+  /* 个别记录的 extra 是 {标签: 值} 对象（FHR 酒店单），摘要里展开成值串，不许出现 [object Object] */
+  const ex = d.extra as unknown;
+  if (ex) parts.push(typeof ex === "string" ? ex : Object.values(ex as Record<string, string>).join(" · "));
   if (d.code) parts.push(`确认号 ${d.code}`);
   if (!parts.length && d.note) parts.push(d.note);
   return parts.join(" · ");

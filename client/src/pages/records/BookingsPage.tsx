@@ -21,7 +21,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT, CashTipChip, FlightBuyLink, HotelBookLinks } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT, CashTipChip, FlightBuyLink, HotelBookLinks } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -2287,7 +2287,13 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
     if (data.time)
       lines.push({ label: "时间", value: data.timeEnd ? `${data.time} – ${data.timeEnd}` : data.time });
     if (data.guests) lines.push({ label: fl.guests ?? "数量", value: data.guests });
-    if (data.extra) lines.push({ label: fl.extra ?? "补充信息", value: data.extra });
+    /* extra 两种形态：字符串按原标签一行；对象（FHR 酒店单的 {标签: 值}）逐项展开成行 */
+    const ex = data.extra as unknown;
+    if (typeof ex === "string" && ex) lines.push({ label: fl.extra ?? "补充信息", value: ex });
+    else if (ex && typeof ex === "object")
+      for (const [k, v] of Object.entries(ex as Record<string, string>)) lines.push({ label: k, value: String(v) });
+    /* 结构化明细逐行进表格（航线/机型/座位/行李/总价/订单号/客票号…），备注殿后 */
+    if (data.details) for (const [k, v] of Object.entries(data.details)) lines.push({ label: k, value: v });
     if (data.note) lines.push({ label: "备注", value: data.note });
     const head = [
       data.city,
@@ -2308,16 +2314,10 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
       lines,
       recordId: row.id,
       isFlight: data.bkind === "transport",
-      /* 航班类最终预定带积分兑换标签（2026-10-17 用户）：从标题/补充/备注里认航司，
-         与预定筛选同一套标签实现（GuideApp.carrierPointsTag） */
-      pointsTag:
-        data.bkind === "transport"
-          ? carrierPointsTag([row.title, data.extra ?? "", data.note ?? ""].join(" "))
-          : null,
-      pointsText:
-        data.bkind === "transport"
-          ? [row.title, data.extra ?? "", data.note ?? ""].join(" ")
-          : null,
+      /* 最终预定里的航班都是已出票的：不挂积分/现金买法建议（2026-10-18 用户铁律，
+         与日历当天明细同口径）——买法建议只留在预定筛选/价格追踪 */
+      pointsTag: null,
+      pointsText: null,
     });
   }
   items.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
@@ -2402,14 +2402,18 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
                       </div>
                     </div>
                   )}
-                  <dl className="space-y-1.5">
-                    {it.lines.map((ln, i) => (
-                      <div key={i} className="flex gap-2 text-sm">
-                        <dt className="text-gray-400 shrink-0 w-20">{ln.label}</dt>
-                        <dd className="text-gray-800 font-medium break-words min-w-0">{ln.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
+                  {/* 明细表格（2026-10-18 用户）：标签列对齐、行分隔、斑马纹，
+                      关键事实逐行可查，不再把整张票的信息挤成一段散文备注 */}
+                  <div className="rounded-lg border border-gray-200 overflow-hidden">
+                    <dl>
+                      {it.lines.map((ln, i) => (
+                        <div key={i} className={`grid grid-cols-[5.5rem_1fr] text-sm ${i % 2 ? "bg-gray-50" : "bg-white"}`}>
+                          <dt className="px-2.5 py-1.5 text-gray-500 border-r border-gray-100">{ln.label}</dt>
+                          <dd className="px-2.5 py-1.5 text-gray-800 font-medium break-words min-w-0">{ln.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
                   {it.recordId != null && (
                     <div className="mt-3">
                       <button
