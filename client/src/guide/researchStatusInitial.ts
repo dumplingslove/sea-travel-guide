@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T16:47:56Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T22:47:56Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -8385,5 +8385,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 230,
- "updated_at": "2026-10-18T16:47:56Z"
+ "updated_at": "2026-10-18T22:47:56Z"
 };
