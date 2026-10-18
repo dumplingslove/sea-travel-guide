@@ -1,9 +1,9 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T04:50Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T06:16:01Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 32,
+   "complete": 33,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -1143,10 +1143,45 @@ export const initialResearchStatus = {
        "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：谨慎选择（避雷向）"
       }
      }
+    },
+    {
+     "name": "The Ritz-Carlton, Bangkok 曼谷丽思卡尔顿酒店",
+     "note": "【万豪 The Ritz-Carlton】【档次：顶奢】2024年11月开业，One Bangkok（无线电路189号）；米其林一星之钥。【2026-10-17补录】2026-09-16 阵容审计将本店移出清单（替换为半岛）但网站条目/图库/价格追踪保留，详情页长期空壳且对审计隐形；用户 22:38 PDT 点名后主 agent round 334 补录：小红书 3 篇实住帖全读（证据 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md），data.ts 与 researchExtra 已回填。",
+     "sources": {
+      "chinese_sites": {
+       "note": "携程 4.6 分 · 273 条点评（网站 secondaryEvidence 已登记，规范链接见 researchExtra.ts）",
+       "status": "done"
+      },
+      "details": {
+       "note": "2026-10-17 补录回填 data.ts：189 Wireless Road（One Bangkok）；电梯几步到 BTS Phloen Chit、楼下 Central Embassy；Deluxe 约 55㎡（实住帖实证）；高层泳池对伦披尼公园；行政酒廊包三餐、另付费 → done",
+       "status": "done"
+      },
+      "google_maps": {
+       "note": "GM 4.7 星 · 733 条评价（网站 secondaryEvidence 已登记）",
+       "status": "done"
+      },
+      "photos": {
+       "note": "网站图库 15 张（placeGalleries 酒店|曼谷|The Ritz-Carlton, Bangkok：外观/大堂/客房/套房/泳池/酒廊俱全，含官方图与实拍、均已目验归属）",
+       "status": "done",
+       "target": 5,
+       "verified": 15
+      },
+      "tripadvisor": {
+       "note": "TA 4.7/5 · 158 条评价（网站 secondaryEvidence 已登记）",
+       "status": "done"
+      },
+      "xiaohongshu": {
+       "note": "2026-10-17 round 334 主 agent 老窗口实读 3 篇真实住客帖（不爱喝酒的老爷爷 2025-04-13 306赞、Travelholic 2025-02-05 280赞、咕噜咕噜 2025-03-23 133赞），全推荐；正文+评论原话与规范 URL 见 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md",
+       "posts": 3,
+       "status": "done",
+       "target": 3
+      }
+     },
+     "type": "酒店"
     }
    ],
    "name": "曼谷",
-   "total": 33
+   "total": 34
   },
   "chiangmai": {
    "complete": 18,
@@ -8194,23 +8229,23 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 141,
+ "complete_items": 142,
  "summary": {
   "bangkok": {
-   "total": 33,
-   "tripadvisor": 33,
-   "ta": 33,
-   "google_maps": 33,
-   "gm": 33,
-   "chinese_sites": 32,
-   "cs": 32,
-   "xiaohongshu": 33,
-   "xhs_done": 33,
-   "photos": 33,
-   "ph": 33,
-   "details": 33,
-   "de": 33,
-   "all_done": 32
+   "total": 34,
+   "tripadvisor": 34,
+   "ta": 34,
+   "google_maps": 34,
+   "gm": 34,
+   "chinese_sites": 33,
+   "cs": 33,
+   "xiaohongshu": 34,
+   "xhs_done": 34,
+   "photos": 34,
+   "ph": 34,
+   "details": 34,
+   "de": 34,
+   "all_done": 33
   },
   "chiangmai": {
    "total": 20,
@@ -8349,6 +8384,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 229,
- "updated_at": "2026-10-18T04:50Z"
+ "total_locations": 230,
+ "updated_at": "2026-10-18T06:16:01Z"
 };

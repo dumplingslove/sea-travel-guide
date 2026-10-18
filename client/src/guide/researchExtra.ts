@@ -4,6 +4,7 @@ const E=(title:string,url:string,note:string):EvidenceLink=>({title,url,note});
 const S=(verdict:XhsAssessment['verdict'],recommend:number,caution:number,avoid:number,why:string,avoidNote:string):XhsAssessment=>({verdict,recommend,caution,avoid,why,avoidNote});
 
 export const extraXhsEvidence:Record<string,EvidenceLink[]>={
+'The Ritz-Carlton, Bangkok':[E('🏨曼谷新开的丽思太值得住了！按摩1.5k🐷拿下','https://www.xiaohongshu.com/explore/67f957a0000000001c02d4c7','不爱喝酒的老爷爷 · 2025-04-13 · 306赞/194藏/30评 · 推荐：基础房 Deluxe Park View King；行政酒廊包三餐且三餐都不错、早餐可大堂或酒廊两处吃；Spa 1500 泰铢买到原价 3000 的面部护理；评论互证房间比曼谷其他酒店大、景观对公园；酒廊早餐比素可泰小一号'),E('🇹🇭曼谷新酒店｜丽思卡尔顿是懂度假的⛱️','https://www.xiaohongshu.com/explore/67a385a3000000002903e8cf','Travelholic · 2025-02-05 · 280赞/214藏/30评 · 推荐：房间真大、大步入式衣帽间加办公区落地窗；泳池有服务、池边免费冰饮冰淇淋可招手点单；评论：Deluxe 55 平还带衣帽间'),E('在曼谷住到了人生酒店','https://www.xiaohongshu.com/explore/67dec3ff000000001e0008c8','咕噜咕噜 · 2025-03-23 · 133赞/96藏/9评 · 推荐：Corner King；欢迎水果与茶、隔音很好、泳池对公园不吵；评论：电梯下去几步路就是轻轨、楼下就是 Central Embassy 商场，房价约一千被赞比国内丽思划算')],
 '137 Pillars House':[E('清迈🇹🇭｜137柱子酒店','https://www.xiaohongshu.com/explore/68dbf3a50000000004017db0','2025-09-30 · 正文与评论区可见滚动复核'),E('清迈隐世天花板丨137根柚木撑起的百年传奇','https://www.xiaohongshu.com/explore/6a9a8fe20000000011035b28','正文摘录：由19世纪末柚木官邸修缮而来的“可入住博物馆”')],
 'Four Seasons Resort Chiang Mai':[E('住进清迈的“秘密花园”！被稻田包围的四季','https://www.xiaohongshu.com/explore/6981f86e000000000d00805c','正文摘录：最出名的是“活的水稻梯田”'),E('清迈四季酒店｜住进稻田里的4天3晚','https://www.xiaohongshu.com/explore/6a83f04c0000000025005dc0','正文与评论区可见滚动复核')],
 'Raya Heritage':[E('清迈Raya heritage盛名之下 其实难副','https://www.xiaohongshu.com/explore/6a86d35100000000320339ca','正文摘录：“性价比太低了”；评论涉及迷你吧收费'),E('无踩雷！清迈的拉雅古迹Raya Heritage酒店','https://www.xiaohongshu.com/explore/69e1dee9000000002301e4bf','评论摘录：房价高、蚊虫多、位置偏')],
@@ -57,6 +58,7 @@ export const extraXhsEvidence:Record<string,EvidenceLink[]>={
 
 /* 2026-10-16 逐键裁决：与主表重叠的 10 键中 9 键已摘除（7 键主表胜、Amanpuri/Trisara 已按已链接样本在主表合成定版），仅 Capella Bangkok 保留本表版覆盖主表薄版；裁决明细见 research.ts Object.assign 上方注释。 */
 export const extraXhsAssessments:Record<string,XhsAssessment>={
+'The Ritz-Carlton, Bangkok':S('推荐',3,0,0,'One Bangkok 里的万豪顶奢新店，2026-10-17 老窗口实读 3 篇真实住客帖全推荐：房间明显比曼谷同级大（Deluxe 约 55㎡、基础房带步入式衣帽间）、高层泳池对着伦披尼公园（池边免费冰饮冰淇淋、可招手点单）、隔音好；电梯几步到 BTS Phloen Chit、楼下 Central Embassy；行政酒廊包三餐且口碑不错。研究更新：2026-10-17（补录，原清单遗漏项）。','早餐与行政酒廊都要另付费，且酒廊早餐比曼谷素可泰小一号、选择少一点；酒水与 Spa 另付，$400 类抵扣金要先问清可用范围；个别楼层有评论嫌房间样子普通。原味提醒：2026-09 曾因热度不及半岛被移出研究清单，本次按真实住客证据补录。'),
 'Kiti Panit':S('谨慎选择',1,1,2,'百年华人老宅（1888年华人移民建、清迈第一家购物商场旧址）与泰北料理有文化感；2026-09-28第51轮：人均五六百铢+10%服务费。','评论区避雷集中：难吃、10%消费税+7%服务费、烤鸡肉串不如夜市100铢；walk-in可能只能坐户外。研究更新：2026-09-28。'),
 'Huen Phen':S('谨慎选择',1,0,1,'老宅与泰北民俗氛围。','出品与服务稳定性有争议。'),
 'Khao Kha Moo Chang Phueak':S('谨慎选择',1,0,1,'传奇夜市摊与软糯猪脚。','环境与品质下滑反馈并存。'),
