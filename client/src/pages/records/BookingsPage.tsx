@@ -430,7 +430,7 @@ function FavoriteActionList({
   /** 地图置顶偏移（菜单体系之下）：站点顶栏 + 预订页吸顶菜单总高 */
   mapStickyTop?: number;
 }) {
-  const { rows, del, save } = useRecordsData(["favorite"]);
+  const { rows, del, save, loading: favLoading } = useRecordsData(["favorite"]);
   /* 2026-10-13 用户：预定筛选要标出每项"是否已预订"——拿已确认的预订记录按名称匹配 */
   const { rows: bookingRows } = useRecordsData(["booking"]);
   const confirmedByName = useMemo(() => {
@@ -565,16 +565,10 @@ function FavoriteActionList({
     );
   })();
 
-  if (!favs.length) {
-    return (
-      <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
-        <p className="text-sm text-gray-500">📈 价格追踪是空的</p>
-        <p className="text-xs text-gray-400 mt-1">
-          在「🔍 预定筛选」里浏览酒店/机票/餐厅/景点时点「＋ 收藏」，收藏项会按城市+时间线出现在这里，集中追踪价格、余位和可预订状态
-        </p>
-      </div>
-    );
-  }
+  /* ⚠️ 这里不许再放 early return（2026-10-17 实测崩溃）：本组件后面还有 useState/useMemo
+   * （地图选点/展开/筛选等），收藏数据是异步加载的——先以空数组渲染又在此返回、数据到达后
+   * 再渲染就会多出 hooks，React 直接抛错整页崩掉。空状态统一挪到所有 hooks 与派生计算之后、
+   * 主 JSX return 之前处理。 */
 
   const typeLabel = (type: string) =>
     type === "hotel" ? "🏨 酒店" :
@@ -827,6 +821,24 @@ function FavoriteActionList({
       list.find((h) => norm(h.name).includes(n) || n.includes(norm(h.name)))
     );
   };
+
+  /* 空状态（全部 hooks 与派生计算已执行完，hooks 顺序稳定）：加载中只说加载中，不冒充空 */
+  if (!favs.length) {
+    return (
+      <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 mb-6 text-center">
+        {favLoading ? (
+          <p className="text-sm text-gray-500">⏳ 价格追踪加载中…</p>
+        ) : (
+          <>
+            <p className="text-sm text-gray-500">📈 价格追踪是空的</p>
+            <p className="text-xs text-gray-400 mt-1">
+              在「🔍 预定筛选」里浏览酒店/机票/餐厅/景点时点「＋ 收藏」，收藏项会按城市+时间线出现在这里，集中追踪价格、余位和可预订状态
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="mb-6">
