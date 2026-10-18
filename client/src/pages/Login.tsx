@@ -29,7 +29,7 @@ export default function Login() {
       const msg = err instanceof Error ? err.message : "登录失败，请稍后重试";
       setPasteError(
         /expired|invalid|already/i.test(msg)
-          ? "这个链接已经失效或被用过了（在浏览器里点开过也会作废）。请点下面「重新发送」，在新邮件里只长按拷贝、不要点开。"
+          ? "这个链接已经失效或被用过了。链接是一次性的：在任何地方用过都会作废——包括在浏览器里点开过、或刚刚在另一个设备/浏览器里粘贴登录过。这个设备请点下面「重新发送」单独发一封新邮件，收到后只长按拷贝、不要点开、也不要先在别处粘贴。"
           : msg
       );
     } finally {
@@ -95,6 +95,7 @@ export default function Login() {
             <div className="text-sm text-gray-600 mt-4 space-y-2">
               <p><b>在浏览器里用：</b>去邮箱点开邮件里的登录链接即可，会自动登录。</p>
               <p><b>在手机桌面 App 里用：</b>不要点开链接（点开只会登录浏览器，App 里还是未登录，这是苹果的隔离机制）。在邮件里<b>长按登录链接 → 拷贝</b>，回到这里粘贴：</p>
+              <p><b>一封链接只能给一个设备用一次：</b>电脑、iPad、手机 App 要分别登录的，每个设备各发送一封，只用自己最新收到的那封——重新发送会让之前的链接作废，在别处粘贴登录过也会作废。</p>
             </div>
             {pasteError && (
               <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 text-red-700 text-sm mt-3">
@@ -175,7 +176,7 @@ export default function Login() {
                 没点发送就看不到）——改为登录页常显：已有登录邮件的人直接粘贴登录 */}
             <div className="border-t border-gray-100 pt-3">
               <p className="text-xs text-gray-500">
-                已经收到过登录邮件？在邮件里<b>长按登录链接 → 拷贝</b>（不要点开），粘贴到这里直接登录（桌面 App 必须用这个方式）：
+                已经收到过登录邮件？在邮件里<b>长按登录链接 → 拷贝</b>（不要点开），粘贴到这里直接登录（桌面 App 必须用这个方式）。注意链接一次性且一封只能给一个设备用：在别处点开过或粘贴登录过的就作废了，这个设备请重新发送一封、只用最新那封。
               </p>
               {pasteError && (
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 text-red-700 text-sm mt-2">
