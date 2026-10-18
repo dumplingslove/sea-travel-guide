@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-17T22:47Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T02:30:52Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -6973,8 +6973,8 @@ export const initialResearchStatus = {
   },
   "seoul": {
    "name": "首尔",
-   "total": 25,
-   "complete": 22,
+   "total": 26,
+   "complete": 23,
    "items": [
     {
      "name": "景福宫 Gyeongbokgung",
@@ -7968,11 +7968,48 @@ export const initialResearchStatus = {
        "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：谨慎选择"
       }
      }
+    },
+    {
+     "name": "首尔JW万豪酒店 JW Marriott Hotel Seoul",
+     "note": "万豪奢华品牌 JW Marriott，176 Sinbanpo-ro, Seocho-gu，高速巴士客运站上盖、地下直连新世界百货江南店，376间客房（2000年开业、2018年全面翻新；2026-10-17 用户点名加回候选——2026-10-02 曾按当时10家精选口径删除；全套研究完成：小红书3篇/TA/GM/Trip.com/照片15张/Google Hotels价格均已上站）",
+     "type": "酒店",
+     "chain": "Marriott",
+     "tier": "奢华",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-17 实查：4.9/5、2,360条、首尔第3/559家、Travellers' Choice 2026；分项 Cleanliness 5.0 / Service 4.9 / Location 4.9 / Value 4.7。证据：hidden_files/jw-marriott-seoul-research/research-pack.md"
+      },
+      "google_maps": {
+       "status": "done",
+       "note": "2026-10-17 places 实读：4.4/5、1,307条（place_id 587290863090306，176 Sinbanpo-ro, Seocho-gu；Google Hotels 页头部 4.4/6,417 为 Travel 聚合口径，两数并存）。证据：hidden_files/jw-marriott-seoul-research/research-pack.md"
+      },
+      "chinese_sites": {
+       "status": "done",
+       "note": "2026-10-17 Trip.com 实查：9.5/10、229条、韩国高端酒店第4、近1年无差评；3条带日期中文点评已收录。大众点评/马蜂窝未查到公开可读条目。证据：hidden_files/jw-marriott-seoul-research/research-pack.md"
+      },
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 3,
+       "target": 3,
+       "note": "2026-10-17 已登录老窗口实读3篇盘浦本馆专帖（全推荐）：小章鱼Iris《在首尔的家🏨》(2026-06-19，845赞/324藏/37评）、又没美剧了《首尔江南JW万豪》(2026-06-06，137赞/90藏/19评）、HereIsNeo《酒店日记：JW Marriott Seoul》(2025-10-07，85赞/16藏/14评）；正文+评论逐字原话已存证。结论：推荐。证据：hidden_files/jw-marriott-seoul-research/xhs-evidence.md"
+      },
+      "photos": {
+       "status": "done",
+       "target": 15,
+       "verified": 15,
+       "note": "2026-10-17 15张逐张视觉核验（外观/大堂/客房/套房/酒廊/泳池/健身/餐饮），已接线 placeGalleries.ts g1762–g1776，目录 client/src/guide/assets/galleries/jw-marriott-seoul-15x/"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-17 data.ts 条目已按研究包+XHS共识写全（detail/best/acclaim/highlight），结论定调：推荐（Titanium 礼遇完整；注意酒廊晚间未成年禁入、房间新旧感）"
+      }
+     }
     }
    ]
   }
  },
- "complete_items": 135,
+ "complete_items": 136,
  "summary": {
   "bangkok": {
    "total": 33,
@@ -8103,20 +8140,20 @@ export const initialResearchStatus = {
    "all_done": 26
   },
   "seoul": {
-   "total": 25,
-   "tripadvisor": 24,
-   "ta": 24,
-   "google_maps": 24,
-   "gm": 24,
-   "chinese_sites": 23,
-   "cs": 23,
-   "xiaohongshu": 25,
-   "xhs_done": 25,
-   "photos": 25,
-   "ph": 25,
-   "details": 25,
-   "de": 25,
-   "all_done": 22
+   "total": 26,
+   "tripadvisor": 25,
+   "ta": 25,
+   "google_maps": 25,
+   "gm": 25,
+   "chinese_sites": 24,
+   "cs": 24,
+   "xiaohongshu": 26,
+   "xhs_done": 26,
+   "photos": 26,
+   "ph": 26,
+   "details": 26,
+   "de": 26,
+   "all_done": 23
   }
  },
  "targets": {
@@ -8127,6 +8164,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 223,
- "updated_at": "2026-10-17T22:47Z"
+ "total_locations": 224,
+ "updated_at": "2026-10-18T02:30:52Z"
 };

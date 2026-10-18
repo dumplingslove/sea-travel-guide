@@ -281,6 +281,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "首尔弘大RYSE RYSE, Autograph Collection", lat: 37.5542951, lng: 126.9212674, precision: "exact", note: "130 Yanghwa-ro, Mapo-gu（2026-10-05 新增：Nominatim RYSE Hotel Seoul Hongdae 全地址匹配 hotel/tourism）" },
       { name: "明洞L'Escape L'Escape, a Luxury Collection Hotel", lat: 37.5600276, lng: 126.9795778, precision: "exact", note: "Namdaemunsijang 10-gil, Jung-gu（2026-10-05 新增：Nominatim L'Escape Seoul 全地址匹配 hotel/tourism）" },
       { name: "首尔柏悦酒店 Park Hyatt Seoul", lat: 37.5086027, lng: 127.0641785, precision: "exact", note: "606 Teheran-ro, Gangnam-gu（2026-10-11 新增：Nominatim Park Hyatt 全地址匹配 hotel/tourism）" },
+      { name: "首尔JW万豪酒店 JW Marriott Hotel Seoul", lat: 37.503881, lng: 127.004744, precision: "exact", note: "176 Sinbanpo-ro, Seocho-gu（2026-10-17 新增：Google 商家资料 place_id 核对，盘浦本馆）" },
     ],
     restaurants: [
       { name: "明洞饺子 Myeongdong Kyoja", lat: 37.5625608, lng: 126.9856037, precision: "exact", note: "29 Myeongdong 10-gil, Jung-gu（2026-10-11 新增：Nominatim Myeongdong Kyoja 全地址匹配 restaurant/amenity）" },
