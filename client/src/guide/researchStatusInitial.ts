@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T06:16:01Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T06:26:08Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -1146,7 +1146,7 @@ export const initialResearchStatus = {
     },
     {
      "name": "The Ritz-Carlton, Bangkok 曼谷丽思卡尔顿酒店",
-     "note": "【万豪 The Ritz-Carlton】【档次：顶奢】2024年11月开业，One Bangkok（无线电路189号）；米其林一星之钥。【2026-10-17补录】2026-09-16 阵容审计将本店移出清单（替换为半岛）但网站条目/图库/价格追踪保留，详情页长期空壳且对审计隐形；用户 22:38 PDT 点名后主 agent round 334 补录：小红书 3 篇实住帖全读（证据 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md），data.ts 与 researchExtra 已回填。",
+     "note": "【万豪 The Ritz-Carlton】【档次：顶奢】2024年11月开业，One Bangkok（无线电路189号）；米其林一星之钥。【2026-10-17补录】2026-09-16 阵容审计将本店移出清单（替换为半岛）但网站条目/图库/价格追踪保留，详情页长期空壳且对审计隐形；用户 22:38 PDT 点名后主 agent round 334 补录：小红书 6 篇实住帖全读（4 推荐/1 中立/1 不推荐）（证据 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md），data.ts 与 researchExtra 已回填。",
      "sources": {
       "chinese_sites": {
        "note": "携程 4.6 分 · 273 条点评（网站 secondaryEvidence 已登记，规范链接见 researchExtra.ts）",
@@ -1171,8 +1171,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-10-17 round 334 主 agent 老窗口实读 3 篇真实住客帖（不爱喝酒的老爷爷 2025-04-13 306赞、Travelholic 2025-02-05 280赞、咕噜咕噜 2025-03-23 133赞），全推荐；正文+评论原话与规范 URL 见 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md",
-       "posts": 3,
+       "note": "2026-10-17 round 334 主 agent 老窗口两批实读共 6 篇真实住客帖（4 推荐/1 中立/1 不推荐）：不爱喝酒的老爷爷 2025-04-13 306赞、Travelholic 2025-02-05 280赞、咕噜咕噜 2025-03-23 133赞、Shaw 2026-08-01 167赞、芭樂懒趴 2026-10-12 39赞、沃米Warmmy 2025-10-19 68赞；1,665 赞的黄太Joan 帖疑似代言已排除。正文+评论原话与规范 URL 见 hidden_files/ritz-carlton-bangkok-research/xhs-evidence.md",
+       "posts": 6,
        "status": "done",
        "target": 3
       }
@@ -8385,5 +8385,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 230,
- "updated_at": "2026-10-18T06:16:01Z"
+ "updated_at": "2026-10-18T06:26:08Z"
 };
