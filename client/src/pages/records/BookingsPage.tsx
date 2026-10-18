@@ -1666,6 +1666,17 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
     if (p && p.unavailable) return <div className="text-xs text-gray-400 mt-1">💰 该日期暂无可订房</div>;
     if (!p && livePriceDatasetStatus() === "error") return <div className="text-xs text-red-500 mt-1">💰 价格：加载失败，刷新页面会重新加载</div>;
     if (!p && livePriceDatasetStatus() !== "ready") return <div className="text-xs text-gray-400 mt-1">💰 价格：加载中…</div>;
+    if (p && p.baselineUSD != null) {
+      return (
+        <div className="text-xs text-gray-600 mt-1">
+          💰 <span className="font-semibold text-teal-700 text-sm">${p.baselineUSD}/晚起</span>
+          {p.baselineTotalUSD != null && (
+            <span className="text-gray-600"> · 整段共 <span className="font-semibold">${p.baselineTotalUSD.toLocaleString("en-US")}</span>{p.nights ? `/${p.nights}晚` : ""}</span>
+          )}
+          <span className="text-gray-400"> · Google Hotels 基准价（每晚价不含税、整段为含税总价）· 房型级价格待每日深查轮补入</span>
+        </div>
+      );
+    }
     return <div className="text-xs text-gray-400 mt-1">💰 价格：暂无实时价</div>;
   }
   if (type === "restaurant") {
