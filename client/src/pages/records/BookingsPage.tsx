@@ -1976,6 +1976,24 @@ function BookingsCalendar() {
   const selTransfer = selDay ? transfers.get(selDay) : undefined;
   const selHotelBooked = selDay ? hotelNights.has(selDay) : false;
   const selHotelNeed = selDay ? hotelNeedByDay.get(selDay) !== false : true;
+  /* 逐腿订票判定（2026-10-18 用户抓包）：同一天有多条航班腿时，旧逻辑用 some() ——
+     订了任意一条就整天标「✈️ 已订」，没订的那条被藏起来（12-06 北京→新加坡已订、
+     西安→新加坡没订，格子却只挂已订）。改为按路线逐腿对：腿 label 形如「北京→新加坡」
+     （可带（老婆一人）等后缀），机票记录标题形如「北京 → 新加坡 · Air China CA889」。 */
+  const legRouteKey = (label: string) => label.replace(/（[^）]*）.*$/, "").replace(/\s/g, "");
+  const legIsBooked = (label: string, evs: CalEvent[]) =>
+    evs.some((e) => e.kind === "flight" && e.title.replace(/\s/g, "").includes(legRouteKey(label)));
+  const dayFlightState = (legs: { label: string; mode: string }[] | undefined, evs: CalEvent[]) => {
+    const fl = (legs ?? []).filter((l) => l.mode === "flight");
+    if (!fl.length) return { fl, booked: [] as boolean[], all: false, some: false };
+    const booked = fl.map((l) => legIsBooked(l.label, evs));
+    const fev = evs.filter((e) => e.kind === "flight").length;
+    /* 路线一条都对不上但机票记录数不少于腿数（记录标题没带路线时）→ 按数量兜底认全订 */
+    const allByCount = booked.every((b) => !b) && fev >= fl.length;
+    const all = booked.every(Boolean) || allByCount;
+    const some = !all && (booked.some(Boolean) || fev > 0);
+    return { fl, booked: allByCount ? fl.map(() => true) : booked, all, some };
+  };
 
   return (
     <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
@@ -2031,7 +2049,7 @@ function BookingsCalendar() {
                 const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
                 /* 分品类状态（2026-10-17 用户定稿）：绿底只认酒店——这晚酒店订好才变绿；
                    机票没订用红色 ❗ 明确提醒；餐厅订了只挂标记、不影响格子颜色 */
-                const flightBooked = dayEvents.some((e) => e.kind === "flight");
+                const fstate = dayFlightState(tr, dayEvents);
                 const restBooked = dayEvents.some((e) => e.kind === "restaurant");
                 const hasFlightLeg = !!tr?.some((l) => l.mode === "flight");
                 const hotelNeed = hotelNeedByDay.get(k) !== false;
@@ -2049,13 +2067,18 @@ function BookingsCalendar() {
                     ) : (
                       <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>
                     ))}
-                    {nonHotel.length > 0 && (
-                      <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}</span>
+                    {dayEvents.filter((e) => e.kind === "flight").map((e, fi) => (
+                      <span key={`fe${fi}`} className="wz-calleg" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
+                    ))}
+                    {nonHotel.filter((e) => e.kind !== "flight").length > 0 && (
+                      <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.filter((e) => e.kind !== "flight").map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel.find((e) => e.kind !== "flight")!.title}</span>
                     )}
                     <span className="wz-catchips">
-                      {hasFlightLeg && (flightBooked
+                      {hasFlightLeg && (fstate.all
                         ? chip(true, "#4f46e5", "✈️ 已订")
-                        : <span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span>)}
+                        : fstate.some
+                          ? <>{chip(true, "#4f46e5", "✈️ 已订")}<span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 还有未订</span></>
+                          : <span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span>)}
                       {city != null && !isPlane && hotelNeed && chip(booked, "#0f766e", booked ? "🏨 已订" : "🏨 未订")}
                       {restBooked && chip(true, "#d97706", "🍽 已订")}
                     </span>
@@ -2079,13 +2102,14 @@ function BookingsCalendar() {
                 : `✈️ 转场：${l.label}（飞机）· ${l.overnight ? "🌙 这班要在飞机上过夜" : "落地过夜，不用睡飞机"}`}
             </p>
           ))}
-          {selTransfer?.some((l) => l.mode === "flight") && (
-            selEvents.some((e) => e.kind === "flight") ? (
-              <p className="text-xs text-gray-600">✈️ 机票：已出票（见下方明细）</p>
+          {(() => {
+            const st = dayFlightState(selTransfer, selEvents);
+            return st.fl.map((l, li) => st.booked[li] ? (
+              <p key={li} className="text-xs text-gray-600">✈️ {l.label}：已出票（见下方明细）</p>
             ) : (
-              <p className="text-xs font-semibold text-red-600">❗ 机票：还没订</p>
-            )
-          )}
+              <p key={li} className="text-xs font-semibold text-red-600">❗ {l.label}：还没订</p>
+            ));
+          })()}
           {selCity && !selPlane && (
             <p className="text-xs text-gray-600">
               {selHotelBooked
@@ -2106,9 +2130,8 @@ function BookingsCalendar() {
                 <li key={i} className="text-xs text-gray-700">
                   {kindMeta[e.kind].icon} <span className="font-medium">{e.title}</span>
                   {e.sub && <span className="text-gray-400"> · {e.sub}</span>}
-                  {e.kind === "flight" && carrierPointsTag(e.title) && (
-                    <span> · <PointsTag text={e.title} /><CashTipChip text={e.title} /></span>
-                  )}
+                  {/* 2026-10-18 用户抓包：已出票的航班还挂着「怎么买」的积分/现金建议签 ——
+                      那是下单前的内容，订完必须摘掉；买法建议只留在价格追踪/预定筛选 */}
                 </li>
               ))}
             </ul>
