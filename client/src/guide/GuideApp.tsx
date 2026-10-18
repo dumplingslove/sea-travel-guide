@@ -487,6 +487,76 @@ export function carrierPointsTag(text:string):string|null{
  return k?CARRIER_POINTS[k]:null;
 }
 
+/** 航司官网订票入口（2026-10-18 用户：价格追踪里看好哪班就要能直接点去官网买，
+ * 不许只给「怎么买」结论没有入口）。键与 CARRIER_POINTS 同一套航司名口径。 */
+export const CARRIER_BOOKING_SITE: Record<string, string> = {
+ 'Singapore Airlines': 'https://www.singaporeair.com',
+ 'Scoot': 'https://www.flyscoot.com',
+ 'Air China': 'https://www.airchina.com',
+ 'THAI': 'https://www.thaiairways.com',
+ 'Thai Airways': 'https://www.thaiairways.com',
+ 'Asiana': 'https://www.asiana.com',
+ 'Asiana Airlines': 'https://www.asiana.com',
+ 'Korean Air': 'https://www.koreanair.com',
+ 'China Eastern': 'https://www.ceair.com',
+ 'China Eastern Airlines': 'https://www.ceair.com',
+ 'Delta': 'https://www.delta.com',
+ 'Alaska': 'https://www.alaskaair.com',
+ 'Alaska Airlines': 'https://www.alaskaair.com',
+ 'Hainan': 'https://www.hainanairlines.com',
+ 'Hainan Airlines': 'https://www.hainanairlines.com',
+ 'Bangkok Airways': 'https://www.bangkokair.com',
+ 'Spring Airlines': 'https://www.ch.com',
+ 'Thai AirAsia': 'https://www.airasia.com',
+ 'Thai Lion Air': 'https://www.lionairthai.com',
+ 'Nok Air': 'https://www.nokair.com',
+ 'Thai Vietjet Air': 'https://www.vietjetair.com',
+ 'Thai VietJet Air': 'https://www.vietjetair.com',
+};
+export function carrierBookingSite(text: string): string | null {
+ if (!text) return null;
+ const keys = Object.keys(CARRIER_BOOKING_SITE).sort((a, b) => b.length - a.length);
+ const k = keys.find(x => text.indexOf(x) === 0) ?? keys.find(x => text.includes(x));
+ return k ? CARRIER_BOOKING_SITE[k] : null;
+}
+/** 🎫 官网买票链接签：价格追踪/预定筛选的航班卡与「本段推荐」里直接点去航司官网下单 */
+export function FlightBuyLink({ text }: { text: string }) {
+ const url = carrierBookingSite(text);
+ if (!url) return null;
+ return <a className="buylinkchip" href={url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>🎫 官网买票 ↗</a>;
+}
+
+/** 酒店订房入口（2026-10-18 用户同批要求）：品牌官网（按酒店名识别集团）+ Amex Travel + Trip.com。
+ * 品牌域名只收确定的大集团与本站已核实的独立酒店官网；认不出的只给平台入口，不猜域名。 */
+export const HOTEL_BRAND_SITE: [RegExp, string][] = [
+ [/marriott|ritz|st\.?\s*regis|edition|万豪|丽思|瑞吉/i, 'https://www.marriott.com'],
+ [/\bw singapore|sentosa cove/i, 'https://www.marriott.com'],
+ [/hyatt|凯悦|柏悦/i, 'https://www.hyatt.com'],
+ [/hilton|希尔顿/i, 'https://www.hilton.com'],
+ [/intercontinental|洲际|\bihg\b/i, 'https://www.ihg.com'],
+ [/raffles|莱佛士|fairmont|费尔蒙|accor|雅高/i, 'https://all.accor.com'],
+ [/shangri|香格里拉/i, 'https://www.shangri-la.com'],
+ [/rosewood|瑰丽/i, 'https://www.rosewoodhotels.com'],
+ [/banyan|悦榕/i, 'https://www.banyantree.com'],
+ [/capella|嘉佩乐/i, 'https://www.capellahotels.com'],
+ [/four seasons|四季酒店/i, 'https://www.fourseasons.com'],
+ [/mandarin oriental|文华东方/i, 'https://www.mandarinoriental.com'],
+ [/peninsula|半岛酒店/i, 'https://www.peninsula.com'],
+ [/pan pacific|泛太平洋/i, 'https://www.panpacific.com'],
+ [/anantara|安纳塔拉/i, 'https://www.anantara.com'],
+ [/aman|安缦/i, 'https://www.aman.com'],
+ [/trisara/i, 'https://www.trisara.com'],
+ [/137 pillars/i, 'https://137pillarshotels.com'],
+];
+export function HotelBookLinks({ name }: { name: string }) {
+ const brand = HOTEL_BRAND_SITE.find(([re]) => re.test(name));
+ return <span className="hotelbooklinks">
+   {brand && <a className="buylinkchip" href={brand[1]} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>🏨 品牌官网订房 ↗</a>}
+   <a className="buylinkchip" href="https://www.americanexpress.com/en-us/travel/" target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>💳 Amex Travel（FHR）↗</a>
+   <a className="buylinkchip" href="https://www.trip.com/hotels/" target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>🧳 Trip.com ↗</a>
+ </span>;
+}
+
 /** 积分兑换操作指南（2026-10-17 用户：点 💠 标签弹窗看怎么转分、难易、链接、积分价、值不值）。
  * 数据来自 2026-10-17 两轮专项调研（兑换路径 + 逐段积分价/性价比），报告在
  * research_notes/airline-points-redemption-map-20261017-1742/ 与 airline-award-prices-value-20261017-1915/。
@@ -740,6 +810,10 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="积分兑换指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💠 积分兑换指南{carrierName ? ` · ${carrierName}` : ''}</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
        {seg && SEGMENT_POINTS_HINT[seg] && <span className="pointsmodal-rec">本段推荐：{SEGMENT_POINTS_HINT[seg].replace(/^怎么买：/, '')}</span>}
+      <span className="pointsmodal-block">
+        <b className="pointsmodal-sec">🎫 买票入口</b>
+        <span><FlightBuyLink text={text} /><span className="pointsmodal-note">打开航司官网后按本航班的日期与航线搜票下单；用积分订的入口在下方各兑换路径里。</span></span>
+      </span>
        {segInfo && <span className="pointsmodal-block">
          <b className="pointsmodal-sec">本航段积分价（{seg}）</b>
          {segInfo.rows.map((r, i) => <span key={i} className="pointsmodal-row"><span>{r.program}：<b>{r.miles}</b></span><em className={`points-verdict ${r.good}`}>{r.verdict}</em></span>)}
@@ -822,6 +896,10 @@ export function HotelPayTag({ name, city, chain: chainProp }: { name: string; ci
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="酒店用卡指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💳 {name} · 怎么订最划算</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
        <span className="pointsmodal-rec">{g.title}{city ? ` · ${city}` : ''}</span>
+       <span className="pointsmodal-block">
+         <b className="pointsmodal-sec">🔗 订房入口</b>
+         <span><HotelBookLinks name={name} /></span>
+       </span>
        <span className="pointsmodal-block">
          {g.rows.map((r, i) => <span key={i} className="pointsmodal-path"><span className="pointsmodal-pathname">{r.label}</span><span>{r.text}</span></span>)}
        </span>
@@ -941,7 +1019,7 @@ function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selK
   {leg.dbSeg&&SEGMENT_POINTS_HINT[leg.dbSeg]&&<p className="flightpointsline">🧾 {SEGMENT_POINTS_HINT[leg.dbSeg]}（点任意航班的紫色积分标签看明细）</p>}
   {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);const rowKey=`${leg.dbSeg??leg.route}|${o.carrier}|${o.flight}|${cabin}`;return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}${selKey===rowKey?' selflight':''}`} style={{cursor:onSelectFlight?'pointer':undefined}} title={onSelectFlight?'点这张票，顶部地图联动高亮它的航线':undefined} onClick={onSelectFlight?(e)=>{if((e.target as HTMLElement).closest('button, a, details, summary, input, textarea, select'))return;onSelectFlight(rowKey,o.depAirport??segCodesForMap[0]??'',o.arrAirport??segCodesForMap[1]??'',`${o.carrier} ${o.flight} ${leg.route}`);}:undefined}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
-    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/><CashTipChip text={o.carrier} seg={leg.dbSeg}/></div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/><CashTipChip text={o.carrier} seg={leg.dbSeg}/><FlightBuyLink text={o.carrier}/></div>
     <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}

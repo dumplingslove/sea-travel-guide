@@ -500,6 +500,10 @@
 .pointsmodal-verdicttext{color:#4c1d95;font-weight:600}
 .pointsmodal-cashtip{display:block;font-size:12.5px;line-height:1.65;color:#7c2d12;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px;font-weight:600}
 .cashtipchip{display:inline-block;margin-left:6px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle;line-height:1.5}
+.buylinkchip{display:inline-block;margin-left:6px;background:#ecfdf5;border:1px solid #a7f3d7;color:#065f46;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle;line-height:1.5;text-decoration:none;white-space:nowrap}
+.buylinkchip:hover{background:#d1fae5}
+.hotelbooklinks{display:inline-block}
+.hotelbooklinks .buylinkchip:first-child{margin-left:0}
 /* 价格追踪「详情」弹窗（2026-10-17 用户：详情改弹窗，看完关掉还在原地，不许整页展开把列表推走）。
    内容仍是与详情页同一份完整实现（PlaceDetailSections），只是容器换成弹窗：手机底部升起、桌面居中。 */
 .detailmodal-backdrop{position:fixed;inset:0;background:rgba(15,35,45,.55);z-index:1250;display:flex;align-items:flex-end;justify-content:center}
