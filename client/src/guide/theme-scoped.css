@@ -462,8 +462,12 @@
    价格追踪里的弹窗完全没样式（遮罩不全屏、关不掉、字体裸奔，被用户骂山寨）。故这组类名不许再加
    .guide-scope 前缀，全站一份样式。 */
 .pointstagwrap{display:inline}
-.pointstag{background:none;border:none;padding:0;cursor:pointer;color:#7c3aed;font-weight:600;font-size:inherit;text-align:left}
-.pointstag:hover{text-decoration:underline}
+/* 2026-10-17 用户：价格追踪里积分签字体太大不好看——与现金签统一成 11px 小药丸签，
+   不再 font-size:inherit 继承正文 16px */
+.pointstag{display:inline-block;background:#f5f3ff;border:1px solid #ddd6fe;color:#5b21b6;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle;cursor:pointer;text-align:left;line-height:1.5}
+.pointstag:hover{background:#ede9fe}
+.hotelpayline{display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap;max-width:100%}
+.hotelpayshort{font-size:12px;font-weight:600;color:#57534e}
 .pointsmodal-backdrop{position:fixed;inset:0;background:rgba(20,16,40,.55);z-index:1200;display:flex;align-items:center;justify-content:center;padding:16px}
 .pointsmodal{background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 40px rgba(0,0,0,.35);cursor:default;text-align:left}
 .pointsmodal-head{display:flex;justify-content:space-between;align-items:center;font-size:15px}
@@ -495,7 +499,16 @@
 .pointsmodal-pathname .points-verdict.na{background:#9ca3af;color:#fff}
 .pointsmodal-verdicttext{color:#4c1d95;font-weight:600}
 .pointsmodal-cashtip{display:block;font-size:12.5px;line-height:1.65;color:#7c2d12;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px;font-weight:600}
-.cashtipchip{display:inline-block;margin-left:6px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle}
+.cashtipchip{display:inline-block;margin-left:6px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle;line-height:1.5}
+/* 价格追踪「详情」弹窗（2026-10-17 用户：详情改弹窗，看完关掉还在原地，不许整页展开把列表推走）。
+   内容仍是与详情页同一份完整实现（PlaceDetailSections），只是容器换成弹窗：手机底部升起、桌面居中。 */
+.detailmodal-backdrop{position:fixed;inset:0;background:rgba(15,35,45,.55);z-index:1250;display:flex;align-items:flex-end;justify-content:center}
+.detailmodal{background:#fff;width:100%;max-width:760px;max-height:92dvh;overflow-y:auto;overflow-x:clip;border-radius:16px 16px 0 0;padding:0 16px 20px;box-shadow:0 12px 40px rgba(0,0,0,.35);text-align:left}
+@media(min-width:640px){.detailmodal-backdrop{align-items:center;padding:18px}.detailmodal{border-radius:16px}}
+.detailmodal-head{position:sticky;top:0;background:#fff;z-index:2;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px 0 10px;border-bottom:1px solid #eef0ee}
+.detailmodal-title{font-size:15px;font-weight:700;color:#111827;line-height:1.45;min-width:0;overflow-wrap:break-word}
+.detailmodal-x{background:#f3f4f6;border:none;border-radius:8px;font-size:18px;cursor:pointer;color:#4b5563;line-height:1;padding:5px 10px;flex-shrink:0}
+.detailmodal-x:hover{background:#e5e7eb}
 .guide-scope .flightsmapwrap{position:sticky;z-index:24;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin:0 0 14px;box-shadow:0 2px 10px rgba(15,47,62,.08)}
 .guide-scope .flightsmapbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;font-size:12px;font-weight:600;color:#134e4a;background:#f0fdfa}
 .guide-scope .flightsmapbar button{border:1px solid #99f6e4;background:#fff;color:#0f766e;border-radius:6px;padding:2px 9px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}

@@ -784,21 +784,21 @@ function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
  * 按酒店所属链（findHotelChain 的数据推导）给订法：渠道 + 用卡 + 积分选项 + 避雷。
  * 费率口径同用户信用卡站：Brilliant 万豪渠道 6x、CSR 酒店直购 4x UR / Chase Travel 8x、
  * Amex 预付酒店 5x、Atmos Summit 境外 3x、Smartly 4% 现金兜底。 */
-export function hotelPayGuide(chain: string): { title: string; rows: { label: string; text: string }[] } {
+export function hotelPayGuide(chain: string): { title: string; short: string; rows: { label: string; text: string }[] } {
  const c = chain || '';
- if (/marriott|万豪/i.test(c)) return { title: '万豪系 · 直订 + Brilliant', rows: [
+ if (/marriott|万豪/i.test(c)) return { title: '万豪系 · 直订 + Brilliant', short: '官网直订刷 Brilliant 6x，Titanium 礼遇只认直订', rows: [
    { label: '首选订法', text: '官网/App 直订，刷 Marriott Bonvoy Brilliant：万豪渠道 6x 分；你的 Titanium 升级、酒廊、早餐礼遇只在直订渠道完整生效。下单前和 Google Hotels 基准价对一遍，直订贵太多再议。' },
    { label: '积分选项', text: '先查万豪分订每晚要多少分：旺季现金价高时用分常更划算；Brilliant 的 85K 周年房券能覆盖的房晚优先用券，别让券过期。' },
    { label: '避雷', text: '别走第三方平台订万豪（礼遇和积分/房晚都可能不认）；别用其他卡付（浪费 6x 连锁加成）。' } ] };
- if (/hyatt|凯悦/i.test(c)) return { title: '凯悦系 · 先查积分房', rows: [
+ if (/hyatt|凯悦/i.test(c)) return { title: '凯悦系 · 先查积分房', short: '先查积分房（Chase UR 1:1 转分订），现金刷 CSR 直订 4x', rows: [
    { label: '首选订法', text: '先查积分房：Chase UR 1:1 转 Hyatt 是公认最值的酒店转分，每晚分价合理就优先转分订（用 CSR 的分）。' },
    { label: '现金订法', text: '官网直订刷 Chase Sapphire Reserve：酒店直购 4x UR，攒的分又能转回 Hyatt。' },
    { label: '避雷', text: '别用 Amex 付凯悦攒分（转不进 Hyatt）；第三方平台订不攒凯悦积分/房晚。' } ] };
- if (c) return { title: `${c} 系 · 直订刷 CSR/Platinum`, rows: [
+ if (c) return { title: `${c} 系 · 直订刷 CSR/Platinum`, short: '官网直订刷 CSR 4x，平台明显更便宜再用 Smartly 4%', rows: [
    { label: '首选订法', text: '官网直订刷 Chase Sapphire Reserve（酒店直购 4x UR）或 Amex Platinum（保障全）；境外酒店官网付款可用 Atmos Summit（境外消费 3x Atmos 分）。' },
    { label: '平台比价', text: '若携程/Google Hotels 整段总价明显更低，走平台时用 U.S. Bank Smartly（4% 现金兜底）；注意平台订多数连锁不攒积分/房晚。' },
    { label: '积分选项', text: '这家所属计划与你的六类积分没有高值转分路径，以现金订为主，别专门为它转分。' } ] };
- return { title: '独立酒店 · 比价后选卡', rows: [
+ return { title: '独立酒店 · 比价后选卡', short: '比整段含税总价，刷 CSR 4x 或 Smartly 4% 兜底', rows: [
    { label: '首选订法', text: '直订刷 Chase Sapphire Reserve（酒店直购 4x UR）；走 OTA/平台订用 U.S. Bank Smartly（4% 现金返现兜底）；境外付款可用 Atmos Summit（境外 3x）。' },
    { label: '比价要点', text: '独立酒店重点看整段含税总价和取消政策：用 Google Hotels 基准价对齐口径再比，别被每晚价误导。' },
    { label: '积分选项', text: '无连锁积分可攒，现金订就是最优；别为了这家转任何分。' } ] };
@@ -814,8 +814,10 @@ export function HotelPayTag({ name, city, chain: chainProp }: { name: string; ci
    return () => window.removeEventListener('keydown', f);
  }, [open ]);
  const g = hotelPayGuide(chain);
- return <span className="pointstagwrap">
+ return <span className="pointstagwrap hotelpayline">
    <button type="button" className="hotelpaytag" onClick={() => setOpen(true)} aria-label={`查看${name}用卡指南`}>💳 用卡指南</button>
+   {/* 2026-10-17 用户：最直接的推荐要直接写在卡面上，不要非得点进去才看得到；弹窗保留看细节 */}
+   <span className="hotelpayshort">{g.short}</span>
    {open && createPortal(<span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="酒店用卡指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💳 {name} · 怎么订最划算</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>

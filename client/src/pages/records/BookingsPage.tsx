@@ -7,6 +7,7 @@
  * - 兼容旧版三行纯文本 body，按 other 类型解析展示。
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useRecordsData,
@@ -794,6 +795,15 @@ function FavoriteActionList({
   const decided = favs.filter((f) => f.row.done).length;
   /* 2026-10-03 用户：行动安排的 item 要能展开看详情，方便对比 */
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  /* 详情弹窗打开时锁背景滚动 + Esc 关闭（2026-10-17 用户：详情改弹窗） */
+  useEffect(() => {
+    if (expandedId == null) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const f = (e: KeyboardEvent) => { if (e.key === "Escape") setExpandedId(null); };
+    window.addEventListener("keydown", f);
+    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", f); };
+  }, [expandedId]);
   // 2026-10-10 用户：卡片按钮太占空间，确定/加入预订/移除收进 ⋯ 菜单
   const [menuId, setMenuId] = useState<number | null>(null);
   /* 价格追踪类别筛选（2026-10-16 redesign）：页头 chips 按类型过滤，与预定筛选的类别口径一致 */
@@ -840,6 +850,10 @@ function FavoriteActionList({
       </div>
     );
   }
+
+  /* 详情弹窗：内容在卡片循环里按 expandedId 捕获，循环外统一用 portal 渲染（关掉回到原地） */
+  let favModalNode: React.ReactNode = null;
+  let favModalTitle = "";
 
   return (
     <div className="mb-6">
@@ -1111,44 +1125,9 @@ function FavoriteActionList({
                             ) : null;
                           })()}
                         </div>
-                        {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策；
-                            价格/余位收进浅灰面板区，和标题区拉开层级（2026-10-16 redesign） */}
-                        <div className="mt-2 rounded-lg bg-gray-50 border border-gray-100 px-2.5 py-2">
-                        <FavoritePriceLine
-                          name={f.row.title} type={f.type} city={f.city}
-                          flight={f.flight} segs={flightSegs}
-                        />
-                        {/* 余位 live 状态（sea_availability 每日实查）：餐厅看订位空位、景点看门票余量 */}
-                        {(() => {
-                          if (f.type !== "restaurant" && f.type !== "attraction") return null;
-                          const av = availMap.get(`${f.type}:${f.row.title}`);
-                          if (!av) return null;
-                          const meta = AV_BADGE[av.status] ?? AV_BADGE.unverifiable!;
-                          const label = f.type === "restaurant" ? meta.r : meta.a;
-                          const when = av.checked_at
-                            ? new Date(av.checked_at).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })
-                            : "";
-                          return (
-                            <div className="mt-1">
-                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white ${meta.cls}`}>
-                                🎫 {label}
-                              </span>
-                              {when && <span className="ml-1.5 text-[10px] text-gray-400">{when} 实查</span>}
-                            </div>
-                          );
-                        })()}
-                        {/* 2026-10-17 用户：价格追踪是付款 checklist——积分/用卡弹窗也要在这里能打开，
-                            不许只在预定筛选有；点标签当前页弹窗，不跳页 */}
-                        {f.type === "flight" && (
-                          <div className="mt-1.5"><PointsTag text={f.row.title} seg={flightLeg?.dbSeg} /><CashTipChip text={f.row.title} seg={flightLeg?.dbSeg} /></div>
-                        )}
-                        {f.type === "hotel" && (
-                          <div className="mt-1.5"><HotelPayTag name={f.row.title} city={itemCity(f)} /></div>
-                        )}
-                        </div>
                       </div>
                       <div className="flex gap-1.5 shrink-0 pt-0.5">
-                        {/* 2026-10-03 用户：行动安排里所有类型都就地展开看详情，不跳详情页（返回位置修不好就别跳） */}
+                        {/* 详情入口：2026-10-17 用户改定为弹窗（看完关掉还在原地），内容仍是完整详情 */}
                         {(detail || f.type === "hotel") && f.type !== "flight" && (
                           <button
                             onClick={() => setExpandedId(isOpen ? null : f.row.id)}
@@ -1231,9 +1210,47 @@ function FavoriteActionList({
                         </div>
                       </div>
                       </div>
-                      {/* 展开：航班看当天所有选项（酒店/餐厅/景点走详情页，此处不再内联展开） */}
-                      {isOpen && f.type === "flight" && flightLeg && (
-                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
+                        {/* 实时信息行：航班查库带涨跌，酒店查房价，餐厅/景点给政策；
+                            价格/余位收进浅灰面板区，和标题区拉开层级（2026-10-16 redesign）；
+                            2026-10-17 布局修正：面板移到标题行下方整卡全宽——旧版面板塞在标题
+                            左栏里，右侧按钮列把面板挤到约 180px，走势说明被挤成一字竖列、卡片
+                            右侧大片留白（用户投诉）。 */}
+                        <div className="mt-2 rounded-lg bg-gray-50 border border-gray-100 px-2.5 py-2">
+                        <FavoritePriceLine
+                          name={f.row.title} type={f.type} city={f.city}
+                          flight={f.flight} segs={flightSegs}
+                        />
+                        {/* 余位 live 状态（sea_availability 每日实查）：餐厅看订位空位、景点看门票余量 */}
+                        {(() => {
+                          if (f.type !== "restaurant" && f.type !== "attraction") return null;
+                          const av = availMap.get(`${f.type}:${f.row.title}`);
+                          if (!av) return null;
+                          const meta = AV_BADGE[av.status] ?? AV_BADGE.unverifiable!;
+                          const label = f.type === "restaurant" ? meta.r : meta.a;
+                          const when = av.checked_at
+                            ? new Date(av.checked_at).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })
+                            : "";
+                          return (
+                            <div className="mt-1">
+                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white ${meta.cls}`}>
+                                🎫 {label}
+                              </span>
+                              {when && <span className="ml-1.5 text-[10px] text-gray-400">{when} 实查</span>}
+                            </div>
+                          );
+                        })()}
+                        {/* 2026-10-17 用户：价格追踪是付款 checklist——积分/用卡弹窗也要在这里能打开，
+                            不许只在预定筛选有；点标签当前页弹窗，不跳页 */}
+                        {f.type === "flight" && (
+                          <div className="mt-1.5"><PointsTag text={f.row.title} seg={flightLeg?.dbSeg} /><CashTipChip text={f.row.title} seg={flightLeg?.dbSeg} /></div>
+                        )}
+                        {f.type === "hotel" && (
+                          <div className="mt-1.5"><HotelPayTag name={f.row.title} city={itemCity(f)} /></div>
+                        )}
+                        </div>
+                      {/* 详情弹窗内容捕获：航班=当天全部直飞比价+价格时间线；酒店/餐厅/景点=完整详情 */}
+                      {isOpen && f.type === "flight" && flightLeg && (() => { favModalTitle = f.row.title; favModalNode = (
+                        <div className="text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
                             ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
                           </p>
@@ -1294,11 +1311,10 @@ function FavoriteActionList({
                           {flightLeg.queriedAt && (
                             <p className="text-gray-400 mt-1">Google Flights 实查 · {flightLeg.queriedAt}</p>
                           )}
-                        </div>
-                      )}
-                      {/* 2026-10-03 用户：酒店/餐厅/景点也在行动安排里就地展开看详情，不跳页 */}
-                      {isOpen && f.type !== "flight" && (detail || f.type === "hotel") && (
-                        <div className="mt-2 pt-2 border-t border-gray-100 inline-detail">
+                        </div>); return null; })()}
+                      {/* 酒店/餐厅/景点详情同样捕获进弹窗（ PlaceDetailSections 完整版，不是摘录） */}
+                      {isOpen && f.type !== "flight" && (detail || f.type === "hotel") && (() => { favModalTitle = f.row.title; favModalNode = (
+                        <div className="inline-detail">
                           {/* 2026-10-17 用户明确：价格追踪里展开的必须是与行程详情页
                               一模一样的完整详情（照片图库/介绍/实用信息/小红书口碑/
                               多平台评分/亮点/口碑/避雷/位置/证据），不要精简版摘录。
@@ -1314,8 +1330,7 @@ function FavoriteActionList({
                           ) : (
                             f.type === "hotel" && <HotelTrackDetail name={f.row.title} />
                           )}
-                        </div>
-                      )}
+                        </div>); return null; })()}
                     </div>
                     );
                   })}
@@ -1326,6 +1341,18 @@ function FavoriteActionList({
         </div>
         );
       })}
+      {expandedId != null && favModalNode && createPortal(
+        <div className="detailmodal-backdrop" onClick={() => setExpandedId(null)}>
+          <div className="detailmodal" role="dialog" aria-modal="true" aria-label="详情" onClick={(e) => e.stopPropagation()}>
+            <div className="detailmodal-head">
+              <div className="detailmodal-title">{favModalTitle}</div>
+              <button type="button" className="detailmodal-x" onClick={() => setExpandedId(null)} aria-label="关闭">×</button>
+            </div>
+            <div className="pt-3">{favModalNode}</div>
+          </div>
+        </div>,
+        document.body,
+      )}
     </div>
   );
 }
@@ -1429,14 +1456,16 @@ function PriceSpark({ points, caption }: { points: PricePoint[]; caption: string
   const diff = last - first;
   const pct = first ? Math.round((diff / first) * 100) : 0;
   return (
-    <div className="mt-1.5 flex items-center gap-2">
-      <svg width={W} height={H} className="shrink-0" aria-hidden="true">
+    /* 2026-10-17 用户：旧版折线与说明文字左右并排，窄卡上文字被挤成一字一行的竖列、卡片被撑出大片留白。
+       改上下排：折线一行、说明占满整行宽。 */
+    <div className="mt-1.5">
+      <svg width={W} height={H} className="block" aria-hidden="true">
         <polyline points={line} fill="none" stroke="#0f766e" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
         <circle cx={x(points.length - 1)} cy={y(last)} r="2.6" fill="#0f766e" />
         <circle cx={x(prices.indexOf(min))} cy={y(min)} r="2.2" fill="#94a3b8" />
         <circle cx={x(prices.indexOf(max))} cy={y(max)} r="2.2" fill="#94a3b8" />
       </svg>
-      <div className="text-[11px] leading-tight text-gray-500 min-w-0">
+      <div className="text-[11px] leading-snug text-gray-500 mt-0.5">
         <div>
           {caption}：最低 <span className="font-semibold text-gray-700">${Math.round(min)}</span> · 最高{" "}
           <span className="font-semibold text-gray-700">${Math.round(max)}</span>
