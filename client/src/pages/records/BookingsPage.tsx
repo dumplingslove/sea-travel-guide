@@ -2034,27 +2034,48 @@ function BookingsCalendar() {
         </Fragment>
       );
     });
-  /* 格子/列表版一腿一签；没被任何腿认领的机票事件（标题对不上路线的兜底）维持旧事件行，不丢信息 */
+  /* 腿↔机票事件配对（格子签与当天明细共用一套）：先按路线标题对；标题对不上的
+     （记录标题写机场名「首尔仁川→西雅图」、腿写城市名「首尔→西雅图」）把当天剩余的
+     机票事件按顺序配给剩余的腿。2026-10-18 用户抓包：1/1 飞回西雅图那天，AS120 没配上腿，
+     绿签之外又另冒一行「✈️ 首尔仁川 → 西雅图 · Alaska Airlines AS120」——同一张票出现两次、
+     还看不懂多出来那行是什么意思。配上后事件被腿签消费，不再另行渲染 */
+  const pairLegEvents = (legs: { label: string; mode: string }[], evs: CalEvent[]) => {
+    const fl = legs.filter((l) => l.mode === "flight");
+    const flightEvs = evs.filter((e) => e.kind === "flight");
+    const used = new Set<number>();
+    const match: (number | null)[] = fl.map((l) => {
+      const ei = flightEvs.findIndex((e, i) => !used.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
+      if (ei >= 0) used.add(ei);
+      return ei >= 0 ? ei : null;
+    });
+    fl.forEach((_, i) => {
+      if (match[i] != null) return;
+      const ei = flightEvs.findIndex((_, j) => !used.has(j));
+      if (ei >= 0) {
+        used.add(ei);
+        match[i] = ei;
+      }
+    });
+    return { flightEvs, match, used };
+  };
+  /* 格子/列表版一腿一签；没被任何腿认领的机票事件（当天根本没有对应腿时）维持旧事件行，不丢信息。
+     签上带 ✈️ 符号（2026-10-18 用户：签里把航班小符号弄丢了，必须加回） */
   const renderLegPills = (legs: { label: string; mode: string; overnight: boolean }[] | undefined, evs: CalEvent[]) => {
     if (!legs) return null;
-    const flightEvs = evs.filter((e) => e.kind === "flight");
-    const usedEv = new Set<number>();
+    const { flightEvs, match, used } = pairLegEvents(legs, evs);
     const st = dayFlightState(legs, evs);
     let fli = -1;
     const pills = legs.map((l, li) => {
       if (l.mode === "rail") return <span key={li} className="wz-calleg rail">🚄 {l.label}</span>;
       fli += 1;
-      const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
-      const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
+      const ei = match[fli];
+      const fm = ei != null ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
       const em = <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em>;
-      if (ei >= 0) {
-        usedEv.add(ei);
-        return <span key={li} className="wz-legpill ok">✓ {fm ? `${fm[0]} ` : ""}{l.label} {em}</span>;
-      }
-      if (st.booked[fli]) return <span key={li} className="wz-legpill ok">✓ {l.label} {em}</span>;
-      return <span key={li} className="wz-legpill no">❗ {l.label} {em}</span>;
+      if (ei != null) return <span key={li} className="wz-legpill ok">✈️ ✓ {fm ? `${fm[0]} ` : ""}{l.label} {em}</span>;
+      if (st.booked[fli]) return <span key={li} className="wz-legpill ok">✈️ ✓ {l.label} {em}</span>;
+      return <span key={li} className="wz-legpill no">✈️ ❗ {l.label} {em}</span>;
     });
-    const extraEvs = flightEvs.filter((_, i) => !usedEv.has(i));
+    const extraEvs = flightEvs.filter((_, i) => !used.has(i));
     return (
       <>
         {pills}
@@ -2062,24 +2083,22 @@ function BookingsCalendar() {
       </>
     );
   };
-  /* 当天明细版一腿一线：与格子同口径（绿 = 已订、带航班号；红 = 还没订），整行上色 */
+  /* 当天明细版一腿一线：与格子同口径（✈️ + 绿 = 已订、带航班号；红 = 还没订），整行上色 */
   const renderDetailLegs = (legs: { label: string; mode: string; overnight: boolean }[] | undefined, evs: CalEvent[]) => {
     if (!legs) return null;
-    const flightEvs = evs.filter((e) => e.kind === "flight");
-    const usedEv = new Set<number>();
+    const { flightEvs, match } = pairLegEvents(legs, evs);
     const st = dayFlightState(legs, evs);
     let fli = -1;
     return legs.map((l, li) => {
       if (l.mode === "rail") return <p key={li} className="text-xs text-gray-600">🚄 转场：{l.label}（高铁）</p>;
       fli += 1;
-      const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
-      const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
-      if (ei >= 0) usedEv.add(ei);
+      const ei = match[fli];
+      const fm = ei != null ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
       const onTxt = l.overnight ? "🌙 这班要在飞机上过夜" : "落地过夜，不用睡飞机";
-      if (ei >= 0 || st.booked[fli]) {
-        return <p key={li} className="wz-detailline ok">✓ {fm ? `${fm[0]} ` : ""}{l.label} · {onTxt}</p>;
+      if (ei != null || st.booked[fli]) {
+        return <p key={li} className="wz-detailline ok">✈️ ✓ {fm ? `${fm[0]} ` : ""}{l.label} · {onTxt}</p>;
       }
-      return <p key={li} className="wz-detailline no">❗ {l.label} · {onTxt} · 还没订</p>;
+      return <p key={li} className="wz-detailline no">✈️ ❗ {l.label} · {onTxt} · 还没订</p>;
     });
   };
 
@@ -2092,7 +2111,7 @@ function BookingsCalendar() {
       <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
         <span><span className="inline-block w-2.5 h-2.5 rounded-sm mr-1" style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", verticalAlign: "-1px" }} />绿底 = 这晚的酒店已订好（只有酒店能把格子变绿）</span>
-        <span><span style={{ background: "#16a34a", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✓ CA889 北京→新加坡</span> = 航班签：绿 = 已订（带航班号）；<span style={{ background: "#dc2626", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>❗ 西安→新加坡</span> = 红 = 还没订</span>
+        <span><span style={{ background: "#16a34a", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✈️ ✓ CA889 北京→新加坡</span> = 航班签：绿 = 已订（带航班号）；<span style={{ background: "#dc2626", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✈️ ❗ 西安→新加坡</span> = 红 = 还没订</span>
         <span>🏨 酒店名 · N间房 = 这晚住哪家、几间房</span>
         <span><span className="wz-catchip" style={{ background: "#d97706", border: "1px solid #d97706", color: "#fff" }}>🍽 已订</span> = 餐厅订上了（只做标记，不影响格子颜色）</span>
         <span>🌙 飞机上过夜</span>
