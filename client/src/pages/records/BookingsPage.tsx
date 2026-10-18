@@ -1974,7 +1974,7 @@ function BookingsCalendar() {
   const selSplit = selDay ? splitDays.has(selDay) : false;
   const selPlane = selDay ? planeNights.has(selDay) : false;
   const selTransfer = selDay ? transfers.get(selDay) : undefined;
-  const selHotelBooked = selDay ? hotelNights.has(selDay) : false;
+
   const selHotelNeed = selDay ? hotelNeedByDay.get(selDay) !== false : true;
   /* 逐腿订票判定（2026-10-18 用户抓包）：同一天有多条航班腿时，旧逻辑用 some() ——
      订了任意一条就整天标「✈️ 已订」，没订的那条被藏起来（12-06 北京→新加坡已订、
@@ -1995,8 +1995,96 @@ function BookingsCalendar() {
     return { fl, booked: allByCount ? fl.map(() => true) : booked, all, some };
   };
 
+  /* 一腿一签（2026-10-18 用户二改）：状态不许再单独挂一排签——和航班信息分家就看不出哪个签
+     对应哪条腿。每条航班腿自己一个签：订好了 = 绿底「✓ 航班号 城市→城市」，没订 = 红底
+     「❗ 城市→城市」。酒店同理：直接写酒店名 + 间房数，不再只写「已订」。
+     格子（桌面月历）与手机每日列表共用下面这些 helper。 */
+  const hotelShortName = (t: string) => {
+    const m = t.match(/^[^\u4e00-\u9fff]+/);
+    const s = (m ? m[0] : t).replace(/[\s·・\-—]+$/, "").trim();
+    return s || t;
+  };
+  /* 当晚酒店按名称分组汇总间房数（间房数在记录 guests 字段里，如「1间房 · 2位成人」；
+     同一晚两间房分开下单时合并成「· 2间房」） */
+  const hotelGroupsOf = (evs: CalEvent[]) => {
+    const g = new Map<string, number>();
+    for (const e of evs) {
+      if (e.kind !== "hotel") continue;
+      const rm = e.sub.match(/(\d+)\s*间房/);
+      g.set(e.title, (g.get(e.title) ?? 0) + (rm ? +rm[1] : 1));
+    }
+    return [...g.entries()].map(([title, rooms]) => ({ title, rooms }));
+  };
+  const renderHotelLines = (evs: CalEvent[], showUnbooked: boolean) => {
+    const groups = hotelGroupsOf(evs);
+    if (groups.length) {
+      return groups.map((g, gi) => (
+        <span key={`h${gi}`} className="wz-hotelline">🏨 {hotelShortName(g.title)} · {g.rooms}间房</span>
+      ));
+    }
+    return showUnbooked ? <span className="wz-hotelline no">🏨 还没订</span> : null;
+  };
+  const renderLooseFlightEvs = (evs: CalEvent[]) =>
+    evs.filter((e) => e.kind === "flight").map((e, fi) => {
+      const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/);
+      return (
+        <Fragment key={`fe${fi}`}>
+          <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
+          {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
+        </Fragment>
+      );
+    });
+  /* 格子/列表版一腿一签；没被任何腿认领的机票事件（标题对不上路线的兜底）维持旧事件行，不丢信息 */
+  const renderLegPills = (legs: { label: string; mode: string; overnight: boolean }[] | undefined, evs: CalEvent[]) => {
+    if (!legs) return null;
+    const flightEvs = evs.filter((e) => e.kind === "flight");
+    const usedEv = new Set<number>();
+    const st = dayFlightState(legs, evs);
+    let fli = -1;
+    const pills = legs.map((l, li) => {
+      if (l.mode === "rail") return <span key={li} className="wz-calleg rail">🚄 {l.label}</span>;
+      fli += 1;
+      const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
+      const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
+      const em = <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em>;
+      if (ei >= 0) {
+        usedEv.add(ei);
+        return <span key={li} className="wz-legpill ok">✓ {fm ? `${fm[0]} ` : ""}{l.label} {em}</span>;
+      }
+      if (st.booked[fli]) return <span key={li} className="wz-legpill ok">✓ {l.label} {em}</span>;
+      return <span key={li} className="wz-legpill no">❗ {l.label} {em}</span>;
+    });
+    const extraEvs = flightEvs.filter((_, i) => !usedEv.has(i));
+    return (
+      <>
+        {pills}
+        {extraEvs.length > 0 && renderLooseFlightEvs(extraEvs)}
+      </>
+    );
+  };
+  /* 当天明细版一腿一线：与格子同口径（绿 = 已订、带航班号；红 = 还没订），整行上色 */
+  const renderDetailLegs = (legs: { label: string; mode: string; overnight: boolean }[] | undefined, evs: CalEvent[]) => {
+    if (!legs) return null;
+    const flightEvs = evs.filter((e) => e.kind === "flight");
+    const usedEv = new Set<number>();
+    const st = dayFlightState(legs, evs);
+    let fli = -1;
+    return legs.map((l, li) => {
+      if (l.mode === "rail") return <p key={li} className="text-xs text-gray-600">🚄 转场：{l.label}（高铁）</p>;
+      fli += 1;
+      const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
+      const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
+      if (ei >= 0) usedEv.add(ei);
+      const onTxt = l.overnight ? "🌙 这班要在飞机上过夜" : "落地过夜，不用睡飞机";
+      if (ei >= 0 || st.booked[fli]) {
+        return <p key={li} className="wz-detailline ok">✓ {fm ? `${fm[0]} ` : ""}{l.label} · {onTxt}</p>;
+      }
+      return <p key={li} className="wz-detailline no">❗ {l.label} · {onTxt} · 还没订</p>;
+    });
+  };
+
   return (
-    <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
+    <div className="bk-cal bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
       <div className="flex items-center justify-between mb-1">
         <h3 className="font-bold text-gray-900">📅 预定日历</h3>
         <span className="text-[11px] text-gray-400">点任意一天看当天明细</span>
@@ -2004,7 +2092,8 @@ function BookingsCalendar() {
       <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
         <span><span className="inline-block w-2.5 h-2.5 rounded-sm mr-1" style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", verticalAlign: "-1px" }} />绿底 = 这晚的酒店已订好（只有酒店能把格子变绿）</span>
-        <span><span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span> = 这天的机票还没订，红色提醒</span>
+        <span><span style={{ background: "#16a34a", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✓ CA889 北京→新加坡</span> = 航班签：绿 = 已订（带航班号）；<span style={{ background: "#dc2626", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>❗ 西安→新加坡</span> = 红 = 还没订</span>
+        <span>🏨 酒店名 · N间房 = 这晚住哪家、几间房</span>
         <span><span className="wz-catchip" style={{ background: "#d97706", border: "1px solid #d97706", color: "#fff" }}>🍽 已订</span> = 餐厅订上了（只做标记，不影响格子颜色）</span>
         <span>🌙 飞机上过夜</span>
         <span>🚄 高铁转场</span>
@@ -2023,6 +2112,7 @@ function BookingsCalendar() {
         const cells: string[] = [];
         for (let k = gridStart; k <= gridEnd; k = addDayStr(k, 1)) cells.push(k);
         return (
+          <>
           <div className="wz-calmonth">
             <h4>{rangeHead}</h4>
             <div className="wz-calgrid">
@@ -2049,9 +2139,7 @@ function BookingsCalendar() {
                 const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
                 /* 分品类状态（2026-10-17 用户定稿）：绿底只认酒店——这晚酒店订好才变绿；
                    机票没订用红色 ❗ 明确提醒；餐厅订了只挂标记、不影响格子颜色 */
-                const fstate = dayFlightState(tr, dayEvents);
                 const restBooked = dayEvents.some((e) => e.kind === "restaurant");
-                const hasFlightLeg = !!tr?.some((l) => l.mode === "flight");
                 const hotelNeed = hotelNeedByDay.get(k) !== false;
                 const hotelGreen = booked && city != null && !isPlane && hotelNeed;
                 const chip = (ok: boolean, color: string, label: string) => (
@@ -2062,58 +2150,65 @@ function BookingsCalendar() {
                     <span className="wz-caldate">{dateNum}</span>
                     {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
                     {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
-                    {tr && (() => {
-                      /* 精简（2026-10-18 用户）：已订的腿只显示航班号一行，原来的「哪到哪」路线行不再重复；
-                         未订的腿保留路线行（下方红色 ❗ 签会说明未订）。过夜标注是睡觉信息、保留不删。
-                         记录标题对不上路线的兜底情形维持旧显示（腿行+事件行都在），不丢信息。 */
-                      const flightEvs = dayEvents.filter((e) => e.kind === "flight");
-                      const usedEv = new Set<number>();
-                      const legRows = tr.map((l, li) => {
-                        if (l.mode === "rail") return <span key={li} className="wz-calleg rail">🚄 {l.label}</span>;
-                        const ei = flightEvs.findIndex((e, i) => !usedEv.has(i) && e.title.replace(/\s/g, "").includes(legRouteKey(l.label)));
-                        const fm = ei >= 0 ? (flightEvs[ei].title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/) : null;
-                        if (ei >= 0 && fm) {
-                          usedEv.add(ei);
-                          return <span key={li} className="wz-calleg" style={{ color: "#4f46e5" }}>✈️ {fm[0]} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>;
-                        }
-                        return <span key={li} className="wz-calleg">✈️ {l.label} <em className={l.overnight ? "on" : ""}>{l.overnight ? "🌙 飞机上过夜" : "落地过夜"}</em></span>;
-                      });
-                      const extraEvs = flightEvs.filter((_, i) => !usedEv.has(i));
-                      return (
-                        <>
-                          {legRows}
-                          {extraEvs.map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
-                            <Fragment key={`fe${fi}`}>
-                              <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
-                              {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
-                            </Fragment>
-                          ); })}
-                        </>
-                      );
-                    })()}
-                    {!tr && dayEvents.filter((e) => e.kind === "flight").map((e, fi) => { const fm = (e.title.split("·")[1] || "").match(/[A-Z0-9]{2}\d{3,4}/); return (
-                      <Fragment key={`fe${fi}`}>
-                        <span className="wz-calleg evt" style={{ color: "#4f46e5" }}>✈️ {e.title}</span>
-                        {fm && <span className="wz-calleg evtm" style={{ color: "#4f46e5" }}>✈️ {fm[0]}</span>}
-                      </Fragment>
-                    ); })}
+                    {renderLegPills(tr, dayEvents)}
+                    {!tr && renderLooseFlightEvs(dayEvents)}
                     {nonHotel.filter((e) => e.kind !== "flight").length > 0 && (
                       <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.filter((e) => e.kind !== "flight").map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel.find((e) => e.kind !== "flight")!.title}</span>
                     )}
-                    <span className="wz-catchips">
-                      {hasFlightLeg && (fstate.all
-                        ? chip(true, "#4f46e5", "✈️ 已订")
-                        : fstate.some
-                          ? <>{chip(true, "#4f46e5", "✈️ 已订")}<span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 还有未订</span></>
-                          : <span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span>)}
-                      {city != null && !isPlane && hotelNeed && chip(booked, "#0f766e", booked ? "🏨 已订" : "🏨 未订")}
-                      {restBooked && chip(true, "#d97706", "🍽 已订")}
-                    </span>
+                    {renderHotelLines(dayEvents, city != null && !isPlane && hotelNeed)}
+                    {restBooked && (
+                      <span className="wz-catchips">{chip(true, "#d97706", "🍽 已订")}</span>
+                    )}
                   </button>
                 );
               })}
             </div>
           </div>
+          <div className="wz-callist">
+            {/* 手机每日列表（2026-10-18 用户：月历格子在手机上太局促，改按天纵排、只列行程日；
+                桌面仍用上面的月历。两边共用同一套逐腿/酒店渲染，口径一致） */}
+            {(() => {
+              let lastMo = "";
+              const wdNames = ["一", "二", "三", "四", "五", "六", "日"];
+              return cells
+                .filter((k) => dayCity.get(k) != null || (events.get(k)?.length ?? 0) > 0 || transfers.get(k))
+                .map((k) => {
+                  const dom = Number(k.slice(8));
+                  const mo2 = Number(k.slice(5, 7));
+                  const city = dayCity.get(k);
+                  const isPlane = planeNights.has(k);
+                  const tr = transfers.get(k);
+                  const dayEvents = events.get(k) ?? [];
+                  const isSel = selDay === k;
+                  const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
+                  const restBooked = dayEvents.some((e) => e.kind === "restaurant");
+                  const hotelNeed = hotelNeedByDay.get(k) !== false;
+                  const hotelGreen = hotelNights.has(k) && city != null && !isPlane && hotelNeed;
+                  const moKey = `${Number(k.slice(0, 4))}年${monthNames[mo2 - 1]}`;
+                  const head = moKey !== lastMo ? <h5 key={`mh-${k}`}>{moKey}</h5> : null;
+                  lastMo = moKey;
+                  return (
+                    <Fragment key={k}>
+                      {head}
+                      <button onClick={() => setSelDay(isSel ? null : k)} className={`wz-calrow${isSel ? " sel" : ""}${hotelGreen ? " booked" : ""}`} style={{ borderLeft: `4px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
+                        <span className="wz-calrowhead"><span>{mo2}/{dom} · 周{wdNames[dowOf(k)]}</span><span>{isPlane ? "🌙 飞机上过夜" : city ?? ""}</span></span>
+                        {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
+                        {renderLegPills(tr, dayEvents)}
+                        {!tr && renderLooseFlightEvs(dayEvents)}
+                        {nonHotel.filter((e) => e.kind !== "flight").length > 0 && (
+                          <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.filter((e) => e.kind !== "flight").map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel.find((e) => e.kind !== "flight")!.title}</span>
+                        )}
+                        {renderHotelLines(dayEvents, city != null && !isPlane && hotelNeed)}
+                        {restBooked && (
+                          <span className="wz-catchips"><span className="wz-catchip" style={{ background: "#d97706", border: "1px solid #d97706", color: "#fff" }}>🍽 已订</span></span>
+                        )}
+                      </button>
+                    </Fragment>
+                  );
+                });
+            })()}
+          </div>
+          </>
         );
       })()}
       {selDay && (
@@ -2122,25 +2217,11 @@ function BookingsCalendar() {
             {selDay}
             {selCity ? ` · ${selPlane ? `🌙 当晚睡在飞机上（白天在${selCity}）` : selSplit ? "当晚住：北京（你）/ 西安（老婆+Dylan）· 分开行动" : `当晚住：${selCity}`}` : ""}
           </div>
-          {selTransfer && selTransfer.map((l, li) => (
-            <p key={li} className="text-xs text-gray-600">
-              {l.mode === "rail"
-                ? `🚄 转场：${l.label}（高铁）`
-                : `✈️ 转场：${l.label}（飞机）· ${l.overnight ? "🌙 这班要在飞机上过夜" : "落地过夜，不用睡飞机"}`}
-            </p>
-          ))}
-          {(() => {
-            /* 精简（2026-10-18 用户）：已出票的腿下方明细里有带航班号的记录，不再单列「已出票」状态行；
-               只有还没订的腿保留这一行，红色叹号提醒 */
-            const st = dayFlightState(selTransfer, selEvents);
-            return st.fl.map((l, li) => st.booked[li] ? null : (
-              <p key={li} className="text-xs font-semibold text-red-600">❗ {l.label}：还没订</p>
-            ));
-          })()}
+          {renderDetailLegs(selTransfer, selEvents)}
           {selCity && !selPlane && (
             <p className="text-xs text-gray-600">
-              {selHotelBooked
-                ? "🏨 酒店：已订"
+              {hotelGroupsOf(selEvents).length
+                ? `🏨 酒店：${hotelGroupsOf(selEvents).map((g) => `${hotelShortName(g.title)} · ${g.rooms}间房`).join("；")}`
                 : selHotelNeed
                   ? "🏨 酒店：还没订"
                   : "🏠 酒店：这个城市在大行程里设了不用订酒店（住家里）"}
