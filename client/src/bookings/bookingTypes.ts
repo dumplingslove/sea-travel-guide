@@ -116,6 +116,10 @@ export function bookingSummary(d: BookingData): string {
   const ex = d.extra as unknown;
   if (ex) parts.push(typeof ex === "string" ? ex : Object.values(ex as Record<string, string>).join(" · "));
   if (d.code) parts.push(`确认号 ${d.code}`);
+  /* 价格上卡面（2026-10-18 用户：每张机票/每个酒店的价格要在最终预定里直接看到，
+     且用美金显示——外币总价在 details 里带 ≈USD 折算，这里原样带出） */
+  if (d.details?.["总价"]) parts.push(`💰 ${d.details["总价"]}`);
+  else if (d.details?.["押金"]) parts.push(`💰 押金 ${d.details["押金"]}`);
   if (!parts.length && d.note) parts.push(d.note);
   return parts.join(" · ");
 }

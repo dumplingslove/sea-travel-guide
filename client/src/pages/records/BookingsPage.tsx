@@ -2316,6 +2316,9 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
       data.date ? (data.dateEnd ? `${data.date} → ${data.dateEnd}` : data.date) : "",
       data.time ?? "",
       data.guests ?? "",
+      /* 价格上卡面（2026-10-18 用户：每张机票/每个酒店的价格要在卡面上直接看到，
+         且用美金显示——外币总价在 details 里带 ≈USD 折算，这里原样带出） */
+      data.details?.["总价"] ? `💰 ${data.details["总价"]}` : data.details?.["押金"] ? `💰 押金 ${data.details["押金"]}` : "",
     ]
       .filter(Boolean)
       .join(" · ");
