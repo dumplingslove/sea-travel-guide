@@ -1981,9 +1981,9 @@ function BookingsCalendar() {
       </div>
       <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
       <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
-        <span>格子里的标签按品类分开看：<span style={{ color: "#4f46e5", fontWeight: 600 }}>✈️ 机票</span> · <span style={{ color: "#0f766e", fontWeight: 600 }}>🏨 酒店</span> · <span style={{ color: "#d97706", fontWeight: 600 }}>🍽 餐厅</span></span>
-        <span><span className="wz-catchip" style={{ background: "#0f766e", border: "1px solid #0f766e", color: "#fff" }}>实心</span> = 已订好</span>
-        <span><span className="wz-catchip" style={{ background: "#fff", border: "1px dashed #0f766e", color: "#0f766e" }}>空心</span> = 还没订</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-sm mr-1" style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", verticalAlign: "-1px" }} />绿底 = 这晚的酒店已订好（只有酒店能把格子变绿）</span>
+        <span><span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span> = 这天的机票还没订，红色提醒</span>
+        <span><span className="wz-catchip" style={{ background: "#d97706", border: "1px solid #d97706", color: "#fff" }}>🍽 已订</span> = 餐厅订上了（只做标记，不影响格子颜色）</span>
         <span>🌙 飞机上过夜</span>
         <span>🚄 高铁转场</span>
       </div>
@@ -2025,17 +2025,18 @@ function BookingsCalendar() {
                 const booked = hotelNights.has(k);
                 const isSel = selDay === k;
                 const nonHotel = dayEvents.filter((e) => e.kind !== "hotel");
-                /* 分品类状态（2026-10-17 用户纠正）：不许整格一色——机票/酒店/餐厅各一个标签，
-                   实心=已订、虚线空心=未订；如 12-09 只有餐厅订了，酒店标签必须仍显示未订 */
+                /* 分品类状态（2026-10-17 用户定稿）：绿底只认酒店——这晚酒店订好才变绿；
+                   机票没订用红色 ❗ 明确提醒；餐厅订了只挂标记、不影响格子颜色 */
                 const flightBooked = dayEvents.some((e) => e.kind === "flight");
                 const restBooked = dayEvents.some((e) => e.kind === "restaurant");
                 const hasFlightLeg = !!tr?.some((l) => l.mode === "flight");
                 const hotelNeed = hotelNeedByDay.get(k) !== false;
+                const hotelGreen = booked && city != null && !isPlane && hotelNeed;
                 const chip = (ok: boolean, color: string, label: string) => (
                   <span className="wz-catchip" style={ok ? { background: color, border: `1px solid ${color}`, color: "#fff" } : { background: "#fff", border: `1px dashed ${color}`, color }}>{label}</span>
                 );
                 return (
-                  <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
+                  <button key={k} onClick={() => setSelDay(isSel ? null : k)} className={`wz-calday${isSel ? " sel" : ""}${hotelGreen ? " booked" : ""}`} style={{ borderTop: `3px solid ${segColor[segOf.get(k) ?? ""] ?? "#94a3b8"}` }}>
                     <span className="wz-caldate">{dateNum}</span>
                     {city != null && <span className="wz-calcity">{isPlane ? "🌙 飞机上过夜" : city}</span>}
                     {isPlane && city != null && <span className="wz-calnote">白天在{city}</span>}
@@ -2048,7 +2049,9 @@ function BookingsCalendar() {
                       <span className="wz-calleg" style={{ color: "#64748b" }}>{nonHotel.map((e) => kindMeta[e.kind].icon).join(" ")} {nonHotel[0]!.title}</span>
                     )}
                     <span className="wz-catchips">
-                      {hasFlightLeg && chip(flightBooked, "#4f46e5", flightBooked ? "✈️ 已订" : "✈️ 未订")}
+                      {hasFlightLeg && (flightBooked
+                        ? chip(true, "#4f46e5", "✈️ 已订")
+                        : <span className="wz-catchip" style={{ background: "#dc2626", border: "1px solid #dc2626", color: "#fff" }}>❗ 机票未订</span>)}
                       {city != null && !isPlane && hotelNeed && chip(booked, "#0f766e", booked ? "🏨 已订" : "🏨 未订")}
                       {restBooked && chip(true, "#d97706", "🍽 已订")}
                     </span>
@@ -2073,11 +2076,11 @@ function BookingsCalendar() {
             </p>
           ))}
           {selTransfer?.some((l) => l.mode === "flight") && (
-            <p className="text-xs text-gray-600">
-              {selEvents.some((e) => e.kind === "flight")
-                ? "✈️ 机票：已出票（见下方明细）"
-                : "✈️ 机票：还没订"}
-            </p>
+            selEvents.some((e) => e.kind === "flight") ? (
+              <p className="text-xs text-gray-600">✈️ 机票：已出票（见下方明细）</p>
+            ) : (
+              <p className="text-xs font-semibold text-red-600">❗ 机票：还没订</p>
+            )
           )}
           {selCity && !selPlane && (
             <p className="text-xs text-gray-600">
