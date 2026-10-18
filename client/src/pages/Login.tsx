@@ -6,11 +6,36 @@ import { supabaseConfigured } from "@/lib/supabase";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { isAuthenticated, loading: authLoading, sendMagicLink } = useAuth();
+  const { isAuthenticated, loading: authLoading, sendMagicLink, completeWithPastedLink } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [pasted, setPasted] = useState("");
+  const [pasteError, setPasteError] = useState("");
+  const [pasting, setPasting] = useState(false);
+
+  const handlePasteLogin = async () => {
+    setPasteError("");
+    if (!pasted.trim()) {
+      setPasteError("先把拷贝的登录链接粘贴进来");
+      return;
+    }
+    setPasting(true);
+    try {
+      await completeWithPastedLink(pasted);
+      /* 登录成功后 useAuth 的监听会更新状态，本页自动跳回首页 */
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "登录失败，请稍后重试";
+      setPasteError(
+        /expired|invalid|already/i.test(msg)
+          ? "这个链接已经失效或被用过了（在浏览器里点开过也会作废）。请点下面「重新发送」，在新邮件里只长按拷贝、不要点开。"
+          : msg
+      );
+    } finally {
+      setPasting(false);
+    }
+  };
 
   if (!authLoading && isAuthenticated) {
     navigate("/", { replace: true });
@@ -62,18 +87,43 @@ export default function Login() {
             </p>
           </div>
         ) : sent ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm text-center">
-            <CheckCircle2 size={28} className="mx-auto text-emerald-500 mb-3" />
-            <p className="font-medium">已发送，请去邮箱点击登录链接</p>
-            <p className="text-sm text-gray-500 mt-1">
-              链接发往 {email}，点击后自动登录并回到本站。
-            </p>
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <div className="text-center">
+              <CheckCircle2 size={28} className="mx-auto text-emerald-500 mb-3" />
+              <p className="font-medium">登录邮件已发送到 {email}</p>
+            </div>
+            <div className="text-sm text-gray-600 mt-4 space-y-2">
+              <p><b>在浏览器里用：</b>去邮箱点开邮件里的登录链接即可，会自动登录。</p>
+              <p><b>在手机桌面 App 里用：</b>不要点开链接（点开只会登录浏览器，App 里还是未登录，这是苹果的隔离机制）。在邮件里<b>长按登录链接 → 拷贝</b>，回到这里粘贴：</p>
+            </div>
+            {pasteError && (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 text-red-700 text-sm mt-3">
+                <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                <span>{pasteError}</span>
+              </div>
+            )}
+            <textarea
+              value={pasted}
+              onChange={(e) => setPasted(e.target.value)}
+              placeholder="把拷贝的登录链接粘贴到这里"
+              rows={3}
+              className="w-full mt-3 px-3 py-2 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-600 break-all"
+            />
             <button
-              onClick={() => setSent(false)}
-              className="text-sm text-teal-700 hover:text-teal-900 transition-colors mt-4"
+              onClick={handlePasteLogin}
+              disabled={pasting}
+              className="w-full py-2 mt-2 rounded-lg bg-teal-700 text-white text-sm font-medium hover:bg-teal-800 disabled:opacity-60"
             >
-              换个邮箱
+              {pasting ? "登录中..." : "用粘贴的链接在 App 里登录"}
             </button>
+            <div className="text-center mt-4">
+              <button
+                onClick={() => { setSent(false); setPasted(""); setPasteError(""); }}
+                className="text-sm text-teal-700 hover:text-teal-900 transition-colors"
+              >
+                重新发送 / 换个邮箱
+              </button>
+            </div>
           </div>
         ) : (
           <form
@@ -108,6 +158,8 @@ export default function Login() {
               </div>
               <p className="text-xs text-gray-500">
                 无需密码，输入邮箱后我们会发一封登录链接给你。
+                若你是从手机桌面 App 打开的本页：发送后别点开邮件里的链接（会跑去浏览器），
+                下一步会教你长按拷贝链接、回来粘贴登录。
               </p>
             </div>
 
