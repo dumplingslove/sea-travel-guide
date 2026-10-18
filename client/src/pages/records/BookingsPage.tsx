@@ -20,7 +20,7 @@ import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
-import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT } from "@/guide/GuideApp";
+import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, carrierPointsTag, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT, CashTipChip } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
 import { hotels, attractions } from "@/guide/data";
 import { placeDetailPath, type PlaceKind } from "@/guide/placeDetail";
@@ -1071,7 +1071,7 @@ function FavoriteActionList({
                         {/* 2026-10-17 用户：价格追踪是付款 checklist——积分/用卡弹窗也要在这里能打开，
                             不许只在预定筛选有；点标签当前页弹窗，不跳页 */}
                         {f.type === "flight" && (
-                          <div className="mt-1.5"><PointsTag text={f.row.title} seg={flightLeg?.dbSeg} /></div>
+                          <div className="mt-1.5"><PointsTag text={f.row.title} seg={flightLeg?.dbSeg} /><CashTipChip text={f.row.title} seg={flightLeg?.dbSeg} /></div>
                         )}
                         {f.type === "hotel" && (
                           <div className="mt-1.5"><HotelPayTag name={f.row.title} city={itemCity(f)} /></div>
@@ -1971,7 +1971,7 @@ function BookingsCalendar() {
                   {kindMeta[e.kind].icon} <span className="font-medium">{e.title}</span>
                   {e.sub && <span className="text-gray-400"> · {e.sub}</span>}
                   {e.kind === "flight" && carrierPointsTag(e.title) && (
-                    <span> · <PointsTag text={e.title} /></span>
+                    <span> · <PointsTag text={e.title} /><CashTipChip text={e.title} /></span>
                   )}
                 </li>
               ))}
@@ -2104,7 +2104,7 @@ function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
                     )}
                     {it.pointsTag && (
                       <div className="mt-0.5">
-                        <PointsTag text={it.pointsText ?? it.title} />
+                        <PointsTag text={it.pointsText ?? it.title} /><CashTipChip text={it.pointsText ?? it.title} />
                       </div>
                     )}
                     {it.code && (
@@ -2627,7 +2627,7 @@ function BookingsInner() {
         </div>
       ) : section === "screen" && cat === "flights" ? (
         <div className="guide-scope">
-          <Flights onBook={onBookPreset} />
+          <Flights onBook={onBookPreset} mapStickyTop={mapStickyTop} />
         </div>
       ) : section === "screen" && cat === "restaurants" ? (
         <div className="guide-scope">

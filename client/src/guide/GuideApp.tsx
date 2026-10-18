@@ -683,7 +683,31 @@ export const SEGMENT_CASH_TIP: Record<string, string> = {
 /** 无航段上下文（最终预定弹窗）或该段无专属提示时的用卡推荐：按航司属地给默认。
  * 2026-10-17 用户抓包：用卡提示此前嵌在「本航段积分价」区块里，纯现金航段
  * （普吉→清迈、曼谷→西安等无积分价数据的段）和最终预定弹窗根本不显示——改为独立标签区、恒显示。 */
-export function carrierCashTip(text: string): string {
+/** 现金用卡短签（2026-10-17 用户：现金买法和用哪张卡要和积分签放在一起、
+ * 在最外层卡片上直接看到，不许再点进详情才看得到）。全文版仍在积分弹窗里。 */
+export const SEGMENT_CASH_SHORT: Record<string, string> = {
+ 'SEA-PEK': '💳 现金刷 Amex Platinum',
+ 'PEK-SIN': '💳 现金刷 Amex Platinum',
+ 'XIY-SIN': '💳 现金刷 Amex Platinum',
+ 'SIN-XIY': '💳 现金刷 Amex Platinum',
+ 'SIN-HKT': '💳 现金刷 Amex Platinum',
+ 'HKT-CNX': '💳 现金刷 Amex Platinum / Atmos Summit',
+ 'CNX-BKK': '💳 现金刷 Amex Platinum',
+ 'BKK-XIY': '💳 现金刷 Atmos Summit（境外 3x）/ Amex Platinum',
+ 'BKK-PEK': '💳 现金刷 Amex Platinum',
+ 'XIY-ICN': '💳 现金刷 Amex Platinum',
+ 'ICN-SEA': '💳 本程已出票',
+};
+export function carrierCashShort(text: string): string {
+ if (/Alaska|Delta|United|Hawaiian/i.test(text)) return '💳 现金刷 Amex Platinum';
+ return '💳 现金刷 Atmos Summit（境外 3x）/ Amex Platinum';
+}
+export function CashTipChip({ text, seg }: { text: string; seg?: string }) {
+ const t = (seg && SEGMENT_CASH_SHORT[seg]) || carrierCashShort(text);
+ return <span className="cashtipchip">{t}</span>;
+}
+
+function carrierCashTip(text: string): string {
  if (/Alaska|Delta/.test(text)) return '美国航司、美元计价：Amex Platinum 直订 5x MR 最厚；在阿拉斯加官网买票也可用 Atmos Summit（Alaska 消费 3x Atmos 分）';
  return '首选 Amex Platinum（航司官网直订 5x MR，保障最全）；境外航司网站付款（外币计价）可用 Atmos Summit（境外消费 3x Atmos 分，顺便攒订大韩的里程）；别用有境外交易费的卡（如 Citi Double Cash）';
 }
@@ -804,36 +828,73 @@ export function HotelPayTag({ name, city, chain: chainProp }: { name: string; ci
  </span>;
 }
 
-/** 本段机场地图（2026-10-17 用户：预定筛选要能看到两边机场的位置，
- * 同城多机场必须区分开——北京首都 PEK vs 大兴 PKX、曼谷素万那普 BKK vs 廊曼 DMK）。
- * 机场点与航线对全部由本段航班选项的 dep/arrAirport 推导；选项没带机场时
- * 回退到航段两端机场。容器 className 静态（Leaflet 会往上加类，React 不许重写）。 */
-function SegmentAirportMap({leg}:{leg:FlightLegInfo}){
- const ref=useRef<HTMLDivElement|null>(null);
- const opts=[...(leg.options??[]),...(leg.businessOptions??[])];
- const segCodes=leg.dbSeg?leg.dbSeg.split('-'):[];
- const defDep=segCodes[0]; const defArr=segCodes[1];
- const codes=new Set<string>(); const pairs=new Set<string>();
- opts.forEach(o=>{const d=o.depAirport??defDep;const a=o.arrAirport??defArr;if(d)codes.add(d);if(a)codes.add(a);if(d&&a)pairs.add(`${d}|${a}`);});
- if(!pairs.size&&defDep&&defArr){codes.add(defDep);codes.add(defArr);pairs.add(`${defDep}|${defArr}`);}
- const pts=[...codes].map(c=>airportByCode(c)).filter((a):a is AirportInfo=>!!a);
- const pairList=[...pairs].map(p=>p.split('|') as [string,string]).filter(([d,a])=>airportByCode(d)&&airportByCode(a));
- const mapKey=pts.map(p=>p.code).join(',')+'#'+pairList.map(p=>p.join('-')).join(',');
- useEffect(()=>{
-   if(!ref.current||pts.length<2)return;
-   const map=L.map(ref.current,{scrollWheelZoom:false});
-   addAmapTiles(map);
-   pairList.forEach(([d,a])=>{const A=airportByCode(d)!;const B=airportByCode(a)!;L.polyline([LL(A.lat,A.lng),LL(B.lat,B.lng)],{color:'#7c3aed',weight:2,dashArray:'6 5',opacity:.7}).addTo(map);});
-   pts.forEach(p=>{L.marker(LL(p.lat,p.lng),{icon:L.divIcon({className:'apicon',html:`<span class="ap-plate"><b>✈️ ${p.code}</b><i>${p.name.replace(/国际机场|机场/g,'')}</i></span>`,iconSize:[92,36],iconAnchor:[46,18]})}).addTo(map);});
-   map.fitBounds(L.latLngBounds(pts.map(p=>LL(p.lat,p.lng))).pad(0.3));
-   return ()=>{map.remove();};
+/** 航班总览吸顶地图（2026-10-17 用户改版：不要每张卡里塞一张小地图——
+ * 要跟酒店/价格追踪那边一样，一张固定在顶部的地图，点哪张票联动高亮哪条航线）。
+ * 机场点与航线对由全部航段选项的 dep/arrAirport 推导（同城多机场分开画：
+ * 北京 PEK/PKX、曼谷 BKK/DMK）；选中航班的机场对加粗高亮并 flyToBounds。
+ * 容器 className 静态（Leaflet 会往上加类，React 不许重写）。 */
+function FlightsRouteMap({ legs, sel, stickyTop }: { legs: FlightLegInfo[]; sel: { dep: string; arr: string; label: string } | null; stickyTop: number }) {
+ const ref = useRef<HTMLDivElement | null>(null);
+ const mapRef = useRef<any>(null);
+ const layerRef = useRef<any>(null);
+ const [collapsed, setCollapsed] = useState(false);
+ const data = useMemo(() => {
+   const codes = new Map<string, AirportInfo>(); const pairs = new Map<string, [string, string]>();
+   legs.forEach(leg => {
+     const segCodes = leg.dbSeg ? leg.dbSeg.split('-') : [];
+     const defDep = segCodes[0]; const defArr = segCodes[1];
+     const opts = [...(leg.options ?? []), ...(leg.businessOptions ?? [])];
+     const addPair = (d?: string, a?: string) => {
+       if (!d || !a) return;
+       const A = airportByCode(d); const B = airportByCode(a);
+       if (!A || !B) return;
+       codes.set(d, A); codes.set(a, B); pairs.set(`${d}|${a}`, [d, a]);
+     };
+     if (opts.length) opts.forEach(o => addPair(o.depAirport ?? defDep, o.arrAirport ?? defArr));
+     else addPair(defDep, defArr);
+   });
+   return { pts: [...codes.values()], pairs: [...pairs.values()] };
+ }, [legs]);
+ const selPair = sel ? `${sel.dep}|${sel.arr}` : '';
+ useEffect(() => {
+   if (collapsed) {
+     if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; layerRef.current = null; }
+     return;
+   }
+   if (!ref.current || data.pts.length < 2) return;
+   if (!mapRef.current) {
+     mapRef.current = L.map(ref.current, { scrollWheelZoom: false });
+     addAmapTiles(mapRef.current);
+   }
+   const map = mapRef.current;
+   if (layerRef.current) layerRef.current.remove();
+   const g = L.layerGroup().addTo(map); layerRef.current = g;
+   data.pairs.forEach(([d, a]) => {
+     const A = airportByCode(d)!; const B = airportByCode(a)!;
+     const isSel = selPair === `${d}|${a}`;
+     L.polyline([LL(A.lat, A.lng), LL(B.lat, B.lng)], isSel ? { color: '#0f766e', weight: 4, opacity: 1 } : { color: '#94a3b8', weight: 1.5, opacity: 0.55 }).addTo(g);
+   });
+   data.pts.forEach(p => {
+     L.marker(LL(p.lat, p.lng), { icon: L.divIcon({ className: 'apicon', html: `<span class="ap-plate"><b>✈️ ${p.code}</b><i>${p.name.replace(/国际机场|机场/g, '')}</i></span>`, iconSize: [92, 36], iconAnchor: [46, 18] }) }).addTo(g);
+   });
+   if (sel) {
+     const A = airportByCode(sel.dep); const B = airportByCode(sel.arr);
+     if (A && B) map.flyToBounds(L.latLngBounds([LL(A.lat, A.lng), LL(B.lat, B.lng)]).pad(0.35), { duration: 0.6 });
+   } else {
+     map.fitBounds(L.latLngBounds(data.pts.map(p => LL(p.lat, p.lng))).pad(0.2));
+   }
    // eslint-disable-next-line react-hooks/exhaustive-deps
- },[mapKey]);
- if(pts.length<2)return null;
- return <div ref={ref} className="segapmap" style={{height:230}} aria-label="本段起降机场地图"/>;
+ }, [data, selPair, collapsed]);
+ useEffect(() => () => { if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } }, []);
+ if (data.pts.length < 2) return null;
+ return <div className="flightsmapwrap" style={{ top: stickyTop }}>
+   <div className="flightsmapbar"><span>{sel ? `🗺️ 已选：${sel.label}（再点一次该航班取消）` : '🗺️ 航班地图 · 点任意航班，地图联动高亮它的航线'}</span><button type="button" onClick={() => setCollapsed(c => !c)}>{collapsed ? '展开地图' : '收起'}</button></div>
+   {!collapsed && <div ref={ref} className="flightsroutemap" aria-label="全部航段机场与航线地图" />}
+ </div>;
 }
 
-function FlightLegOptions({leg}:{leg:FlightLegInfo}){
+function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selKey?:string|null; onSelectFlight?:(key:string,dep:string,arr:string,label:string)=>void}){
+ const segCodesForMap=leg.dbSeg?leg.dbSeg.split('-'):[];
  const eco=leg.options??null;                 /* null/空 = 未查询；查过但无直飞用 queriedAt 区分 */
  const biz=leg.businessOptions??null;         /* null = 未查询；[] = 查过但无商务舱直飞 */
  const [cabin,setCabin]=useState<'eco'|'biz'>('eco');
@@ -875,21 +936,23 @@ function FlightLegOptions({leg}:{leg:FlightLegInfo}){
    <button type="button" role="tab" aria-selected={cabin==='biz'} className={cabin==='biz'?'active':''} onClick={()=>setCabin('biz')}>商务舱{bizMin!=null?` · $${bizMin}起`:bizState==='none'?' · 无':' · 待查'}</button>
   </div>
   {leg.dbSeg&&SEGMENT_POINTS_HINT[leg.dbSeg]&&<p className="flightpointsline">🧾 {SEGMENT_POINTS_HINT[leg.dbSeg]}（点任意航班的紫色积分标签看明细）</p>}
-  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}`}>
+  {curState==='ok'?<ul className="flighttimeline">{sorted.map((o,oi)=>{const dur=flightDur(o);const flightName=`${o.carrier} ${o.flight} ${leg.route} ${o.depart}→${o.arrive}`;const lp=livePriceOf(o,cabin);const shownPrice=lp??o.price;const isFav=isFavOf(o);const rowKey=`${leg.dbSeg??leg.route}|${o.carrier}|${o.flight}|${cabin}`;return <li key={oi} className={`${o.recommend?'rec':''}${isFav?' fav':''}${selKey===rowKey?' selflight':''}`} style={{cursor:onSelectFlight?'pointer':undefined}} title={onSelectFlight?'点这张票，顶部地图联动高亮它的航线':undefined} onClick={onSelectFlight?(e)=>{if((e.target as HTMLElement).closest('button, a, details, summary, input, textarea, select'))return;onSelectFlight(rowKey,o.depAirport??segCodesForMap[0]??'',o.arrAirport??segCodesForMap[1]??'',`${o.carrier} ${o.flight} ${leg.route}`);}:undefined}>
     <div className="ft-times"><b>{o.depart}</b><span className="ft-line" aria-hidden="true"><i/></span><b>{o.arrive}{o.arrivePlusDay?'+1':''}</b></div>
-    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/></div>
+    <div className="ft-meta"><span className="ft-flight">{o.carrier} {o.flight}{(o.stops??0)>0&&o.via?` · 经${o.via}中转`:''}</span>{(o.depAirport==='PKX'||o.depAirport==='DMK'||o.arrAirport==='PKX'||o.arrAirport==='DMK')&&<span style={{color:'#b45309',fontWeight:600}}>{[o.depAirport==='PKX'?'大兴出发':o.depAirport==='DMK'?'廊曼出发':null,o.arrAirport==='PKX'?'落大兴':o.arrAirport==='DMK'?'落廊曼':null].filter(Boolean).join(' · ')}</span>}{dur&&<span className="ft-dur">飞行 {dur}</span>}{isRedEye(o)&&<em className="ft-redeye">🌙 红眼</em>}{o.recommend&&<em className="fo-rec">推荐</em>}{isFav&&<em className="fo-fav">♥ 已收藏</em>}<PointsTag text={o.carrier} seg={leg.dbSeg}/><CashTipChip text={o.carrier} seg={leg.dbSeg}/></div>
     <div className="ft-side">{shownPrice!=null?<b className="fo-price">${Math.round(shownPrice)}</b>:<b className="fo-price" style={{fontSize:13,color:'#92400e'}}>价格待查</b>}{lp!=null&&<span style={{color:'#0f766e',fontSize:11,fontWeight:600}}>最新实查</span>}{(()=>{const fare=[o.refundable==='yes'?'可退':o.refundable==='no'?'不可退':null,o.changeable==='yes'?'可改':o.changeable==='no'?'不可改':null,o.bags?`托运${o.bags}`:null].filter(Boolean).join('·');return fare?<span className="fo-fare">{fare}</span>:null;})()}<FavButton name={flightName} city="" type="flight" extra={{flight:{carrier:o.carrier,flight:o.flight,depart:o.depart,arrive:o.arrive,arrivePlusDay:!!o.arrivePlusDay,price:shownPrice!=null?Math.round(shownPrice):null,cabin,route:leg.route,date:leg.date,priceBasis:leg.priceBasis,queriedAt:leg.queriedAt}}}/></div>
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
-  <SegmentAirportMap leg={leg}/>
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</p></details>}
   <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>
  </div>;
 }
 
-export function Flights({onBook}:{onBook?:OnBook}){
+export function Flights({onBook, mapStickyTop}:{onBook?:OnBook; mapStickyTop?:number}){
  const segments = useFullTripSegments();
+ /* 吸顶联动地图的选中航班（2026-10-17 用户：点哪张票，顶部地图高亮哪条航线；再点取消） */
+ const [mapSel,setMapSel]=useState<{key:string;dep:string;arr:string;label:string}|null>(null);
+ const handleSelectFlight=(key:string,dep:string,arr:string,label:string)=>{ if(!dep||!arr)return; setMapSel(prev=>prev&&prev.key===key?null:{key,dep,arr,label}); };
  /** 航段以 FLIGHT_LEGS 为唯一数据源（当前 11 段全量：去程西雅图→北京 1 段、亚洲段 8 段、
   * 回程 2 段——西安→首尔、首尔→西雅图 AS120 已出票；段数以 bookingTimeline.ts 头注为准）：
   * 每日航班刷新任务更新它的日期与直飞选项，这里自动同步；
@@ -941,7 +1004,7 @@ export function Flights({onBook}:{onBook?:OnBook}){
  const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：现行回程（2026-10-13 定）为分开行动最后一天高铁北京→西安汇合、全家一起西安→首尔（住 2 晚）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><FlightsRouteMap legs={legs.map(l=>l.leg)} sel={mapSel?{dep:mapSel.dep,arr:mapSel.arr,label:mapSel.label}:null} stickyTop={mapStickyTop??64}/><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：现行回程（2026-10-13 定）为分开行动最后一天高铁北京→西安汇合、全家一起西安→首尔（住 2 晚）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg} selKey={mapSel?.key??null} onSelectFlight={handleSelectFlight}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 
