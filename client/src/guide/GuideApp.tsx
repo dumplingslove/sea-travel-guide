@@ -1,4 +1,5 @@
 import { Component, Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from "react-dom";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // space-sdk 在 GitHub Pages 新站不可用：顶部署名条由新站全局 Header 承担，此处 stub 为空，保持视觉一致。
@@ -735,7 +736,7 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
  const carrierName = text.length <= 40 ? text : '';
  return <span className="pointstagwrap">
    <button type="button" className="pointstag" onClick={() => setOpen(true)} aria-label={`查看${carrierName || '该航司'}积分兑换指南`}>💠 {tag}</button>
-   {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
+   {open && createPortal(<span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="积分兑换指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💠 积分兑换指南{carrierName ? ` · ${carrierName}` : ''}</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
        {seg && SEGMENT_POINTS_HINT[seg] && <span className="pointsmodal-rec">本段推荐：{SEGMENT_POINTS_HINT[seg].replace(/^怎么买：/, '')}</span>}
@@ -766,7 +767,7 @@ export function PointsTag({ text, seg }: { text: string; seg?: string }) {
        </span>
        <span className="pointsmodal-foot">积分价为兑换表/公开口径（2026-10-17 调研）；具体日期有没有积分票，必须登录对应官网查。铁律：先查到有位、再转分——转分不可逆。</span>
      </span>
-   </span>}
+   </span>, document.body)}
  </span>;
 }
 
@@ -815,7 +816,7 @@ export function HotelPayTag({ name, city, chain: chainProp }: { name: string; ci
  const g = hotelPayGuide(chain);
  return <span className="pointstagwrap">
    <button type="button" className="hotelpaytag" onClick={() => setOpen(true)} aria-label={`查看${name}用卡指南`}>💳 用卡指南</button>
-   {open && <span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
+   {open && createPortal(<span className="pointsmodal-backdrop" onClick={() => setOpen(false)}>
      <span className="pointsmodal" role="dialog" aria-modal="true" aria-label="酒店用卡指南" onClick={e => e.stopPropagation()}>
        <span className="pointsmodal-head"><b>💳 {name} · 怎么订最划算</b><button type="button" className="pointsmodal-x" onClick={() => setOpen(false)} aria-label="关闭">×</button></span>
        <span className="pointsmodal-rec">{g.title}{city ? ` · ${city}` : ''}</span>
@@ -824,7 +825,7 @@ export function HotelPayTag({ name, city, chain: chainProp }: { name: string; ci
        </span>
        <span className="pointsmodal-foot">口径：价格先对 Google Hotels 整段基准价；连锁酒店礼遇与积分只认官方直订渠道；境外付款别用有境外交易费的卡（Citi Double Cash）。</span>
      </span>
-   </span>}
+   </span>, document.body)}
  </span>;
 }
 

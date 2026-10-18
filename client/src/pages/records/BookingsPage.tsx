@@ -49,6 +49,7 @@ import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveHo
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { PlaceDetailSections } from "@/pages/PlaceDetail";
 
 /** 余位状态徽标（与详情页 AvailabilityInfoPanel 同口径）：r=餐厅文案，a=景点文案 */
 const AV_BADGE: Record<string, { r: string; a: string; cls: string }> = {
@@ -1059,7 +1060,7 @@ function FavoriteActionList({
                         if ((e.target as HTMLElement).closest("button, a")) return;
                         setMapSelKey((prev) => (prev === cardKey ? null : cardKey));
                       }}
-                      className={`bg-white rounded-xl border border-l-4 px-4 py-3 cursor-pointer shadow-[0_1px_2px_rgba(16,47,62,0.05)] ${
+                      className={`bg-white rounded-xl border border-l-4 px-4 py-3 cursor-pointer min-w-0 shadow-[0_1px_2px_rgba(16,47,62,0.05)] ${
                         cardSelected
                           ? "ring-2 ring-teal-600 border-teal-600 border-l-teal-600"
                           : confirmedByName.has(f.row.title.trim().toLowerCase()) ||
@@ -1297,22 +1298,22 @@ function FavoriteActionList({
                       )}
                       {/* 2026-10-03 用户：酒店/餐厅/景点也在行动安排里就地展开看详情，不跳页 */}
                       {isOpen && f.type !== "flight" && (detail || f.type === "hotel") && (
-                        <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600 space-y-1.5">
-                          {detail && (() => {
-                            const d = detail as { meta?: string; detail?: string; best?: string; hotelHighlight?: string; hotelAcclaim?: string };
-                            return (<>
-                              {d.hotelHighlight && <p><b className="text-gray-700">✨ 亮点</b> {d.hotelHighlight}</p>}
-                              {d.detail && <p>{d.detail}</p>}
-                              {d.meta && <p className="text-gray-500">{d.meta}</p>}
-                              {d.hotelAcclaim && <p><b className="text-gray-700">🏆 公认口碑</b> {d.hotelAcclaim}</p>}
-                              {d.best && <p className="text-teal-700">💡 {d.best}</p>}
-                            </>);
-                          })()}
-                          {/* 2026-10-17 用户：酒店详情就在本页展开看全（房价明细/走势），不许再跳页 */}
-                          {f.type === "hotel" && <HotelTrackDetail name={f.row.title} />}
-                          {/* 2026-10-17 用户再次明确：不要「看完整详情页 →」这种跳出去的 link——
-                              价格追踪是付款 checklist，详情就在当前页展开/收起里看完，链接已移除。
-                              完整详情页（含照片/评论）仍可从「🔍 预定筛选」进入。 */}
+                        <div className="mt-2 pt-2 border-t border-gray-100 inline-detail">
+                          {/* 2026-10-17 用户明确：价格追踪里展开的必须是与行程详情页
+                              一模一样的完整详情（照片图库/介绍/实用信息/小红书口碑/
+                              多平台评分/亮点/口碑/避雷/位置/证据），不要精简版摘录。
+                              与独立详情页共用 PlaceDetailSections 同一份实现；
+                              酒店的实时房价区块通过 hotelPriceSlot 就地注入。 */}
+                          {detail ? (
+                            <PlaceDetailSections
+                              kind={f.type === "hotel" ? "hotel" : f.type === "restaurant" ? "restaurant" : "attraction"}
+                              item={detail}
+                              compact
+                              hotelPriceSlot={f.type === "hotel" ? <HotelTrackDetail name={f.row.title} /> : undefined}
+                            />
+                          ) : (
+                            f.type === "hotel" && <HotelTrackDetail name={f.row.title} />
+                          )}
                         </div>
                       )}
                     </div>

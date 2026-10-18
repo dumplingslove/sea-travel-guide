@@ -57,3 +57,13 @@ body {
   .wz-caldate{font-size:13px}
   .wz-calcity{font-size:10px}
 }
+
+/* 价格追踪卡片内嵌完整详情（与详情页同一份 PlaceDetailSections/面板）：
+   内容不变，只把面板间距按卡片内阅读收紧，避免一展开几屏高的大留白 */
+.inline-detail section { margin-bottom: 1.1rem; }
+.inline-detail section > h2 { font-size: 1.02rem; margin-bottom: 0.45rem; }
+.inline-detail section > div { padding: 0.85rem; }
+
+/* 全站防横向溢出（2026-10-17）：任何子元素意外撑宽都不许把整个页面拉出屏幕；
+   用 clip 而不是 hidden，避免破坏 position: sticky 的吸顶条 */
+html, body { overflow-x: clip; }
