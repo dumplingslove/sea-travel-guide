@@ -640,6 +640,7 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
 .wz-legpill.ok{background:#16a34a;color:#fff}
 .wz-legpill.no{background:#dc2626;color:#fff}
 .wz-legpill em{font-style:normal;font-size:9px;font-weight:600;color:#fff;background:rgba(255,255,255,.25);border-radius:4px;padding:0 3px;white-space:nowrap}
+.wz-restpill{display:block;font-size:10px;line-height:1.3;font-weight:700;border-radius:6px;padding:2px 5px;margin-top:2px;text-align:center;overflow-wrap:anywhere;background:#d97706;color:#fff}
 .wz-hotelline{display:block;font-size:10px;line-height:1.3;font-weight:600;color:#0f766e;background:#f0fdfa;border:1px solid #5eead4;border-radius:6px;padding:2px 5px;margin-top:2px;text-align:center;overflow-wrap:anywhere}
 .wz-hotelline.no{color:#dc2626;background:#fff;border:1px dashed #dc2626}
 .wz-detailline{font-size:12px;border-radius:8px;padding:3px 8px;margin:2px 0}
@@ -655,7 +656,7 @@ nav.tabs .tab{font-size:15px;padding:12px 8px;white-space:nowrap}
   .wz-calrow.sel{box-shadow:0 0 0 2px #0f766e inset}
   .wz-calrowhead{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:#374151}
   .wz-calrow .wz-calnote{display:block;text-align:left}
-  .wz-calrow .wz-legpill,.wz-calrow .wz-hotelline{text-align:left;font-size:11px}
+  .wz-calrow .wz-legpill,.wz-calrow .wz-restpill,.wz-calrow .wz-hotelline{text-align:left;font-size:11px}
   .wz-calrow .wz-legpill em{white-space:normal}
   .wz-calrow .wz-calleg{text-align:left}
 }
