@@ -2259,10 +2259,12 @@ function BookingsCalendar() {
 }
 
 
-/** 全程预算（2026-10-18 用户新增）：在最终预定里加一节，把已订的钱算清楚——花在哪、已付多少、还差多少。
- * 金额全部从预订记录 details 的「总价/押金」现解析（USD 原值，或 SGD/THB 的 ≈USD 折算），不写死；
- * 状态按记录口径判定：「已付/已预付」=已付；「到店应付」(非 $0) 或无已付标记的酒店单=到店待付；
- * 积分/免房券单列非现金、不进现金合计。未订腿估算取 FLIGHT_LEGS 未出票腿的推荐价（航班库现价）。 */
+/** 全程预算（2026-10-18 用户新增 + 同日晚优化）：在最终预定里把已订的钱算清楚——花在哪、已付多少、还差多少、
+ * 用了多少积分/credit、省了多少钱。金额全部从预订记录 details 的「总价/押金」现解析（USD 原值或 ≈USD 折算），不写死；
+ * 状态按记录口径判定：「已付/已支付/已预付」=已付；「到店应付」(非 $0) 或无已付标记的酒店单=到店待付；
+ * 积分/免房券单列非现金。酒店消费额与 statement credit 从各记录 details 里逐单解析累加；
+ * 积分抵掉的现金按价格库现查价折算（JW 首尔两晚现金价 $1,197、曼谷柏悦每晚 $403，均为 2026-10-18 价格库值，
+ * 口径写在界面注脚里）。未订腿估算取 FLIGHT_LEGS 未出票腿的推荐价（航班库现价）。 */
 function BudgetSection() {
   const { rows, loading } = useRecordsData(["booking"]);
   const confirmed = rows.filter((r) => r.done).map((r) => ({ row: r, data: parseBookingBody(r.body) }));
@@ -2306,6 +2308,30 @@ function BudgetSection() {
   const cityRows = [...cityMap.entries()].sort((a, b) => b[1] - a[1]);
   const flightCash = catSum("transport");
   const placeMax = Math.max(flightCash, ...cityRows.map(([, v]) => v), 1);
+  /* 权益与节省（逐单从记录 details 解析）：酒店消费额取每单第一处「$X 酒店消费额」；
+     statement credit 取 Dinso 单的 The Edit/select 两笔 + 瑞吉单的 Bilt Cash；
+     Platinum $300 酒店 credit 不在预订记录里，来自 2026-10-18 两卡审计（FHR 预付已触发），单列常量。 */
+  let propertyCredit = 0;
+  let stmtFromRecords = 0;
+  for (const { data } of confirmed) {
+    /* 消费额散在 details / extra / note 三处（瑞吉 Bilt 单的 $100 写在 note 的「渠道福利」里）——三处都扫，漏一处就少 $100 */
+    const ex = data.extra as unknown;
+    const exText = typeof ex === "string" ? ex : ex && typeof ex === "object" ? Object.values(ex as Record<string, string>).join(" ") : "";
+    const blob = [...Object.values(data.details ?? {}), exText, data.note ?? ""].join(" ");
+    const pc = blob.match(/\$(\d+)\s*(?:USD\s*等值)?酒店消费额/);
+    if (pc) propertyCredit += parseInt(pc[1], 10);
+    const te = blob.match(/\$(\d+) The Edit credit/);
+    const sel = blob.match(/\$(\d+) select hotels credit/);
+    const bc = blob.match(/\$(\d+) Bilt Cash/);
+    if (te) stmtFromRecords += parseInt(te[1], 10);
+    if (sel) stmtFromRecords += parseInt(sel[1], 10);
+    if (bc) stmtFromRecords += parseInt(bc[1], 10);
+  }
+  const PLATINUM_HOTEL_CREDIT = 300;
+  const stmtCredits = stmtFromRecords + PLATINUM_HOTEL_CREDIT;
+  const pointsCashEq = 1197 + 403; /* 万豪 146,000 分抵 JW 首尔两晚现金价 1,197 + 凯悦免房券抵柏悦一晚 403（价格库 2026-10-18） */
+  const perksTotal = pointsCashEq + stmtCredits + propertyCredit;
+  const netCash = cashTotal - stmtCredits;
   const unbooked = FLIGHT_LEGS.filter((l) => !l.ticketed && l.options && l.options.length > 0).flatMap((l) => {
     const priced = (l.options ?? []).filter((o) => o.price != null);
     if (!priced.length) return [];
@@ -2315,25 +2341,16 @@ function BudgetSection() {
   const unbookedEst = unbooked.reduce((a, u) => a + u.price, 0);
   const fmt = (n: number) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
   const fmt2 = (n: number) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const pct = (v: number) => (cashTotal ? Math.round((v / cashTotal) * 100) : 0);
   const chip: Record<MStatus, { bg: string; fg: string }> = {
     paid: { bg: "#dcfce7", fg: "#15803d" },
     due: { bg: "#fef3c7", fg: "#b45309" },
     noncash: { bg: "#ede9fe", fg: "#6d28d9" },
     none: { bg: "#f3f4f6", fg: "#6b7280" },
   };
-  const Bar = ({ label, value, color }: { label: string; value: number; color: string }) => (
-    <div className="flex items-center gap-2 text-[12px]">
-      <span className="w-24 shrink-0 text-gray-600">{label}</span>
-      <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
-        <div className="h-full rounded" style={{ width: `${cashTotal ? Math.max(2, (value / cashTotal) * 100) : 0}%`, background: color }} />
-      </div>
-      <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(value)}</span>
-      <span className="w-9 shrink-0 text-right text-gray-400">{cashTotal ? Math.round((value / cashTotal) * 100) : 0}%</span>
-    </div>
-  );
   return (
-    <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
-      <div className="flex items-center justify-between mb-2">
+    <div className="bg-white border border-[#e5e1d6] rounded-2xl p-4 mb-4 shadow-sm">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-gray-900">💰 全程预算 · 已订部分</h3>
         <span className="text-[11px] text-gray-400">金额取自每条预订记录（美金）</span>
       </div>
@@ -2341,71 +2358,116 @@ function BudgetSection() {
         <p className="text-sm text-gray-400">加载中…</p>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-            <div className="rounded-lg bg-emerald-50 border border-emerald-100 p-2.5">
-              <div className="text-[11px] text-emerald-700">已付现金</div>
-              <div className="text-lg font-bold text-emerald-800">{fmt(paid)}</div>
-            </div>
-            <div className="rounded-lg bg-amber-50 border border-amber-100 p-2.5">
-              <div className="text-[11px] text-amber-700">到店待付</div>
-              <div className="text-lg font-bold text-amber-800">{fmt(due)}</div>
-            </div>
-            <div className="rounded-lg bg-blue-50 border border-blue-100 p-2.5">
-              <div className="text-[11px] text-blue-700">现金总计</div>
-              <div className="text-lg font-bold text-blue-900">{fmt(cashTotal)}</div>
-            </div>
-            <div className="rounded-lg bg-violet-50 border border-violet-100 p-2.5">
-              <div className="text-[11px] text-violet-700">非现金（不计入总计）</div>
-              <div className="text-[13px] font-bold text-violet-800 leading-snug pt-0.5">
-                {items.filter((i) => i.status === "noncash").map((i) => i.tag).join(" · ") || "—"}
-              </div>
-            </div>
-          </div>
-          <div className="space-y-1.5 mb-3">
+          {/* 构成堆叠条：一眼看清钱花在哪 */}
+          <div className="flex h-5 rounded-full overflow-hidden mb-1.5">
             {cats.map((c) => (
-              <Bar key={c.key} label={c.label} value={catSum(c.key)} color={c.color} />
+              <div key={c.key} style={{ width: `${pct(catSum(c.key))}%`, background: c.color }} className="h-full" />
             ))}
           </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-0.5 mb-3 text-[12px]">
+            {cats.map((c) => (
+              <span key={c.key} className="inline-flex items-center gap-1.5">
+                <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: c.color }} />
+                <span className="text-gray-600">{c.label}</span>
+                <b className="text-gray-900">{fmt(catSum(c.key))}</b>
+                <span className="text-gray-400">{pct(catSum(c.key))}%</span>
+              </span>
+            ))}
+          </div>
+          {/* KPI 四格 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+              <div className="text-[11px] text-gray-500">现金总计</div>
+              <div className="text-xl font-bold text-gray-900">{fmt(cashTotal)}</div>
+              <div className="text-[11px] text-gray-400">已订 {confirmed.length} 项</div>
+            </div>
+            <div className="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+              <div className="text-[11px] text-emerald-700">已付现金</div>
+              <div className="text-xl font-bold text-emerald-800">{fmt(paid)}</div>
+              <div className="h-1.5 rounded bg-emerald-100 mt-1 overflow-hidden">
+                <div className="h-full bg-emerald-500 rounded" style={{ width: `${pct(paid)}%` }} />
+              </div>
+              <div className="text-[11px] text-emerald-600 mt-0.5">已付 {pct(paid)}%</div>
+            </div>
+            <div className="rounded-xl bg-amber-50 border border-amber-100 p-3">
+              <div className="text-[11px] text-amber-700">到店待付</div>
+              <div className="text-xl font-bold text-amber-800">{fmt(due)}</div>
+              <div className="text-[11px] text-amber-600">瑞吉两间，到店付</div>
+            </div>
+            <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
+              <div className="text-[11px] text-blue-700">全订齐预计</div>
+              <div className="text-xl font-bold text-blue-900">{fmt(cashTotal + unbookedEst)}</div>
+              <div className="text-[11px] text-blue-500">含未订 {unbooked.length} 腿估算 {fmt(unbookedEst)}</div>
+            </div>
+          </div>
+          {/* 积分 · credit · 省了多少 */}
+          <div className="rounded-xl border border-violet-100 bg-violet-50/60 p-3 mb-3">
+            <div className="text-[12px] font-bold text-violet-900 mb-2">🎁 积分 · credit · 省了多少</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px]">
+              <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
+                <div className="text-violet-700 font-semibold">积分与免房券</div>
+                <div className="text-gray-700 mt-0.5">万豪 <b>146,000 分</b>（首尔 JW 两晚）· 凯悦<b>免房券 1 晚</b>（曼谷柏悦）</div>
+                <div className="text-gray-500 mt-0.5">按现查现金价折算，抵掉约 <b className="text-violet-800">{fmt(pointsCashEq)}</b></div>
+              </div>
+              <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
+                <div className="text-violet-700 font-semibold">statement credit 待返</div>
+                <div className="text-gray-700 mt-0.5">CSR $500（Dinso 触发 Edit + select）· Bilt Cash $100（退房后）· Platinum 酒店 credit $300（FHR 触发）</div>
+                <div className="text-gray-500 mt-0.5">合计 <b className="text-violet-800">{fmt(stmtCredits)}</b>，到账后现金净支出约 <b className="text-violet-800">{fmt(netCash)}</b></div>
+              </div>
+              <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
+                <div className="text-violet-700 font-semibold">酒店消费额（到店用）</div>
+                <div className="text-gray-700 mt-0.5">7 张单带消费额：金沙 $100×2、瑞吉 $100、悦榕庄 $100、Dinso $100、137 $125、瑰丽 $150</div>
+                <div className="text-gray-500 mt-0.5">合计 <b className="text-violet-800">{fmt(propertyCredit)}</b>，吃饭/Spa 时别忘用</div>
+              </div>
+            </div>
+            <div className="text-[11px] text-violet-500 mt-2">三项权益合计约 {fmt(perksTotal)}（积分抵现金 + 待返 credit + 酒店消费额）。这还没算每单的免费双早与 4pm 退房。</div>
+          </div>
+          {/* 按地方分 */}
           <div className="space-y-1.5 mb-3">
             <div className="flex items-center gap-2 text-[12px]">
-              <span className="w-24 shrink-0 text-gray-600">✈️ 机票（全部航段）</span>
-              <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
-                <div className="h-full rounded" style={{ width: `${(flightCash / placeMax) * 100}%`, background: "#93c5fd" }} />
+              <span className="w-28 shrink-0 text-gray-600">✈️ 机票（全部航段）</span>
+              <div className="flex-1 h-4 rounded-full bg-gray-100 overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${(flightCash / placeMax) * 100}%`, background: "#93c5fd" }} />
               </div>
               <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(flightCash)}</span>
-              <span className="w-9 shrink-0" />
             </div>
             {cityRows.map(([city, v]) => (
               <div key={city} className="flex items-center gap-2 text-[12px]">
-                <span className="w-24 shrink-0 text-gray-600">📍 {city}（酒店/餐厅）</span>
-                <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
-                  <div className="h-full rounded" style={{ width: `${(v / placeMax) * 100}%`, background: "#6ee7b7" }} />
+                <span className="w-28 shrink-0 text-gray-600">📍 {city}（酒店/餐厅）</span>
+                <div className="flex-1 h-4 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${(v / placeMax) * 100}%`, background: "#6ee7b7" }} />
                 </div>
                 <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(v)}</span>
-                <span className="w-9 shrink-0" />
               </div>
             ))}
           </div>
-          <div className="border-t border-dashed border-gray-200 pt-2 space-y-1">
-            {cats.map((c) => (
-              <div key={c.key}>
-                {items.filter((i) => i.bkind === c.key).map((i, ix) => (
-                  <div key={ix} className="flex items-center gap-2 text-[12px] py-0.5">
-                    <span className="flex-1 min-w-0 truncate text-gray-700">{i.title}</span>
-                    <span className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: chip[i.status].bg, color: chip[i.status].fg }}>
-                      {i.status === "noncash" ? i.tag : i.tag}
-                    </span>
-                    <span className="w-24 shrink-0 text-right font-semibold text-gray-800">{i.usd != null && i.status !== "noncash" ? fmt2(i.usd) : "—"}</span>
+          {/* 逐项清单（带分类小计） */}
+          <div className="border-t border-dashed border-gray-200 pt-2">
+            {cats.map((c) => {
+              const list = items.filter((i) => i.bkind === c.key);
+              return (
+                <div key={c.key} className="mb-1.5">
+                  <div className="flex items-center justify-between text-[12px] font-semibold text-gray-800 pt-1">
+                    <span>{c.label}</span>
+                    <span>小计 {fmt(catSum(c.key))}</span>
                   </div>
-                ))}
-              </div>
-            ))}
+                  {list.map((i, ix) => (
+                    <div key={ix} className="flex items-center gap-2 text-[12px] py-0.5">
+                      <span className="flex-1 min-w-0 truncate text-gray-700">{i.title}</span>
+                      <span className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: chip[i.status].bg, color: chip[i.status].fg }}>
+                        {i.tag}
+                      </span>
+                      <span className="w-24 shrink-0 text-right font-semibold text-gray-800">{i.usd != null && i.status !== "noncash" ? fmt2(i.usd) : "—"}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
-          <div className="mt-3 space-y-1 text-[11px] leading-relaxed text-gray-400">
-            <p>外币按各记录留存的折算（2026-10-18 汇率：SGD ≈ 0.7813、THB ≈ 0.02991）；逐条明细点开下方任意预订卡看。</p>
-            <p>Dinso 一单预计触发 CSR 两笔 $250 statement credit（The Edit + select hotels），到账后现金净支出再减 $500。PRU 押金到店抵扣账单，菜单费用另结。首尔酒店走万豪积分、曼谷柏悦走免房券，不占现金。</p>
+          <div className="mt-2 space-y-1 text-[11px] leading-relaxed text-gray-400">
+            <p>外币按各记录留存的折算（2026-10-18 汇率：SGD ≈ 0.7813、THB ≈ 0.02991）；逐条明细点开下方任意预订卡看。PRU 押金到店抵扣账单，菜单费用另结。</p>
             {unbooked.length > 0 && (
-              <p>还没订的 {unbooked.length} 腿（{unbooked.map((u) => `${u.route} ≈${fmt(u.price)}`).join("；")}）按航班库当前推荐价估算约 {fmt(unbookedEst)}，全订齐后总预算约 {fmt(cashTotal + unbookedEst)}。</p>
+              <p>还没订的 {unbooked.length} 腿（{unbooked.map((u) => `${u.route} ≈${fmt(u.price)}`).join("；")}）按航班库当前推荐价估算约 {fmt(unbookedEst)}。</p>
             )}
           </div>
         </>
