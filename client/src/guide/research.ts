@@ -45,24 +45,75 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('随手订到的Sorn到底值不值','https://www.xiaohongshu.com/explore/69edb79f0000000022028274','价格、订位与菜品反馈已复核')],
  'Sühring':[
   L('Sühring｜曼谷最强米其林三星','https://www.xiaohongshu.com/explore/69fbffc5000000003700dda4','2026升三星与套餐价格样本'),
-  L('曼谷｜米三Sühring，难吃，避雷，拉完了','https://www.xiaohongshu.com/explore/69f4997a000000002301522e','负面样本与评论区已复核')],
+  L('曼谷｜米三Sühring，难吃，避雷，拉完了','https://www.xiaohongshu.com/explore/69f4997a000000002301522e','负面样本与评论区已复核'),
+  L('曼谷Sühring l 德餐米其林三星，吃服了','https://www.xiaohongshu.com/explore/69d94536000000001b0203f9','2026-04-10 · Lc · 推荐 · 「小贵但爽爆！服务和菜品几乎没得挑，德国人细节控真的刻进DNA里」· 评论：A5和牛不值得，万万不要点（中佬电竞选手）'),
+  L('在泰国拿下米其林三星的德国菜Sühring','https://www.xiaohongshu.com/explore/6a3d19390000000007013afb','2026-06-25 · 尚先生 · 避雷 · 「我不推荐」· 评论：曼谷其他的米其林更难吃（Tiger小脑斧）'),
+  L('德国之外，最好的德国菜居然在曼谷？','https://www.xiaohongshu.com/explore/6a910010000000000402a00c','2026-08-28 · 阿德楽兹 · 推荐 · 「酸是真的酸但后劲很足，非常推荐中午来！」· 午餐约1500-2000泰铢（作者回复）'),
+  L('曼谷新晋米其林三星，德菜Fusion','https://www.xiaohongshu.com/explore/69d891840000000023024c70','2026-04-10 · From Earth to Neptune · 推荐 · 「一开始不抱太大期待，但吃完之后完全改观……它不是那种很张扬的三星」· 评论0条'),
+  L('🇹🇭曼谷 suhring 唯二 ⭐️⭐️⭐️ - 不推','https://www.xiaohongshu.com/explore/6a58c9170000000008009c00','2026-07-16 · RL · 避雷 · 「只有🦆和一款sourdough还不错……作为3🌟其实很失望，忘记给顾客上生日蛋糕」· 评论：一个人吃了18000泰铢，吃了个寂寞（Momoo）'),
+  L('Suhring｜这家餐厅，值得我专程飞一趟曼谷','https://www.xiaohongshu.com/explore/6a0ea318000000000603157e','2026-05-22 · 刘齐铭Ming · 推荐 · 「不像传统fine dining那样有距离……只有吃过的才知道它为什么能是三星」'),
+  L('曼谷, 刚吃完Sühring就升了三星','https://www.xiaohongshu.com/explore/69292593000000001e02dbad','08-25 · 生姜黑鳕鱼 · 推荐 · 「两年前一访时就非常喜欢……这次二访之后不久就真的升星了，实至名归，整体依旧很稳」· 评论：鸭肉很骚，带我姐去吃过挨骂死（居又周）'),
+  L('曼谷 Sühring | 米其林三星！德国菜？','https://www.xiaohongshu.com/explore/6a1bac3c000000003503a6fe','2026-05-31 · 活着就要吃 · 推荐 · 「是夜的体验完整而美好，从结构，水准到表达都非常出色……Sühring依然熠熠生辉，无愧其诸多荣誉」')],
  'Gaggan':[
-  L('Gaggan 5月29日（今日）在曼谷重新开业','https://www.xiaohongshu.com/explore/6a1920df000000003601a820','2026-05-29重开、地址与No Phone政策核对')],
+  L('Gaggan 5月29日（今日）在曼谷重新开业','https://www.xiaohongshu.com/explore/6a1920df000000003601a820','2026-05-29重开、地址与No Phone政策核对'),
+  L('Gaggan at LV📍Bangkok','https://www.xiaohongshu.com/explore/69fd67fe00000000360180df','2026-05-08 · lotyytol · 中性偏推荐 · 「时隔一个多月，味觉记忆已经查无此菜 只对舔盘子记忆犹新」· 两人不加酒水约5000元（作者回复）'),
+  L('🏆霸榜5次亚洲50佳TOP1｜Gaggan曼谷','https://www.xiaohongshu.com/explore/6a9d9b0b0000000026017dc8','2026-09 · 爱吃鱼的徕卡妹 · 中性 · 「订的20:30开始，到23点结束……是一次记忆大于味蕾的顶级餐饮体验。不推荐，因为能共鸣的一定是少数」· 评论：绝对是最难忘的最难吃的餐厅（嘻momo）'),
+  L('亚洲第一餐厅Gaggan｜这钱没花明白…','https://www.xiaohongshu.com/explore/69098298000000000303614a','2025-11-04 · 蛋森Denson · 避雷 · 「前菜很牛逼，主菜很离谱……这个钱花的有点迷糊」· 评论：有25道（作者回复）'),
+  L('🇹🇭曼谷 亚洲第一Gaggan叛逆Fine Dining👍','https://www.xiaohongshu.com/explore/69d3bc7d0000000021010cb1','2026-04-06 · 三三来吃 · 中性（挑人） · 「这家店真的非常挑人……这不是一顿吃饭，是一场体验、一场秀」· 官网可直接订，还蛮好定的（作者回复）'),
+  L('不让拍照的曼谷米其林三星Gaggan','https://www.xiaohongshu.com/explore/6a64342c000000001c00e311','2026-07-25 · hoho · 避雷 · 标题指Gaggan、正文实吃姊妹店Gaa「吃的一言难尽……以后再也不吃印度菜了」· 评论：gaggan不是随便拍照的吗（VK的美食日记）'),
+  L('全曼谷最适合带仇人去吃的餐厅Gaa','https://www.xiaohongshu.com/explore/6a6e0c13000000002500a250','2026-08-01 · 比利比利酥 · 避雷 · 姊妹店Gaa专帖「比gaggan还难吃是怎么得米二的……又酸又咸又冰，朋友中间就已经不愿意吃要买单走掉」'),
+  L('曼谷GAGGAN | 为了一碗粥，我大唱4首白人歌','https://www.xiaohongshu.com/explore/6a5a261e000000000c017b82','2026-07-17 · 吉拉不戒酒 · 中性 · 「每一道都很小，几乎只够一口……把餐厅变成了一座私人剧场」· 评论：不嫌贵的话体验挺好的（作者回复）'),
+  L('Gaggan咱都吃啥了','https://www.xiaohongshu.com/explore/6a05d05b000000000803fcc2','2026-05-14 · 拔草主义 · 中性 · 「分子料理和各种fine dinning技巧融入的不错，体验拉满、味道其次」· 评论：英语不好会很影响体验（作者回复确认）')],
  'Côte by Mauro Colagreco':[
   L('曼谷｜米二Côte by Mauro，根本吃不饱…','https://www.xiaohongshu.com/explore/69f73633000000001b0211e5','午餐价格与份量负面样本'),
-  L('曼谷｜Côte by Mauro Colagreco','https://www.xiaohongshu.com/explore/67755ec0000000000b01784b','2025-01-02 · 餐厅定位核对')],
+  L('曼谷｜Côte by Mauro Colagreco','https://www.xiaohongshu.com/explore/67755ec0000000000b01784b','2025-01-02 · 餐厅定位核对'),
+  L('没中却拔系列｜曼谷米二Côte真的很难吃吗','https://www.xiaohongshu.com/explore/6a6138a80000000022019a8f','2026-07-23 · C太 · 避雷 · 「吃完老实了……全程只有黑松露那道是好吃的」· 评论：还是吃点street food吧（Mira在曼谷）'),
+  L('10/09 曼谷 Côte by Mauro Colagreco','https://www.xiaohongshu.com/explore/68c6c98a000000001c00f5a4','2025-09-14 · vv · 推荐 · 碰上Chef Mauro东京店CYCLE与曼谷店四手联弹「真的很好吃😋」'),
+  L('TOP1大鼻子主厨开的米二Côte','https://www.xiaohongshu.com/explore/6a4667fa000000000f02afc9','2026-07-02 · 急速菜菜 · 推荐 · 「地中海路线，融合法意两地的风味……菜品几乎每天更换，食材只用当天最好的」· 逮到了主厨Mauro Colagreco本人'),
+  L('🇹🇭打卡曼谷米其林côte🌟🌟','https://www.xiaohongshu.com/explore/69fcbaf3000000003502d0eb','2026-05-07 · 然然 · 推荐 · 「每道菜味道都还不错，也相对保守……总的来说还是很推荐～值得！」'),
+  L('本来冲祖传面包，却被教科书级粉嫩乳鸽圈粉','https://www.xiaohongshu.com/explore/6a5deb98000000000c0177a7','2026-07-20 · 小马真的会 · 推荐 · 「全场绝对主角必须是乳鸽，火候堪称范本，鸽胸粉嫩爆汁」· 祖传配方餐前面包开篇'),
+  L('曼谷米二 Côte','https://www.xiaohongshu.com/explore/6a4121c900000000060366c9','2026-06-28 · 水母爱榴莲 · 中性 · 「Lunch + wine pairing……总体来说酒比菜好，主菜品质逊色了点，不应该是米二的水平；曼谷性价比还可以」（作者声明含AI生成内容）'),
+  L('在曼谷嘉佩乐酒店 Côte 享受米其林星级午餐','https://www.xiaohongshu.com/explore/67dec16c000000000d015a10','2025-03-22 · 我想吃玉米 · 推荐 · 「绝对是一场味觉盛宴。餐厅坐拥迷人的河畔景色，搭配无可挑剔的服务，每道菜都堪称艺术品」'),
+  L('来曼谷吃漂亮饭啦','https://www.xiaohongshu.com/explore/69416a02000000001b026327','2025-12-16 · 太陈了抱不动🐷 · 推荐 · 「曼谷嘉佩乐的法餐厅Côte 好吃又好看～」')],
  'Le Du':[
   L('曾经的亚洲Top 1餐厅，现在味道如何？','https://www.xiaohongshu.com/explore/6a660c8e000000000e036547','正文菜品体验已复核'),
-  L('曼谷Ledu，曾经的亚洲第一','https://www.xiaohongshu.com/explore/696e3a83000000001a02310c','回访体验与加点建议已复核')],
+  L('曼谷Ledu，曾经的亚洲第一','https://www.xiaohongshu.com/explore/696e3a83000000001a02310c','回访体验与加点建议已复核'),
+  L('🇹🇭曼谷最惊艳一餐 亚洲排名第一LeDu','https://www.xiaohongshu.com/explore/68883375000000002201c414','2025-07-29 · 肉包罢了 · 推荐 · 「尽管菜单上的六道菜让人吃得有些撑，但这次的用餐体验依然是开心和满足的」· 评论：超級愛le du的（PRESIDENT ZHANG）'),
+  L('亚洲Best 50餐厅榜单有它，就知道水分有多大','https://www.xiaohongshu.com/explore/6a13f352000000003700fcb0','2026-05-25 · 小A今天也在压马路 · 避雷 · 「整体菜品上少了点让人惊喜的点……ledu作为米其林一星，是符合我对米一餐厅的期待的：环境好、服务佳、菜品漂亮口味一般」'),
+  L('🇹🇭曼谷Fine Dining-🥂亚洲Top1餐厅LE DU','https://www.xiaohongshu.com/explore/67f39b28000000001d024027','2025-04-07 · Tete_ · 推荐 · 「整体算是性价比最高的Fine Dining，预约相对比较容易……三个人4道菜含服务费和税一共消费了16314铢」· 无dress code'),
+  L('曼谷fine dinning🇹🇭|LEDU','https://www.xiaohongshu.com/explore/69478351000000001e006a0f','2025-12-21 · happiesttubao · 中性 · 「前面几道都有被超丰富的风味层次惊艳到……石斑鱼是冬季菜单中个人觉得口感最差的一道」'),
+  L('🇹🇭曼谷｜Le Du 亚洲第一餐厅大失所望','https://www.xiaohongshu.com/explore/65dd67930000000007025f4a','2024-02-27 · 卡尔的流浪日记 · 避雷 · 「整体就是一顿如坐针矢的晚餐体验，个人不会再去……亚洲第一世界第15的排名水分太高」· 评论：他们的水平取决于菜单（伤心小狗）'),
+  L('LEDU活该这么好订，米其林🌟也会踩雷的餐厅','https://www.xiaohongshu.com/explore/686e1d02000000000d01a1fc','2025-07-09 · 扶老奶奶闯红灯 · 避雷 · 「不知道是整体水准下降了还是本季菜单翻车，整个用餐过程比较煎熬……人均1000+rmb，性价比是不高」'),
+  L('曼谷LEDUKAAN｜环境是极好的，味道是极难吃的','https://www.xiaohongshu.com/explore/6904de5000000000050126ed','2025-11-20 · 海里绵绵 · 避雷 · 姊妹店LEDU KAAN（帝国大厦56楼）专帖「环境有多好，就有多难吃🤢难吃到应该赔我钱的程度」'),
+  L('曼谷Le Du｜去年亚洲第一，今年离谱第一。','https://www.xiaohongshu.com/explore/66f46b5f000000001a021534','2024-09-25 · Amber徐安博 · 避雷 · 「试酒发现离谱的酸，侍酒师说就这味儿……那块肉不配叫和牛」· 评论：过敏提前说了蟹，结果头盘就给我整了蟹（SUMYU在伦敦）')],
  'Nusara':[
   L('如果来曼谷只选一家米其林｜强推Nusara','https://www.xiaohongshu.com/explore/699d1c5f0000000015032c84','正面样本与地址核对'),
-  L('曼谷｜Nusara米其林避雷 区别对待+食物中毒','https://www.xiaohongshu.com/explore/69d89f2e0000000023025bf9','严重负面样本；用于呈现口碑方差')],
+  L('曼谷｜Nusara米其林避雷 区别对待+食物中毒','https://www.xiaohongshu.com/explore/69d89f2e0000000023025bf9','严重负面样本；用于呈现口碑方差'),
+  L('曼谷Nusara｜2026亚洲50佳No.5','https://www.xiaohongshu.com/explore/6aa16a26000000002802d1fd','2026-09 · 爱吃鱼的徕卡妹 · 推荐 · 「每一道都扎根泰国本土风味，香料层次极其丰富……可以直接眺望卧佛寺Wat Pho」· 不点酒人均THB7000含税服（作者回复）'),
+  L('Nusara摘星体验实话篇｜曼谷','https://www.xiaohongshu.com/explore/69b179af000000002303846c','2026-03-11 · Sylvia · 中性偏避雷 · 「对味道比较失望，环境服务确实很好，view也非常漂亮！有一道汤居然是那种臭臭的口水味」· 评论：nusara只剩下景了（作者）'),
+  L('曼谷·Nusara｜亚洲第五，宏大叙事or整蛊客人？','https://www.xiaohongshu.com/explore/6a895e88000000000b0259ae','2026-08-22 · cyc · 避雷 · 「用餐流程比较不合理，菜品的槽点也不少……从头到尾的咸已经叠加到让我有点受不了」· 同行两位表示不如路边小店'),
+  L('曼谷 | Nusara，不高不低、不咸不淡','https://www.xiaohongshu.com/explore/69415132000000000d0391d6','2025-12-16 · Kristin张嘉桐 · 中性 · 「漂亮精致的游客饭……有新意但不够，属于那种吃不吃都行的餐厅；卖1k8有点贵」'),
+  L('曼谷Nusara🇹🇭沉浸体验亚洲第6米其林一星','https://www.xiaohongshu.com/explore/694aa2ea000000001f00898b','2025-12-23 · 林大脸儿 · 推荐 · 「每个位置都能看到大皇宫or卧佛寺……菜品偏向于泰式小吃和经典料理的创新升级版，值得一吃」· 需提前官网预约'),
+  L('曼谷Nusara｜ASIA 50高排名vs情懷消費','https://www.xiaohongshu.com/explore/68fb4ce10000000004013911','2025-10-24 · 神秘路人Tzu · 中性 · 「整套菜单吃下来记忆点并不突出……显然是在舒适圈里。推荐给FD探索者；追寻味觉震颤的老饕或许还要给这对兄弟更多时间」'),
+  L('曼谷Nusara｜逛完卧佛寺的惬意餐厅选择','https://www.xiaohongshu.com/explore/6901d8de00000000070205b6','2025-11-01 · 大绿本 · 推荐 · 「精致泰餐，位置无敌，旅游首选……味型基本上都是路边能吃到的传统搭配，只是做得更细致讲究」· 人均约1500（作者回复）；不吃辣备注少辣')],
  'Potong':[
   L('提前三个月订｜到底普通不普通？','https://www.xiaohongshu.com/explore/69ae6e9d0000000015039577','预约与份量评论已复核'),
-  L('曼谷最难订的POTONG我walk-in进去了','https://www.xiaohongshu.com/explore/69821f98000000000a028254','订位难度与walk-in样本')],
+  L('曼谷最难订的POTONG我walk-in进去了','https://www.xiaohongshu.com/explore/69821f98000000000a028254','订位难度与walk-in样本'),
+  L('📍曼谷🇹🇭2026年7月翻新后的POTONG','https://www.xiaohongshu.com/explore/6a71358f0000000010037726','2026-08-04 · 跟着皇后吃👑FoodieQueen · 推荐 · 「刚吃完这顿，我直接原地封神！2026年翻新后更绝了……POTONG依然是一封写给家族、记忆和泰华中味的情书」· 价格6300+17%（作者回复）'),
+  L('曼谷, 普通大药房2.0上线','https://www.xiaohongshu.com/explore/6a375d0d00000000070254b1','2026-06-21 · 生姜黑鳕鱼 · 中性 · 「装修后重新开业第二天，全新菜单……部分菜品偏向概念先行，味道层面的惊喜没有完全跟上；总体来说是开心的一顿，比Sorn强」'),
+  L('Potong，这2000一顿的饭却是普通啊','https://www.xiaohongshu.com/explore/6a3f2a0300000000110166c2','2026-06-27 · yikpan · 中性 · 「这2000一顿的曼谷米一最好吃的是烤鸭……菜的水平参差不齐，这个价位我给60分。80%中餐基因+20%泰国调味」'),
+  L('🇹🇭亚洲50佳「普通大药房」到底普不普通？','https://www.xiaohongshu.com/explore/69cbee61000000001a02e6e7','2026-03-31 · 半糖雪梨 · 中性 · 「超级难定，提前半年都一座难求……经典的Pad Thai端上来创意满分，但是口感真的非常平淡。总的来说，是故事大于味道的一顿」'),
+  L('泰国人在药房里开中餐，专门忽悠白人','https://www.xiaohongshu.com/explore/69bfdc8e0000000022028b0f','2026-03-23 · 米雪食记 · 避雷 · 「泰式炒粉抽象得我想笑，就这都能拿世界第二……普通大药房岂止普通啊？还很奇葩！」· 评论：付费另加的菜全加了，厚葬虾我真的两眼一黑（nono）'),
+  L('🇹🇭曼谷最难约米其林🌟Potong','https://www.xiaohongshu.com/explore/6919b5d0000000000d037dfb','2025-11-16 · Livy · 中性 · 「提前四个月官网约的，交完押金才刷到一堆差评……没吃过的可以试一次，但是不太会再去了」（评论区未加载到实质评论）'),
+  L('周杰伦同款!曼谷米其林一星餐厅⭐️','https://www.xiaohongshu.com/explore/69204174000000001f00aae5','2025-11-21 · 泰国吃货 · 中性（推广向） · 「Chef Pam是泰国首位获得世界最佳女主厨称号的厨师，她将祖传120年的药房改造成Potong」· 通常需提前两个月预订（评论区未加载到实质评论）')],
  'Nahm':[
   L('曼谷 米其林一星泰餐厅 Nahm','https://www.xiaohongshu.com/explore/69a0cb0a00000000260339c2','地址与星级展示帖'),
-  L('避坑指南｜nahm','https://www.xiaohongshu.com/explore/65d1afd8000000000b00d0a5','2024-02-18 · 负面口碑样本')],
+  L('避坑指南｜nahm','https://www.xiaohongshu.com/explore/65d1afd8000000000b00d0a5','2024-02-18 · 负面口碑样本'),
+  L('曼谷｜连续九年的米其林一星泰餐值得吃吗？','https://www.xiaohongshu.com/explore/6a32a5a70000000016027c08','2026-06-17 · 戴踏踏 · 推荐 · 114赞 · 「这也许是我吃到过最好吃的冬阴功汤，超级活泼明亮的酸度……甜品是椰子的一生，甜蜜收尾」· 评论多为简短种草'),
+  L('在曼谷，已对米其林餐厅祛魅','https://www.xiaohongshu.com/explore/6a5726d8000000001003f84e','2026-07-15 · 周半半 · 避雷 · 多餐厅合集帖Nahm段「人均3600铢的套餐+税+服务费，2人吃了2000人民币……最好吃的是泰国香米白米饭，不会再来」'),
+  L('nahm｜轮胎也不一定靠谱','https://www.xiaohongshu.com/explore/68bae2da000000001d0026ac','2025-09-05 · themaxxtl · 避雷 · 「有订位，但是到吃完也没几桌客，这还是周六的晚上……可以算是踩雷」· 评论：正在吃，完美表达我心里的想法（汪汪呀）'),
+  L('曼谷逛吃 nahm（不推荐）','https://www.xiaohongshu.com/explore/6959580a000000001e0015c7','2026-01-04 · 走路带风的王同学 · 避雷 · 「heritage套餐3900泰铢/人……那个烟熏牛肉熏的过程没处理好，有点hao味；汤的部分普遍偏咸」'),
+  L('开年首餐 惨败NAHM','https://www.xiaohongshu.com/explore/695c7859000000002103dde2','2026-01-06 · 新_yyy · 避雷 · 「非常非常非常失败的米其林一🌟 Canapé全场最佳……Entrées开始下坡」（评论区未完整加载）')],
  'Jay Fai':[
   L('米其林一星 Jay Fai','https://www.xiaohongshu.com/explore/69fac657000000002202b429','2026仍营业、预约与营业信息核对'),
   L('曼谷街头米其林｜Raan Jay Fai餐厅宣布关闭！','https://www.xiaohongshu.com/explore/6721a8e8000000003c01b55f','2024关闭传闻样本；与2026营业帖交叉判断'),
@@ -195,6 +246,11 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('🇹🇭PRU | 普吉岛生日体验','https://www.xiaohongshu.com/explore/69155729000000000703125d','2025-11-12 · Chnee_ · 推荐 · 105赞 · 正文原话：「这是普吉唯一一家米其林」「服务和仪式感确实很到位」「菜品里居然还有一道肉夹馍也是蛮意外的」'),
   L('🇹🇭普吉岛唯一米其林Pru','https://www.xiaohongshu.com/explore/69f2c4e90000000038021438','04-30 · Livy · 中立偏推荐 · 37赞/34藏/7评 · 正文原话：「米一加个绿🌟 环境很好…看到了绝美的粉色晚霞」「晚餐set 7200🐷还要收快20%的服务费」「甜品过分创新不咋好吃」'),
  ],
+ /* phuket：Jampa 小红书证据补齐（2026-10-19 接线；xhs-round45 两篇 + 2026-10-05 补采第 3 篇，专帖池整体低互动） */
+ 'Jampa':[
+  L('普吉岛绿星餐厅Jampa-hideway隐藏餐厅','https://www.xiaohongshu.com/explore/681767f20000000003039537','2025-05-04 · 天降好运福星高照的LYT · 避雷 · 12赞 · 「每道菜竟然以咸和烟熏味为主……人均750的一顿饭几乎没有饱腹感；农场tour不错但要注意防蚊，全身被咬了七八个包」· 评论：好难吃，踩雷了（那年夏天）'),
+  L('普吉岛JAMPA米其林绿星漂亮饭','https://www.xiaohongshu.com/explore/67d5a5c0000000000703435e','2025-03-16 · 正好好 · 中立偏推荐 · 9赞 · 「非常惊艳的Snack前菜，烟熏Charocal味道；后面主菜就中规中矩一般」· 评论：请问这家怎么预定呢（三岛草纸）'),
+  L('Phuket素食Dining | Jampa','https://www.xiaohongshu.com/explore/687cbba80000000012030faf','2025-07-20 · 云朵上的棉花糖 · 中立偏推荐 · 4赞 · 「主打zero waste & sustainable……前菜和小菜很好吃，可以感受chef的用心，但是主菜普普」· 午餐menu人均RM450+（帖子原话）；评论0条如实标注')],
  '神仙半岛':[
   L('吹爆普吉岛落日｜观赏指南','https://www.xiaohongshu.com/explore/69629162000000000e03e6a0','01-10 · 包包出走世界 · 正向 · 55赞/35收藏/18评论 · 正文原话：「神仙半岛最经典、卡塔观景台俯瞰三湾」「蓝调时刻日落后10-25分钟更出片」· 人像机位候选已登记 xhs-portrait-spots/phuket/神仙半岛'),
   L('普吉岛流水账第6️⃣天：悬崖咖啡-神仙半岛','https://www.xiaohongshu.com/explore/698b4937000000000a02da2f','09-16 · 不插电的超人 · 正向 · 35赞/27收藏/2评论 · 正文原话：「Laem Sai Cup Cafe悬崖咖啡厅低消100泰铢很出片，步行20分钟边走边拍」'),
@@ -362,7 +418,9 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('新加坡米三odette没这么好吃','https://www.xiaohongshu.com/explore/68e4a3bd00000000040158de','2025-10-06 · 黄黄flo · 不推荐 · 「新加坡米三odette没这么好吃」（视频记录在国家美术馆内用餐）· 评论：唯一吃食物中毒的一家（醉卧知味）'),
   L('新加坡米三🌟吃完：不愧亚洲法餐至高点','https://www.xiaohongshu.com/explore/699db088000000000a03cbe1','2026-02-24 · 米其林一人食 · 推荐 · 「口味无可指摘，even chef Julien 不在, 出品稳得很，令人折服，我无话可说」'),
   L('Odette | 一言难尽但又有点好吃的米🌟🌟🌟','https://www.xiaohongshu.com/explore/69985210000000000a02fcc2','2026-02-20 · 姜醬元 · 不推荐 · 「曾经多年在亚洲排第一的餐厅…有些小巧思 一会好吃一会不好吃 整不会了」· 评论：去zen吧（努力搬砖喝康帝）'),
-  L('米其林三星 前亚洲第一','https://www.xiaohongshu.com/explore/6a75ac770000000028008779','2026-08-07 · 黑米happy · 推荐 · 「今年再度拿下了米其林三星」（视频字幕）· 评论：那个奶油蘑菇汤看上去好美味（起名好难。。）')],
+  L('米其林三星 前亚洲第一','https://www.xiaohongshu.com/explore/6a75ac770000000028008779','2026-08-07 · 黑米happy · 推荐 · 「今年再度拿下了米其林三星」（视频字幕）· 评论：那个奶油蘑菇汤看上去好美味（起名好难。。）'),
+  L('亚洲第一餐厅｜国家美术馆里的米其林三星','https://www.xiaohongshu.com/explore/6a855b63000000003300a24a','08-19 · VK的美食日记 · 推荐（嫌贵） · 306赞 · 「新加坡真的好贵好贵」· 评论：这么多年了蘑菇汤，乳鸽，海胆吐司，鹅肝汤还都在（Yundi）'),
+  L('🇸🇬米3️⃣odette｜《爱（好吃）与痛（贵）的边缘》','https://www.xiaohongshu.com/explore/698c0584000000000a03e979','02-11 · KFC在逃蛋挞 · 推荐 · 269赞 · 「好吃毋庸置疑……整套吃下来衔接很顺，循序渐进；468 set里的菜品实在是无需多言了」· 午餐基础套餐1.5小时可吃完（作者回复）')],
  'Jumbo Seafood':[
   L('新加坡🇸🇬珍宝海鲜辣椒蟹🦀给到一个夯！','https://www.xiaohongshu.com/explore/6a4dba2b000000000f02b814','2026-07-07 · ⚡️mint_durian · 推荐 · 「辣椒蟹｜必点！这调味实在太夯👍青蟹重量有多档可选，我和我妈两个人就点了800g的，非常大肉非常饱满非常够吃‼️」'),
   L('不是呀…这个珍宝海鲜好吃在哪里？','https://www.xiaohongshu.com/explore/6a2f5e83000000000803d8cd','2026-06-14 · momo · 不推荐 · 「我一个人吃就点了3样东西…这个辣椒螃蟹？…真的好吃吗[扶额R]没啥味道还没有多辣呢，而且这三道直接142 SGD」· 评论：本地人不去珍宝吃螃蟹的（哄哄）'),
@@ -440,7 +498,14 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('🇸🇬跟着王嘉尔打卡全球唯1️⃣米其林娘惹菜','https://www.xiaohongshu.com/explore/6a01a9a400000000360182ff','2026-08-17 · 安静的虫牙君 · 推荐 · 166赞/215藏/12评 · 正文原话：「Candlenut是全球唯一一家米其林娘惹菜餐厅」「点了ah-ma-kase的套餐」「白咖喱红脚虾🦐…搭配米饭简直下饭神器！」· 评论：ah-ma-kase 108新币/人（作者回复）'),
   L('📍Singapore 打卡王嘉尔同款米其林一星','https://www.xiaohongshu.com/explore/69a9928b000000001a031bde','2026-03-05 · 樱桃小迷糊-🍒 · 推荐 · 301赞/350藏 · 正文原话：「据说是全球唯一摘星的娘惹菜餐厅」「怕点餐踩雷…可以直接点ah-ma-kase」「这个价格能在新加坡吃到米其林已经性价比非常高了」'),
   L('新加坡Candlenut米其林娘惹菜探店','https://www.xiaohongshu.com/explore/683d52ce000000002101846b','2025-06-02 · Alin摘星星 · 推荐 · 366赞 · 本轮搜索池专帖互动量前三'),
- ],
+  L('据说是全球第一家获星星的娘惹菜','https://www.xiaohongshu.com/explore/69491ba0000000001e02556c','2025-12-22 · mgmgmg · 不推荐 · 「菜品和口味真的不适合中国宝宝，顶着米其林一星的头衔有点子失望」· 评论：我当时也准备去，还好没去（蒋笑话☀）'),
+  L('Candlenut太好吃了！！！','https://www.xiaohongshu.com/explore/69be1db5000000002102cd48','2026-03-20 · 吹个粉球球 · 推荐 · 「吃上第一口，之前那些娘惹菜啥都不是！！！第一第一！！！一个人也可以吃个遍」'),
+  L('新加坡娘惹菜好吃推荐，但有点贵了','https://www.xiaohongshu.com/explore/69ca37740000000021004987','2026-03-31 · 小美煤球 · 推荐 · 「五点前去吃不排队而且菜品也有打折，两人吃了550左右……味道都还是不错的，挺符合广东人的胃口」')],
+ /* singapore/10 Burnt Ends：2026-09-14 严格实读 3 篇（覆盖不足，如实标注），2026-10-19 补接线 */
+ 'Burnt Ends':[
+  L('🇸🇬传说中最难订的米其林餐厅 Burnt Ends','https://www.xiaohongshu.com/explore/69a2df64000000002602ee51','2026-02-28 · Liliane莉莉 · 推荐 · 「男友天天刷网站终于订到了最难订的burnt ends，其实也没那么难订」· 评论：到底怎么订到的（momo）'),
+  L('祛魅的最好方式是拥有之Burnt Ends打卡','https://www.xiaohongshu.com/explore/6968dfa3000000001a03677d','2026-01-15 · 三万个Cissy · 中立 · 「感谢朋友抢到一个slot，终于来吃了这家超有名餐厅，结论就是不后悔来吃但也不会特意再来吃了」'),
+  L('Burnt ends这个餐厅为什么难定？','https://www.xiaohongshu.com/explore/68fb5a9c000000000300e6bf','2025-10-24 · Maple🍁.NIE · 中立 · 订位讨论帖 · 评论：可以试一下Seroja，Thevar都蛮特别的（dd_wong）')],
  '328 Katong Laksa':[
   L('328加东叻沙的体验','https://www.xiaohongshu.com/explore/69be1b160000000021038acb','2026-03-20 · Bridget · 中立 · 「一伙人都吃了328的叻沙……原来这个叻沙的形状是粉虫啊！味道我个人不是很习惯，偏甜了点」· 评论：小红薯64DC2392「还不错啦，但是funan商场B1奇迹叻沙更好吃呢」'),
   L('🇸🇬为了这家店我愿意再去一趟新加坡！！！','https://www.xiaohongshu.com/explore/695f6705000000002203a67b','2026-01-08 · 小郭爱吃香菜💗 · 推荐 · 「🏠：328加东叻沙 🚖地址：51 E Coast Rd, Singapore 428770 🤤口味：最推荐鸡丝味儿的！真的超级超级鲜！」· 评论：从零越野奔向UTMB「旁边shoppong center 楼下的比这个好吃」'),
@@ -477,7 +542,7 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
   L('这家餐厅，让我重新认识了新加坡菜','https://www.xiaohongshu.com/explore/6a91f0ea000000002102e964','08-29 · Pearlzeng · 推荐 · 「在Labyrinth吃完一顿饭 我脑子里只有一个念头 原来新加坡菜还可以这样表达 主厨LG Han不走寻常路 他翻出那些快要被遗忘的旧食谱 把奶奶辈的味道捡回来 再用现代手法重新演绎」· 评论：ISAYNAY（上海）「太想吃一口了」'),
   L('尝尝米其林的海南鸡饭。Labyrinth','https://www.xiaohongshu.com/explore/67e79b62000000001c00654e','08-29 · 跟阿勤吃新加坡 · 中立（个人推荐指数3/5） · 「新加坡创新菜，菜单里有很多的新加坡元素…海南鸡饭有点意思…价格：2个人，套餐，人均286新（1540人民币）…地址：8 Raffles Ave., #02 - 23, 039802 预约：比较好约，提前3天约的」· 评论：為什麼每天都很饿啊啊啊啊（新加坡）「这家的kaya toast让我念念不忘了好久，我觉得好好吃!!」'),
   L('🇸🇬米一labyrinth｜闹麻了，有人管管吗','https://www.xiaohongshu.com/explore/692aef28000000001d039e4d','编辑于2025-12-01 · KFC在逃蛋挞 · 不推荐 · 「平心而论有一些菜…挺可圈可点的 但是！！感觉主厨没有考虑到不同菜组合起来是否合适…腻到爆炸…配酒158新一位只能说普通…真消费才真抱怨 人均500多新了」· 评论：A GT. Cyrus（广东）「88 SGD 一杯Krug??? 报警吧」；北冥有鱼（北京）「labyrinth一生黑」'),
- ],
+  L('新加坡菜米其林：糟糕不妙我想逃','https://www.xiaohongshu.com/explore/69eddc7b00000000360019d5','2026-04-26 · 米其林一人食 · 不推荐 · 「第一道，糟糕不妙我想逃。临时加一餐米其林，这是唯一能订上的，大头就是不好吃」· 评论：你还没地摊好吃（BourbonMD）')],
  '鱼尾狮公园':[
   L('鱼尾狮公园，是我在新加坡最惬意的地方','https://www.xiaohongshu.com/explore/69db8cd4000000002200353d','2026-04-12 · Amy努力谈单中 · 推荐（鱼尾狮） · 「很多人说只有游客才去鱼尾狮，但我找到了免费、人少、出片的"本地人"玩法。我的黄金法则：下午4:30抵达。避开人流，光线绝佳。」· 评论：Ng/「请问H出口，走路过去要多久呢」'),
   L('🎆新加坡金沙 Spectra 灯光秀有点震撼','https://www.xiaohongshu.com/explore/6a2c26580000000007012fcc','2026-06-12 · 乌鱼子 · 推荐（Spectra） · 「散步到金沙...未曾想到会被这个Light & Water Show吸引到！现场音效很赞 水和光影交织变身 身临其境确实不一样👀沉浸式欣赏录了一小段」· 评论：岫利不是山由利「这个是钻哪里的景吖？」'),
@@ -618,81 +683,81 @@ export const xhsEvidence:Record<string,EvidenceLink[]>={
  'The Peninsula Bangkok':[
   L('曼谷半岛｜1998年的奢华🏨 今天依然经典','https://www.xiaohongshu.com/explore/6a7f118a0000000021022084','2026-08-15 · 翻斗花园壮壮 · 339赞 · 推荐："它确实记得你是谁"，服务记得客人偏好'),
   L('避雷，曼谷半岛酒店','https://www.xiaohongshu.com/explore/688b1e30000000002302ad07','2025-07-31 · MaxwithLove · 22赞 · 避雷：隔音是硬伤"半夜能听到隔壁上厕所"，设施有年代感、位置偏'),
-  L('一千零一夜第七夜：和我同岁的曼谷半岛','https://www.xiaohongshu.com/explore/6a61866e000000000301fc28','2026-07-22 · 云章 · 276赞 · 推荐带保留：用料扎实空间阔绰，前台服务偶有疏漏')
+  L('一千零一夜第七夜：和我同岁的曼谷半岛','https://www.xiaohongshu.com/explore/6a61866e000000000301fc28','2026-07-22 · 云章 · 276赞 · 推荐带保留：用料扎实空间阔绰，前台服务偶有疏漏'),
  ],
  'Rosewood Bangkok':[
   L('🌿曼谷瑰丽真实测评！无边泳池+黑胶酒吧！','https://www.xiaohongshu.com/explore/6a36c44800000000060201b3','2026-06-20 · 它处 · 2006赞 · 推荐：9楼半室内无边泳池不怕晒，顶楼Lennon黑胶酒吧；低楼层有摩托噪音建议住高层'),
   L('rosewood bangkok ⛱️','https://www.xiaohongshu.com/explore/685e3d9d000000001c035fb2','2025-06-26 · ar1abb · 290赞 · 推荐：日落泳池设计感强，晚上体验spa很酥胡'),
-  L('曼谷瑰丽🪻','https://www.xiaohongshu.com/explore/68e5e2770000000007032032','2026-09-13 · Saraaa25 · 617赞 · 推荐：过天桥即商场，19楼南北中餐厅烤鸭需提前订；船面有人嫌"酱油煮面"')
+  L('曼谷瑰丽🪻','https://www.xiaohongshu.com/explore/68e5e2770000000007032032','2026-09-13 · Saraaa25 · 617赞 · 推荐：过天桥即商场，19楼南北中餐厅烤鸭需提前订；船面有人嫌"酱油煮面"'),
  ],
  'The Reverie Saigon':[
   L('西贡万韵｜藏在南洋烟火里的意式孤品。','https://www.xiaohongshu.com/explore/69cf8eed000000001a02dab1','06-11 · LadyCheetah · 245赞 · 推荐：意式宫殿风立鼎世成员，高楼层河景房框住西贡河与城市屋顶'),
-  L('一个人住进西贡的"意大利皇宫"','https://www.xiaohongshu.com/explore/69d8c0d000000000220281e6','05-05 · 努力小马的酒店手记 · 192赞 · 推荐：第1郡核心阮惠大道，夜床服务每天手写卡片+巧克力')
+  L('一个人住进西贡的"意大利皇宫"','https://www.xiaohongshu.com/explore/69d8c0d000000000220281e6','05-05 · 努力小马的酒店手记 · 192赞 · 推荐：第1郡核心阮惠大道，夜床服务每天手写卡片+巧克力'),
  ],
  'Park Hyatt Saigon':[
   L('西贡柏悦的前世今生','https://www.xiaohongshu.com/explore/6a0b1f150000000007024987','05-18 · Charlie 明 · 212赞 · 推荐带保留：1950年Brink酒店旧址老派奢华，客房老旧偏小、硬件不算突出'),
-  L('胡志明｜西贡柏悦','https://www.xiaohongshu.com/explore/6a3798670000000022014efc','06-21 · 阿宝 · 2132赞 · 推荐带保留：法式殖民风+越南元素，早餐半自助越南粉现点现煮，约2000-3000价位')
+  L('胡志明｜西贡柏悦','https://www.xiaohongshu.com/explore/6a3798670000000022014efc','06-21 · 阿宝 · 2132赞 · 推荐带保留：法式殖民风+越南元素，早餐半自助越南粉现点现煮，约2000-3000价位'),
  ],
  'Mai House Saigon':[
   L('西贡迈之家Mai House酒店','https://www.xiaohongshu.com/explore/69855405000000000a02dcb3','02-09 · 驭电大叔 · 19赞 · 推荐：第三郡欧陆精品风，顶楼天台酒吧270度鸟瞰全市；水流小是缺点'),
-  L('胡志明市 | Mai House Saigon Hotel','https://www.xiaohongshu.com/explore/6a38a5420000000011014fb6','06-22 · 南北绿豆 · 137赞 · 推荐：860r含早服务细节好（鲜花/欢迎饮品券），位置稍偏但安静')
+  L('胡志明市 | Mai House Saigon Hotel','https://www.xiaohongshu.com/explore/6a38a5420000000011014fb6','06-22 · 南北绿豆 · 137赞 · 推荐：860r含早服务细节好（鲜花/欢迎饮品券），位置稍偏但安静'),
  ],
  'Caravelle Saigon':[
   L('Vlog |又来住 Caravelle Saigon Hotel 🇻🇳','https://www.xiaohongshu.com/explore/69187a130000000007002927','2025-11-17 · 一言天成 · 33赞 · 推荐：视频帖"又来住"，第一郡歌剧院旁位置无敌方便'),
-  L('西贡卡拉威尔酒店第四次入住体验记分享🇻🇳','https://www.xiaohongshu.com/explore/6917dae10000000007015af7','2025-11-14 · 一言天成 · 28赞 · 强推荐：第四次入住的"首选常驻饭店"；评论区无实质评论')
+  L('西贡卡拉威尔酒店第四次入住体验记分享🇻🇳','https://www.xiaohongshu.com/explore/6917dae10000000007015af7','2025-11-14 · 一言天成 · 28赞 · 强推荐：第四次入住的"首选常驻饭店"；评论区无实质评论'),
  ],
  'Hôtel des Arts Saigon':[
   L('胡志明 西貢美憬閣藝術酒店','https://www.xiaohongshu.com/explore/6871f02c000000001d00db0e','2025-07-11 · 克里斯先生在越南 · 38赞 · 强推荐：顶楼泳池+酒吧+玻璃天桥，早餐丰盛果汁好喝，价格香'),
   L('胡志明美憬阁酒店｜西贡美憬阁｜无边泳池','https://www.xiaohongshu.com/explore/660bf10f000000001b00ec42','2024-04-02 · momo · 35赞 · 中立偏推荐：无边泳池+屋顶酒吧景美；位置一般，步行15分钟到中心区'),
-  L('Hotel des Arts Saigon-屋顶bar','https://www.xiaohongshu.com/explore/6939a67d000000001e0275de','2025-12-10 · 旅拍作者 · 低互动 · 中立：15秒视频帖，屋顶酒吧')
+  L('Hotel des Arts Saigon-屋顶bar','https://www.xiaohongshu.com/explore/6939a67d000000001e0275de','2025-12-10 · 旅拍作者 · 低互动 · 中立：15秒视频帖，屋顶酒吧'),
  ],
  'The St. Regis Kuala Lumpur':[
   L('吉隆坡瑞吉','https://www.xiaohongshu.com/explore/6a3ce0a7000000001c027d85','06-25 · 吃水煮菜菜菜 · 465赞 · 推荐'),
-  L('吉隆坡瑞吉劝你别住','https://www.xiaohongshu.com/explore/683ddfcb000000002301cd29','2025-06-04 · 福妮 · 57赞 · 避雷："马来西亚的客房服务我认为是东南亚国家最差的"，泳池局促')
+  L('吉隆坡瑞吉劝你别住','https://www.xiaohongshu.com/explore/683ddfcb000000002301cd29','2025-06-04 · 福妮 · 57赞 · 避雷："马来西亚的客房服务我认为是东南亚国家最差的"，泳池局促'),
  ],
  'Eastern & Oriental Hotel':[
   L('🇲🇾住进19Eastern & Orie','https://www.xiaohongshu.com/explore/686f783b000000002400e2e3','2025-07-10 · apple · 696赞 · 推荐：19世纪老酒店入住体验分享'),
   L('槟城E&O｜住进黑塞笔下的"东方最美酒店" 🏨','https://www.xiaohongshu.com/explore/69f591330000000023006fa7','06-08 · itsalicia · 1409赞 · 推荐：黑塞"东方最美酒店"典故向'),
-  L('避雷🇲🇾槟城东家酒店E&O hotel','https://www.xiaohongshu.com/explore/69fae28b0000000022024210','05-05 · 星球杯杯 · 36评论 · 避雷')
+  L('避雷🇲🇾槟城东家酒店E&O hotel','https://www.xiaohongshu.com/explore/69fae28b0000000022024210','05-05 · 星球杯杯 · 36评论 · 避雷'),
  ],
  'Penang Marriott Hotel 槟城万豪':[
-  L('马来西亚槟城万豪酒店全系Marriott Bonvoy','https://www.xiaohongshu.com/explore/6809a70f000000001c0021bc','2025-04-24 · Artists.H · 207赞 · 中立：万豪全系指南帖')
+  L('马来西亚槟城万豪酒店全系Marriott Bonvoy','https://www.xiaohongshu.com/explore/6809a70f000000001c0021bc','2025-04-24 · Artists.H · 207赞 · 中立：万豪全系指南帖'),
  ],
  'Cheong Fatt Tze Mansion':[
   L('没预约别去｜槟城蓝屋超详细预约攻略','https://www.xiaohongshu.com/explore/695cfdca0000000022008756','01-06 · 樱漪落 · 442赞 · 推荐：蓝屋超详细预约攻略'),
   L('阿嬷的情书在汕头拍的，真正的蓝屋在槟城','https://www.xiaohongshu.com/explore/6a60f18e000000002201ac62','07-22 · 老余说建筑 · 376赞 · 推荐：建筑文化向，真假蓝屋辨析'),
-  L('槟城蓝屋避雷','https://www.xiaohongshu.com/explore/6aaa9832000000001401ce3e','09-16 · 拖拉B懵 · 68赞 · 避雷')
+  L('槟城蓝屋避雷','https://www.xiaohongshu.com/explore/6aaa9832000000001401ce3e','09-16 · 拖拉B懵 · 68赞 · 避雷'),
  ],
  'The Prestige Hotel Penang':[
-  L('Malaysia-槟城最出片酒店之一','https://www.xiaohongshu.com/explore/685ecd39000000001203eb41','03-20 · 载酒Kiyo · 128赞 · 推荐：槟城最出片酒店之一')
+  L('Malaysia-槟城最出片酒店之一','https://www.xiaohongshu.com/explore/685ecd39000000001203eb41','03-20 · 载酒Kiyo · 128赞 · 推荐：槟城最出片酒店之一'),
  ],
  'The Edison George Town':[
-  L('🇲🇾隐藏在乔治市的复古神级酒店！','https://www.xiaohongshu.com/explore/688b58cd0000000004000d6b','09-01 · 打工魂 · 148赞 · 推荐：1906年百年老建筑，殖民拱廊+挑高中庭；每日17-19点免费红酒时段')
+  L('🇲🇾隐藏在乔治市的复古神级酒店！','https://www.xiaohongshu.com/explore/688b58cd0000000004000d6b','09-01 · 打工魂 · 148赞 · 推荐：1906年百年老建筑，殖民拱廊+挑高中庭；每日17-19点免费红酒时段'),
  ],
  'JW Marriott Phu Quoc':[
-  L('奔赴山海，邂逅全球顶奢JW秘境🏝️','https://www.xiaohongshu.com/explore/69d8b8c1000000001d01b5bc','04-24 · 沈奕铭 · 2081赞 · 推荐：法式建筑群与海滩，"推开窗就是一整片蓝"')
+  L('奔赴山海，邂逅全球顶奢JW秘境🏝️','https://www.xiaohongshu.com/explore/69d8b8c1000000001d01b5bc','04-24 · 沈奕铭 · 2081赞 · 推荐：法式建筑群与海滩，"推开窗就是一整片蓝"'),
  ],
  'Regent Phu Quoc':[
-  L('富国岛丽晶，你真的把我养很好','https://www.xiaohongshu.com/explore/6a09b8380000000006033823','05-17 · Kimber 艺然 · 345赞 · 推荐：实质评论最丰富的丽晶专帖')
+  L('富国岛丽晶，你真的把我养很好','https://www.xiaohongshu.com/explore/6a09b8380000000006033823','05-17 · Kimber 艺然 · 345赞 · 推荐：实质评论最丰富的丽晶专帖'),
  ],
  'InterContinental Phu Quoc 洲际':[
-  L('住遍越南🇻🇳 | IHG奢华度假酒店测评','https://www.xiaohongshu.com/explore/6a7d927d00000000330335d5','08-13 · 努力成为小飞侠 · 151赞 · 推荐：评论区有IHG大使升房与4点退房讨论')
+  L('住遍越南🇻🇳 | IHG奢华度假酒店测评','https://www.xiaohongshu.com/explore/6a7d927d00000000330335d5','08-13 · 努力成为小飞侠 · 151赞 · 推荐：评论区有IHG大使升房与4点退房讨论'),
  ],
  '乐天酒店首尔 Lotte Hotel Seoul':[
   L('首尔乐天酒店｜明洞地标级顶奢旅居🌆','https://www.xiaohongshu.com/explore/6a743ca90000000022013fea','2026-08-06 · Junshare全球顶奢私藏 · 1赞 · 正向：1979年旗舰明洞地标双塔，高层观景房俯瞰全城'),
   L('首尔乐天酒店好评！📍Lotte Hotel Seoul','https://www.xiaohongshu.com/explore/69c84dcb0000000022002da0','2026-03-28 · 乌啦啦个啦 · 11赞 · 正向：Amex FHR两晚600美元，本馆有年代感但维护好'),
   L('首尔明洞封神酒店✨乐天行政楼闭眼冲不踩雷','https://www.xiaohongshu.com/explore/6a565cb700000000150261d9','2026-07-14 · 喵喵爱吃鱼鱼 · 3赞 · 正向：行政楼新装修，33F南山塔夜景，6701巴士直达'),
-  L('首尔乐天酒店','https://www.xiaohongshu.com/explore/6a70bfbf00000000220129c5','2025-08-08 · 菲嘟嘟左卫门 · 15赞 · 推荐：行政楼33F约57平，"意外的不错，没有网上说得那么旧"；14条评论5组实质问答')
+  L('首尔乐天酒店','https://www.xiaohongshu.com/explore/6a70bfbf00000000220129c5','2025-08-08 · 菲嘟嘟左卫门 · 15赞 · 推荐：行政楼33F约57平，"意外的不错，没有网上说得那么旧"；14条评论5组实质问答'),
  ],
  '威斯汀朝鲜首尔 The Westin Josun Seoul':[
   L('首尔百年潮牌｜威斯汀朝鲜太好住🌆','https://www.xiaohongshu.com/explore/6a45bd010000000021016eb9','2026-07-03 · 悟空国际旅行 PLANET · 1赞 · 正向：百年老牌五星，紧挨明洞+乐天百货，天梦之床+祖马龙洗护'),
   L('体验首尔市中心112年历史的百年酒店','https://www.xiaohongshu.com/explore/69860fbd000000002802288c','2026-07-14 · LAUCL. · 90赞 · 正向：白金卡升级顶楼圜丘坛景观行政房；酒廊HH丰富；房间有年代感'),
-  L('体验南韩最古老的酒店','https://www.xiaohongshu.com/explore/6a65ca67000000000c033c00','2026-07-26 · Tetryl · 10赞 · 中立：对比明洞VOCO，威斯汀朝鲜为正面体验')
+  L('体验南韩最古老的酒店','https://www.xiaohongshu.com/explore/6a65ca67000000000c033c00','2026-07-26 · Tetryl · 10赞 · 中立：对比明洞VOCO，威斯汀朝鲜为正面体验'),
  ],
  '首尔四季酒店 Four Seasons Hotel Seoul':[
   L('在首尔的四季酒店感受到了一种美学力量','https://www.xiaohongshu.com/explore/692676ef000000000d03bf62','2025-12-01 · 酒神G · 1429赞 · 正向："老钱美学"天花板，房间如艺术展'),
   L('首尔四季Hotel | 忙碌中的井然有序','https://www.xiaohongshu.com/explore/691040180000000003036db1','2025-11-08 · Nono · 50赞 · 正向：光化门四季"家外之家"，服务对得起口碑'),
-  L('韩国首尔 I Four Seasons Hotel 🏨🍂','https://www.xiaohongshu.com/explore/6a9ed6c80000000019030aee','2026-09-07 · jj瑛 · 14赞 · 正向：酒店美食口碑好')
+  L('韩国首尔 I Four Seasons Hotel 🏨🍂','https://www.xiaohongshu.com/explore/6a9ed6c80000000019030aee','2026-09-07 · jj瑛 · 14赞 · 正向：酒店美食口碑好'),
  ],
 };
 
