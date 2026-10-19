@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T05:10:00Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T10:47:56Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -1435,10 +1435,10 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md",
-       "note": "xhs-peritem-backfill 严格重验最终轮收尾（截至2026-09-16T01:55Z）：SP Chicken 5篇（3有效+2特例，特例额度已满）；Khao Soi Khun Yai 0篇。01:49–01:51Z最终三轮7候选全部剔除、深挖两轮零新增（泛搜索被宁曼11巷Kaiyang Wichianburi系主导，已实锤9帖）。缺5篇。证据：redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md；09:25 PDT(16:25Z) xhs-continuous-search干净轮落盘: 深读10篇全剔除(宁曼陷阱4/Maesai错店3/无年份2/其他错店1), 卡片排除约140(19组关键词); 新3帖标准累计仍0/3(本品类流量普遍低、无万赞帖,\"明显高于同类\"难以适用), 停止原因=候选池枯竭(唯一真货独立专帖均卡MM-DD无年份纪律); 菜小盒登录态健康(无扫码墙/验证码/滑块/操作频繁/空白页/黑块), 全程只读无熔断; item19(悟孟寺+班康瓦)连续4轮新增计入=0按08:43 PDT用户枯井规则换下, 管线自然覆盖本项; item06(清迈香格里拉)的01:58Z轮次浏览器任务静默丢失(06:52Z adjudication按空轮)。证据: redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 16:25Z轮次记录；19:49Z xhs-continuous-search硬熔断轮（滑块验证码：item19 Canny帖URL 404→站内搜索恢复时弹出滑块拼图，按熔断纪律立即停、未交互未重试未刷新）：item07本轮新增计入0（主agent 12:56 PDT裁决：worker原报2/3纠正为0/3——熙熙在迈村6aa9202f图片5/5通过但条目内无实质评论原话、既有记录载明仅寒暄；强华6a6f8219零评论且本项特例额度2/2已满；另2候选仅1评论/0评论已剔除，两候选均转备选留档）。累计新3帖标准仍0/3。12:36健康检查时菜小盒已登录、首页信息流正常（熔断时登录态未确认丢失）。item19 Canny剩余图片补核、c.备份深读、singapore/01/02图片快翻未执行，留待下轮。consecutive_fuse=1，circuit_breaker=false，主会话冷却后按节奏恢复。；2026-09-24T02:18Z主会话定时轮xhs-continuous-search授权重试轮（19:49Z滑块硬熔断后、用户30分钟无回复按3.5步协议触发）干净完成无熔断：健康检查通过（18:53–18:56 PDT，菜小盒已登录、首页信息流正常）；滑块熔断解除，consecutive_fuse_count清零；全程只读。item07三组搜索pass（Khao Soi Khun Yai翻2页约50卡片/SP Chicken翻2页约30卡片/清迈米其林烤鸡翻1页约28卡片），8篇深读全剔除（hh bean Maesai陷阱/阿K哥68d4ebc1零评论/小肠儿泡奶Nimman陷阱/mika错主题/Sa💗697428c2 SP实锤零评论/清迈直人6a6f4c17 SP实锤零评论/半透明Translucent店名未实锤仅3条评论/Patrick错店）；新增计入0，累计新3帖标准仍0/3（高流量头部位被陷阱店/合集帖挤占，真货专帖均零评论）。【2026-09-24T08:52Z hourly更新】主会话xhs-continuous-search三轮结论：①09-23 19:36–19:49Z硬熔断终止（滑块验证码；登录态健康检查时正常，未确认丢失），item07本轮0计入（熙熙在迈村/强华两候选均缺实质评论证据，主agent 12:56 PDT裁决纠正worker原报2/3→0/3；特例额度已满不再新增特例）；②09-24 01:53–02:18Z授权重试轮（用户30分钟无回复触发，健康检查通过、熔断解除consecutive清零）干净完成，8深读全剔除（Maesai/Nimman陷阱店4、零评论3、主题不符1），0计入，仍0/3——原因：陷阱店挤占头部、Khun Yai/SP Chicken真货专帖池枯竭（实锤店名2篇均零评论；店名未实锤1篇仅3条评论）；③熔断机制新发现：不带xsec_token的直接URL粘贴会404（error_code=300031，token缺失非删帖），须经站内搜索点入。累计新3帖标准0/3，仍partial（posts=5为旧10帖口径存量，按Capella先例暂留，主agent逐项转换裁决）。 ｜ 2026-09-28 第16轮0新增；英文仅2低赞帖且被AI头遮挡打不开，高赞咖喱面均为别家(Mae Sai/Nimman)已排除，候选池枯竭；2026-10-02 第76轮：Khao Soi Khun Yai 找到首篇专帖——熙熙在迈村《清迈最接地气的Khao Soi Khun Yai咖喱面》(5赞，正文扎实，09-15，https://www.xiaohongshu.com/explore/6aa9202f0000000011037d0c)，低互动已备注；另1篇 Nicky Chang 视频帖（10赞，无正文无评论）太薄未计入；墨尔本分店帖已排除。非零新增，不标枯竭。证据：research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/xhs-round76-phuket-chiangmai-2026-10-02.md\nBATCH3-2026-10-05: 本轮翻2-3页逐一点开核验7篇，均为别家店(Baan Kang Wat/SO SOOD/尼曼Khao-Sō-i/Maesai/Nimman/80株)，唯一标题含Khun Yai的为已有帖(熙熙在迈村5赞)；墨尔本分店已排除。本轮0新增，不死磕，维持partial。\nHONEST-2026-10-05主agent: 本店专帖池薄。仅1篇完整证据专帖(熙熙在迈村《清迈最接地气的Khao Soi Khun Yai咖喱面》5赞，09-15，https://www.xiaohongshu.com/explore/6a9202f0000000011037d0c)；第76轮+本轮共核验8+篇，高赞咖喱面均为别家(Mae Sai/Nimman/尼曼路)，英文帖仅2低赞且打不开。2/3未达标，维持partial，不死磕。 | 2026-10-08 主agent重探（持续重试政策首轮）：三搜索词共5屏，深读7篇——真Khun Yai专帖全是小透明（个位数赞/无实质评论），高互动帖（116-438赞）均为陷阱店Mae Sai/Nimman或曼谷店；SP Chicken清迈无专帖（全是曼谷分店）。0新增计入，仍0/3（新标准）。证据见 redo-strict/chiangmai-item07-khaosoi-spchicken-PARTIAL-2026-09-15.md 重探轮记录。｜【2026-10-12主agent严格审计回退】2026-10-11证据3帖互动仅1/5/2赞，证据文件自认'无高互动候选'；同类高互动帖（Mae Sai 439赞/Nimman 1021赞）均为别家店，已排除。不符合'同类结果中相对高流量'标准——真店专帖池整体低互动，无高流量帖可取。done→partial回退，不拿低互动证据充数。结论内容（咖喱浓/90铢/两点关门）为真实帖子原话，网站可见结论保留，仅状态回退partial。complete_items 136→135。\n【2026-10-13 round161 重探】老窗口实搜：Khun Yai 严格匹配仍只有既有3篇低互动帖（1-5赞），0篇新增达标；SP Chicken 深读2篇（疑似推荐54赞+确认避雷），池子低赞两极。维持 partial，按24h节拍自动重探。证据：hidden_files/xhs-evidence/chiangmai/khao-soi-sp-chicken-reprobe-2026-10-13.md；2026-10-18 round328 重探（老窗口实搜，无墙）：Khun Yai 真店专帖仍仅 3 篇全低互动（小鱼蛋 23赞/2评、青山不改 11赞/0评、熙熙在迈村 5赞/1评），关键词头部高互动帖经深读实锤为别店（hh bean 443赞=Mae Sai、Patrick 248赞=Baan Landai）已排除；SP Chicken 新增 6 篇专帖、其中 Kang崽《清迈烤鸡烤到米其林》166赞/208藏/33评论实读达标。合并项维持 partial（结构性池薄，与 2026-10-11 审计结论一致）。证据：hidden_files/chiangmai-khaosoi-spchicken-reprobe-2026-10-17.md（本轮报告未回传各帖规范 URL，待后续补录）",
+       "note": "2026-10-19 round347 重探转 done（老窗口两店拆搜、各翻约3页、先列池全貌再深读池内最佳专帖）：计入 3 篇——SP Chicken：Kang崽 2025-03-25（166赞/208藏，中立偏推荐）+ 方洲很忙 2022-10-28（110赞/161藏，推荐，10:00-17:00、帕辛寺附近）；Khao Soi Khun Yai：eelman 2025-05-10（46赞/18藏，推荐，周一至周六10:00-14:00卖完即关、约50泰铢）。注意事项如实保留：Khun Yai 专帖池结构性低互动（46赞为池内专帖第一，443赞大帖实为别家 Mae Sai 已排除）、两店评论区实质美食讨论偏少（互动多由照片驱动）、SP Chicken 口味两极（避雷帖多篇）。证据：hidden_files/chiangmai-khaosoi-spchicken-reprobe-2026-10-19.md",
        "posts": 3,
-       "status": "partial",
-       "target": 10,
+       "status": "done",
+       "target": 3,
        "evidence": "hidden_files/xhs-evidence/chiangmai/khaosoi-khunyia-2026-10-11.md",
        "updated_at": "2026-10-11T11:59:00Z"
       }
@@ -4446,8 +4446,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-28 05:12Z 第4轮放款3/3 done: 九四和九五《世界第一家悦榕庄》(1071赞,视频)、亮拐《成年人的避世治愈之地》(609赞,13张)、他有点厉害《真实避雷提醒》(69赞,33评论)。避雷: 蚊虫多、房间偏旧、自带花洒、Rava餐厅性价比低。证据见 xhs-coverage-phuket.md。",
-       "posts": 3,
+       "note": "2026-09-28 05:12Z 第4轮放款3/3 done: 九四和九五《世界第一家悦榕庄》(1071赞,视频)、亮拐《成年人的避世治愈之地》(609赞,13张)、他有点厉害《真实避雷提醒》(69赞,33评论)。避雷: 蚊虫多、房间偏旧、自带花洒、Rava餐厅性价比低。证据见 xhs-coverage-phuket.md。 || 2026-10-19 已订酒店深研#3：深读计入 10 篇书目齐全。核心：全别墅带私人泳池（用户 Banyan Pool Villa≈帖7基础档实住）；早餐分裂口碑；$100 券全场通用花 Spa 最值（帖5）；蚊虫两帖印证为最大雷点；升房唯一实证为淡季团建全升双泳池别墅、与用户12月旺季条件相反、初判偏低。证据 hidden_files/booked-hotels-deep-dive/banyan-tree-phuket.md。",
+       "posts": 10,
        "status": "done",
        "target": 10
       }
@@ -5228,8 +5228,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "note": "2026-10-18 用户接管交回窗口后老窗口实搜「Dinso 普吉」实读 3 篇（2 推荐/1 不推荐）：琦琦的养猫日常 2026-07-27（371赞/209藏，正文仅标签，评论证实丛林轨道电梯全体住客可用）/飞翔的小阿贵 2026-05-13 不推荐（国内App预订给双床尾房、噪音与隔音差、劝退标准间）/迩耶Jason 2026-04-30 推荐（丛林设计与三泳池强、bar音乐到22:00、隔音一般）。跨帖雷点=噪音/隔音（与 TA 池畔吧音乐投诉互证）；早餐口碑分裂。证据：hidden_files/dinso-phuket-research/xhs-evidence-2026-10-18.md",
-       "posts": 3,
+       "note": "2026-10-18 用户接管交回窗口后老窗口实搜「Dinso 普吉」实读 3 篇（2 推荐/1 不推荐）：琦琦的养猫日常 2026-07-27（371赞/209藏，正文仅标签，评论证实丛林轨道电梯全体住客可用）/飞翔的小阿贵 2026-05-13 不推荐（国内App预订给双床尾房、噪音与隔音差、劝退标准间）/迩耶Jason 2026-04-30 推荐（丛林设计与三泳池强、bar音乐到22:00、隔音一般）。跨帖雷点=噪音/隔音（与 TA 池畔吧音乐投诉互证）；早餐口碑分裂。证据：hidden_files/dinso-phuket-research/xhs-evidence-2026-10-18.md || 2026-10-19 已订酒店深研#4：新深读 9 篇（书目齐全），累计深读 15 篇。新证：尾房被独立再证（前台有空房仍给尾房、协调近1小时）；缆车单程 3–4 分钟、高峰等 5 分钟；$100 全场券被评论实证（渠道未点名）；早餐 9:30 高峰人挤、现切水果证实；山上别墅夜间风声为新噪音源；生日邮件可得布置+蛋糕。升房直接证据零。证据 hidden_files/dinso-phuket-research/xhs-deep-dive-2026-10-19.md。上站待办：researchExtra 补这批 E()/S()。",
+       "posts": 15,
        "target": 3
       },
       "photos": {
@@ -6158,8 +6158,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-24T06:15Z主会话xhs-continuous-search新标准核销→done: 搜索pass3页~55卡片,存档中明显高于其他帖≥3篇(可素不宅家7924/福建小林1240/陈千千Claire1131/Visit The World708/汤川星辰493,共5篇),无需深读;福建大乔卡片标题未渲染+日期不符未确认,雨子酱Yuki 2275为商场非酒店已排除;证据singapore-xhs.md 22:53–23:15 PDT轮次记录",
-       "posts": 3,
+       "note": "2026-09-24T06:15Z主会话xhs-continuous-search新标准核销→done: 搜索pass3页~55卡片,存档中明显高于其他帖≥3篇(可素不宅家7924/福建小林1240/陈千千Claire1131/Visit The World708/汤川星辰493,共5篇),无需深读;福建大乔卡片标题未渲染+日期不符未确认,雨子酱Yuki 2275为商场非酒店已排除;证据singapore-xhs.md 22:53–23:15 PDT轮次记录 || 2026-10-19 已订酒店深研#1：深读计入 8 篇（陈千千Claire/福建小林/阮扬扬/洛可可/卷毛小泡芙的麻麻/5en/慢慢七/福建大乔，含评论实读）；旧计数中的可素不宅家经核实为 Pan Pacific Orchard 假阳性已剔除。待补 2 篇（白舒Leah/何胜0423）+早餐专帖达 10。证据 hidden_files/booked-hotels-deep-dive/marina-bay-sands.md || 2026-10-19 深研补尾完成：计入 10 篇达标（新增白舒Leah 1406、何胜0423 891；早餐专帖 MYYY_ Paiza 已读、FHR 早餐仍无证据）；9-10 篇 URL 待补录。",
+       "posts": 10,
        "status": "done",
        "target": 3,
        "verified_at": "2026-09-24T06:15:00Z"
@@ -7132,8 +7132,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：王骁PIL《出差PLOG｜新加坡瑞吉》（2026-09-17，1030 赞）、小红薯64030D91《入住奢华酒店，但家人差点出人命》（2025-05-17，2292 赞，翻新前事故帖）、Liuxiaoyi《新加坡瑞吉🇸🇬翻新之后太好住了》（2026-07-24）。结论：推荐（翻新后性价比突出，事故帖与工地噪音如实标注）。证据：hidden_files/st-regis-singapore-research/xhs-evidence.md",
-       "posts": 3,
+       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：王骁PIL《出差PLOG｜新加坡瑞吉》（2026-09-17，1030 赞）、小红薯64030D91《入住奢华酒店，但家人差点出人命》（2025-05-17，2292 赞，翻新前事故帖）、Liuxiaoyi《新加坡瑞吉🇸🇬翻新之后太好住了》（2026-07-24）。结论：推荐（翻新后性价比突出，事故帖与工地噪音如实标注）。证据：hidden_files/st-regis-singapore-research/xhs-evidence.md || 2026-10-19 已订酒店深研#2：深读计入 10 篇。核心：早餐 Sophia 半自助+点单不限次、11:00 硬结束；2025 翻新 50㎡ 起、连通房可提前锁；差评样本在案（前台/换房）；铂金 NUA 实证零篇、钛金对照 1 篇（YY行记→Caroline Suite）。证据 hidden_files/booked-hotels-deep-dive/st-regis-singapore.md（书目 URL 待补录轮）。",
+       "posts": 10,
        "target": 3
       },
       "photos": {
@@ -8264,7 +8264,7 @@ export const initialResearchStatus = {
    ]
   }
  },
- "complete_items": 142,
+ "complete_items": 143,
  "summary": {
   "bangkok": {
    "total": 34,
@@ -8290,13 +8290,13 @@ export const initialResearchStatus = {
    "gm": 20,
    "chinese_sites": 20,
    "cs": 20,
-   "xiaohongshu": 19,
-   "xhs_done": 19,
+   "xiaohongshu": 20,
+   "xhs_done": 20,
    "photos": 20,
    "ph": 20,
    "details": 20,
    "de": 20,
-   "all_done": 18
+   "all_done": 19
   },
   "hcmc": {
    "total": 23,
@@ -8354,8 +8354,8 @@ export const initialResearchStatus = {
    "gm": 24,
    "chinese_sites": 24,
    "cs": 24,
-   "xiaohongshu": 25,
-   "xhs_done": 25,
+   "xiaohongshu": 26,
+   "xhs_done": 26,
    "photos": 25,
    "ph": 25,
    "details": 26,
@@ -8420,5 +8420,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 231,
- "updated_at": "2026-10-19T05:10:00Z"
+ "updated_at": "2026-10-19T10:47:56Z"
 };
