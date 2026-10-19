@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T00:02:00Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T05:10:00Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -5227,8 +5227,10 @@ export const initialResearchStatus = {
        "note": "2026-10-18 Trip.com 4.3–4.4/5（约 640 条）、Agoda 8.9/10（1,989 条）评分已核；带日期原话待补"
       },
       "xiaohongshu": {
-       "status": "pending",
-       "note": "2026-10-18 网页搜索未见索引帖，待管线在小红书内实搜"
+       "status": "done",
+       "note": "2026-10-18 用户接管交回窗口后老窗口实搜「Dinso 普吉」实读 3 篇（2 推荐/1 不推荐）：琦琦的养猫日常 2026-07-27（371赞/209藏，正文仅标签，评论证实丛林轨道电梯全体住客可用）/飞翔的小阿贵 2026-05-13 不推荐（国内App预订给双床尾房、噪音与隔音差、劝退标准间）/迩耶Jason 2026-04-30 推荐（丛林设计与三泳池强、bar音乐到22:00、隔音一般）。跨帖雷点=噪音/隔音（与 TA 池畔吧音乐投诉互证）；早餐口碑分裂。证据：hidden_files/dinso-phuket-research/xhs-evidence-2026-10-18.md",
+       "posts": 3,
+       "target": 3
       },
       "photos": {
        "status": "partial",
@@ -8418,5 +8420,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 231,
- "updated_at": "2026-10-19T00:02:00Z"
+ "updated_at": "2026-10-19T05:10:00Z"
 };
