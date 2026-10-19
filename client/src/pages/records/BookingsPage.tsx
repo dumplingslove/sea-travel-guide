@@ -2114,15 +2114,7 @@ function BookingsCalendar() {
         <h3 className="font-bold text-gray-900">📅 预定日历</h3>
         <span className="text-[11px] text-gray-400">点任意一天看当天明细</span>
       </div>
-      <p className="text-[11px] text-gray-400 mb-2">和行程安排同一套口径：每格城市 = 当晚住在哪；转场方式按大行程里选的飞机/高铁显示；在大行程里关掉「订酒店」的城市（比如住家里的北京/西安），这里不再标未订酒店。分开行动的日子标「北京/西安」。</p>
-      <div className="flex gap-3 flex-wrap text-[11px] text-gray-500 mb-2">
-        <span><span className="inline-block w-2.5 h-2.5 rounded-sm mr-1" style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", verticalAlign: "-1px" }} />绿底 = 这晚的酒店已订好（只有酒店能把格子变绿）</span>
-        <span><span style={{ background: "#16a34a", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✈️ ✓ CA889 北京→新加坡</span> = 航班签：绿 = 已订（带航班号）；<span style={{ background: "#dc2626", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>✈️ ❗ 西安→新加坡</span> = 红 = 还没订</span>
-        <span>🏨 酒店名 · N间房 = 这晚住哪家、几间房</span>
-        <span><span style={{ background: "#d97706", color: "#fff", borderRadius: 6, padding: "1px 6px", fontWeight: 700 }}>🍽 ✓ Jumbo Seafood</span> = 餐厅签：餐厅名和已订在同一个签里（只做标记，不影响格子颜色）</span>
-        <span>🌙 飞机上过夜</span>
-        <span>🚄 高铁转场</span>
-      </div>
+      {/* 2026-10-18 用户：日历顶部关于各签/口径的介绍段与图例整段删除——不需要，直接看日历即可 */}
       {/* 2026-10-13 样式统一（用户第二次要求）：与行程规划检查日历同款连续网格——
           单个网格跨全部月份、星期头只一行、格子带段色顶边；不再逐月分块 */}
       {(() => {
