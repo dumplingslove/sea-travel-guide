@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-18T22:47:56Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T00:02:00Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -5208,10 +5208,43 @@ export const initialResearchStatus = {
        "note": "2026-10-08 data.ts detail 已更新全套研究结论，结论定调：推荐"
       }
      }
+    },
+    {
+     "name": "Dinso Resort & Villas Phuket",
+     "note": "【IHG 洲际酒店集团 · Vignette Collection】【档次：高端】芭东 Nanai 路山坡别墅度假村，2018 开业、2022 翻新加盟 IHG；儿童泳池+儿童俱乐部带娃友好（2026-10-18 用户点名新增）",
+     "type": "酒店",
+     "sources": {
+      "tripadvisor": {
+       "status": "done",
+       "note": "2026-10-18 实查：4.8/5（657条），芭东 445 家排第 13、Travellers' Choice 2026；好差评原话 4 条（Shaun 2026-06、Kate K 2026-02、jadebakare01 2025-11、Paul J 2026-01）。证据：hidden_files/dinso-phuket-research/evidence-2026-10-18.md"
+      },
+      "google_maps": {
+       "status": "partial",
+       "note": "2026-10-18 GM 4.7/5、约 2,990 条（Wanderlog 汇总口径，非地图页直读）；逐条带日期原话待补"
+      },
+      "chinese_sites": {
+       "status": "partial",
+       "note": "2026-10-18 Trip.com 4.3–4.4/5（约 640 条）、Agoda 8.9/10（1,989 条）评分已核；带日期原话待补"
+      },
+      "xiaohongshu": {
+       "status": "pending",
+       "note": "2026-10-18 网页搜索未见索引帖，待管线在小红书内实搜"
+      },
+      "photos": {
+       "status": "partial",
+       "verified": 12,
+       "target": 15,
+       "note": "2026-10-18 接入 12 张目验图（placeGalleries g1851–g1862：IHG 官方图/酒店官方图库/Phuket 101 实拍/OTA 专页），覆盖别墅区、主楼、主泳池与夜景；客房内景待补至 15 张"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-10-18 facts 已核验（地址/房型/设施/早餐/交通/儿童政策，IHG 官网+官方 factsheet）；12 月确切房价待按日期实查。证据：hidden_files/dinso-phuket-research/evidence-2026-10-18.md"
+      }
+     }
     }
    ],
    "name": "普吉",
-   "total": 25
+   "total": 26
   },
   "phuquoc": {
    "complete": 0,
@@ -8312,9 +8345,9 @@ export const initialResearchStatus = {
    "all_done": 0
   },
   "phuket": {
-   "total": 25,
-   "tripadvisor": 25,
-   "ta": 25,
+   "total": 26,
+   "tripadvisor": 26,
+   "ta": 26,
    "google_maps": 24,
    "gm": 24,
    "chinese_sites": 24,
@@ -8323,8 +8356,8 @@ export const initialResearchStatus = {
    "xhs_done": 25,
    "photos": 25,
    "ph": 25,
-   "details": 25,
-   "de": 25,
+   "details": 26,
+   "de": 26,
    "all_done": 23
   },
   "phuquoc": {
@@ -8384,6 +8417,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 230,
- "updated_at": "2026-10-18T22:47:56Z"
+ "total_locations": 231,
+ "updated_at": "2026-10-19T00:02:00Z"
 };
