@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T10:47:56Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T16:47:56Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -235,8 +235,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。",
-       "posts": 3,
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：3 篇严格达标帖深读（正文全文+评论区实读），转 done。证据见 xhs-coverage-bangkok.md 2026-09-27 07:00Z 轮次记录。 || 2026-10-19 已订酒店深研#7：深读计入 10 篇。核心：FHR 升套实证仅 1 篇且作者称意外（广/港瑰丽不可能）；到店付费升套 3500 泰铢机制成体系；$150 花法指向南北餐厅（烤鸭提前订）+Sense Spa（口碑最强）；泳池实为 9 楼半室内（更正）；最大雷=交通噪音与 15 点才能入住。FHR 订最低房型结论=划算、旺季升房偏低。证据 hidden_files/booked-hotels-deep-dive/rosewood-bangkok.md。",
+       "posts": 10,
        "status": "done",
        "target": 10
       }
@@ -1128,9 +1128,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "posts": 3,
+       "posts": 10,
        "target": 3,
-       "note": "2026-10-08 新窗口只读深读3篇达标专帖（0推荐/1中立/2避雷）：Maverick《曼谷柏悦酒店测评》(2026-06-20，中立7.4/10，36评论）、迷你绿书《曼谷柏悦｜全球最垃柏悦之一》(2026-06-11，避雷，126评论）、傲娇魔羯超龄少女《曼谷柏悦卫生堪忧》(2025-10-19，避雷，33评论）。结论：谨慎选择（避雷向）。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md"
+       "note": "2026-10-08 新窗口只读深读3篇达标专帖（0推荐/1中立/2避雷）：Maverick《曼谷柏悦酒店测评》(2026-06-20，中立7.4/10，36评论）、迷你绿书《曼谷柏悦｜全球最垃柏悦之一》(2026-06-11，避雷，126评论）、傲娇魔羯超龄少女《曼谷柏悦卫生堪忧》(2025-10-19，避雷，33评论）。结论：谨慎选择（避雷向）。证据：hidden_files/hyatt-full-research/xhs-evidence-4hotels.md || 2026-10-19 已订酒店深研#6：深读计入 10 篇。核心：早餐半自助+单点无限点（牛肉面/叻沙/烤鸡肉饭）为最强共识；最大雷=排房不稳定「按闹分配」、工地侧景观与隔音；升房证据全为环球客且正反参半，用户免房券非球客口径零实证、初判偏低，打法=提前邮件谈心要高层非工地侧。证据 hidden_files/booked-hotels-deep-dive/park-hyatt-bangkok.md。"
       },
       "photos": {
        "status": "done",
@@ -1249,8 +1249,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "evidence_file": "research_notes/sea-guide-2026/xiaohongshu-audit/redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "note": "2026-09-22 11:15 PDT xhs-continuous-search轮（新3帖高流量标准）：第3篇达标帖找到——💜金爷《ช้าๆ | Slow days at 137 Pillars🇹🇭》(2026-04-10，974赞/416收藏/40评论，推荐偏温和；https://www.xiaohongshu.com/explore/69d4b7290000000023007146)；第4篇补充候选：小章鱼Iris《在清迈的家🏨》(2026-05-13，945赞/29评论，18张逐张核验实拍相符；https://www.xiaohongshu.com/explore/6a03319a0000000007011a7a)。排除：Crystal Chen 1452赞帖实为The Amata Lanna错酒店。高流量达标3/3（penghunana 2464赞/羊老板🐑 1518赞/💜金爷 974赞），按新3帖标准转done。历史：09:12 PDT轮新增2篇实读达标；旧标准严格实读9篇（7有效+2特例）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md",
-       "posts": 3,
+       "note": "2026-09-22 11:15 PDT xhs-continuous-search轮（新3帖高流量标准）：第3篇达标帖找到——💜金爷《ช้าๆ | Slow days at 137 Pillars🇹🇭》(2026-04-10，974赞/416收藏/40评论，推荐偏温和；https://www.xiaohongshu.com/explore/69d4b7290000000023007146)；第4篇补充候选：小章鱼Iris《在清迈的家🏨》(2026-05-13，945赞/29评论，18张逐张核验实拍相符；https://www.xiaohongshu.com/explore/6a03319a0000000007011a7a)。排除：Crystal Chen 1452赞帖实为The Amata Lanna错酒店。高流量达标3/3（penghunana 2464赞/羊老板🐑 1518赞/💜金爷 974赞），按新3帖标准转done。历史：09:12 PDT轮新增2篇实读达标；旧标准严格实读9篇（7有效+2特例）。证据：redo-strict/chiangmai-item02-137pillars-2026-09-15.md || 2026-10-19 已订酒店深研#5：深读计入 10 篇。核心：30 间全套房柚木老宅、中文管家、早餐泰北酸辣米线必点但自助口碑分裂；避雷=清晨鸟鸣/临居民区狗叫/餐厅飞虫/设施少；Rajah Brooke 无帖点名；升房与 $125 用法零证据、旺季初判偏低。证据 hidden_files/booked-hotels-deep-dive/137-pillars-house.md。",
+       "posts": 10,
        "status": "done",
        "target": 3
       }
@@ -7132,8 +7132,8 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：王骁PIL《出差PLOG｜新加坡瑞吉》（2026-09-17，1030 赞）、小红薯64030D91《入住奢华酒店，但家人差点出人命》（2025-05-17，2292 赞，翻新前事故帖）、Liuxiaoyi《新加坡瑞吉🇸🇬翻新之后太好住了》（2026-07-24）。结论：推荐（翻新后性价比突出，事故帖与工地噪音如实标注）。证据：hidden_files/st-regis-singapore-research/xhs-evidence.md || 2026-10-19 已订酒店深研#2：深读计入 10 篇。核心：早餐 Sophia 半自助+点单不限次、11:00 硬结束；2025 翻新 50㎡ 起、连通房可提前锁；差评样本在案（前台/换房）；铂金 NUA 实证零篇、钛金对照 1 篇（YY行记→Caroline Suite）。证据 hidden_files/booked-hotels-deep-dive/st-regis-singapore.md（书目 URL 待补录轮）。",
-       "posts": 10,
+       "note": "2026-10-17 已登录老窗口实读 3 篇（2 推荐/1 不推荐）：王骁PIL《出差PLOG｜新加坡瑞吉》（2026-09-17，1030 赞）、小红薯64030D91《入住奢华酒店，但家人差点出人命》（2025-05-17，2292 赞，翻新前事故帖）、Liuxiaoyi《新加坡瑞吉🇸🇬翻新之后太好住了》（2026-07-24）。结论：推荐（翻新后性价比突出，事故帖与工地噪音如实标注）。证据：hidden_files/st-regis-singapore-research/xhs-evidence.md || 2026-10-19 已订酒店深研#2：深读计入 10 篇。核心：早餐 Sophia 半自助+点单不限次、11:00 硬结束；2025 翻新 50㎡ 起、连通房可提前锁；差评样本在案（前台/换房）；铂金 NUA 实证零篇、钛金对照 1 篇（YY行记→Caroline Suite）。证据 hidden_files/booked-hotels-deep-dive/st-regis-singapore.md（书目 URL 待补录轮）。 || 2026-10-19 补录轮更正：原计入的 Giana 亲子帖正文实为丽思卡尔顿美年酒店、误归类剔除，瑞吉深读实为 9 篇；5 篇书目 URL 已核验（YY行记/Liuxiaoyi/阳子/脆桃），无冕小嬢嬢早餐帖 URL 未复核。证据 st-regis-singapore.md 补录段。",
+       "posts": 9,
        "target": 3
       },
       "photos": {
@@ -8245,9 +8245,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "posts": 3,
+       "posts": 10,
        "target": 3,
-       "note": "2026-10-17 已登录老窗口实读3篇盘浦本馆专帖（全推荐）：小章鱼Iris《在首尔的家🏨》(2026-06-19，845赞/324藏/37评）、又没美剧了《首尔江南JW万豪》(2026-06-06，137赞/90藏/19评）、HereIsNeo《酒店日记：JW Marriott Seoul》(2025-10-07，85赞/16藏/14评）；正文+评论逐字原话已存证。结论：推荐。证据：hidden_files/jw-marriott-seoul-research/xhs-evidence.md"
+       "note": "2026-10-17 已登录老窗口实读3篇盘浦本馆专帖（全推荐）：小章鱼Iris《在首尔的家🏨》(2026-06-19，845赞/324藏/37评）、又没美剧了《首尔江南JW万豪》(2026-06-06，137赞/90藏/19评）、HereIsNeo《酒店日记：JW Marriott Seoul》(2025-10-07，85赞/16藏/14评）；正文+评论逐字原话已存证。结论：推荐。证据：hidden_files/jw-marriott-seoul-research/xhs-evidence.md || 2026-10-19 已订酒店深研#8（收官）：深读计入 10 篇（东大门店排除 4 篇）。核心：铂金基础房→高层行政大有旺季实证、酒廊可进；NUA 本店零先例帖、跨年升套初判偏谨慎；带娃避雷=医院侧救护车噪音须备注避开；跨年活动帖零篇。证据 hidden_files/booked-hotels-deep-dive/jw-marriott-seoul.md。至此 8 家已订酒店深研全部完成。"
       },
       "photos": {
        "status": "done",
@@ -8420,5 +8420,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 231,
- "updated_at": "2026-10-19T10:47:56Z"
+ "updated_at": "2026-10-19T16:47:56Z"
 };
