@@ -2259,6 +2259,161 @@ function BookingsCalendar() {
 }
 
 
+/** 全程预算（2026-10-18 用户新增）：在最终预定里加一节，把已订的钱算清楚——花在哪、已付多少、还差多少。
+ * 金额全部从预订记录 details 的「总价/押金」现解析（USD 原值，或 SGD/THB 的 ≈USD 折算），不写死；
+ * 状态按记录口径判定：「已付/已预付」=已付；「到店应付」(非 $0) 或无已付标记的酒店单=到店待付；
+ * 积分/免房券单列非现金、不进现金合计。未订腿估算取 FLIGHT_LEGS 未出票腿的推荐价（航班库现价）。 */
+function BudgetSection() {
+  const { rows, loading } = useRecordsData(["booking"]);
+  const confirmed = rows.filter((r) => r.done).map((r) => ({ row: r, data: parseBookingBody(r.body) }));
+  const parseUsd = (s?: string): number | null => {
+    if (!s) return null;
+    const m = s.match(/≈\s*USD\s*([\d,]+(?:\.\d{1,2})?)/) || s.match(/USD\s*([\d,]+(?:\.\d{1,2})?)/);
+    return m ? parseFloat(m[1].replace(/,/g, "")) : null;
+  };
+  type MStatus = "paid" | "due" | "noncash" | "none";
+  interface Money { title: string; city: string; bkind: string; usd: number | null; status: MStatus; tag: string }
+  const items: Money[] = confirmed.map(({ row, data }) => {
+    const total = data.details?.["总价"];
+    const dep = data.details?.["押金"];
+    const base = { title: row.title, city: data.city ?? "", bkind: data.bkind as string };
+    if (total && /积分/.test(total))
+      return { ...base, usd: 0, status: "noncash" as MStatus, tag: total.match(/[\d,]+\s*万豪积分/)?.[0] ?? "积分" };
+    if (total && /房券/.test(total))
+      return { ...base, usd: 0, status: "noncash" as MStatus, tag: "免房券 1 晚" };
+    const usd = parseUsd(total) ?? parseUsd(dep);
+    if (usd == null) return { ...base, usd: null, status: "none" as MStatus, tag: "" };
+    if (dep && !total) return { ...base, usd, status: "paid" as MStatus, tag: "押金已付" };
+    /* 机票总价写「已支付」、酒店写「已付/已预付」——两种都要认（首版只认已付，8 张机票全被误标到店付） */
+    if (total && /已支付|已付|已预付/.test(total)) return { ...base, usd, status: "paid" as MStatus, tag: "已付" };
+    return { ...base, usd, status: "due" as MStatus, tag: "到店付" };
+  });
+  const sum = (f: (i: Money) => boolean) => items.filter(f).reduce((a, i) => a + (i.usd ?? 0), 0);
+  const paid = sum((i) => i.status === "paid");
+  const due = sum((i) => i.status === "due");
+  const cashTotal = paid + due;
+  const cats: { key: string; label: string; color: string }[] = [
+    { key: "transport", label: "✈️ 机票", color: "#2563eb" },
+    { key: "hotel", label: "🏨 酒店", color: "#059669" },
+    { key: "restaurant", label: "🍽 餐厅", color: "#d97706" },
+  ];
+  const catSum = (k: string) => sum((i) => i.bkind === k && i.status !== "noncash");
+  const cityMap = new Map<string, number>();
+  for (const i of items) {
+    if (i.bkind === "transport" || i.status === "noncash" || !i.usd) continue;
+    cityMap.set(i.city, (cityMap.get(i.city) ?? 0) + i.usd);
+  }
+  const cityRows = [...cityMap.entries()].sort((a, b) => b[1] - a[1]);
+  const flightCash = catSum("transport");
+  const placeMax = Math.max(flightCash, ...cityRows.map(([, v]) => v), 1);
+  const unbooked = FLIGHT_LEGS.filter((l) => !l.ticketed && l.options && l.options.length > 0).flatMap((l) => {
+    const priced = (l.options ?? []).filter((o) => o.price != null);
+    if (!priced.length) return [];
+    const rec = priced.find((o) => o.recommend) ?? priced.reduce((a, b) => ((a.price as number) <= (b.price as number) ? a : b));
+    return [{ route: l.route, price: rec.price as number }];
+  });
+  const unbookedEst = unbooked.reduce((a, u) => a + u.price, 0);
+  const fmt = (n: number) => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const fmt2 = (n: number) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const chip: Record<MStatus, { bg: string; fg: string }> = {
+    paid: { bg: "#dcfce7", fg: "#15803d" },
+    due: { bg: "#fef3c7", fg: "#b45309" },
+    noncash: { bg: "#ede9fe", fg: "#6d28d9" },
+    none: { bg: "#f3f4f6", fg: "#6b7280" },
+  };
+  const Bar = ({ label, value, color }: { label: string; value: number; color: string }) => (
+    <div className="flex items-center gap-2 text-[12px]">
+      <span className="w-24 shrink-0 text-gray-600">{label}</span>
+      <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
+        <div className="h-full rounded" style={{ width: `${cashTotal ? Math.max(2, (value / cashTotal) * 100) : 0}%`, background: color }} />
+      </div>
+      <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(value)}</span>
+      <span className="w-9 shrink-0 text-right text-gray-400">{cashTotal ? Math.round((value / cashTotal) * 100) : 0}%</span>
+    </div>
+  );
+  return (
+    <div className="bg-white border border-[#e5e1d6] rounded-xl p-4 mb-4">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="font-bold text-gray-900">💰 全程预算 · 已订部分</h3>
+        <span className="text-[11px] text-gray-400">金额取自每条预订记录（美金）</span>
+      </div>
+      {loading && confirmed.length === 0 ? (
+        <p className="text-sm text-gray-400">加载中…</p>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+            <div className="rounded-lg bg-emerald-50 border border-emerald-100 p-2.5">
+              <div className="text-[11px] text-emerald-700">已付现金</div>
+              <div className="text-lg font-bold text-emerald-800">{fmt(paid)}</div>
+            </div>
+            <div className="rounded-lg bg-amber-50 border border-amber-100 p-2.5">
+              <div className="text-[11px] text-amber-700">到店待付</div>
+              <div className="text-lg font-bold text-amber-800">{fmt(due)}</div>
+            </div>
+            <div className="rounded-lg bg-blue-50 border border-blue-100 p-2.5">
+              <div className="text-[11px] text-blue-700">现金总计</div>
+              <div className="text-lg font-bold text-blue-900">{fmt(cashTotal)}</div>
+            </div>
+            <div className="rounded-lg bg-violet-50 border border-violet-100 p-2.5">
+              <div className="text-[11px] text-violet-700">非现金（不计入总计）</div>
+              <div className="text-[13px] font-bold text-violet-800 leading-snug pt-0.5">
+                {items.filter((i) => i.status === "noncash").map((i) => i.tag).join(" · ") || "—"}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-1.5 mb-3">
+            {cats.map((c) => (
+              <Bar key={c.key} label={c.label} value={catSum(c.key)} color={c.color} />
+            ))}
+          </div>
+          <div className="space-y-1.5 mb-3">
+            <div className="flex items-center gap-2 text-[12px]">
+              <span className="w-24 shrink-0 text-gray-600">✈️ 机票（全部航段）</span>
+              <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
+                <div className="h-full rounded" style={{ width: `${(flightCash / placeMax) * 100}%`, background: "#93c5fd" }} />
+              </div>
+              <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(flightCash)}</span>
+              <span className="w-9 shrink-0" />
+            </div>
+            {cityRows.map(([city, v]) => (
+              <div key={city} className="flex items-center gap-2 text-[12px]">
+                <span className="w-24 shrink-0 text-gray-600">📍 {city}（酒店/餐厅）</span>
+                <div className="flex-1 h-4 rounded bg-gray-100 overflow-hidden">
+                  <div className="h-full rounded" style={{ width: `${(v / placeMax) * 100}%`, background: "#6ee7b7" }} />
+                </div>
+                <span className="w-20 shrink-0 text-right font-semibold text-gray-800">{fmt(v)}</span>
+                <span className="w-9 shrink-0" />
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-dashed border-gray-200 pt-2 space-y-1">
+            {cats.map((c) => (
+              <div key={c.key}>
+                {items.filter((i) => i.bkind === c.key).map((i, ix) => (
+                  <div key={ix} className="flex items-center gap-2 text-[12px] py-0.5">
+                    <span className="flex-1 min-w-0 truncate text-gray-700">{i.title}</span>
+                    <span className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: chip[i.status].bg, color: chip[i.status].fg }}>
+                      {i.status === "noncash" ? i.tag : i.tag}
+                    </span>
+                    <span className="w-24 shrink-0 text-right font-semibold text-gray-800">{i.usd != null && i.status !== "noncash" ? fmt2(i.usd) : "—"}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 space-y-1 text-[11px] leading-relaxed text-gray-400">
+            <p>外币按各记录留存的折算（2026-10-18 汇率：SGD ≈ 0.7813、THB ≈ 0.02991）；逐条明细点开下方任意预订卡看。</p>
+            <p>Dinso 一单预计触发 CSR 两笔 $250 statement credit（The Edit + select hotels），到账后现金净支出再减 $500。PRU 押金到店抵扣账单，菜单费用另结。首尔酒店走万豪积分、曼谷柏悦走免房券，不占现金。</p>
+            {unbooked.length > 0 && (
+              <p>还没订的 {unbooked.length} 腿（{unbooked.map((u) => `${u.route} ≈${fmt(u.price)}`).join("；")}）按航班库当前推荐价估算约 {fmt(unbookedEst)}，全订齐后总预算约 {fmt(cashTotal + unbookedEst)}。</p>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function FinalBookingsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { rows, loading } = useRecordsData(["booking"]);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -2959,6 +3114,7 @@ function BookingsInner() {
         {syncMode === "cloud" ? (
           <>
             <BookingsCalendar />
+            <BudgetSection />
             <FinalBookingsList onEdit={openEdit} />
           </>
         ) : (
