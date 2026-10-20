@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-19T22:47:56Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-10-20T04:47:56Z）
 // 注意：这是静态快照，不是实时数据库；页面"重新读取"返回此快照。
 export const initialResearchStatus = {
  "cities": {
@@ -269,9 +269,9 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 06:31Z 轮次记录。",
-       "posts": 3,
-       "status": "done",
+       "note": "2026-09-27 主 agent 亲自用老窗口执行轮次：补 1 篇严格达标帖（头部互动+实质评论+全文实读），3/3 done。证据见 xhs-coverage-bangkok.md 2026-09-27 06:31Z 轮次记录。【2026-10-19 主agent对账修正】证据文件实际 distinct 帖仅 2 篇（bangkok-2026-09-13 基线 2 篇；coverage 文件的第 3 篇系同帖 VK 6970803c 复读），原记 3 篇有误，计数改 2、状态改 partial，缺 1 篇待补。",
+       "posts": 2,
+       "status": "partial",
        "target": 10
       }
      },
@@ -337,8 +337,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 补足轮次核验：10篇2024-2026帖子实读（正文+评论区），报告见 redo-strict/bangkok-2026-09-13.md 补足轮次节",
-       "posts": 10,
+       "note": "2026-09-13 补足轮次核验：10篇2024-2026帖子实读（正文+评论区），报告见 redo-strict/bangkok-2026-09-13.md 补足轮次节【2026-10-19 主agent对账修正】证据文件实际 distinct 9 篇（「帖2 莲香之味」只有搜索备注无 URL），原记 10 篇有误，计数改 9。",
+       "posts": 9,
        "status": "done",
        "target": 10
       }
@@ -439,8 +439,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增8/8完成（2基线+8新增=10篇；含HannahdePekin避雷帖：区别对待+食物中毒）",
-       "posts": 10,
+       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增8/8完成（2基线+8新增=10篇；含HannahdePekin避雷帖：区别对待+食物中毒）【2026-10-19 主agent对账修正】证据文件实际 distinct 9 篇（「新8 HannahdePekin」与基线帖2 同 URL 69d89f2e），原记 10 篇有误，计数改 9。",
+       "posts": 9,
        "status": "done",
        "target": 10
       }
@@ -473,8 +473,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增8/8完成（2基线+8新增=10篇2024-2026帖子）",
-       "posts": 10,
+       "note": "2026-09-13 16:35 PDT浏览器实读轮：新增8/8完成（2基线+8新增=10篇2024-2026帖子）【2026-10-19 主agent对账修正】证据文件实际 distinct 9 篇（「新8」与基线帖1 同 URL 69ae6e9d），原记 10 篇有误，计数改 9。",
+       "posts": 9,
        "status": "done",
        "target": 10
       }
@@ -508,9 +508,9 @@ export const initialResearchStatus = {
       },
       "xiaohongshu": {
        "status": "done",
-       "posts": 5,
+       "posts": 7,
        "target": 3,
-       "note": "2026-09-28 第49轮老窗口：FoodieLouis《曼谷米其林一星泰餐厅 Nahm》(强推荐，硬核传统派，性价比高)。戴踏踏114赞冬阴功汤帖评论泛泛未达标，王同学避雷帖(3900泰铢/人套餐，汤咸如海水)评论未达标。合计5帖转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round49-bangkok-nahm-DONE-2026-09-28.md"
+       "note": "2026-09-28 第49轮老窗口：FoodieLouis《曼谷米其林一星泰餐厅 Nahm》(强推荐，硬核传统派，性价比高)。戴踏踏114赞冬阴功汤帖评论泛泛未达标，王同学避雷帖(3900泰铢/人套餐，汤咸如海水)评论未达标。合计5帖转done。证据：research_notes/sea-guide-2026/xiaohongshu/xhs-round49-bangkok-nahm-DONE-2026-09-28.md【2026-10-19 主agent对账修正】证据文件实际 7 篇（bangkok 文件第 18 轮 4 篇+基线 2 篇+戴踏踏帖），原记 5 篇少计，计数改 7。"
       }
      },
      "type": "餐厅"
@@ -6299,8 +6299,8 @@ export const initialResearchStatus = {
        "status": "done"
       },
       "xiaohongshu": {
-       "note": "2026-09-27 主agent老窗口搜索轮（搜索后端正常，翻4-5页无被限）：3篇高流量帖深读入库——VK的美食日记《亚洲第一餐厅｜国家美术馆里的米其林三星》08-19/306赞、KFC在逃蛋挞《米3️⃣odette｜《爱（好吃）与痛（贵）的边缘》》02-11/269赞、爱干饭的小猪《新加坡 Odette 米其林⭐️⭐️⭐️》09-12/56赞；每篇标题/作者/日期/规范URL/倾向/正文原话/实质评论原话齐备，证据见 redo-strict/singapore-odette-2026-09-27.md。用户3篇标准达标。",
-       "posts": 3,
+       "note": "2026-09-27 主agent老窗口搜索轮（搜索后端正常，翻4-5页无被限）：3篇高流量帖深读入库——VK的美食日记《亚洲第一餐厅｜国家美术馆里的米其林三星》08-19/306赞、KFC在逃蛋挞《米3️⃣odette｜《爱（好吃）与痛（贵）的边缘》》02-11/269赞、爱干饭的小猪《新加坡 Odette 米其林⭐️⭐️⭐️》09-12/56赞；每篇标题/作者/日期/规范URL/倾向/正文原话/实质评论原话齐备，证据见 redo-strict/singapore-odette-2026-09-27.md。用户3篇标准达标。【2026-10-19 主agent对账修正】证据文件实际 distinct 12 篇（singapore-xhs.md 全量 10 篇+odette 专题 2 篇），原记 3 篇少计，计数改 12。",
+       "posts": 12,
        "status": "done",
        "target": 10
       }
@@ -8420,5 +8420,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 231,
- "updated_at": "2026-10-19T22:47:56Z"
+ "updated_at": "2026-10-20T04:47:56Z"
 };
