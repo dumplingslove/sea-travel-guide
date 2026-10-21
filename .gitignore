@@ -4,3 +4,9 @@ dist/
 .env.local
 *.log
 .DS_Store
+
+# 本地验证 harness（主 agent 验站用，不入库；2026-10-21 加入，避免 site-improve-hourly 因工作区不干净跳过实现）
+client/src/harness-data/
+client/src/supabase.mock.ts
+harness-out/
+vite.harness.config.ts
