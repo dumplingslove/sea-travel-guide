@@ -122,6 +122,25 @@ export function applyCloudDayOverride(
     };
   }
 
+  // 清迈 12/16（ordinal 1，周三）：美食发掘第一轮落行程日
+  // （证据 hidden_files/food-discovery/food-phuket-chiangmai-2026-10-21.md C1/C3/C5/C7/C10：
+  //  Mae Sai 必比登 55 铢、Lamduan 1940 年代老店离 137 Pillars 最近、Huen Muan Jai 周三休息、
+  //  昌帕克门夜市牛仔帽大姐猪脚饭；此前云端覆盖里清迈一天都没有）
+  if (cityZh === "清迈" && ordinalInCity === 1) {
+    return {
+      ...base,
+      food:
+        "🍽️ 本地吃法（2026-10-21 美食发掘）：午餐咖喱面三选一——原计划 Khao Soi Khun Yai 只开 10:00–14:00（40–60 铢/碗，有实测排队约 30 分钟、等餐约 30 分钟，预留时间）；" +
+        "赶时间改去离住处最近的 Khao Soi Lamduan Fah Ham（萍河东岸 Wat Ket 一带、Charoen Rat Road 352/22，1940 年代初开业的老店，鸡肉版 50 铢，份量偏小、本地人常连吃两碗）；" +
+        "想吃必比登款去古城北 Ratchaphuek 巷的 Khao Soi Mae Sai（周一至周六 8:00–16:00、周日休，鸡肉 55 铢，约 14:00 部分菜品售罄，今天周三正常开）。" +
+        "晚餐别排 Huen Muan Jai——它周三休息（午晚两段 11:00–15:00、17:00–21:00），挪到明天 12-17 再吃；今晚改昌帕克门夜市（古城北门外，每天约 17:00–24:00）：「牛仔帽大姐」卤猪脚饭小份 60 / 大份 80 铢，配溏心蛋与酸菜，全场多为现金小摊、备小额泰铢。" +
+        (base.food ? "另：" + base.food : ""),
+      tip:
+        base.tip +
+        "【周三避坑】泰北菜必比登 Huen Muan Jai 每周三休息，今天排它必然扑空——已挪到明天；今天晚餐走昌帕克门夜市，17 点开市早去不用排长队。（2026-10-21 美食发掘第一轮）",
+    };
+  }
+
   // 首尔 12/30（ordinal 0）：抵达晚先抢 The Hyundai Seoul 圣诞村次日预约
   // （2026-10-19 发现轮换第三轮 round 348 实读：圣诞村 2026-11-08 至 12-31、马戏主题、预约秒空）
   if (cityZh === "首尔" && ordinalInCity === 0) {
