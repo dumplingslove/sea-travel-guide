@@ -168,6 +168,24 @@ export function applyCloudDayOverride(
     };
   }
 
+  // 清迈 12/17（ordinal 2，周四）：承接昨天预告——Huen Muan Jai 今天开门补吃 + 瓦洛洛市场早市
+  // （证据 hidden_files/food-discovery/food-phuket-chiangmai-2026-10-21.md C5/C6：
+  //  Huen Muan Jai 在 Ratchaphuek Alley 24 号、午晚两段 11:00–15:00/17:00–21:00、周三休息故昨天挪到今天，
+  //  泰北拼盘一次吃齐香肠/咖喱猪/脆皮猪配辣椒酱，价格未明确；瓦洛洛 9:00–12:00 人流高峰、建议 8:00 去，
+  //  Dam Rong 炸猪肉+泰北香肠、按斤称先确认份/袋/重量）
+  if (cityZh === "清迈" && ordinalInCity === 2) {
+    return {
+      ...base,
+      food:
+        "🍽️ 承接昨天（2026-10-21 美食发掘）：早上先去瓦洛洛市场 Warorot（萍河边 Wichayanon Road，清迈人真正买菜的大市场）——8:00 左右到避开 9:00–12:00 人流高峰，一楼熟食区吃 Dam Rong 的炸猪肉＋泰北香肠 Sai Ua、青辣椒酱 Nam Prik Num 配炸猪皮和糯米饭，伴手礼也在这里买；按斤称的先问清数字指的是份、袋还是重量，先少买尝味再加。" +
+        "正餐补上昨天因周三休息挪来的 Huen Muan Jai（Chang Phueak 区 Ratchaphuek Alley 24 号，兰纳木屋，多年必比登）：午餐 11:00–15:00 或晚餐 17:00–21:00 二选一，点一份泰北拼盘一次吃到泰北香肠、咖喱猪肉、脆皮猪配辣椒酱，米其林另点名南姜辣酱配蒸蘑菇与蛇头鱼辣野菜汤；价格未明确（来源价格带 $$–$$$），按现场菜单为准。它与 Khao Soi Mae Sai 同在 Ratchaphuek 巷一带，午餐选它可与咖喱面串成北门片区一场。" +
+        (base.food ? "另：" + base.food : ""),
+      tip:
+        base.tip +
+        "【昨天预告今天兑现】Huen Muan Jai 每周三休息、昨天排不上，今天周四正常开门，别再错过；瓦洛洛市场上午新鲜度最好、别拖到 9 点后的人流高峰。（2026-10-21 美食发掘承接轮）",
+    };
+  }
+
   // 首尔 12/30（ordinal 0）：抵达晚先抢 The Hyundai Seoul 圣诞村次日预约
   // （2026-10-19 发现轮换第三轮 round 348 实读：圣诞村 2026-11-08 至 12-31、马戏主题、预约秒空）
   if (cityZh === "首尔" && ordinalInCity === 0) {
