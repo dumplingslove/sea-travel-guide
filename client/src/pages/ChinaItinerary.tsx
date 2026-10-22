@@ -7,6 +7,7 @@ import {
 import {
   CHINA_DAY_CONTENT,
   XIAN_LAST_MORNING,
+  XIAN_STAY_FOOD,
   type ChinaDayContent,
 } from "@/guide/chinaDays";
 import { useRecordsData } from "@/pages/records/shared";
@@ -45,7 +46,7 @@ const SEG_META: Record<SegKey, { title: string; sub: string }> = {
   },
   xa: {
     title: "西安 · 汇合",
-    sub: "12-29 高铁抵达、全家汇合；窗口只有一下午加一清晨，吃食按本地人私藏口径排",
+    sub: "12-29 高铁抵达、全家汇合；窗口只有一下午加一清晨，吃食按本地人私藏口径排；段末另附「长住日常档」，供家人 12-11–12-29 在西安期间日常吃",
   },
 };
 
@@ -168,12 +169,20 @@ function DayCard({
   );
 }
 
-function StaticCard({ content, badge }: { content: ChinaDayContent; badge: string }) {
+function StaticCard({
+  content,
+  badge,
+  label = "转场日清晨",
+}: {
+  content: ChinaDayContent;
+  badge: string;
+  label?: string;
+}) {
   return (
     <div className="bg-white border border-dashed border-amber-300 rounded-xl p-4 mb-3">
       <div className="flex items-baseline gap-2 flex-wrap mb-1">
         <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">
-          转场日清晨
+          {label}
         </span>
         <span className="font-bold text-gray-900">{badge}</span>
         <span className="text-xs text-gray-500">西安</span>
@@ -267,6 +276,9 @@ export default function ChinaItinerary() {
                   bookings={bookingsByIso.get(e.iso) ?? []}
                 />
               ))}
+              {k === "xa" && (
+                <StaticCard content={XIAN_STAY_FOOD} badge="12月11日–29日" label="长住补充" />
+              )}
               {k === "xa" && <StaticCard content={XIAN_LAST_MORNING} badge="12月30日" />}
             </section>
           );
