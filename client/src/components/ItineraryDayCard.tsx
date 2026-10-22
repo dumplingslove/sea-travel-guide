@@ -107,17 +107,33 @@ export function buildBookingsByDay(
     }
     const iso = bd.date ? toISODate(bd.date) : null;
     if (!iso) return;
-    let dayNum: number | null = byDate.get(iso) ?? null;
-    if (dayNum == null && bd.city) {
-      for (const d of sortedDays) {
-        const di = isoOfDay.get(d.day);
-        if (di && di < iso && d.city_zh === bd.city) dayNum = d.day;
+    /* 酒店按住宿区间展开（2026-10-22 用户抓包补修）：酒店记录的 date 是入住日、
+     * dateEnd 是退房日，住的每一个晚上都要挂到当天卡上——此前只挂入住日，
+     * 续住晚的「今晚住哪」看不到已订酒店、甚至显示成没订/仅收藏未确认。 */
+    const nightIsos: string[] = [iso];
+    if (bd.bkind === "hotel" && bd.dateEnd) {
+      const endIso = toISODate(bd.dateEnd);
+      if (endIso && endIso > iso) {
+        let cur = addOneDay(iso);
+        while (cur < endIso) {
+          nightIsos.push(cur);
+          cur = addOneDay(cur);
+        }
       }
     }
-    if (dayNum == null) return;
-    const list = out.get(dayNum) || [];
-    list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
-    out.set(dayNum, list);
+    nightIsos.forEach((nightIso, nightIdx) => {
+      let dayNum: number | null = byDate.get(nightIso) ?? null;
+      if (dayNum == null && nightIdx === 0 && bd.city) {
+        for (const d of sortedDays) {
+          const di = isoOfDay.get(d.day);
+          if (di && di < iso && d.city_zh === bd.city) dayNum = d.day;
+        }
+      }
+      if (dayNum == null) return;
+      const list = out.get(dayNum) || [];
+      list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done, stayNight: nightIdx });
+      out.set(dayNum, list);
+    });
   });
   return out;
 }
@@ -421,10 +437,31 @@ export function DayHotelSection({
   onSelect?: (kind: "hotel", name: string) => void;
   selectedKey?: string | null;
 }) {
+  /* 住宿行优先用已订酒店记录自身的入住/退房日期（date/dateEnd）：
+   * 城市级区间是靠行程天推导的，曼谷会被推到下一城首日、首尔会被算成末日+1，晚数全错。 */
+  const bookedStayLines: string[] = [];
+  hotelBookings.forEach((b) => {
+    try {
+      const bd = parseBookingBody(b.body);
+      if (bd.date && bd.dateEnd) {
+        const ci = toISODate(bd.date);
+        const co = toISODate(bd.dateEnd);
+        if (ci && co) {
+          const n = Math.max(0, Math.round((new Date(co).getTime() - new Date(ci).getTime()) / 86400000));
+          const line = `${isoShort(ci)} 入住 · ${isoShort(co)} 退房 · ${n} 晚`;
+          if (!bookedStayLines.includes(line)) bookedStayLines.push(line);
+        }
+      }
+    } catch {
+      /* 坏记录忽略 */
+    }
+  });
   const nights = stay
     ? Math.max(0, Math.round((new Date(stay.checkOut).getTime() - new Date(stay.checkIn).getTime()) / 86400000))
     : 0;
-  const stayLine = stay ? (
+  const stayLine = bookedStayLines.length ? (
+    <p className="text-xs text-gray-500 mb-2">🛏️ {bookedStayLines.join("；")}</p>
+  ) : stay ? (
     <p className="text-xs text-gray-500 mb-2">🛏️ {isoShort(stay.checkIn)} 入住 · {isoShort(stay.checkOut)} 退房 · {nights} 晚</p>
   ) : null;
   if (!favHotels.length && !hotelBookings.length) {
@@ -439,8 +476,13 @@ export function DayHotelSection({
       </section>
     );
   }
-  const bookedNames = new Set(hotelBookings.map((b) => b.title.trim().toLowerCase()));
-  const onlyFav = favHotels.filter((f) => !bookedNames.has(f.name.trim().toLowerCase()));
+  /* 收藏名与预订标题常一长一短（收藏「Marina Bay Sands」vs 预订标题带中文后缀），
+   * 精确相等会漏去重、同一家酒店既显示已确认又显示已收藏；改包含匹配。 */
+  const bookedNames = hotelBookings.map((b) => b.title.trim().toLowerCase());
+  const onlyFav = favHotels.filter((f) => {
+    const fn = f.name.trim().toLowerCase();
+    return !bookedNames.some((bn) => bn.includes(fn) || fn.includes(bn));
+  });
   return (
     <section className="mb-6 pt-6 border-t border-gray-100">
       <h4 className="text-lg font-bold mb-3 text-teal-800">🛏️ 今晚住哪</h4>
@@ -466,6 +508,9 @@ export function DayHotelSection({
                   ? <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
                   : <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>}
               </div>
+              {b.stayNight != null && (
+                <p className="text-xs text-teal-700 mt-1">{b.stayNight === 0 ? "📅 今天入住" : `🌙 住宿第 ${b.stayNight + 1} 晚`}</p>
+              )}
               {summary && <p className="text-xs text-gray-600 mt-1">{summary}</p>}
               {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
             </div>
@@ -487,14 +532,23 @@ export function DayHotelSection({
 
 /* ---------------- 本日预订（Home 列表页与 DayDetail 单日页共用） ---------------- */
 export function DayBookingsSection({ bookings }: { bookings: DayBooking[] }) {
-  if (!bookings.length) return null;
+  /* 酒店续住晚不在「本日预订」里重复出现（入住日出现一次即可），续住看「今晚住哪」 */
+  const visible = bookings.filter((b) => {
+    if ((b.stayNight ?? 0) === 0) return true;
+    try {
+      return parseBookingBody(b.body).bkind !== "hotel";
+    } catch {
+      return true;
+    }
+  });
+  if (!visible.length) return null;
   return (
     <section className="mb-6 pt-6 border-t border-gray-100">
       <h4 className="text-lg font-bold mb-3 text-green-700">
         ✅ 本日预订
       </h4>
       <div className="space-y-2">
-        {bookings.map((b, i) => {
+        {visible.map((b, i) => {
           const bd = parseBookingBody(b.body);
           const summary = bookingSummary(bd);
           return (
@@ -648,6 +702,8 @@ export interface DayBooking {
   title: string;
   body: string;
   done: boolean;
+  /** 酒店住宿第几晚（0=入住日）；非酒店记录为 0 */
+  stayNight?: number;
 }
 
 /**
