@@ -275,7 +275,15 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 曼谷首日：从清迈短途飞来，不是跨洲飞行；Le Du 晚餐盯放号
+  // 曼谷 12/18（ordinal 0，周五）：从清迈短途飞来，不是跨洲飞行；Le Du 晚餐已订 + 美食发掘落行程日
+  // （Le Du 口径修正：2026-10-21 availability-watch 核实 12-18 18:30 已订好，旧文案「12/19 尚未放号」已过期；
+  //  美食证据 hidden_files/food-discovery/food-bangkok-xhs-round355-2026-10-21.md 帖1/帖4
+  //  + food-singapore-bangkok-2026-10-21.md BK-2：
+  //  Thong Smith CentralWorld 店船面照片菜单价 149–239 铢按肉分档、偏贵分量小、晚餐排队约 30 分钟故放午餐；
+  //  Karun 金箔泰茶冰沙 30% 糖口碑最好、Khiri Thai Tea Siam 旗舰冰沙口碑最佳；
+  //  Krua Khun Puk 在 Sukhumvit 11/1、BTS Nana 3 号口，08:00–凌晨 04:00，作 Le Du 后深夜保险；
+  //  荣泰 Rung Rueang 在 Sukhumvit 26，08:00–17:00，价格两来源不一（50/60/70 与 60/70/80），只收现金，
+  //  且与胜利纪念碑船面 Ruathong 是两家店、别混同）
   if (cityZh === "曼谷" && ordinalInCity === 0) {
     return {
       ...base,
@@ -285,9 +293,10 @@ export function applyCloudDayOverride(
           : s,
       ),
       food:
-        "🍽️ 晚餐计划：Le Du（一星现代泰餐）12/19 周六尚未放号（12 月只开了 1–11 号），盯 CoverManager 放位；" +
-        "72 小时内取消按每人 5,000 铢收费。备选 Nahm（一星泰餐）/ Nusara（仅 10 座，极难订）；" +
-        "午餐 Jay Fai 现场排队（周六 9:00–19:30，只收现金，队长早去）。" +
+        "🍽️ 午餐（2026-10-21 美食发掘，小红书 round 355 实读）：住柏悦在 Siam 一带，午餐就近走 CentralWorld 线、避开晚市队——Thong Smith 通思密船面（CentralWorld 店）按肉分档 149/179/199/209/239 泰铢，偏贵、分量小（评论区有人吐槽吃不饱，当尝鲜别指望一碗吃饱），晚餐排队约 30 分钟，午餐时段去正好；" +
+        "甜品顺路两家：Karun 的金箔泰茶冰沙点 30% 糖度款口碑最好，Khiri Thai Tea（Siam 旗舰）泰茶提拉米苏、软冰与冰沙里冰沙口碑最佳。想吃传奇摊就改去 Jay Fai 现场排队（9:00–19:30，只收现金，队长早去），与船面线二选一、别都排。" +
+        "晚餐已订：Le Du（一星现代泰餐）今天 12-18 18:30 已订好（2026-10-21 核实）；72 小时内取消按每人 5,000 铢收费，别改期爽约。晚餐后还饿有深夜保险：Krua Khun Puk（Sukhumvit 11/1，BTS Nana 站 3 号口，本地人推崇的老字号，08:00–凌晨 04:00），菠萝海鲜炒饭等，一餐约 ¥150（帖作者口径）。" +
+        "明早（12-19）早餐备选：荣泰 Rung Rueang 米粉（Sukhumvit 26，BTS Phrom Phong 步行约 5 分钟，连续多年米其林必比登）清汤猪肉细粉配鱼丸，龙眼冰与橙汁是帖里点名搭配，08:00–17:00；小/中/大两来源记 50/60/70 与 60/70/80 泰铢不一、以店内为准，只收现金。注意它与胜利纪念碑的船面老店 Ruathong 是两家店，别混同跑错。" +
         (base.food ? "另：" + base.food : ""),
     };
   }
