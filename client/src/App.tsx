@@ -8,6 +8,7 @@ import Placeholder from "@/pages/Placeholder";
 import GuidePage from "@/pages/GuidePage";
 import Planner from "@/pages/Planner";
 import KoreaItinerary from "@/pages/KoreaItinerary";
+import ChinaItinerary from "@/pages/ChinaItinerary";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
 import { usePlanItinerary } from "@/guide/plannerSchedule";
@@ -25,6 +26,7 @@ import {
 const NAV = [
   { to: "/", label: "东南亚行程" },
   { to: "/korea", label: "韩国行程" },
+  { to: "/china", label: "中国行程" },
   { to: "/planner", label: "行程规划" },
   { to: "/bookings", label: "预订" },
   { to: "/travel-research", label: "旅行研究" },
@@ -165,6 +167,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<RecordsProvider><Home /></RecordsProvider>} />
             <Route path="/korea" element={<RecordsProvider><KoreaItinerary /></RecordsProvider>} />
+            <Route path="/china" element={<RecordsProvider><ChinaItinerary /></RecordsProvider>} />
             <Route path="/day/:n" element={<RecordsProvider><DayDetail /></RecordsProvider>} />
             <Route path="/attraction/:slug" element={<AttractionDetailPage />} />
             <Route path="/restaurant/:slug" element={<RestaurantDetailPage />} />
