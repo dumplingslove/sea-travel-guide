@@ -5,6 +5,7 @@ import {
   type PlanTimeline,
 } from "@/guide/plannerSchedule";
 import {
+  BEIJING_HOME_FOOD,
   CHINA_DAY_CONTENT,
   XIAN_LAST_MORNING,
   XIAN_STAY_FOOD,
@@ -38,7 +39,7 @@ type SegKey = "bj1" | "bj2" | "xa";
 const SEG_META: Record<SegKey, { title: string; sub: string }> = {
   bj1: {
     title: "北京 · 第一段",
-    sub: "一家三口住立水家园，陪父亲为主，节奏放轻；吃食以老字号小吃为主、看展挑离家近的",
+    sub: "一家三口住立水家园，陪父亲为主，节奏放轻；吃食以老字号小吃为主、看展挑离家近的；段末附「立水家园家门口」日常吃食块（两段通用）",
   },
   bj2: {
     title: "北京 · 第二段",
@@ -173,10 +174,12 @@ function StaticCard({
   content,
   badge,
   label = "转场日清晨",
+  city = "西安",
 }: {
   content: ChinaDayContent;
   badge: string;
   label?: string;
+  city?: string;
 }) {
   return (
     <div className="bg-white border border-dashed border-amber-300 rounded-xl p-4 mb-3">
@@ -185,7 +188,7 @@ function StaticCard({
           {label}
         </span>
         <span className="font-bold text-gray-900">{badge}</span>
-        <span className="text-xs text-gray-500">西安</span>
+        <span className="text-xs text-gray-500">{city}</span>
       </div>
       <p className="text-sm font-semibold text-gray-800 mb-2">{content.title}</p>
       {content.food && content.food.length > 0 && (
@@ -276,6 +279,14 @@ export default function ChinaItinerary() {
                   bookings={bookingsByIso.get(e.iso) ?? []}
                 />
               ))}
+              {k === "bj1" && (
+                <StaticCard
+                  content={BEIJING_HOME_FOOD}
+                  badge="立水家园一带"
+                  label="住家补充"
+                  city="北京"
+                />
+              )}
               {k === "xa" && (
                 <StaticCard content={XIAN_STAY_FOOD} badge="12月11日–29日" label="长住补充" />
               )}
