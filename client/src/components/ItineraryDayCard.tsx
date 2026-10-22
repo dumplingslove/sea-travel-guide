@@ -53,6 +53,15 @@ export function toISODate(s: string): string | null {
     const yr = mo >= 10 ? 2026 : 2027;
     return `${yr}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
   }
+  /* PlanDay.date 是 fmtMD 的 "M-D" 短格式（如 "12-6"）：buildDayByDate 靠它把
+   * 行程天转回 ISO 挂预订，此前不认这个格式导致映射表恒为空、按日期挂天全失效
+   * （2026-10-21 审计发现）。锚定整串匹配，避免误伤 "2026-12-06" 这类全 ISO。 */
+  m = s.match(/^(\d{1,2})-(\d{1,2})$/);
+  if (m) {
+    const mo = Number(m[1]);
+    const yr = mo >= 10 ? 2026 : 2027;
+    return `${yr}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+  }
   return null;
 }
 
@@ -64,6 +73,53 @@ export function buildDayByDate(days: PlanDay[]): Map<string, number> {
     if (iso && !m.has(iso)) m.set(iso, d.day);
   });
   return m;
+}
+
+/**
+ * 预订记录 → 按天分组（Home 列表页与 DayDetail 单日页共用，全站唯一挂天口径）。
+ *
+ * 只认记录 body 里的日期，不许用记录的 day 列：day 列是按 2026-12-06 起算的
+ * 旧口径偏移量，与行程天号（schedule 序号）不是一套——曾导致全部预订错位一天、
+ * 首尔预订挂到不存在的天号而整页消失（2026-10-21 用户抓包后改）。
+ *
+ * 日期不在任何行程卡里时（如分开行动日 12-20 的离境航班）：挂到同城最近的
+ * 前一张卡，卡片摘要自带真实日期，不冒充本日；同城也没有卡（如西雅图出发的
+ * 去程航班）就不挂，预订页/最终预定里仍有完整记录。
+ */
+export function buildBookingsByDay(
+  rows: { title: string; body: string; done: boolean }[],
+  days: PlanDay[],
+): Map<number, DayBooking[]> {
+  const byDate = buildDayByDate(days);
+  const isoOfDay = new Map<number, string>();
+  days.forEach((d) => {
+    const iso = toISODate(d.date);
+    if (iso) isoOfDay.set(d.day, iso);
+  });
+  const sortedDays = [...days].sort((a, b) => a.day - b.day);
+  const out = new Map<number, DayBooking[]>();
+  rows.forEach((r) => {
+    let bd: ReturnType<typeof parseBookingBody>;
+    try {
+      bd = parseBookingBody(r.body || "");
+    } catch {
+      return;
+    }
+    const iso = bd.date ? toISODate(bd.date) : null;
+    if (!iso) return;
+    let dayNum: number | null = byDate.get(iso) ?? null;
+    if (dayNum == null && bd.city) {
+      for (const d of sortedDays) {
+        const di = isoOfDay.get(d.day);
+        if (di && di < iso && d.city_zh === bd.city) dayNum = d.day;
+      }
+    }
+    if (dayNum == null) return;
+    const list = out.get(dayNum) || [];
+    list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
+    out.set(dayNum, list);
+  });
+  return out;
 }
 
 function addOneDay(iso: string): string {

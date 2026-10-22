@@ -3,6 +3,7 @@ import {
   ItineraryDayCard,
   detailForPlanDay,
   buildDayByDate,
+  buildBookingsByDay,
   cityStayRanges,
   parseFavoriteRow,
   toISODate,
@@ -53,6 +54,9 @@ function FavoriteItineraryCheck({
 }) {
   const { rows, save } = useRecordsData(["favorite"]);
   const [pick, setPick] = useState<Record<string, string>>({});
+  // 只看本页城市的收藏：韩国页只查首尔、东南亚页只查四城。其他城市的必去项
+  // 不属于本页行程，不许混进来报「未排入行程」（2026-10-21 用户截图抓包）。
+  const pageCities = new Set(dayOptions.map((d) => d.city_zh));
   const favs = rows
     .map((r) => {
       let body: Record<string, unknown> = {};
@@ -73,7 +77,7 @@ function FavoriteItineraryCheck({
         assignDate: typeof body.assignDate === "string" ? body.assignDate : undefined,
       };
     })
-    .filter((f) => f.type === "attraction");
+    .filter((f) => f.type === "attraction" && pageCities.has(f.city));
 
   if (!favs.length) return null;
 
@@ -279,24 +283,9 @@ export function ItineraryTab({
     idxInCity.set(d.day, seen.get(d.city_zh) || 0);
     seen.set(d.city_zh, (seen.get(d.city_zh) || 0) + 1);
   });
-  const bookingsByDay = new Map<number, DayBooking[]>();
-  rows.forEach((r) => {
-    // 2026-10-03：day 没手填时按预订日期自动推导天号；手填的优先
-    let dayNum: number | null = r.day;
-    if (dayNum == null) {
-      try {
-        const bd = parseBookingBody(r.body || "");
-        const iso = bd.date ? toISODate(bd.date) : null;
-        dayNum = iso ? dayByDate.get(iso) ?? null : null;
-      } catch {
-        dayNum = null;
-      }
-    }
-    if (dayNum == null) return;
-    const list = bookingsByDay.get(dayNum) || [];
-    list.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
-    bookingsByDay.set(dayNum, list);
-  });
+  // 预订挂天：只认记录 body 里的日期（buildBookingsByDay 全站唯一口径），
+  // 不许用记录的 day 列——那是旧口径偏移量，曾导致全部预订错位（2026-10-21）。
+  const bookingsByDay = buildBookingsByDay(rows, allDays);
   // 我排入的必去景点：收藏景点带 assignDate 的，按日期挂到对应天（assignedAttractions 传给当天卡片）
   const assignedByDay = new Map<number, string[]>();
   favRows.forEach((r) => {

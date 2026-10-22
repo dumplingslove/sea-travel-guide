@@ -9,6 +9,13 @@ import {
   XIAN_LAST_MORNING,
   type ChinaDayContent,
 } from "@/guide/chinaDays";
+import { useRecordsData } from "@/pages/records/shared";
+import {
+  DayBookingsSection,
+  toISODate,
+  type DayBooking,
+} from "@/components/ItineraryDayCard";
+import { parseBookingBody } from "@/bookings/bookingTypes";
 
 /**
  * 中国行程页（/china）：北京（两段）+ 西安。
@@ -104,7 +111,15 @@ function dateLabel(iso: string): string {
   return `${Number(m)}月${Number(dd)}日 · ${wd}`;
 }
 
-function DayCard({ entry, content }: { entry: ChinaEntry; content?: ChinaDayContent }) {
+function DayCard({
+  entry,
+  content,
+  bookings,
+}: {
+  entry: ChinaEntry;
+  content?: ChinaDayContent;
+  bookings?: DayBooking[];
+}) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 mb-3">
       <div className="flex items-baseline gap-2 flex-wrap mb-1">
@@ -143,6 +158,11 @@ function DayCard({ entry, content }: { entry: ChinaEntry; content?: ChinaDayCont
         <p className="text-sm text-gray-500">
           这天暂无专门安排：在{entry.cityZh}以陪伴和休整为主，临时想出门再从本段的机动项里挑。
         </p>
+      )}
+      {bookings && bookings.length > 0 && (
+        <div className="mt-3">
+          <DayBookingsSection bookings={bookings} />
+        </div>
       )}
     </div>
   );
@@ -186,6 +206,32 @@ function StaticCard({ content, badge }: { content: ChinaDayContent; badge: strin
 
 export default function ChinaItinerary() {
   const { entries, loading } = useChinaEntries();
+  const { rows: bookingRows } = useRecordsData(["booking"]);
+  // 已订记录按日期同步到本页卡片（不写死）：日期在本页某天就挂那天；
+  // 早于本页第一天的（去程航班 11-28 出发、11-29 落地北京）挂第一天，
+  // 摘要里带真实日期。其余日期（东南亚/首尔段）不属于本页，不挂。
+  const bookingsByIso = useMemo(() => {
+    const entryIsos = new Set(entries.map((e) => e.iso));
+    const firstIso = entries[0]?.iso;
+    const out = new Map<string, DayBooking[]>();
+    bookingRows.forEach((r) => {
+      let bd: ReturnType<typeof parseBookingBody>;
+      try {
+        bd = parseBookingBody(r.body || "");
+      } catch {
+        return;
+      }
+      const iso = bd.date ? toISODate(bd.date) : null;
+      if (!iso) return;
+      let target: string | null = entryIsos.has(iso) ? iso : null;
+      if (target == null && firstIso && iso < firstIso) target = firstIso;
+      if (target == null) return;
+      const list = out.get(target) || [];
+      list.push({ day: 0, title: r.title, body: r.body || "", done: !!r.done });
+      out.set(target, list);
+    });
+    return out;
+  }, [bookingRows, entries]);
   const groups = useMemo(() => {
     const out: Record<SegKey, ChinaEntry[]> = { bj1: [], bj2: [], xa: [] };
     for (const e of entries) out[e.seg].push(e);
@@ -197,7 +243,7 @@ export default function ChinaItinerary() {
       <div className="mb-5">
         <h1 className="text-xl font-bold text-gray-900 mb-1">🇨🇳 中国行程</h1>
         <p className="text-sm text-gray-500">
-          北京两段 + 西安汇合：日期以行程规划为准，本页只排吃和玩——都来自实查证据（本地人常去的老店、夜市与市场档口，不排游客网红店）。
+          北京两段 + 西安汇合：日期以行程规划为准；吃和玩来自实查证据（本地人常去的老店、夜市与市场档口，不排游客网红店），已订的机票会按日期同步显示在每天卡片里。
         </p>
       </div>
 
@@ -214,7 +260,12 @@ export default function ChinaItinerary() {
               <h2 className="text-lg font-bold text-gray-900 mb-1">{SEG_META[k].title}</h2>
               <p className="text-xs text-gray-500 mb-3">{SEG_META[k].sub}</p>
               {items.map((e) => (
-                <DayCard key={e.iso} entry={e} content={CHINA_DAY_CONTENT[e.iso]} />
+                <DayCard
+                  key={e.iso}
+                  entry={e}
+                  content={CHINA_DAY_CONTENT[e.iso]}
+                  bookings={bookingsByIso.get(e.iso) ?? []}
+                />
               ))}
               {k === "xa" && <StaticCard content={XIAN_LAST_MORNING} badge="12月30日" />}
             </section>

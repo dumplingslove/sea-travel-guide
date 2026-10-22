@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-r
 import { days as detailDays, attractions, restaurants } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
-import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, buildDayByDate, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
+import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
@@ -63,26 +63,13 @@ export default function DayDetail() {
    * hooks 必须在 early return 之前调用，day 为空时用空值兜底。 */
   const { rows: bookingRows } = useRecordsData(["booking"]);
   const { rows: favRows } = useRecordsData(["favorite"]);
-  const dayByDate = useMemo(() => buildDayByDate(days), [days]);
   const stays = useMemo(() => cityStayRanges(days), [days]);
-  const dayBookings: DayBooking[] = useMemo(() => {
-    if (!day) return [];
-    const out: DayBooking[] = [];
-    bookingRows.forEach((r) => {
-      let dayNum: number | null = r.day;
-      if (dayNum == null) {
-        try {
-          const bd = parseBookingBody(r.body || "");
-          const iso = bd.date ? toISODate(bd.date) : null;
-          dayNum = iso ? dayByDate.get(iso) ?? null : null;
-        } catch {
-          dayNum = null;
-        }
-      }
-      if (dayNum === day.day) out.push({ day: dayNum, title: r.title, body: r.body || "", done: !!r.done });
-    });
-    return out;
-  }, [bookingRows, dayByDate, day]);
+  // 预订挂天与主页同一套 buildBookingsByDay（只认记录日期，不用 day 列旧口径）
+  const bookingsByDay = useMemo(
+    () => buildBookingsByDay(bookingRows, days),
+    [bookingRows, days],
+  );
+  const dayBookings: DayBooking[] = day ? bookingsByDay.get(day.day) ?? [] : [];
   const favorites: ParsedFavorite[] = useMemo(
     () =>
       favRows
