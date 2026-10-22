@@ -479,10 +479,13 @@ export function DayHotelSection({
   /* 收藏名与预订标题常一长一短（收藏「Marina Bay Sands」vs 预订标题带中文后缀），
    * 精确相等会漏去重、同一家酒店既显示已确认又显示已收藏；改包含匹配。 */
   const bookedNames = hotelBookings.map((b) => b.title.trim().toLowerCase());
-  const onlyFav = favHotels.filter((f) => {
+  const favDeduped = favHotels.filter((f) => {
     const fn = f.name.trim().toLowerCase();
     return !bookedNames.some((bn) => bn.includes(fn) || fn.includes(bn));
   });
+  /* 当晚已有「已确认」的酒店预订时，其他收藏酒店一律不列（2026-10-22 用户明确：
+   * 都订好了还列别家能住哪个没意义）。收藏只在还没订的那晚才作为候选出现。 */
+  const onlyFav = hotelBookings.some((b) => b.done) ? [] : favDeduped;
   return (
     <section className="mb-6 pt-6 border-t border-gray-100">
       <h4 className="text-lg font-bold mb-3 text-teal-800">🛏️ 今晚住哪</h4>
@@ -532,9 +535,9 @@ export function DayHotelSection({
 
 /* ---------------- 本日预订（Home 列表页与 DayDetail 单日页共用） ---------------- */
 export function DayBookingsSection({ bookings }: { bookings: DayBooking[] }) {
-  /* 酒店续住晚不在「本日预订」里重复出现（入住日出现一次即可），续住看「今晚住哪」 */
+  /* 酒店不在「本日预订」里出现（2026-10-22 用户指出与「今晚住哪」重复）：
+   * 酒店只在「今晚住哪」出现一次；本区只放当天的机票/交通、餐厅、活动类预订。 */
   const visible = bookings.filter((b) => {
-    if ((b.stayNight ?? 0) === 0) return true;
     try {
       return parseBookingBody(b.body).bkind !== "hotel";
     } catch {
