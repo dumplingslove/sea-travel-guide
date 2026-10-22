@@ -149,6 +149,32 @@ export function applyCloudDayOverride(
     };
   }
 
+  // 清迈 12/15（ordinal 0，周二，抵达日）：发现第四轮落行程日——Seasons of Neighbors 落夜市日
+  // （证据 hidden_files/discovery-chiangmai-round4-2026-10-21.md 帖5：
+  //  Seasons of Neighbors 在昌康路 Chang Klan Road，2026-10-10 开业，11:00–19:00，
+  //  汇集泰国本土创意品牌的集合店；官方号公告帖无评论、口碑待补核，故只作顺路项不吹；
+  //  昌康路即长康路，与本日 base 晚间「清迈大学夜市」stop 里写的长康路夜市备选同片区。
+  //  同轮另两项核对：KĀTII（宁曼 13、10:00–22:00）与 PLAYWORKS（Think Park 重开）
+  //  已在静态 base 宁曼路 stop 里落地（2026-10-17 发现轮换），本轮核对仍在，不在覆盖层重复堆叠。）
+  if (cityZh === "清迈" && ordinalInCity === 0) {
+    return {
+      ...base,
+      stops: base.stops.map((s) =>
+        s.name === "清迈大学夜市"
+          ? {
+              ...s,
+              detail:
+                s.detail +
+                "若今晚改走长康路夜市线，先赶在 19:00 打烊前顺路逛新开的 Seasons of Neighbors 集合店（见 tip），再逛夜市正好衔接。",
+            }
+          : s,
+      ),
+      tip:
+        base.tip +
+        "【新店顺路·夜市日】Seasons of Neighbors（昌康路 Chang Klan Road，2026-10-10 刚开业的泰国本土创意品牌集合店，11:00–19:00）就在长康路夜市同一片区：今晚选长康路线就先逛它（19:00 关门，别拖到夜市逛完再去）、再接夜市；今晚若去清迈大学夜市就别硬绕——两个方向，留到路过昌康路时再逛。该店目前只有开业公告、无食客口碑帖，当顺路一站看，别专程。（2026-10-21 发现第四轮）",
+    };
+  }
+
   // 清迈 12/16（ordinal 1，周三）：美食发掘第一轮落行程日
   // （证据 hidden_files/food-discovery/food-phuket-chiangmai-2026-10-21.md C1/C3/C5/C7/C10：
   //  Mae Sai 必比登 55 铢、Lamduan 1940 年代老店离 137 Pillars 最近、Huen Muan Jai 周三休息、
@@ -176,13 +202,23 @@ export function applyCloudDayOverride(
   if (cityZh === "清迈" && ordinalInCity === 2) {
     return {
       ...base,
+      stops: [
+        ...base.stops,
+        {
+          time: "17:00",
+          name: "古树公园 Changthong Heritage Park（下午候选）",
+          detail:
+            "发现第四轮最强帖（1,028 赞／1,024 藏）：成片古树环绕，作者称比清迈大学更治愈、12 月旱季正宜。19:00 闭园，最佳光线约 18:00 蓝调时分；入口的苔藓古树小径是招牌机位（已登记机位台账、原图待补，页面不硬凑图）。门票价原帖未明确、按现场为准不预估；离古城有距离、需打车前往（原帖称打车比想象中容易）。只作候选：选它就替换原 16:30 烹饪课时段，且 Huen Muan Jai 选午餐场、别再排晚餐场。（2026-10-21 发现第四轮，证据 discovery-chiangmai-round4-2026-10-21.md 帖3）",
+        },
+      ],
       food:
         "🍽️ 承接昨天（2026-10-21 美食发掘）：早上先去瓦洛洛市场 Warorot（萍河边 Wichayanon Road，清迈人真正买菜的大市场）——8:00 左右到避开 9:00–12:00 人流高峰，一楼熟食区吃 Dam Rong 的炸猪肉＋泰北香肠 Sai Ua、青辣椒酱 Nam Prik Num 配炸猪皮和糯米饭，伴手礼也在这里买；按斤称的先问清数字指的是份、袋还是重量，先少买尝味再加。" +
         "正餐补上昨天因周三休息挪来的 Huen Muan Jai（Chang Phueak 区 Ratchaphuek Alley 24 号，兰纳木屋，多年必比登）：午餐 11:00–15:00 或晚餐 17:00–21:00 二选一，点一份泰北拼盘一次吃到泰北香肠、咖喱猪肉、脆皮猪配辣椒酱，米其林另点名南姜辣酱配蒸蘑菇与蛇头鱼辣野菜汤；价格未明确（来源价格带 $$–$$$），按现场菜单为准。它与 Khao Soi Mae Sai 同在 Ratchaphuek 巷一带，午餐选它可与咖喱面串成北门片区一场。" +
         (base.food ? "另：" + base.food : ""),
       tip:
         base.tip +
-        "【昨天预告今天兑现】Huen Muan Jai 每周三休息、昨天排不上，今天周四正常开门，别再错过；瓦洛洛市场上午新鲜度最好、别拖到 9 点后的人流高峰。（2026-10-21 美食发掘承接轮）",
+        "【昨天预告今天兑现】Huen Muan Jai 每周三休息、昨天排不上，今天周四正常开门，别再错过；瓦洛洛市场上午新鲜度最好、别拖到 9 点后的人流高峰。（2026-10-21 美食发掘承接轮）" +
+        "【下午候选·古树公园】若下午去 Changthong Heritage Park（19:00 闭园、约 18:00 光线最好），Huen Muan Jai 必须选午餐场：公园＋晚餐场两头赶会两头空，二选一别堆叠。（2026-10-21 发现第四轮）",
     };
   }
 
