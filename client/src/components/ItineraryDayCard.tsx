@@ -24,6 +24,8 @@ import { stickyItemKey, type DayRoute, type DayRouteStop } from "@/components/St
 import {
   bookingPolicyBadge,
   getRestaurantBookingPolicy,
+  mustGoBadge,
+  MUST_GO,
 } from "@/bookings/restaurantBookingStatus";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
@@ -420,6 +422,93 @@ function Collapsible({
   );
 }
 
+/* ============ 餐饮/提醒结构化呈现（2026-10-22 用户要求） ============
+ * 用户原话：餐饮现在全是大段文字、每天塞一堆餐厅根本吃不完；安排提醒也是
+ * 小红书研究结论堆成大段文字、没法读。定版结构：
+ * ① 餐饮三层：已预订置顶 → 必吃（mustGo 数据集判定）highlight → 其余全部折叠；
+ * ② food 长文按段拆成条目，只露前 2 条，其余进折叠区；
+ * ③ 提醒按【小标题】拆成结构卡，只露前 2 条，其余进折叠区；
+ *    无标题的提醒按句拆条。研究新发现今后应直接进 stops 时间线，
+ *    不许再往 tip/food 字符串尾巴上追加段落（管线规则已同步）。 */
+
+/** food 长文拆段：段首标记（🍽️ ✅ 🌙 ⚠️）与「另：」是历史追加的段界。 */
+export function splitFoodText(text: string): string[] {
+  if (!text) return [];
+  return text
+    .replace(/([🍽️✅🌙⚠️])/g, "\n$1")
+    .split(/\n|另：/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 1);
+}
+
+export interface TipItem {
+  title: string | null;
+  body: string;
+}
+
+/** tip 长文拆条：【标题】内容…是研究追加的固定格式；无标题时按句拆。 */
+export function parseTipItems(text: string): TipItem[] {
+  if (!text) return [];
+  const t = text.trim();
+  if (!t.includes("【")) {
+    return t
+      .split(/(?<=。)/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((body) => ({ title: null, body }));
+  }
+  const parts = t.split(/(?=【[^】]+】)/).filter((s) => s.trim());
+  const out: TipItem[] = [];
+  for (const p of parts) {
+    const m = p.match(/^【([^】]+)】\s*(.*)$/s);
+    if (m) out.push({ title: m[1].trim(), body: m[2].trim() });
+    else
+      p.split(/(?<=。)/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .forEach((body) => out.push({ title: null, body }));
+  }
+  return out;
+}
+
+function TipCard({ item }: { item: TipItem }) {
+  return (
+    <div className="bg-white/70 border border-purple-200 rounded-lg px-3 py-2">
+      {item.title && (
+        <p className="text-xs font-bold text-purple-800 mb-0.5">{item.title}</p>
+      )}
+      <p className="text-sm text-purple-900 leading-relaxed">{item.body}</p>
+    </div>
+  );
+}
+
+/** 安排提醒结构化列表：只露前 2 条，其余折叠（Home 日卡与 DayDetail 共用）。 */
+export function TipStructured({ tip }: { tip: string }) {
+  const items = parseTipItems(tip);
+  if (!items.length) return null;
+  const visible = items.slice(0, 2);
+  const rest = items.slice(2);
+  return (
+    <div className="space-y-2">
+      {visible.map((it, i) => (
+        <TipCard key={i} item={it} />
+      ))}
+      {rest.length > 0 && (
+        <details>
+          <summary className="text-xs font-medium text-purple-700 cursor-pointer py-1">
+            更多提醒（{rest.length} 条）▾
+          </summary>
+          <div className="space-y-2 mt-2">
+            {rest.map((it, i) => (
+              <TipCard key={i} item={it} />
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- 今晚住哪（2026-10-03 用户模型：每天显示当天的酒店，收藏的和已订的都要有） ---------------- */
 export function DayHotelSection({
   city,
@@ -534,12 +623,22 @@ export function DayHotelSection({
 }
 
 /* ---------------- 本日预订（Home 列表页与 DayDetail 单日页共用） ---------------- */
-export function DayBookingsSection({ bookings }: { bookings: DayBooking[] }) {
+export function DayBookingsSection({
+  bookings,
+  excludeRestaurant = false,
+}: {
+  bookings: DayBooking[];
+  /** 行程日卡里餐厅预订已移到「餐饮安排」置顶展示，本区不再重复（2026-10-22 用户要求） */
+  excludeRestaurant?: boolean;
+}) {
   /* 酒店不在「本日预订」里出现（2026-10-22 用户指出与「今晚住哪」重复）：
    * 酒店只在「今晚住哪」出现一次；本区只放当天的机票/交通、餐厅、活动类预订。 */
   const visible = bookings.filter((b) => {
     try {
-      return parseBookingBody(b.body).bkind !== "hotel";
+      const k = parseBookingBody(b.body).bkind;
+      if (k === "hotel") return false;
+      if (excludeRestaurant && k === "restaurant") return false;
+      return true;
     } catch {
       return true;
     }
@@ -848,6 +947,42 @@ export function ItineraryDayCard({
       return false;
     }
   });
+
+  /* 餐饮三层（2026-10-22 用户定版）：已预订置顶 → 必吃 highlight → 其余折叠。
+   * 必吃判定只认 mustGo 数据集（研究结论），不凭卡片顺序；highlight 上限 3 家，
+   * 超出的必吃也进折叠区（带必吃徽章），免得一天又堆满。 */
+  const bookedRests = bookings.filter((b) => {
+    try {
+      return parseBookingBody(b.body).bkind === "restaurant";
+    } catch {
+      return false;
+    }
+  });
+  const bookedRestNames = bookedRests.map((b) => b.title.trim().toLowerCase());
+  const isBookedRest = (name: string) => {
+    const n = name.trim().toLowerCase();
+    return bookedRestNames.some((bn) => bn.includes(n) || n.includes(bn));
+  };
+  type RestCard = { name: string; city: string; fav: boolean; item?: Item };
+  const restCards: RestCard[] = [];
+  {
+    const seen = new Set<string>();
+    const pushCard = (name: string, city: string, fav: boolean, item?: Item) => {
+      const key = name.trim().toLowerCase();
+      if (!key || seen.has(key) || isBookedRest(name)) return;
+      seen.add(key);
+      restCards.push({ name, city, fav, item });
+    };
+    favRests.forEach((f) => pushCard(f.name, f.city, true));
+    restPicks.forEach((r) => pushCard(r.name, r.city, false, r));
+  }
+  const mustEatCards = restCards.filter((c) => mustGoBadge(c.name)).slice(0, 3);
+  const mustEatNames = new Set(mustEatCards.map((c) => c.name));
+  const otherRestCards = restCards.filter((c) => !mustEatNames.has(c.name));
+  /* food 长文拆段；已订信息段（✅ 开头）与上方已预订卡重复，剔除 */
+  const foodSegs = splitFoodText(detail?.food ?? "").filter(
+    (s) => !(bookedRests.length > 0 && s.startsWith("✅")),
+  );
 
   /**
    * 当天地图数据（2026-10-04 用户：点卡片后顶栏地图只显示这一天）：
@@ -1183,43 +1318,147 @@ export function ItineraryDayCard({
           </details>
         )}
 
-        {/* 餐饮安排 */}
-        {(detail?.food || restPicks.length > 0 || favRests.length > 0) && (
+        {/* 餐饮安排：三层结构（2026-10-22 用户定版）
+            ① 已预订置顶 ② 必吃 highlight（mustGo 判定，上限 3 家）
+            ③ food 长文只露前 2 条 + 其余餐厅卡全部折叠，吃不完不用硬塞 */}
+        {(bookedRests.length > 0 || mustEatCards.length > 0 || foodSegs.length > 0 || otherRestCards.length > 0) && (
           <section className="mb-6 pt-6 border-t border-gray-100">
             <h4 className="text-lg font-bold mb-3 text-orange-700">
               🍽️ 餐饮安排
             </h4>
-            {detail?.food && (
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">
-                {detail.food}
-              </p>
-            )}
-            {/* 2026-10-03：你收藏的餐厅优先显示，不再只给静态推荐 */}
-            {favRests.length > 0 && (
+
+            {bookedRests.length > 0 && (
               <div className="mb-3">
-                <p className="text-xs font-bold text-orange-700 mb-1.5">⭐ 你收藏的餐厅</p>
+                <p className="text-xs font-bold text-green-700 mb-1.5">✅ 已预订 · 先看这个</p>
+                <div className="space-y-2">
+                  {bookedRests.map((b, i) => {
+                    const bd = parseBookingBody(b.body);
+                    const summary = bookingSummary(bd);
+                    return (
+                      <div key={i} className="bg-green-50 border-2 border-green-500 rounded-lg p-3">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold flex-1">{b.title}</span>
+                          {b.done && (
+                            <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+                              已确认
+                            </span>
+                          )}
+                        </div>
+                        {summary && <p className="text-xs text-gray-700 mt-1">{summary}</p>}
+                        {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {mustEatCards.length > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-bold text-red-700 mb-1.5">⭐ 必吃 · 当地特色，别错过</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {favRests.map((f) => {
-                    const b = bookingPolicyBadge(f.name);
-                    const fSel = isSel("restaurant", f.name);
+                  {mustEatCards.map((c) => {
+                    const b = bookingPolicyBadge(c.name);
+                    const cSel = isSel("restaurant", c.name);
+                    const photo = c.item ? getPlaceGallery("餐厅", c.item)[0] : undefined;
                     return (
                       <div
-                        key={f.name}
+                        key={c.name}
                         onClick={onSelectStop ? (e) => {
                           if ((e.target as HTMLElement).closest("button, a")) return;
-                          handleSelect("restaurant", f.name);
+                          handleSelect("restaurant", c.name);
                         } : undefined}
-                        className={`bg-orange-100 border border-orange-300 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${fSel ? " ring-2 ring-orange-600" : ""}`}
+                        className={`bg-red-50 border-2 border-red-400 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${cSel ? " ring-2 ring-orange-600" : ""}`}
                       >
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-semibold flex-1">{f.name}</span>
+                          {photo && (
+                            <img src={photo.src} alt={c.name} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" />
+                          )}
+                          <span className="text-sm font-bold flex-1">{c.name}</span>
+                          <span className="text-xs font-bold text-white bg-red-600 rounded-full px-2 py-0.5">必吃</span>
                           <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
                             {b.text}
                           </span>
                           <DetailLink
-                            to={placeDetailPath("restaurant", f.city, f.name)}
+                            to={placeDetailPath("restaurant", c.city, c.name)}
                             pageKey="itinerary-day"
-                            cardId={`day-${day.day}-restaurant-${f.name}`}
+                            cardId={`day-${day.day}-restaurant-${c.name}`}
+                            className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
+                          >
+                            查看详情
+                          </DetailLink>
+                        </div>
+                        {MUST_GO[c.name] && (
+                          <p className="text-xs text-red-900 mt-1">{MUST_GO[c.name]}</p>
+                        )}
+                        {c.fav && <p className="text-xs text-gray-400 mt-0.5">⭐ 你收藏的</p>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {foodSegs.length > 0 && (
+              <div className="mb-3">
+                <ul className="space-y-1.5">
+                  {foodSegs.slice(0, 2).map((s, i) => (
+                    <li key={i} className="text-sm text-gray-700 leading-relaxed">• {s}</li>
+                  ))}
+                </ul>
+                {foodSegs.length > 2 && (
+                  <details>
+                    <summary className="text-xs font-medium text-orange-700 cursor-pointer py-1">
+                      更多吃法备选（{foodSegs.length - 2} 条，吃不完不用硬塞）▾
+                    </summary>
+                    <ul className="space-y-1.5 mt-1">
+                      {foodSegs.slice(2).map((s, i) => (
+                        <li key={i} className="text-sm text-gray-700 leading-relaxed">• {s}</li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
+            )}
+
+            {otherRestCards.length > 0 && (
+              <details>
+                <summary className="text-xs font-medium text-orange-700 cursor-pointer py-1">
+                  备选餐厅还有 {otherRestCards.length} 家（点开看）▾
+                </summary>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                  {otherRestCards.map((c) => {
+                    const b = bookingPolicyBadge(c.name);
+                    const mg = mustGoBadge(c.name);
+                    const cSel = isSel("restaurant", c.name);
+                    const photo = c.item ? getPlaceGallery("餐厅", c.item)[0] : undefined;
+                    return (
+                      <div
+                        key={c.name}
+                        onClick={onSelectStop ? (e) => {
+                          if ((e.target as HTMLElement).closest("button, a")) return;
+                          handleSelect("restaurant", c.name);
+                        } : undefined}
+                        className={`bg-orange-50 border border-orange-200 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${cSel ? " ring-2 ring-orange-600" : ""}`}
+                      >
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {photo && (
+                            <img src={photo.src} alt={c.name} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" />
+                          )}
+                          <span className="text-sm font-semibold flex-1">{c.name}</span>
+                          {mg && (
+                            <span title={mg.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${mg.cls}`}>
+                              ⭐{mg.text}
+                            </span>
+                          )}
+                          {c.fav && <span className="text-xs text-gray-400">⭐ 已收藏</span>}
+                          <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
+                            {b.text}
+                          </span>
+                          <DetailLink
+                            to={placeDetailPath("restaurant", c.city, c.name)}
+                            pageKey="itinerary-day"
+                            cardId={`day-${day.day}-restaurant-${c.name}`}
                             className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
                           >
                             查看详情
@@ -1229,58 +1468,7 @@ export function ItineraryDayCard({
                     );
                   })}
                 </div>
-              </div>
-            )}
-            {restPicks.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {restPicks.map((r) => {
-                  const photo = getPlaceGallery("餐厅", r)[0];
-                  const rSel = isSel("restaurant", r.name);
-                  return (
-                    <div
-                      key={r.name}
-                      onClick={onSelectStop ? (e) => {
-                        if ((e.target as HTMLElement).closest("button, a")) return;
-                        handleSelect("restaurant", r.name);
-                      } : undefined}
-                      className={`bg-orange-50 border border-orange-200 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${rSel ? " ring-2 ring-orange-600" : ""}`}
-                    >
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        {photo && (
-                          <img
-                            src={photo.src}
-                            alt={r.name}
-                            className="w-10 h-10 rounded-lg object-cover shrink-0"
-                            loading="lazy"
-                          />
-                        )}
-                        <span className="text-sm font-semibold flex-1">
-                          {r.name}
-                        </span>
-                        {(() => {
-                          const b = bookingPolicyBadge(r.name);
-                          return (
-                            <span
-                              title={b.title}
-                              className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
-                            >
-                              {b.text}
-                            </span>
-                          );
-                        })()}
-                        <DetailLink
-                          to={placeDetailPath("restaurant", r.city, r.name)}
-                          pageKey="itinerary-day"
-                          cardId={`day-${day.day}-restaurant-${r.name}`}
-                          className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
-                        >
-                          查看详情
-                        </DetailLink>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              </details>
             )}
           </section>
         )}
@@ -1297,13 +1485,11 @@ export function ItineraryDayCard({
           </section>
         )}
 
-        {/* 安排提醒 */}
+        {/* 安排提醒：结构化卡片（2026-10-22 用户要求，不再整段文字墙） */}
         {detail?.tip && (
           <section className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
             <h4 className="font-bold mb-2 text-purple-700">💡 安排提醒</h4>
-            <p className="text-sm text-purple-900 leading-relaxed">
-              {detail.tip}
-            </p>
+            <TipStructured tip={detail.tip} />
           </section>
         )}
 
@@ -1330,8 +1516,9 @@ export function ItineraryDayCard({
           </Collapsible>
         )}
 
-        {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天） */}
-        <DayBookingsSection bookings={bookings} />
+        {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天）；
+            餐厅预订已在餐饮安排置顶，酒店在今晚住哪，本区只剩机票/活动 */}
+        <DayBookingsSection bookings={bookings} excludeRestaurant />
 
       </div>
     </article>

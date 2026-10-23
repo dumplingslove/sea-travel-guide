@@ -114,6 +114,61 @@ function dateLabel(iso: string): string {
   return `${Number(m)}月${Number(dd)}日 · ${wd}`;
 }
 
+/* 餐饮/提醒同全站口径（2026-10-22 用户要求）：正选先露、备选折叠，不堆文字墙。
+ * 正选 = 不带「备选/机动」标记的条目，最多露 3 条；其余全部进折叠区。 */
+function FoodList({ food }: { food: string[] }) {
+  const primary = food.filter((s) => !/备选|机动/.test(s));
+  const backup = food.filter((s) => /备选|机动/.test(s));
+  const visible = (primary.length ? primary : food).slice(0, 3);
+  const rest = [
+    ...(primary.length ? primary : food).slice(3),
+    ...(primary.length ? backup : []),
+  ];
+  return (
+    <div className="text-sm text-gray-700 space-y-1 mb-2">
+      {visible.map((s, i) => (
+        <p key={i}>🍽️ {s}</p>
+      ))}
+      {rest.length > 0 && (
+        <details>
+          <summary className="text-xs font-medium text-orange-700 cursor-pointer py-0.5">
+            备选吃法还有 {rest.length} 条（点开看）▾
+          </summary>
+          <div className="space-y-1 mt-1">
+            {rest.map((s, i) => (
+              <p key={i}>🍽️ {s}</p>
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
+function TipsList({ tips }: { tips: string[] }) {
+  const visible = tips.slice(0, 2);
+  const rest = tips.slice(2);
+  return (
+    <div className="text-xs text-gray-500 space-y-1">
+      {visible.map((s, i) => (
+        <p key={i}>💡 {s}</p>
+      ))}
+      {rest.length > 0 && (
+        <details>
+          <summary className="cursor-pointer py-0.5 font-medium text-purple-700">
+            更多提醒（{rest.length} 条）▾
+          </summary>
+          <div className="space-y-1 mt-1">
+            {rest.map((s, i) => (
+              <p key={i}>💡 {s}</p>
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
 function DayCard({
   entry,
   content,
@@ -143,18 +198,10 @@ function DayCard({
             </div>
           )}
           {content.food && content.food.length > 0 && (
-            <div className="text-sm text-gray-700 space-y-1 mb-2">
-              {content.food.map((s, i) => (
-                <p key={i}>🍽️ {s}</p>
-              ))}
-            </div>
+            <FoodList food={content.food} />
           )}
           {content.tips && content.tips.length > 0 && (
-            <div className="text-xs text-gray-500 space-y-1">
-              {content.tips.map((s, i) => (
-                <p key={i}>💡 {s}</p>
-              ))}
-            </div>
+            <TipsList tips={content.tips} />
           )}
         </>
       ) : (
@@ -193,11 +240,7 @@ function StaticCard({
       </div>
       <p className="text-sm font-semibold text-gray-800 mb-2">{content.title}</p>
       {content.food && content.food.length > 0 && (
-        <div className="text-sm text-gray-700 space-y-1 mb-2">
-          {content.food.map((s, i) => (
-            <p key={i}>🍽️ {s}</p>
-          ))}
-        </div>
+        <FoodList food={content.food} />
       )}
       {content.fun && content.fun.length > 0 && (
         <div className="text-sm text-gray-700 space-y-1 mb-2">
@@ -207,11 +250,7 @@ function StaticCard({
         </div>
       )}
       {content.tips && content.tips.length > 0 && (
-        <div className="text-xs text-gray-500 space-y-1">
-          {content.tips.map((s, i) => (
-            <p key={i}>💡 {s}</p>
-          ))}
-        </div>
+        <TipsList tips={content.tips} />
       )}
     </div>
   );

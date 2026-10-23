@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-r
 import { days as detailDays, attractions, restaurants } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
-import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
+import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, TipStructured, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
@@ -192,7 +192,7 @@ export default function DayDetail() {
             <h2 className="font-bold text-lg mb-2 flex items-center gap-2 text-amber-900">
               <Lightbulb size={18} /> 安排提醒
             </h2>
-            <p className="text-sm text-amber-900">{guided.tip}</p>
+            <TipStructured tip={guided.tip} />
           </div>
 
           {/* 2026-10-03：单日页也要显示今晚住哪和本日预订 */}
