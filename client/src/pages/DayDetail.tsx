@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-react";
-import { days as detailDays, attractions, restaurants } from "@/guide/data";
+import { days as detailDays, attractions, restaurants, hotels } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
-import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, TipStructured, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite } from "@/components/ItineraryDayCard";
+import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, DayResearchSection, researchEntryFor, TipStructured, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite, type ResearchEntry } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
@@ -85,6 +85,26 @@ export default function DayDetail() {
       return false;
     }
   });
+  /* 研究依据（与主页日卡同口径）：单日页也要看得出哪些地点是小红书实证过的 */
+  const researchEntries: ResearchEntry[] = [];
+  if (day && guided) {
+    const seen = new Set<string>();
+    const add = (item: (typeof attractions)[number] | undefined, displayName?: string) => {
+      if (!item || seen.has(item.name)) return;
+      const e = researchEntryFor(item, displayName);
+      if (e) {
+        seen.add(item.name);
+        researchEntries.push(e);
+      }
+    };
+    guided.stops.forEach((s) => {
+      add(matchItem(s.name, day.city_zh, attractions));
+      add(matchItem(s.name, day.city_zh, restaurants));
+    });
+    hotelBookings.forEach((b) =>
+      add(hotels.find((h) => b.title.includes(h.name) || h.name.includes(b.title)), b.title),
+    );
+  }
 
   if (!day) {
     return (
@@ -204,6 +224,7 @@ export default function DayDetail() {
               hotelBookings={hotelBookings}
             />
             <DayBookingsSection bookings={dayBookings} />
+            <DayResearchSection entries={researchEntries.slice(0, 8)} />
           </div>
         </>
       ) : (

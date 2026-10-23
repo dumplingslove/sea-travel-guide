@@ -6,14 +6,18 @@ import {
   cityMobility,
   attractions,
   restaurants,
+  hotels,
   shopping,
   type Day,
   type Item,
 } from "@/guide/data";
+import { xhsEvidence, xhsAssessments } from "@/guide/research";
 import {
   BOOKING_KIND_LABEL,
+  BOOKING_FIELD_LABEL,
   parseBookingBody,
   bookingSummary,
+  type BookingData,
 } from "@/bookings/bookingTypes";
 type Stop = { time: string; name: string; detail: string };
 import { getPlaceGallery } from "@/guide/placeGalleries";
@@ -434,11 +438,37 @@ function Collapsible({
 /** food 长文拆段：段首标记（🍽️ ✅ 🌙 ⚠️）与「另：」是历史追加的段界。 */
 export function splitFoodText(text: string): string[] {
   if (!text) return [];
-  return text
+  const raw = text
     .replace(/(🍽️|✅|🌙|⚠️)/g, "\n$1")
+    /* 长串里用「•」当分隔符的（研究追加段常见），此前拆不开、整段成墙：
+     * 2026-10-23 全行程审计实测曼谷 D14 单条 2182 字、新加坡 D2 836 字、普吉 D8 1042 字。 */
+    .replace(/•\s*/g, "\n• ")
     .split(/\n|另：/)
     .map((s) => s.trim())
     .filter((s) => s.length > 1);
+  /* 仍超长的段按句（。/；）重组到 ≤180 字一条，单句超长再硬切——保证默认露出的
+   * 前 2 条不再是文字墙，其余进「更多吃法备选」折叠区。 */
+  const out: string[] = [];
+  for (const seg of raw) {
+    if (seg.length <= 180) {
+      out.push(seg);
+      continue;
+    }
+    const sentences = seg.split(/(?<=。|；)/).map((s) => s.trim()).filter(Boolean);
+    let cur = "";
+    for (const s of sentences) {
+      if (cur && cur.length + s.length > 180) {
+        out.push(cur);
+        cur = s;
+      } else cur += s;
+      while (cur.length > 200) {
+        out.push(cur.slice(0, 200));
+        cur = cur.slice(200);
+      }
+    }
+    if (cur) out.push(cur);
+  }
+  return out;
 }
 
 export interface TipItem {
@@ -522,6 +552,133 @@ export function TipStructured({ tip }: { tip: string }) {
   );
 }
 
+/* ---------------- 预订详情展开（2026-10-23 用户要求：行程里点开就能看全详情） ----------------
+ * 此前行程日卡只显示 bookingSummary 一行摘要 + note，记录 body.details 里的结构化
+ * 明细（确认号/房型/座位/客票号/总价/取消政策/早餐福利…）只有最终预定页才渲染，
+ * 出行时在行程页根本看不到。统一展开组件：酒店（今晚住哪）、本日预订（机票/景点/
+ * 餐厅）、餐饮安排的已预订餐厅，三处共用，点开即是全量明细表。 */
+export function BookingDetailsExpand({ bd }: { bd: BookingData }) {
+  const labels = BOOKING_FIELD_LABEL[bd.bkind] ?? BOOKING_FIELD_LABEL.other;
+  const rows: [string, string][] = [];
+  const detailValues = new Set<string>(
+    bd.details ? Object.values(bd.details).map((v) => String(v)) : [],
+  );
+  const push = (label: string, v?: string) => {
+    if (v && !detailValues.has(v)) rows.push([label, v]);
+  };
+  if (bd.code) rows.push(["确认号", bd.code]);
+  if (bd.date) push(labels.date, bd.dateEnd ? `${bd.date} → ${bd.dateEnd}` : bd.date);
+  if (bd.time) push(labels.time ?? "时间", bd.timeEnd ? `${bd.time}–${bd.timeEnd}` : bd.time);
+  if (bd.guests) push(labels.guests ?? "数量", bd.guests);
+  const ex = bd.extra as unknown;
+  if (typeof ex === "string" && ex) push(labels.extra ?? "补充信息", ex);
+  else if (ex && typeof ex === "object") {
+    Object.entries(ex as Record<string, string>).forEach(([k, v]) => {
+      if (v) rows.push([k, String(v)]);
+    });
+  }
+  if (bd.details) {
+    Object.entries(bd.details).forEach(([k, v]) => {
+      if (v) rows.push([k, String(v)]);
+    });
+  }
+  if (!rows.length) return null;
+  return (
+    <details className="mt-2">
+      <summary className="text-xs font-semibold text-teal-800 cursor-pointer py-0.5">
+        📋 查看预订详情（确认号 / 房型·座位 / 价格 / 取消政策）▾
+      </summary>
+      <dl className="mt-1.5 bg-white/70 border border-gray-200 rounded-lg px-3 py-2 space-y-1">
+        {rows.map(([k, v], i) => (
+          <div key={i} className="flex gap-2 text-xs leading-relaxed">
+            <dt className="text-gray-500 shrink-0 w-20">{k}</dt>
+            <dd className="font-medium text-gray-800 break-words min-w-0">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </details>
+  );
+}
+
+/* ---------------- 研究依据（2026-10-23 用户要求：行程里要看得出哪些是研究出来的） ----------------
+ * 此前几百篇小红书实证只躺在各地点详情页里，行程日卡上 0 条小红书链接、0 处结论，
+ * 用户翻行程根本看不出哪些内容是查过的。本区按天汇总：当天涉及的地点里有实证的，
+ * 逐个给出明确结论（推荐/谨慎选择/不推荐 + 一句结论）与原帖链接（最多 3 篇/处）。 */
+export interface ResearchEntry {
+  name: string;
+  verdict?: string;
+  why?: string;
+  count: number;
+  links: { title: string; url: string; note: string }[];
+}
+
+export function researchEntryFor(item: Item | undefined, displayName?: string): ResearchEntry | null {
+  if (!item) return null;
+  const links = xhsEvidence[item.name] ?? [];
+  const as = xhsAssessments[item.name];
+  if (!links.length && !as) return null;
+  return {
+    name: displayName ?? item.name,
+    verdict: as?.verdict,
+    why: as?.why,
+    count: links.length,
+    links: links.slice(0, 3),
+  };
+}
+
+export function DayResearchSection({ entries }: { entries: ResearchEntry[] }) {
+  if (!entries.length) return null;
+  const total = entries.reduce((n, e) => n + e.count, 0);
+  const badge = (v?: string) =>
+    v === "推荐"
+      ? "text-green-700 bg-green-100 border-green-200"
+      : v === "谨慎选择"
+        ? "text-amber-700 bg-amber-100 border-amber-200"
+        : v === "不推荐"
+          ? "text-red-700 bg-red-100 border-red-200"
+          : "text-gray-500 bg-gray-100 border-gray-200";
+  return (
+    <section className="mb-6 pt-6 border-t border-gray-100">
+      <details>
+        <summary className="cursor-pointer">
+          <span className="text-lg font-bold text-indigo-800">🔎 研究依据 · 小红书实证 {total} 篇</span>
+          <span className="block text-xs text-gray-500 mt-0.5">
+            本日 {entries.length} 个地点是真查过小红书的、都有明确结论——点开看结论和原帖链接 ▾
+          </span>
+        </summary>
+        <div className="space-y-2 mt-3">
+          {entries.map((e, i) => (
+            <div key={i} className="bg-indigo-50/60 border border-indigo-100 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-semibold">{e.name}</span>
+                {e.verdict && (
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${badge(e.verdict)}`}>
+                    {e.verdict}
+                  </span>
+                )}
+                <span className="text-xs text-gray-500">小红书 {e.count} 篇实证</span>
+              </div>
+              {e.why && <p className="text-xs text-gray-700 mt-1">结论：{e.why}</p>}
+              {e.links.length > 0 && (
+                <ul className="mt-1.5 space-y-1">
+                  {e.links.map((l, j) => (
+                    <li key={j} className="text-xs leading-relaxed">
+                      <a href={l.url} target="_blank" rel="noreferrer" className="text-indigo-700 underline font-medium">
+                        📕 {l.title}
+                      </a>
+                      {l.note && <span className="text-gray-500"> · {l.note}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </details>
+    </section>
+  );
+}
+
 /* ---------------- 今晚住哪（2026-10-03 用户模型：每天显示当天的酒店，收藏的和已订的都要有） ---------------- */
 export function DayHotelSection({
   city,
@@ -602,7 +759,7 @@ export function DayHotelSection({
             <div
               key={`hb-${i}`}
               onClick={clickable ? (e) => {
-                if ((e.target as HTMLElement).closest("button, a")) return;
+                if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
                 onSelect!("hotel", b.title);
               } : undefined}
               className={`bg-teal-50 border border-teal-200 rounded-lg p-3${clickable ? " cursor-pointer" : ""}${isSel ? " ring-2 ring-teal-600" : ""}`}
@@ -618,6 +775,7 @@ export function DayHotelSection({
               )}
               {summary && <p className="text-xs text-gray-600 mt-1">{summary}</p>}
               {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+              <BookingDetailsExpand bd={bd} />
             </div>
           );
         })}
@@ -688,6 +846,7 @@ export function DayBookingsSection({
               {bd.note && (
                 <p className="text-xs text-gray-500 mt-1">{bd.note}</p>
               )}
+              <BookingDetailsExpand bd={bd} />
             </div>
           );
         })}
@@ -996,6 +1155,36 @@ export function ItineraryDayCard({
   const foodSegs = splitFoodText(detail?.food ?? "").filter(
     (s) => !(bookedRests.length > 0 && s.startsWith("✅")),
   );
+
+  /* 研究依据：本日涉及的地点（时间线/餐厅卡/备选景点/已订酒店餐厅）里
+   * 有小红书实证的一个个收齐，卡内「研究依据」区展示结论+原帖链接。 */
+  const researchList: ResearchEntry[] = [];
+  {
+    const seen = new Set<string>();
+    const add = (item: Item | undefined, displayName?: string) => {
+      if (!item || seen.has(item.name)) return;
+      const e = researchEntryFor(item, displayName);
+      if (e) {
+        seen.add(item.name);
+        researchList.push(e);
+      }
+    };
+    stops.forEach((s) => {
+      add(matchItem(s.name, day.city_zh, attractions));
+      add(matchItem(s.name, day.city_zh, restaurants));
+    });
+    restCards.forEach((c) => add(c.item, c.name));
+    altAttrs.forEach((a) => add(a));
+    hotelBookings.forEach((b) =>
+      add(hotels.find((h) => b.title.includes(h.name) || h.name.includes(b.title)), b.title),
+    );
+    favHotels.forEach((f) =>
+      add(hotels.find((h) => f.name.includes(h.name) || h.name.includes(f.name)), f.name),
+    );
+    bookedRests.forEach((b) =>
+      add(restaurants.find((r) => b.title.includes(r.name) || r.name.includes(b.title)), b.title),
+    );
+  }
 
   /**
    * 当天地图数据（2026-10-04 用户：点卡片后顶栏地图只显示这一天）：
@@ -1359,6 +1548,7 @@ export function ItineraryDayCard({
                         </div>
                         {summary && <p className="text-xs text-gray-700 mt-1">{summary}</p>}
                         {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+                        <BookingDetailsExpand bd={bd} />
                       </div>
                     );
                   })}
@@ -1532,6 +1722,8 @@ export function ItineraryDayCard({
         {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天）；
             餐厅预订已在餐饮安排置顶，酒店在今晚住哪，本区只剩机票/活动 */}
         <DayBookingsSection bookings={bookings} excludeRestaurant />
+
+        <DayResearchSection entries={researchList.slice(0, 8)} />
 
       </div>
     </article>
