@@ -6,6 +6,7 @@ import {
 } from "@/guide/plannerSchedule";
 import {
   BEIJING_HOME_FOOD,
+  BEIJING_HOSPITAL_FOOD,
   CHINA_DAY_CONTENT,
   XIAN_LAST_MORNING,
   XIAN_STAY_FOOD,
@@ -284,6 +285,14 @@ export default function ChinaItinerary() {
                   content={BEIJING_HOME_FOOD}
                   badge="立水家园一带"
                   label="住家补充"
+                  city="北京"
+                />
+              )}
+              {k === "bj1" && (
+                <StaticCard
+                  content={BEIJING_HOSPITAL_FOOD}
+                  badge="朝阳医院一带"
+                  label="陪诊补充"
                   city="北京"
                 />
               )}
