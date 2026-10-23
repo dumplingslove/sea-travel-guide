@@ -529,6 +529,10 @@ export function applyCloudDayOverride(
   // Krua Apsorn One Bangkok 五层店（连续 9 年米其林 2018–2026/蒜香炸对虾/蟹肉蛋包/11:30 前到避队/
   // 价格时间未明确），369 口径 12-19 午餐步行级首选；落点与 Mr. Joe 早午二选一不冲突——
   // Mr. Joe 仍是早午档与唐人街线二选一，Krua 作正餐午餐选项、与朱拉午后场二选一、不叠加。
+  // 发现第一遍 round 361 补落（证据 discovery-bangkok-round5-2026-10-21.md 深读 2 帖）：
+  // Dib Bangkok「Giving Life」（2026-09-26 至 2027-05-03、฿700 不收现金可微信/支付宝、10:00–19:00 周三闭馆、
+  // 需 2.5–3 小时、7 岁以下不能进主展厅——本段夫妻二人无娃不受影响；网上订票免排队为 AI 面板口径）落本日白天整块备选；
+  // BAB 2026 One Bangkok 展区落本日免费填充（Siam 簇落 12-18，见 ordinal 0）。
   // 发现第二遍 round 375 追加（证据 discovery-bangkok-round6-xhs-round375-2026-10-21.md 帖3）：
   // Dusit Central Park 屋顶公园在 Silom/Sala Daeng、距 Rosewood Bangkok 步行圈，常设免费；
   // 作者负面、评论两极（Z 形步道窄、白天歇脚处少 vs 傍晚俯瞰伦披尼公园惊艳），定级只作白天顺路散步，
@@ -548,6 +552,18 @@ export function applyCloudDayOverride(
           name: "Dusit Central Park 屋顶公园（顺路散步）",
           detail:
             "Silom／Sala Daeng 一带的新商场屋顶公园，离今晚入住的 Rosewood Bangkok 在步行圈内，常设免费。口碑两极先说清：实读帖作者给了负评——空中花园的 Z 形步道比较窄、人多时走着拘束，白天能歇脚的地方不多；但评论区也有人盛赞傍晚点杯鸡尾酒俯瞰整个伦披尼公园的时刻。定级：只作白天顺路散步、傍晚光线优于正午，不专程；最实用的是负一层 B1 美食广场——生活气息足、能一次尝鲜好几家米其林推荐餐厅，今天午餐没定死时可拿它兜底。园内交叉扶梯是标志性机位（已登记机位台账、原图待补）。（2026-10-21 发现第二遍 round 375）",
+        },
+        {
+          time: "白天",
+          name: "Dib Bangkok「Giving Life」展（整块备选）",
+          detail:
+            "当代艺术馆 Dib Bangkok 的「Giving Life」展（2026-09-26 至 2027-05-03），Calder 1963 年巨型活动雕塑领衔，作者口径互动体验比开馆展好、但需要一定艺术感知。门票 ฿700、不收现金（可微信／支付宝），10:00–19:00、周三闭馆——今天周六正常开；要预留 2.5–3 小时且 19:00 闭馆，只能白天整块排、不能作晚间安排，与朱拉午后场二选一别叠加。7 岁以下不能进主展厅，本段夫妻二人无娃不受影响。网上提前订票免排队为 AI 面板口径、未帖级坐实，临行再核。（2026-10-21 发现第一遍 round 361）",
+        },
+        {
+          time: "白天",
+          name: "曼谷艺术双年展 BAB 2026 · One Bangkok 展区（免费填充）",
+          detail:
+            "第五届曼谷艺术双年展 BAB 2026（主题 Angels & Mara，2026-10-29 至 2027-02-28，全城 10+ 展区、帖称免费）：One Bangkok 展区就贴着今晚的 Rosewood Bangkok，今天在 One Bangkok 吃 Krua Apsorn／邢泰记时顺路把展区作品看掉即可，不占主线、不专程；Siam 簇展区已排在昨天 12-18。（2026-10-21 发现第一遍 round 361）",
         },
       ],
       food:
@@ -590,6 +606,10 @@ export function applyCloudDayOverride(
   // 美食第四遍 round 397 更正（证据 food-discovery/food-bangkok-xhs-round397-2026-10-22.md）：
   // 林老五营业时间帖级坐实为 17:00 开档的晚市摊（作者本人评论回复），round 383「同区午餐一次吃完」口径作废——
   // 本日午餐线只留 Nai Mong，林老五改作耀华力傍晚正餐前小吃并加汤味偏淡预期（异议作者认同）。
+  // 发现第一遍 round 361 补落（证据 discovery-bangkok-round5-2026-10-21.md 深读 1 帖）：
+  // BAB 2026 第五届（主题 Angels & Mara、2026-10-29 至 2027-02-28、免费、全城 10+ 展区）Siam 簇
+  // （BACC/CentralWorld/Siam Paragon）从 Park Hyatt Bangkok 步行圈，落本日白天免费填充 stop；
+  // One Bangkok 展区与 Dib Bangkok 落 12-19（见 ordinal 1）。
   // 美食第二遍 round 369 遗留补落（证据 food-bangkok-xhs-round369-2026-10-21.md 新发现 1）：
   // 邢泰记 Kope Hya Tai Kee 大皇宫旁 1952 年泰式早餐（二楼空调/分量小每人 1.5 份/2026-07 装修回迁待复核/
   // 价格时间未明确），只作老城动线早餐备选落本日，与唐人街午餐线同区串联。
@@ -613,6 +633,12 @@ export function applyCloudDayOverride(
           name: "NEXTOPIA（Siam Paragon 5 楼 · 顺路项）",
           detail:
             "Siam Paragon 5 楼的常设新空间，免费、随商场营业：编织大树装置是招牌拍照位（已登记机位台账、原图待补）。定级说清：只值得顺路花 10–15 分钟上来拍拍照——实读帖作者直言「店都是零零散散、动线一般，更像是走走拍拍的拍摄影城」，装置远看大气、近看细节粗糙，评论区有人直说「塑料感和廉价风」，不值得为它专程跑一趟；今天在 Siam 一带吃饭逛街时顺带上楼即可。（2026-10-21 发现第二遍 round 375）",
+        },
+        {
+          time: "下午",
+          name: "曼谷艺术双年展 BAB 2026 · Siam 簇（免费填充）",
+          detail:
+            "第五届曼谷艺术双年展 BAB 2026（主题 Angels & Mara，2026-10-29 至 2027-02-28，全城 10 多个展区、帖称免费）：Siam 簇的 BACC 曼谷艺术文化中心、CentralWorld、Siam Paragon 都在 Park Hyatt Bangkok 步行圈内，今天下午在 Siam 一带吃饭逛街时顺路看展即可，是免费填充项、不占主线；郑王庙／卧佛寺也是展区，明后天走王城线可顺带。One Bangkok 展区留到明天 12-19 贴 Rosewood Bangkok 那天看。（2026-10-21 发现第一遍 round 361）",
         },
       ],
       tip:
