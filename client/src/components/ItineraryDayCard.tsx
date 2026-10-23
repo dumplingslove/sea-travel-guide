@@ -435,7 +435,7 @@ function Collapsible({
 export function splitFoodText(text: string): string[] {
   if (!text) return [];
   return text
-    .replace(/([🍽️✅🌙⚠️])/g, "\n$1")
+    .replace(/(🍽️|✅|🌙|⚠️)/g, "\n$1")
     .split(/\n|另：/)
     .map((s) => s.trim())
     .filter((s) => s.length > 1);
@@ -482,12 +482,25 @@ function TipCard({ item }: { item: TipItem }) {
   );
 }
 
-/** 安排提醒结构化列表：只露前 2 条，其余折叠（Home 日卡与 DayDetail 共用）。 */
+/** 安排提醒结构化列表：露「首条无标题核心提醒 + 前 2 条带标题研究卡」，其余折叠
+ * （Home 日卡与 DayDetail 共用）。带标题的多是研究追加项，必须露出来才算呈现，
+ * 只露无标题的开头句会把研究结论全折掉。 */
 export function TipStructured({ tip }: { tip: string }) {
   const items = parseTipItems(tip);
   if (!items.length) return null;
-  const visible = items.slice(0, 2);
-  const rest = items.slice(2);
+  const keep = new Set<number>();
+  const firstPlain = items.findIndex((it) => !it.title);
+  if (firstPlain >= 0) keep.add(firstPlain);
+  items.forEach((it, i) => {
+    if (it.title && [...keep].filter((k) => items[k].title).length < 2) keep.add(i);
+  });
+  if (!items.some((it) => it.title)) {
+    keep.clear();
+    items.slice(0, 2).forEach((_, i) => keep.add(i));
+  }
+  if (keep.size === 0) items.slice(0, 2).forEach((_, i) => keep.add(i));
+  const visible = items.filter((_, i) => keep.has(i));
+  const rest = items.filter((_, i) => !keep.has(i));
   return (
     <div className="space-y-2">
       {visible.map((it, i) => (
