@@ -1173,7 +1173,10 @@ export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments
  * double-check 口径：数据里明确写了"官网预订/每天仅接待/必须预约/按场次/热门场次售罄"的，
  * 加上出海一日游这类需要提前报团的。不包括现场买票就行的大皇宫、寺庙、夜市等。 */
 export const MUST_BOOK_ATTRACTIONS: string[] = [
-  "大象自然公园",           // 清迈：官网预订，旺季提前订
+  "大象自然公园",           // 清迈：官网付订金锁位，12 月旺季提前 4–6 周（2026-10-24 tour 研究更新提前量）
+  "Simba 皮皮岛日出团",      // 普吉：18 人小团旺季易满，提前 2–4 周官网订（2026-10-24 tour 研究新增）
+  "斯米兰群岛",              // 普吉：每日限流，提前 2–3 周订本地团、避中文大团（2026-10-24 tour 研究新增）
+  "首尔儿童博物馆 Seoul Children's Museum", // 首尔：必须在线预约、每小时仅 100 名额，尽早请酒店代订（2026-10-24 tour 研究新增）
   "Phuket Elephant Sanctuary", // 普吉：每天仅200名，预约提前规划
   "Siam Niramit",           // 普吉：演出票，建议提前订
   "夜间动物园",             // 新加坡：热门场次售罄，Klook买完还要预约时段
@@ -1192,7 +1195,10 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
 
 /** 需提前订票景点 → 原因（行动安排页展示用） */
 export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
-  "大象自然公园": "官网预订，旺季提前订",
+  "大象自然公园": "官网付订金锁位，12 月旺季提前 4–6 周",
+  "Simba 皮皮岛日出团": "18 人小团旺季易满，提前 2–4 周官网订",
+  "斯米兰群岛": "每日限流，提前 2–3 周订本地团（避中文大团）",
+  "首尔儿童博物馆 Seoul Children's Museum": "必须在线预约、每小时仅 100 名额，尽早请酒店代订",
   "Phuket Elephant Sanctuary": "每天仅接待200名，预约提前规划",
   "Siam Niramit": "演出票，建议提前订",
   "夜间动物园": "热门场次售罄，买票后还要预约时段",
