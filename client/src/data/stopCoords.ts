@@ -349,13 +349,8 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
   // D3 新加坡 EXTRA《弹性日 · 光影与河》
   903: [
     { name: "ArtScience Museum", time: "09:30", lat: 1.2861382, lng: 103.8592297 },
-    {
-      name: "新加坡河游船（看天气）",
-      time: "18:00",
-      lat: 1.2882413,
-      lng: 103.8464276,
-      note: "游船码头一带（图示克拉码头）",
-    },
+    // 原 18:00「新加坡河游船（看天气）」坐标已随该站从本日删除（2026-10-24，与当晚已订 Jumbo 冲突；
+    // 河船正式可选站在 12-07，见 cloudDayOverrides ordinal 1）
   ],
   // D4 新加坡 EXTRA《弹性日 · 老街区慢逛》
   904: [
