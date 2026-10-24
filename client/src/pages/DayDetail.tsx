@@ -3,14 +3,14 @@ import { ArrowLeft, ArrowRight, CalendarDays, MapPin, Lightbulb } from "lucide-r
 import { days as detailDays, attractions, restaurants, hotels } from "@/guide/data";
 import DayMap from "@/components/DayMap";
 import { DayPlaceDetails } from "@/components/DayPlaceDetails";
-import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, DayResearchSection, researchEntryFor, TipStructured, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, type DayBooking, type ParsedFavorite, type ResearchEntry } from "@/components/ItineraryDayCard";
+import { matchItem, detailForPlanDay, DayHotelSection, DayBookingsSection, DayResearchSection, researchEntryFor, TipStructured, buildBookingsByDay, cityStayRanges, parseFavoriteRow, toISODate, BookingDetailsExpand, type DayBooking, type ParsedFavorite, type ResearchEntry } from "@/components/ItineraryDayCard";
 import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { cloudStopsForTimeline } from "@/data/stopCoords";
 import { usePlanItinerary, type PlanDay } from "@/guide/plannerSchedule";
 import { useRecordsData } from "@/pages/records/shared";
-import { parseBookingBody } from "@/bookings/bookingTypes";
+import { parseBookingBody, bookingSummary } from "@/bookings/bookingTypes";
 import { useMemo } from "react";
 
 type Day = PlanDay;
@@ -85,6 +85,32 @@ export default function DayDetail() {
       return false;
     }
   });
+  /* 已订餐厅进单日页时间线（2026-10-23 用户抓包，与主页日卡同口径）：
+   * 此前单日页的行程时间线里没有已订餐厅、只在页面下方「本日预订」出现，
+   * 按时间线读行程时看不到。今按订位时间附在时间线末尾（晚餐时段在当天最后）。 */
+  const bookedRestEntries = dayBookings
+    .filter((b) => {
+      try {
+        return parseBookingBody(b.body).bkind === "restaurant";
+      } catch {
+        return false;
+      }
+    })
+    .map((b) => {
+      const bd = parseBookingBody(b.body);
+      const item = restaurants.find(
+        (r) => b.title.includes(r.name) || r.name.includes(b.title),
+      );
+      return { b, bd, item };
+    })
+    .filter(({ item }) => {
+      if (!item || !guided) return true;
+      return !guided.stops.some((s) => {
+        const m = matchItem(s.name, day!.city_zh, restaurants);
+        return (m && m.name === item.name) || s.name.includes(item.name);
+      });
+    })
+    .sort((x, y) => (x.bd.time || "99:99").localeCompare(y.bd.time || "99:99"));
   /* 研究依据（与主页日卡同口径）：单日页也要看得出哪些地点是小红书实证过的 */
   const researchEntries: ResearchEntry[] = [];
   if (day && guided) {
@@ -205,6 +231,39 @@ export default function DayDetail() {
                   </li>
                 );
               })}
+              {bookedRestEntries.map(({ b, bd, item }) => (
+                <li key={`br-${b.title}`} className="ml-4">
+                  <span className="absolute -left-[7px] mt-1 w-3 h-3 rounded-full bg-green-600" />
+                  <p className="text-sm font-semibold text-green-700">{bd.time || "晚上"}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-bold">🍽️ {b.title}</h3>
+                    {b.done ? (
+                      <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+                        已确认 · 已订
+                      </span>
+                    ) : (
+                      <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">
+                        待预订
+                      </span>
+                    )}
+                    {item && (
+                      <DetailLink
+                        to={placeDetailPath("restaurant", day.city_zh, item.name)}
+                        pageKey="day-detail"
+                        cardId={`day-${dayNum}-booked-rest-${item.name}`}
+                        className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
+                      >
+                        查看详情
+                      </DetailLink>
+                    )}
+                  </div>
+                  {bookingSummary(bd) && (
+                    <p className="text-sm text-gray-600 mt-1">{bookingSummary(bd)}</p>
+                  )}
+                  {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+                  <BookingDetailsExpand bd={bd} />
+                </li>
+              ))}
             </ol>
           </div>
 

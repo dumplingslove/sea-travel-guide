@@ -902,6 +902,50 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
   );
 }
 
+/* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ---------------- */
+function BookedRestBlock({
+  entry,
+  city,
+}: {
+  entry: { b: DayBooking; bd: BookingData; item?: Item };
+  city: string;
+}) {
+  const { b, bd, item } = entry;
+  const summary = bookingSummary(bd);
+  return (
+    <div className="border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg">
+      <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
+          {bd.time || "晚上"}
+        </span>
+        <h5 className="font-semibold text-base">🍽️ {b.title}</h5>
+        {b.done ? (
+          <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+            已确认 · 已订
+          </span>
+        ) : (
+          <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">
+            待预订
+          </span>
+        )}
+        {item && (
+          <DetailLink
+            to={placeDetailPath("restaurant", city, item.name)}
+            pageKey="itinerary-day"
+            cardId={`booked-rest-${bd.time || ""}-${item.name}`}
+            className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
+          >
+            查看详情
+          </DetailLink>
+        )}
+      </div>
+      {summary && <p className="text-sm text-gray-700">{summary}</p>}
+      {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+      <BookingDetailsExpand bd={bd} />
+    </div>
+  );
+}
+
 /* ---------------- 时间线上的单个站点 ---------------- */
 function StopBlock({
   stop,
@@ -1135,6 +1179,35 @@ export function ItineraryDayCard({
     const n = name.trim().toLowerCase();
     return bookedRestNames.some((bn) => bn.includes(n) || n.includes(bn));
   };
+  /* 已订餐厅进当天时间线（2026-10-23 用户抓包）：此前已订餐厅只出现在卡片下方
+   * 「餐饮安排 · 已预订置顶」，按上午/下午/晚上时间线读行程时根本看不到，
+   * 等于没排进行程。现在按订位时间把已订餐厅渲染成对应时段的一站；
+   * 时间线里已有同一家餐厅站点的，不重复加。餐饮区置顶卡保留（看详情用）。 */
+  type BookedRestEntry = { b: DayBooking; bd: BookingData; item?: Item };
+  const bookedRestEntries: BookedRestEntry[] = bookedRests
+    .map((b) => {
+      const bd = parseBookingBody(b.body);
+      const item = restaurants.find(
+        (r) => b.title.includes(r.name) || r.name.includes(b.title),
+      );
+      return { b, bd, item };
+    })
+    .filter(({ item }) => {
+      if (!item) return true;
+      return !stops.some((s) => {
+        const m = matchItem(s.name, day.city_zh, restaurants);
+        return (m && m.name === item.name) || s.name.includes(item.name);
+      });
+    })
+    .sort((x, y) => (x.bd.time || "99:99").localeCompare(y.bd.time || "99:99"));
+  const bookedByPeriod: Record<"上午" | "下午" | "晚上", BookedRestEntry[]> = {
+    上午: [],
+    下午: [],
+    晚上: [],
+  };
+  bookedRestEntries.forEach((e) => {
+    bookedByPeriod[periodOf(e.bd.time || "19:00")].push(e);
+  });
   type RestCard = { name: string; city: string; fav: boolean; item?: Item };
   const restCards: RestCard[] = [];
   {
@@ -1410,8 +1483,8 @@ export function ItineraryDayCard({
           </section>
         )}
 
-        {/* 上午 / 下午 / 晚上 */}
-        {morning.length > 0 && (
+        {/* 上午 / 下午 / 晚上（已订餐厅按订位时间进对应时段，2026-10-23） */}
+        {(morning.length > 0 || bookedByPeriod["上午"].length > 0) && (
           <section className="mb-6">
             <h4 className="text-lg font-bold mb-3 text-teal-800">☀️ 上午</h4>
             <div className="space-y-2">
@@ -1424,10 +1497,13 @@ export function ItineraryDayCard({
                   selected={isSel("attraction", s.name)}
                 />
               ))}
+              {bookedByPeriod["上午"].map((e) => (
+                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
+              ))}
             </div>
           </section>
         )}
-        {afternoon.length > 0 && (
+        {(afternoon.length > 0 || bookedByPeriod["下午"].length > 0) && (
           <section className="mb-6">
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌤 下午</h4>
             <div className="space-y-2">
@@ -1440,10 +1516,13 @@ export function ItineraryDayCard({
                   selected={isSel("attraction", s.name)}
                 />
               ))}
+              {bookedByPeriod["下午"].map((e) => (
+                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
+              ))}
             </div>
           </section>
         )}
-        {evening.length > 0 && (
+        {(evening.length > 0 || bookedByPeriod["晚上"].length > 0) && (
           <section className="mb-6">
             <h4 className="text-lg font-bold mb-3 text-teal-800">🌙 晚上</h4>
             <div className="space-y-2">
@@ -1455,6 +1534,9 @@ export function ItineraryDayCard({
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
                 />
+              ))}
+              {bookedByPeriod["晚上"].map((e) => (
+                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
               ))}
             </div>
           </section>

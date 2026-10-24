@@ -702,11 +702,20 @@ export function applyCloudDayOverride(
     return {
       ...base,
       stops: [
-        ...base.stops.map((s) =>
-          s.name === "入住酒店"
-            ? { ...s, detail: s.detail.replace("跨洲飞行", "短途飞行") }
-            : s,
-        ),
+        ...base.stops.map((s) => {
+          if (s.name === "入住酒店")
+            return { ...s, detail: s.detail.replace("跨洲飞行", "短途飞行") };
+          /* 2026-10-23：静态首日的「湄南河畔晚餐」与今晚已订的 Le Du（18:30）冲突，
+           * 改为傍晚休整；Le Du 本身由行程卡按预订记录动态进时间线，不在这里写死。 */
+          if (s.name === "湄南河畔晚餐")
+            return {
+              ...s,
+              name: "傍晚休整 · 准备晚餐",
+              detail:
+                "今晚正餐是已订好的 Le Du（18:30，Silom，离 Park Hyatt Bangkok 打车约 10–15 分钟，用餐约 2–2.5 小时）：傍晚先回酒店休整、换身衣服再出发，别在外面逛到赶。静态行程原排的河畔晚餐今晚不排，Asiatique 河滨夜市留到明天 12-19 晚（Rosewood Bangkok 那天）顺路。",
+            };
+          return s;
+        }),
         {
           time: "下午",
           name: "Pokémon Center Bangkok（Central World 6 楼 · 新开）",
