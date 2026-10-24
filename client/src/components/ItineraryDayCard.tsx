@@ -291,7 +291,10 @@ const EXTRA_CITY_DAYS: Record<string, Day[]> = {
         // 当晚 18:00 已订 Jumbo Seafood（Dempsey Hill），同刻冲突；河船正式可选站
         // 已在 12-07 cloudDayOverrides（ordinal 1 的 18:00 黄昏班），不在此重复排。
       ],
-      food: "ArtScience/金沙园内简餐；晚餐回市区吃 Song Fa 肉骨茶（早去避开排队）。",
+      // food 口径（2026-10-24）：此弹性日当前落在 12-08，当晚 18:00 已订 Jumbo Seafood
+      // （Dempsey Hill）；Song Fa 只写成「当晚未订餐厅时」的条件备选，避免渲染出的
+      // 「另：…」被误读成当晚还有第二顿晚餐。轮换到没订餐的日期时该句仍成立。
+      food: "ArtScience/金沙园内简餐；晚餐若当天没订餐厅，可回市区吃 Song Fa 肉骨茶（早去避开排队）。",
       tip: "研究结论里环球影城、夜间动物园、小印度对 2 岁半家庭都偏舍，这两天是 5 天行程的弹性备选：ArtScience 全室内不怕雨，下午金沙一带室内慢逛。本日不再排河游船：黄昏班已列为另一天的可选站，今天傍晚以已订晚餐为准。",
     },
     {
