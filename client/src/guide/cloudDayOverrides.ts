@@ -229,6 +229,9 @@ export function applyCloudDayOverride(
   }
 
   // 普吉 12/12（ordinal 1）：PRU 晚餐已订
+  // 2026-10-24 tour 研究落行程日（证据 hidden_files/tour-research/phuket-tours-2026-10-24.md 第 1/2/6 项）：
+  // Simba 皮皮岛日出团升为本日出海首选站（05:00 接、约 15:00 回酒店、5,310 泰铢全包、提前 2–4 周订），
+  // V. Marine 日出团作替补；白天攀牙湾团约 17:00 回酒店与 PRU 17:45 冲突，tip 明示挪到 12-13/12-14。
   // （2026-10-17 修正：旧版 ordinal 0 按普吉 12-12 起算，与现行 schedule 12-11 起算差一天）
   // 发现第二遍 round 380 追加 tip（证据 discovery-phuket-round7-xhs-round380-2026-10-21.md 帖2）：
   // Cherngtalay 三项目均为「2026-27 年陆续开业」预告口径、无一给出 2026 年 12 月前开业日期，列观察项不排程。
@@ -240,6 +243,12 @@ export function applyCloudDayOverride(
       ...base,
       stops: [
         ...base.stops,
+        {
+          time: "05:00",
+          name: "Simba Sea Trips 皮皮岛日出团 · 今日出海首选（与白天攀牙湾团二选一）",
+          detail:
+            "今天出海只选日出团：白天版攀牙湾团约 17:00 才回酒店，赶不上 17:45 的 PRU（见今日提醒）。首选 Simba Sea Trips 皮皮岛日出团（普吉老牌精品运营商、快艇硬上限 18 名成人）：约 05:00 酒店接人（邦涛／乐古浪在接送线上）、06:00 Boat Lagoon 码头出发、约 07:15 抢在大团前到玛雅湾（12 月开放、只能观景拍照不能下水），全程 7 站含 Pileh Lagoon 浮潜；约 13:30 回码头吃午餐、约 14:30–15:30 回酒店，留足换装时间赶 PRU。官网价 5,310 泰铢／人全包（国家公园费、接送、早餐＋午餐、税费），官网直订、出发前 24 小时免费取消；18 人上限加 12 月旺季，建议提前 2–4 周订。订满替补：V. Marine 日出团（限 20 人、官网 3,900 泰铢／人含公园费、约 15:30 回酒店）。（2026-10-24 tour 研究实查，证据 hidden_files/tour-research/phuket-tours-2026-10-24.md 第 1–2 项）",
+        },
         {
           time: "晚间（PRU 前后备选）",
           name: "NAKA Weekend Market · 周末夜市（确定备选）",
@@ -254,7 +263,8 @@ export function applyCloudDayOverride(
       tip:
         base.tip +
         "【观察项·Cherngtalay 三项目不排】这两晚住 Laguna／Bang Tao 一带，附近 Cherngtalay 有三个新商业项目在预告——POP Phuket（波普艺术主题、餐饮占比高，紧邻 Bang Tao 与 Porto de Phuket）、Porto de Phuket 二期（影院／室内儿童乐园／家庭餐厅）、The Grove by Botanica（高端超市与精品咖啡）——但帖图写明口径是「2026-27 年陆续开业」、跨年分批，无一给出 2026 年 12 月前开业日期，帖图也是效果图不是实景：本程 12-11 至 12-13 不排、不专程去看围挡；11–12 月若出现开业实况帖再评估能否赶上 Laguna 时段。（2026-10-21 发现第二遍 round 380）" +
-        "【NAKA·今晚备选】周末夜市已列入今日行程备选站（见上方时间线）：只有周末开、今晚先保 PRU、两晚只选一晚。（2026-10-23 存量 tip 升 stops 迁移）",
+        "【NAKA·今晚备选】周末夜市已列入今日行程备选站（见上方时间线）：只有周末开、今晚先保 PRU、两晚只选一晚。（2026-10-23 存量 tip 升 stops 迁移）" +
+        "【12-12 出海口径】白天攀牙湾团约 17:00 才回酒店、赶不上 17:45 的 PRU：今天出海只选日出团（见时间线首选站），攀牙湾白天版挪到 12-13／12-14。（2026-10-24 tour 研究）",
     };
   }
 
