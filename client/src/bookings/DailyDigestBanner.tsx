@@ -15,6 +15,9 @@ import { getLiveHotelPrice, livePriceDatasetStatus } from "@/guide/hotelLivePric
 import { FLIGHT_LEGS } from "@/bookings/bookingTimeline";
 import { useAvailabilityWithStatus, fmtChecked } from "@/components/DayPlaceDetails";
 import { useDatasetsVersion } from "@/lib/datasets";
+import { useRecordsData } from "@/pages/records/shared";
+import { parseBookingBody } from "@/bookings/bookingTypes";
+import { nameHit } from "@/bookings/nameMatch";
 
 /** 无保存行程时的回退城市（与 BookingStatusSummary 保持一致） */
 const FALLBACK_CITIES = [
@@ -42,6 +45,23 @@ export default function DailyDigestBanner({
   onJump: (m: MenuKey) => void;
 }) {
   const { map: av, status: avStatus } = useAvailabilityWithStatus();
+  /* 已确认预订（与行动队列同口径，2026-10-24 误报修复续）：监控查的是散客档，
+   * 已订餐厅/景点以记录为准——满位/售罄与未开售计数一律排除已订同名项
+   * （对账尺 @/bookings/nameMatch 的 nameHit，与 NextActionQueue 共用）。 */
+  const { rows: bkRows } = useRecordsData(["booking"]);
+  const bookedTitles = useMemo(() => {
+    const rest: string[] = [];
+    const attr: string[] = [];
+    for (const r of bkRows) {
+      if (!r.done) continue;
+      const d = parseBookingBody(r.body);
+      if (d.bkind === "restaurant") rest.push(r.title);
+      else if (d.bkind === "attraction") attr.push(r.title);
+    }
+    return { rest, attr };
+  }, [bkRows]);
+  const hitBooked = (titles: string[], name: string) =>
+    titles.some((t) => nameHit(name, t));
   // 数据集到达后横幅必须重算：hotel_live_prices / flight_db 都是先空后灌入的
   // 可变存储，只按城市列表 memo 会把首屏的空结果冻住不刷新（2026-10-13 审计）。
   const dsVersion = useDatasetsVersion();
@@ -111,25 +131,33 @@ export default function DailyDigestBanner({
 
   const diningLine = useMemo(() => {
     const scoped = restaurants.filter((r) => inScope(r.city));
-    const rows = scoped
-      .map((r) => av.get(r.name))
-      .filter((x): x is NonNullable<typeof x> => !!x);
-    if (!rows.length) {
+    const entries = scoped
+      .map((r) => ({ name: r.name, row: av.get(r.name) }))
+      .filter((e): e is { name: string; row: NonNullable<typeof e.row> } => !!e.row);
+    if (!entries.length) {
       // 未就绪不许冒充「读取中」：加载失败与还在加载、已加载无数据分开写
       if (avStatus === "error") return `${scoped.length}家 · 空位数据加载失败，刷新页面重试`;
       if (avStatus !== "ready") return `${scoped.length}家 · 空位数据读取中…`;
       return `${scoped.length}家 · 暂无空位数据`;
     }
-    const n = (ss: string[]) => rows.filter((r) => ss.includes(r.status)).length;
+    const rows = entries.map((e) => e.row);
+    /* 已订餐厅不计入满位/售罄与未开售：监控售罄查的多是另一门店/时段的散客档，
+     * 与已确认的本单无关（Jumbo 实祸）；可订/部分可订是真实余位信息，照实计。 */
+    const n = (ss: string[], excludeBooked = false) =>
+      entries.filter(
+        (e) =>
+          ss.includes(e.row.status) &&
+          !(excludeBooked && hitBooked(bookedTitles.rest, e.name)),
+      ).length;
     const parts = [
       `${rows.length}/${scoped.length}家已查`,
       `${n(["available"])}家可订`,
     ];
     const mixed = n(["mixed"]);
     if (mixed) parts.push(`${mixed}家部分可订`);
-    const full = n(["full", "soldout"]);
+    const full = n(["full", "soldout"], true);
     if (full) parts.push(`${full}家满位/售罄`);
-    const notRel = n(["not_released"]);
+    const notRel = n(["not_released"], true);
     if (notRel) parts.push(`${notRel}家未开售`);
     const latest = rows
       .map((r) => r.checked_at)
@@ -139,26 +167,33 @@ export default function DailyDigestBanner({
     parts.push(`更新于 ${latest ? fmtChecked(latest) : "—"}`);
     return parts.join(" · ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [av, avStatus, list.join("|")]);
+  }, [av, avStatus, list.join("|"), bookedTitles.rest.join("|")]);
 
   const ticketLine = useMemo(() => {
     const scoped = attractions.filter((a) => inScope(a.city));
-    const rows = scoped
-      .map((a) => av.get(a.name))
-      .filter((x): x is NonNullable<typeof x> => !!x);
-    if (!rows.length) {
+    const entries = scoped
+      .map((a) => ({ name: a.name, row: av.get(a.name) }))
+      .filter((e): e is { name: string; row: NonNullable<typeof e.row> } => !!e.row);
+    if (!entries.length) {
       if (avStatus === "error") return `${scoped.length}个 · 余票数据加载失败，刷新页面重试`;
       if (avStatus !== "ready") return `${scoped.length}个 · 余票数据读取中…`;
       return `${scoped.length}个 · 暂无余票数据`;
     }
-    const n = (ss: string[]) => rows.filter((r) => ss.includes(r.status)).length;
+    const rows = entries.map((e) => e.row);
+    /* 与餐厅行同口径：已订景点不计入售罄与未开售，有票照实计。 */
+    const n = (ss: string[], excludeBooked = false) =>
+      entries.filter(
+        (e) =>
+          ss.includes(e.row.status) &&
+          !(excludeBooked && hitBooked(bookedTitles.attr, e.name)),
+      ).length;
     const parts = [
       `${rows.length}/${scoped.length}个已查`,
       `${n(["available"])}个有票`,
     ];
-    const sold = n(["full", "soldout"]);
+    const sold = n(["full", "soldout"], true);
     if (sold) parts.push(`${sold}个售罄`);
-    const notRel = n(["not_released"]);
+    const notRel = n(["not_released"], true);
     if (notRel) parts.push(`${notRel}个未开售`);
     const latest = rows
       .map((r) => r.checked_at)
@@ -168,7 +203,7 @@ export default function DailyDigestBanner({
     parts.push(`更新于 ${latest ? fmtChecked(latest) : "—"}`);
     return parts.join(" · ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [av, avStatus, list.join("|")]);
+  }, [av, avStatus, list.join("|"), bookedTitles.attr.join("|")]);
 
   const rows: { icon: string; label: string; text: string; jump: MenuKey }[] = [
     { icon: "🏨", label: "酒店", text: hotelLine, jump: "hotels" },

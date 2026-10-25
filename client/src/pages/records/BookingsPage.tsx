@@ -20,6 +20,7 @@ import {
 import BookingDialog, { presetFromRow } from "@/bookings/BookingDialog";
 import BookingStatusSummary from "@/bookings/BookingStatusSummary";
 import DailyDigestBanner from "@/bookings/DailyDigestBanner";
+import { nameHit, flightNoHit } from "@/bookings/nameMatch";
 import { priceHistoryKey, logPrice, getHistory, fmtSnapshotTime, type PriceSnapshot } from "@/bookings/flightPriceHistory";
 import { Flights, HotelCatalog, RestaurantCatalog, AttractionCatalog, Transport, usePlanScope, useFullTripSegments, planDateShort, MUST_BOOK_ATTRACTIONS, MUST_BOOK_ATTRACTION_REASONS, PointsTag, HotelPayTag, SEGMENT_POINTS_HINT, CashTipChip, FlightBuyLink, HotelBookLinks } from "@/guide/GuideApp";
 import { cities as allCities } from "@/guide/data";
@@ -214,23 +215,8 @@ function NextActionQueue({
     }
   }
 
-  /* 名称对账：去括号后缀（中英文括号）后包含匹配——「Jumbo Seafood」⊂「Jumbo Seafood（珍宝海鲜）」；
-   * 太短的名字只认全等，防误连。航班对账：航班号去空白后在记录全文里出现即算已订。 */
-  const bareName = (s: string) =>
-    s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, "").trim();
-  const nameHit = (a: string, b: string) => {
-    const x = bareName(a);
-    const y = bareName(b);
-    if (!x || !y) return false;
-    if (x.length < 3 || y.length < 3) return x === y;
-    return x === y || x.includes(y) || y.includes(x);
-  };
+  /* 名称/航班号对账尺在 @/bookings/nameMatch（与 DailyDigestBanner 共用一套，不许另写） */
   const confirmedHay = confirmedList.map((b) => b.hay);
-  const flightNoHit = (flightNo: string | undefined, pool: string[]) => {
-    const no = (flightNo ?? "").replace(/\s+/g, "").toLowerCase();
-    if (no.length < 4) return false;
-    return pool.some((h) => h.includes(no));
-  };
 
   /* 酒店未订夜：timeline 酒店窗口里还没被已确认酒店记录覆盖的夜（关掉订酒店的城市不算） */
   if (plan) {
