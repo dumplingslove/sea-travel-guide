@@ -1585,7 +1585,7 @@ function HotelTrackDetail({ name }: { name: string }) {
       <div className="rounded-lg border border-gray-100 bg-white px-2.5 py-2 space-y-1.5">
         <p className="font-medium text-gray-700">🏨 实时房价</p>
         <p className="text-gray-400">
-          {st === "ready" ? "暂无这家酒店的实时房价数据（每日监听会持续补）" : "实时房价加载中…"}
+          {st === "ready" ? "暂无这家酒店的实时房价数据" : "实时房价加载中…"}
         </p>
         {trendPts && <PriceSpark points={trendPts} caption="历史价格走势（每晚）" />}
       </div>
@@ -1787,7 +1787,7 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
         </div>
       );
     }
-    return <div className="text-xs text-gray-400 mt-1">🎫 现场买票即可，不用提前订</div>;
+    return <div className="text-xs text-gray-400 mt-1">🎫 暂无提前订票研究结论</div>;
   }
   return null;
 }
@@ -2365,6 +2365,7 @@ function BudgetSection() {
      statement credit 取 Dinso 单的 The Edit/select 两笔 + 瑞吉单的 Bilt Cash；
      Platinum $300 酒店 credit 不在预订记录里，来自 2026-10-18 两卡审计（FHR 预付已触发），单列常量。 */
   let propertyCredit = 0;
+  let propertyCreditCount = 0;
   let stmtFromRecords = 0;
   for (const { data } of confirmed) {
     /* 消费额散在 details / extra / note 三处（瑞吉 Bilt 单的 $100 写在 note 的「渠道福利」里）——三处都扫，漏一处就少 $100 */
@@ -2372,7 +2373,7 @@ function BudgetSection() {
     const exText = typeof ex === "string" ? ex : ex && typeof ex === "object" ? Object.values(ex as Record<string, string>).join(" ") : "";
     const blob = [...Object.values(data.details ?? {}), exText, data.note ?? ""].join(" ");
     const pc = blob.match(/\$(\d+)\s*(?:USD\s*等值)?酒店消费额/);
-    if (pc) propertyCredit += parseInt(pc[1], 10);
+    if (pc) { propertyCredit += parseInt(pc[1], 10); propertyCreditCount += 1; }
     const te = blob.match(/\$(\d+) The Edit credit/);
     const sel = blob.match(/\$(\d+) select hotels credit/);
     const bc = blob.match(/\$(\d+) Bilt Cash/);
@@ -2445,7 +2446,7 @@ function BudgetSection() {
             <div className="rounded-xl bg-amber-50 border border-amber-100 p-3">
               <div className="text-[11px] text-amber-700">到店待付</div>
               <div className="text-xl font-bold text-amber-800">{fmt(due)}</div>
-              <div className="text-[11px] text-amber-600">瑞吉两间，到店付</div>
+              <div className="text-[11px] text-amber-600">逐项见下方清单</div>
             </div>
             <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
               <div className="text-[11px] text-blue-700">全订齐预计</div>
@@ -2460,16 +2461,16 @@ function BudgetSection() {
               <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
                 <div className="text-violet-700 font-semibold">积分与免房券</div>
                 <div className="text-gray-700 mt-0.5">万豪 <b>146,000 分</b>（首尔 JW 两晚）· 凯悦<b>免房券 1 晚</b>（曼谷柏悦）</div>
-                <div className="text-gray-500 mt-0.5">按现查现金价折算，抵掉约 <b className="text-violet-800">{fmt(pointsCashEq)}</b></div>
+                <div className="text-gray-500 mt-0.5">按 2026-10-18 价格库折算，抵掉约 <b className="text-violet-800">{fmt(pointsCashEq)}</b></div>
               </div>
               <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
-                <div className="text-violet-700 font-semibold">statement credit 待返</div>
-                <div className="text-gray-700 mt-0.5">CSR $500（Dinso 触发 Edit + select）· Bilt Cash $100（退房后）· Platinum 酒店 credit $300（FHR 触发）</div>
+                <div className="text-violet-700 font-semibold">账单返现待返</div>
+                <div className="text-gray-700 mt-0.5">记录解析 {fmt(stmtFromRecords)}（The Edit / select hotels / Bilt Cash）· Platinum 酒店 credit $300（FHR 触发，审计口径）</div>
                 <div className="text-gray-500 mt-0.5">合计 <b className="text-violet-800">{fmt(stmtCredits)}</b>，到账后现金净支出约 <b className="text-violet-800">{fmt(netCash)}</b></div>
               </div>
               <div className="rounded-lg bg-white/80 border border-violet-100 p-2.5">
                 <div className="text-violet-700 font-semibold">酒店消费额（到店用）</div>
-                <div className="text-gray-700 mt-0.5">7 张单带消费额：金沙 $100×2、瑞吉 $100、悦榕庄 $100、Dinso $100、137 $125、瑰丽 $150</div>
+                <div className="text-gray-700 mt-0.5">{propertyCreditCount} 张单带消费额（逐单从预订记录解析）</div>
                 <div className="text-gray-500 mt-0.5">合计 <b className="text-violet-800">{fmt(propertyCredit)}</b>，吃饭/Spa 时别忘用</div>
               </div>
             </div>

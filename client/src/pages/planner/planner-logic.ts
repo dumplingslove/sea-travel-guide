@@ -376,8 +376,8 @@ function renderTransferAlerts(){
     const routeLabel=`${r.date.slice(5)} · ${esc(r.from)}→${esc(r.to)}`,a=r.assessment;
     if(transferModeForDate(r.date)==="rail")return `<div class="transfer-alert"><strong>${routeLabel}</strong><p>🚄 已选高铁转场（在大行程里逐段设置），这段不查航班。</p></div>`;
     if(a.kind==="direct")return `<div class="transfer-alert"><strong>${routeLabel}</strong><p>✓ 当天有直飞 · ${a.airlines.map(x=>`${esc(x.code)} ${esc(x.name)}`).join(" / ")} · 安全优先排序。${r.route.verification_status.includes("部分待核验")?" 排班模式已核验，精确日期时刻待核验。":""}</p></div>`;
-    if(a.kind==="no-service")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 当天无运营直飞。${esc((r.route.calendar_warnings||[]).join(" ")||"请改期或查看中转、铁路方案。")}</p></div>`;
-    if(a.kind==="no-direct")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 已确认无直飞。${esc(r.route.notes||"请查看合理中转方案。")}</p></div>`;
+    if(a.kind==="no-service")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 当天无运营直飞。${esc((r.route.calendar_warnings||[]).join(" ")||"请改期，或改走高铁（仅限同铁路网的城市对）。")}</p></div>`;
+    if(a.kind==="no-direct")return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ 已确认无直飞。${esc(r.route.notes||"请改期，或改走高铁（仅限同铁路网的城市对）。")}</p></div>`;
     return `<div class="transfer-alert blocked"><strong>${routeLabel}</strong><p>⚠ ${a.kind==="pending"?"排班模式已核验，精确日期时刻待核验":"尚未核验"}；不能据此推断当天无直飞，请先复核再定转场。</p></div>`;
   }).join("");
 }
@@ -411,15 +411,15 @@ function renderHardConstraints(){
 
   const transfers=scheduleTransitions().filter(r=>transferModeForDate(r.date)==="flight"), problemTransfers=transfers.filter(r=>r.assessment.kind!=="direct");
   problemTransfers.forEach(r=>{
-    if(r.assessment.kind==="no-service")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}当天无直飞`,(r.route.calendar_warnings||[]).join(" ")+" 请改期，或查看中转／普通铁路替代。","来源：最终 56 对矩阵 · 2026-09-14");
-    else if(r.assessment.kind==="no-direct")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}已确认无直飞`,r.route.notes||"请选择中转方案。","来源：最终 56 对矩阵 · 多源交叉核验");
-    else add("warn",`${dateLabel(r.date)} · ${r.from}→${r.to}精确日期待核验`,"排班模式已核验，精确日期时刻待核验；不能据此推断当天无直飞。","来源：最终 56 对矩阵 · 2026-09-14");
+    if(r.assessment.kind==="no-service")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}当天无直飞`,(r.route.calendar_warnings||[]).join(" ")+" 请改期，或改走高铁（仅限同铁路网的城市对）。","来源：航班库实查（Google Flights）");
+    else if(r.assessment.kind==="no-direct")add("blocked",`${dateLabel(r.date)} · ${r.from}→${r.to}已确认无直飞`,r.route.notes||"请改期，或改走高铁（仅限同铁路网的城市对）。","来源：航班库实查（Google Flights）");
+    else add("warn",`${dateLabel(r.date)} · ${r.from}→${r.to}精确日期待核验`,"排班模式已核验，精确日期时刻待核验；不能据此推断当天无直飞。","来源：航班库实查（Google Flights）");
   });
   const partialTransfers=transfers.filter(r=>r.assessment.kind==="direct"&&r.route.verification_status.includes("部分待核验"));
-  partialTransfers.forEach(r=>add("warn",`${dateLabel(r.date)} · ${r.from}→${r.to}需复核时刻`,"排班模式已核验，精确日期时刻待核验。先用星期模式排顺序，出票前再锁定班次。","来源：最终 56 对矩阵 · 2026-09-14"));
+  partialTransfers.forEach(r=>add("warn",`${dateLabel(r.date)} · ${r.from}→${r.to}需复核时刻`,"排班模式已核验，精确日期时刻待核验。先用星期模式排顺序，出票前再锁定班次。","来源：航班库实查（Google Flights）"));
   const kulSin=transfers.filter(r=>[r.from,r.to].includes("吉隆坡")&&[r.from,r.to].includes("新加坡"));
   kulSin.forEach(r=>add("warn",`${dateLabel(r.date)} · 隆新无可用高铁`,"2026年12月无可用高铁；可选直飞，或经新山搭 ETS＋Shuttle Tebrau 联运。","2026-09 交通核查"));
-  if(!problemTransfers.length&&!partialTransfers.length)add("pass","航班衔接未触发硬警告","连续换城段在所选星期均有直飞，且没有命中精确日期待核验项目。","来源：最终 56 对矩阵 · 2026-09-14；出票前仍需重查");
+  if(!problemTransfers.length&&!partialTransfers.length)add("pass","航班衔接未触发硬警告","连续换城段在所选星期均有直飞，且没有命中精确日期待核验项目。","来源：航班库实查（Google Flights）；出票前仍需重查");
 
   if(cityDates("富国岛").length)add("blocked","Park Hyatt Phu Quoc 在本次 12 月行程不可选","该酒店目前从 2027 年 3 月 1 日起才开放预订；富国岛请改选 New World、Regent 或其他实际可订酒店。",sourceLink(constraintSources.parkHyatt));
   const festive=entries.filter(([date])=>date>="2026-12-24"&&date<="2026-12-31");
@@ -585,7 +585,7 @@ function saveDay(){
   if(mode==="free")delete state.schedule[modalDate];else state.schedule[modalDate]={city:inputVal("modalCity"),mode};
   state.edited=true;closeModal();renderCalendar();
   const nextDate=addDays(modalDate,1),blocked=scheduleTransitions().filter(r=>r.assessment.kind!=="direct"&&(r.date===modalDate||r.date===nextDate));
-  if(blocked.length){const r=blocked[0],label=r.assessment.kind==="no-direct"?"已确认无直飞":r.assessment.kind==="no-service"?"当天无直飞":"精确日期待核验";toast(`${r.date.slice(5)} ${r.from}→${r.to}：${label}。请查看中转、铁路或改期方案。`,true)}else toast("这一天已调整");
+  if(blocked.length){const r=blocked[0],label=r.assessment.kind==="no-direct"?"已确认无直飞":r.assessment.kind==="no-service"?"当天无直飞":"精确日期待核验";toast(`${r.date.slice(5)} ${r.from}→${r.to}：${label}。请改期，或改走高铁（仅限同铁路网的城市对）。`,true)}else toast("这一天已调整");
 }
 function removeDay(){if(!modalDate)return;delete state.schedule[modalDate];state.edited=true;closeModal();renderCalendar();toast("这一天已留白")}
 function planText(){
@@ -1357,8 +1357,8 @@ function wzBudgetOk(){
 function wzLegCheck(from: string, to: string, date: string){
   const route=routeForCities(from,to), a=routeAssessment(route,date);
   if(a.kind==="direct"){ const partial=route&&route.verification_status.includes("部分待核验"); return {level:"pass", html:`<b>✓ 当天有直飞</b>（按星期查矩阵）：${a.airlines.map(x=>esc(`${x.code} ${x.name}`)).join(" / ")}${partial?'<br>⚠ 排班模式已核验，精确日期时刻待核验，出票前重查':""}`} }
-  if(a.kind==="no-service") return {level:"blocked", html:`<b>⛔ ${dateLabel(date)}无直飞</b>：${esc((route?.calendar_warnings||[]).join(" ")||"请改期或看中转/铁路方案。")}`};
-  if(a.kind==="no-direct") return {level:"blocked", html:`<b>⛔ 已确认无直飞</b>：${esc(route?.notes||"请改走中转。")}`};
+  if(a.kind==="no-service") return {level:"blocked", html:`<b>⛔ ${dateLabel(date)}无直飞</b>：${esc((route?.calendar_warnings||[]).join(" ")||"请改期，或改走高铁（仅限同铁路网的城市对）。")}`};
+  if(a.kind==="no-direct") return {level:"blocked", html:`<b>⛔ 已确认无直飞</b>：${esc(route?.notes||"请改期，或改走高铁（仅限同铁路网的城市对）。")}`};
   return {level:"warn", html:`<b>⚠ 精确日期待查询</b>：Google Flights 航班库正在逐日填充，当前日期暂无实查数据；不能据此推断当天无直飞，出票前以实查为准。`};
 }
 /* 向导选择的同步指纹：用于判断是否需要重排日历 */
@@ -1581,7 +1581,7 @@ function tripTransitionFlightIssues(date: string): DayIssue[] {
   const check = (code: string, label: string) => {
     const d = TRIP_FLIGHTS[`${code}|${date}`];
     if(!d) return; /* 还没查过，不打扰 */
-    if(!d.direct) out.push({ severity: "critical", text: `✈️ ${label}（${date.slice(5).replace("-","/")}）：实查确认无直飞`, why: `Google Flights ${d.queriedAt||"近期"}实查当天无直飞，需要改期或看中转方案` });
+    if(!d.direct) out.push({ severity: "critical", text: `✈️ ${label}（${date.slice(5).replace("-","/")}）：实查确认无直飞`, why: `Google Flights ${d.queriedAt||"近期"}实查当天无直飞，需要改期，或改走高铁（仅限同铁路网的城市对）` });
   };
   /* 转场检查按「到达段第一天 = 航班日」触发（2026-10-13 口径，与航班库/预订页一致；
      旧口径挂在出发段最后一天，查的是前一天的航班数据，已废止）。选了高铁的段不查航班。 */

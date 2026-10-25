@@ -26,10 +26,6 @@ const FALLBACK_CITIES = [
   "曼谷",
   "清迈",
   "首尔",
-  "槟城",
-  "吉隆坡",
-  "胡志明市",
-  "富国岛",
 ];
 
 type MenuKey = "action" | "hotels" | "restaurants" | "flights";
@@ -99,15 +95,17 @@ export default function DailyDigestBanner({
     const staleCount = legs.filter((l) => l.stale).length;
     const active = legs.filter((l) => !l.stale);
     if (!legs.length) return "暂无航班数据";
+    const pending = active.filter((l) => !l.ticketed);
+    const ticketedCount = active.length - pending.length;
     const minPrice = (kind: "intl" | "intercity") => {
-      const ps = active
+      const ps = pending
         .filter((l) => l.kind === kind)
         .flatMap((l) => l.options ?? [])
         .map((o) => o.price)
         .filter((p): p is number => p != null && Number.isFinite(p));
       return ps.length ? Math.min(...ps) : null;
     };
-    const directLegs = active.filter((l) =>
+    const directLegs = pending.filter((l) =>
       (l.options ?? []).some((o) => (o.stops ?? 0) === 0)
     ).length;
     const minIntl = minPrice("intl");
@@ -118,8 +116,9 @@ export default function DailyDigestBanner({
       .sort()
       .pop();
     const parts = [
-      `${legs.length}段`,
-      `${directLegs}段有直飞`,
+      `${active.length}段`,
+      `${ticketedCount}段已出票`,
+      `${pending.length}段待订（${directLegs}段有直飞）`,
       minIntl != null ? `国际段 $${minIntl}/人起` : null,
       minInter != null ? `城际段 $${minInter}/2人起` : null,
       `更新于 ${shortT(latest as string) ?? "—"}`,

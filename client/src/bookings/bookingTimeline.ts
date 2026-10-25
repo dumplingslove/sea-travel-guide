@@ -365,7 +365,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "sin-hkt",
     dbSeg: "SIN-HKT",
-    ctx: "D14 转场：新加坡段结束、普吉段开始",
+    ctx: "D13 转场：新加坡段结束、普吉段开始",
     route: "新加坡 → 普吉",
     date: "2026-12-11",
     dateLabel: "12-11",
@@ -404,7 +404,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "sin-xiy",
     dbSeg: "SIN-XIY",
-    ctx: "D14：新加坡段结束，岳父母带娃回西安",
+    ctx: "D13：新加坡段结束，岳父母带娃回西安",
     route: "新加坡 → 西安",
     date: "2026-12-11",
     dateLabel: "12-11",
@@ -426,7 +426,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "hkt-cnx",
     dbSeg: "HKT-CNX",
-    ctx: "D18 转场：普吉段结束、清迈段开始",
+    ctx: "D17 转场：普吉段结束、清迈段开始",
     route: "普吉 → 清迈",
     date: "2026-12-15",
     dateLabel: "12-15",
@@ -455,7 +455,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "cnx-bkk",
     dbSeg: "CNX-BKK",
-    ctx: "D21 转场：清迈段结束、曼谷段开始",
+    ctx: "D20 转场：清迈段结束、曼谷段开始",
     route: "清迈 → 曼谷",
     date: "2026-12-18",
     dateLabel: "12-18",
@@ -613,7 +613,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
   {
     id: "icn-sea",
     dbSeg: "ICN-SEA",
-    ctx: "回程：三人一起首尔→西雅图（2大1小），直飞+一次转机都查",
+    ctx: "回程：三人一起首尔→西雅图（2大1小）",
     route: "首尔 → 西雅图",
     date: "2027-01-01",
     dateLabel: "01-01",

@@ -1076,7 +1076,7 @@ export const initialResearchStatus = {
     },
     {
      "name": "The Athenee Hotel, a Luxury Collection Hotel, Bangkok 曼谷雅典娜豪华精选酒店",
-     "note": "【万豪系·Luxury Collection】【档次：奢华】用户钛金福利增补（2026-09-16）：前 Plaza Athénée，王子宫殿旧址，标志性双楼梯大堂，8家餐厅酒吧",
+     "note": "【万豪系·Luxury Collection】【档次：奢华】用户万豪福利增补（Platinum，2026-09-16）：前 Plaza Athénée，王子宫殿旧址，标志性双楼梯大堂，8家餐厅酒吧",
      "sources": {
       "chinese_sites": {
        "note": "Trip.com中文版 9.6/10，247条，3条中文原话+链接（ota-reviews/bangkok-newhotels-2026-09-16.md）；携程国内版登录墙pending、马蜂窝无独立listing pending、Klook反爬403 pending",
@@ -2687,7 +2687,7 @@ export const initialResearchStatus = {
     },
     {
      "name": "Sheraton Saigon Grand Opera Hotel 西贡喜来登歌剧院酒店",
-     "note": "【万豪系·Sheraton】【档次：奢华】用户钛金福利增补（2026-09-16）：88 Dong Khoi 歌剧院旁；官网 Sheraton Club 对 Platinum/Titanium/Ambassador 免费（含+1宾客）",
+     "note": "【万豪系·Sheraton】【档次：奢华】用户万豪福利增补（Platinum，2026-09-16）：88 Dong Khoi 歌剧院旁；官网 Sheraton Club 对 Platinum/Titanium/Ambassador 免费（含+1宾客）",
      "sources": {
       "chinese_sites": {
        "note": "携程 4.6/5很好，625条（推荐605/差评20），3条中文原话+链接（ota-reviews/hcmc-newhotels-2026-09-16.md）；Trip.com同源9.2/10；cn.trip.com DNS不可达、Trip.com zh-CN登录墙已绕行en-US公开页",

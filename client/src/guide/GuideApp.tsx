@@ -153,7 +153,7 @@ const route:[string,string,string][]=[['曼谷','3天','12/12–14'],['清迈','
 /** 预订入口回调：各 tab 的卡片/详情弹窗点“预订”时打开 BookingDialog */
 type OnBook=(p:BookingPreset)=>void;
 /** 当前行程各城住宿首/末日（末日=在该城的最后一晚，不是退房日）：
- * 与云端规划一致（2026-12-07～12-19：新加坡 12/07–11 → 普吉 12/12–15 → 清迈 12/16–18 → 曼谷 12/19，
+ * 与云端规划一致（2026-12-06～12-19：新加坡 12/06–10 → 普吉 12/11–14 → 清迈 12/15–17 → 曼谷 12/18–19，
  * 入住=到达当天、退房=转场航班当天；"次日飞"口径已作废）。
  * 2026-10-03 修正：此前退房日按"下一段 start"多占一晚，与航班错位。
  * 2026-10-12 更新：用户调整东南亚各城天数（云端 2026-10-11 07:19Z）。
@@ -163,10 +163,10 @@ type OnBook=(p:BookingPreset)=>void;
  * 城市头图显示「建议住宿日期 待定」、cityStayRange 兜底返回空——首尔是现行行程末段
  * （12-30 抵达、住 12-30/12-31 两晚、2027-01-01 退房晚飞 AS120，与云端 timeline 首尔段一致）。 */
 const currentStayRanges:Record<string,[string,string]>={
- '新加坡':['2026-12-07','2026-12-11'],
- '普吉':['2026-12-12','2026-12-15'],
- '清迈':['2026-12-16','2026-12-18'],
- '曼谷':['2026-12-19','2026-12-19'],
+ '新加坡':['2026-12-06','2026-12-10'],
+ '普吉':['2026-12-11','2026-12-14'],
+ '清迈':['2026-12-15','2026-12-17'],
+ '曼谷':['2026-12-18','2026-12-19'],
  '首尔':['2026-12-30','2026-12-31'],
 };
 /** 行程城市住宿日期短标签（云端现行程优先，旧20天 route 表仅作非行程城市回退） */
@@ -245,13 +245,13 @@ function topPickGroupOf(item:Item):'Marriott'|'Hyatt'|''{
 }
 function PageHero({title,summary,image,eyebrow}:{title:string;summary:string;image:string;eyebrow?:string}){return <section className="pagehero"><img src={image} alt="" aria-hidden="true"/><div/><section>{eyebrow&&<span>{eyebrow}</span>}<h1>{title}</h1><p>{summary}</p></section></section>}
 
-function ResearchStatus(){const strictItems=Object.keys(xhsEvidence).length;const maxSample=Math.max(0,...Object.values(xhsEvidence).map(x=>x.length));return <section className="research-status" aria-label="资料核验状态"><div><span>RESEARCH LOG · 2026-09-13</span><h2>逐项证据，不把缺口藏起来</h2><p>网站目录与候选图片覆盖和六来源研究工作集采用不同口径；六来源条目总数以“信息来源搜索状态”页的实时汇总为准。小红书严格样本目前覆盖 {strictItems} 项、单项最多 {maxSample} 篇，未满每地点 10 篇的项目不计算推荐率；图片精确地点匹配也仍在逐张核验。</p></div><strong>{guideFactsCount} 个结构化详情 · {strictResearchLinkCount} 个严格记录链接 · {placeGalleryPlaceCount} 个地点 / {placeGalleryPhotoCount} 张候选图片</strong></section>}
+function ResearchStatus(){const strictItems=Object.keys(xhsEvidence).length;const maxSample=Math.max(0,...Object.values(xhsEvidence).map(x=>x.length));return <section className="research-status" aria-label="资料核验状态"><div><span>RESEARCH LOG · 2026-10-25</span><h2>逐项证据，不把缺口藏起来</h2><p>网站目录与候选图片覆盖和六来源研究工作集采用不同口径；六来源条目总数以“信息来源搜索状态”页的实时汇总为准。小红书严格样本目前覆盖 {strictItems} 项、单项最多 {maxSample} 篇，未满每地点 3 篇的项目不计算推荐率；图片精确地点匹配也仍在逐张核验。</p></div><strong>{guideFactsCount} 个结构化详情 · {strictResearchLinkCount} 个严格记录链接 · {placeGalleryPlaceCount} 个地点 / {placeGalleryPhotoCount} 张候选图片</strong></section>}
 
 function XhsMini({item}:{item:Item}){const a=getXhsAssessment(item);const sample=(xhsEvidence[item.name]||[]).length;const cut=(s:string)=>s.length>120?s.slice(0,120)+'…':s;
  if(!a)return <div className="xhsmini pending"><span>小红书口碑</span><><b>待严格核验</b><small>暂无可追溯统计，不补写结论</small></></div>;
  return <div className="xhsmini ready"><span>小红书口碑</span><div><b>{a.verdict}</b> <small>{sample} 篇已核验 · 推荐 {a.recommend} · 谨慎 {a.caution} · 避雷 {a.avoid}</small></div><div className="miniwr"><p className="miniw"><i>✅</i><span><b>为什么推荐　</b>{cut(a.why)}</span></p><p className="minia"><i>⚠️</i><span><b>避雷　</b>{cut(a.avoidNote)}</span></p></div></div>}
 
-function XhsPanel({item}:{item:Item}){const a=getXhsAssessment(item);const evidence=xhsEvidence[item.name]||[];const total=Math.max(1,a?a.recommend+a.caution+a.avoid:0);return <section className="xhsreview" aria-label={`${item.name}小红书口碑`}><header><div><span>XIAOHONGSHU REVIEW</span><h3>小红书口碑</h3></div><b className={a?a.verdict==='推荐'?'good':a.verdict==='不推荐'?'bad':'mixed':'pending'}>{a?.verdict||'待严格核验'}</b></header>{a?<><p className="sample-note">核验进度 {evidence.length}/10。基于下方已打开并阅读正文与评论区的帖子样本；是样本计数，不是平台总评分，未满 10 篇不写成已完成。</p><div className="sentiment" aria-label={`推荐${a.recommend}篇，谨慎${a.caution}篇，避雷${a.avoid}篇`}><article><div><span>推荐</span><b>{a.recommend}</b></div><i><em style={{width:`${a.recommend/total*100}%`}}/></i></article><article><div><span>谨慎</span><b>{a.caution}</b></div><i><em style={{width:`${a.caution/total*100}%`}}/></i></article><article><div><span>避雷</span><b>{a.avoid}</b></div><i><em style={{width:`${a.avoid/total*100}%`}}/></i></article></div><div className="xhswhy"><article><span>为什么推荐</span><p>{a.why}</p></article><article><span>应该避雷</span><p>{a.avoidNote}</p></article></div></>:<div className="xhspending"><strong>这项还没有完成小红书严格逐帖核验</strong><p>暂不显示推荐率、避雷率或虚构的帖子摘要。现有公开资料仍保留在其他详情区；严格核验完成后再补原帖与统计。</p></div>}</section>}
+function XhsPanel({item}:{item:Item}){const a=getXhsAssessment(item);const evidence=xhsEvidence[item.name]||[];const total=Math.max(1,a?a.recommend+a.caution+a.avoid:0);return <section className="xhsreview" aria-label={`${item.name}小红书口碑`}><header><div><span>XIAOHONGSHU REVIEW</span><h3>小红书口碑</h3></div><b className={a?a.verdict==='推荐'?'good':a.verdict==='不推荐'?'bad':'mixed':'pending'}>{a?.verdict||'待严格核验'}</b></header>{a?<><p className="sample-note">核验进度 {evidence.length}/3。基于下方已打开并阅读正文与评论区的帖子样本；是样本计数，不是平台总评分，未满 3 篇不写成已完成。</p><div className="sentiment" aria-label={`推荐${a.recommend}篇，谨慎${a.caution}篇，避雷${a.avoid}篇`}><article><div><span>推荐</span><b>{a.recommend}</b></div><i><em style={{width:`${a.recommend/total*100}%`}}/></i></article><article><div><span>谨慎</span><b>{a.caution}</b></div><i><em style={{width:`${a.caution/total*100}%`}}/></i></article><article><div><span>避雷</span><b>{a.avoid}</b></div><i><em style={{width:`${a.avoid/total*100}%`}}/></i></article></div><div className="xhswhy"><article><span>为什么推荐</span><p>{a.why}</p></article><article><span>应该避雷</span><p>{a.avoidNote}</p></article></div></>:<div className="xhspending"><strong>这项还没有完成小红书严格逐帖核验</strong><p>暂不显示推荐率、避雷率或虚构的帖子摘要。现有公开资料仍保留在其他详情区；严格核验完成后再补原帖与统计。</p></div>}</section>}
 
 function OtaReviewPanel({item}:{item:Item}){const row=bangkokOta[item.name];if(!row)return null;return <section className="ota-panel" aria-label={`${item.name}多平台评分与口碑`}><header><div><span>MULTI-SOURCE REVIEW</span><h3>多平台评分与实读摘要</h3></div><b>核验于 {row.checked}</b></header><div className={`ota-scores ${row.google?'three':''}`}><a href={row.tripadvisor.url} target="_blank" rel="noreferrer"><span>TripAdvisor</span><strong>{row.tripadvisor.score}</strong><small>{row.tripadvisor.reviews} 条评价</small><em>{row.tripadvisor.title} ↗</em></a><article><span>{row.chinese.site}</span><strong>{row.chinese.score||'公开样本'}</strong><small>{row.chinese.reviews?`${row.chinese.reviews} 条评价`:'评分／数量未可靠取得'}</small>{row.chinese.url?<a href={row.chinese.url} target="_blank" rel="noreferrer">打开来源 ↗</a>:<em>原页面登录受限或报告未提供直链</em>}</article>{row.google&&<a href={row.google.url} target="_blank" rel="noreferrer"><span>Google Maps</span><strong>{row.google.score}</strong><small>{row.google.reviews} 条评价</small><em>打开地点 ↗</em></a>}</div><div className="ota-reading"><article><span>为什么推荐</span><p>{row.recommend}</p></article><article><span>应该避雷</span><p>{row.caution}</p></article></div><p className="ota-note">{row.chinese.note} {row.google?.note} 评分、数量与摘要只描述这次研究取得的页面及样本，不代表全网一致意见。</p></section>}
 
@@ -308,7 +308,7 @@ function ItemMedia({item,kind,index}:{item:Item;kind:'酒店'|'餐厅'|'景点';
  >{showStack?<div className="stackrail">{gallery.map(p=><img key={p.src} src={p.src} alt={`${item.name}候选图片`} loading="lazy"/>)}</div>:(image?<img src={image} alt={`${item.name}候选图片`} loading="lazy"/>:<span aria-hidden="true">{item.name.slice(0,1)}</span>)}<b style={{background:accents[item.city]}}>{String(index+1).padStart(2,'0')}</b>{n>1&&!showStack&&<><button type="button" className="imgnav prev" onClick={prev} aria-label="上一张">‹</button><button type="button" className="imgnav next" onClick={next} aria-label="下一张">›</button><em>{imgIdx+1}/{n}</em></>}{n>1&&showStack&&<em>共{n}张·上滑</em>}</div>}
 
 const operationalNotices:Record<string,{title:string;body:string}>={
- 'PRU':{title:'营业状态异常',body:'Google Maps 在 2026-09-13 研究快照中显示“Temporarily closed”。不要按原计划直接前往；订位或出发前先向餐厅确认是否恢复营业。'},
+ 'PRU':{title:'已订位',body:'已订 2026-12-12 17:45（确认号 484R2B3A8U2A，押金 THB 10,000 已付）。2026-09-13 研究快照曾显示 Temporarily closed，出发前正常确认营业即可。'},
  'Roti Taew Nam':{title:'营业状态异常',body:'Google Maps 在 2026-09-13 研究快照中显示“Temporarily closed”。不要按原计划直接前往；出发前先核对官方页面或电话确认。'}
 };
 
@@ -317,12 +317,12 @@ const operationalNotices:Record<string,{title:string;body:string}>={
 function PortraitSpots({item}:{item:Item}){
  const spots=getPortraitSpots(item.city,item.name);
  const gallery=getPlaceGallery('景点',item);
- return <div className="portraitspots"><h4>👩 人像机位</h4><p className="portraitspots-intro">给老婆/同行人拍照用的点位：人站在哪、面向哪。以下点位均出自上方机位的实地研究文案（文案里明确写了人像/合影拍法），原样复用、没有新编。</p>{spots?.length?<div className="photospotlist">{spots.map((s,i)=>{const photo=s.sampleIndex!=null?gallery[s.sampleIndex]:undefined;return <article key={i} className="photospot"><header><b>{String(i+1).padStart(2,'0')}</b><h4>{s.name}</h4><span className="portraitbadge">👩 人像</span></header><p className="spotwhere"><strong>📍 详细位置</strong><span>{s.where}</span></p><p className="spothow"><strong>📷 拍摄建议</strong><span>{s.how}</span></p>{photo?<figure><img src={photo.src} alt={s.sampleCaption||`${item.name} · ${s.name}样片`} loading="lazy"/><figcaption><span>{s.sampleCaption||'样片'}</span><a href={photo.sourceUrl} target="_blank" rel="noreferrer">来源：{photo.title} ↗</a></figcaption></figure>:<p className="spotnosample">该机位暂无视角对得上的样片，图库复核后补上。</p>}</article>})}</div>:<p className="photospots-pending">该景点的人像机位待补充（需结合小红书人像实拍帖再研究）。</p>}</div>;
+ return <div className="portraitspots"><h4>👩 人像机位</h4><p className="portraitspots-intro">给老婆/同行人拍照用的点位：人站在哪、面向哪。以下点位均出自上方机位的实地研究文案（文案里明确写了人像/合影拍法），原样复用、没有新编。</p>{spots?.length?<div className="photospotlist">{spots.map((s,i)=>{const photo=s.sampleIndex!=null?gallery[s.sampleIndex]:undefined;return <article key={i} className="photospot"><header><b>{String(i+1).padStart(2,'0')}</b><h4>{s.name}</h4><span className="portraitbadge">👩 人像</span></header><p className="spotwhere"><strong>📍 详细位置</strong><span>{s.where}</span></p><p className="spothow"><strong>📷 拍摄建议</strong><span>{s.how}</span></p>{photo?<figure><img src={photo.src} alt={s.sampleCaption||`${item.name} · ${s.name}样片`} loading="lazy"/><figcaption><span>{s.sampleCaption||'样片'}</span><a href={photo.sourceUrl} target="_blank" rel="noreferrer">来源：{photo.title} ↗</a></figcaption></figure>:<p className="spotnosample">该机位暂无视角对得上的样片，图库复核后补上。</p>}</article>})}</div>:<p className="photospots-pending">该景点暂无人像机位记录。</p>}</div>;
 }
 function PhotoSpotPanel({item}:{item:Item}){
  const spots=getPhotoSpots(item.city,item.name);
  const gallery=getPlaceGallery('景点',item);
- return <section id="photospots" className="detailsection photospots"><span>PHOTO SPOTS</span><h3>📸 最佳机位</h3>{spots?.length?<><p className="photospots-intro">每个机位都写了站在哪、面向哪。给同行人拍人像：优先上午顺光、傍晚黄金时刻，背景尽量干净；小红书实拍验证过的人像机位正在逐条整理，整理好即补入。样片只用本站图库里视角对得上的照片，对不上的机位暂不配样片。</p><div className="photospotlist">{spots.map((s,i)=>{const photo=s.sampleIndex!=null?gallery[s.sampleIndex]:undefined;return <article key={i} className="photospot"><header><b>{String(i+1).padStart(2,'0')}</b><h4>{s.name}</h4></header><p className="spotwhere"><strong>📍 详细位置</strong><span>{s.where}</span></p><p className="spothow"><strong>📷 拍摄建议</strong><span>{s.how}</span></p>{photo?<figure><img src={photo.src} alt={s.sampleCaption||`${item.name} · ${s.name}样片`} loading="lazy"/><figcaption><span>{s.sampleCaption||'样片'}</span><a href={photo.sourceUrl} target="_blank" rel="noreferrer">来源：{photo.title} ↗</a></figcaption></figure>:<p className="spotnosample">该机位暂无视角对得上的样片，图库复核后补上。</p>}<a className="spotmap" href={mapLink(item.name,item.city)} target="_blank" rel="noreferrer">🗺 地图导航到{item.name}附近</a></article>})}</div><PortraitSpots item={item}/></>:<p className="photospots-pending">该景点机位整理中，稍后补上。</p>}</section>
+ return <section id="photospots" className="detailsection photospots"><span>PHOTO SPOTS</span><h3>📸 最佳机位</h3>{spots?.length?<><p className="photospots-intro">每个机位都写了站在哪、面向哪。给同行人拍人像：优先上午顺光、傍晚黄金时刻，背景尽量干净；小红书实拍验证过的人像机位正在逐条整理，整理好即补入。样片只用本站图库里视角对得上的照片，对不上的机位暂不配样片。</p><div className="photospotlist">{spots.map((s,i)=>{const photo=s.sampleIndex!=null?gallery[s.sampleIndex]:undefined;return <article key={i} className="photospot"><header><b>{String(i+1).padStart(2,'0')}</b><h4>{s.name}</h4></header><p className="spotwhere"><strong>📍 详细位置</strong><span>{s.where}</span></p><p className="spothow"><strong>📷 拍摄建议</strong><span>{s.how}</span></p>{photo?<figure><img src={photo.src} alt={s.sampleCaption||`${item.name} · ${s.name}样片`} loading="lazy"/><figcaption><span>{s.sampleCaption||'样片'}</span><a href={photo.sourceUrl} target="_blank" rel="noreferrer">来源：{photo.title} ↗</a></figcaption></figure>:<p className="spotnosample">该机位暂无视角对得上的样片，图库复核后补上。</p>}<a className="spotmap" href={mapLink(item.name,item.city)} target="_blank" rel="noreferrer">🗺 地图导航到{item.name}附近</a></article>})}</div><PortraitSpots item={item}/></>:<p className="photospots-pending">该景点暂无机位记录。</p>}</section>
 }
 
 // 非行程城市（槟城/吉隆坡/胡志明市/富国岛）酒店价格按旧8城口径查询：
@@ -440,8 +440,8 @@ const [selectedKey,setSelectedKey]=useState<string|null>(null);
 
 /** 历史航班研究：2026-09-14/15 Duffel 实测（2成人直飞当前库存）+ 每段航司选择建议。旧8城行程版本，仅供参考，非实时价。数据来源：git 历史（交通页已删的「跨城航班详解」）与 planner-logic.ts 的 DUFFEL_MEASURED。 */
 /** 航司口碑速览（历史研究结论，来源：git 历史交通页已删内容）。 */
-const AIRLINE_REPUTATION='亚航AirAsia：Skytrax连续16年全球最佳廉航，东南亚航线之王，班次密、价格低，行李额需另购。酷航Scoot：新航旗下，全球最佳长途廉航，新加坡进出首选。曼谷航空：精品航司，票价含20kg行李+餐食+贵宾室，体验接近全服务。越南航空：越南国家航司，全服务，准点率不错。越捷VietJet：便宜但准点率和服务口碑一般，适合不赶时间的短途。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
-/** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「口碑待核验」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
+const AIRLINE_REPUTATION='Hainan Airlines 海航：本程西雅图→北京直飞，全服务，行李与餐食口碑稳。Air China 国航：本程北京→新加坡、曼谷→北京两段，全服务，准点口碑中上。China Eastern 东航：本程西安、新加坡、首尔多段都飞它，班次密、价格低，国际段服务口碑中等。Spring Airlines 春秋：本程曼谷→西安一段，廉航口径，行李额与选座另收费，票价本身低。Alaska Airlines 阿拉斯加：本程首尔→西雅图商务舱，北美口碑头部，Atmos 里程好用。Singapore Airlines 新航：服务标杆，票价偏高。Scoot 酷航：新航旗下廉航，新加坡进出班次多，行李额需另购。Thai AirAsia 泰亚航：泰国国内段班次密、价格低，行李额需另购。Thai VietJet Air 泰越捷：泰国国内段便宜，准点口碑一般。Bangkok Airways 曼谷航空：精品支线，票价含 20kg 行李＋餐食，清迈—曼谷可选。廉航通病：行李额、选座、餐食全另收费，订票时算总价别只看裸票价。';
+/** 当前行程航司靠谱程度：只写历史研究覆盖的，无依据的不编，写「暂无口碑数据」。key 按 FLIGHT_LEGS 的 carrier 前缀匹配。 */
 /* 航司口碑：一句短评，只写定性事实（全服务/廉航、联盟、行李餐食要点）。
  * 2026-10-16 用户抓包补齐：此前只有 9 家，本行程实际出现的 17 家里大半显示「口碑待核验」
  * （含新加坡航空、韩亚、大韩、海南、春秋、亚航等主力）。新增航司出现在航班库时，
@@ -637,15 +637,15 @@ export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: stri
    { program:'KrisFlyer 订新航', miles:'20,500 分/人（3 人 61,500）', verdict:'换 $436 现金票仅约 0.71¢/分', good:'no' },
    { program:'Aeroplan 订国航', miles:'30,000 分/人', verdict:'约 0.48¢/分', good:'no' },
    { program:'United 订国航', miles:'约 15,000 分/人', verdict:'约 0.97¢/分，勉强打平', good:'mid' } ],
-   bottom:'结论：付现金。这一段现金价太低，积分换了亏。' },
+   bottom:'参考：本程已现金出票（CA889）；将来再飞这条线，现金价太低、积分换了亏，仍付现金。' },
  'XIY-SIN': { rows: [
    { program:'KrisFlyer 订酷航', miles:'12,000 分/人（2 人 24,000）', verdict:'换 $384 约 1.60¢/分', good:'yes' },
    { program:'Virgin 订东航', miles:'15,000 分/人（2 人 30,000）', verdict:'换 $368 约 1.23¢/分，勉强', good:'mid' } ],
-   bottom:'结论：坐酷航就用 KrisFlyer 换，值；东航现金价已经便宜，付现金更省事。' },
+   bottom:'参考：本程已现金出票（MU2069）；将来再飞这条线，坐酷航可用 KrisFlyer 换，东航现金价便宜、付现金更省事。' },
  'SIN-XIY': { rows: [
    { program:'Virgin 订东航 MU2070（白天班）', miles:'15,000 分/人（3 人 45,000）', verdict:'换 $1,736 约 3.86¢/分，全程最值', good:'yes' },
    { program:'KrisFlyer 订酷航 TR134（过夜班）', miles:'12,000 分/人（3 人 36,000）', verdict:'换 $916 约 2.54¢/分', good:'yes' } ],
-   bottom:'结论：这一段优先用积分——东航白天班积分价尤其划算，前提是 Virgin 官网查得到位。' },
+   bottom:'参考：本程已现金出票（MU2070）；将来再飞这条线，可优先看 Virgin 订东航白天班的积分位。' },
  'SIN-HKT': { rows: [
    { program:'KrisFlyer 订酷航', miles:'2,500 分/人（2 人 5,000）', verdict:'短途固定表价，超值', good:'yes' },
    { program:'KrisFlyer 订新航', miles:'13,000 分/人（2 人 26,000）', verdict:'换 $291 约 1.12¢/分，勉强', good:'mid' } ],
@@ -657,11 +657,11 @@ export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: stri
  'BKK-PEK': { rows: [
    { program:'United 订国航/泰航', miles:'约 15,000 分/人', verdict:'对 $292 的泰航班约 1.95¢/分可以；对 $174–228 的班次不值', good:'mid' },
    { program:'Aeroplan 订国航/泰航', miles:'30,000 分/人', verdict:'约 0.58–0.97¢/分', good:'no' } ],
-   bottom:'结论：多数班次付现金；只有坐最贵的泰航 TG614 时才值得考虑 United 里程。' },
+   bottom:'参考：本程已现金出票（CA886）；将来再飞这条线，多数班次付现金。' },
  'XIY-ICN': { rows: [
    { program:'Atmos 订大韩 KE138', miles:'7,500 分/人起（3 人 22,500 起）', verdict:'换 $744 约 3.31¢/分，很值', good:'yes' },
    { program:'Flying Blue 订东航 MU853', miles:'约 6,000–12,500 分/人（动态区间）', verdict:'换 $505 约 1.35–2.81¢/分', good:'mid' } ],
-   bottom:'结论：优先查 Atmos 有没有大韩的位——有位就是全程最划算的兑换之一；没位再看蓝翔订东航。' },
+   bottom:'参考：本程已现金出票（MU853）；将来再飞这条线，可先查 Atmos 有没有大韩的位，没位再看蓝翔订东航。' },
  'ICN-SEA': { rows: [
    { program:'AAdvantage 订阿拉斯加', miles:'35,000 分/人（3 人 105,000）', verdict:'对 $3,840 现金价约 3.66¢/分', good:'yes' },
    { program:'Atmos 订阿拉斯加（动态）', miles:'约 42,500–52,500 分/人', verdict:'约 2.44–3.01¢/分', good:'yes' } ],
@@ -670,21 +670,21 @@ export const SEGMENT_POINTS: Record<string, { rows: SegmentAward[]; bottom: stri
 /** 每段一句话积分推荐（2026-10-17 用户：别只给单独表格，要整合进预定筛选——
  * 在每段航班列表上方直接显示，扫一眼就知道这段该用分还是付现金；明细在弹窗里） */
 export const SEGMENT_POINTS_HINT: Record<string, string> = {
- 'SEA-PEK': '怎么买：付现金 · 刷 Amex Platinum（海航官网直订 5x MR）；积分换这段不划算',
- 'PEK-SIN': '怎么买：付现金 · 刷 Amex Platinum（直订 5x MR）；积分最好的换法也仅约 0.97¢/分，别换',
- 'XIY-SIN': '怎么买：用积分 · 转 KrisFlyer 订酷航 12,000 分/人（约 1.60¢/分）；付现金则刷 Amex Platinum',
- 'SIN-XIY': '怎么买：用积分 · 转 Virgin 订东航白天班 15,000 分/人（约 3.86¢/分，全程最值，先查位）；无位再付现金刷 Amex Platinum',
+ 'SEA-PEK': '怎么买：本程已出票（HU496）；将来再飞这条线付现金，刷 Amex Platinum（海航官网直订 5x MR）',
+ 'PEK-SIN': '怎么买：本程已出票（CA889）；将来再飞这条线付现金，刷 Amex Platinum（直订 5x MR）',
+ 'XIY-SIN': '怎么买：本程已出票（MU2069）；将来再飞这条线，坐酷航可用 KrisFlyer 换（12,000 分/人）',
+ 'SIN-XIY': '怎么买：本程已出票（MU2070）；将来再飞这条线，可先查 Virgin 订东航白天班的积分位',
  'SIN-HKT': '怎么买：坐酷航用积分（2,500 分/人超值）；坐新航付现金 · 刷 Amex Platinum',
  'HKT-CNX': '怎么买：付现金 · 刷 Amex Platinum 或 Atmos Summit（金额小）；这段无积分路径',
  'CNX-BKK': '怎么买：付现金 · 刷 Amex Platinum；积分换全亏（当天现金最低才 $82）',
- 'BKK-XIY': '怎么买：付现金 · 刷 Atmos Summit（春秋官网人民币计价、境外 3x）或 Amex Platinum；这段无积分路径',
- 'BKK-PEK': '怎么买：付现金 · 刷 Amex Platinum；只有最贵的泰航 TG614 才值得用 United 里程',
- 'XIY-ICN': '怎么买：用积分 · Atmos 订大韩 7,500 分/人起（约 3.31¢/分，先查位）；无位则东航付现金刷 Amex Platinum',
+ 'BKK-XIY': '怎么买：本程已出票（9C6294）；将来再飞这条线付现金，刷 Atmos Summit（境外 3x）或 Amex Platinum',
+ 'BKK-PEK': '怎么买：本程已出票（CA886）；将来再飞这条线付现金，刷 Amex Platinum',
+ 'XIY-ICN': '怎么买：本程已出票（MU853）；将来再飞这条线，可先查 Atmos 订大韩的积分位',
  'ICN-SEA': '怎么买：本程已现金出票；将来再飞这条线，用 AA 里程订阿拉斯加（35,000 分/人）最划算',
 };
 /** 用分总策略（2026-10-17 调研结论，弹窗底部常驻）：跨航段的钱包级推荐 */
 export const POINTS_STRATEGY: string[] = [
- '首选三笔：Virgin 订东航回西安（3.86¢/分）、Atmos 订大韩去首尔（3.31¢/分）、KrisFlyer 订酷航去新加坡（1.60¢/分）。',
+ '本程 8 段已全部出票，下面的积分对照只作将来再飞同航线时的参考；未订的泰国境内段金额小、付现金即可。',
  '万豪分这一程一分别转航司：3:1 全线亏（转 SKYPASS 折合约 0.55¢/分最亏），万豪分留着订酒店。',
  'Bilt 分留给 Atmos（唯一能转进 Atmos 的银行分）；Citi 分留给 AA（唯一能转进 AAdvantage 的银行分）。',
  '标尺：≥1.5¢/分 才值得转；1.0–1.5 看情况；<1.0 付现金。',
@@ -694,7 +694,7 @@ export const POINTS_STRATEGY: string[] = [
  * 按（航司指南键，路径名关键词）匹配；评价均为本行程口径，来自逐段积分价调研，未核实的标 na 不给结论。 */
 export const PATH_VERDICTS: Record<string, { match: string; level: 'yes'|'mid'|'no'|'na'; label: string; text: string }[]> = {
  'Singapore Airlines': [ { match:'KrisFlyer', level:'mid', label:'一般', text:'本程新航自家票性价比一般：北京→新加坡 0.71¢/分别换，新加坡→普吉 1.12¢/分勉强；KrisFlyer 的价值主要在换酷航' } ],
- 'Scoot': [ { match:'KrisFlyer', level:'yes', label:'值得', text:'本程最稳的兑换之一：去新加坡 1.60¢/分、回西安 2.54¢/分、去普吉 2,500 分/人超值' } ],
+ 'Scoot': [ { match:'KrisFlyer', level:'yes', label:'值得', text:'将来参考：去新加坡 1.60¢/分、回西安 2.54¢/分、去普吉 2,500 分/人超值' } ],
  'Air China': [
    { match:'星盟伙伴', level:'no', label:'不值', text:'本程实测 0.48–0.97¢/分：北京→新加坡、曼谷→北京都不划算，付现金' },
    { match:'凤凰知音', level:'no', label:'不值', text:'万豪 3:1 折损大，除非清仓零散万豪分' } ],
@@ -710,14 +710,14 @@ export const PATH_VERDICTS: Record<string, { match: string; level: 'yes'|'mid'|'
  'Asiana Airlines': [
    { match:'星盟伙伴', level:'na', label:'未核实', text:'本程无韩亚直飞，价格未核实' } ],
  'Korean Air': [
-   { match:'Atmos', level:'yes', label:'值得', text:'西安→首尔约 3.31¢/分，本程第二值；唯一风险是积分位少，先查位' },
+   { match:'Atmos', level:'yes', label:'值得', text:'西安→首尔约 3.31¢/分（本程已订东航 MU853，此为将来参考）；积分位少，先查位' },
    { match:'SKYPASS', level:'no', label:'不值', text:'万豪 3:1 折合约 0.55¢/分，全场最亏，别走这条' } ],
  'China Eastern': [
-   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分全程最值；去新加坡约 1.23¢/分勉强' },
+   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分（本程已现金出票，供将来参考）；去新加坡约 1.23¢/分勉强' },
    { match:'Flying Blue', level:'mid', label:'一般', text:'动态价浮动大：西安→首尔段约 1.35–2.81¢ 可看，去新加坡段约 0.71–1.05¢ 不值，下单前和 Virgin 比价' },
    { match:'Delta', level:'na', label:'未核实', text:'达美订东航未核实到可靠价格，不给结论；另有幽灵位问题' } ],
  'China Eastern Airlines': [
-   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分全程最值' },
+   { match:'Virgin', level:'yes', label:'值得', text:'回西安约 3.86¢/分（本程已现金出票，供将来参考）' },
    { match:'Flying Blue', level:'mid', label:'一般', text:'动态价，下单前和 Virgin 比价' } ],
  'Delta': [ { match:'SkyMiles', level:'na', label:'未核实', text:'本程无达美自营待订航段，价格未核实' } ],
  'Alaska': [
@@ -740,16 +740,16 @@ export const PATH_VERDICTS: Record<string, { match: string; level: 'yes'|'mid'|'
 /** 付现金时用哪张卡（按用户自有卡组合核对的费率：Amex Platinum 机票直订 5x MR、
  * CSR 直订 4x UR、Atmos Summit 境外消费 3x Atmos；Citi Double Cash 有境外交易费别用） */
 export const SEGMENT_CASH_TIP: Record<string, string> = {
- 'SEA-PEK': '海航官网直订：Amex Platinum 5x MR 最厚；海航境外站付款也可用 Atmos Summit（境外 3x）',
- 'PEK-SIN': '首选 Amex Platinum（航司官网直订 5x MR，保障最全）；想攒 Atmos 里程就用 Atmos Summit（境外消费 3x）',
- 'XIY-SIN': '若付现金：Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
- 'SIN-XIY': '若付现金（东航现金价高）：Amex Platinum 5x MR 最厚，大额票的延误/取消保障也靠它',
+ 'SEA-PEK': '本程已出票（HU496）；将来再飞：海航官网直订 Amex Platinum 5x MR 最厚，海航境外站付款也可用 Atmos Summit（境外 3x）',
+ 'PEK-SIN': '本程已出票（CA889）；将来再飞：首选 Amex Platinum（航司官网直订 5x MR，保障最全）；想攒 Atmos 里程就用 Atmos Summit（境外消费 3x）',
+ 'XIY-SIN': '本程已出票（MU2069）；将来再飞：付现金用 Amex Platinum 直订 5x MR，或 Atmos Summit 境外 3x',
+ 'SIN-XIY': '本程已出票（MU2070）；将来再飞：付现金用 Amex Platinum 5x MR 最厚，大额票的延误/取消保障也靠它',
  'SIN-HKT': '付现金（新航）：Amex Platinum 5x MR；酷航金额小随意，但别用有境外交易费的卡',
  'HKT-CNX': '金额小：Amex Platinum 或 Atmos Summit 均可；别用 Citi Double Cash（境外交易费）',
  'CNX-BKK': 'Amex Platinum 直订 5x MR，或 Atmos Summit 境外 3x；别用有境外交易费的卡',
- 'BKK-XIY': '春秋官网按人民币计价：Atmos Summit（境外 3x、无境外交易费）或 Amex Platinum 5x；别用有境外交易费的卡',
- 'BKK-PEK': 'Amex Platinum 直订 5x MR；或 Atmos Summit 境外 3x',
- 'XIY-ICN': '若付现金（东航）：Amex Platinum 直订 5x MR',
+ 'BKK-XIY': '本程已出票（9C6294）；将来再飞：春秋官网按人民币计价，Atmos Summit（境外 3x、无境外交易费）或 Amex Platinum 5x；别用有境外交易费的卡',
+ 'BKK-PEK': '本程已出票（CA886）；将来再飞：Amex Platinum 直订 5x MR，或 Atmos Summit 境外 3x',
+ 'XIY-ICN': '本程已出票（MU853）；将来再飞：付现金（东航）用 Amex Platinum 直订 5x MR',
 };
 /** 无航段上下文（最终预定弹窗）或该段无专属提示时的用卡推荐：按航司属地给默认。
  * 2026-10-17 用户抓包：用卡提示此前嵌在「本航段积分价」区块里，纯现金航段
@@ -757,16 +757,16 @@ export const SEGMENT_CASH_TIP: Record<string, string> = {
 /** 现金用卡短签（2026-10-17 用户：现金买法和用哪张卡要和积分签放在一起、
  * 在最外层卡片上直接看到，不许再点进详情才看得到）。全文版仍在积分弹窗里。 */
 export const SEGMENT_CASH_SHORT: Record<string, string> = {
- 'SEA-PEK': '💳 现金刷 Amex Platinum',
- 'PEK-SIN': '💳 现金刷 Amex Platinum',
- 'XIY-SIN': '💳 现金刷 Amex Platinum',
- 'SIN-XIY': '💳 现金刷 Amex Platinum',
+ 'SEA-PEK': '💳 本程已出票',
+ 'PEK-SIN': '💳 本程已出票',
+ 'XIY-SIN': '💳 本程已出票',
+ 'SIN-XIY': '💳 本程已出票',
  'SIN-HKT': '💳 现金刷 Amex Platinum',
  'HKT-CNX': '💳 现金刷 Amex Platinum / Atmos Summit',
  'CNX-BKK': '💳 现金刷 Amex Platinum',
- 'BKK-XIY': '💳 现金刷 Atmos Summit（境外 3x）/ Amex Platinum',
- 'BKK-PEK': '💳 现金刷 Amex Platinum',
- 'XIY-ICN': '💳 现金刷 Amex Platinum',
+ 'BKK-XIY': '💳 本程已出票',
+ 'BKK-PEK': '💳 本程已出票',
+ 'XIY-ICN': '💳 本程已出票',
  'ICN-SEA': '💳 本程已出票',
 };
 export function carrierCashShort(text: string): string {
@@ -860,8 +860,8 @@ function isRedEye(o:FlightOption){return depMinutes(o.depart)/60<6;}
  * Amex 预付酒店 5x、Atmos Summit 境外 3x、Smartly 4% 现金兜底。 */
 export function hotelPayGuide(chain: string): { title: string; short: string; rows: { label: string; text: string }[] } {
  const c = chain || '';
- if (/marriott|万豪/i.test(c)) return { title: '万豪系 · 直订 + Brilliant', short: '官网直订刷 Brilliant 6x，Titanium 礼遇只认直订', rows: [
-   { label: '首选订法', text: '官网/App 直订，刷 Marriott Bonvoy Brilliant：万豪渠道 6x 分；你的 Titanium 升级、酒廊、早餐礼遇只在直订渠道完整生效。下单前和 Google Hotels 基准价对一遍，直订贵太多再议。' },
+ if (/marriott|万豪/i.test(c)) return { title: '万豪系 · 直订 + Brilliant', short: '官网直订刷 Brilliant 6x，Platinum 礼遇只认直订', rows: [
+   { label: '首选订法', text: '官网/App 直订，刷 Marriott Bonvoy Brilliant：万豪渠道 6x 分；你的 Platinum 升级、酒廊、早餐礼遇只在直订渠道完整生效。下单前和 Google Hotels 基准价对一遍，直订贵太多再议。' },
    { label: '积分选项', text: '先查万豪分订每晚要多少分：旺季现金价高时用分常更划算；Brilliant 的 85K 周年房券能覆盖的房晚优先用券，别让券过期。' },
    { label: '避雷', text: '别走第三方平台订万豪（礼遇和积分/房晚都可能不认）；别用其他卡付（浪费 6x 连锁加成）。' } ] };
  if (/hyatt|凯悦/i.test(c)) return { title: '凯悦系 · 先查积分房', short: '先查积分房（Chase UR 1:1 转分订），现金刷 CSR 直订 4x', rows: [
@@ -1024,7 +1024,7 @@ function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selK
    </li>;})}</ul>
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
-  {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：口碑待核验`).join('；')}</p></details>}
+  {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：暂无口碑数据`).join('；')}</p></details>}
   <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>
  </div>;
 }
@@ -1085,7 +1085,7 @@ export function Flights({onBook, mapStickyTop}:{onBook?:OnBook; mapStickyTop?:nu
  const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
- return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><FlightsRouteMap legs={legs.map(l=>l.leg)} sel={mapSel?{dep:mapSel.dep,arr:mapSel.arr,label:mapSel.label}:null} stickyTop={mapStickyTop??64}/><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：现行回程（2026-10-13 定）为分开行动最后一天高铁北京→西安汇合、全家一起西安→首尔（住 2 晚）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg} selKey={mapSel?.key??null} onSelectFlight={handleSelectFlight}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>转机签证</span><span>最短衔接时间</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
+ return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><FlightsRouteMap legs={legs.map(l=>l.leg)} sel={mapSel?{dep:mapSel.dep,arr:mapSel.arr,label:mapSel.label}:null} stickyTop={mapStickyTop??64}/><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.ticketed?"✅ 已出票":l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：现行回程（2026-10-13 定）为分开行动最后一天高铁北京→西安汇合、全家一起西安→首尔（住 2 晚）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg} selKey={mapSel?.key??null} onSelectFlight={handleSelectFlight}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>入境与过境要求</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
 
 export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments:planSegs}=usePlanScope();const planCities=useMemo(()=>{const s:string[]=[];planSegs.forEach(x=>{if(!s.includes(x.city))s.push(x.city)});return s;},[planSegs]);const tabList=useMemo(()=>{if(scopeCities&&scopeCities.length){const s=scopeCities.filter(c=>cities.includes(c));if(s.length)return s;}const rest=cities.filter(c=>!planCities.includes(c));return [...planCities,...rest];},[planCities,scopeCities]);const [mcity,setMcity]=useState(tabList[0]!);useEffect(()=>{if(!tabList.includes(mcity))setMcity(tabList[0]!);},[tabList,mcity]);
 
@@ -1149,9 +1149,9 @@ export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments
   '首尔':{title:'地铁四通八达，T-money走全城',sections:[
    {h:'🚇 市内交通（地铁首选）',p:'地铁覆盖主要景点，明洞、景福宫、弘大、圣水洞、江南都靠地铁串联。土俗村参鸡汤从景福宫站步行可达；三清洞从安国站1号或3号出口进，和景福宫、北村串成半天。圣水洞在圣水站下车、3号口顺着逛。南山首尔塔走明洞站4号口乘免费自动扶梯接缆车上山，下山坐01A/01B公交回明洞，别摸黑步行下山。'},
    {h:'💳 怎么付钱',p:'T-money卡在机场便利店就能买，刷地铁公交都方便，落地先办一张。南山缆车单程12000韩币、往返15000韩币，买往返更划算（小红书实测口径）。三清洞一带部分店可用微信/支付宝，但标价都是韩币，付款前先看清币种。'},
-   {h:'✈️ 机场进城',p:'仁川机场用AREX或机场巴士进城。住明洞一带可坐机场巴士6701或AREX：本行程KE138 16:45落地，入境取完行李进城约18:30到明洞酒店。离境日同样走机场巴士或AREX去仁川机场，国际航班提前3小时到，先办退税再托运。'},
-   {h:'🚕 打车软件',p:'明洞、弘大、江南一带打车用Kakao T（站内实用信息口径）。首尔地铁本身四通八达，打车只作带娃、行李多或深夜返程的补充，别在高峰时段指望打车跨城。'},
-   {h:'🧳 带娃/行李',p:'落地段行李多就走机场巴士或AREX直达明洞一带，少在地铁里换乘拖箱子。北村韩屋村坡道多，推车量力而行。首尔12月底零下，落地先给娃穿足羽绒加帽子手套再出机场。'},
+   {h:'✈️ 机场进城',p:'仁川机场用AREX或机场巴士进城。本行程 MU853 18:55 落地仁川 T1，入境取完行李后坐往江南/瑞草方向的机场巴士、或 AREX 换乘进城，约 20:30 到 JW Marriott Hotel Seoul（瑞草区盘浦）。离境日同样走机场巴士或AREX去仁川机场，国际航班提前3小时到，先办退税再托运。'},
+   {h:'🚕 打车软件',p:'瑞草、江南、弘大一带打车用Kakao T（站内实用信息口径）。首尔地铁本身四通八达，打车只作带娃、行李多或深夜返程的补充，别在高峰时段指望打车跨城。'},
+   {h:'🧳 带娃/行李',p:'落地段行李多就走往瑞草方向的机场巴士直达酒店附近，少在地铁里换乘拖箱子。北村韩屋村坡道多，推车量力而行。首尔12月底零下，落地先给娃穿足羽绒加帽子手套再出机场。'},
    {h:'⚠️ 常见坑',p:'去南山首尔塔别信步行上山，爬到怀疑人生且天黑后下山难，老老实实坐缆车和公交。12月31日跨年市区人多、南山缆车排队久，尽量早点上山，山顶风大注意保暖。圣水洞部分店是预约制，出发前先确认，别白跑一趟。'}]},
  };
 
@@ -1176,13 +1176,9 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "大象自然公园",           // 清迈：官网付订金锁位，12 月旺季提前 4–6 周（2026-10-24 tour 研究更新提前量）
   "Jungle Flight 丛林飞跃",   // 清迈：JF2 早班（8:00 接）整团上限 20 人，提前订；出发前 24h 免费取消（2026-10-24 定版新增）
   "Simba 皮皮岛日出团",      // 普吉：18 人小团旺季易满，提前 2–4 周官网订（2026-10-24 tour 研究新增）
-  "斯米兰群岛",              // 普吉：每日限流，提前 2–3 周订本地团、避中文大团（2026-10-24 tour 研究新增）
-  "皇帝岛＋珊瑚岛一日游",    // 普吉：轻量团，提前 3–7 天订（2026-10-24 tour 研究新增）
   "攀牙湾 · Amazing Canoeing 独木舟团", // 普吉：专人划舟进洞团，提前 3–7 天订（2026-10-24 tour 研究新增）
   "John Gray 星光团 Hong by Starlight", // 普吉：渠道价差大，提前 1–2 周订、订前比价（2026-10-24 tour 研究新增）
   "蓝象 Blue Elephant 烹饪课", // 普吉：上午场含早市采购，提前 3–7 天订（2026-10-24 tour 研究新增）
-  "Smile Organic Farm 烹饪课", // 清迈：旺季提前 1–2 周，官网直订更便宜（2026-10-24 tour 研究新增）
-  "Zabb E Lee 烹饪课",        // 清迈：竹屋档须提前订，官网邮件预订（2026-10-24 tour 研究新增）
   "Tingly Thai 烹饪课",       // 曼谷：上午班才有市场采购，提前 1–2 周订（2026-10-24 tour 研究新增）
   "Rajadamnern 泰拳场 · RWS", // 曼谷：仅 Sorn 备胎——11-25 放号后决策，周六旗舰场最先售罄（2026-10-24 tour 研究新增）
   "首尔儿童博物馆 Seoul Children's Museum", // 首尔：必须在线预约、每小时仅 100 名额，尽早请酒店代订（2026-10-24 tour 研究新增）
@@ -1192,13 +1188,7 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "环球影城",               // 新加坡：建议提前买票
   "Singapore Oceanarium",   // 新加坡：建议提前买票
   "滨海湾花园",             // 新加坡：双温室票建议官网提前买
-  "双子塔",                 // 吉隆坡：需提前预订，限流
   "吉姆·汤普森之家",       // 曼谷：按导览场次
-  "攀牙湾",                 // 普吉：一日游建议提前报团
-  "皮皮岛",                 // 普吉：一日游建议提前报团
-  "因他农国家公园",         // 清迈：一日团建议提前报
-  "VinWonders",             // 富国岛：主题乐园建议提前买票
-  "Vinpearl Safari",        // 富国岛：建议提前买票
   "乐天世界 Lotte World",   // 首尔：主题乐园需买票入园，热门项目建议买快速通道（2026-10-15 site-improve 补：此前首尔在预订页景点 tab 整城为空、收藏徽章误标「现场买票即可」；条目原文「周边需买票入园才能买」「热门项目建议买快速通道」，与 VinWonders 同口径；首尔其余 14 景点逐项核对均为免费街区/免门票/「免费无需预约」，不入）
 ];
 
@@ -1207,29 +1197,19 @@ export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "大象自然公园": "半日上午场（฿2,500）官网付订金锁位，12 月旺季提前 4–6 周",
   "Jungle Flight 丛林飞跃": "JF2 早班提前订（8:00 接），出发前 24h 免费取消",
   "Simba 皮皮岛日出团": "18 人小团旺季易满，提前 2–4 周官网订",
-  "斯米兰群岛": "每日限流，提前 2–3 周订本地团（避中文大团）",
-  "皇帝岛＋珊瑚岛一日游": "轻量团，提前 3–7 天订",
   "攀牙湾 · Amazing Canoeing 独木舟团": "专人划舟进洞团，提前 3–7 天订",
-  "John Gray 星光团 Hong by Starlight": "渠道价差大，提前 1–2 周订、订前比价",
-  "蓝象 Blue Elephant 烹饪课": "上午场含早市采购，提前 3–7 天订（走官网/Klook 拼班）",
-  "Smile Organic Farm 烹饪课": "旺季提前 1–2 周，官网直订更便宜",
-  "Zabb E Lee 烹饪课": "竹屋档须提前订（提前 1 天订不到有实证），官网邮件预订",
-  "Tingly Thai 烹饪课": "上午班才有市场采购，提前 1–2 周订、别订错班次",
+  "John Gray 星光团 Hong by Starlight": "定版未选·备选（与 12-14 定版攀牙湾纯玩团互斥、二选一）：渠道价差大，提前 1–2 周订、订前比价",
+  "蓝象 Blue Elephant 烹饪课": "定版未选·备选：上午场含早市采购，提前 3–7 天订（走官网/Klook 拼班）",
+  "Tingly Thai 烹饪课": "定版未选·备选：上午班才有市场采购，提前 1–2 周订、别订错班次",
   "Rajadamnern 泰拳场 · RWS": "仅 Sorn 备胎：11-25 Sorn 放号后决策，周六旗舰场最先售罄、落空尽快订",
   "首尔儿童博物馆 Seoul Children's Museum": "必须在线预约、每小时仅 100 名额，尽早请酒店代订",
-  "Phuket Elephant Sanctuary": "每天仅接待200名，预约提前规划",
-  "Siam Niramit": "演出票，建议提前订",
+  "Phuket Elephant Sanctuary": "定版未选·备选（清迈已选 ENP）：每天仅接待 200 名，预约提前规划",
+  "Siam Niramit": "定版未选·备选：演出票，建议提前订",
   "夜间动物园": "热门场次售罄，买票后还要预约时段",
   "环球影城": "建议提前买票",
   "Singapore Oceanarium": "建议提前买票",
   "滨海湾花园": "双温室票建议官网提前买",
-  "双子塔": "需提前预订，限流",
   "吉姆·汤普森之家": "按导览场次参观",
-  "攀牙湾": "一日游建议提前报团",
-  "皮皮岛": "一日游建议提前报团",
-  "因他农国家公园": "一日团建议提前报",
-  "VinWonders": "主题乐园建议提前买票",
-  "Vinpearl Safari": "建议提前买票",
   "乐天世界 Lotte World": "主题乐园建议提前买票，热门项目买快速通道",
 };
 
@@ -1289,7 +1269,7 @@ function CountryAdvice(){ return <div className="countryadvice">{Object.entries(
 
 function PackingTab(){
  const categories:{title:string;items:string[]}[]=[
-  {title:'📄 证件与重要文件',items:['护照（有效期6个月以上）','越南电子签打印件','往返机票行程单','酒店确认单','旅行保险保单','证件复印件（与原件分开放）','2寸证件照2张备用']},
+  {title:'📄 证件与重要文件',items:['护照（有效期6个月以上）','往返机票行程单','酒店确认单','旅行保险保单','证件复印件（与原件分开放）','2寸证件照2张备用']},
   {title:'👕 衣物（速干透气为主）',items:['速干T恤 3-4件','薄长袖1-2件（寺庙遮肩+防晒）','速干短裤2-3条','轻薄长裤1-2条（寺庙+飞机上）','泳衣/泳裤','轻薄外套1件（商场空调+清迈早晚凉）','速干内衣裤4-5套','短袜2-3双','睡衣1套']},
   {title:'👟 鞋类（别超2双+拖鞋）',items:['好走的凉鞋/洞洞鞋1双','人字拖1双（酒店+海滩）','轻便运动鞋1双（暴走日）']},
   {title:'🌧️ 雨季防护（12月新加坡多阵雨）',items:['轻便可折叠雨衣','防水手机袋','防水背包罩或干湿分离袋','速干毛巾1条','密封袋若干（装湿衣物/电子产品）']},
@@ -1376,7 +1356,7 @@ function Practical({onBook}:{onBook?:OnBook}){
  },[mode,deep]);
  const info=[
  ['签证（分国家）','中国护照：泰国免签（停留不超30天）、新加坡免签（30天）、马来西亚免签（30天）；越南需提前办电子签（e-Visa，官网申请约3-5个工作日）。韩国需提前办签证（以韩国驻华使领馆最新政策为准，中转/过境免签政策时有调整，出发前务必复核）。所有免签入境通常要求：护照有效期6个月以上、返程机票、酒店订单。政策可能变化，出发前务必向各国移民局官网复核。'],
- ['12月天气（分城市）','曼谷：28°C上下，干季，晴多，早晚舒适。清迈：15-28°C，早晚凉（需薄外套），干季少雨。普吉：26-31°C，干季，海况好，适合出海。新加坡：25-31°C，全年多雨，12月阵雨频繁，备雨衣+室内备选。吉隆坡/槟城：26-32°C，午后阵雨。胡志明市：22-32°C，干季开始。富国岛：25-30°C，干季，海况佳。首尔：回程经停在12月底-1月初，正值冬季，严寒干燥、日均温多在零下，羽绒服+防滑鞋必备。'],
+ ['12月天气（分城市）','曼谷：28°C上下，干季，晴多，早晚舒适。清迈：15-28°C，早晚凉（需薄外套），干季少雨。普吉：26-31°C，干季，海况好，适合出海。新加坡：25-31°C，全年多雨，12月阵雨频繁，备雨衣+室内备选。首尔：12月底-1月初住 2 晚，正值冬季，严寒干燥、日均温多在零下，羽绒服+防滑鞋必备。'],
  ['货币与支付','泰国泰铢(THB)、新加坡新币(SGD)、马来西亚林吉特(MYR)、越南盾(VND)、韩国韩元(KRW)。商场/超市/餐厅刷卡方便（Visa/Master全覆盖）；夜市、路边摊、打车多收现金。落地机场先取少量现金；泰国Big C、越南金店汇率较好，明洞/弘大的换钱所汇率常优于银行。参考汇率≠实际成交价，大额消费刷卡看实时汇率。'],
  ['网络与电话卡','提前买覆盖多国的eSIM最省事（淘宝/京东搜"东南亚eSIM"）；或落地机场买本地SIM：泰国AIS/TrueMove、马来西亚Digi、新加坡Singtel、越南Viettel、韩国KT/SK。海岛出海日提前下载离线地图（Google Maps离线包）。酒店WiFi普遍可用，但速度不稳定，重要预订用流量操作。'],
  ['插头与电压','五国电压220-240V。泰国：A/B/C型（两孔扁/圆）；新加坡/马来西亚：G型（英标三方）；越南：A/C型；韩国：C/F型（德标圆孔）。带一只全球转换插头+多口USB充电器全程通用。充电宝10000mAh以上随身，长途转场必备。'],
@@ -1394,12 +1374,12 @@ function Practical({onBook}:{onBook?:OnBook}){
  const icons=['🛂','🌤️','💳','📱','🔌','🚇','✈️','🗣️','🧾','🏥','🛡️','📞','🛕','💰'];
  const icon=icons[i]||'📌';
  return <article key={x[0]} className="infocard"><div className="infoicon">{icon}</div><div><h2>{x[0]}</h2><p>{x[1]}</p></div></article>
-})}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项10篇的最终标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0||c===deep.shop}><ShopGuide city={c} openMall={c===deep.shop?deep.mall:undefined}/></Fold>)}</div></SectionErrorBoundary>}{mode==='打包清单'&&<SectionErrorBoundary label="打包清单"><PackingTab/></SectionErrorBoundary>}{mode==='交通'&&<Transport/>}</div>
+})}</div><section className="sourceguide"><h2>当前网站如何标注资料</h2><dl><div><dt>固定研究快照</dt><dd>表示内容截至 2026-09-12 整理，不代表出行时仍然有效。</dd></div><div><dt>行前复核</dt><dd>开放时间、价格、签证、航班、房态与天气相关项目都需要再次确认。</dd></div><div><dt>小红书链接</dt><dd>曼谷、清迈与普吉部分严格重做记录已导入详情页：只展示实际打开并阅读正文、可见滚动评论区的帖子。每项 3 篇的达标标准仍以页面显示的真实样本量为准。</dd></div></dl></section></>}{mode==='购物推荐'&&<SectionErrorBoundary label="购物推荐"><CountryAdvice/><div className="shopfolds">{shopCities.map((c,i)=><Fold key={c} eyebrow={shopDayLabel[c]||'行程外参考'} title={c} image={cityImages[c]} defaultOpen={i===0||c===deep.shop}><ShopGuide city={c} openMall={c===deep.shop?deep.mall:undefined}/></Fold>)}</div></SectionErrorBoundary>}{mode==='打包清单'&&<SectionErrorBoundary label="打包清单"><PackingTab/></SectionErrorBoundary>}{mode==='交通'&&<Transport/>}</div>
 }
 
 /** 购物推荐：行程内四城按实际行程顺序排前面，其余城市作参考。 */
 const shopRouteOrder=['新加坡','普吉','清迈','曼谷','首尔'];
-const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-07～12-11','普吉':'D6–D9 · 12-12～12-15','清迈':'D10–D12 · 12-16～12-18','曼谷':'D13 · 12-19','首尔':'D24–D26 · 12-30～01-01'};
+const shopDayLabel:Record<string,string>={'新加坡':'D1–D5 · 12-06～12-10','普吉':'D6–D9 · 12-11～12-14','清迈':'D10–D12 · 12-15～12-17','曼谷':'D13–D14 · 12-18～12-19','首尔':'D15–D17 · 12-30～01-01'};
 const shopCities=[...shopRouteOrder,...cities.filter(c=>!shopRouteOrder.includes(c))];
 function MallCard({m,defaultOpen}:{m:MallDetail;defaultOpen?:boolean}){
  const [open,setOpen]=useState(!!defaultOpen);
