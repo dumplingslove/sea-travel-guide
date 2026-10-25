@@ -115,7 +115,9 @@ function isoAddDays(iso: string, n: number): string {
 /** 统一行动队列（2026-10-16 审计改进）：把原本散在首页警告、每日横幅、价格追踪卡、
  * 最终预定日历四处的「现在该处理什么」汇总到预订页顶部，按紧迫度排，每条带原因和直达入口。
  * 数据只用现成的：已确认预订记录（与最终预定同口径）、收藏流水线状态、sea_availability
- * 每日实查、航班库实时价 vs 收藏价、timeline 酒店窗口 vs 已订夜。查不到的就不写、不编。 */
+ * 每日实查、航班库实时价 vs 收藏价、timeline 酒店窗口 vs 已订夜。查不到的就不写、不编。
+ * 监控/候选状态与已订记录冲突时一律以已订记录为准（2026-10-24 误报修复）：名称包含匹配
+ * 或航班号对账命中已确认记录的，售罄提醒降为中性信息，涨价/没订位类提醒不再生成。 */
 type QueueCat = "hotels" | "flights" | "restaurants" | "attractions";
 
 function NextActionQueue({
@@ -139,19 +141,19 @@ function NextActionQueue({
   const { rows: bkRows, loading } = useRecordsData(["booking"]);
   const { rows: fvRows } = useRecordsData(["favorite"]);
   useDatasetsVersion();
-  const [availMap, setAvailMap] = useState<Map<string, { status: string; checked_at: string }>>(new Map());
+  const [availMap, setAvailMap] = useState<Map<string, { status: string; checked_at: string; detail: string }>>(new Map());
   useEffect(() => {
     if (!supabaseConfigured || !supabase) return;
     let live = true;
     supabase
       .from("sea_availability")
-      .select("kind,name,status,checked_at")
+      .select("kind,name,status,checked_at,detail")
       .eq("trip_ref", "dec2026")
       .then(({ data }) => {
         if (!live || !data) return;
-        const m = new Map<string, { status: string; checked_at: string }>();
-        for (const r of data as { kind: string; name: string; status: string; checked_at: string }[]) {
-          m.set(`${r.kind}:${r.name}`, { status: r.status, checked_at: r.checked_at });
+        const m = new Map<string, { status: string; checked_at: string; detail: string }>();
+        for (const r of data as { kind: string; name: string; status: string; checked_at: string; detail?: string }[]) {
+          m.set(`${r.kind}:${r.name}`, { status: r.status, checked_at: r.checked_at, detail: r.detail ?? "" });
         }
         setAvailMap(m);
       });
@@ -176,11 +178,28 @@ function NextActionQueue({
   const confirmedNames = new Set<string>();
   const bookingTitles = new Set<string>();
   const coveredNights = new Set<string>();
+  /* 已订对账（2026-10-24 误报修复）：收藏名与预订标题常一短一长——收藏「Jumbo Seafood」
+   * vs 预订「Jumbo Seafood（珍宝海鲜）」，门店/日期/确认号都在记录 body 里——精确相等
+   * 漏判会把已订餐厅的「另一家店监控售罄」误报成红点行动项。故除精确集合外，另存
+   * 已确认记录清单供包含匹配对账（与 ItineraryDayCard 收藏/预订去重同口径），
+   * 并存去空白小写全文供航班号对账（航班收藏标题与预订标题形态完全不同）。 */
+  const confirmedList: {
+    title: string;
+    data: ReturnType<typeof parseBookingBody>;
+    hay: string;
+  }[] = [];
+  const allBookingHay: string[] = [];
   for (const r of bkRows) {
     bookingTitles.add(r.title.trim().toLowerCase());
+    allBookingHay.push(`${r.title} ${r.body ?? ""}`.replace(/\s+/g, "").toLowerCase());
     if (!r.done) continue;
     confirmedNames.add(r.title.trim().toLowerCase());
     const d = parseBookingBody(r.body);
+    confirmedList.push({
+      title: r.title,
+      data: d,
+      hay: `${r.title} ${r.body ?? ""}`.replace(/\s+/g, "").toLowerCase(),
+    });
     if (d.bkind === "hotel" && d.date) {
       if (!d.dateEnd) {
         coveredNights.add(d.date);
@@ -194,6 +213,24 @@ function NextActionQueue({
       }
     }
   }
+
+  /* 名称对账：去括号后缀（中英文括号）后包含匹配——「Jumbo Seafood」⊂「Jumbo Seafood（珍宝海鲜）」；
+   * 太短的名字只认全等，防误连。航班对账：航班号去空白后在记录全文里出现即算已订。 */
+  const bareName = (s: string) =>
+    s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, "").trim();
+  const nameHit = (a: string, b: string) => {
+    const x = bareName(a);
+    const y = bareName(b);
+    if (!x || !y) return false;
+    if (x.length < 3 || y.length < 3) return x === y;
+    return x === y || x.includes(y) || y.includes(x);
+  };
+  const confirmedHay = confirmedList.map((b) => b.hay);
+  const flightNoHit = (flightNo: string | undefined, pool: string[]) => {
+    const no = (flightNo ?? "").replace(/\s+/g, "").toLowerCase();
+    if (no.length < 4) return false;
+    return pool.some((h) => h.includes(no));
+  };
 
   /* 酒店未订夜：timeline 酒店窗口里还没被已确认酒店记录覆盖的夜（关掉订酒店的城市不算） */
   if (plan) {
@@ -239,22 +276,47 @@ function NextActionQueue({
 
   for (const f of favsQ) {
     const title = f.row.title;
-    const confirmed = confirmedNames.has(title.trim().toLowerCase());
-    if ((f.type === "restaurant" || f.type === "attraction") && !confirmed) {
+    /* 已订对账：名称包含匹配（餐厅/景点/酒店）或航班号匹配（航班）命中已确认记录，
+     * 即以已订记录为准，不再拿监控/候选状态说事。 */
+    const matchedBk =
+      f.type === "flight"
+        ? undefined
+        : confirmedList.find((b) => nameHit(title, b.title));
+    const confirmed =
+      f.type === "flight"
+        ? flightNoHit(f.flight?.flight, confirmedHay)
+        : !!matchedBk || confirmedNames.has(title.trim().toLowerCase());
+    if (f.type === "restaurant" || f.type === "attraction") {
       const av = availMap.get(`${f.type}:${title}`);
       const when = av?.checked_at
         ? new Date(av.checked_at).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })
         : "";
       if (av && (av.status === "full" || av.status === "soldout")) {
-        actions.push({
-          sev: 3,
-          cat: f.type === "restaurant" ? "restaurants" : "attractions",
-          icon: "🔴",
-          text: `${title} 已经订满/售罄${when ? `（${when} 实查）` : ""}，得换备选或改时间`,
-          btn: "去看这项",
-          go: () => onGoTrackCard(f.row.id),
-        });
-      } else if (av && av.status === "not_released") {
+        if (matchedBk) {
+          /* 已订好：监控售罄查的是另一门店/时段的散客档，与本单无关——
+           * 降为中性信息（sev 0 排最后），写明已订事实，不再出红点行动项。 */
+          const d = matchedBk.data;
+          const branch = d.details?.["分店"] || d.details?.["门店"] || "";
+          const monBranch = av.detail.match(/[（(]([^）)]+?)分店[）)]/)?.[1]?.trim() ?? "";
+          actions.push({
+            sev: 0,
+            cat: f.type === "restaurant" ? "restaurants" : "attractions",
+            icon: "✅",
+            text: `${title} 已订好${branch ? `（${branch}店）` : ""}${d.date ? `：${planDateShort(d.date)}` : ""}${d.time ? ` ${d.time}` : ""}${d.code ? `，确认号 ${d.code}` : ""}；${monBranch ? `${monBranch}店` : "另一门店/时段"}监控档售罄与本单无关`,
+            btn: "去看这项",
+            go: () => onGoTrackCard(f.row.id),
+          });
+        } else if (!confirmed) {
+          actions.push({
+            sev: 3,
+            cat: f.type === "restaurant" ? "restaurants" : "attractions",
+            icon: "🔴",
+            text: `${title} 已经订满/售罄${when ? `（${when} 实查）` : ""}，得换备选或改时间`,
+            btn: "去看这项",
+            go: () => onGoTrackCard(f.row.id),
+          });
+        }
+      } else if (!confirmed && av && av.status === "not_released") {
         actions.push({
           sev: 1,
           cat: f.type === "restaurant" ? "restaurants" : "attractions",
@@ -264,6 +326,7 @@ function NextActionQueue({
           go: () => onGoTrackCard(f.row.id),
         });
       } else if (
+        !confirmed &&
         f.type === "restaurant" &&
         getRestaurantBookingPolicy(title)?.policy === "must_book"
       ) {
@@ -294,7 +357,11 @@ function NextActionQueue({
         });
       }
     }
-    if (f.row.done && !confirmed && !bookingTitles.has(title.trim().toLowerCase())) {
+    const hasAnyBk =
+      f.type === "flight"
+        ? flightNoHit(f.flight?.flight, allBookingHay)
+        : [...bookingTitles].some((bt) => nameHit(title, bt));
+    if (f.row.done && !confirmed && !hasAnyBk) {
       actions.push({
         sev: 1,
         cat: (f.type === "hotel" ? "hotels" : f.type === "flight" ? "flights" : f.type === "restaurant" ? "restaurants" : "attractions") as QueueCat,
