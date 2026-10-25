@@ -122,7 +122,7 @@ export function applyCloudDayOverride(
       food:
         "🍽️ 午餐（2026-10-21 美食发掘 round 354，本轮最佳适配）：鸿兴手工鱼圆肉圆面在 Raffles City 楼上 The Food Place 食阁（City Hall 一带，离瑞吉与金沙两片酒店都步行可达）——连续 4 年米其林必比登，帖作者置顶评论称 1968 年开卖；鱼圆每天用黄尾鱼现打手搓、弹牙，人均约 S$10，面食不辣、娃可吃，空调食阁还有望向 Raffles Hotel 的景观位；唯一的雷是饭点排队，错峰去。" +
         "若上午去了旧机场路专程半日，午餐就在食阁内解决（见今日行程里的专程站），鸿兴这餐顺延到下午茶或改日。" +
-        "晚餐备选：Candlenut（米其林一星娘惹菜，全球唯一）12 月尚未放号，盯 SevenRooms 放位（当前只开到 11 月 10 日左右）。" +
+        "今晚晚餐已订好（Jumbo Seafood 18:00，见今日预订卡），不再另排第二家；Candlenut（米其林一星娘惹菜，全球唯一）12 月尚未放号，盯 SevenRooms 放位（当前只开到 11 月 10 日左右），真放号也只作改期备选。" +
         (base.food ? "另：" + base.food : ""),
       tip:
         base.tip +
@@ -131,7 +131,9 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 新加坡 12/9（ordinal 3）：Jumbo Seafood 已订位
+  // 新加坡 12/9（ordinal 3）：晚餐已订 Burnt Ends 18:30
+  // 2026-10-24 修正：Jumbo Seafood 已改期到 12-08 18:00（确认号 TW7NH3），12-09 晚改为
+  //  Burnt Ends 18:30（确认号 BurntYZVRGCM）；本日 food/tip 里原 Jumbo 19:30 系改期前旧文案，已更正。
   // 发现第二遍 round 379 追加（证据 hidden_files/discovery-singapore-round7-xhs-round379-2026-10-21.md 帖1）：
   // 新加坡国家博物馆全新历史展厅 2026-10-10 已重开（常设），Stamford Road／Bras Basah、距瑞吉步行圈，
   // 落本日上午半日；来源帖带「可能含 AI 生成内容」标记且仅 2 条评论、票价未明确，文案如实标注、不编价。
@@ -152,12 +154,11 @@ export function applyCloudDayOverride(
       ],
       food:
         "🍽️ 早餐备选：旺利茶室武吉士分行（91 Bencoolen Street）——绿色斑斓咖椰吐司＋椰浆饭，辣椒不辣适合全家；口碑两极偏贵，价格/营业时间未明确、临行复核。（2026-10-24 美食发掘 round 411）" +
-        "✅ 晚餐已订：Jumbo Seafood（珍宝海鲜 Dempsey Hill 店）19:30，5 人（4 大 1 小，幼儿 2 岁），确认号 TW7NH3，无押金、无需信用卡。" +
-        "Indoor 已满、按无偏好预订（已备注希望室内）；17:30–20:00 的桌可能被要求提前让位，桌位只保留 15 分钟，别迟到。" +
+        "✅ 晚餐已订：Burnt Ends（7 Dempsey Road，Dempsey 一带）18:30，5 人（4 大 1 小，幼儿 2 岁），Main Dining Area 桌位，确认号 BurntYZVRGCM；信用卡仅作担保、尚未扣款，用餐前 24 小时内取消或 no-show 收 SGD 100/位，别迟到。（Jumbo Seafood 已改到昨晚 12-08 18:00，不在今晚。）" +
         (base.food ? "另：" + base.food : ""),
       tip:
         base.tip +
-        "【上午半日·国家博物馆】今天上午先去国家博物馆新展厅（瑞吉步行圈、室内恒温），逛完回酒店午休，晚上 Jumbo 别迟到；博物馆票价未坐实，出发前在官网核价再买，别按攻略旧价准备现金。（2026-10-21 发现第二遍 round 379）",
+        "【上午半日·国家博物馆】今天上午先去国家博物馆新展厅（瑞吉步行圈、室内恒温），逛完回酒店午休，晚上 Burnt Ends 18:30 别迟到；博物馆票价未坐实，出发前在官网核价再买，别按攻略旧价准备现金。（2026-10-21 发现第二遍 round 379）",
     };
   }
 
