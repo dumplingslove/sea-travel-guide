@@ -135,6 +135,9 @@ export function applyCloudDayOverride(
   // 发现第二遍 round 379 追加（证据 hidden_files/discovery-singapore-round7-xhs-round379-2026-10-21.md 帖1）：
   // 新加坡国家博物馆全新历史展厅 2026-10-10 已重开（常设），Stamford Road／Bras Basah、距瑞吉步行圈，
   // 落本日上午半日；来源帖带「可能含 AI 生成内容」标记且仅 2 条评论、票价未明确，文案如实标注、不编价。
+  // 2026-10-24 美食发掘第五遍 round 411 续补本日（证据 food-discovery/food-singapore-xhs-round411-2026-10-24.md）：
+  //  大巴窑旺利茶室 Wang Lee Cafe 帖级坐实（绿色斑斓咖椰吐司/椰浆饭/不辣口碑），总店偏远不排，
+  //  只落其武吉士分行（91 Bencoolen Street、2025-12 开）作本日早餐备选短条；价格/营业时间未明确。
   if (cityZh === "新加坡" && ordinalInCity === 3) {
     return {
       ...base,
@@ -148,6 +151,7 @@ export function applyCloudDayOverride(
         },
       ],
       food:
+        "🍽️ 早餐备选：旺利茶室武吉士分行（91 Bencoolen Street）——绿色斑斓咖椰吐司＋椰浆饭，辣椒不辣适合全家；口碑两极偏贵，价格/营业时间未明确、临行复核。（2026-10-24 美食发掘 round 411）" +
         "✅ 晚餐已订：Jumbo Seafood（珍宝海鲜 Dempsey Hill 店）19:30，5 人（4 大 1 小，幼儿 2 岁），确认号 TW7NH3，无押金、无需信用卡。" +
         "Indoor 已满、按无偏好预订（已备注希望室内）；17:30–20:00 的桌可能被要求提前让位，桌位只保留 15 分钟，别迟到。" +
         (base.food ? "另：" + base.food : ""),
