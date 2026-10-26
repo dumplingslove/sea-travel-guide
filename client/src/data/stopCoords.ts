@@ -430,6 +430,32 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "明洞逛街", time: "16:00", lat: 37.5608977, lng: 126.9863762 },
     { name: "南山首尔塔夜景", time: "17:30", lat: 37.55127, lng: 126.9882805 },
   ],
+  // ============ 云端定版 stops 补钉（2026-10-26 site-improve-hourly 类别 2/5） ============
+  // 缺口：cloudDayOverrides 的定版站点名是带后缀的全名（如「查龙寺 Wat Chalong」
+  // 「双龙寺看日落」），findStopCoord 精确匹配永不命中基础名条目，云端天 DayMap
+  // 图钉静默缺失（与 2026-10-14 首尔合并名同型事故）。本键按云端全名逐条补钉：
+  // 坐标分两类——① 复用本表/EXTRA_ATTRACTION_COORDS/placeCoords 已核验坐标
+  // （大佛/查龙寺/神仙半岛/双龙寺/郑王庙/耀华力/Lard Yai/瓦洛洛/普吉老镇）；
+  // ② 2026-10-26 map.geocode 实查、full_address 逐条核对为本体（Boat Avenue
+  // FULL_ADDRESS 99、NAKA FULL_ADDRESS 100、Night Bazaar FULL_ADDRESS 100、
+  // Wat Pha Lat FULL_ADDRESS 100、Talat Noi DISTRICT 100 区级坐标）。
+  // 酒店时间/回酒店/换房等泛指站故意不列。
+  920: [
+    { name: "Boat Avenue 周五夜市 · Fun Friday（定版主线）", time: "傍晚", lat: 7.99666, lng: 98.30185, note: "Boat Avenue, Cherngtalay（geocode 实查）" },
+    { name: "NAKA Weekend Market · 周末夜市（确定备选）", time: "晚间（PRU 前后备选）", lat: 7.88106, lng: 98.36592, note: "NAKA 夜市本体（geocode 实查，Wirat Hong Yok 路）" },
+    { name: "包车出发 · 普吉大佛", time: "13:00", lat: 7.827598, lng: 98.312853, note: "图示普吉大佛（Nakkerd Hill 山顶）" },
+    { name: "查龙寺 Wat Chalong", time: "15:30", lat: 7.84625, lng: 98.3371 },
+    { name: "神仙半岛日落", time: "17:00", lat: 7.7643212, lng: 98.3053958, note: "神仙半岛日落点（与「悬崖日落」同点）" },
+    { name: "Thalang 路周日步行街 Lard Yai · 老街周日夜市", time: "傍晚（回芭东前）", lat: 7.8845565, lng: 98.3920742, note: "图示 Thalang 路（普吉老镇）" },
+    { name: "普吉老镇夜景（备选）", time: "20:00", lat: 7.8845565, lng: 98.3920742, note: "图示普吉老镇" },
+    { name: "瓦洛洛市场 Warorot（1 小时）", time: "傍晚", lat: 18.7902357, lng: 99.000535 },
+    { name: "Night Bazaar 长康路夜市", time: "晚间", lat: 18.78501, lng: 99.00037, note: "Chang Klan 路 104 号（geocode 实查）" },
+    { name: "帕拉特寺 Wat Pha Lat（停 30–60 分钟）", time: "16:30", lat: 18.79929, lng: 98.93417, note: "Wat Pha Lat 本体（geocode 实查）" },
+    { name: "双龙寺看日落", time: "17:30", lat: 18.8050094, lng: 98.9221843, note: "图示双龙寺（素贴山）" },
+    { name: "郑王庙 Wat Arun（渡船过河）", time: "12:00", lat: 13.7438976, lng: 100.4885137, note: "图示郑王庙" },
+    { name: "Talat Noi ＋ 宋瓦路老街", time: "16:00", lat: 13.73757, lng: 100.5139, note: "图示 Talat Noi 社区（区级坐标）" },
+    { name: "耀华力夜市 · 唐人街吃一圈", time: "18:30", lat: 13.7411515, lng: 100.5083113, note: "图示耀华力路" },
+  ],
   35: [
     // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
     // 云端天地图 findStopCoord 精确匹配永不命中（图钉静默缺失，2026-10-14 补）。
