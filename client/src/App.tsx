@@ -15,7 +15,7 @@ import { usePlanItinerary } from "@/guide/plannerSchedule";
 import NotesPage from "@/pages/records/NotesPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
-import ForceRefreshButton from "@/components/ForceRefreshButton";
+import FloatingActions from "@/components/FloatingActions";
 import { loadDatasets, useDatasetsVersion } from "@/lib/datasets";
 import {
   AttractionDetailPage,
@@ -235,8 +235,8 @@ function AppRouter() {
           <AppRoutes />
         </main>
         <SiteFooter />
-        {/* 2026-10-03 用户：调试期间一键强制刷新（清缓存+硬重载），放右下角 */}
-        <ForceRefreshButton />
+        {/* 右下角三按钮（2026-10-25 用户要求三站统一）：登录 / 强制刷新 / 分享链接 */}
+        <FloatingActions />
       </div>
     </BrowserRouter>
   );
