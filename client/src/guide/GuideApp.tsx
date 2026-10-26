@@ -1199,7 +1199,7 @@ export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "Jungle Flight 丛林飞跃": "JF2 早班提前订（8:00 接），出发前 24h 免费取消",
   "清迈泰拳体验课 Chiang Mai Muay Thai Gym": "定版 12-16 下午场，Klook 提前 1 天订即可、延误可顺延或取消",
   "Simba 皮皮岛日出团": "18 人小团旺季易满，提前 2–4 周官网订",
-  "攀牙湾 · Amazing Canoeing 独木舟团": "专人划舟进洞团，提前 3–7 天订",
+  "攀牙湾 · Amazing Canoeing 独木舟团": "已定版 12-14 主线：专人划舟进洞纯玩团，提前 3–7 天订、核对公园费口径",
   "John Gray 星光团 Hong by Starlight": "定版未选·备选（与 12-14 定版攀牙湾纯玩团互斥、二选一）：渠道价差大，提前 1–2 周订、订前比价",
   "蓝象 Blue Elephant 烹饪课": "定版未选·备选：上午场含早市采购，提前 3–7 天订（走官网/Klook 拼班）",
   "Tingly Thai 烹饪课": "定版未选·备选：上午班才有市场采购，提前 1–2 周订、别订错班次",
