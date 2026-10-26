@@ -484,6 +484,26 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "泰拳体验课（约 1 小时）", time: "15:00", lat: 18.79327, lng: 98.9829, note: "图示 Chiang Mai Muay Thai Gym（古城内 Wiang Kaew 路，geocode 实查）" },
     { name: "Central Embassy · 楼下随便逛", time: "下午", lat: 13.74391, lng: 100.5464, note: "图示 Central Embassy（1031 Ploenchit 路，geocode 以同址命中）" },
   ],
+  // ============ 云端 stops 补钉第三轮（2026-10-26 site-improve-hourly 类别 2/5） ============
+  // 承接键 921 的「留待 Nominatim 渠道」尾巴：map.geocode 对韩国只回 CITY 级，
+  // 本轮改走 OSM Nominatim 直查（2026-10-26 实查、display_name 逐条核对本体）：
+  // ① 光化门广场 광화문광장 relation 本体（37.5727839,126.9768558，종로구 사직동）；
+  // ② 清溪川取起点清溪广场 청계광장 square 本体（37.5692125,126.9779831，紧邻
+  // 光化门、与行程动线「光化门后连逛清溪川」一致；河流本体 way 的质心在东大门
+  // 段、不合动线，故不用）；③ 石村湖 석촌호수 relation 湖本体（37.5100884,
+  // 127.1040775，송파구 잠실6동，与站内 detail 的松坡区 송파나루길 166 口径一致）。
+  // ④ Torry's：上轮 map.geocode 命中异址与 detail 的 Soi Rommanee 冲突而故意不列，
+  // 本轮 Nominatim 命中 Torry's Ice Cream Boutique node 本体、display_name 明写
+  // 「16, ซอยรมณีย์（Soi Rommanee）」与 detail 逐字一致，冲突解除、补钉。
+  // 本轮仍故意不列：Jdot Tree（Nominatim 按旧记地址 사직로2길 12 只命中无名 building，
+  // 且站内 detail 自述地点写法冲突未解，钉任一写法都会把待核实地址冒充定论）、
+  // Dib Bangkok（Nominatim 空返回、无本体）、Jungle Flight JF2（营地本体仍无命中）。
+  922: [
+    { name: "光化门圣诞市集 · 最后一天", time: "15:15", lat: 37.5727839, lng: 126.9768558, note: "图示光化门广场本体（Nominatim 实查）" },
+    { name: "清溪川 · 首尔灯节", time: "15:45", lat: 37.5692125, lng: 126.9779831, note: "图示清溪广场（清溪川起点，紧邻光化门，Nominatim 实查）" },
+    { name: "石村湖灯光节（备选·与光化门线二选一）", time: "17:00", lat: 37.5100884, lng: 127.1040775, note: "图示石村湖本体（松坡区蚕室，Nominatim 实查）" },
+    { name: "Torry's Ice Cream 刨冰收尾（先确认打烊时间）", time: "晚间", lat: 7.8854595, lng: 98.3892454, note: "Torry's 本体，16 Soi Rommanee（Nominatim 实查，与 detail 地址一致）" },
+  ],
   35: [
     // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
     // 云端天地图 findStopCoord 精确匹配永不命中（图钉静默缺失，2026-10-14 补）。
