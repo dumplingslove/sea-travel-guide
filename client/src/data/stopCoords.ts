@@ -456,6 +456,34 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "Talat Noi ＋ 宋瓦路老街", time: "16:00", lat: 13.73757, lng: 100.5139, note: "图示 Talat Noi 社区（区级坐标）" },
     { name: "耀华力夜市 · 唐人街吃一圈", time: "18:30", lat: 13.7411515, lng: 100.5083113, note: "图示耀华力路" },
   ],
+  // ============ 云端定版 stops 补钉续轮（2026-10-26 site-improve-hourly 类别 2/5） ============
+  // 承接键 920：cloudDayOverrides 其余全名站此前同样精确匹配永不命中。本键 10 条，
+  // 坐标来源：① map.geocode 2026-10-26 实查 FULL_ADDRESS 本体命中（Exploria
+  // 80 Mandai Lake Rd 与站内 detail 地址逐字一致；ACM relevance 100；国家博物馆
+  // relevance 100；Dusit Central Park relevance 100；CentralWorld relevance 100；
+  // Siam Paragon relevance 99）；② 旧机场路 geocode FULL 99 与 placeCoords 既有
+  // exact 坐标（1.3082727,103.8858564）相距约 3 米交叉核验一致，取 geocode 值；
+  // ③ ENP geocode FULL 100（19.2144,98.85888）与 StickyMapBar 既有「大象自然公园」
+  // 坐标逐字相同、双源一致；④ 泰拳课 geocode FULL_ADDRESS 81 命中 detail 点名的
+  // Chiang Mai Muay Thai Gym 本体（76 Wiang Kaew Rd，古城内）。
+  // Pokémon/NEXTOPIA 为商场内店铺，坐标取商场本体、note 如实标注楼层。
+  // 本轮故意不列：Dib Bangkok（geocode 只命中 Sukhumvit 40 街道级/异馆，无本体）、
+  // Jungle Flight JF2（geocode 只命中 Loi Kroh 路市区办公室、非丛林营地，钉办公室
+  // 会误导动线）、Jdot Tree（站内 detail 自述地点写法冲突、待复核）、首尔清溪川/
+  // 光化门广场/石村湖（map.geocode 对韩国覆盖弱、多次只回 CITY 级，见 placeCoords
+  // 文件头注记，留待 Nominatim 渠道轮次，不编造）。
+  921: [
+    { name: "万态 Exploria 探索馆 · 专程日（与芳林线二选一）", time: "全天（专程日备选）", lat: 1.40421, lng: 103.78844, note: "Exploria 本体，80 Mandai Lake Rd（geocode 实查）" },
+    { name: "亚洲文明博物馆 · 敦煌特展 Sacred Caves（半日，与旧机场路二选一）", time: "上午", lat: 1.28745, lng: 103.85138, note: "亚洲文明博物馆本体，1 Empress Pl（geocode 实查）" },
+    { name: "旧机场路熟食中心 · 本地老档专程半日（可选）", time: "上午", lat: 1.30825, lng: 103.88583, note: "旧机场路熟食中心本体，51 Old Airport Rd（geocode 实查）" },
+    { name: "新加坡国家博物馆 · 全新历史展厅（半日慢逛）", time: "上午", lat: 1.29678, lng: 103.84841, note: "新加坡国家博物馆本体，93 Stamford Rd（geocode 实查）" },
+    { name: "Dusit Central Park 屋顶公园（顺路散步）", time: "白天", lat: 13.72839, lng: 100.53738, note: "Dusit Central Park 本体，Rama IV 路 Silom（geocode 实查）" },
+    { name: "Pokémon Center Bangkok（Central World 6 楼 · 新开）", time: "下午", lat: 13.74659, lng: 100.53974, note: "图示 CentralWorld 本体（店在 6 楼）" },
+    { name: "NEXTOPIA（Siam Paragon 5 楼 · 顺路项）", time: "下午", lat: 13.74563, lng: 100.53463, note: "图示 Siam Paragon 本体（NEXTOPIA 在 5 楼）" },
+    { name: "大象自然公园 ENP · 半日上午（定版主线）", time: "07:30", lat: 19.2144, lng: 98.85888, note: "图示 ENP 主园区（Mae Taeng 山谷，酒店接送由运营商负责）" },
+    { name: "泰拳体验课（约 1 小时）", time: "15:00", lat: 18.79327, lng: 98.9829, note: "图示 Chiang Mai Muay Thai Gym（古城内 Wiang Kaew 路，geocode 实查）" },
+    { name: "Central Embassy · 楼下随便逛", time: "下午", lat: 13.74391, lng: 100.5464, note: "图示 Central Embassy（1031 Ploenchit 路，geocode 以同址命中）" },
+  ],
   35: [
     // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
     // 云端天地图 findStopCoord 精确匹配永不命中（图钉静默缺失，2026-10-14 补）。
