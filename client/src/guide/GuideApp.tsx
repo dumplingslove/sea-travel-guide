@@ -1175,6 +1175,7 @@ export function Transport({scopeCities}:{scopeCities?:string[]}){const {segments
 export const MUST_BOOK_ATTRACTIONS: string[] = [
   "大象自然公园",           // 清迈：官网付订金锁位，12 月旺季提前 4–6 周（2026-10-24 tour 研究更新提前量）
   "Jungle Flight 丛林飞跃",   // 清迈：JF2 早班（8:00 接）整团上限 20 人，提前订；出发前 24h 免费取消（2026-10-24 定版新增）
+  "清迈泰拳体验课 Chiang Mai Muay Thai Gym", // 清迈：定版 12-16 下午上手体验课，Klook 提前 1 天订即可（2026-10-25 site-improve 补：此前只在行程日、无目录条目）
   "Simba 皮皮岛日出团",      // 普吉：18 人小团旺季易满，提前 2–4 周官网订（2026-10-24 tour 研究新增）
   "攀牙湾 · Amazing Canoeing 独木舟团", // 普吉：专人划舟进洞团，提前 3–7 天订（2026-10-24 tour 研究新增）
   "John Gray 星光团 Hong by Starlight", // 普吉：渠道价差大，提前 1–2 周订、订前比价（2026-10-24 tour 研究新增）
@@ -1196,6 +1197,7 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
 export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "大象自然公园": "半日上午场（฿2,500）官网付订金锁位，12 月旺季提前 4–6 周",
   "Jungle Flight 丛林飞跃": "JF2 早班提前订（8:00 接），出发前 24h 免费取消",
+  "清迈泰拳体验课 Chiang Mai Muay Thai Gym": "定版 12-16 下午场，Klook 提前 1 天订即可、延误可顺延或取消",
   "Simba 皮皮岛日出团": "18 人小团旺季易满，提前 2–4 周官网订",
   "攀牙湾 · Amazing Canoeing 独木舟团": "专人划舟进洞团，提前 3–7 天订",
   "John Gray 星光团 Hong by Starlight": "定版未选·备选（与 12-14 定版攀牙湾纯玩团互斥、二选一）：渠道价差大，提前 1–2 周订、订前比价",
