@@ -454,7 +454,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "普吉老镇夜景（备选）", time: "20:00", lat: 7.8845565, lng: 98.3920742, note: "图示普吉老镇" },
     { name: "瓦洛洛市场 Warorot（1 小时）", time: "傍晚", lat: 18.7902357, lng: 99.000535 },
     { name: "Night Bazaar 长康路夜市", time: "晚间", lat: 18.78501, lng: 99.00037, note: "Chang Klan 路 104 号（geocode 实查）" },
-    { name: "帕拉特寺 Wat Pha Lat（停 30–60 分钟）", time: "16:30", lat: 18.79929, lng: 98.93417, note: "Wat Pha Lat 本体（geocode 实查）" },
+    { name: "帕拉特寺 Wat Pha Lat（停 30–45 分钟）", time: "16:30", lat: 18.79929, lng: 98.93417, note: "Wat Pha Lat 本体（geocode 实查）" },
     { name: "双龙寺看日落", time: "17:30", lat: 18.8050094, lng: 98.9221843, note: "图示双龙寺（素贴山）" },
     { name: "郑王庙 Wat Arun（渡船过河）", time: "12:00", lat: 13.7438976, lng: 100.4885137, note: "图示郑王庙" },
     { name: "Talat Noi ＋ 宋瓦路老街", time: "16:00", lat: 13.73757, lng: 100.5139, note: "图示 Talat Noi 社区（区级坐标）" },
