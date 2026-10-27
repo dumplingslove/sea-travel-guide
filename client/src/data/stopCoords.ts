@@ -504,6 +504,42 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "石村湖灯光节（备选·与光化门线二选一）", time: "17:00", lat: 37.5100884, lng: 127.1040775, note: "图示石村湖本体（松坡区蚕室，Nominatim 实查）" },
     { name: "Torry's Ice Cream 刨冰收尾（先确认打烊时间）", time: "晚间", lat: 7.8854595, lng: 98.3892454, note: "Torry's 本体，16 Soi Rommanee（Nominatim 实查，与 detail 地址一致）" },
   ],
+  // ============ 云端 stops 补钉第四轮（2026-10-26 site-improve-hourly 类别 2/5） ============
+  // 承接上轮候选：Lennon's／Cloud 11／Seasons 复查 + BAB 两展区与 Layan/Jampa 顺查。
+  // 坐标来源（2026-10-26 实查、逐条核对本体）：
+  // ① Lennon's：map.geocode FULL_ADDRESS 命中「เลนนอน（Lennon's）, Ploenchit」
+  // 本体（13.74335,100.54896），与 placeCoords 既有 Rosewood Bangkok exact
+  // 坐标（13.7435351,100.548994）相距约 20 米交叉一致——Lennon's 在 Rosewood
+  // 30 楼，取 geocode 本体值、note 如实标注同楼。
+  // ② Cloud 11：map.geocode 只回 CITY 级，改 Nominatim 命中「คลาวด์ 11」
+  // commercial 本体（13.6834242,100.6082854，Phra Khanong 区），与 detail
+  // 「南素坤逸、BTS Punnawithi 步行约 5 分钟」口径一致（Punnawithi 站同区）。
+  // ③ BAB One Bangkok 展区：Nominatim 命中 One Bangkok commercial 本体
+  // （13.7270987,100.5467662，Lumpini、Rama IV／Wireless 一带），展区就在综合体内。
+  // ④ BAB Siam 簇：展区含 BACC／CentralWorld／Siam Paragon 三处、无单一本体，
+  // 按本表既有「二选一，图示其一」口径取键 921 已核验的 Siam Paragon 本体
+  // 坐标，note 明示只是簇中一处。
+  // ⑤ Layan Beach：Nominatim 命中 Layan Beach natural/beach 本体
+  // （8.0346279,98.2843289，Cherngtalay），与 detail「酒店旁海滩」口径一致
+  // （Banyan Tree 在乐古浪／Bang Tao 北端、Layan 紧邻其北）。
+  // ⑥ Jampa：Nominatim 命中 JAMPA restaurant amenity 本体（8.0394207,
+  // 98.3173132，Thalang、Thep Krasattri），与 Jampa 位于 Tri Vananda 一带口径一致。
+  // ⑦ 137 Pillars 酒店内两项（烹饪课／Spa）：与 Lennon's 同口径——具名活动在
+  // 酒店内，取 placeCoords 既有 137 Pillars House exact 坐标（18.7918933,
+  // 99.004047），note 明示图示酒店本体；泛指的「酒店时间／泳池／换房入住」仍不列。
+  // 本轮仍故意不列：Seasons of Neighbors（Nominatim 空返回、map.geocode 只回
+  // Chang Klan STREET 级，无店铺本体，钉街道等于冒充本体）、Jdot Tree／Dib
+  // Bangkok／Jungle Flight JF2（理由同键 922 注记，未变）。
+  923: [
+    { name: "Lennon's 黑胶吧（可选）", time: "21:00", lat: 13.74335, lng: 100.54896, note: "图示 Lennon's 本体（Rosewood Bangkok 30 楼，geocode 实查，与酒店 exact 坐标交叉一致）" },
+    { name: "Cloud 11 创意综合体 · 南素坤逸（备选）", time: "傍晚（备选）", lat: 13.6834242, lng: 100.6082854, note: "Cloud 11 本体（Nominatim 实查，南素坤逸 Phra Khanong）" },
+    { name: "曼谷艺术双年展 BAB 2026 · One Bangkok 展区（免费填充）", time: "白天", lat: 13.7270987, lng: 100.5467662, note: "图示 One Bangkok 本体（展区在综合体内，Nominatim 实查）" },
+    { name: "曼谷艺术双年展 BAB 2026 · Siam 簇（免费填充）", time: "下午", lat: 13.74563, lng: 100.53463, note: "Siam 簇多展区，图示其一 Siam Paragon 本体（BACC／CentralWorld 同片区）" },
+    { name: "睡到自然醒 · Layan Beach 散步（定版）", time: "上午", lat: 8.0346279, lng: 98.2843289, note: "图示 Layan Beach 本体（Nominatim 实查，乐古浪北端）" },
+    { name: "Jampa 晚餐（tentative · 待确认订金）", time: "19:30", lat: 8.0394207, lng: 98.3173132, note: "图示 Jampa 餐厅本体（Nominatim 实查，Thalang）" },
+    { name: "酒店烹饪课 · Cook like a Thai Chef（137 Pillars）", time: "15:00", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（烹饪课在酒店内，placeCoords exact 坐标）" },
+    { name: "酒店 Spa · 137 Pillars 放松", time: "傍晚", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（Spa 在酒店内，placeCoords exact 坐标）" },
+  ],
   35: [
     // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
     // 云端天地图 findStopCoord 精确匹配永不命中（图钉静默缺失，2026-10-14 补）。
