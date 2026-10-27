@@ -194,6 +194,12 @@ export function ItineraryTab({
   renderDayExtra?: (day: Day, index: number) => ReactNode;
 }) {
   const plan = usePlanItinerary();
+  // 加载未决：云端规划还在解析、当前展示的只是静态回退行程（source=static）。
+  // 此时不许把静态天/空状态冒充成已保存行程的最终结果（2026-10-27 类别2 核查：
+  // 此前 ItineraryTab 从不读 plan.loading，冷启动无缓存时 /korea 会先闪
+  // 「韩国行程的天数还没排进来」、东南亚页会先闪旧 20 天静态行程）。
+  // 有本地缓存的云端行程时 source=cloud，内容已是云端口径、不在此列。
+  const planLoadingUnresolved = plan.loading && plan.source !== "cloud";
   // 顶部导航拆成"东南亚行程"/"韩国行程"两个页面：
   // 东南亚行程只显示 SEA_CITY_ZH（新加坡/普吉/清迈/曼谷），北京/西安不混入；
   // 韩国行程只显示 KOREA_CITY_ZH（首尔）。
@@ -388,6 +394,9 @@ export function ItineraryTab({
       {/* 空状态（days.length===0）时不渲染"X 0 天详细行程"标题，
           避免 /korea 首尔日期未定时出现"韩国 0 天详细行程"这种别扭文案，
           只保留下面的诚实空状态说明 */}
+      {planLoadingUnresolved && days.length > 0 && (
+        <p className="text-sm text-gray-500 mb-4">⏳ 行程加载中…正在读取已保存的行程，下面内容马上会更新。</p>
+      )}
       {days.length > 0 && (
         <h2 className="text-xl font-bold mb-4">
           {koreaOnly ? `韩国 ${days.length} 天详细行程` : `东南亚 ${days.length} 天详细行程`}
@@ -395,9 +404,11 @@ export function ItineraryTab({
       )}
       {days.length === 0 && (
         <p className="text-sm text-gray-500 mb-8">
-          {koreaOnly
-            ? "韩国行程的天数还没排进来，先去「行程规划」把首尔段日期定下来。"
-            : "东南亚行程的天数还没排进来，先去「行程规划」确认日期。"}
+          {planLoadingUnresolved
+            ? "⏳ 行程加载中…正在读取已保存的行程。"
+            : koreaOnly
+              ? "韩国行程的天数还没排进来，先去「行程规划」把首尔段日期定下来。"
+              : "东南亚行程的天数还没排进来，先去「行程规划」确认日期。"}
         </p>
       )}
       <div className="space-y-8 mb-12">
