@@ -396,6 +396,16 @@ export function matchItem(
 }
 
 function periodOf(time: string): "上午" | "下午" | "晚上" {
+  /* 中文时段标签必须先认（2026-10-27 类别2核查）：parseInt("上午")=NaN，
+   * 此前所有非数字 time 一律掉进「晚上」——cloudDayOverrides 里
+   * time:"上午" 的站（ACM 敦煌特展／旧机场路／国家博物馆／Layan Beach）、
+   * time:"下午" 的 Banyan Tree 酒店时间、time:"全天…" 的 Exploria 专程日
+   * 全被错分到🌙晚上栏，与它们自己的时段标签自相矛盾。
+   * 「全天」归上午栏：全天备选站要在一天开头就被看到、好做二选一决定；
+   * 「入住后」等无时段词标签维持旧回退（晚上），其 detail 本就按傍晚入住写。 */
+  if (/上午|早上|早晨|清晨|全天/.test(time)) return "上午";
+  if (/中午|下午/.test(time)) return "下午";
+  if (/傍晚|晚上|晚间|夜/.test(time)) return "晚上";
   const h = parseInt(time.slice(0, 2), 10);
   if (h < 12) return "上午";
   if (h < 17) return "下午";
