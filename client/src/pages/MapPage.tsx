@@ -179,6 +179,7 @@ export default function MapPage() {
       extraCities={extraCities}
       source={plan.source}
       updatedByName={plan.updatedByName}
+      loadingUnresolved={plan.loading && plan.source !== "cloud"}
     />
   );
 }
@@ -188,11 +189,14 @@ function MapCanvas({
   extraCities,
   source,
   updatedByName,
+  loadingUnresolved,
 }: {
   stops: CityStop[];
   extraCities: ExtraCity[];
   source: "cloud" | "static";
   updatedByName?: string;
+  /** 云端规划未决且当前只是静态回退：先按静态路线画图会闪变，须明示加载中（与 Home/DayDetail 同口径） */
+  loadingUnresolved?: boolean;
 }) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -382,6 +386,9 @@ function MapCanvas({
             · 点选城市后显示 🏨 候选酒店 / 🍽️ 推荐餐厅 / 🛍️ 值得逛商场 / ✈️ 机场（仅位置）
           </span>
         </p>
+        {loadingUnresolved && (
+          <p className="text-sm text-gray-500 mt-2">⏳ 行程加载中…正在读取已保存的行程，下面内容马上会更新。</p>
+        )}
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
           <div
             ref={mapEl}

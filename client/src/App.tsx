@@ -244,9 +244,14 @@ function AppRouter() {
 
 function SiteFooter() {
   const plan = usePlanItinerary();
+  // 云端规划未决且只有静态回退时，天数/日期是旧静态口径，会先闪错数再跳变；
+  // 未决期间只显示加载中，不把静态数字冒充已保存行程（与 Home/DayDetail 同口径）。
+  const planLoadingUnresolved = plan.loading && plan.source !== "cloud";
   return (
     <footer className="border-t border-gray-200 py-6 text-center text-xs text-gray-400">
-      东南亚 {plan.totalDays} 天旅行指南 · {plan.dateRangeLong}
+      {planLoadingUnresolved
+        ? "东南亚旅行指南 · 行程加载中…"
+        : `东南亚 ${plan.totalDays} 天旅行指南 · ${plan.dateRangeLong}`}
     </footer>
   );
 }
