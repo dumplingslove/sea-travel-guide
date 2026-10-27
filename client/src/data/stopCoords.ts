@@ -446,7 +446,11 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "包车出发 · 普吉大佛", time: "13:00", lat: 7.827598, lng: 98.312853, note: "图示普吉大佛（Nakkerd Hill 山顶）" },
     { name: "查龙寺 Wat Chalong", time: "15:30", lat: 7.84625, lng: 98.3371 },
     { name: "神仙半岛日落", time: "17:00", lat: 7.7643212, lng: 98.3053958, note: "神仙半岛日落点（与「悬崖日落」同点）" },
-    { name: "Thalang 路周日步行街 Lard Yai · 老街周日夜市", time: "傍晚（回芭东前）", lat: 7.8845565, lng: 98.3920742, note: "图示 Thalang 路（普吉老镇）" },
+    { name: "Thalang 路周日步行街 Lard Yai · 老街周日夜市", time: "晚间（正餐后）", lat: 7.8845565, lng: 98.3920742, note: "图示 Thalang 路（普吉老镇）" },
+    // 2026-10-27 补钉：普吉 12-13 老城正餐站（cloudDayOverrides 本轮新增）此前无坐标；
+    // 按本表既有「二选一，图示其一」口径取 placeCoords 已核验的 Raya exact 坐标
+    // （7.8859294,98.3909045，老城 Dibuk 路本体），One Chun 同在老城、note 如实标注。
+    { name: "老城正餐 · One Chun / Raya（二选一）", time: "19:00", lat: 7.8859294, lng: 98.3909045, note: "二选一，图示 Raya 本体（老城 Dibuk 路，placeCoords exact 坐标）" },
     { name: "普吉老镇夜景（备选）", time: "20:00", lat: 7.8845565, lng: 98.3920742, note: "图示普吉老镇" },
     { name: "瓦洛洛市场 Warorot（1 小时）", time: "傍晚", lat: 18.7902357, lng: 99.000535 },
     { name: "Night Bazaar 长康路夜市", time: "晚间", lat: 18.78501, lng: 99.00037, note: "Chang Klan 路 104 号（geocode 实查）" },
