@@ -498,16 +498,16 @@ export function applyCloudDayOverride(
             "定版晚间第一站（体力允许才去、逛 1 小时收）：清迈人自己的买菜大市场，与 137 Pillars 同在 Wat Ket 片区、隔着滨河相望，顺路；熟食、干货与伴手礼都有。⚠️ 只收现金，备小额泰铢；傍晚熟食摊陆续收，别拖太晚才去。（2026-10-24 定版落站）",
         },
         {
-          time: "晚间",
-          name: "Night Bazaar 长康路夜市",
-          detail:
-            "定版晚间主项：长康路 Night Bazaar 逛吃散步收尾；新建的 Lannatique 一期 Lanna Garden 就在夜市旁（Kalare 地块、弧面 3D LED 屏＋米其林主厨餐厅 Akantuka），顺路看一眼即可——演出日与餐厅预约临行复核，不为它改动线（详情见景点目录「Lannatique」条目）。明天 ENP 7:30 接人，别熬太晚。（2026-10-24 定版落站）",
-        },
-        {
           time: "傍晚（长康路线才排）",
           name: "Seasons of Neighbors · 昌康路新开集合店（长康路线顺路站）",
           detail:
             "Seasons of Neighbors 在昌康路 Chang Klan Road（即长康路），是 2026-10-10 刚开业的泰国本土创意品牌集合店，11:00–19:00（证据：官方号开业公告帖，2026-10-02 发帖、无评论）。它就在长康路夜市同一片区：今晚选长康路线就先逛它（19:00 关门，别拖到夜市逛完再去）、再接夜市；今晚若去清迈大学夜市就别硬绕——两个方向，留到路过昌康路时再逛。该店目前只有开业公告、无食客口碑帖，当顺路一站看，别专程。（2026-10-21 发现第四轮；2026-10-23 存量 tip 升 stops 迁移）",
+        },
+        {
+          time: "晚间",
+          name: "Night Bazaar 长康路夜市",
+          detail:
+            "定版晚间主项：长康路 Night Bazaar 逛吃散步收尾；新建的 Lannatique 一期 Lanna Garden 就在夜市旁（Kalare 地块、弧面 3D LED 屏＋米其林主厨餐厅 Akantuka），顺路看一眼即可——演出日与餐厅预约临行复核，不为它改动线（详情见景点目录「Lannatique」条目）。明天 ENP 7:30 接人，别熬太晚。（2026-10-24 定版落站）",
         },
       ],
       tip:
