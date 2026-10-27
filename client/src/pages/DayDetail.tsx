@@ -20,6 +20,12 @@ export default function DayDetail() {
   const { n } = useParams<{ n: string }>();
   const dayNum = Number(n);
   const plan = usePlanItinerary();
+  // 加载未决：云端规划还在解析、当前展示的只是静态回退行程（source=static）。
+  // 与 Home.tsx ItineraryTab 同口径（2026-10-27 类别2）：此时不许把静态天
+  // 冒充已保存行程的最终结果，也不许把「静态行程里没有这一天」冒充成
+  // 「没有找到行程」——深链冷启动 /day/N 时静态 20 天与云端 34 天天号对不上，
+  // 会先闪错天内容或假的未找到页。有本地缓存时 source=cloud，不在此列。
+  const planLoadingUnresolved = plan.loading && plan.source !== "cloud";
   const days: Day[] = plan.days;
   const day = days.find((d) => d.day === dayNum);
   const year = plan.dateRangeLong.slice(0, 4);
@@ -135,7 +141,11 @@ export default function DayDetail() {
   if (!day) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500 mb-6">没有找到第 {n} 天的行程。</p>
+        <p className="text-gray-500 mb-6">
+          {planLoadingUnresolved
+            ? "⏳ 行程加载中…正在读取已保存的行程。"
+            : `没有找到第 ${n} 天的行程。`}
+        </p>
         <Link
           to="/"
           className="inline-block px-5 py-2 rounded-lg bg-teal-700 text-white text-sm font-medium hover:bg-teal-800"
@@ -157,6 +167,10 @@ export default function DayDetail() {
       >
         <ArrowLeft size={16} /> 返回行程总览
       </Link>
+
+      {planLoadingUnresolved && (
+        <p className="text-sm text-gray-500 mb-4">⏳ 行程加载中…正在读取已保存的行程，下面内容马上会更新。</p>
+      )}
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
         <p className="text-xs font-semibold text-teal-700 mb-1">
