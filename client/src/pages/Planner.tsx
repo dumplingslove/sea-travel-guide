@@ -29,6 +29,12 @@ export default function Planner() {
   const tripStops = usePlannerTripStops();
   const mapStops = tripStops?.stops ?? plan.cityStops;
   const mapTotalDays = tripStops?.totalDays ?? plan.totalDays;
+  /* 云端规划未决、无本地缓存全程站点且当前只是静态回退时，标题天数与地图站点
+     都是旧静态 20 天口径，会先闪错数再跳成云端 34 天；未决期间标题只显示加载中
+     并加一行加载提示，不把静态数字冒充已保存行程（与 MapPage/页脚同口径）。
+     tripStops 非空（本地缓存全程口径）或 plan 已是云端口径时内容已对，不在此列。 */
+  const planLoadingUnresolved =
+    plan.loading && plan.source !== "cloud" && tripStops === null;
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PlannerTab>("trip");
   const showMap = searchParams.get("view") === "map";
@@ -138,7 +144,7 @@ export default function Planner() {
         <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 pt-3 pb-2">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <h2 className="text-lg font-bold">
-              {mapTotalDays}天路线总览
+              {planLoadingUnresolved ? "行程加载中…" : `${mapTotalDays}天路线总览`}
             </h2>
             {plan.source === "cloud" && plan.updatedByName && (
               <span className="text-[11px] text-teal-700 bg-teal-50 border border-teal-100 rounded-full px-2 py-0.5">
@@ -146,6 +152,9 @@ export default function Planner() {
               </span>
             )}
           </div>
+          {planLoadingUnresolved && (
+            <p className="text-sm text-gray-500 mb-2">⏳ 行程加载中…正在读取已保存的行程，下面内容马上会更新。</p>
+          )}
           <TripOverviewMap key={stopsKey} stops={mapStops} mapHeight={230} />
         </div>
       </div>
