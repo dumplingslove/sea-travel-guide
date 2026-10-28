@@ -317,6 +317,7 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   // —— 新加坡 ——
   "新加坡动物园与Bird Paradise": { lat: 1.403782, lng: 103.79414 }, // Wikipedia Singapore Zoo；Bird Paradise 同属万态片区相邻
   "小印度": { lat: 1.30667, lng: 103.84972 }, // Wikipedia Little India MRT
+  "娘惹博物馆 Peranakan Museum": { lat: 1.29428, lng: 103.84909 }, // 2026-10-28 site-improve-hourly 补（类别5/2）：固定场馆缺钉总表续项，此前四级坐标链全缺（findStopCoord/MUST_BOOK_COORDS/EXTRA 均无、模糊不命中——stopCoords 无娘惹相关站；data.ts 另一「娘惹博物馆」为槟城条目属冻结城市、本轮只钉新加坡馆），预订筛选/收藏地图静默缺钉。坐标为 map.geocode 带馆名+门牌实查 FULL_ADDRESS 点（Peranakan Museum, 39 Armenian St, Singapore 179941，relevance 100，与 data.ts 条目「亚美尼亚街」一致）；交叉核验：反查本点命中同一 39 Armenian St 门牌，21–24 米内邻点均为 47 Armenian St 同街门牌——本体精度确认，弃用街道级漂移点。键用 data.ts 全标题
   // —— 清迈 ——
   "周日步行街": { lat: 18.78821, lng: 98.98799 }, // mapcarta/OSM Sunday Market (Walking Street)
   "Baan Kang Wat": { lat: 18.77631, lng: 98.94836 }, // mapcarta/OSM
