@@ -906,6 +906,13 @@ export function applyCloudDayOverride(
   // Bamee Kon Sae Lee 通罗面馆（1956 年华裔老字号、1081 Sukhumvit Rd、BTS Thong Lo 旁、07:00–00:00、
   // 馄饨面 ฿120／虾仁炒饭 ฿150）——与 Phed Mark 同走廊、二选一，只作 Ekkamai 方向午餐备选，不进正选
   // （午餐锚点仍 Krua Apsorn、晚餐等 Sorn）；排队时长帖内未明确、如实标注。
+  // 2026-10-28 发现轮换 round 460 续核（证据 food-discovery/discovery-bangkok-xhs-round460-2026-10-28.md
+  //  + 同日 site-improve-hourly 官方口径核验）：Dib Bangkok 目录条目已按全攻略帖补齐（开馆后第二个大展／
+  //  Calder《Untitled》／闪光灯·三脚架·自拍杆受限／12 岁以下需成人陪同／公共区 Dib Store 与
+  //  Watthu-Dib Bistro & Bar 免票可进），馆址 111 Soi Sukhumvit 40 经官方新闻稿坐实、已补候选地图钉
+  //  （StickyMapBar EXTRA_ATTRACTION_COORDS）；开放日口径纠偏——官方稿为周二、周三闭馆，与两帖
+  //  「只休周三」冲突，条目已并列标注，本程 12-18 周五／12-19 周六两口径都开、不受影响；本日 tip 的
+  //  目录指针不变、不新增 stop（2026-10-24 落点新规）。
   if (cityZh === "曼谷" && ordinalInCity === 1) {
     return {
       ...base,

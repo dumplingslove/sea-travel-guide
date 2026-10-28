@@ -310,6 +310,7 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   "伦披尼公园": { lat: 13.73056, lng: 100.54167 }, // Wikipedia Lumphini Park
   "金山寺": { lat: 13.75389, lng: 100.50833 }, // Wikipedia Wat Saket
   "Mahanakhon 天空步道": { lat: 13.72361, lng: 100.52833 }, // Wikipedia King Power Mahanakhon
+  "Dib Bangkok · Giving Life 展": { lat: 13.712883, lng: 100.579767 }, // 2026-10-28 site-improve-hourly 补：此前该目录景点四级坐标链全缺（findStopCoord/MUST_BOOK_COORDS/EXTRA 均无、模糊不命中），预订筛选/收藏地图静默缺钉；stopCoords 两处「故意不列」注记只针对行程站表（它已移出时间线、不是站），候选/收藏地图走本表。坐标为 Places 本体 exact 点（Art Museum，地址 111 Soi Sukhumvit 40 与博物馆官方新闻稿门牌一致）；交叉核验：带全址查 map.geocode 首位 FULL_ADDRESS 点（13.71359,100.58048，Soi Ban Kluai Tai/Phra Khanong/Khlong Toei 10110）距本体点约 100 米同巷，反查本体点 19–35 米内同为 Soi Ban Kluai Tai（素坤逸 40 巷当地名）/Rama IV 地址——三源收敛同一街区，弃用早前只按馆名查到的素坤逸街道级漂移点（13.66575,100.60379，Bang Na 段）
   "大城府 Ayutthaya 古城遗迹": { lat: 14.34778, lng: 100.56056 }, // Wikipedia UNESCO Historic City of Ayutthaya
   "丹嫩沙多水上市场+美功铁道": { lat: 13.51933, lng: 99.95928 }, // mapcarta/OSM 丹嫩沙多水上市场；美功铁道市场在 Samut Songkhram，单点仅标水上市场
   // —— 新加坡 ——
