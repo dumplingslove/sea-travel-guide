@@ -896,7 +896,18 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
           <span className="text-xs text-sky-600">（你收藏的）</span>
         </p>
       ))}
-      {leg && (
+      {leg && leg.ticketed ? (
+        /* 2026-10-27 类别2修复：已出票腿先判 ticketed（与 GuideApp/planner/预订弹窗同口径）——
+           refreshLegFromDb 对 ticketed 只设 flightState='ok'、options 保持 null，此前落进 ok 分支
+           渲染「当天 0 班直飞（去预订页收藏具体航班）」，与已出票事实自相矛盾（北京→新加坡/
+           曼谷→北京/西安→首尔等转场日卡均中招）。已出票以出票邮件为准，只渲染确认信息。 */
+        <>
+          <p className="text-sm text-sky-800 mt-1">
+            ✅ 已出票{leg.carrier ? ` · ${leg.carrier}` : ""}{leg.schedule ? ` ${leg.schedule}` : ""}
+          </p>
+          {leg.note && <p className="text-xs text-sky-700 mt-1">{leg.note}</p>}
+        </>
+      ) : leg ? (
         <p className="text-xs text-sky-700 mt-1">
           {leg.flightState === "pending" ? (
             <>航班信息待查询（库里还没有 {isoShort(date)} 的实查数据）</>
@@ -907,7 +918,7 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
           )}
           {!favFlights.length && leg.flightState !== "pending" && "（去预订页收藏具体航班）"}
         </p>
-      )}
+      ) : null}
     </div>
   );
 }
