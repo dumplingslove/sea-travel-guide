@@ -46,7 +46,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, refreshLegFromDb, type FlightLegInfo, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveHotelPrice, type LiveRoomRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
@@ -1305,13 +1305,13 @@ function FavoriteActionList({
                         )}
                         </div>
                       {/* 详情弹窗内容捕获：航班=当天全部直飞比价+价格时间线；酒店/餐厅/景点=完整详情 */}
-                      {isOpen && f.type === "flight" && flightLeg && (() => { favModalTitle = f.row.title; favModalNode = (
+                      {isOpen && f.type === "flight" && flightLeg && (() => { /* 2026-10-27 类别2修复：弹窗此前直接读共享 FLIGHT_LEGS 且不看 flightState——实查确认无直飞（none）与还没查（pending）都写成同一句「暂无直飞数据（待实查）」，且选项是共享 leg 当前日期的、未按本收藏的规划日期重查。与 ItineraryDayCard 同法：深拷贝后按规划日期 refreshLegFromDb 再渲染，并按 flightState 区分三种口径（与 BookingTimeline/GuideApp 一致）。 */ const modalQDate = (f.flight?.route ? flightDateFromPlan(f.flight.route, flightSegs) : null) || f.flight?.date || flightLeg.date || ""; const modalLeg = JSON.parse(JSON.stringify(flightLeg)) as FlightLegInfo; if (modalQDate) refreshLegFromDb(modalLeg, modalQDate); favModalTitle = f.row.title; favModalNode = (
                         <div className="text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
-                            ✈️ {flightLeg.route} · {flightLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : ` 当天所有直飞（${flightLeg.options?.length ?? 0} 班）`}
+                            ✈️ {modalLeg.route} · {modalLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : modalLeg.flightState === "none" ? " · 当天实查无直飞" : modalLeg.flightState === "pending" ? " · 当天直飞待查询" : ` 当天所有直飞（${modalLeg.options?.length ?? 0} 班）`}
                           </p>
-                          {flightLeg.dbSeg && SEGMENT_POINTS_HINT[flightLeg.dbSeg] && (
-                            <p className="mb-1.5 font-medium text-violet-900 bg-violet-50 border border-violet-100 rounded-lg px-2 py-1.5">🧾 {SEGMENT_POINTS_HINT[flightLeg.dbSeg]}</p>
+                          {modalLeg.dbSeg && SEGMENT_POINTS_HINT[modalLeg.dbSeg] && (
+                            <p className="mb-1.5 font-medium text-violet-900 bg-violet-50 border border-violet-100 rounded-lg px-2 py-1.5">🧾 {SEGMENT_POINTS_HINT[modalLeg.dbSeg]}</p>
                           )}
                           <p className="mb-1.5"><FlightBuyLink text={f.row.title} /><span className="ml-1.5 text-gray-400">打开航司官网后按日期与航线搜这班下单</span></p>
                           {/* 2026-10-03 用户：机票要有价格变动时间线（含每次涨跌的发生时间） */}
@@ -1342,9 +1342,9 @@ function FavoriteActionList({
                           {/* 已出票（以 DB 预订记录为准）直接给出票摘要；否则列当天直飞选项比价 */}
                           {(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? (
                             <p className="text-emerald-700 font-medium">✅ 已出票 · {ticketedByFlightNo.get(f.flight.flight)!.summary}（全部细节见「✅ 最终预定」）</p>
-                          ) : (flightLeg.options ?? []).length ? (
+                          ) : (modalLeg.options ?? []).length ? (
                             <div className="space-y-1">
-                              {[...(flightLeg.options ?? [])]
+                              {[...(modalLeg.options ?? [])]
                                 .sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))
                                 .map((o, i) => {
                                   const isFav = f.flight?.flight === o.flight;
@@ -1362,11 +1362,13 @@ function FavoriteActionList({
                                   );
                                 })}
                             </div>
+                          ) : modalLeg.flightState === "none" ? (
+                            <p className="text-gray-400">Google Flights 实查确认：当天无直飞。</p>
                           ) : (
-                            <p className="text-gray-400">暂无直飞数据（待实查）</p>
+                            <p className="text-gray-400">⏳ 航班待查询（航班库暂无该日期实查数据，不能据此推断无直飞）</p>
                           )}
-                          {flightLeg.queriedAt && (
-                            <p className="text-gray-400 mt-1">Google Flights 实查 · {flightLeg.queriedAt}</p>
+                          {modalLeg.queriedAt && (
+                            <p className="text-gray-400 mt-1">Google Flights 实查 · {modalLeg.queriedAt}</p>
                           )}
                         </div>); return null; })()}
                       {/* 酒店/餐厅/景点详情同样捕获进弹窗（ PlaceDetailSections 完整版，不是摘录） */}
