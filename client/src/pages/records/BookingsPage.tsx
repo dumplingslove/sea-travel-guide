@@ -1703,11 +1703,22 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
       );
     }
     // 旧版：整条航段收藏，按路线匹配（兼容旧数据）
-    const leg = FLIGHT_LEGS.find((l) => l.route === name || name.includes(l.route) || l.route.includes(name));
-    if (!leg) return <div className="text-xs text-gray-400 mt-1">💰 价格：航段信息待匹配</div>;
+    // 2026-10-27 类别2修复：价格行此前直接读共享 FLIGHT_LEGS 且不看 ticketed/flightState、也不按规划日期重查——
+    // 已出票腿 options=null 被写成「价格：待实查」，与同卡「✅ 已出票」徽标矛盾；实查无直飞（none）同样被写成待实查；
+    // 有选项时用的也是静态日期的价、行程改期不跟随。与详情弹窗同法：深拷贝后按规划日期 refreshLegFromDb 再按四口径渲染。
+    const sharedLeg = FLIGHT_LEGS.find((l) => l.route === name || name.includes(l.route) || l.route.includes(name));
+    if (!sharedLeg) return <div className="text-xs text-gray-400 mt-1">💰 价格：航段信息待匹配</div>;
+    const leg = JSON.parse(JSON.stringify(sharedLeg)) as FlightLegInfo;
+    const planDate = flightDateFromPlan(leg.route, segs);
+    const qDate = planDate || leg.date || "";
+    if (qDate) refreshLegFromDb(leg, qDate);
+    if (leg.ticketed) return <div className="text-xs text-emerald-700 font-medium mt-1">✅ 已出票 · {leg.carrier} {leg.schedule} · 以出票邮件为准（收藏价格行）</div>;
+    if (leg.flightState === "none") return <div className="text-xs text-gray-400 mt-1">💰 价格：当天实查无直飞（{qDate || "日期待定"}）</div>;
     const opts = leg.options ?? [];
-    if (!opts.length) return <div className="text-xs text-gray-400 mt-1">💰 价格：待实查（{leg.date || "日期待定"}）</div>;
-    const cheapest = opts.reduce((a, b) => (a.price ?? Infinity) < (b.price ?? Infinity) ? a : b);
+    if (!opts.length) return <div className="text-xs text-gray-400 mt-1">💰 价格：航班待查询（{qDate || "日期待定"}，航班库暂无该日期实查数据，不能据此推断无直飞）</div>;
+    const priced = opts.filter((o) => o.price != null);
+    if (!priced.length) return <div className="text-xs text-gray-400 mt-1">💰 当天 {opts.length} 班直飞 · 价格待查</div>;
+    const cheapest = priced.reduce((a, b) => (a.price ?? Infinity) < (b.price ?? Infinity) ? a : b);
     return (
       <div className="text-xs text-gray-600 mt-1">
         💰 <span className="font-semibold text-teal-700">${cheapest.price}</span>
