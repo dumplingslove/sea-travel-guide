@@ -277,6 +277,7 @@ const MUST_BOOK_COORDS: Record<string, { lat: number; lng: number }> = {
   "滨海湾花园": { lat: 1.28213, lng: 103.86372 }, // Gardens by the Bay, 18 Marina Gardens Dr
   "吉姆·汤普森之家": { lat: 13.74876, lng: 100.52848 }, // Jim Thompson House Museum, Pathum Wan, Bangkok
   "因他农国家公园": { lat: 18.53569, lng: 98.52234 }, // Doi Inthanon NP（1009 公路园内实查点）
+  "The Hyundai Seoul 圣诞村": { lat: 37.5259638, lng: 126.9284184 }, // 2026-10-28 site-improve-hourly 补：此前该 MUST_BOOK 项（2026-10-27 才入清单）三层坐标表全缺、预订筛选/收藏地图静默缺钉；OSM Nominatim 实查 way 本体（shop/department_store，display_name「더현대 서울, 108, 여의대로, 여의동, 영등포구」逐字核对，圣诞村在商场 5 层 Sounds Forest、图示商场本体）；韩文查询只命中同名公交站 node、已弃用不取
 };
 
 /**
