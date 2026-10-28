@@ -278,6 +278,7 @@ const MUST_BOOK_COORDS: Record<string, { lat: number; lng: number }> = {
   "吉姆·汤普森之家": { lat: 13.74876, lng: 100.52848 }, // Jim Thompson House Museum, Pathum Wan, Bangkok
   "因他农国家公园": { lat: 18.53569, lng: 98.52234 }, // Doi Inthanon NP（1009 公路园内实查点）
   "The Hyundai Seoul 圣诞村": { lat: 37.5259638, lng: 126.9284184 }, // 2026-10-28 site-improve-hourly 补：此前该 MUST_BOOK 项（2026-10-27 才入清单）三层坐标表全缺、预订筛选/收藏地图静默缺钉；OSM Nominatim 实查 way 本体（shop/department_store，display_name「더현대 서울, 108, 여의대로, 여의동, 영등포구」逐字核对，圣诞村在商场 5 层 Sounds Forest、图示商场本体）；韩文查询只命中同名公交站 node、已弃用不取
+  "首尔儿童博物馆 Seoul Children's Museum": { lat: 37.5507529, lng: 127.0776369 }, // 2026-10-28 site-improve-hourly 补：此前该 MUST_BOOK 项三层坐标表全缺（findStopCoord/MUST_BOOK_COORDS/EXTRA 均无、模糊匹配只查 stopCoords 亦不命中）、预订筛选/收藏地图静默缺钉；OSM Nominatim 韩文名「서울상상나라」实查 way 629148394 本体（building，display_name「서울상상나라, 능동로, 능동, 광진구」与 tour 研究地址广津区陵洞路 216·儿童大公园内逐项对上）；英文查询 0 结果、公园本体中心（37.5488862,127.0804753）为另一 way 已弃用不取，图示博物馆建筑本体非公园中心
 };
 
 /**
