@@ -1189,6 +1189,7 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "Tingly Thai 烹饪课",       // 曼谷：上午班才有市场采购，提前 1–2 周订（2026-10-24 tour 研究新增）
   "Rajadamnern 泰拳场 · RWS", // 曼谷：仅 Sorn 备胎——11-25 放号后决策，周六旗舰场最先售罄（2026-10-24 tour 研究新增）
   "首尔儿童博物馆 Seoul Children's Museum", // 首尔：必须在线预约、每小时仅 100 名额，尽早请酒店代订（2026-10-24 tour 研究新增）
+  "The Hyundai Seoul 圣诞村", // 首尔：需预约入场、名额秒空，首轮预约 2026-11-05 经官方 App 开抢（2026-10-27 site-improve 补：round419 已帖级坐实预约方式且目录条目 best 明写 11-05 抢预约，此前未入本清单——预订筛选（bookingOnly）看不到它、收藏徽章误标「暂无提前订票研究结论」；同城其余圣诞项逐项核对：光化门市集/石村湖/清溪川均为免费无需预订、Jdot 条目明写「不入提前订清单的必订项」，均不入）
   "Phuket Elephant Sanctuary", // 普吉：每天仅200名，预约提前规划
   "Siam Niramit",           // 普吉：演出票，建议提前订
   "夜间动物园",             // 新加坡：热门场次售罄，Klook买完还要预约时段
@@ -1211,6 +1212,7 @@ export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "Tingly Thai 烹饪课": "定版未选·备选：上午班才有市场采购，提前 1–2 周订、别订错班次",
   "Rajadamnern 泰拳场 · RWS": "仅 Sorn 备胎：11-25 Sorn 放号后决策，周六旗舰场最先售罄、落空尽快订",
   "首尔儿童博物馆 Seoul Children's Museum": "必须在线预约、每小时仅 100 名额，尽早请酒店代订",
+  "The Hyundai Seoul 圣诞村": "需预约入场：首轮 2026-11-05 经官方 App「The Hyundai Hi」开抢 12-30/12-31 场次；Klook 外国游客通道每天限量 100 个免费快速通行名额作备选",
   "Phuket Elephant Sanctuary": "定版未选·备选（清迈已选 ENP）：每天仅接待 200 名，预约提前规划",
   "Siam Niramit": "定版未选·备选：演出票，建议提前订",
   "夜间动物园": "热门场次售罄，买票后还要预约时段",
