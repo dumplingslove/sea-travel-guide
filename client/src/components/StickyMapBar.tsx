@@ -322,6 +322,7 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   "Baan Kang Wat": { lat: 18.77631, lng: 98.94836 }, // mapcarta/OSM
   "乌蒙寺": { lat: 18.7831833, lng: 98.9513083 }, // Wikipedia Wat Umong
   "瓦洛洛市场": { lat: 18.790239, lng: 99.000628 }, // place listing，Wichayanon Rd
+  "POP MART 小野 Hirono 清迈快闪店": { lat: 18.80224, lng: 98.96728 }, // 2026-10-28 site-improve-hourly 补（类别5/2）：固定场馆缺钉总表续项，此前四级坐标链全缺（findStopCoord/MUST_BOOK_COORDS/EXTRA 均无、模糊不命中——stopCoords 无 MAYA 相关站），预订筛选/收藏地图静默缺钉；快闪在 MAYA 商场 G 层、图示商场本体（同 Pokémon Center Bangkok 取 CentralWorld 本体先例）。坐标为 map.geocode 带门牌实查 FULL_ADDRESS 点（เมญ่า ไลฟ์สไตล์ ช็อปปิ้ง เซ็นเตอร์，55 Huay Kaew Rd, Moo 5, Chang Phueak 50300，与 data.ts 条目门牌 55 Moo 5 逐字一致）；交叉核验：同法实查 One Nimman 本体（1 Nimmanhaemin Rd，relevance 100）距本点约 250 米正南，与条目「宁曼路口、One Nimman 对面一带」一致；弃用同名北侧点（18.80864,98.95456，Moo 1、距 One Nimman 约 1.5 km，非对面口径）。键用 data.ts 全标题，快闪档期 2026-11-05 至 2027-01-10 覆盖行程清迈日
   // —— 首尔（2026-10-14 site-improve-hourly 补：覆盖率审计实锤首尔 15 个景点仅
   // 星空图书馆靠模糊匹配命中、其余 14 个在候选/收藏地图上全缺钉。坐标来源分两类：
   // ① 复用 stopCoords.ts 里已核验的行程站点坐标（同地异名）；
