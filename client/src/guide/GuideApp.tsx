@@ -979,8 +979,8 @@ function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selK
  const eco=leg.options??null;                 /* null/空 = 未查询；查过但无直飞用 queriedAt 区分 */
  const biz=leg.businessOptions??null;         /* null = 未查询；[] = 查过但无商务舱直飞 */
  const [cabin,setCabin]=useState<'eco'|'biz'>('eco');
- const ecoState=!eco||!eco.length?(leg.queriedAt?'none':'pending'):'ok';
- const bizState=!biz?'pending':(!biz.length?'none':'ok');
+ const ecoState=eco&&eco.length?'ok':(leg.flightState??(leg.queriedAt?'none':'pending')); /* 2026-10-27 类别2修复：此前只凭 queriedAt 派生——已出票腿 options/queriedAt 均为 null 会被误判 pending（见下方 ticketed 分支），实查无直飞但 queriedAt 为空的腿也会误判 pending；改以 refreshLegFromDb 维护的 flightState 为准，无 flightState 才回退旧启发式 */
+ const bizState=biz&&biz.length?'ok':(leg.flightState==='pending'?'pending':leg.flightState==='none'?'none':(!biz?'pending':'none'));
  const opts=(cabin==='eco'?eco:biz)??[];
  const sorted=[...opts].sort((a,b)=>depMinutes(a.depart)-depMinutes(b.depart));
  /* 2026-10-17 用户：预定这边也要提供最新价格——与价格追踪同源同口径：
@@ -1010,6 +1010,12 @@ function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selK
  sorted.forEach(o=>{const k=Object.keys(CARRIER_REPUTATION).find(x=>o.carrier.indexOf(x)===0);if(k&&!seen.includes(k)){seen.push(k);reps.push(`${o.carrier}：${CARRIER_REPUTATION[k]}${CARRIER_FEATURES[k]?`｜特色：${CARRIER_FEATURES[k]}`:''}${carrierPointsTag(o.carrier)?`｜${carrierPointsTag(o.carrier)}`:''}`);}});
  const unknown=[...new Set(sorted.map(o=>o.carrier))].filter(c=>!Object.keys(CARRIER_REPUTATION).some(k=>c.indexOf(k)===0));
  const curState=cabin==='eco'?ecoState:bizState;
+ /* 2026-10-27 类别2修复：已出票腿先判 ticketed（与 planner-logic/预订弹窗同口径）——此前 8 条已出票腿 options=null 被渲染成「⏳ 航班待查询」，与同卡「✅ 已出票」表头自相矛盾。已出票以出票邮件为准，只渲染确认信息，不渲染泛搜索的舱位页签/待查询空状态。本分支位于全部 hooks 之后。 */
+ if(leg.ticketed) return <div className="flightoptions">
+  <p className="flightstatus ok">{`✅ 已出票${leg.carrier?` · ${leg.carrier}`:''}${leg.schedule?` ${leg.schedule}`:''}`}</p>
+  {leg.note&&<p className="flightempty">{leg.note}</p>}
+  <p className="flightsrc">以出票邮件为准{leg.priceBasis?` · 价格口径 ${leg.priceBasis}`:''}</p>
+ </div>;
  return <div className="flightoptions">
   <p className={`flightstatus ${ecoState}`}>{ecoState==='ok'?`🟢 当天 ${eco!.length} 班直飞`:(ecoState==='none'?'⚪ 当天暂无直飞':'⏳ 航班待查询')}{ecoMin!=null?` · 经济舱 $${ecoMin} 起`:''}{bizMin!=null?` · 商务舱 $${bizMin} 起`:''}</p>
   <div className="cabintabs" role="tablist" aria-label="舱位选择">
@@ -1025,7 +1031,7 @@ function FlightLegOptions({leg, selKey, onSelectFlight}:{leg:FlightLegInfo; selK
   :<p className="flightempty">{curState==='none'?(cabin==='eco'?'Google Flights 实查确认：当天无直飞。':'Google Flights 实查确认：当天无商务舱直飞（多为廉航执飞，无商务舱）。'):'航班待查询：Google Flights 航班库正在逐日填充，当前日期暂无实查数据，不能据此推断当天无直飞。'}</p>}
   {cabin==='eco'&&rec&&rec.recommendReason&&<p className="forecwhy">👉 推荐 {rec.carrier} {rec.flight}（{rec.depart}→{rec.arrive}{rec.arrivePlusDay?'+1':''}）：{rec.recommendReason}</p>}
   {(reps.length>0||unknown.length>0)&&<details className="flightreput"><summary><b>航司口碑与特色</b>（{seen.length+unknown.length} 家，点开看）</summary><p>{reps.length?reps.join('；')+'。':''}{unknown.map(u=>`${u}：暂无口碑数据`).join('；')}</p></details>}
-  <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>
+  <p className="flightsrc">Google Flights {leg.queriedAt?`实查 ${leg.queriedAt}`:ecoState==='none'?'实查确认无直飞':'待查询'} · 价格口径 {leg.priceBasis??'2成人总价'}{leg.stale?' · ⚠️旧方案已停更':''}</p>
  </div>;
 }
 
@@ -1082,7 +1088,7 @@ export function Flights({onBook, mapStickyTop}:{onBook?:OnBook; mapStickyTop?:nu
  const countryLabel=countries.join('、');
  const legPager=usePaged(legs,5,'个航段');
  const sourceLine='航段与直飞选项由 Google Flights 实查维护；每条航班优先显示航班库最新实查价（与价格追踪同源），出票前重查退改';
- const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&((f.options&&f.options.length)||f.queriedAt);}).length;
+ const checkedCount=legs.filter(l=>{const f=l.leg;return !f.stale&&!f.ticketed&&(f.flightState?f.flightState!=='pending':!!((f.options&&f.options.length)||f.queriedAt));}).length; /* 2026-10-27 类别2修复：已实查计数改认 flightState——none 腿 queriedAt 为空此前不计数、pending 腿残留静态 queriedAt 此前误计数；已出票腿不计入 Google 实查口径（与此前其 options/queriedAt 均为 null 时不计数一致） */
  const staleCount=legs.filter(l=>l.leg.stale).length;
  const activeCount=legs.length-staleCount;
  return <div className="page"><PageHero eyebrow="FLIGHT PLAN" title="航班信息" summary="各段移动按出发日期排布，与每日航班刷新同步。未确认航班号、实时票价与库存不会被写成事实。" image={bangkokImg}/><section className="sectionblock"><div className="sectiontitle"><h2>航段总览</h2><p>出票后把航班号、时间与确认号存进"我的预订" · 已实查 {checkedCount}/{activeCount} 段（Google Flights 持续更新中{staleCount>0?`；旧方案 ${staleCount} 段已停更，不计入`:""}）</p></div><div className="flightsummary"><article><b>{legs.length}</b><span>个航段</span></article><article><b>{midCount}</b><span>段城际直飞</span></article><article><b>{countries.length}</b><span>个入境国家（{countryLabel}）</span></article></div><FlightsRouteMap legs={legs.map(l=>l.leg)} sel={mapSel?{dep:mapSel.dep,arr:mapSel.arr,label:mapSel.label}:null} stickyTop={mapStickyTop??64}/><div className="flightgrid">{legPager.visible.map(l=>{const i=legs.indexOf(l);return <article key={l.id}><header><span>FLIGHT {String(i+1).padStart(2,'0')}</span><em>{l.leg.ticketed?"✅ 已出票":l.leg.stale?"⚠️ 旧方案已停更":"待预订"}</em></header><h3>{l.title}</h3>{l.date?<p className="flightdate">📅 {planDateFull(l.date)}</p>:<p className="flightdate">📅 日期待定</p>}<strong>{l.kind}</strong><p>{l.desc}</p>{l.leg.stale&&<p className="stalewhy">旧方案已停更：现行回程（2026-10-13 定）为分开行动最后一天高铁北京→西安汇合、全家一起西安→首尔（住 2 晚）→西雅图，本候选价格不再刷新，仅供参考。</p>}<FlightLegOptions leg={l.leg} selKey={mapSel?.key??null} onSelectFlight={handleSelectFlight}/><dl><div><dt>出票前</dt><dd>核验日期与机场</dd></div><div><dt>出票后</dt><dd>保存航班号与确认号</dd></div></dl>{onBook&&<div className="cardactions"><button className="solid" onClick={()=>onBook({bkind:'transport',name:l.title,date:l.date||undefined,day:l.day})}>记录预订</button>{/* 2026-10-03 用户：不再收藏整条航段，只收藏具体航班（每条航班选项上的收藏按钮保留） */}</div>}</article>})}</div>{legPager.toggle}</section><div className="notice"><h2>航司口碑速览</h2><p>{AIRLINE_REPUTATION}</p></div><section className="checklistband"><h2>每段都要核对</h2><div><span>航站楼</span><span>托运行李额</span><span>入境与过境要求</span><span>末班接驳</span><span>取消与改签</span></div></section><Source>{sourceLine}</Source></div>}
