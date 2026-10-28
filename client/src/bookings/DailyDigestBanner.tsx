@@ -108,17 +108,32 @@ export default function DailyDigestBanner({
     const directLegs = pending.filter((l) =>
       (l.options ?? []).some((o) => (o.stops ?? 0) === 0)
     ).length;
+    /* 2026-10-27 类别2修复：待订段此前不看 flightState——实查确认无直飞（none）
+     * 与还没查（pending）全混进同一个待订计数，none 段只会让「有直飞」变小、
+     * 没有任何提示，用户分不清是没直飞还是没查。与 ItineraryDayCard/预订页
+     * 弹窗同口径拆开标注；ok 段以有无直飞选项为准（directLegs）。 */
+    const noneLegs = pending.filter((l) => l.flightState === "none").length;
+    const queryLegs = pending.filter(
+      (l) => l.flightState === "pending"
+    ).length;
     const minIntl = minPrice("intl");
     const minInter = minPrice("intercity");
-    const latest = active
-      .map((l) => l.queriedAt)
-      .filter(Boolean)
-      .sort()
-      .pop();
+    // 更新时间只认待订段的实查时间；已出票段的静态 queriedAt 不代表待订价新鲜度
+    const latest =
+      pending
+        .map((l) => l.queriedAt)
+        .filter(Boolean)
+        .sort()
+        .pop() ??
+      active
+        .map((l) => l.queriedAt)
+        .filter(Boolean)
+        .sort()
+        .pop();
     const parts = [
       `${active.length}段`,
       `${ticketedCount}段已出票`,
-      `${pending.length}段待订（${directLegs}段有直飞）`,
+      `${pending.length}段待订（${directLegs}段有直飞${noneLegs ? ` · ${noneLegs}段实查无直飞` : ""}${queryLegs ? ` · ${queryLegs}段待查询` : ""}）`,
       minIntl != null ? `国际段 $${minIntl}/人起` : null,
       minInter != null ? `城际段 $${minInter}/2人起` : null,
       `更新于 ${shortT(latest as string) ?? "—"}`,
