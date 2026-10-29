@@ -349,6 +349,7 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   "广藏市场 Gwangjang Market": { lat: 37.5697826, lng: 127.0006548 }, // ② Nominatim Gwangjang Market（amenity/marketplace，昌庆宫路12街）
   "梨泰院 Itaewon": { lat: 37.53842, lng: 126.992 }, // ② Nominatim 이태원동（place/quarter，龙山区梨泰院洞）
   "乐天世界 Lotte World": { lat: 37.5111041, lng: 127.0982333 }, // ② Nominatim 롯데월드（tourism/theme_park，奥林匹克路240号）
+  "韩服体验 · Hanboknam 短租": { lat: 37.5762329, lng: 126.9733124 }, // 2026-10-28 site-improve-hourly 补（类别5/2）：固定场馆缺钉总表续项，此前该目录景点四级坐标链全缺（findStopCoord/MUST_BOOK_COORDS/EXTRA 均无、模糊不命中——stopCoords 只有景福宫宫点，无韩服店站），预订筛选/收藏地图静默缺钉。坐标为该店景福宫分店集合点：多源同记门牌 133-5 Sajik-ro（사직로 133-5，钟路区，邮编 03053，B1~2 层）＋景福宫站 3 号线 4 号出口步行 1 分钟——TripAdvisor 店铺页、创途 Creatrip 分店表、Klook/Lemon8 实测帖三源门牌逐字一致；本点距站内核验宫点（37.579754,126.9766818）约 500 米、位处宫西站旁，与“站旁店”口径一致；注意与北村分店点（37.5798,126.9847，安国站 2 号出口一带）区分，本条目明写景福宫店、只钉景福宫分店不用北村点。本轮 map.geocode 对首尔查询（含景福宫站名）均回空、无法作 geocode 交叉印证，坐标来源如实记为 tour 集合点、非 geocode/Places 本体点；同轮 Jdot Tree（西大门 vs 钟路区地址冲突未解）、Seasons of Neighbors（无店铺本体核准）、FITFAC（多分店）、芭东泰拳观赛（两拳场并存）、游船与出海团（线路/群岛无单点）仍不硬钉，续留待核
   // 诚实跳过（不编造）：皮皮岛（群岛无单点）、湄南河游船（线路无单点）
 };
 
