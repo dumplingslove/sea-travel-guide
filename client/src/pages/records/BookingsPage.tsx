@@ -861,6 +861,22 @@ function FavoriteActionList({
   const [menuId, setMenuId] = useState<number | null>(null);
   /* 价格追踪类别筛选（2026-10-16 redesign）：页头 chips 按类型过滤，与预定筛选的类别口径一致 */
   const [typeFilter, setTypeFilter] = useState<"all" | "flight" | "hotel" | "restaurant" | "attraction">("all");
+  /* 类别筛选联动地图（2026-10-28 用户：只看机票/酒店/景点/餐厅时，地图也要只显示该类，
+     不能列表筛了、地图还全量）：航班只留航线（机场点由航线层自己画），酒店/餐厅/景点只留该 kind 的点（含候选） */
+  const filteredMapItems = useMemo(() => {
+    const byCity = mapCity ? bookingMapItems.filter((it) => it.city === mapCity) : bookingMapItems;
+    if (typeFilter === "all") return byCity;
+    if (typeFilter === "flight") return [];
+    return byCity.filter((it) => it.kind === typeFilter);
+  }, [bookingMapItems, mapCity, typeFilter]);
+  const filteredFlightRoutes = useMemo(() => {
+    if (typeFilter !== "all" && typeFilter !== "flight") return [];
+    return mapCity
+      ? bookingFlightRoutes.filter((r) => r.fromCity === mapCity || r.toCity === mapCity)
+      : bookingFlightRoutes;
+  }, [bookingFlightRoutes, mapCity, typeFilter]);
+  /* 切类别时清掉旧的卡片高亮，避免高亮指到已筛掉的卡 */
+  useEffect(() => { setMapSelKey(null); }, [typeFilter]);
   const bookedCount = favs.filter(
     (f) =>
       confirmedByName.has(f.row.title.trim().toLowerCase()) ||
@@ -1007,18 +1023,22 @@ function FavoriteActionList({
         ))}
       </div>
       <p className="text-[11px] text-gray-400 mb-2">
-        地图上 🏨 是收藏与候选酒店、🏛️ 是该城全部景点、🍽️ 是餐厅——挑酒店时对照位置分布和离景点的远近看。
+        {typeFilter === "all"
+          ? "地图上 🏨 是收藏与候选酒店、🏛️ 是该城全部景点、🍽️ 是餐厅——挑酒店时对照位置分布和离景点的远近看。"
+          : typeFilter === "flight"
+            ? "已按类别筛选：地图只显示 ✈️ 航班航线。"
+            : typeFilter === "hotel"
+              ? "已按类别筛选：地图只显示 🏨 酒店（含候选）。"
+              : typeFilter === "restaurant"
+                ? "已按类别筛选：地图只显示 🍽️ 餐厅（含候选）。"
+                : "已按类别筛选：地图只显示 🏛️ 景点。"}
       </p>
       <SafeStickyMapBar
-        items={mapCity ? bookingMapItems.filter((it) => it.city === mapCity) : bookingMapItems}
+        items={filteredMapItems}
         activeCity={mapCity}
         activeLabel={mapSelLabel}
         activeItemKeys={mapSelKey ? [mapSelKey] : null}
-        flightRoutes={
-          mapCity
-            ? bookingFlightRoutes.filter((r) => r.fromCity === mapCity || r.toCity === mapCity)
-            : bookingFlightRoutes
-        }
+        flightRoutes={filteredFlightRoutes}
         title="🗺️ 价格追踪地图"
         storageKey="sticky-map-bookings"
         stickyTop={stickyBase + CITYNAV_H}
