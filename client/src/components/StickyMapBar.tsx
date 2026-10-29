@@ -303,6 +303,7 @@ const EXTRA_ATTRACTION_COORDS: Record<string, { lat: number; lng: number }> = {
   "卡塔诺伊海滩": { lat: 7.80657, lng: 98.29678 }, // mapcarta Ao Kata Noi 海湾中心
   "芭东 Bangla 路": { lat: 7.893274, lng: 98.298102 }, // 39 Soi Bangla Rd 沿街商户坐标
   "Siam Niramit": { lat: 7.932287, lng: 98.37563 }, // 官方站登记地址 55/81 Moo 5 的 place 坐标
+  "Torry's Ice Cream 冰淇淋刨冰": { lat: 7.8854595, lng: 98.3892454 }, // 2026-10-28 site-improve-hourly 补（类别5/2）：固定场馆缺钉总表续项，此前该目录景点四级坐标链全缺（findStopCoord 精确不命中——行程站名「Torry's Ice Cream 刨冰收尾（先确认打烊时间）」与目录标题不同；MUST_BOOK_COORDS/EXTRA 均无；模糊匹配 norm 后「torry'sicecream冰淇淋刨冰」与站名 norm「torry'sicecream刨冰收尾」互不包含），预订筛选/收藏地图静默缺钉（行程日地图因站名精确命中 stopCoords 922 点反而不缺）。坐标复用站内已核验点：stopCoords 922（2026-10-26 Nominatim 实查 Torry's Ice Cream Boutique node 本体，display_name 明写「16, ซอยรมณีย์（Soi Rommanee）」，与 data.ts 条目「老城店，16 Soi Rommanee 一带」逐字一致；此前 map.geocode 异址冲突已解除）。键用 data.ts 全标题。图示老城店本体。
   // —— 曼谷（同轮按"工作模型全局应用"补齐行程城市） ——
   "大皇宫 & 玉佛寺": { lat: 13.7493514, lng: 100.4918643 }, // 复用行程站点"大皇宫深度游"已核验坐标
   "卧佛寺 Wat Pho": { lat: 13.7463456, lng: 100.4927381 }, // 复用行程站点"卧佛寺与按摩"已核验坐标
