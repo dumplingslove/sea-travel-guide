@@ -1106,6 +1106,11 @@ export function applyCloudDayOverride(
         // 13:00 入住与 15:30 轻走都不可能——15:30 人还在空中，且「倒时差」前提对国内短途
         // 根本不成立；入住后休整已有下方 Park Hyatt 专站覆盖，故 15:30 站直接滤掉、
         // 入住站时标改「傍晚」（与专站「实际入住已是傍晚」一致，periodOf 归晚上栏）。
+        // 2026-10-31 23:38 同轮续修（22:38 轮留待单独立项）：上轮只换了时标与「跨洲→短途」一词，
+        // 入住站 detail 仍原样渲染静态泛建议——「小红书路线共识：住暹罗 Siam / Asok 素坤逸」
+        // 与本日定版（今晚入住 Park Hyatt Bangkok、Ploenchit 一带、只住一晚、次日转 Rosewood）
+        // 直接冲突，且「留足飞行后缓冲」的前提已被专站的休整安排覆盖；故整句改写为定版口径，
+        // 不再保留泛选址建议与缓冲前提。站名不动（stopCoords 按名取坐标）。
         ...base.stops
           .filter((s) => s.name !== "酒店周边轻走")
           .map((s) => {
@@ -1113,7 +1118,8 @@ export function applyCloudDayOverride(
               return {
                 ...s,
                 time: "傍晚",
-                detail: s.detail.replace("跨洲飞行", "短途飞行"),
+                detail:
+                  "今晚定版入住 Park Hyatt Bangkok（Ploenchit 一带），傍晚入住、只住一晚；休整换衣见下方专站——不再按泛泛的 Siam／Asok 选址建议走，已定酒店为准。",
               };
           /* 2026-10-23：静态首日的「湄南河畔晚餐」与今晚已订的 Le Du（18:30）冲突，
            * 改为傍晚休整；Le Du 本身由行程卡按预订记录动态进时间线，不在这里写死。 */
