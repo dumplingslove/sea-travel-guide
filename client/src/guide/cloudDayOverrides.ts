@@ -1151,7 +1151,7 @@ export function applyCloudDayOverride(
               ...s,
               name: "傍晚休整 · 准备晚餐",
               detail:
-                "今晚正餐是已订好的 Le Du（18:30，Silom，离 Park Hyatt Bangkok 打车约 10–15 分钟，用餐约 2–2.5 小时）：傍晚先回酒店休整、换身衣服再出发，别在外面逛到赶。静态行程原排的河畔晚餐今晚不排，Asiatique 河滨夜市留到明天 12-19 晚（Rosewood Bangkok 那天）顺路。",
+                "今晚正餐是已订好的 Le Du（18:30，Silom，离 Park Hyatt Bangkok 打车约 10–15 分钟，用餐约 2–2.5 小时）：傍晚先回酒店休整、换身衣服再出发，别在外面逛到赶。静态行程原排的河畔晚餐今晚不排；Asiatique 河滨夜市本程不另排——12-19 晚已由耀华力夜市段＋班塔通夜食线占满，时间线已滤掉该站，不叠加。（2026-11-01 site-improve-hourly 顺延指针复核）",
             };
           return s;
         }),
