@@ -843,14 +843,22 @@ export function applyCloudDayOverride(
               }
             : s,
     );
+    // 2026-11-01 site-improve-hourly 类别2：石村湖备选原先 push 到末尾、
+    // 但随后的时间排序又把它插回 17:00——与明洞同刻、夹在清溪川与 Jdot 之间，
+    // 蚕室备选线混进光化门主线，时间线与地图编号都会误读成顺路一站。
+    // 修法：先按时间排主线，再把石村湖备选缀到末尾（其 time/detail 不动，
+    // 仍是 17:00 到、与光化门线二选一的备选，不进主线时序）。
+    const sortedStops = [...demoted].sort((a, b) => {
+      const pa = /^(\d{2}):(\d{2})$/.exec(a.time);
+      const pb = /^(\d{2}):(\d{2})$/.exec(b.time);
+      if (!pa || !pb) return 0;
+      return Number(pa[1]) * 60 + Number(pa[2]) - (Number(pb[1]) * 60 + Number(pb[2]));
+    });
+    const mainStops = sortedStops.filter((s) => !s.name.includes("石村湖"));
+    const altStops = sortedStops.filter((s) => s.name.includes("石村湖"));
     return {
       ...base,
-      stops: [...demoted].sort((a, b) => {
-        const pa = /^(\d{2}):(\d{2})$/.exec(a.time);
-        const pb = /^(\d{2}):(\d{2})$/.exec(b.time);
-        if (!pa || !pb) return 0;
-        return Number(pa[1]) * 60 + Number(pa[2]) - (Number(pb[1]) * 60 + Number(pb[2]));
-      }),
+      stops: [...mainStops, ...altStops],
       food:
         "🍽️ 本地吃法（2026-10-21 美食发掘，证据 food-discovery/food-seoul-beijing-xian-2026-10-21.md）：午餐正选按今日时间线走景福宫旁土俗村参鸡汤（见时间线站）；若临时改走明洞线，替换选项是明洞河东馆 Hadongkwan（明洞 9-gil 12 号，1939 年老店、米其林必比登）——只卖清炖牛骨汤 gom tang 与白切牛肉两样，普通汤 18,000 韩元、特制（带牛肚）23,000 韩元，先付款后入座；7:00–16:00、周日休（今天周四正常），汤常在午后卖完打烊，配首尔式萝卜泡菜——只作替换、不是再加一顿。" +
         "明洞线内部备选：走明洞线时河东馆汤卖完或队伍太长，就转去几分钟外的明洞饺子 Myeongdong Kyoja 本店（明洞 10-gil 29 号，1966 年开业、连续 8 年米其林必比登）——只卖四样：鸡汤底刀削面（配 4 只小蒸饺，11,000–12,000 韩元，两来源略有出入以店内为准，面可免费续）、蒸饺 12,000 韩元、拌面与夏季限定豆浆面（冬天没有），蒜味泡菜是招牌配角；10:30–21:00（末点 20:30），常年排队，14:00–16:00 错峰最稳，正好接河东馆打烊后的时段。" +
