@@ -1101,9 +1101,20 @@ export function applyCloudDayOverride(
     return {
       ...base,
       stops: [
-        ...base.stops.map((s) => {
-          if (s.name === "入住酒店")
-            return { ...s, detail: s.detail.replace("跨洲飞行", "短途飞行") };
+        // 2026-10-31 site-improve 类别1（曼谷 12-18 抵达日旧静态钟点残留，与普吉 12-11/12-14
+        // 同类）：本日上午还在清迈、下午飞曼谷（定版选落地 16:30 前的午后班），静态首日的
+        // 13:00 入住与 15:30 轻走都不可能——15:30 人还在空中，且「倒时差」前提对国内短途
+        // 根本不成立；入住后休整已有下方 Park Hyatt 专站覆盖，故 15:30 站直接滤掉、
+        // 入住站时标改「傍晚」（与专站「实际入住已是傍晚」一致，periodOf 归晚上栏）。
+        ...base.stops
+          .filter((s) => s.name !== "酒店周边轻走")
+          .map((s) => {
+            if (s.name === "入住酒店")
+              return {
+                ...s,
+                time: "傍晚",
+                detail: s.detail.replace("跨洲飞行", "短途飞行"),
+              };
           /* 2026-10-23：静态首日的「湄南河畔晚餐」与今晚已订的 Le Du（18:30）冲突，
            * 改为傍晚休整；Le Du 本身由行程卡按预订记录动态进时间线，不在这里写死。 */
           if (s.name === "湄南河畔晚餐")
