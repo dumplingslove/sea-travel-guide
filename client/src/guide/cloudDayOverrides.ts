@@ -169,6 +169,9 @@ export function applyCloudDayOverride(
   //  其 food 原句「Kampong Glam 一带马来餐；晚餐酒店附近解决」被本块全量替换 food 时整句丢掉，
   //  致 12-09 只有早餐备选＋甜品备选＋已订晚餐、午餐位空缺（14:38 轮观察项）。本轮只捡回午餐半句，
   //  晚餐半句已被已订 Burnt Ends 取代、不再重复；店名与价格基底本身未给、未帖级坐实，不编具体店。
+  // 2026-10-31 site-improve-hourly 上午二选一注记（16:38 轮遗留复核项）：合并后上午栏并存基底
+  //  Kampong Glam 09:30／Bugis 11:00 与本块国家博物馆上午半日三站，原 tip 只写「上午先去博物馆」
+  //  未标二选一；本轮只补一条 tip，不动 stops、不改已订锚点、不编顺延日期。
   if (cityZh === "新加坡" && ordinalInCity === 3) {
     return {
       ...base,
@@ -188,7 +191,8 @@ export function applyCloudDayOverride(
         "✅ 晚餐已订：Burnt Ends（7 Dempsey Road，Dempsey 一带）18:30，5 人（4 大 1 小，幼儿 2 岁），Main Dining Area 桌位，确认号 BurntYZVRGCM；信用卡仅作担保、尚未扣款，用餐前 24 小时内取消或 no-show 收 SGD 100/位，别迟到。（Jumbo Seafood 已改到昨晚 12-08 18:00，不在今晚。）",
       tip:
         base.tip +
-        "【上午半日·国家博物馆】今天上午先去国家博物馆新展厅（瑞吉步行圈、室内恒温），逛完回酒店午休，晚上 Burnt Ends 18:30 别迟到；博物馆票价未坐实，出发前在官网核价再买，别按攻略旧价准备现金。（2026-10-21 发现第二遍 round 379）",
+        "【上午半日·国家博物馆】今天上午先去国家博物馆新展厅（瑞吉步行圈、室内恒温），逛完回酒店午休，晚上 Burnt Ends 18:30 别迟到；博物馆票价未坐实，出发前在官网核价再买，别按攻略旧价准备现金。（2026-10-21 发现第二遍 round 379）" +
+        "【上午二选一】国家博物馆是上午半日量级：选它就占整个上午，基底 Kampong Glam／Bugis 晨站不同时排，午餐仍到 Kampong Glam 一带吃马来餐；想逛老街区晨站就改日再去博物馆。（2026-10-31 site-improve-hourly）",
     };
   }
 
