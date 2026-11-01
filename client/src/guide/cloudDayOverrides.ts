@@ -253,14 +253,14 @@ export function applyCloudDayOverride(
   //  行前政策面板称免签 60→30 天、TDAC 出发前 72 小时填报——均为面板级、须按泰国官方渠道核实，不凭面板下结论；
   //  本行程泰国段普吉＋清迈＋曼谷共约 10 天、在 30 天内不受影响。Central Phuket 圣诞 2026 全词零帖、维持未官宣。）
   if (cityZh === "普吉" && ordinalInCity === 0) {
-    return {
-      ...base,
-      // 2026-10-23 存量 tip 升 stops 迁移第 2 天：Boat Avenue 周五夜市（原只在 tip 里的景点级条目）已升为本日 stops 备选站
-      // （只有周五晚有市、今天 12-11 正是周五、近 Banyan Tree Phuket、体量小餐饮偏西式、只顺逛不作正餐），tip 只留一句指针。
-      stops: [
-        // 2026-10-24 密度审计（到达日口径）：普吉老镇 20:00 站降为备选口径——到达日主项只留
-        // 海滩轻走＋悬崖日落两个轻量项，酒店时间占大头（见下方新增酒店时间站），老镇留 12-13 老城日。
-        ...base.stops.map((s) =>
+    // 2026-11-01 site-improve-hourly 类别2（与首尔石村湖修法同类）：渲染层按时段分组、组内保持数组顺序不排序，
+    // 基底 20:00 老镇备选站原先夹在定版晚间链（日落→夜市→Jampa 19:30）中间，Jampa 反而排在 20:00 备选之后。
+    // 修法：主线在前、老镇备选缀全天末尾（其 time/detail 一字不动，仍是 20:00 备选、留 12-13 老城日再逛）。
+    // 2026-10-23 存量 tip 升 stops 迁移第 2 天：Boat Avenue 周五夜市（原只在 tip 里的景点级条目）已升为本日 stops 备选站
+    // （只有周五晚有市、今天 12-11 正是周五、近 Banyan Tree Phuket、体量小餐饮偏西式、只顺逛不作正餐），tip 只留一句指针。
+    // 2026-10-24 密度审计（到达日口径）：普吉老镇 20:00 站降为备选口径——到达日主项只留
+    // 海滩轻走＋悬崖日落两个轻量项，酒店时间占大头（见下方新增酒店时间站），老镇留 12-13 老城日。
+    const phuket0Mapped = base.stops.map((s) =>
           s.name === "普吉老镇"
             ? {
                 ...s,
@@ -277,7 +277,17 @@ export function applyCloudDayOverride(
                     "SIN→HKT 尚未出票、时刻未定（以机票页实查为准，别按旧 09:00 刻度走）：直飞约 2 小时，以实际订到的航班为准；下午抵达乐古浪后按今日主线走——酒店时间＋傍晚 Boat Avenue 夜市＋19:30 Jampa，卡塔/卡伦海滩与悬崖日落两站只留轻量、落地晚就放弃、不硬补。",
                 }
               : s,
-        ),
+        );
+    const phuket0Main = phuket0Mapped.filter(
+      (s) => s.name !== "普吉老镇夜景（备选）",
+    );
+    const phuket0Alt = phuket0Mapped.filter(
+      (s) => s.name === "普吉老镇夜景（备选）",
+    );
+    return {
+      ...base,
+      stops: [
+        ...phuket0Main,
         {
           time: "下午",
           name: "酒店时间 · Banyan Tree 别墅私人泳池（今日主项）",
@@ -296,6 +306,7 @@ export function applyCloudDayOverride(
           detail:
             "定版晚餐（2026-10-23 用户定版 PDF）：Jampa 19:30——状态 tentative：订位口径 12-11 晚有位，押金 ฿1,000／人（两人共 ฿2,000、抵最终账单、提前 ≥48 小时免费取消），待用户确认付款后才算订上，未确认前不算已订、不进已订清单。若 Jampa 最终没订成，晚餐第一备选是同片区 Porto de Phuket 的 Tu Kab Khao 分店（见今日餐饮）。（2026-10-24 定版落站）",
         },
+        ...phuket0Alt,
       ],
       // 2026-10-22 美食发掘第四遍 round 398（证据 food-discovery/food-phuket-xhs-round398-2026-10-22.md）：
       // Tu Kab Khao 的 Porto de Phuket 分店（正对乐古浪大门）作抵达晚第一备选，一家一条短条；
