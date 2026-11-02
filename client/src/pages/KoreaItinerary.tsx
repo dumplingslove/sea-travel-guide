@@ -63,13 +63,13 @@ function SeoulRestaurants() {
   );
 }
 
-/** 首尔景点推荐：复用景点目录，仅显示首尔（15个均已做小红书实测） */
+/** 首尔景点推荐：复用景点目录，仅显示首尔（23个均已做实测） */
 function SeoulAttractions() {
   return (
     <section className="mb-6">
       <h2 className="text-lg font-bold text-gray-900 mb-1">📍 首尔景点推荐</h2>
       <p className="text-xs text-gray-500 mb-3">
-        15个小红书已实测：景福宫、北村韩屋村、明洞、南山首尔塔、圣水洞、星空图书馆、广藏市场等
+        23个已实测：景福宫、北村韩屋村、明洞、南山首尔塔、圣水洞、星空图书馆、广藏市场等
       </p>
       <AttractionCatalog scopeCities={["首尔"]} hideCityTabs />
     </section>
