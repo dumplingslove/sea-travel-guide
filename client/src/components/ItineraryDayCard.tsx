@@ -151,10 +151,9 @@ function addOneDay(iso: string): string {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-/**
- * 每城住宿区间（与航班模型一致：入住=到达当天=本城首日，退房=转场航班当天=下一城首日；
- * 末城退房=本城末日+1）。国内城市不管，只算行程里的城市。
- */
+  /* 每城住宿区间（与航班模型一致：入住=到达当天=本城首日，退房=转场航班当天=下一城首日；
+ * 末城退房=本城末日——末日即离境日，当天退房，不多住一晚；此前末城写成末日+1，
+ * 导致退房日当天卡片误写成 3 晚（2026-11-01 韩国页审计核实，JW 12/30→01-01 应为 2 晚）。 */
 export function cityStayRanges(days: PlanDay[]): Map<string, { checkIn: string; checkOut: string }> {
   const first = new Map<string, string>();
   const last = new Map<string, string>();
@@ -173,7 +172,7 @@ export function cityStayRanges(days: PlanDay[]): Map<string, { checkIn: string; 
     const next = order[i + 1];
     out.set(c, {
       checkIn: first.get(c)!,
-      checkOut: next ? first.get(next)! : addOneDay(last.get(c)!),
+      checkOut: next ? first.get(next)! : last.get(c)!,
     });
   });
   return out;
@@ -707,7 +706,7 @@ export function DayHotelSection({
   selectedKey?: string | null;
 }) {
   /* 住宿行优先用已订酒店记录自身的入住/退房日期（date/dateEnd）：
-   * 城市级区间是靠行程天推导的，曼谷会被推到下一城首日、首尔会被算成末日+1，晚数全错。 */
+   * 城市级区间只作无记录时的兜底（末城退房=末日，见 cityStayRanges）。 */
   const bookedStayLines: string[] = [];
   hotelBookings.forEach((b) => {
     try {
@@ -784,6 +783,13 @@ export function DayHotelSection({
                 <p className="text-xs text-teal-700 mt-1">{b.stayNight === 0 ? "📅 今天入住" : `🌙 住宿第 ${b.stayNight + 1} 晚`}</p>
               )}
               {summary && <p className="text-xs text-gray-600 mt-1">{summary}</p>}
+              {(bd.details?.["入住/退房"] || bd.details?.["取消政策"]) && (
+                <p className="text-xs text-gray-600 mt-1">
+                  {bd.details["入住/退房"] ? `🕒 ${bd.details["入住/退房"]}` : ""}
+                  {bd.details["入住/退房"] && bd.details["取消政策"] ? " · " : ""}
+                  {bd.details["取消政策"] ? `取消：${bd.details["取消政策"]}` : ""}
+                </p>
+              )}
               {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
               <BookingDetailsExpand bd={bd} />
             </div>
