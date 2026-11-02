@@ -755,7 +755,8 @@ export function applyCloudDayOverride(
     };
   }
 
-  // 首尔 12/30（ordinal 0）：圣诞村预约口径已修正——11-05 经官方 App 只锁 12-31 场次，
+  // 首尔 12/30（ordinal 0）：圣诞村预约口径已修正——Klook 分轮制（2026-11-02 round517 官方号新帖）：
+  // 首轮 11.5 只放 11.10–11.25 入场，12-31 场次等后续轮次，11-05 当天抢不到 12-31 属正常；App 线保留；
   // 抵达晚只补查 12-31 候补／放号，不抢 12-30 当天场次（2026-11-01 修正，见本日 tip）
   // （2026-10-19 发现轮换第三轮 round 348 实读：圣诞村 2026-11-08 至 12-31、马戏主题、预约秒空；
   //  发现第二遍 round 376 追加，证据 discovery-seoul-round6-xhs-round376-2026-10-21.md 帖1：
@@ -776,6 +777,8 @@ export function applyCloudDayOverride(
   //  免费快速通行名额、现场排队领等候卡建议 10:30 开门前排），取代上方 round376
   //  「尚未公开／盯官方 IG／Klook 未证实」旧口径——本日 tip 已改坐实口径，data.ts
   //  目录条目此前已同步；同轮该项补入 GuideApp MUST_BOOK_ATTRACTIONS（预订筛选可见）。
+  //  （2026-11-02 round517 官方号新帖补：Klook 分轮制共 4 轮，首轮 11.5 只放 11.10–11.25、
+  //  单日 50 名额、每券最多 4 人，12-31 须等后续轮次；本日 tip 与 data.ts／MUST_BOOK 原因已同步，App 线保留。）
   if (cityZh === "首尔" && ordinalInCity === 0) {
     return {
       ...base,
