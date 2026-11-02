@@ -1,8 +1,8 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-11-02T04:48:51Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-11-02T10:49:24Z）
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
-   "complete": 33,
+   "complete": 32,
    "items": [
     {
      "name": "Aman Nai Lert Bangkok 安曼纳莱特",
@@ -1183,7 +1183,7 @@ export const initialResearchStatus = {
    "total": 34
   },
   "chiangmai": {
-   "complete": 18,
+   "complete": 19,
    "items": [
     {
      "name": "Four Seasons Resort Chiang Mai 清迈四季",
@@ -8419,5 +8419,5 @@ export const initialResearchStatus = {
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
  "total_locations": 231,
- "updated_at": "2026-11-02T04:48:51Z"
+ "updated_at": "2026-11-02T10:49:24Z"
 };
