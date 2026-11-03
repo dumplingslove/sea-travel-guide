@@ -534,6 +534,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
   // 本轮仍故意不列：Seasons of Neighbors（Nominatim 空返回、map.geocode 只回
   // Chang Klan STREET 级，无店铺本体，钉街道等于冒充本体）、Jdot Tree／Dib
   // Bangkok／Jungle Flight JF2（理由同键 922 注记，未变）。
+  // 2026-11-03 site-improve：上句 JF2 排除已由键 924 取代——2026-10-28 EXTRA 营地点经 plus code 收敛终核，日图改钉营地本体；Seasons／Jdot／Dib 排除不变。
   923: [
     { name: "Lennon's 黑胶吧（可选）", time: "21:00", lat: 13.74335, lng: 100.54896, note: "图示 Lennon's 本体（Rosewood Bangkok 30 楼，geocode 实查，与酒店 exact 坐标交叉一致）" },
     { name: "Cloud 11 创意综合体 · 南素坤逸（备选）", time: "傍晚（备选）", lat: 13.6834242, lng: 100.6082854, note: "Cloud 11 本体（Nominatim 实查，南素坤逸 Phra Khanong）" },
@@ -543,6 +544,25 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "Jampa 晚餐（tentative · 待确认订金）", time: "19:30", lat: 8.0394207, lng: 98.3173132, note: "图示 Jampa 餐厅本体（Nominatim 实查，Thalang）" },
     { name: "酒店烹饪课 · Cook like a Thai Chef（137 Pillars）", time: "15:00", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（烹饪课在酒店内，placeCoords exact 坐标）" },
     { name: "酒店 Spa · 137 Pillars 放松", time: "傍晚", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（Spa 在酒店内，placeCoords exact 坐标）" },
+  ],
+  // ============ 云端定版 stops 补钉第五轮（2026-11-03 site-improve-hourly 类别 5/2） ============
+  // 本轮新维：cloudDayOverrides 51 个新增 stop 全名逐条跑 findStopCoord 精确匹配，
+  // 31 命中、20 缺失；缺失中 17 个为泛指站（酒店时间／换房／接送／出海团／二选一午餐，
+  // 按键 920 头注「泛指站故意不列」不钉）、Seasons of Neighbors 与 Jdot Tree 仍按
+  // 键 923 排除理由不钉（前者无店铺本体只有街道级、后者地址写法冲突未解）。
+  // 唯一可结案的是 Jungle Flight JF2：键 921–923 的排除理由是「只命中市区办公室、
+  // 营地本体无命中」，但 2026-10-28 site-improve 已在 StickyMapBar EXTRA 表把
+  // 该营地结案——map.geocode FULL_ADDRESS 命中泰文名本体（Moo 2, Thep Sadet,
+  // Doi Saket 50220，18.95249,99.29611），渠道集合点 plus code X73W+W6X 与
+  // X73W+R98 解码后距本点仅约 0.23–0.27 km、同营地范围收敛，Klook 官方地址亦记
+  // T.Pa Miang A.Doi Saket 同区；古城 Loi Kroh 办公室点已弃用不取。
+  // 预订筛选地图已有该 EXTRA 点，但云端行程日地图只走 findStopCoord 精确匹配，
+  // 且行程日全名「Jungle Flight JF2 早班 · 丛林飞跃（定版主线）」与 EXTRA 键名
+  // 不同、永不命中，致 12-17 上午主线在日图上静默缺钉（同日下午酒店烹饪课有钉，
+  // 故不是整日回退城市标记，而是主线单点缺失）。本键按云端全名补钉，坐标复用
+  // EXTRA 已核验营地点、不新编坐标；接人 8:00–8:30 在酒店大堂，图钉示营地本体。
+  924: [
+    { name: "Jungle Flight JF2 早班 · 丛林飞跃（定版主线）", time: "08:00", lat: 18.95249, lng: 99.29611, note: "图示 Jungle Flight 营地本体（2026-10-28 EXTRA 已核验点，plus code 收敛同营地范围；接人在酒店，不钉办公室）" },
   ],
   35: [
     // 景福宫/土俗村参鸡汤：静态 Day22（首尔第 2 天）站点，此前 stopCoords 侧缺条目、
