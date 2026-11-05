@@ -885,7 +885,7 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
       leg.businessPriceNote = null;
       leg.queriedAt = queriedAt || null;
       leg.priceBasis = basis || null;
-      leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}确认当天无直飞${basis ? `（${basis}）` : ""}。`;
+      leg.note = `${ctx}；当天无直飞。`;
       return;
     }
 
@@ -901,11 +901,9 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
       const o = bizOpts.find((x) => x.flight === (recBizF.flight ?? "") && x.depart === recBizF.dep);
       if (o) { o.recommend = true; o.recommendReason = dbRecommendReason(recBizF); }
     }
-    const carrierSummary = (() => {
-      const m = new Map<string, number>();
-      for (const f of nf) { const c = fullCarrier(f.airline); m.set(c, (m.get(c) || 0) + 1); }
-      return [...m.entries()].map(([c, n]) => `${c}×${n}`).join("、");
-    })();
+    /* 2026-11-05 site-audit-daily：note 只留静态事实短句（≤60 字），此处不再覆写——
+       实查时间由 leg.queriedAt、起价由 priceNote、班次由 options 列表各自展示
+       （GuideApp flightsrc 行已单独显示实查时间与价格口径）。 */
 
     leg.options = ecoOpts;
     leg.businessOptions = bizOpts;
@@ -931,7 +929,6 @@ export function refreshLegFromDb(leg: FlightLegInfo, dateOverride?: string): voi
       leg.carrier = null;
       leg.schedule = null;
     }
-    leg.note = `${ctx}；Google Flights 实查${queriedAt ? ` ${queriedAt}` : ""}（${basis}，当天${nf.length}班直飞：${carrierSummary}）。`;
 }
 
 function applyFlightDb(): void {
