@@ -573,6 +573,7 @@ export function applyCloudDayOverride(
   if (cityZh === "清迈" && ordinalInCity === 0) {
     return {
       ...base,
+      title: "抵达清迈 · 酒店休整＋长康路夜市",
       stops: [
         {
           time: "12:00",
@@ -657,6 +658,7 @@ export function applyCloudDayOverride(
   if (cityZh === "清迈" && ordinalInCity === 1) {
     return {
       ...base,
+      title: "大象保护区 · 泰拳＋双龙寺日落",
       stops: [
         {
           time: "07:30",
@@ -730,6 +732,7 @@ export function applyCloudDayOverride(
   if (cityZh === "清迈" && ordinalInCity === 2) {
     return {
       ...base,
+      title: "丛林飞跃 · 泰餐烹饪课",
       stops: [
         {
           time: "08:00",
