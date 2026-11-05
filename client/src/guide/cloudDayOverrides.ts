@@ -298,6 +298,8 @@ export function applyCloudDayOverride(
     );
     return {
       ...base,
+      // 2026-11-05 site-improve-hourly：基底标题「飞普吉 · 海滩日落」只写轻量项、与定版主线（酒店时间＋周五夜市）不符；渲染层以 detail.title 作副标题，覆盖层显式设 title。
+      title: "抵达普吉 · 酒店休整＋周五夜市",
       stops: [
         ...phuket0Main,
         {
@@ -348,6 +350,8 @@ export function applyCloudDayOverride(
   if (cityZh === "普吉" && ordinalInCity === 1) {
     return {
       ...base,
+      // 2026-11-05 site-improve-hourly：基底标题「攀牙湾 · 海蚀洞」与本日定版（包船皮皮岛＋PRU）完全错位，攀牙湾定版在 12-14；覆盖层显式设 title。
+      title: "包船皮皮岛 · PRU 晚餐",
       stops: [
         {
           time: "07:00",
@@ -424,6 +428,8 @@ export function applyCloudDayOverride(
   if (cityZh === "普吉" && ordinalInCity === 2 && totalInCity >= 3) {
     return {
       ...base,
+      // 2026-11-05 site-improve-hourly：基底标题「攀牙湾 · 海蚀洞」与本日定版（岛南包车＋神仙半岛日落＋老城夜市）完全错位；覆盖层显式设 title。
+      title: "岛南包车 · 大佛＋神仙半岛日落＋老城夜市",
       stops: [
         {
           time: "上午",
@@ -498,6 +504,8 @@ export function applyCloudDayOverride(
   if (cityZh === "普吉" && ordinalInCity === 3) {
     return {
       ...base,
+      // 2026-11-05 site-improve-hourly：基底标题「皮皮岛 · 浮潜」与本日定版（攀牙湾纯玩线）完全错位，皮皮岛定版在 12-12；覆盖层显式设 title。
+      title: "攀牙湾纯玩一日游 · Dinso 休息晚",
       stops: [
         {
           // 2026-10-31 site-improve-hourly：旧 07:30 无来源、与运营商 08:00–09:00 接人时段冲突，改时段标签口径（精确接人时段见 detail 内运营商口径）。
