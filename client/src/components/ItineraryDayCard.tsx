@@ -36,6 +36,7 @@ import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
 import { FLIGHT_LEGS, refreshLegFromDb, type FlightLegInfo } from "@/bookings/bookingTimeline";
+import { bareName } from "@/bookings/nameMatch";
 
 /* ============ 每日行程 enrichment：预订/收藏/酒店（2026-10-03 用户模型） ============
  * 行程页是出行时每天看的：每天要显示当天的酒店、航班、餐厅（收藏的和已订的），
@@ -1221,9 +1222,14 @@ export function ItineraryDayCard({
     })
     .filter(({ item }) => {
       if (!item) return true;
+      // 去括号再比对（2026-11-06 site-improve-hourly 类别1/2）：括号里只是顺带提及
+      // （如 12-12「酒店时间 · 回别墅歇脚（出海后、PRU 前）」）不算该餐厅已有一站；
+      // 否则已订的 PRU 17:45 会被去重误杀、晚间时间线只剩 NAKA 夜市备选。
+      const bare = bareName(item.name);
       return !stops.some((s) => {
-        const m = matchItem(s.name, day.city_zh, restaurants);
-        return (m && m.name === item.name) || s.name.includes(item.name);
+        const bn = bareName(s.name);
+        const m = matchItem(bn, day.city_zh, restaurants);
+        return (m && m.name === item.name) || (bare !== "" && bn.includes(bare));
       });
     })
     .sort((x, y) => (x.bd.time || "99:99").localeCompare(y.bd.time || "99:99"));
