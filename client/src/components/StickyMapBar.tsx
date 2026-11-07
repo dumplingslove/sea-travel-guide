@@ -925,20 +925,31 @@ export default function StickyMapBar({
           if (pts.length === 1) selKindRef.current = e.kind;
         }
       });
+      // 2026-11-07 用户：手机上看地图，点卡片后缩得太近会丢掉当天其他地点。
+      // 当日视角 = 当天本地点（景点/餐厅/酒店）全部同框；机场不算在内——
+      // 机场常在几千公里外，纳入 fitBounds 会把地图拉到洲际尺度。
+      const local = [...dl.entries.values()].filter((e) => e.kind !== "airport");
+      const localPts = local.map((e) => e.marker.getLatLng());
+      const dayZoom = () => {
+        if (localPts.length <= 1) return 14;
+        return Math.min(map.getBoundsZoom(L.latLngBounds(localPts).pad(0.3)), 15);
+      };
       if (pts.length) {
-        // 点了具体卡片：平移+缩放到位，但用 setView 直接过渡，不要 flyTo 的先拉远再推进效果
-        // （2026-10-04 用户：要平移缩放到合适大小，不要从头缩放的效果）
+        // 点了具体卡片：平移到该点并高亮，但 zoom 回到“当天全景”那一档，
+        // 当天其他点仍在同一视野里，不再缩到 15/16 只剩一栋楼。
         if (pts.length === 1) {
-          const kind = selKindRef.current;
-          const target = kind === "hotel" || kind === "restaurant" ? 16 : kind === "attraction" ? 15 : 14;
-          const z = Math.max(map.getZoom(), target);
-          map.setView(pts[0], z, { animate: true, duration: 0.8 });
+          map.setView(pts[0], dayZoom(), { animate: true, duration: 0.8 });
         } else map.flyToBounds(L.latLngBounds(pts).pad(0.4), { duration: 0.8 });
       } else {
-        // 刚切到当日（还没点具体卡）：看当日全景
-        const all = [...dl.entries.values()].map((e) => e.marker.getLatLng());
-        if (all.length === 1) map.flyTo(all[0], 14, { duration: 0.8 });
-        else if (all.length > 1) map.flyToBounds(L.latLngBounds(all).pad(0.3), { duration: 0.8 });
+        // 刚切到当日（还没点具体卡）：看当日全景（本地点同框）
+        if (localPts.length === 1) map.flyTo(localPts[0], 14, { duration: 0.8 });
+        else if (localPts.length > 1) map.flyToBounds(L.latLngBounds(localPts).pad(0.3), { duration: 0.8 });
+        else {
+          // 当天全是机场（纯转场日）：退回全部点同框
+          const all = [...dl.entries.values()].map((e) => e.marker.getLatLng());
+          if (all.length === 1) map.flyTo(all[0], 14, { duration: 0.8 });
+          else if (all.length > 1) map.flyToBounds(L.latLngBounds(all).pad(0.3), { duration: 0.8 });
+        }
       }
       refreshLabelVisibility(); // 显隐变化后同步标签（当日模式隐藏了底图标记）
       return;
