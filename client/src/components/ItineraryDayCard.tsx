@@ -971,14 +971,25 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
 function BookedRestBlock({
   entry,
   city,
+  onSelect,
+  selected,
 }: {
   entry: { b: DayBooking; bd: BookingData; item?: Item };
   city: string;
+  /** 点选（2026-11-07 用户：已订餐厅卡点一下，顶栏地图飞过去） */
+  onSelect?: () => void;
+  selected?: boolean;
 }) {
   const { b, bd, item } = entry;
   const summary = bookingSummary(bd);
   return (
-    <div className="border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg">
+    <div
+      onClick={onSelect ? (e) => {
+        if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
+        onSelect();
+      } : undefined}
+      className={`border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg${onSelect ? " cursor-pointer" : ""}${selected ? " ring-2 ring-green-600" : ""}`}
+    >
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
           {bd.time || "晚上"}
@@ -1331,12 +1342,13 @@ export function ItineraryDayCard({
 
   /**
    * 当天地图数据（2026-10-04 用户：点卡片后顶栏地图只显示这一天）：
-   * 景点按时间线顺序（有坐标才收）→ 餐厅（收藏+推荐，有坐标才收）→ 当天已确认的酒店（只收已确认的那家）
+   * 景点按时间线顺序（有坐标才收）→ 餐厅（只收当天已订的几家，有坐标才收；
+   * 2026-11-07 用户：不去的餐厅不标、不连线，收藏/推荐只是选项不进路线）
+   * → 当天已确认的酒店（只收已确认的那家）
    */
-  // memo 签名：收藏/推荐/预订变化时重算当天地图数据
-  const favSigCheck = favRests.map((f) => f.name).join("|");
+  // memo 签名：已订餐厅/酒店变化时重算当天地图数据
   const assignedSigCheck = (assignedAttractions ?? []).join("|");
-  const restSigCheck = restPicks.map((r) => r.name).join("|");
+  const bookedRestSigCheck = bookedRests.map((b) => `${b.title}:${b.done}`).join("|");
   const hotelSigCheck = hotelBookings.map((b) => `${b.title}:${b.done}`).join("|");
   const dayRoute: DayRoute = useMemo(() => {
     const stops: DayRouteStop[] = [];
@@ -1368,12 +1380,21 @@ export function ItineraryDayCard({
     }
     // 餐厅 / 酒店按名查坐标
     const cityPlaces = placesForCity(cityId);
-    const restNames = [...favRests.map((f) => f.name), ...restPicks.map((r) => r.name)];
-    for (const n of restNames) {
+    // 餐厅只收当天已订的几家（2026-11-07 用户：不去的餐厅不标、不连线）；
+    // 已在时间线里的（同名站点已有编号钉）不再另钉，避免同一地点双标记。
+    const tlBareNames = tl.map((t) => bareName(t.name));
+    for (const b of bookedRests) {
       const hit = cityPlaces.restaurants.find(
-        (r) => r.name === n || r.name.includes(n) || n.includes(r.name),
+        (r) => r.name === b.title || r.name.includes(b.title) || b.title.includes(r.name),
       );
-      if (hit) push(n, "restaurant", hit.lat, hit.lng);
+      if (!hit) continue;
+      const bn = bareName(hit.name);
+      if (
+        bn !== "" &&
+        tlBareNames.some((tbn) => tbn !== "" && (tbn.includes(bn) || bn.includes(tbn)))
+      )
+        continue;
+      push(b.title, "restaurant", hit.lat, hit.lng);
     }
     const confirmed = hotelBookings.find((b) => b.done);
     if (confirmed) {
@@ -1385,7 +1406,7 @@ export function ItineraryDayCard({
     }
     return { day: day.day, city: day.city_zh, label: `D${day.day} · ${day.city_zh}`, stops };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day.day, day.city_zh, isCloud, cityId, favSigCheck, restSigCheck, hotelSigCheck, transferRoute, assignedSigCheck]);
+  }, [day.day, day.city_zh, isCloud, cityId, bookedRestSigCheck, hotelSigCheck, transferRoute, assignedSigCheck]);
 
   /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */
   const handleSelect = (kind: "attraction" | "restaurant" | "hotel", name: string) => {
@@ -1396,6 +1417,19 @@ export function ItineraryDayCard({
         ? null
         : { day: day.day, kind, name, city: day.city_zh, route: dayRoute },
     );
+  };
+  /**
+   * 已订餐厅在地图上的落点（2026-11-07 用户：点的已订餐厅要能在地图上联动飞过去）：
+   * 若该餐厅已是时间线站点（编号钉），点卡片就选中编号钉（kind=attraction + 站点原名）；
+   * 否则选中餐厅钉（kind=restaurant + 订位标题）。
+   */
+  const bookedRestMapTarget = (title: string): { kind: "attraction" | "restaurant"; name: string } => {
+    const rn = bareName(title);
+    const hit = stops.find((s) => {
+      const bn = bareName(s.name);
+      return bn !== "" && rn !== "" && (bn.includes(rn) || rn.includes(bn));
+    });
+    return hit ? { kind: "attraction", name: hit.name } : { kind: "restaurant", name: title };
   };
   const isSel = (kind: string, name: string) =>
     !!selectedKey && selectedKey === stickyItemKey(kind, day.city_zh, name);
@@ -1567,9 +1601,18 @@ export function ItineraryDayCard({
                   selected={isSel("attraction", s.name)}
                 />
               ))}
-              {bookedByPeriod["上午"].map((e) => (
-                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
-              ))}
+              {bookedByPeriod["上午"].map((e) => {
+                const target = bookedRestMapTarget(e.b.title);
+                return (
+                  <BookedRestBlock
+                    key={`br-${e.b.title}`}
+                    entry={e}
+                    city={day.city_zh}
+                    onSelect={onSelectStop ? () => handleSelect(target.kind, target.name) : undefined}
+                    selected={isSel(target.kind, target.name)}
+                  />
+                );
+              })}
             </div>
           </section>
         )}
@@ -1586,9 +1629,18 @@ export function ItineraryDayCard({
                   selected={isSel("attraction", s.name)}
                 />
               ))}
-              {bookedByPeriod["下午"].map((e) => (
-                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
-              ))}
+              {bookedByPeriod["下午"].map((e) => {
+                const target = bookedRestMapTarget(e.b.title);
+                return (
+                  <BookedRestBlock
+                    key={`br-${e.b.title}`}
+                    entry={e}
+                    city={day.city_zh}
+                    onSelect={onSelectStop ? () => handleSelect(target.kind, target.name) : undefined}
+                    selected={isSel(target.kind, target.name)}
+                  />
+                );
+              })}
             </div>
           </section>
         )}
@@ -1605,9 +1657,18 @@ export function ItineraryDayCard({
                   selected={isSel("attraction", s.name)}
                 />
               ))}
-              {bookedByPeriod["晚上"].map((e) => (
-                <BookedRestBlock key={`br-${e.b.title}`} entry={e} city={day.city_zh} />
-              ))}
+              {bookedByPeriod["晚上"].map((e) => {
+                const target = bookedRestMapTarget(e.b.title);
+                return (
+                  <BookedRestBlock
+                    key={`br-${e.b.title}`}
+                    entry={e}
+                    city={day.city_zh}
+                    onSelect={onSelectStop ? () => handleSelect(target.kind, target.name) : undefined}
+                    selected={isSel(target.kind, target.name)}
+                  />
+                );
+              })}
             </div>
           </section>
         )}
@@ -1688,8 +1749,17 @@ export function ItineraryDayCard({
                   {bookedRests.map((b, i) => {
                     const bd = parseBookingBody(b.body);
                     const summary = bookingSummary(bd);
+                    const target = bookedRestMapTarget(b.title);
+                    const bSel = isSel(target.kind, target.name);
                     return (
-                      <div key={i} className="bg-green-50 border-2 border-green-500 rounded-lg p-3">
+                      <div
+                        key={i}
+                        onClick={onSelectStop ? (e) => {
+                          if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
+                          handleSelect(target.kind, target.name);
+                        } : undefined}
+                        className={`bg-green-50 border-2 border-green-500 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${bSel ? " ring-2 ring-green-600" : ""}`}
+                      >
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-sm font-bold flex-1">{b.title}</span>
                           {b.done && (
