@@ -1801,6 +1801,9 @@ import g1864 from "./assets/galleries/gwanghwamun-christmas-market/2.webp";
 import g1865 from "./assets/galleries/gwanghwamun-christmas-market/3.webp";
 import g1866 from "./assets/galleries/gwanghwamun-christmas-market/4.jpeg";
 import g1867 from "./assets/galleries/gwanghwamun-christmas-market/5.jpg";
+import g1868 from "./assets/galleries/cheonggyecheon-lantern-festival/1.webp";
+import g1869 from "./assets/galleries/cheonggyecheon-lantern-festival/2.webp";
+import g1870 from "./assets/galleries/cheonggyecheon-lantern-festival/3.webp";
 
 export type PlacePhoto={src:string;sourceUrl?:string;title:string};
 
@@ -2069,6 +2072,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|首尔|汝矣岛汉江公园":[{src:g1284,sourceUrl:"https://www.roughguides.com/south-korea/itineraries/",title:"汝矣岛汉江公园（来源：roughguides.com，2026-10-05 收录）"}],
   "景点|首尔|益善洞 Ikseon-dong":[{src:g1285,sourceUrl:"https://kaicakorea.com/korea-trip/seoul-jongno-ikseon-guide/",title:"益善洞（来源：kaicakorea.com，2026-10-05 收录）"}],
   "景点|首尔|光化门圣诞市集":[{src:g1863,sourceUrl:"https://www.koreantopik.com/2025/10/gwanghwamun-market-2025-most-beautiful.html",title:"光化门圣诞市集入口：Gwanghwamun Market 招牌＋大圣诞树＋世宗大王像（往届实拍；来源 koreantopik.com，2026-11-07 收录）"},{src:g1864,sourceUrl:"https://www.telltrip.com/festival/gwanghwamun-winter-market-santa-village/",title:"光化门圣诞市集夜景航拍：红顶小木屋群＋大圣诞树（往届实拍；来源 telltrip.com，2026-11-07 收录）"},{src:g1865,sourceUrl:"https://www.telltrip.com/festival/gwanghwamun-market-seoul/",title:"光化门圣诞市集街景：灯串下的小木屋通道（往届实拍；来源 telltrip.com，2026-11-07 收录）"},{src:g1866,sourceUrl:"https://partners.shuttledelivery.co.kr/blog-posts/gwanghwamun-christmas-market-and-seouls-top-winter-festivals-of-2024",title:"光化门圣诞市集小木屋近景：绿植挂饰＋手工艺摊位（往届实拍；来源 shuttledelivery.co.kr，2026-11-07 收录）"},{src:g1867,sourceUrl:"https://korean.visitseoul.net/editorspicks/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4-%EB%AA%85%EC%86%8C/KON042755",title:"光化门圣诞市集夜景：灯光拱门＋圣诞树（2022 年实拍；来源 visitseoul.net，2026-11-07 收录）"}],
+  "景点|首尔|清溪川 · 首尔灯节":[{src:g1868,sourceUrl:"https://www.telltrip.com/festival/seoul-lantern-festival-cheonggyecheon/",title:"清溪川灯节夜景：溪面灯海＋大圣诞树＋桥（往届实拍；来源 telltrip.com，2026-11-07 收录）"},{src:g1869,sourceUrl:"https://www.telltrip.com/festival/seoul-lantern-festival-cheonggyecheon/",title:"清溪川灯节航拍：溪畔大型灯光装置＋两岸夜景（往届实拍；来源 telltrip.com，2026-11-07 收录）"},{src:g1870,sourceUrl:"https://infjblanc.com/seoul-christmas-date-course-best5/",title:"清溪川灯节：韩服人物花灯沿溪排布、两岸游人（往届实拍；来源 infjblanc.com，2026-11-07 收录）"}],
   "餐厅|首尔|土俗村参鸡汤 Tosokchon":[{src:g1289,sourceUrl:"https://www.panasm.com/tosokchon-samgyetang/",title:"土俗村参鸡汤（来源：panasm.com，2026-10-05 收录）"}],
   "餐厅|首尔|明洞饺子 Myeongdong Kyoja":[{src:g1290,sourceUrl:"https://southkoreahallyu.com/myeongdong-kyoja-seoul-restaurant/",title:"明洞饺子（来源：southkoreahallyu.com，2026-10-05 收录）"}],
   "餐厅|首尔|桥村炸鸡 Kyochon":[{src:g1291,sourceUrl:"https://hmong.in.th/wiki/KyoChon",title:"桥村炸鸡：蜂蜜酱料裹着的脆皮鸡腿（2026-10-05 目验确认；来源 hmong.in.th）"}],
