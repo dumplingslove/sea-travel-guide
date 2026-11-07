@@ -14,7 +14,7 @@ import { applyCloudDayOverride } from "@/guide/cloudDayOverrides";
 import { useRecordsData } from "@/pages/records/shared";
 import { usePlanItinerary, KOREA_CITY_ZH, SEA_CITY_ZH, type PlanDay } from "@/guide/plannerSchedule";
 import { parseBookingBody } from "@/bookings/bookingTypes";
-import StickyMapBar, { stickyItemKey, type StickyMapItem } from "@/components/StickyMapBar";
+import StickyMapBar, { stickyItemKey, type StickyMapItem, type DayRoute } from "@/components/StickyMapBar";
 import type { DayStopSelection } from "@/components/ItineraryDayCard";
 import { findStopCoord } from "@/data/stopCoords";
 
@@ -239,6 +239,8 @@ export function ItineraryTab({
   const dateNavRef = useRef<HTMLDivElement>(null);
   // 2026-10-04 用户：点选模式（废弃滚动联动）——点哪天卡片，顶栏地图就显示那一天的路线，被点的跳动高亮
   const [mapSel, setMapSel] = useState<DayStopSelection | null>(null);
+  // 各天卡片登记的地图路线（2026-11-07：日期导航按钮点按时直接切地图，不用再点具体卡片）
+  const dayRoutesRef = useRef(new Map<number, DayRoute>());
   // 点卡片时自动展开地图的信号
   const [mapExpandSig, setMapExpandSig] = useState(0);
   // 折叠态初始高度按标题行估算，ResizeObserver 会校准精确值
@@ -247,7 +249,8 @@ export function ItineraryTab({
     setMapSel(sel);
     if (sel) setMapExpandSig((x) => x + 1);
   };
-  const selectedKey = mapSel ? stickyItemKey(mapSel.kind, mapSel.city, mapSel.name) : null;
+  // 2026-11-07：只切到某天全景的选区（kind/name 为 null）没有单点 key，不高亮
+  const selectedKey = mapSel?.kind && mapSel?.name ? stickyItemKey(mapSel.kind, mapSel.city, mapSel.name) : null;
   // 日期导航紧贴 header 底部：动态测量 header 高度，避免硬编码 top 值与实际高度不一致留下空白条
   // 2026-10-03：吸顶地图条在日期导航之上，日期导航 top = header 高 + 地图条高
   useLayoutEffect(() => {
@@ -374,11 +377,14 @@ export function ItineraryTab({
           {days.map((d) => (
             <button
               key={d.day}
-              onClick={() =>
+              onClick={() => {
                 document
                   .getElementById(`day-${d.day}`)
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
-              }
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                // 2026-11-07：点日期按钮即切地图到这一天全景（此前只滚动、地图不动）
+                const route = dayRoutesRef.current.get(d.day);
+                if (route) handleCardSelect({ day: d.day, kind: null, name: null, city: d.city_zh, route });
+              }}
               className="whitespace-nowrap flex-shrink-0 text-xs px-2.5 py-1.5 rounded-lg text-teal-800 hover:bg-teal-700 hover:text-white transition-colors"
             >
               D{d.day} {shortDate(d.date)} {d.city_zh}
@@ -432,6 +438,10 @@ export function ItineraryTab({
                 stay={stays.get(d.city_zh) ?? null}
                 onSelectStop={handleCardSelect}
                 selectedKey={selectedKey}
+                registerDayRoute={(day, route) => {
+                  dayRoutesRef.current.set(day, route);
+                }}
+                isDayActive={!!mapSel && !mapSel.kind && mapSel.day === d.day}
               />
               {renderDayExtra?.(d, i)}
             </Fragment>

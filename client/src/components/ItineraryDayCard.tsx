@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   days as staticDays,
@@ -1106,8 +1106,9 @@ export interface DayBooking {
  */
 export interface DayStopSelection {
   day: number;
-  kind: "attraction" | "restaurant" | "hotel";
-  name: string;
+  /** 具体被点的站点；null = 只切到这一天看全景，不高亮单点（2026-11-07：点日期按钮/卡片头部） */
+  kind: "attraction" | "restaurant" | "hotel" | null;
+  name: string | null;
   city: string;
   /** 当天的地图数据（站点按游览顺序，含坐标） */
   route: DayRoute;
@@ -1125,6 +1126,8 @@ export function ItineraryDayCard({
   stay,
   onSelectStop,
   selectedKey,
+  registerDayRoute,
+  isDayActive,
 }: {
   day: PlanDay;
   prevDay: PlanDay | undefined;
@@ -1144,6 +1147,10 @@ export function ItineraryDayCard({
   onSelectStop?: (sel: DayStopSelection | null) => void;
   /** 当前被选中的卡片 key（stickyItemKey），用于卡片描边 */
   selectedKey?: string | null;
+  /** 把当天的地图路线登记给父级，供日期导航按钮点按时切地图 */
+  registerDayRoute?: (day: number, route: DayRoute) => void;
+  /** 当前顶栏地图是否正显示这一天的全景（无单点高亮），卡片头部点按时用于切换回总览 */
+  isDayActive?: boolean;
 }) {
   useDetailReturn("itinerary-day");
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
@@ -1408,6 +1415,21 @@ export function ItineraryDayCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day.day, day.city_zh, isCloud, cityId, bookedRestSigCheck, hotelSigCheck, transferRoute, assignedSigCheck]);
 
+  // 2026-11-07：把当天的地图路线登记给父级，日期导航按钮点按时也能切地图（不用再点具体卡片）
+  useEffect(() => {
+    registerDayRoute?.(day.day, dayRoute);
+  }, [day.day, dayRoute, registerDayRoute]);
+
+  /** 点当天卡片头部 → 顶栏地图切到这一天全景（不高亮单点）；已是当天全景时再点一次回到全站总览 */
+  const handleDayHeader = () => {
+    if (!onSelectStop) return;
+    onSelectStop(
+      isDayActive
+        ? null
+        : { day: day.day, kind: null, name: null, city: day.city_zh, route: dayRoute },
+    );
+  };
+
   /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */
   const handleSelect = (kind: "attraction" | "restaurant" | "hotel", name: string) => {
     if (!onSelectStop) return;
@@ -1439,8 +1461,12 @@ export function ItineraryDayCard({
       id={`day-${day.day}`}
       className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden scroll-mt-28"
     >
-      {/* 头部：Day徽标 + 日期 + 城市 + 气候 */}
-      <header className="bg-gradient-to-r from-teal-700/10 to-teal-700/5 border-b-2 border-teal-700/20 px-5 py-5">
+      {/* 头部：Day徽标 + 日期 + 城市 + 气候（点按切地图到这一天全景） */}
+      <header
+        className={`bg-gradient-to-r from-teal-700/10 to-teal-700/5 border-b-2 border-teal-700/20 px-5 py-5${onSelectStop ? " cursor-pointer" : ""}`}
+        onClick={onSelectStop ? handleDayHeader : undefined}
+        title={onSelectStop ? "点按：在地图上显示这一天" : undefined}
+      >
         <div className="flex items-center gap-3 mb-2 flex-wrap">
           <span className="text-lg font-bold text-white bg-teal-700 rounded-lg px-4 py-1">
             Day {day.day}
