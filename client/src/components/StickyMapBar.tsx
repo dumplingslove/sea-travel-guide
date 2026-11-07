@@ -505,7 +505,7 @@ export default function StickyMapBar({
   const routesFittedRef = useRef(false);
   // 当日路线层：站点 markers（景点按序编号）+ 按序连线；进入当日模式时重建
   const dayLayersRef = useRef<{
-    entries: Map<string, { marker: L.Marker; kind: StickyMapKind; num: number }>;
+    entries: Map<string, { marker: L.Marker; kind: StickyMapKind; num: number; name: string }>;
     line: L.Polyline | null;
   }>({ entries: new Map(), line: null });
   // activeItemKeys 每次 render 都是新数组引用，用排序签名去重，避免无意义重飞
@@ -877,7 +877,7 @@ export default function StickyMapBar({
         className: "sea-stickymap-label",
         opacity: 0,
       });
-      dl.entries.set(key, { marker, kind: s.kind, num });
+      dl.entries.set(key, { marker, kind: s.kind, num, name: s.name });
     }
     if (pts.length > 1) {
       dl.line = L.polyline(pts, { color: "#0f766e", weight: 3, opacity: 0.85 }).addTo(map);
@@ -928,7 +928,13 @@ export default function StickyMapBar({
       // 2026-11-07 用户：手机上看地图，点卡片后缩得太近会丢掉当天其他地点。
       // 当日视角 = 当天本地点（景点/餐厅/酒店）全部同框；机场不算在内——
       // 机场常在几千公里外，纳入 fitBounds 会把地图拉到洲际尺度。
-      const local = [...dl.entries.values()].filter((e) => e.kind !== "airport");
+      // 2026-11-07 补洞：光看 kind 不够——D1 的“抵达樟宜机场”是从时间线来的，
+      // kind 是 attraction 不是 airport，照样把当日视角拉到樟宜（约 20 公里外），
+      // 市区那几个点全挤成一团。所以名字里带“机场”的也排除；但“机场路”除外——
+      // “旧机场路熟食中心”是市里的正经吃饭地儿，不是机场，不能误伤。
+      const isAirportStop = (kind: string, name: string) =>
+        kind === "airport" || (/机场/.test(name) && !/机场路/.test(name));
+      const local = [...dl.entries.values()].filter((e) => !isAirportStop(e.kind, e.name));
       const localPts = local.map((e) => e.marker.getLatLng());
       const dayZoom = () => {
         if (localPts.length <= 1) return 14;
