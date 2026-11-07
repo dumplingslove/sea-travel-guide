@@ -129,7 +129,7 @@ export const cityPlaces: Record<string, CityPlaces> = {
       { name: "Côte by Mauro Colagreco", lat: 13.7132727, lng: 100.5111616, precision: "building", note: "位于 Capella Bangkok 内" },
       { name: "Thipsamai", lat: 13.7506605, lng: 100.5041368, precision: "street", note: "Maha Chai 路 313-315 号" },
       { name: "耀华力夜市 / T&K", lat: 13.7401179, lng: 100.5106666, precision: "exact", note: "T&K Seafood" },
-      { name: "通思密 Thong Smith", lat: 13.7465769, lng: 100.5390414, precision: "building", note: "CentralWorld 店（3F #B302，页面实读）；借用 CentralWorld exact 坐标，building 级（2026-09-29 新增；鲁通船面胜利纪念碑店无可验证坐标，待补）" },
+      { name: "通思密 Thong Smith", lat: 13.7465769, lng: 100.5390414, precision: "building", note: "CentralWorld 店（3F #B302，页面实读）；借用 CentralWorld exact 坐标，building 级（2026-09-29 新增；鲁通船面胜利纪念碑店坐标已于 2026-10-14 按 Boat Noodle Alley 区域级补齐）" },
       { name: "Or Tor Kor Market", lat: 13.7971301, lng: 100.5475746, precision: "exact" },
       { name: "鲁通船面 Ruathong Noodle", lat: 13.765801, lng: 100.539369, precision: "area", note: "船面一条街 Boat Noodle Alley 内，1/7 Ratchawithi Rd（2026-10-14 新增：店面无独立地理编码点，以 Places 的 Boat Noodle Alley 精确位置作区域级标注，补此前无坐标缺钉）" },
     ],
