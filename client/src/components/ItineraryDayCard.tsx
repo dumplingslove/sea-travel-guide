@@ -362,6 +362,21 @@ const norm = (s: string) =>
     );
 const cjk = (s: string) => (s.match(/[\u4e00-\u9fa5]+/g) || []).join("");
 
+/* 站名 → 目录条目名 别名（2026-11-07 site-improve-hourly 类别1/2）：
+ * 站名写法与目录条目名对不上的 4 处真缺口（00:38 轮 stops→目录核查逐条裁决），
+ * 通用子串/三字前缀规则够不着：Torry's 站名写「刨冰收尾」而条目叫「冰淇淋刨冰」；
+ * 「擎天树」是滨海湾花园超级树的俗称、条目名里没有；「明洞逛街」对 SA 条目
+ * 「明洞 Myeongdong」只有 2 字中文名、无三字前缀 fallback；「旧机场路」对
+ * R 条目「Old Airport Road」中英名完全不一。别名先于转场守卫判断——
+ * 「旧机场路」含「机场」二字，若先走守卫会被当成转场站拦掉。
+ * 只认同城同名条目，别名键本身不参与通用比对、不扩散到别的站。 */
+const STOP_ALIASES: [string, string][] = [
+  ["刨冰收尾", "Torry's Ice Cream 冰淇淋刨冰"],
+  ["擎天树", "滨海湾花园"],
+  ["明洞逛街", "明洞 Myeongdong"],
+  ["旧机场路", "Old Airport Road"],
+];
+
 export function matchItem(
   stopName: string,
   city: string,
@@ -373,6 +388,17 @@ export function matchItem(
   // 12-08「亚洲文明博物馆 · 敦煌特展（半日，与旧机场路二选一）」不再被括号里的“机场”二字触发守卫。
   // 守卫与比对一律以去括号后的站名判断（17 日 85 站实测：仅此 3 处变化，其余 82 站不变）。
   const bare = bareName(stopName);
+  // 别名先行（2026-11-07 site-improve-hourly 类别1/2）：站名含别名键即直链
+  // 同城同名条目；Old Airport Road 一例证明别名必须在守卫之前判断。
+  const nsAlias = norm(bare);
+  for (const [key, target] of STOP_ALIASES) {
+    if (nsAlias.includes(norm(key))) {
+      const hit = list.find(
+        (it) => it.city === city && norm(it.name) === norm(target),
+      );
+      if (hit) return hit;
+    }
+  }
   // 转场/后勤类站点不参与景点·餐厅匹配：
   // 否则"抵达樟宜机场"会被"新加坡"三字前缀误链到动物园等条目，点出错误的"查看详情"
   if (/机场|航班|飞往|抵达|离境|入住|退房|午睡|收行李|码头集合/.test(bare))
