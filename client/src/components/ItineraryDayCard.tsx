@@ -1127,7 +1127,6 @@ export function ItineraryDayCard({
   onSelectStop,
   selectedKey,
   registerDayRoute,
-  isDayActive,
 }: {
   day: PlanDay;
   prevDay: PlanDay | undefined;
@@ -1149,8 +1148,6 @@ export function ItineraryDayCard({
   selectedKey?: string | null;
   /** 把当天的地图路线登记给父级，供日期导航按钮点按时切地图 */
   registerDayRoute?: (day: number, route: DayRoute) => void;
-  /** 当前顶栏地图是否正显示这一天的全景（无单点高亮），卡片头部点按时用于切换回总览 */
-  isDayActive?: boolean;
 }) {
   useDetailReturn("itinerary-day");
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
@@ -1420,14 +1417,11 @@ export function ItineraryDayCard({
     registerDayRoute?.(day.day, dayRoute);
   }, [day.day, dayRoute, registerDayRoute]);
 
-  /** 点当天卡片头部 → 顶栏地图切到这一天全景（不高亮单点）；已是当天全景时再点一次回到全站总览 */
+  /** 点当天卡片头部 → 顶栏地图切到这一天全景（不高亮单点）；已是当天全景时再点也不取消，
+   * 始终显示这一天（2026-11-07 浏览器验真：开关式会把刚切进来的当日视图又关掉，反直觉） */
   const handleDayHeader = () => {
     if (!onSelectStop) return;
-    onSelectStop(
-      isDayActive
-        ? null
-        : { day: day.day, kind: null, name: null, city: day.city_zh, route: dayRoute },
-    );
+    onSelectStop({ day: day.day, kind: null, name: null, city: day.city_zh, route: dayRoute });
   };
 
   /** 卡片点选 → 顶栏地图切到这一天并高亮；再点一次取消 */

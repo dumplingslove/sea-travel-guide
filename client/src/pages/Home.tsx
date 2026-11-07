@@ -441,7 +441,6 @@ export function ItineraryTab({
                 registerDayRoute={(day, route) => {
                   dayRoutesRef.current.set(day, route);
                 }}
-                isDayActive={!!mapSel && !mapSel.kind && mapSel.day === d.day}
               />
               {renderDayExtra?.(d, i)}
             </Fragment>
