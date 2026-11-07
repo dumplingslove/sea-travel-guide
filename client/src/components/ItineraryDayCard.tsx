@@ -888,6 +888,11 @@ export function DayBookingsSection({
                     已确认
                   </span>
                 )}
+                {!b.done && (
+                  <span className="text-xs font-bold text-white bg-amber-500 rounded-full px-2 py-0.5">
+                    待订
+                  </span>
+                )}
               </div>
               {summary && (
                 <p className="text-xs text-gray-700">{summary}</p>
