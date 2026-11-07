@@ -367,11 +367,17 @@ export function matchItem(
   city: string,
   list: Item[],
 ): Item | undefined {
+  // 去括号再比对（2026-11-07 site-improve-hourly 类别1/2）：
+  // 括号里只是顺带提及/时间锚点，不算该地已有一站——12-12「酒店时间 · 回别墅歇脚（出海后、PRU 前）」
+  // 不再误链到 PRU 餐厅条目；12-16「泰拳体验课（约 1 小时）」能链到清迈泰拳体验课条目；
+  // 12-08「亚洲文明博物馆 · 敦煌特展（半日，与旧机场路二选一）」不再被括号里的“机场”二字触发守卫。
+  // 守卫与比对一律以去括号后的站名判断（17 日 85 站实测：仅此 3 处变化，其余 82 站不变）。
+  const bare = bareName(stopName);
   // 转场/后勤类站点不参与景点·餐厅匹配：
   // 否则"抵达樟宜机场"会被"新加坡"三字前缀误链到动物园等条目，点出错误的"查看详情"
-  if (/机场|航班|飞往|抵达|离境|入住|退房|午睡|收行李|码头集合/.test(stopName))
+  if (/机场|航班|飞往|抵达|离境|入住|退房|午睡|收行李|码头集合/.test(bare))
     return undefined;
-  const ns = norm(stopName);
+  const ns = norm(bare);
   let best: Item | undefined;
   let bestScore = 0;
   for (const it of list) {
