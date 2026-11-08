@@ -480,7 +480,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "万态 Exploria 探索馆 · 专程日（与芳林线二选一）", time: "全天（专程日备选）", lat: 1.40421, lng: 103.78844, note: "Exploria 本体，80 Mandai Lake Rd（geocode 实查）" },
     { name: "亚洲文明博物馆 · 敦煌特展 Sacred Caves（半日，与旧机场路二选一）", time: "上午", lat: 1.28745, lng: 103.85138, note: "亚洲文明博物馆本体，1 Empress Pl（geocode 实查）" },
     { name: "旧机场路熟食中心 · 本地老档专程半日（可选）", time: "上午", lat: 1.30825, lng: 103.88583, note: "旧机场路熟食中心本体，51 Old Airport Rd（geocode 实查）" },
-    { name: "新加坡国家博物馆 · 全新历史展厅（半日慢逛）", time: "上午", lat: 1.29678, lng: 103.84841, note: "新加坡国家博物馆本体，93 Stamford Rd（geocode 实查）" },
+    { name: "新加坡科学中心 · One Ocean 深海极地特展（上午半日，带娃向）", time: "上午", lat: 1.33059, lng: 103.73791, note: "新加坡科学中心本体，Science Centre Rd, Jurong East（geocode 实查，2026-11-07 用户定 12-09 上午由国家博物馆换站）" },
     { name: "Dusit Central Park 屋顶公园（顺路散步）", time: "白天", lat: 13.72839, lng: 100.53738, note: "Dusit Central Park 本体，Rama IV 路 Silom（geocode 实查）" },
     { name: "Pokémon Center Bangkok（Central World 6 楼 · 新开）", time: "下午", lat: 13.74659, lng: 100.53974, note: "图示 CentralWorld 本体（店在 6 楼）" },
     { name: "NEXTOPIA（Siam Paragon 5 楼 · 顺路项）", time: "下午", lat: 13.74563, lng: 100.53463, note: "图示 Siam Paragon 本体（NEXTOPIA 在 5 楼）" },
