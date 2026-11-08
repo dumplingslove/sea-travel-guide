@@ -1909,6 +1909,10 @@ import g1972 from "./assets/galleries/ikseondong/1.webp";
 import g1973 from "./assets/galleries/ikseondong/2.webp";
 import g1974 from "./assets/galleries/ikseondong/3.webp";
 import g1975 from "./assets/galleries/ikseondong/4.webp";
+import g1976 from "./assets/galleries/nseoultower/1.webp";
+import g1977 from "./assets/galleries/nseoultower/2.webp";
+import g1978 from "./assets/galleries/nseoultower/3.webp";
+import g1979 from "./assets/galleries/nseoultower/4.webp";
 
 export type PlacePhoto={src:string;sourceUrl?:string;title:string};
 
@@ -2166,7 +2170,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|首尔|乐天世界 Lotte World":[{src:g1273,sourceUrl:"https://cf.creatrip.com/",title:"乐天世界（来源：creatrip.com，2026-10-05 收录）"}],
   "景点|首尔|仁寺洞 Insadong":[{src:g1274,sourceUrl:"https://taraohreilly.com/one-day-in-seoul-itinerary/",title:"仁寺洞（来源：taraohreilly.com，2026-10-05 收录）"},{src:g1964,sourceUrl:"https://jiji3753.com/191",title:"仁寺洞14街路牌：主街日景＋传统布料店（来源 jiji3753.com，2026-11-08 收录）"},{src:g1965,sourceUrl:"https://mimigo.tw/insa-hole/",title:"森吉街 Ssamziegil 中庭日景：三层环廊＋粉色花饰（来源 mimigo.tw，2026-11-08 收录）"},{src:g1966,sourceUrl:"https://korea-travel.issue-economy.com/es/places",title:"仁寺洞手工艺街黄昏：韩屋瓦顶＋路边工艺品摊（来源 korea-travel.issue-economy.com，2026-11-08 收录）"},{src:g1967,sourceUrl:"https://id.trip.com/guide/activity/things-to-do-in-seoul.html",title:"仁寺洞小巷傍晚：인사동竖牌＋面馆灯光（来源 Trip.com，2026-11-08 收录）"}],
   "景点|首尔|北村韩屋村 Bukchon":[{src:g1275,sourceUrl:"https://k-decoded.com/blog/first-timer-seoul-itinerary-4-days/",title:"北村韩屋村（来源：k-decoded.com，2026-10-05 收录）"},{src:g1956,sourceUrl:"https://www.iwanderlista.com/?p=16952",title:"下坡主巷：韩服游客＋南山首尔塔＋市中心天际线（来源 iwanderlista.com，2026-11-08 收录）"},{src:g1957,sourceUrl:"https://sworld.co.uk/place-69c6cb0606561",title:"暮色巷道：尽头灯光＋韩屋群蓝调（来源 sworld.co.uk，2026-11-08 收录）"},{src:g1958,sourceUrl:"https://jamesdiscover.tw/page/144/",title:"雪后韩屋顶：积雪瓦顶＋南山首尔塔（来源 jamesdiscover.tw，2026-11-08 收录）"},{src:g1959,sourceUrl:"https://upgradedpoints.com/",title:"上坡直巷：木格栅韩屋立面＋行人（来源 upgradedpoints.com，2026-11-08 收录）"}],
-  "景点|首尔|南山首尔塔 N Seoul Tower":[{src:g1276,sourceUrl:"https://img1.daumcdn.net/",title:"南山首尔塔（来源：daumcdn.net，2026-10-05 收录）"}],
+  "景点|首尔|南山首尔塔 N Seoul Tower":[{src:g1276,sourceUrl:"https://img1.daumcdn.net/",title:"南山首尔塔（来源：daumcdn.net，2026-10-05 收录）"},{src:g1976,sourceUrl:"https://www.classkim.com/en/blog/category/tour-seoul",title:"塔下观景台夜景：展望台＋缆车厢＋首尔夜景全景（来源 classkim.com，2026-11-08 收录）"},{src:g1977,sourceUrl:"https://creatrip.com/blog/15256",title:"爱情锁露台夜景：爱心锁墙＋塔身＋汉江夜景（来源 creatrip.com，2026-11-08 收录）"},{src:g1978,sourceUrl:"https://inousny.com/",title:"白天南山全景：绿荫山顶＋塔身＋城市天际线（来源 inousny.com，2026-11-08 收录）"},{src:g1979,sourceUrl:"https://www.seoul-tickets.com/n-seoul-tower/",title:"白天仰拍塔身：蓝天＋绿树＋展望台（来源 seoul-tickets.com，2026-11-08 收录）"}],
   "景点|首尔|圣水洞 Seongsu-dong":[{src:g1277,sourceUrl:"https://english.seoul.go.kr/",title:"圣水洞（来源：english.seoul.go.kr，2026-10-05 收录）"}],
   "景点|首尔|广藏市场 Gwangjang Market":[{src:g1278,sourceUrl:"https://travelgossip.co.uk/",title:"广藏市场（来源：travelgossip.co.uk，2026-10-05 收录）"}],
   "景点|首尔|弘大 Hongdae":[{src:g1279,sourceUrl:"https://www.pelago.com/",title:"弘大（来源：pelago.com，2026-10-05 收录）"}],
