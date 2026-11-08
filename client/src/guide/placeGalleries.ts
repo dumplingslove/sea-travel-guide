@@ -1889,6 +1889,10 @@ import g1952 from "./assets/galleries/gyeongbokgung/1.webp";
 import g1953 from "./assets/galleries/gyeongbokgung/2.webp";
 import g1954 from "./assets/galleries/gyeongbokgung/3.webp";
 import g1955 from "./assets/galleries/gyeongbokgung/4.webp";
+import g1956 from "./assets/galleries/bukchon/1.webp";
+import g1957 from "./assets/galleries/bukchon/2.webp";
+import g1958 from "./assets/galleries/bukchon/3.webp";
+import g1959 from "./assets/galleries/bukchon/4.webp";
 
 export type PlacePhoto={src:string;sourceUrl?:string;title:string};
 
@@ -2145,7 +2149,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|首尔|东大门设计广场 DDP":[{src:g1272,sourceUrl:"https://i.natgeofe.com/",title:"东大门设计广场 DDP（来源：natgeofe.com，2026-10-05 收录）"}],
   "景点|首尔|乐天世界 Lotte World":[{src:g1273,sourceUrl:"https://cf.creatrip.com/",title:"乐天世界（来源：creatrip.com，2026-10-05 收录）"}],
   "景点|首尔|仁寺洞 Insadong":[{src:g1274,sourceUrl:"https://taraohreilly.com/one-day-in-seoul-itinerary/",title:"仁寺洞（来源：taraohreilly.com，2026-10-05 收录）"}],
-  "景点|首尔|北村韩屋村 Bukchon":[{src:g1275,sourceUrl:"https://k-decoded.com/blog/first-timer-seoul-itinerary-4-days/",title:"北村韩屋村（来源：k-decoded.com，2026-10-05 收录）"}],
+  "景点|首尔|北村韩屋村 Bukchon":[{src:g1275,sourceUrl:"https://k-decoded.com/blog/first-timer-seoul-itinerary-4-days/",title:"北村韩屋村（来源：k-decoded.com，2026-10-05 收录）"},{src:g1956,sourceUrl:"https://www.iwanderlista.com/?p=16952",title:"下坡主巷：韩服游客＋南山首尔塔＋市中心天际线（来源 iwanderlista.com，2026-11-08 收录）"},{src:g1957,sourceUrl:"https://sworld.co.uk/place-69c6cb0606561",title:"暮色巷道：尽头灯光＋韩屋群蓝调（来源 sworld.co.uk，2026-11-08 收录）"},{src:g1958,sourceUrl:"https://jamesdiscover.tw/page/144/",title:"雪后韩屋顶：积雪瓦顶＋南山首尔塔（来源 jamesdiscover.tw，2026-11-08 收录）"},{src:g1959,sourceUrl:"https://upgradedpoints.com/",title:"上坡直巷：木格栅韩屋立面＋行人（来源 upgradedpoints.com，2026-11-08 收录）"}],
   "景点|首尔|南山首尔塔 N Seoul Tower":[{src:g1276,sourceUrl:"https://img1.daumcdn.net/",title:"南山首尔塔（来源：daumcdn.net，2026-10-05 收录）"}],
   "景点|首尔|圣水洞 Seongsu-dong":[{src:g1277,sourceUrl:"https://english.seoul.go.kr/",title:"圣水洞（来源：english.seoul.go.kr，2026-10-05 收录）"}],
   "景点|首尔|广藏市场 Gwangjang Market":[{src:g1278,sourceUrl:"https://travelgossip.co.uk/",title:"广藏市场（来源：travelgossip.co.uk，2026-10-05 收录）"}],
