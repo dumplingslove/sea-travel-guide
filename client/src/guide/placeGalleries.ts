@@ -1893,6 +1893,10 @@ import g1956 from "./assets/galleries/bukchon/1.webp";
 import g1957 from "./assets/galleries/bukchon/2.webp";
 import g1958 from "./assets/galleries/bukchon/3.webp";
 import g1959 from "./assets/galleries/bukchon/4.webp";
+import g1960 from "./assets/galleries/myeongdong/1.webp";
+import g1961 from "./assets/galleries/myeongdong/2.webp";
+import g1962 from "./assets/galleries/myeongdong/3.webp";
+import g1963 from "./assets/galleries/myeongdong/4.webp";
 
 export type PlacePhoto={src:string;sourceUrl?:string;title:string};
 
@@ -2154,7 +2158,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|首尔|圣水洞 Seongsu-dong":[{src:g1277,sourceUrl:"https://english.seoul.go.kr/",title:"圣水洞（来源：english.seoul.go.kr，2026-10-05 收录）"}],
   "景点|首尔|广藏市场 Gwangjang Market":[{src:g1278,sourceUrl:"https://travelgossip.co.uk/",title:"广藏市场（来源：travelgossip.co.uk，2026-10-05 收录）"}],
   "景点|首尔|弘大 Hongdae":[{src:g1279,sourceUrl:"https://www.pelago.com/",title:"弘大（来源：pelago.com，2026-10-05 收录）"}],
-  "景点|首尔|明洞 Myeongdong":[{src:g1280,sourceUrl:"https://english.visitseoul.net/",title:"明洞主街：LINE/daiso/ABC MART 招牌林立的购物街（2026-10-05 目验确认；来源 english.visitseoul.net）"}],
+  "景点|首尔|明洞 Myeongdong":[{src:g1280,sourceUrl:"https://english.visitseoul.net/",title:"明洞主街：LINE/daiso/ABC MART 招牌林立的购物街（2026-10-05 目验确认；来源 english.visitseoul.net）"},{src:g1960,sourceUrl:"https://www.epickor.com/seoul",title:"明洞主街夜景：红砖步行街＋霓虹招牌群（来源 epickor.com，2026-11-08 收录）"},{src:g1961,sourceUrl:"https://tour.liontravel.us/zh-tw/a247df3f-8d8f-48a8-8f84-52f6c0f8964e",title:"明洞招牌墙：명동 SINCE 1980＋ARITAUM／CLIO 美妆招牌（来源 liontravel.us，2026-11-08 收录）"},{src:g1962,sourceUrl:"https://userblog.tistory.com/723",title:"明洞 MART 竖版夜景：明洞超市三语招牌＋九树酒店（来源 userblog.tistory.com，2026-11-08 收录）"},{src:g1963,sourceUrl:"http://rain36w.pixnet.net/blog/post/31620077",title:"明洞主街路边摊夜景：炸鸡小吃摊＋innisfree（来源 rain36w.pixnet.net，2026-11-08 收录）"}],
   "景点|首尔|星空图书馆 Starfield Library":[{src:g1281,sourceUrl:"https://ilmestieredileggereblog.com/",title:"星空图书馆（来源：ilmestieredileggereblog.com，2026-10-05 收录）"}],
   "景点|首尔|景福宫 Gyeongbokgung":[{src:g1282,sourceUrl:"https://ordertrip.jp/feed/",title:"景福宫光化门：双层门楼+韩服游客（2026-10-05 目验确认；来源 ordertrip.jp）"},{src:g1952,sourceUrl:"https://wtravel.co.th/travel-info/%e0%b9%80%e0%b8%8a%e0%b9%87%e0%b8%84%e0%b8%ad%e0%b8%b4%e0%b8%99-%e0%b8%aa%e0%b8%96%e0%b8%b2%e0%b8%99%e0%b8%97%e0%b8%b5%e0%b9%88%e0%b9%80%e0%b8%81%e0%b8%b2%e0%b8%ab%e0%b8%a5%e0%b8%b5/",title:"兴礼门冬日雪景：丹青门楼＋积雪北岳山（来源 wtravel.co.th，2026-11-08 收录）"},{src:g1953,sourceUrl:"https://blog.curatorstravel.com/popular-tourist-areas/korea-travel",title:"勤政殿正面：双层重檐＋石阶人群（来源 blog.curatorstravel.com，2026-11-08 收录）"},{src:g1954,sourceUrl:"https://creatrip.com/zh-TW/blog/12643",title:"勤政殿内景：王座＋日月五峰图屏风＋丹青藻井（来源 creatrip.com，2026-11-08 收录）"},{src:g1955,sourceUrl:"http://www.odii.kr/smarttour_web/story/detail?tid=2573&tlid=2573&sid=5379&slid=16377",title:"光化门内侧：三拱门洞＋门外现代高楼（来源 odii.kr，2026-11-08 收录）"}],
   "景点|首尔|梨泰院 Itaewon":[{src:g1283,sourceUrl:"https://www.trotop.be/",title:"梨泰院（来源：trotop.be，2026-10-05 收录）"}],
