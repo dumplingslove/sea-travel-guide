@@ -1,4 +1,4 @@
-// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-11-08T04:50:04Z）
+// 研究状态静态快照（由 research-snapshot-refresh 生成；updated_at: 2026-11-08T10:49:07Z）
 export const initialResearchStatus = {
  "cities": {
   "bangkok": {
@@ -7220,10 +7220,43 @@ export const initialResearchStatus = {
        "note": "2026-10-17 data.ts detail/best 已写入全套研究结论（WET 泳池/无酒廊/接驳/翻新时点标注）"
       }
      }
+    },
+    {
+     "name": "Long Beach Seafood 长堤海鲜",
+     "note": "黑胡椒蟹鼻祖；Dempsey 店拨肉服务；2026-11-08 补入 data.ts 餐厅条目（此前研究清单只立了珍宝一家辣椒蟹代表）",
+     "type": "餐厅",
+     "sources": {
+      "xiaohongshu": {
+       "status": "done",
+       "posts": 10,
+       "target": 3,
+       "note": "2026-11-08 辣椒蟹专项深读 10 帖（珍宝/无招牌/长堤三词搜＋避雷定向搜）：Top 6 横评、Dempsey 拨肉帖、同乐&长堤 PK、三家对比、珍宝vs长堤、无招牌vs长堤、对比珍宝、三大海鲜等；正反两面均有，证据见 hidden_files/chilicrab-comparison-2026-11-08.md"
+      },
+      "details": {
+       "status": "done",
+       "note": "2026-11-08 官网直读 longbeachseafood.com.sg/reservation：四店地址与营业时间；Bistrochat/Chope 订位；12-08 周二 17:30/18:00/19:00 五人 live 查有位，流程未见押金"
+      },
+      "google_maps": {
+       "status": "unavailable",
+       "note": "未核验"
+      },
+      "tripadvisor": {
+       "status": "unavailable",
+       "note": "未核验"
+      },
+      "chinese_sites": {
+       "status": "unavailable",
+       "note": "未核验"
+      },
+      "photos": {
+       "status": "pending",
+       "note": "未采集（餐厅条目暂无图库需求）"
+      }
+     }
     }
    ],
    "name": "新加坡",
-   "total": 34
+   "total": 35
   },
   "seoul": {
    "name": "首尔",
@@ -8378,19 +8411,19 @@ export const initialResearchStatus = {
    "all_done": 0
   },
   "singapore": {
-   "total": 34,
+   "total": 35,
    "tripadvisor": 34,
    "ta": 34,
    "google_maps": 33,
    "gm": 33,
    "chinese_sites": 32,
    "cs": 32,
-   "xiaohongshu": 34,
-   "xhs_done": 34,
+   "xiaohongshu": 35,
+   "xhs_done": 35,
    "photos": 34,
    "ph": 34,
-   "details": 34,
-   "de": 34,
+   "details": 35,
+   "de": 35,
    "all_done": 31
   },
   "seoul": {
@@ -8418,6 +8451,6 @@ export const initialResearchStatus = {
   "tripadvisor": "done",
   "xiaohongshu": "3篇高流量帖（2026-09-22用户放款标准；旧≥10帖口径已作废，宁曼路10/10保留done）"
  },
- "total_locations": 231,
- "updated_at": "2026-11-08T04:50:04Z"
+ "total_locations": 232,
+ "updated_at": "2026-11-08T10:49:07Z"
 };
