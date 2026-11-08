@@ -1885,6 +1885,10 @@ import g1948 from "./assets/galleries/muay-thai-chiangmai/2.webp";
 import g1949 from "./assets/galleries/muay-thai-chiangmai/3.webp";
 import g1950 from "./assets/galleries/muay-thai-chiangmai/4.webp";
 import g1951 from "./assets/galleries/muay-thai-chiangmai/5.webp";
+import g1952 from "./assets/galleries/gyeongbokgung/1.webp";
+import g1953 from "./assets/galleries/gyeongbokgung/2.webp";
+import g1954 from "./assets/galleries/gyeongbokgung/3.webp";
+import g1955 from "./assets/galleries/gyeongbokgung/4.webp";
 
 export type PlacePhoto={src:string;sourceUrl?:string;title:string};
 
@@ -2148,7 +2152,7 @@ const galleries:Record<string,PlacePhoto[]>={
   "景点|首尔|弘大 Hongdae":[{src:g1279,sourceUrl:"https://www.pelago.com/",title:"弘大（来源：pelago.com，2026-10-05 收录）"}],
   "景点|首尔|明洞 Myeongdong":[{src:g1280,sourceUrl:"https://english.visitseoul.net/",title:"明洞主街：LINE/daiso/ABC MART 招牌林立的购物街（2026-10-05 目验确认；来源 english.visitseoul.net）"}],
   "景点|首尔|星空图书馆 Starfield Library":[{src:g1281,sourceUrl:"https://ilmestieredileggereblog.com/",title:"星空图书馆（来源：ilmestieredileggereblog.com，2026-10-05 收录）"}],
-  "景点|首尔|景福宫 Gyeongbokgung":[{src:g1282,sourceUrl:"https://ordertrip.jp/feed/",title:"景福宫光化门：双层门楼+韩服游客（2026-10-05 目验确认；来源 ordertrip.jp）"}],
+  "景点|首尔|景福宫 Gyeongbokgung":[{src:g1282,sourceUrl:"https://ordertrip.jp/feed/",title:"景福宫光化门：双层门楼+韩服游客（2026-10-05 目验确认；来源 ordertrip.jp）"},{src:g1952,sourceUrl:"https://wtravel.co.th/travel-info/%e0%b9%80%e0%b8%8a%e0%b9%87%e0%b8%84%e0%b8%ad%e0%b8%b4%e0%b8%99-%e0%b8%aa%e0%b8%96%e0%b8%b2%e0%b8%99%e0%b8%97%e0%b8%b5%e0%b9%88%e0%b9%80%e0%b8%81%e0%b8%b2%e0%b8%ab%e0%b8%a5%e0%b8%b5/",title:"兴礼门冬日雪景：丹青门楼＋积雪北岳山（来源 wtravel.co.th，2026-11-08 收录）"},{src:g1953,sourceUrl:"https://blog.curatorstravel.com/popular-tourist-areas/korea-travel",title:"勤政殿正面：双层重檐＋石阶人群（来源 blog.curatorstravel.com，2026-11-08 收录）"},{src:g1954,sourceUrl:"https://creatrip.com/zh-TW/blog/12643",title:"勤政殿内景：王座＋日月五峰图屏风＋丹青藻井（来源 creatrip.com，2026-11-08 收录）"},{src:g1955,sourceUrl:"http://www.odii.kr/smarttour_web/story/detail?tid=2573&tlid=2573&sid=5379&slid=16377",title:"光化门内侧：三拱门洞＋门外现代高楼（来源 odii.kr，2026-11-08 收录）"}],
   "景点|首尔|梨泰院 Itaewon":[{src:g1283,sourceUrl:"https://www.trotop.be/",title:"梨泰院（来源：trotop.be，2026-10-05 收录）"}],
   "景点|首尔|汝矣岛汉江公园":[{src:g1284,sourceUrl:"https://www.roughguides.com/south-korea/itineraries/",title:"汝矣岛汉江公园（来源：roughguides.com，2026-10-05 收录）"}],
   "景点|首尔|益善洞 Ikseon-dong":[{src:g1285,sourceUrl:"https://kaicakorea.com/korea-trip/seoul-jongno-ikseon-guide/",title:"益善洞（来源：kaicakorea.com，2026-10-05 收录）"}],
