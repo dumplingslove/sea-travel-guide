@@ -767,7 +767,7 @@ const overrides:Record<string,Partial<GuideFacts>>={
  'Four Seasons Bangkok':{address:'湄南河畔 · Charoen Krung',action:'订房页必须确认是河畔店，不要误订同名服务式公寓'},
  '曼谷文华东方':{address:'48 Oriental Avenue, Bangkok',action:'选河景翻新房；把历史氛围看得比最新硬件更重要时再订'},
  'The Siam':{address:'曼谷老城河畔 · Dusit',transit:'无BTS直达，主要依赖酒店船与打车',action:'只在愿意宅酒店或老城慢游时选；不要把它当市中心通勤酒店'},
- 'Sorn':{hours:'仅按预约时段接待',price:'帖子样本：7,800 THB/位，另加税费与服务费',action:'官网放位即订；无位时请酒店礼宾协助，不围绕未确认餐位锁死整晚'},
+ 'Sorn':{hours:'周日–周五 18:00–22:00，仅按预约时段接待；周六闭店（米其林指南）',price:'帖子样本：7,800 THB/位，另加税费与服务费',action:'官网放位即订；无位时请酒店礼宾协助，不围绕未确认餐位锁死整晚'},
  'Sühring':{hours:'仅按预约时段接待',price:'帖子样本：7,800 / 9,800 THB 套餐',action:'2026升三星后口碑两极；先看当季菜单与份量再订'},
  'Gaggan':{address:'68 Sukhumvit 31, Bangkok',hours:'2026-05-29翻新重开；仅按预约时段接待',price:'帖子汇总约15,000–20,000 THB/人（含配酒）',action:'订位时核对68 Sukhumvit 31；接受No Phone政策再去'},
  'Côte by Mauro Colagreco':{address:'Capella Bangkok 内',price:'帖子样本：四道式午餐3,800 THB++',action:'本趟不订（用户定：只吃当地菜、不要法餐）；参考信息：午餐份量评价偏小，为河景和体验而去，不把它当饱腹安全牌'},
