@@ -1196,6 +1196,7 @@ export const MUST_BOOK_ATTRACTIONS: string[] = [
   "The Hyundai Seoul 圣诞村", // 首尔：需预约入场、名额秒空，首轮预约 2026-11-05 经官方 App 开抢（2026-10-27 site-improve 补：round419 已帖级坐实预约方式且目录条目 best 明写 11-05 抢预约，此前未入本清单——预订筛选（bookingOnly）看不到它、收藏徽章误标「暂无提前订票研究结论」；同城其余圣诞项逐项核对：光化门市集/石村湖/清溪川均为免费无需预订、Jdot 条目明写「不入提前订清单的必订项」，均不入）
   "Phuket Elephant Sanctuary", // 普吉：每天仅200名，预约提前规划
   "Siam Niramit",           // 普吉：演出票，建议提前订
+  "泰皇秀 Wake Up Club",   // 普吉：定版未选·备选（晚间秀）：线上约 1500 泰铢含 1 杯饮品、现场 2500 泰铢，只在线上提前订（2026-11-14 site-improve 补：round669 双帖互证搬迁＋票价；按 Siam Niramit 演出票先例入清单）
   "夜间动物园",             // 新加坡：热门场次售罄，Klook买完还要预约时段
   "环球影城",               // 新加坡：建议提前买票
   "Singapore Oceanarium",   // 新加坡：建议提前买票
@@ -1224,6 +1225,7 @@ export const MUST_BOOK_ATTRACTION_REASONS: Record<string, string> = {
   "The Hyundai Seoul 圣诞村": "需预约入场：Klook 分轮预约，12-31 场次须抢第四轮（12 月 17 日 11:00 韩国时间开放，约合 12 月 16 日 18:00 PST；单日 50 名额、每券最多 4 人；后三轮日期为评论区转述，抢前以 Klook／官方号复核为准；首轮已满）；官方 App「The Hyundai Hi」线保留；Klook 外国游客通道每天限量 100 个免费快速通行名额作备选（与 50 名额口径不同，临行以官方公告为准）",
   "Phuket Elephant Sanctuary": "定版未选·备选（清迈已选 ENP）：每天仅接待 200 名，预约提前规划",
   "Siam Niramit": "定版未选·备选：演出票，建议提前订",
+  "泰皇秀 Wake Up Club": "定版未选·备选（普吉晚间秀）：线上约 1500 泰铢含 1 杯饮品、现场 2500 泰铢，只在线上提前订；打车路边下车再换票，司机送到门口会作废线上订单",
   "夜间动物园": "热门场次售罄，买票后还要预约时段",
   "环球影城": "建议提前买票",
   "Singapore Oceanarium": "建议提前买票",
