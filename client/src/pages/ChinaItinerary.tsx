@@ -327,6 +327,14 @@ export default function ChinaItinerary() {
                   city="北京"
                 />
               )}
+              {k === "bj2" && (
+                <StaticCard
+                  content={BEIJING_HOME_FOOD}
+                  badge="立水家园一带"
+                  label="住家补充"
+                  city="北京"
+                />
+              )}
               {k === "bj1" && (
                 <StaticCard
                   content={BEIJING_HOSPITAL_FOOD}
