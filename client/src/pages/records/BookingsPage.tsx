@@ -504,11 +504,15 @@ function FavoriteActionList({
       if (!r.done) continue;
       const d = parseBookingBody(r.body);
       if (d.bkind !== "transport") continue;
-      const hit = `${r.title} ${d.extra ?? ""}`.match(/[A-Z]{2}\d{3,4}/);
-      if (hit) m.set(hit[0], { code: d.code, summary: bookingSummary(d) });
+      const hit = `${r.title} ${d.extra ?? ""}`.match(/[A-Z]{2}\s?\d{3,4}/);
+      if (hit) m.set(hit[0].replace(/\s+/g, ""), { code: d.code, summary: bookingSummary(d) });
     }
     return m;
   }, [bookingRows]);
+  /* 2026-11-14 用户抓包：收藏里航班号带空格（"CA 886"）而出票记录里不带空格（"CA886"），
+   * 精确匹配不到、已出票徽标不显示——查表前先去掉全部空白再比（"CA 886"→"CA886"）。 */
+  const ticketedFlight = (flightNo?: string) =>
+    flightNo ? ticketedByFlightNo.get(flightNo.replace(/\s+/g, "")) : undefined;
   const { segments } = usePlanScope();
   const segs: PlanSegment[] = useMemo(
     () => segments.map((s) => ({ city: s.city, start: s.start, end: s.end, days: s.days })),
@@ -880,7 +884,7 @@ function FavoriteActionList({
   const bookedCount = favs.filter(
     (f) =>
       confirmedByName.has(f.row.title.trim().toLowerCase()) ||
-      (f.type === "flight" && !!f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)),
+      (f.type === "flight" && !!f.flight?.flight && !!ticketedFlight(f.flight.flight)),
   ).length;
   const anyVisible = journeySections.some((sec) =>
     sec.items.some((f) => typeFilter === "all" || f.type === typeFilter),
@@ -1151,7 +1155,7 @@ function FavoriteActionList({
                         cardSelected
                           ? "ring-2 ring-teal-600 border-teal-600 border-l-teal-600"
                           : confirmedByName.has(f.row.title.trim().toLowerCase()) ||
-                              (f.type === "flight" && !!f.flight?.flight && ticketedByFlightNo.has(f.flight.flight))
+                              (f.type === "flight" && !!f.flight?.flight && !!ticketedFlight(f.flight.flight))
                             ? "border-gray-200 border-l-emerald-500"
                             : f.row.done
                               ? "border-gray-200 border-l-amber-400"
@@ -1166,17 +1170,17 @@ function FavoriteActionList({
                             <span className="ml-2 text-xs font-normal text-gray-500">{f.flight.route}</span>
                           )}
                           {/* 已出票徽标只认 DB 已确认的交通预订记录（按航班号匹配），不读代码常量 */}
-                          {f.type === "flight" && f.flight?.flight && ticketedByFlightNo.has(f.flight.flight) && (
+                          {f.type === "flight" && f.flight?.flight && ticketedFlight(f.flight.flight) && (
                             <span
-                              title={ticketedByFlightNo.get(f.flight.flight)!.summary}
+                              title={ticketedFlight(f.flight.flight)!.summary}
                               className="ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white align-middle"
                             >
-                              ✅ 已出票{ticketedByFlightNo.get(f.flight.flight)!.code ? ` · ${ticketedByFlightNo.get(f.flight.flight)!.code}` : ""}
+                              ✅ 已出票{ticketedFlight(f.flight.flight)!.code ? ` · ${ticketedFlight(f.flight.flight)!.code}` : ""}
                             </span>
                           )}
                           {/* 2026-10-13 用户：预定筛选要标"是否已预订"——与已确认预订记录同名即标（餐厅订位主要靠这条） */}
                           {(() => {
-                            if (f.type === "flight" && f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) return null;
+                            if (f.type === "flight" && f.flight?.flight && ticketedFlight(f.flight.flight)) return null;
                             const rec = confirmedByName.get(f.row.title.trim().toLowerCase());
                             if (!rec) return null;
                             return (
@@ -1328,7 +1332,7 @@ function FavoriteActionList({
                       {isOpen && f.type === "flight" && flightLeg && (() => { /* 2026-10-27 类别2修复：弹窗此前直接读共享 FLIGHT_LEGS 且不看 flightState——实查确认无直飞（none）与还没查（pending）都写成同一句「暂无直飞数据（待实查）」，且选项是共享 leg 当前日期的、未按本收藏的规划日期重查。与 ItineraryDayCard 同法：深拷贝后按规划日期 refreshLegFromDb 再渲染，并按 flightState 区分三种口径（与 BookingTimeline/GuideApp 一致）。 */ const modalQDate = (f.flight?.route ? flightDateFromPlan(f.flight.route, flightSegs) : null) || f.flight?.date || flightLeg.date || ""; const modalLeg = JSON.parse(JSON.stringify(flightLeg)) as FlightLegInfo; if (modalQDate) refreshLegFromDb(modalLeg, modalQDate); favModalTitle = f.row.title; favModalNode = (
                         <div className="text-xs text-gray-600">
                           <p className="font-medium text-gray-500 mb-1.5">
-                            ✈️ {modalLeg.route} · {modalLeg.date || "日期待定"}{(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? "（已出票）" : modalLeg.flightState === "none" ? " · 当天实查无直飞" : modalLeg.flightState === "pending" ? " · 当天直飞待查询" : ` 当天所有直飞（${modalLeg.options?.length ?? 0} 班）`}
+                            ✈️ {modalLeg.route} · {modalLeg.date || "日期待定"}{(f.flight?.flight && ticketedFlight(f.flight.flight)) ? "（已出票）" : modalLeg.flightState === "none" ? " · 当天实查无直飞" : modalLeg.flightState === "pending" ? " · 当天直飞待查询" : ` 当天所有直飞（${modalLeg.options?.length ?? 0} 班）`}
                           </p>
                           {modalLeg.dbSeg && SEGMENT_POINTS_HINT[modalLeg.dbSeg] && (
                             <p className="mb-1.5 font-medium text-violet-900 bg-violet-50 border border-violet-100 rounded-lg px-2 py-1.5">🧾 {SEGMENT_POINTS_HINT[modalLeg.dbSeg]}</p>
@@ -1360,8 +1364,8 @@ function FavoriteActionList({
                             />
                           )}
                           {/* 已出票（以 DB 预订记录为准）直接给出票摘要；否则列当天直飞选项比价 */}
-                          {(f.flight?.flight && ticketedByFlightNo.has(f.flight.flight)) ? (
-                            <p className="text-emerald-700 font-medium">✅ 已出票 · {ticketedByFlightNo.get(f.flight.flight)!.summary}（全部细节见「✅ 最终预定」）</p>
+                          {(f.flight?.flight && ticketedFlight(f.flight.flight)) ? (
+                            <p className="text-emerald-700 font-medium">✅ 已出票 · {ticketedFlight(f.flight.flight)!.summary}（全部细节见「✅ 最终预定」）</p>
                           ) : (modalLeg.options ?? []).length ? (
                             <div className="space-y-1">
                               {[...(modalLeg.options ?? [])]
