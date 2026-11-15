@@ -361,6 +361,15 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       lng: 103.8596966,
       note: "图示苏丹清真寺一带",
     },
+    {
+      // 2026-11-15 site-improve-hourly 类别2：12-09 早晨栏二选一改名后的全名补钉（精确匹配口径）；
+      // 坐标复用本键已核验的 Kampong Glam 点，不新编坐标。Bugis 室内原先就无钉，不补。
+      name: "Kampong Glam（与科学中心二选一）",
+      time: "09:30",
+      lat: 1.3034335,
+      lng: 103.8596966,
+      note: "图示苏丹清真寺一带（与 Kampong Glam 同点）",
+    },
     { name: "乌节路", time: "15:30", lat: 1.2993444, lng: 103.8450261 },
   ],
   // D6 普吉《飞普吉 · 海滩日落》

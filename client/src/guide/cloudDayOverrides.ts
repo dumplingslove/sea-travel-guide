@@ -219,7 +219,16 @@ export function applyCloudDayOverride(
     return {
       ...base,
       stops: [
-        ...base.stops.filter((s) => s.name !== "酒店附近晚餐"),
+        // 2026-11-15 site-improve-hourly 类别2：基底两晨站与科学中心是二选一（见本块 tip「上午二选一」与
+        // data.ts 科学中心条目 best），但站名不标、早晨栏读起来像 09:30→11:00→上午三站连排；按 12-07
+        // Exploria／12-08 敦煌的站名标二选一惯例补后缀。科学中心是 2026-11-07 用户定的主项，站名不动。
+        ...base.stops
+          .filter((s) => s.name !== "酒店附近晚餐")
+          .map((s) =>
+            s.name === "Kampong Glam" || s.name === "Bugis 室内"
+              ? { ...s, name: `${s.name}（与科学中心二选一）` }
+              : s,
+          ),
         {
           time: "上午",
           name: "新加坡科学中心 · One Ocean 深海极地特展（上午半日，带娃向）",
