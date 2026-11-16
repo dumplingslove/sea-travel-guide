@@ -225,7 +225,7 @@ export function applyCloudDayOverride(
         ...base.stops
           .filter((s) => s.name !== "酒店附近晚餐")
           .map((s) =>
-            s.name === "Kampong Glam" || s.name === "Bugis 室内"
+            s.name === "Kampong Glam" || s.name === "Bugis"
               ? { ...s, name: `${s.name}（与科学中心二选一）` }
               : s,
           ),
