@@ -346,18 +346,28 @@ export function applyCloudDayOverride(
     const phuket0Alt = phuket0Mapped.filter(
       (s) => s.name === "普吉老镇夜景（备选）",
     );
+    // 2026-11-16 site-improve-hourly 类别2（04:38 轮软观察裁决）：酒店时间「下午」块原先缀在
+    // phuket0Main 之后、即基底 14:30 海滩＋17:15 日落之后，时间线读成「日落后才回酒店泡下午泳池」、
+    // 与「抵达后先回别墅休整、海滩与日落只留轻量」的主线矛盾。移至航班站之后、海滩/日落轻量站之前。
+    const phuket0Flight = phuket0Main.filter(
+      (s) => s.name === "飞往普吉（航班待订）",
+    );
+    const phuket0Rest = phuket0Main.filter(
+      (s) => s.name !== "飞往普吉（航班待订）",
+    );
     return {
       ...base,
       // 2026-11-05 site-improve-hourly：基底标题「飞普吉 · 海滩日落」只写轻量项、与定版主线（酒店时间＋周五夜市）不符；渲染层以 detail.title 作副标题，覆盖层显式设 title。
       title: "抵达普吉 · 酒店休整＋周五夜市",
       stops: [
-        ...phuket0Main,
+        ...phuket0Flight,
         {
           time: "下午",
           name: "酒店时间 · Banyan Tree 别墅私人泳池（今日主项）",
           detail:
             "抵达日酒店时间占大头：Banyan Tree Phuket 每栋别墅带私家泳池与露天浴缸，下午就泡在别墅里躺平补觉、点客房餐饮，哪里也不去；海滩与日落只留轻量，别的都只是备选。（2026-10-24 密度审计）",
         },
+        ...phuket0Rest,
         {
           time: "傍晚",
           name: "Boat Avenue 周五夜市 · Fun Friday（定版主线）",
