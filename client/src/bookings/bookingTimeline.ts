@@ -462,7 +462,7 @@ export const FLIGHT_LEGS: FlightLegInfo[] = [
     dateLabel: "12-15",
     day: 17,
     kind: "intercity",
-    note: "✅ 已出票：Thai VietJet VZ417，Trip.com 订单 1688903619698421，航司确认号 3TUN8E，座位 5A/5B（Linjun/Daran），以出票邮件为准",
+    note: "✅ 已出票：Thai VietJet VZ417，确认号 3TUN8E，座位 5A/5B，以出票邮件为准",
     ticketed: true,
     carrier: "Thai VietJet",
     schedule: "VZ417 13:25 → 15:40",
