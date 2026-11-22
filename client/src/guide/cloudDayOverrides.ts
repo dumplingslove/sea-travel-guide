@@ -260,6 +260,7 @@ export function applyCloudDayOverride(
         "🍽️ 早餐备选：旺利茶室武吉士分行（91 Bencoolen Street）——绿色斑斓咖椰吐司＋椰浆饭，辣椒不辣适合全家；口碑两极偏贵，价格/营业时间未明确、临行复核。（2026-10-24 美食发掘 round 411）" +
         "🍽️ 午餐：动物园内简餐或回市中心吃马来餐（Kampong Glam 一带；店名与价格未帖级坐实，现场选）。" +
         "🍽️ 甜品备选：一家人甜品（财富中心二楼，190 Middle Rd #02-08，明古连站附近；另有 Tan Quee Lan 店）——$3–9，猫山王慕斯＞榴莲珍多（本地人也会来打包）；第二帖（round671）再补三款必点：紫米椰奶芋圆、菜脯肠粉、小三圆热糖水，饭点排队、翻台快；营业时间未明确（round495；分店与慕斯口碑 round537）。" +
+        "🍽️ 甜品备选：Mr. CHEESECAKE 芝士蛋糕快闪，ION Orchard L3，至 12-30；整只约 S$69，三种吃法；单帖顺路尝鲜。（round766）" +
         "✅ 晚餐已订：Burnt Ends（7 Dempsey Road，Dempsey 一带）18:30，5 人（4 大 1 小，幼儿 2 岁），Main Dining Area 桌位，确认号 BurntYZVRGCM；信用卡仅作担保、尚未扣款，用餐前 24 小时内取消或 no-show 收 SGD 100/位，别迟到。（昨晚 12-08 是长堤海鲜 18:00，不在今晚；原珍宝已取消。）",
       tip:
         base.tip +
