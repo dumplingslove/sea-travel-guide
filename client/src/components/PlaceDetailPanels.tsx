@@ -369,19 +369,23 @@ export function PreTripChecklistPanel({ kind }: { kind: DetailKind }) {
   );
 }
 
-/** 机位条目（最佳机位与人像小节复用；研究数据原样展示不改写） */
+/** 机位条目（最佳机位与人像小节复用；研究数据原样展示不改写）
+ * 人像小节复用上方机位时 hidePhoto：同一张样片在同一页只出现一次，
+ * 人像小节只留文字指引（站位/拍法），不再重复贴图。 */
 function SpotArticle({
   item,
   s,
   i,
   gallery,
   portrait,
+  hidePhoto,
 }: {
   item: Item;
   s: PhotoSpot;
   i: number;
   gallery: ReturnType<typeof getPlaceGallery>;
   portrait?: boolean;
+  hidePhoto?: boolean;
 }) {
   const photo = s.sampleIndex != null ? gallery[s.sampleIndex] : undefined;
   return (
@@ -405,7 +409,7 @@ function SpotArticle({
         <span className="font-bold">📷 拍摄建议：</span>
         {s.how}
       </p>
-      {photo ? (
+      {hidePhoto ? null : photo ? (
         <figure>
           <img
             src={photo.src}
@@ -465,6 +469,7 @@ export function PhotoSpotsPanel({ item }: { item: Item }) {
                 i={i}
                 gallery={gallery}
                 portrait
+                hidePhoto
               />
             ))}
           </div>

@@ -2,16 +2,14 @@ import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   days as staticDays,
-  legs,
-  cityMobility,
   attractions,
   restaurants,
   hotels,
-  shopping,
   type Day,
   type Item,
 } from "@/guide/data";
-import { xhsEvidence, xhsAssessments } from "@/guide/research";
+import { xhsEvidence, xhsAssessments, getGuideFacts } from "@/guide/research";
+import { attractionGuides } from "@/guide/attractionGuides";
 import {
   BOOKING_KIND_LABEL,
   BOOKING_FIELD_LABEL,
@@ -31,11 +29,11 @@ import {
   mustGoBadge,
   MUST_GO,
 } from "@/bookings/restaurantBookingStatus";
-import { placeDetailPath, kindFromZh } from "@/guide/placeDetail";
+import { placeDetailPath } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
-import { FLIGHT_LEGS, refreshLegFromDb, type FlightLegInfo } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, type FlightLegInfo } from "@/bookings/bookingTimeline";
 import { bareName } from "@/bookings/nameMatch";
 
 /* ============ 每日行程 enrichment：预订/收藏/酒店（2026-10-03 用户模型） ============
@@ -221,45 +219,14 @@ export function isoShort(iso: string): string {
 }
 
 /**
- * 意大利南法站行程页 1:1 逻辑复刻：
- * 单页列出所有天数，每张 Day 卡自包含当天一切信息——
- * 跨城交通 / 市内交通 / 上午下午晚上时间线（含景点配图与空位余票）/
- * 餐饮安排 / 安排提醒 / 本日预订 / 当日路线图 / 本城酒店餐厅景点详情。
+ * 行程页是旅游途中第一个要看的东西：每天一张卡，自包含当天一切信息——
+ * 今日已定（住/机票/吃统一一单，按时间排序）/ 上午下午晚上时间线
+ * （一行一站，点开在原地看实用信息）/ 餐饮安排 / 安排提醒（最多 2 行）/
+ * 当日路线图 / 本城酒店餐厅景点详情。
+ * 2026-11-21 二次改版：删气候行、购物行、穿搭建议、研究依据计数、
+ * 跨城交通折叠区与「本日预订」区；日卡内不再跳往 /attraction/ 详情页。
  */
 
-/* ---------------- 12月气候参考（气候平均值，非实时预报） ----------------
- * 曼谷/清迈/普吉/胡志明市：weather2visit.com 12月均值；
- * 清迈另核 weather-atlas.com（28.6/15.7°C，降雨16mm）；
- * 吉隆坡：easeweather.com（29/22°C，降雨335.5mm）；
- * 槟城（乔治市）：dwd.de 气候表（31.1/23.4°C，降雨113.5mm）；
- * 富国岛：bestpricetravel/asiatouradvisor（23–30°C，降雨48–104mm）；
- * 新加坡：weather-and-climate.com 新加坡站数据（29/26°C，降雨约360mm，20雨天）。
- * 首尔：weather2visit.com 首尔站 12 月均值（3.9/-4.7°C，降雨21mm）；weather-atlas 同月口径（4.3/-3.2°C，降雨22mm）互证，2026-10-14 核对。
- */
-const CLIMATE: Record<string, string> = {
-  曼谷: "31/21°C · 月降雨约11mm · 干燥少雨，短袖+防晒",
-  清迈: "28/16°C · 月降雨约12mm · 早晚凉，备薄外套",
-  普吉: "31/23°C · 月降雨约66mm · 旱季海况稳，防晒+带伞",
-  槟城: "31/23°C · 月降雨约114mm · 阵雨多，随身带伞",
-  吉隆坡: "29/22°C · 月降雨约336mm · 全年最湿月之一，多备室内备选",
-  胡志明市: "30/22°C · 月降雨约42mm · 干季少雨，短袖即可",
-  富国岛: "29/25°C · 月降雨约50–100mm · 干季，海岛装+防晒",
-  新加坡: "29/25°C · 月降雨300mm+ · 全年最多雨月份之一，阵雨频繁",
-  首尔: "4/-5°C · 月降雨约21mm · 干冷少雨，可能下雪，羽绒服+保暖内衣",
-};
-
-/* ---------------- 12月穿搭建议（按城市气候） ---------------- */
-const PACKING: Record<string, string> = {
-  曼谷: "31°C：短袖短裤为主，防晒做足；进大皇宫等寺庙需遮肩盖膝，备一条长裙/长裤。",
-  清迈: "白天 28°C 短袖，早晚 16°C 左右：备薄外套或长袖；素贴山上更冷。",
-  普吉: "31°C 海岛装；出海日备防水袋、换洗衣物和晕船药。",
-  槟城: "31°C 阵雨多：短袖 + 折叠伞 + 防滑凉鞋。",
-  吉隆坡: "29°C 多雨：短袖 + 雨伞；商场空调冷，备薄外套。",
-  胡志明市: "30°C 短袖；摩托车多，穿好走的鞋，注意包不离身。",
-  富国岛: "29°C 海岛装 + 防晒；夜市备驱蚊水。",
-  新加坡: "29°C 高湿多雨：速干衣 + 折叠伞；室内空调冷，备薄外套；带娃多备一套换洗衣物。",
-  首尔: "白天约 4°C、夜间 -5°C：羽绒服/厚外套 + 保暖内衣 + 手套围巾；路面可能结冰，穿防滑鞋；室内暖气足，洋葱式穿法方便增减。",
-};
 /* 云端 13 天行程里新加坡有 5 天、静态只有 3 天内容：
  * 首日取抵达日内容、末日取离境日内容，中间多出的天数用下面两篇弹性日补上。
  * 内容取自本站已有的景点研究结论（含"建议舍"的诚实标注）。 */
@@ -444,30 +411,6 @@ function periodOf(time: string): "上午" | "下午" | "晚上" {
   return "晚上";
 }
 
-function Collapsible({
-  title,
-  children,
-}: {
-  title: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="mb-5">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-2 text-left text-base font-bold text-teal-800 hover:text-teal-600"
-      >
-        {title}
-        <span className="text-gray-400 text-sm ml-auto">
-          {open ? "▲" : "▼"}
-        </span>
-      </button>
-      {open && <div className="mt-3">{children}</div>}
-    </div>
-  );
-}
-
 /* ============ 餐饮/提醒结构化呈现（2026-10-22 用户要求） ============
  * 用户原话：餐饮现在全是大段文字、每天塞一堆餐厅根本吃不完；安排提醒也是
  * 小红书研究结论堆成大段文字、没法读。定版结构：
@@ -575,35 +518,18 @@ function TipCard({ item }: { item: TipItem }) {
   );
 }
 
-/** 安排提醒结构化列表：只露 1 条最重要提醒（2026-11-21 日卡改版：默认
- * 只展开「今日已定」和时间线，提醒其余进「更多提醒（N 条）」），其余折叠
+/** 安排提醒结构化列表：每张日卡最多 2 行、只留当天必须行动的事
+ * （2026-11-21 二次改版：不再折叠收纳更多提醒，多余的不显示），
  * （Home 日卡与 DayDetail 共用）。 */
 export function TipStructured({ tip }: { tip: string }) {
   const items = parseTipItems(tip);
   if (!items.length) return null;
-  const keep = new Set<number>();
-  const firstPlain = items.findIndex((it) => !it.title);
-  if (firstPlain >= 0) keep.add(firstPlain);
-  else keep.add(0);
-  const visible = items.filter((_, i) => keep.has(i));
-  const rest = items.filter((_, i) => !keep.has(i));
+  const visible = items.slice(0, 2);
   return (
     <div className="space-y-2">
       {visible.map((it, i) => (
         <TipCard key={i} item={it} />
       ))}
-      {rest.length > 0 && (
-        <details>
-          <summary className="text-xs font-medium text-purple-700 cursor-pointer py-1">
-            更多提醒（{rest.length} 条）▾
-          </summary>
-          <div className="space-y-2 mt-2">
-            {rest.map((it, i) => (
-              <TipCard key={i} item={it} />
-            ))}
-          </div>
-        </details>
-      )}
     </div>
   );
 }
@@ -1159,11 +1085,14 @@ export function DayBookingsSection({
   );
 }
 
-/* ---------------- 今日已定（2026-11-21 日卡改版 P0 主线 1） ----------------
- * 每张日卡头部下方、时间线之前：当天已预定的住宿/航班/餐厅一行一条，
- * 点行展开看完整明细（复用 BookingDetailsExpand 的 bare 模式）。
- * 三类全无则整个 session 不渲染。同一酒店多间房只出现一次；
- * 已出票航班只出现在这里，跨城交通区与「本日预订」不再重复。 */
+/* ---------------- 今日已定（2026-11-21 二次改版：旅途中清单式日卡） ----------------
+ * 一张单一扁平列表，按时间排序，包含当天全部已订项：航班（航班号、起降
+ * 时间、确认号）、酒店、餐厅，一行一条，不分子标题、不分区域。点一行在
+ * 原地展开看确认号、价格、取消政策。
+ * 航班行优先用当天交通预订记录（出票事实）；已出票但没有交通记录的腿
+ * 用 FLIGHT_LEGS 行兜底；未出票的当天转场航段只占一行未订推荐
+ * （推荐航班按库里 recommend 项，不展开航班列表、不跳预订页）。
+ * 同一酒店多间房只出现一次；三类全无则整个 section 不渲染。 */
 function TodayBookedRow({
   icon,
   label,
@@ -1191,26 +1120,103 @@ function TodayBookedRow({
 export function TodayBookedSection({
   hotelGroups,
   flightLeg,
-  flightBooking,
+  transportBookings,
+  unbookedLeg,
   bookedRests,
 }: {
   hotelGroups: HotelGroup[];
+  /** 已出票但无交通预订记录时的兜底航段行 */
   flightLeg?: FlightLegInfo | null;
-  flightBooking?: DayBooking;
+  /** 当天已出票的交通预订记录（机票/车票） */
+  transportBookings: DayBooking[];
+  /** 当天转场航段未出票时：只占一行未订推荐 */
+  unbookedLeg?: FlightLegInfo | null;
   bookedRests: DayBooking[];
 }) {
-  if (!hotelGroups.length && !flightLeg && !bookedRests.length) return null;
   const doneBadge = (done: boolean) =>
     done ? (
       <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
     ) : (
       <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>
     );
-  return (
-    <section className="mb-6">
-      <h4 className="text-lg font-bold mb-3 text-teal-800">✅ 今日已定</h4>
-      <div className="space-y-2">
-        {hotelGroups.map((g) => {
+  /* 已出票航段是否已有交通记录覆盖（有则只渲染记录行，不重复渲染腿行） */
+  const legFlightNo = flightLeg?.note?.match(/[A-Z]{2}\d{2,4}/)?.[0];
+  const legCovered =
+    !!legFlightNo &&
+    transportBookings.some((b) => b.title.includes(legFlightNo) || b.body.includes(legFlightNo));
+  /* 推荐航班：库里 recommend 项优先，否则取当日直飞最低价 */
+  const recommendOpt = (leg: FlightLegInfo) => {
+    const opts = (leg.options ?? []).filter((o) => o.price != null);
+    return (
+      opts.find((o) => o.recommend) ??
+      opts.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))[0]
+    );
+  };
+  type BookedRow = { key: string; sort: string; node: React.ReactNode };
+  const rows: BookedRow[] = [];
+  /* 航班行：当天交通预订记录（出票事实），按出发时间排 */
+  transportBookings.forEach((b) => {
+    const bd = parseBookingBody(b.body);
+    const flightNo =
+      (typeof bd.extra === "string" && bd.extra) || b.title.match(/[A-Z]{2}\d{2,4}/)?.[0] || "";
+    const route = flightNo ? b.title.replace(flightNo, "").trim() : b.title;
+    const when = [bd.time, bd.timeEnd].filter(Boolean).join("–");
+    const label = [flightNo, route, when, bd.guests, bd.code ? `确认号 ${bd.code}` : null]
+      .filter(Boolean)
+      .join(" · ");
+    rows.push({
+      key: `transport-${b.title}`,
+      sort: bd.time || "99:99",
+      node: (
+        <TodayBookedRow icon="✈️" label={label} badge={doneBadge(b.done)}>
+          {bd.note && <p className="text-xs text-gray-500">{bd.note}</p>}
+          <BookingDetailsExpand bd={bd} bare />
+        </TodayBookedRow>
+      ),
+    });
+  });
+  /* 航班行：已出票腿兜底（无交通记录时才渲染） */
+  if (flightLeg && !legCovered) {
+    const schedStart = flightLeg.schedule?.match(/\d{1,2}:\d{2}/)?.[0] ?? "99:99";
+    rows.push({
+      key: `leg-${flightLeg.route}`,
+      sort: schedStart,
+      node: (
+        <TodayBookedRow
+          icon="✈️"
+          label={`${flightLeg.route}${flightLeg.carrier ? ` · ${flightLeg.carrier}` : ""}${flightLeg.schedule ? ` ${flightLeg.schedule}` : ""}`}
+          badge={doneBadge(true)}
+        >
+          {flightLeg.note && <p className="text-xs text-gray-700">{flightLeg.note}</p>}
+        </TodayBookedRow>
+      ),
+    });
+  }
+  /* 航班行：未出票转场航段只占一行（推荐航班按库里 recommend 项） */
+  if (unbookedLeg) {
+    const opt = recommendOpt(unbookedLeg);
+    const label = opt
+      ? `${unbookedLeg.route} 未订，推荐 ${opt.flight} ${opt.depart}→${opt.arrive} $${opt.price}`
+      : `${unbookedLeg.route} 未订`;
+    rows.push({
+      key: `unbooked-${unbookedLeg.route}`,
+      sort: opt?.depart ?? "99:99",
+      node: (
+        <TodayBookedRow
+          icon="✈️"
+          label={label}
+          badge={
+            <span className="text-xs font-bold text-white bg-amber-500 rounded-full px-2 py-0.5">未订</span>
+          }
+        >
+          {unbookedLeg.note && <p className="text-xs text-gray-700">{unbookedLeg.note}</p>}
+          {opt?.recommendReason && <p className="text-xs text-gray-500 mt-1">{opt.recommendReason}</p>}
+        </TodayBookedRow>
+      ),
+    });
+  }
+  /* 酒店行：同一酒店多间房只出现一次；入住日按 15:00 排，续住排在最前 */
+  hotelGroups.forEach((g) => {
           const first = g.rooms[0];
           const bd = parseBookingBody(first.body);
           const allDone = g.rooms.every((r) => r.done);
@@ -1233,7 +1239,10 @@ export function TodayBookedSection({
           const label = [g.title, stayRange, g.rooms.length > 1 ? `${g.rooms.length} 间房` : "", nightLabel]
             .filter(Boolean)
             .join(" · ");
-          return (
+          rows.push({
+            key: `hotel-${g.title}`,
+            sort: first.stayNight === 0 ? "15:00" : "00:00",
+            node: (
             <TodayBookedRow
               key={g.title}
               icon="🛏️"
@@ -1266,111 +1275,43 @@ export function TodayBookedSection({
               })}
               {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
             </TodayBookedRow>
-          );
-        })}
-        {flightLeg && (
-          <TodayBookedRow
-            icon="✈️"
-            label={`${flightLeg.route}${flightLeg.carrier ? ` · ${flightLeg.carrier}` : ""}${flightLeg.schedule ? ` ${flightLeg.schedule}` : ""}`}
-            badge={doneBadge(true)}
-          >
-            {flightLeg.note && <p className="text-xs text-gray-700">{flightLeg.note}</p>}
-            {flightBooking && <BookingDetailsExpand bd={parseBookingBody(flightBooking.body)} bare />}
-          </TodayBookedRow>
-        )}
-        {[...bookedRests]
-          .sort((a, b) => {
-            const ta = (() => {
-              try {
-                return parseBookingBody(a.body).time || "99:99";
-              } catch {
-                return "99:99";
-              }
-            })();
-            const tb = (() => {
-              try {
-                return parseBookingBody(b.body).time || "99:99";
-              } catch {
-                return "99:99";
-              }
-            })();
-            return ta.localeCompare(tb);
-          })
-          .map((b) => {
-            const bd = parseBookingBody(b.body);
-            const label = [b.title, bd.time, bd.guests].filter(Boolean).join(" · ");
-            return (
-              <TodayBookedRow key={b.title} icon="🍽️" label={label} badge={doneBadge(b.done)}>
-                {bd.note && <p className="text-xs text-gray-500">{bd.note}</p>}
-                <BookingDetailsExpand bd={bd} bare />
-              </TodayBookedRow>
-            );
-          })}
+            ),
+          });
+        });
+  /* 餐厅行：按订位时间排 */
+  bookedRests.forEach((b) => {
+    const bd = parseBookingBody(b.body);
+    const label = [b.title, bd.time, bd.guests].filter(Boolean).join(" · ");
+    rows.push({
+      key: `rest-${b.title}`,
+      sort: bd.time || "99:99",
+      node: (
+        <TodayBookedRow key={b.title} icon="🍽️" label={label} badge={doneBadge(b.done)}>
+          {bd.note && <p className="text-xs text-gray-500">{bd.note}</p>}
+          <BookingDetailsExpand bd={bd} bare />
+        </TodayBookedRow>
+      ),
+    });
+  });
+  const sortedRows = [...rows].sort((a, b) => a.sort.localeCompare(b.sort));
+  if (!sortedRows.length) return null;
+  return (
+    <section className="mb-6">
+      <h4 className="text-lg font-bold mb-3 text-teal-800">✅ 今日已定</h4>
+      <div className="space-y-2">
+        {sortedRows.map((r) => (
+          <div key={r.key}>{r.node}</div>
+        ))}
       </div>
-      <p className="text-xs text-gray-400 mt-2">点一行展开看确认号、价格与取消政策；详情只在这里出现一次，时间线与下方不再重复。</p>
+      <p className="text-xs text-gray-400 mt-2">点一行展开看确认号、价格与取消政策。</p>
     </section>
   );
 }
 
-/* ---------------- 转场日实际航班（2026-10-03：不再只显示通用核对清单） ---------------- */
-function TransferFlightInfo({ route, date, favFlights }: { route: string; date: string; favFlights: ParsedFavorite[] }) {
-  /* 2026-10-03 修：按转场实际日期从航班库重查，不读静态日期价格；
-   * 深拷贝再查，不污染共享 FLIGHT_LEGS（与预订页航班列表同一做法） */
-  const leg = useMemo(() => {
-    const f = FLIGHT_LEGS.find((l) => l.route === route);
-    if (!f) return null;
-    const copy = JSON.parse(JSON.stringify(f)) as FlightLegInfo;
-    if (date) refreshLegFromDb(copy, date);
-    return copy;
-  }, [route, date]);
-  const opts = leg?.options ?? [];
-  const prices = opts.map((o) => o.price ?? Infinity).filter((p) => p !== Infinity);
-  const min = prices.length ? Math.min(...prices) : null;
-  if (!leg && !favFlights.length) return null;
-  /* 2026-11-21 日卡改版：已出票航段只在「今日已定」出现一次，
-   * 跨城交通区不再重复渲染（未出票时仍显示直飞信息与核对清单）。 */
-  if (leg?.ticketed && !favFlights.length) return null;
-  return (
-    <div className="mb-3 pb-3 border-b border-sky-200">
-      <p className="text-sm font-semibold text-sky-900">✈️ {route}{date ? ` · ${isoShort(date)}` : ""}</p>
-      {favFlights.map((f) => (
-        <p key={f.name} className="text-sm text-sky-800 mt-1">
-          ⭐ {f.flight?.carrier} {f.flight?.flight} {f.flight?.depart}→{f.flight?.arrive}{f.flight?.arrivePlusDay ? "+1" : ""}
-          {f.flight?.price != null && <span> · ${f.flight.price}</span>}
-          <span className="text-xs text-sky-600">（你收藏的）</span>
-        </p>
-      ))}
-      {leg && leg.ticketed ? (
-        /* 2026-10-27 类别2修复：已出票腿先判 ticketed（与 GuideApp/planner/预订弹窗同口径）——
-           refreshLegFromDb 对 ticketed 只设 flightState='ok'、options 保持 null，此前落进 ok 分支
-           渲染「当天 0 班直飞（去预订页收藏具体航班）」，与已出票事实自相矛盾（北京→新加坡/
-           曼谷→北京/西安→首尔等转场日卡均中招）。已出票以出票邮件为准，只渲染确认信息。 */
-        <>
-          <p className="text-sm text-sky-800 mt-1">
-            ✅ 已出票{leg.carrier ? ` · ${leg.carrier}` : ""}{leg.schedule ? ` ${leg.schedule}` : ""}
-          </p>
-          {leg.note && <p className="text-xs text-sky-700 mt-1">{leg.note}</p>}
-        </>
-      ) : leg ? (
-        <p className="text-xs text-sky-700 mt-1">
-          {leg.flightState === "pending" ? (
-            <>航班信息待查询（库里还没有 {isoShort(date)} 的实查数据）</>
-          ) : leg.flightState === "none" ? (
-            <>当天实查无直飞</>
-          ) : (
-            <>当天 {opts.length} 班直飞{min != null && <> · ${min} 起</>}{leg.queriedAt && <> · 实查 {leg.queriedAt}</>}</>
-          )}
-          {!favFlights.length && leg.flightState !== "pending" && "（去预订页收藏具体航班）"}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 /* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
- * 2026-11-21 日卡改版：瘦身为时间标记——只留时间徽章＋站名＋已确认徽章＋查看详情
- * 链接＋地图点选；完整明细（确认号/价格/取消政策）只在上方「今日已定」出现一次，
- * 这里不再重复 note 与 BookingDetailsExpand。 */
+ * 2026-11-21 二次改版：瘦身为时间标记——只留时间徽章＋站名＋已确认徽章＋
+ * 摘要行（确认号/时间/人数）；完整明细只在上方「今日已定」出现一次，
+ * 这里不再重复 note 与 BookingDetailsExpand，不跳详情页。 */
 function BookedRestBlock({
   entry,
   city,
@@ -1383,7 +1324,7 @@ function BookedRestBlock({
   onSelect?: () => void;
   selected?: boolean;
 }) {
-  const { b, bd, item } = entry;
+  const { b, bd } = entry;
   const summary = bookingSummary(bd);
   return (
     <div
@@ -1407,16 +1348,6 @@ function BookedRestBlock({
             待预订
           </span>
         )}
-        {item && (
-          <DetailLink
-            to={placeDetailPath("restaurant", city, item.name)}
-            pageKey="itinerary-day"
-            cardId={`booked-rest-${bd.time || ""}-${item.name}`}
-            className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
-          >
-            查看详情
-          </DetailLink>
-        )}
       </div>
       {summary && <p className="text-sm text-gray-700">{summary}</p>}
     </div>
@@ -1424,31 +1355,69 @@ function BookedRestBlock({
 }
 
 /* ---------------- 时间线上的单个站点 ----------------
- * 2026-11-21 日卡改版：默认只露 detail 首句（≤60 字），点「展开详情」看全文；
- * 站图只在每时段第一站露 64px 小缩略图（showThumb），其余站不放图。 */
+ * 2026-11-21 二次改版：折叠态只露时间＋站名＋一句话干什么（≤30 字）＋待多久，
+ * 不放站图；点站点在原地展开，展开只放旅途中要用的实用信息（地址/怎么去、
+ * 开放时间、门票价格、待多久、干什么≤3 条、避坑一行，已订带确认信息），
+ * 不放口碑计数、评分与研究数据；没有新增内容时不显示展开入口。 */
 function StopBlock({
   stop,
   city,
   onSelect,
   selected,
-  showThumb = false,
+  booked,
 }: {
   stop: Stop;
   city: string;
   onSelect?: () => void;
   selected?: boolean;
-  /** 只在每时段第一站传 true：露 64px 小缩略图 */
-  showThumb?: boolean;
+  /** 该站是已订餐厅时：展开里带确认信息（确认号/时间/人数） */
+  booked?: BookingData;
 }) {
   const [open, setOpen] = useState(false);
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
   const item = mA || mR;
   const kindZh = mA ? "景点" : mR ? "餐厅" : null;
-  const photo =
-    item && kindZh === "景点" ? getPlaceGallery("景点", item)[0] : undefined;
-  const oneLiner = firstSentence(stop.detail);
-  const hasMore = stop.detail.trim().length > oneLiner.length + 1;
+  const oneLiner = firstSentence(stop.detail, 30);
+  const guide = item && kindZh === "景点" ? attractionGuides[city]?.[item.name] : undefined;
+  const duration = guide?.visit.duration;
+  /* 实用信息行：只取已核验的具体值，通用模板句（未录入/地图入口/预留 1–2 小时）
+   * 一律不显示——展开必须是折叠态没有的新信息。 */
+  const practical: { label: string; text: string }[] = [];
+  if (item && kindZh) {
+    const facts = getGuideFacts(item, kindZh);
+    if (facts.address && !facts.address.includes("地图入口已带入地点全名")) {
+      const transit =
+        facts.transit && facts.transit !== "使用详情页地图入口规划最后一段交通"
+          ? ` · ${facts.transit}`
+          : "";
+      practical.push({ label: "📍 地址/怎么去", text: `${facts.address}${transit}` });
+    }
+    if (facts.hours && !facts.hours.startsWith("当前资料未录入")) {
+      practical.push({ label: "🕒 开放时间", text: facts.hours });
+    }
+    if (facts.price && !facts.price.startsWith("当前资料未录入")) {
+      practical.push({ label: "🎫 门票价格", text: facts.price });
+    }
+    if (duration) practical.push({ label: "⏱ 待多久", text: duration });
+    const dos = guide ? guide.highlights.slice(0, 3).map((h) => h.name).filter(Boolean) : [];
+    if (dos.length) practical.push({ label: "✅ 干什么", text: dos.join("；") });
+    else if (
+      facts.action &&
+      facts.action !== "把这一站放在同片区动线中；有预约或天气限制时先确认再出发"
+    ) {
+      practical.push({ label: "✅ 怎么做", text: facts.action });
+    }
+    const pitfall = xhsAssessments[item.name]?.avoidNote;
+    if (pitfall) practical.push({ label: "⚠️ 避什么坑", text: pitfall });
+  }
+  /* 首句之外的正文余量：有实用信息时不重复贴正文；没有时余量就是展开内容 */
+  const firstFull = firstSentence(stop.detail);
+  const restDetail = stop.detail
+    .trim()
+    .slice(firstFull.replace(/…$/, "").length)
+    .trim();
+  const hasMore = practical.length > 0 || restDetail.length > 0;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1457,58 +1426,65 @@ function StopBlock({
       } : undefined}
       className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
     >
-      <div className="flex gap-3">
-        {showThumb && photo && (
-          <img
-            src={photo.src}
-            alt={item!.name}
-            className="w-16 h-16 rounded-lg object-cover shrink-0"
-            loading="lazy"
-          />
+      <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
+          {stop.time}
+        </span>
+        <h5 className="font-semibold text-base">{stop.name}</h5>
+        {booked && (
+          <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
+            已订
+          </span>
         )}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
-              {stop.time}
-            </span>
-            <h5 className="font-semibold text-base">{stop.name}</h5>
-            {item && kindZh === "餐厅" && (() => {
-              const b = bookingPolicyBadge(item.name);
-              return (
-                <span
-                  title={b.title}
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
-                >
-                  {b.text}
-                </span>
-              );
-            })()}
-            {item && kindZh && (
-              <DetailLink
-                to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
-                pageKey="itinerary-day"
-                cardId={`stop-${stop.time}-${item.name}`}
-                className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
-              >
-                查看详情
-              </DetailLink>
-            )}
-          </div>
-          <p className="text-sm text-gray-600 leading-relaxed">{open ? stop.detail : oneLiner}</p>
-          {hasMore && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(!open);
-              }}
-              className="text-xs font-medium text-teal-700 mt-1"
+        {item && kindZh === "餐厅" && (() => {
+          const b = bookingPolicyBadge(item.name);
+          return (
+            <span
+              title={b.title}
+              className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
             >
-              {open ? "收起 ▲" : "展开详情 ▾"}
-            </button>
-          )}
-        </div>
+              {b.text}
+            </span>
+          );
+        })()}
+        {duration && (
+          <span className="text-xs text-gray-500">⏱ {duration}</span>
+        )}
       </div>
+      <p className="text-sm text-gray-600 leading-relaxed">{oneLiner}</p>
+      {hasMore && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(!open);
+            }}
+            className="text-xs font-medium text-teal-700 mt-1"
+          >
+            {open ? "收起 ▲" : "展开详情 ▾"}
+          </button>
+          {open && (
+            <div className="mt-2 space-y-1.5 bg-teal-50/50 border border-teal-100 rounded-lg px-3 py-2">
+              {booked && (
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  <span className="font-bold">✅ 已订：</span>
+                  {bookingSummary(booked)}
+                </p>
+              )}
+              {practical.map((row, i) => (
+                <p key={i} className="text-xs text-gray-700 leading-relaxed">
+                  <span className="font-bold">{row.label}：</span>
+                  {row.text}
+                </p>
+              ))}
+              {!practical.length && restDetail && (
+                <p className="text-xs text-gray-700 leading-relaxed">{restDetail}</p>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -1571,10 +1547,6 @@ export function ItineraryDayCard({
 }) {
   useDetailReturn("itinerary-day");
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
-  const prevCityId =
-    prevDay && prevDay.city_zh !== day.city_zh
-      ? CITY_ID_BY_ZH[prevDay.city_zh] || prevDay.city_id
-      : null;
   // 首尔首日的进城转场出发地（2026-10-13 修复）：云端 schedule 里没有分开行动
   // （北京/西安）的日子，prevDay 会是 12-19 曼谷，但全家实际从西安飞首尔
   // （XIY→ICN，前一天高铁在西安汇合）——转场城市按西安算，不许显示曼谷飞首尔。
@@ -1583,19 +1555,6 @@ export function ItineraryDayCard({
       ? "西安"
       : prevDay?.city_zh;
   const stops = detail?.stops || [];
-  // 转场站点：静态天沿用静态 stop（含航班号等细节）；云端天按前后城市直接算，
-  // 不用静态天的“清迈飞普吉”这类旧城市对。
-  const staticTransferStop = stops.find((s) => /飞|退房|离境/.test(s.name));
-  const cloudTransferName =
-    isCloud && prevDay && prevDay.city_zh !== day.city_zh
-      ? `${transferPrevZh}飞${day.city_zh}`
-      : undefined;
-  const transferStop = isCloud
-    ? cloudTransferName
-      ? { name: cloudTransferName }
-      : undefined
-    : staticTransferStop;
-  const isTransfer = !!transferStop || !!prevCityId;
 
   // 云端天地图站点：按当天时间线站点名全局查核实坐标（编号对应当天时间线）；
   // 查不到坐标的站点跳过，全部查不到时 DayMap 回退到城市级标记。
@@ -1604,20 +1563,6 @@ export function ItineraryDayCard({
     ? cloudStopsForTimeline(stops)
     : undefined;
 
-  // 跨城航段匹配（静态 legs 只服务静态 20 天；云端一律走通用清单，
-  // 避免旧 8 城航段建议泄漏进云端转场卡——向导 7 城任意重排都可能撞上旧城市对）
-  const matchedLeg = (() => {
-    if (isCloud) return null;
-    if (!prevDay || prevDay.city_zh === day.city_zh) return null;
-    for (const l of legs) {
-      const m = l[0].match(/(.+?)\s*→\s*(.+)/);
-      if (m && m[1].trim() === prevDay.city_zh && m[2].trim() === day.city_zh)
-        return l;
-    }
-    return null;
-  })();
-
-  const mobility = cityMobility[day.city_zh];
   const morning = stops.filter((s) => periodOf(s.time) === "上午");
   const afternoon = stops.filter((s) => periodOf(s.time) === "下午");
   const evening = stops.filter((s) => periodOf(s.time) === "晚上");
@@ -1643,9 +1588,6 @@ export function ItineraryDayCard({
       ? `${transferPrevZh} → ${day.city_zh}`
       : null;
   const transferDate = toISODate(day.date) ?? "";
-  const favFlights = transferRoute
-    ? favs.filter((f) => f.type === "flight" && f.flight?.route === transferRoute)
-    : [];
   const hotelBookings = bookings.filter((b) => {
     try {
       return parseBookingBody(b.body).bkind === "hotel";
@@ -1655,8 +1597,18 @@ export function ItineraryDayCard({
   });
   /* 2026-11-21 日卡改版：同一酒店多间房在「今日已定」与「今晚住哪」都只出现一次 */
   const hotelGroups = groupHotelBookings(hotelBookings, day.city_zh);
-  /* 今日已定里的已出票航段：只认 ticketed 且日期与当天一致的腿；
-   * 未出票腿仍走跨城交通区的直飞信息，不进今日已定。 */
+  /* 今日已定里的航班行优先用当天交通预订记录（出票事实，如 Day 1 的 CA889 /
+   * MU2069——首日没有 prevDay、没有 transferRoute，旧逻辑只认 transferRoute
+   * 导致航班根本进不了今日已定）。 */
+  const transportBookings = bookings.filter((b) => {
+    try {
+      return parseBookingBody(b.body).bkind === "transport";
+    } catch {
+      return false;
+    }
+  });
+  /* 今日已定里的已出票航段兜底：只认 ticketed 且日期与当天一致的腿，
+   * 且没有交通记录覆盖时才渲染腿行。 */
   const shownFlightLeg = (() => {
     if (!transferRoute) return null;
     const leg = FLIGHT_LEGS.find((l) => l.route === transferRoute);
@@ -1664,19 +1616,19 @@ export function ItineraryDayCard({
     if (leg.date && leg.date !== transferDate) return null;
     return leg;
   })();
-  /* 与该航段同一张票的交通预订记录（若有）：详情只在今日已定展开，「本日预订」区过滤掉。 */
-  const flightBooking = shownFlightLeg
-    ? bookings.find((b) => {
-        try {
-          const bd = parseBookingBody(b.body);
-          if (bd.bkind !== "transport") return false;
-          const no = shownFlightLeg.note.match(/[A-Z]{2}\d{2,4}/)?.[0];
-          return !!no && (b.title.includes(no) || b.body.includes(no));
-        } catch {
-          return false;
-        }
-      })
-    : undefined;
+  /* 未出票的当天转场航段：今日已定里只占一行未订推荐，不另开跨城交通区；
+   * 已有同路线交通记录时不渲染（以出票事实为准）。 */
+  const unbookedLeg = (() => {
+    if (!transferRoute) return null;
+    const leg = FLIGHT_LEGS.find((l) => l.route === transferRoute);
+    if (!leg || leg.ticketed) return null;
+    if (leg.date && leg.date !== transferDate) return null;
+    const [from, to] = transferRoute.split("→").map((s) => s.trim());
+    const covered = transportBookings.some(
+      (b) => (b.title + b.body).includes(from) && (b.title + b.body).includes(to),
+    );
+    return covered ? null : leg;
+  })();
 
   /* 餐饮三层（2026-10-22 用户定版）：已预订置顶 → 必吃 highlight → 其余折叠。
    * 必吃判定只认 mustGo 数据集（研究结论），不凭卡片顺序；highlight 上限 3 家，
@@ -1692,6 +1644,20 @@ export function ItineraryDayCard({
   const isBookedRest = (name: string) => {
     const n = name.trim().toLowerCase();
     return bookedRestNames.some((bn) => bn.includes(n) || n.includes(bn));
+  };
+  /* 时间线站点本身就是已订餐厅时：StopBlock 展开里带确认信息 */
+  const bookedForStop = (stopName: string): BookingData | undefined => {
+    const hit = bookedRests.find((b) => {
+      const item = restaurants.find((r) => b.title.includes(r.name) || r.name.includes(b.title));
+      if (!item) return false;
+      return matchItem(stopName, day.city_zh, [item])?.name === item.name;
+    });
+    if (!hit) return undefined;
+    try {
+      return parseBookingBody(hit.body);
+    } catch {
+      return undefined;
+    }
   };
   /* 已订餐厅进当天时间线（2026-10-23 用户抓包）：此前已订餐厅只出现在卡片下方
    * 「餐饮安排 · 已预订置顶」，按上午/下午/晚上时间线读行程时根本看不到，
@@ -1767,36 +1733,6 @@ export function ItineraryDayCard({
       .filter(([, v]) => v)
       .map(([m, v]) => `${m}：${v}`);
   })();
-
-  /* 研究依据：本日涉及的地点（时间线/餐厅卡/已订酒店餐厅）里
-   * 有小红书实证的一个个收齐，卡内「研究依据」区展示结论+原帖链接。
-   * （2026-11-21：备选景点/餐厅已移出日卡，不再计入本日研究依据。） */
-  const researchList: ResearchEntry[] = [];
-  {
-    const seen = new Set<string>();
-    const add = (item: Item | undefined, displayName?: string) => {
-      if (!item || seen.has(item.name)) return;
-      const e = researchEntryFor(item, displayName);
-      if (e) {
-        seen.add(item.name);
-        researchList.push(e);
-      }
-    };
-    stops.forEach((s) => {
-      add(matchItem(s.name, day.city_zh, attractions));
-      add(matchItem(s.name, day.city_zh, restaurants));
-    });
-    restCards.forEach((c) => add(c.item, c.name));
-    hotelBookings.forEach((b) =>
-      add(hotels.find((h) => b.title.includes(h.name) || h.name.includes(b.title)), b.title),
-    );
-    favHotels.forEach((f) =>
-      add(hotels.find((h) => f.name.includes(h.name) || h.name.includes(f.name)), f.name),
-    );
-    bookedRests.forEach((b) =>
-      add(restaurants.find((r) => b.title.includes(r.name) || r.name.includes(b.title)), b.title),
-    );
-  }
 
   /**
    * 当天地图数据（2026-10-04 用户：点卡片后顶栏地图只显示这一天）：
@@ -1932,108 +1868,17 @@ export function ItineraryDayCard({
         {detail?.title && (
           <p className="text-teal-800 font-medium mt-1">{detail.title}</p>
         )}
-        {CLIMATE[day.city_zh] && (
-          <p className="text-xs text-gray-500 mt-2">
-            🌡 12月气候参考：{CLIMATE[day.city_zh]}
-            （气候平均值，临行前查实时预报）
-          </p>
-        )}
       </header>
 
       <div className="px-5 py-5">
-        {/* 今日已定（2026-11-21 日卡改版 P0 主线 1）：头部下方、时间线之前 */}
+        {/* 今日已定（2026-11-21 二次改版）：头部下方、时间线之前，一张统一列表 */}
         <TodayBookedSection
           hotelGroups={hotelGroups}
           flightLeg={shownFlightLeg}
-          flightBooking={flightBooking}
+          transportBookings={transportBookings}
+          unbookedLeg={unbookedLeg}
           bookedRests={bookedRests}
         />
-
-        {/* 跨城交通（默认折叠） */}
-        {isTransfer && (
-          <Collapsible
-            title={
-              <>
-                ✈️ 跨城交通
-                {matchedLeg
-                  ? `：${matchedLeg[0]}`
-                  : transferStop
-                    ? `：${transferStop.name}`
-                    : ""}
-              </>
-            }
-          >
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              {/* 2026-10-03：转场日显示实际航班（收藏的+当天直飞），不再只给通用清单 */}
-              {transferRoute && (
-                <TransferFlightInfo route={transferRoute} date={transferDate} favFlights={favFlights} />
-              )}
-              {matchedLeg ? (
-                <>
-                  <p className="font-semibold text-sky-900">{matchedLeg[0]}</p>
-                  <p className="text-sm text-sky-800 mt-1">
-                    {matchedLeg[1]} · {matchedLeg[2]}
-                  </p>
-                </>
-              ) : (
-                <p className="text-sm text-sky-800">
-                  {prevDay && prevDay.city_zh !== day.city_zh
-                    ? `${transferPrevZh} → ${day.city_zh} 转场日`
-                    : "转场/离境日"}
-                  ：以下为通用核对清单，具体航班以出票信息为准。
-                </p>
-              )}
-              <div className="flex flex-wrap gap-2 mt-3">
-                {[
-                  "航班号",
-                  "航站楼",
-                  "托运行李额",
-                  "提前3小时到机场",
-                  "转机签证",
-                  "取消与改签",
-                ].map((t) => (
-                  <span
-                    key={t}
-                    className="text-xs bg-white border border-sky-200 text-sky-800 rounded-full px-2.5 py-1"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <Link
-                to="/bookings?menu=flights"
-                className="inline-block mt-3 text-sm font-medium text-sky-700 underline"
-              >
-                去预订页看全部航段 →
-              </Link>
-            </div>
-          </Collapsible>
-        )}
-
-        {/* 市内交通（默认折叠） */}
-        {mobility && (
-          <Collapsible title={<>🚌 市内交通：{mobility[0]}</>}>
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <p className="text-sm font-semibold text-sky-900 mb-1">
-                主要方式
-              </p>
-              <p className="text-sm text-sky-800 mb-3">{mobility[0]}</p>
-              <p className="text-sm font-semibold text-sky-900 mb-1">
-                出行建议
-              </p>
-              <p className="text-sm text-sky-800 mb-3">{mobility[1]}</p>
-              <p className="text-xs text-sky-700 bg-white/60 rounded p-2 border border-sky-200">
-                💡 {mobility[2]}
-              </p>
-              <Link
-                to="/practical?mode=交通"
-                className="inline-block mt-3 text-sm font-medium text-sky-700 underline"
-              >
-                去实用信息看交通指南 →
-              </Link>
-            </div>
-          </Collapsible>
-        )}
 
         {/* 今晚住哪（2026-10-03 用户模型：每天都要能看到住哪，收藏的和已订的）；
             2026-11-21：已订酒店只在「今日已定」出现一次，本区只留收藏候选 */}
@@ -2080,10 +1925,10 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
-                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
+                  booked={bookedForStop(s.name)}
                 />
               ))}
               {bookedByPeriod["上午"].map((e) => {
@@ -2109,10 +1954,10 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
-                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
+                  booked={bookedForStop(s.name)}
                 />
               ))}
               {bookedByPeriod["下午"].map((e) => {
@@ -2138,10 +1983,10 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
-                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
+                  booked={bookedForStop(s.name)}
                 />
               ))}
               {bookedByPeriod["晚上"].map((e) => {
@@ -2204,14 +2049,6 @@ export function ItineraryDayCard({
                           <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
                             {b.text}
                           </span>
-                          <DetailLink
-                            to={placeDetailPath("restaurant", c.city, c.name)}
-                            pageKey="itinerary-day"
-                            cardId={`day-${day.day}-restaurant-${c.name}`}
-                            className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
-                          >
-                            查看详情
-                          </DetailLink>
                         </div>
                         {MUST_GO[c.name] && (
                           <p className="text-xs text-red-900 mt-1">{MUST_GO[c.name]}</p>
@@ -2247,18 +2084,6 @@ export function ItineraryDayCard({
           </section>
         )}
 
-        {/* 购物建议（2026-11-21 日卡改版：默认折叠成一行） */}
-        {(shopping as Record<string, string>)[day.city_zh] && (
-          <details className="mb-6">
-            <summary className="text-sm font-bold text-amber-700 cursor-pointer py-1">
-              🛍️ 购物建议（点开看）▾
-            </summary>
-            <p className="text-sm text-gray-700 leading-relaxed bg-amber-50 border border-amber-200 rounded-lg p-3 mt-1">
-              {(shopping as Record<string, string>)[day.city_zh]}
-            </p>
-          </details>
-        )}
-
         {/* 安排提醒：结构化卡片（2026-10-22 用户要求，不再整段文字墙） */}
         {detail?.tip && (
           <section className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
@@ -2266,39 +2091,6 @@ export function ItineraryDayCard({
             <TipStructured tip={detail.tip} />
           </section>
         )}
-
-        {/* 今日穿搭建议（原版逻辑，默认折叠） */}
-        {PACKING[day.city_zh] && (
-          <Collapsible
-            title={
-              <>
-                👗 今日穿搭建议
-                <span className="text-xs font-normal text-gray-400 ml-1">
-                  点击展开
-                </span>
-              </>
-            }
-          >
-            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
-              <p className="text-sm text-pink-900 leading-relaxed">
-                {PACKING[day.city_zh]}
-              </p>
-              <p className="text-xs text-pink-700 mt-2">
-                12月气候参考见卡片顶部；临行前请查实时天气预报再定最终穿搭。
-              </p>
-            </div>
-          </Collapsible>
-        )}
-
-        {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天）；
-            餐厅预订已在餐饮安排置顶，酒店在今晚住哪，本区只剩机票/活动；
-            2026-11-21：与「今日已定」航班重复的交通记录已过滤，不再重复 */}
-        <DayBookingsSection
-          bookings={flightBooking ? bookings.filter((b) => b !== flightBooking) : bookings}
-          excludeRestaurant
-        />
-
-        <DayResearchSection entries={researchList.slice(0, 8)} />
 
       </div>
     </article>
