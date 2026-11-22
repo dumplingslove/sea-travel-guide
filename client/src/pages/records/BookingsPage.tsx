@@ -504,7 +504,8 @@ function FavoriteActionList({
       if (!r.done) continue;
       const d = parseBookingBody(r.body);
       if (d.bkind !== "transport") continue;
-      const hit = `${r.title} ${d.extra ?? ""}`.match(/[A-Z]{2}\s?\d{3,4}/);
+      /* 航司代码可能含数字（如春秋航空 9C）：[A-Z0-9]{2} 才能命中 "9C6294"，纯字母 [A-Z]{2} 会漏掉它 */
+      const hit = `${r.title} ${d.extra ?? ""}`.match(/[A-Z0-9]{2}\s?\d{3,4}/);
       if (hit) m.set(hit[0].replace(/\s+/g, ""), { code: d.code, summary: bookingSummary(d) });
     }
     return m;

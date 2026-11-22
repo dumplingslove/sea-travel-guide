@@ -1139,8 +1139,8 @@ export function TodayBookedSection({
     ) : (
       <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>
     );
-  /* 已出票航段是否已有交通记录覆盖（有则只渲染记录行，不重复渲染腿行） */
-  const legFlightNo = flightLeg?.note?.match(/[A-Z]{2}\d{2,4}/)?.[0];
+  /* 已出票航段是否已有交通记录覆盖（有则只渲染记录行，不重复渲染腿行）——航司代码可能含数字（如 9C） */
+  const legFlightNo = flightLeg?.note?.match(/[A-Z0-9]{2}\d{2,4}/)?.[0];
   const legCovered =
     !!legFlightNo &&
     transportBookings.some((b) => b.title.includes(legFlightNo) || b.body.includes(legFlightNo));
@@ -1158,7 +1158,7 @@ export function TodayBookedSection({
   transportBookings.forEach((b) => {
     const bd = parseBookingBody(b.body);
     const flightNo =
-      (typeof bd.extra === "string" && bd.extra) || b.title.match(/[A-Z]{2}\d{2,4}/)?.[0] || "";
+      (typeof bd.extra === "string" && bd.extra) || b.title.match(/[A-Z0-9]{2}\d{2,4}/)?.[0] || "";
     const route = flightNo ? b.title.replace(flightNo, "").trim() : b.title;
     const when = [bd.time, bd.timeEnd].filter(Boolean).join("–");
     const label = [flightNo, route, when, bd.guests, bd.code ? `确认号 ${bd.code}` : null]

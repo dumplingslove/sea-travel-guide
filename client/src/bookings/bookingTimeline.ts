@@ -310,18 +310,21 @@ export const CARRIER_INFO: Record<string, CarrierInfo> = {
   VZ: { name: "越捷航空", kind: "廉航", cabin: "7kg", checked: "另买" },
   DD: { name: "皇雀航空", kind: "廉航", cabin: "7kg", checked: "另买" },
   SL: { name: "泰狮航", kind: "廉航", cabin: "7kg", checked: "另买" },
+  "9C": { name: "春秋航空", kind: "廉航", cabin: "7kg", checked: "另买" },
 };
 /** 按航班号取航司类型与行李标注，如 carrierBaggageLabel("TR658") → "廉航 · 手提 10kg · 托运另买"；
  *  未知航司代码返回「航司类型与行李待核」，不留空白、不猜。 */
 export function carrierBaggageLabel(flight: string): string {
-  const code = (flight || "").match(/^[A-Z]{2}/)?.[0];
+  /* 航司代码可能含数字（如春秋 9C）：[A-Z0-9]{2} 才能取到 "9C" */
+  const code = (flight || "").match(/^[A-Z0-9]{2}/)?.[0];
   const info = code ? CARRIER_INFO[code] : undefined;
   if (!info) return "航司类型与行李待核";
   return `${info.kind} · 手提 ${info.cabin} · 托运${info.checked === "另买" ? "另买" : ` ${info.checked}`}`;
 }
 /** 托运部分单拎出来（用于价格行里替换 options.bags 那个"待定"占位）：如 "托运另买" / "托运 25kg 起含"；未知航司返回"托运待核"。 */
 export function carrierCheckedLabel(flight: string): string {
-  const code = (flight || "").match(/^[A-Z]{2}/)?.[0];
+  /* 航司代码可能含数字（如春秋 9C） */
+  const code = (flight || "").match(/^[A-Z0-9]{2}/)?.[0];
   const info = code ? CARRIER_INFO[code] : undefined;
   if (!info) return "托运待核";
   return info.checked === "另买" ? "托运另买" : `托运 ${info.checked}`;
