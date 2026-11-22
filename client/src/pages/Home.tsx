@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ItineraryDayCard,
+  CityBackupList,
   detailForPlanDay,
   buildDayByDate,
   buildBookingsByDay,
@@ -327,6 +328,33 @@ export function ItineraryTab({
     }
     det.stops.forEach((st) => s.add(st.name));
   });
+  // 每城已订/已收藏餐厅名（本城备选清单过滤用：已订与已排进日程的不再进备选）
+  const cityBookedRestNames = new Map<string, Set<string>>();
+  const cityFavRestNames = new Map<string, Set<string>>();
+  days.forEach((d) => {
+    (bookingsByDay.get(d.day) || []).forEach((b) => {
+      try {
+        if (parseBookingBody(b.body).bkind !== "restaurant") return;
+      } catch {
+        return;
+      }
+      let s = cityBookedRestNames.get(d.city_zh);
+      if (!s) {
+        s = new Set<string>();
+        cityBookedRestNames.set(d.city_zh, s);
+      }
+      s.add(b.title.trim().toLowerCase());
+    });
+  });
+  favorites.forEach((f) => {
+    if (f.type !== "restaurant") return;
+    let s = cityFavRestNames.get(f.city);
+    if (!s) {
+      s = new Set<string>();
+      cityFavRestNames.set(f.city, s);
+    }
+    s.add(f.name.trim().toLowerCase());
+  });
   const isCloudPlan = plan.source === "cloud";
   // 2026-10-03 用户：吸顶地图的点 = 每天行程的景点（按名查坐标），滚动联动高亮
   // days/details 每 render 都是新数组引用，用天号签名做 memo key，避免地图 markers 无意义重建
@@ -432,7 +460,6 @@ export function ItineraryTab({
                 detail={details[i]}
                 bookings={bookingsByDay.get(d.day) || []}
                 isCloud={isCloudPlan}
-                cityScheduledNames={cityScheduled.get(d.city_zh)}
                 favorites={favorites}
                 assignedAttractions={assignedByDay.get(d.day)}
                 stay={stays.get(d.city_zh) ?? null}
@@ -443,6 +470,15 @@ export function ItineraryTab({
                 }}
               />
               {renderDayExtra?.(d, i)}
+              {/* 本城备选清单（2026-11-21 日卡改版 P0 主线 3）：每个城市最后一天卡片之后渲染一次 */}
+              {(i === days.length - 1 || days[i + 1].city_zh !== d.city_zh) && (
+                <CityBackupList
+                  city={d.city_zh}
+                  scheduledNames={cityScheduled.get(d.city_zh)}
+                  bookedRestNames={cityBookedRestNames.get(d.city_zh)}
+                  favRestNames={cityFavRestNames.get(d.city_zh)}
+                />
+              )}
             </Fragment>
           );
         })}

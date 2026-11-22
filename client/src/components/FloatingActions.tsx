@@ -1,21 +1,24 @@
-import { useState, type CSSProperties } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 /* 右下角三按钮（与「家庭财务中枢」、露营站同一排布，从下往上）：分享链接 / 强制刷新 / 登录。
    取代原先单独的 ForceRefreshButton（2026-10-25 用户要求三站统一）。
    登录跳 /login 页——该页含「粘贴链接登录」，避开 iOS 桌面 App 与 Safari 存储隔离：
-   邮件链接点开只登录浏览器、App 里不认，所以 App 里要长按拷贝链接、回站内粘贴。 */
+   邮件链接点开只登录浏览器、App 里不认，所以 App 里要长按拷贝链接、回站内粘贴。
+   2026-11-21 登录后真机审计：三颗 52px 大圆钮竖排约 180px 高，盖住正文
+   （Day 1 到达卡句尾、气候行、酒店卡右缘）。改成一颗 40px 小钮，点开才展开
+   三项；滚动时整组收起、停下 900ms 后再出现，阅读时不挡字。 */
 const SITE_URL = "https://dumplingslove.github.io/sea-travel-guide/";
 
 const btnStyle: CSSProperties = {
-  width: 52,
-  height: 52,
+  width: 40,
+  height: 40,
   borderRadius: "50%",
   background: "#16213e",
   border: "1px solid #667eea",
   color: "#8f9bff",
-  fontSize: "1.35em",
+  fontSize: "1.1em",
   cursor: "pointer",
   boxShadow: "0 4px 16px rgba(0,0,0,0.5)",
   display: "flex",
@@ -31,6 +34,23 @@ export default function FloatingActions() {
   const [refreshing, setRefreshing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const hideTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setHidden(true);
+      setExpanded(false);
+      if (hideTimer.current) window.clearTimeout(hideTimer.current);
+      hideTimer.current = window.setTimeout(() => setHidden(false), 900);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (hideTimer.current) window.clearTimeout(hideTimer.current);
+    };
+  }, []);
 
   if (location.pathname === "/login") return null;
 
@@ -99,49 +119,67 @@ export default function FloatingActions() {
       <div
         style={{
           position: "fixed",
-          right: 18,
-          bottom: 18,
+          right: 12,
+          bottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
           zIndex: 9000,
           display: "flex",
           flexDirection: "column",
-          gap: 12,
+          gap: 8,
+          opacity: hidden ? 0 : 1,
+          transform: hidden ? "translateY(8px)" : "translateY(0)",
+          transition: "opacity 0.2s ease, transform 0.2s ease",
+          pointerEvents: hidden ? "none" : "auto",
         }}
       >
+        {expanded && (
+          <>
+            <button
+              type="button"
+              style={btnStyle}
+              title={user ? `已登录：${user.email}（点击去登录页）` : "登录（邮箱链接 / 粘贴链接）"}
+              aria-label="登录"
+              onClick={() => navigate("/login")}
+            >
+              {user ? "✅" : "🔒"}
+            </button>
+            <button
+              type="button"
+              style={{ ...btnStyle, opacity: refreshing ? 0.55 : 1 }}
+              title="强制刷新：清缓存并重新加载最新版本"
+              aria-label="强制刷新"
+              onClick={forceRefresh}
+              disabled={refreshing}
+            >
+              {refreshing ? "⏳" : "🔄"}
+            </button>
+            <button
+              type="button"
+              style={btnStyle}
+              title="复制本站链接"
+              aria-label="分享链接"
+              onClick={share}
+            >
+              {copied ? "✅" : "🔗"}
+            </button>
+          </>
+        )}
         <button
           type="button"
           style={btnStyle}
-          title={user ? `已登录：${user.email}（点击去登录页）` : "登录（邮箱链接 / 粘贴链接）"}
-          aria-label="登录"
-          onClick={() => navigate("/login")}
+          title={expanded ? "收起" : "登录 / 强制刷新 / 分享链接"}
+          aria-label={expanded ? "收起菜单" : "打开菜单（登录 / 强制刷新 / 分享链接）"}
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
         >
-          {user ? "✅" : "🔒"}
-        </button>
-        <button
-          type="button"
-          style={{ ...btnStyle, opacity: refreshing ? 0.55 : 1 }}
-          title="强制刷新：清缓存并重新加载最新版本"
-          aria-label="强制刷新"
-          onClick={forceRefresh}
-          disabled={refreshing}
-        >
-          {refreshing ? "⏳" : "🔄"}
-        </button>
-        <button
-          type="button"
-          style={btnStyle}
-          title="复制本站链接"
-          aria-label="分享链接"
-          onClick={share}
-        >
-          {copied ? "✅" : "🔗"}
+          {expanded ? "✕" : "⋯"}
         </button>
       </div>
       {toast && (
         <div
           style={{
             position: "fixed",
-            right: 18,
-            bottom: 240,
+            right: 12,
+            bottom: 110,
             zIndex: 9001,
             background: "#16213e",
             border: "1px solid #667eea",

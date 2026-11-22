@@ -11,7 +11,8 @@ import KoreaItinerary from "@/pages/KoreaItinerary";
 import ChinaItinerary from "@/pages/ChinaItinerary";
 import NotFound from "@/pages/NotFound";
 import { RecordsProvider } from "@/pages/records/shared";
-import { usePlanItinerary } from "@/guide/plannerSchedule";
+import { usePlanItinerary, SEA_CITY_ZH, KOREA_CITY_ZH } from "@/guide/plannerSchedule";
+import { toISODate } from "@/components/ItineraryDayCard";
 import NotesPage from "@/pages/records/NotesPage";
 import BookingsPage from "@/pages/records/BookingsPage";
 import ExpensesPage from "@/pages/records/ExpensesPage";
@@ -244,14 +245,31 @@ function AppRouter() {
 
 function SiteFooter() {
   const plan = usePlanItinerary();
+  const { pathname } = useLocation();
   // 云端规划未决且只有静态回退时，天数/日期是旧静态口径，会先闪错数再跳变；
   // 未决期间只显示加载中，不把静态数字冒充已保存行程（与 Home/DayDetail 同口径）。
   const planLoadingUnresolved = plan.loading && plan.source !== "cloud";
+  // 2026-11-21 登录后真机审计：页头「东南亚 14 天」与页脚「东南亚 17 天」口径不一致——
+  // 17 天是全 plan 天数（14 天东南亚 + 3 天首尔），14 天只是东南亚 tab 的天数，
+  // 页脚却把全程标成「东南亚」。页脚按当前路由取对应口径，与页头同算法
+  // （SEA_CITY_ZH / KOREA_CITY_ZH 过滤），两边永远一致；对应口径取不到时
+  // （如静态回退下 /korea 无首尔天）回退到全 plan 口径。
+  const isKorea = pathname.startsWith("/korea");
+  const scope = isKorea ? KOREA_CITY_ZH : SEA_CITY_ZH;
+  const scopeDays = plan.days.filter((d) => scope.has(d.city_zh));
+  const scopeRange = (() => {
+    if (!scopeDays.length) return null;
+    const isos = scopeDays.map((d) => toISODate(d.date)).filter((x): x is string => !!x);
+    if (isos.length !== scopeDays.length) return null;
+    return `${isos[0]} ～ ${isos[isos.length - 1]}`;
+  })();
   return (
     <footer className="border-t border-gray-200 py-6 text-center text-xs text-gray-400">
       {planLoadingUnresolved
         ? "东南亚旅行指南 · 行程加载中…"
-        : `东南亚 ${plan.totalDays} 天旅行指南 · ${plan.dateRangeLong}`}
+        : scopeRange
+          ? `${isKorea ? "韩国" : "东南亚"} ${scopeDays.length} 天旅行指南 · ${scopeRange}`
+          : `东南亚 ${plan.totalDays} 天旅行指南 · ${plan.dateRangeLong}`}
     </footer>
   );
 }

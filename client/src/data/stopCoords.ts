@@ -361,16 +361,18 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
       lng: 103.8596966,
       note: "图示苏丹清真寺一带",
     },
-    {
-      // 2026-11-15 site-improve-hourly 类别2：12-09 早晨栏二选一改名后的全名补钉（精确匹配口径）；
-      // 坐标复用本键已核验的 Kampong Glam 点，不新编坐标。Bugis 室内原先就无钉，不补。
-      name: "Kampong Glam（与科学中心二选一）",
-      time: "09:30",
-      lat: 1.3034335,
-      lng: 103.8596966,
-      note: "图示苏丹清真寺一带（与 Kampong Glam 同点）",
-    },
+    // 2026-11-21 新加坡审计重排：12-09 上午改动物园日，Kampong Glam 晨站已滤掉，
+    // 此处原先的「Kampong Glam（与科学中心二选一）」改名钉随之失效、已删（不新编坐标）。
     { name: "乌节路", time: "15:30", lat: 1.2993444, lng: 103.8450261 },
+    {
+      // 2026-11-21 新加坡审计重排：12-09 上午改动物园日，站名精确匹配补钉；
+      // 坐标复用已核验的 Exploria 点（80 Mandai Lake Rd 同路段，不新编坐标）。
+      name: "新加坡动物园 · 万礼专程日（上午半日，必去）",
+      time: "上午",
+      lat: 1.40421,
+      lng: 103.78844,
+      note: "图示万礼片区（与 Exploria 同点，动物园本体在 Mandai Lake Rd 同路段）",
+    },
   ],
   // D6 普吉《飞普吉 · 海滩日落》
   906: [
@@ -486,7 +488,7 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
   // 光化门广场/石村湖（map.geocode 对韩国覆盖弱、多次只回 CITY 级，见 placeCoords
   // 文件头注记，留待 Nominatim 渠道轮次，不编造）。
   921: [
-    { name: "万态 Exploria 探索馆 · 专程日（与芳林线二选一）", time: "全天（专程日备选）", lat: 1.40421, lng: 103.78844, note: "Exploria 本体，80 Mandai Lake Rd（geocode 实查）" },
+    { name: "万态 Exploria 探索馆 · 专程日（与海洋馆日二选一）", time: "全天（专程日备选）", lat: 1.40421, lng: 103.78844, note: "Exploria 本体，80 Mandai Lake Rd（geocode 实查）" },
     { name: "亚洲文明博物馆 · 敦煌特展 Sacred Caves（半日，与旧机场路二选一）", time: "上午", lat: 1.28745, lng: 103.85138, note: "亚洲文明博物馆本体，1 Empress Pl（geocode 实查）" },
     { name: "旧机场路熟食中心 · 本地老档专程半日（可选）", time: "上午", lat: 1.30825, lng: 103.88583, note: "旧机场路熟食中心本体，51 Old Airport Rd（geocode 实查）" },
     { name: "新加坡科学中心 · One Ocean 深海极地特展（上午半日，带娃向）", time: "上午", lat: 1.33059, lng: 103.73791, note: "新加坡科学中心本体，Science Centre Rd, Jurong East（geocode 实查，2026-11-07 用户定 12-09 上午由国家博物馆换站）" },

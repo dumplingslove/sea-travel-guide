@@ -473,7 +473,7 @@ function Collapsible({
  * 小红书研究结论堆成大段文字、没法读。定版结构：
  * ① 餐饮三层：已预订置顶 → 必吃（mustGo 数据集判定）highlight → 其余全部折叠；
  * ② food 长文按段拆成条目，只露前 2 条，其余进折叠区；
- * ③ 提醒按【小标题】拆成结构卡，只露前 2 条，其余进折叠区；
+ * ③ 提醒按【小标题】拆成结构卡，只露 1 条最重要，其余进折叠区；
  *    无标题的提醒按句拆条。研究新发现今后应直接进 stops 时间线，
  *    不许再往 tip/food 字符串尾巴上追加段落（管线规则已同步）。 */
 
@@ -511,6 +511,27 @@ export function splitFoodText(text: string): string[] {
     if (cur) out.push(cur);
   }
   return out;
+}
+
+/** food 长文按早/午/晚各取一行的启发式摘要（2026-11-21 日卡改版过渡用，
+ * P1 结构化 food 数据落地后替换）：只认段首 80 字内出现「早餐/午餐/晚餐」
+ * 的段，取其首句截到 60 字；认不出的餐不硬凑、返回 null。 */
+function mealLine(segs: string[], meal: "早" | "午" | "晚"): string | null {
+  const re = meal === "早" ? /早餐|早饭/ : meal === "午" ? /午餐|午饭/ : /晚餐|晚饭|夜宵/;
+  const seg = segs.find((s) => re.test(s.slice(0, 80)));
+  if (!seg) return null;
+  const first = (seg.split(/(?<=。|；)/)[0] ?? "").trim();
+  if (!first) return null;
+  return first.length > 60 ? `${first.slice(0, 60)}…` : first;
+}
+
+/** detail 首句（≤60 字）作站点默认摘要：超长截断加 …；没句号时硬切。 */
+function firstSentence(text: string, maxLen = 60): string {
+  const t = text.trim();
+  const m = t.match(/^[^。；!！？\n]{1,120}?[。；!！？]/);
+  const first = (m ? m[0] : t.slice(0, maxLen)).trim();
+  if (first.length <= maxLen) return first;
+  return `${first.slice(0, maxLen)}…`;
 }
 
 export interface TipItem {
@@ -554,23 +575,16 @@ function TipCard({ item }: { item: TipItem }) {
   );
 }
 
-/** 安排提醒结构化列表：露「首条无标题核心提醒 + 前 2 条带标题研究卡」，其余折叠
- * （Home 日卡与 DayDetail 共用）。带标题的多是研究追加项，必须露出来才算呈现，
- * 只露无标题的开头句会把研究结论全折掉。 */
+/** 安排提醒结构化列表：只露 1 条最重要提醒（2026-11-21 日卡改版：默认
+ * 只展开「今日已定」和时间线，提醒其余进「更多提醒（N 条）」），其余折叠
+ * （Home 日卡与 DayDetail 共用）。 */
 export function TipStructured({ tip }: { tip: string }) {
   const items = parseTipItems(tip);
   if (!items.length) return null;
   const keep = new Set<number>();
   const firstPlain = items.findIndex((it) => !it.title);
   if (firstPlain >= 0) keep.add(firstPlain);
-  items.forEach((it, i) => {
-    if (it.title && [...keep].filter((k) => items[k].title).length < 2) keep.add(i);
-  });
-  if (!items.some((it) => it.title)) {
-    keep.clear();
-    items.slice(0, 2).forEach((_, i) => keep.add(i));
-  }
-  if (keep.size === 0) items.slice(0, 2).forEach((_, i) => keep.add(i));
+  else keep.add(0);
   const visible = items.filter((_, i) => keep.has(i));
   const rest = items.filter((_, i) => !keep.has(i));
   return (
@@ -599,7 +613,17 @@ export function TipStructured({ tip }: { tip: string }) {
  * 明细（确认号/房型/座位/客票号/总价/取消政策/早餐福利…）只有最终预定页才渲染，
  * 出行时在行程页根本看不到。统一展开组件：酒店（今晚住哪）、本日预订（机票/景点/
  * 餐厅）、餐饮安排的已预订餐厅，三处共用，点开即是全量明细表。 */
-export function BookingDetailsExpand({ bd }: { bd: BookingData }) {
+export function BookingDetailsExpand({
+  bd,
+  bare = false,
+  summaryLabel,
+}: {
+  bd: BookingData;
+  /** 只渲染明细表、不包 <details>：供「今日已定」行内展开复用（行本身就是 <details>） */
+  bare?: boolean;
+  /** 多间房/多条记录并列时区分用的展开标题 */
+  summaryLabel?: string;
+}) {
   const labels = BOOKING_FIELD_LABEL[bd.bkind] ?? BOOKING_FIELD_LABEL.other;
   const rows: [string, string][] = [];
   const detailValues = new Set<string>(
@@ -625,19 +649,23 @@ export function BookingDetailsExpand({ bd }: { bd: BookingData }) {
     });
   }
   if (!rows.length) return null;
+  const dl = (
+    <dl className="mt-1.5 bg-white/70 border border-gray-200 rounded-lg px-3 py-2 space-y-1">
+      {rows.map(([k, v], i) => (
+        <div key={i} className="flex gap-2 text-xs leading-relaxed">
+          <dt className="text-gray-500 shrink-0 w-20">{k}</dt>
+          <dd className="font-medium text-gray-800 break-words min-w-0">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+  if (bare) return dl;
   return (
     <details className="mt-2">
       <summary className="text-xs font-semibold text-teal-800 cursor-pointer py-0.5">
-        📋 查看预订详情（确认号 / 房型·座位 / 价格 / 取消政策）▾
+        {summaryLabel ?? "📋 查看预订详情（确认号 / 房型·座位 / 价格 / 取消政策）▾"}
       </summary>
-      <dl className="mt-1.5 bg-white/70 border border-gray-200 rounded-lg px-3 py-2 space-y-1">
-        {rows.map(([k, v], i) => (
-          <div key={i} className="flex gap-2 text-xs leading-relaxed">
-            <dt className="text-gray-500 shrink-0 w-20">{k}</dt>
-            <dd className="font-medium text-gray-800 break-words min-w-0">{v}</dd>
-          </div>
-        ))}
-      </dl>
+      {dl}
     </details>
   );
 }
@@ -721,6 +749,157 @@ export function DayResearchSection({ entries }: { entries: ResearchEntry[] }) {
   );
 }
 
+/* ---------------- 本城备选清单（2026-11-21 日卡改版 P0 主线 3） ----------------
+ * 备选景点/备选餐厅彻底移出日卡，统一放在每个城市最后一天卡片之后，分两组、
+ * 每家一行（名字 + 一句话理由 + 查看详情链接）。过滤按城算一次：全城景点去掉
+ * 已排进日程的（全部列出，不再每天只取 3 家）；餐厅去掉已订与已排进日程的，
+ * 收藏优先、再按订位政策排序，取前 10 家。 */
+export function CityBackupList({
+  city,
+  scheduledNames,
+  bookedRestNames,
+  favRestNames,
+}: {
+  city: string;
+  /** 该城市段所有天已排的站点名 */
+  scheduledNames?: Set<string>;
+  /** 该城市段已订餐厅名（小写归一化） */
+  bookedRestNames?: Set<string>;
+  /** 该城市段已收藏餐厅名（小写归一化） */
+  favRestNames?: Set<string>;
+}) {
+  const backupAttrs = attractions.filter(
+    (a) =>
+      a.city === city &&
+      ![...(scheduledNames || [])].some((stName) => matchItem(stName, city, [a])),
+  );
+  const backupRests = restaurants
+    .filter((r) => {
+      if (r.city !== city) return false;
+      const n = r.name.trim().toLowerCase();
+      if (bookedRestNames?.has(n)) return false;
+      if ([...(scheduledNames || [])].some((stName) => matchItem(stName, city, [r]))) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const favA = favRestNames?.has(a.name.trim().toLowerCase()) ? 0 : 1;
+      const favB = favRestNames?.has(b.name.trim().toLowerCase()) ? 0 : 1;
+      if (favA !== favB) return favA - favB;
+      const prio = (n: string) => {
+        const p = getRestaurantBookingPolicy(n)?.policy;
+        return p === "must_book" ? 0 : p === "peak_recommended" ? 1 : 2;
+      };
+      return prio(a.name) - prio(b.name);
+    })
+    .slice(0, 10);
+  if (!backupAttrs.length && !backupRests.length) return null;
+  return (
+    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden px-5 py-5">
+      <h3 className="text-lg font-bold text-teal-800 mb-1">📋 {city}备选清单</h3>
+      <p className="text-xs text-gray-500 mb-4">
+        本城没排进日程的景点与餐厅都在这里统一看——每天的日卡里不再重复列。
+      </p>
+      {backupAttrs.length > 0 && (
+        <div className="mb-4">
+          <h4 className="text-sm font-bold text-teal-700 mb-2">🔀 备选景点（{backupAttrs.length} 个）</h4>
+          <ul className="space-y-2">
+            {backupAttrs.map((a) => (
+              <li key={a.name} className="flex items-baseline gap-2 text-sm flex-wrap">
+                <span className="font-semibold shrink-0">{a.name}</span>
+                {a.meta && (
+                  <span className="text-gray-500 min-w-0">
+                    {a.meta.length > 48 ? `${a.meta.slice(0, 48)}…` : a.meta}
+                  </span>
+                )}
+                <DetailLink
+                  to={placeDetailPath("attraction", a.city, a.name)}
+                  pageKey="itinerary-day"
+                  cardId={`backup-attraction-${a.name}`}
+                  className="text-xs font-medium text-teal-700 underline shrink-0 ml-auto"
+                >
+                  查看详情 →
+                </DetailLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {backupRests.length > 0 && (
+        <div>
+          <h4 className="text-sm font-bold text-orange-700 mb-2">🍽️ 备选餐厅（{backupRests.length} 家）</h4>
+          <ul className="space-y-2">
+            {backupRests.map((r) => {
+              const b = bookingPolicyBadge(r.name);
+              const mg = mustGoBadge(r.name);
+              return (
+                <li key={r.name} className="flex items-center gap-2 flex-wrap text-sm">
+                  <span className="font-semibold">{r.name}</span>
+                  {favRestNames?.has(r.name.trim().toLowerCase()) && (
+                    <span className="text-xs text-gray-400">⭐ 已收藏</span>
+                  )}
+                  {mg && (
+                    <span title={mg.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${mg.cls}`}>
+                      ⭐{mg.text}
+                    </span>
+                  )}
+                  <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
+                    {b.text}
+                  </span>
+                  {MUST_GO[r.name] && (
+                    <span className="text-xs text-gray-500">
+                      {MUST_GO[r.name].length > 48 ? `${MUST_GO[r.name].slice(0, 48)}…` : MUST_GO[r.name]}
+                    </span>
+                  )}
+                  <DetailLink
+                    to={placeDetailPath("restaurant", r.city, r.name)}
+                    pageKey="itinerary-day"
+                    cardId={`backup-restaurant-${r.name}`}
+                    className="text-xs font-medium text-orange-700 underline shrink-0 ml-auto"
+                  >
+                    查看详情 →
+                  </DetailLink>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ---------------- 同一酒店多间房合并（2026-11-21 登录后真机审计） ----------------
+ * 同一酒店两间房是两条预订记录（只差人数/确认号/价格），此前渲染成两张几乎
+ * 完全相同的完整大卡，入住退房/FHR/取消文案逐字重复。按目录酒店名归一分组
+ * （标题常带房型/人数后缀，先按目录名匹配，匹配不上再按归一化标题分），
+ * 一张卡内分行列各间房。DayHotelSection 与「今日已定」共用。 */
+export interface HotelGroup {
+  /** 展示名（目录酒店名或首间房标题） */
+  title: string;
+  /** 地图点选用的名（首间房原始标题，与 dayRoute 的酒店钉一致） */
+  selName: string;
+  rooms: DayBooking[];
+}
+
+export function groupHotelBookings(bookings: DayBooking[], city: string): HotelGroup[] {
+  const groups: HotelGroup[] = [];
+  const byKey = new Map<string, HotelGroup>();
+  bookings.forEach((b) => {
+    const hit = hotels.find(
+      (h) => h.city === city && (b.title.includes(h.name) || h.name.includes(b.title)),
+    );
+    const key = hit ? hit.name : b.title.trim().toLowerCase();
+    let g = byKey.get(key);
+    if (!g) {
+      g = { title: hit ? hit.name : b.title, selName: b.title, rooms: [] };
+      byKey.set(key, g);
+      groups.push(g);
+    }
+    g.rooms.push(b);
+  });
+  return groups;
+}
+
 /* ---------------- 今晚住哪（2026-10-03 用户模型：每天显示当天的酒店，收藏的和已订的都要有） ---------------- */
 export function DayHotelSection({
   city,
@@ -729,6 +908,7 @@ export function DayHotelSection({
   hotelBookings,
   onSelect,
   selectedKey,
+  hideBooked = false,
 }: {
   city: string;
   stay: { checkIn: string; checkOut: string } | null;
@@ -737,6 +917,9 @@ export function DayHotelSection({
   /** 点选（2026-10-04）：只有已确认的酒店卡可点 */
   onSelect?: (kind: "hotel", name: string) => void;
   selectedKey?: string | null;
+  /** 2026-11-21 日卡改版：true 时已订酒店只在「今日已定」出现，本区只留收藏候选
+   * （无候选时整个区不渲染）；DayDetail 单日页不传，保持原样。 */
+  hideBooked?: boolean;
 }) {
   /* 住宿行优先用已订酒店记录自身的入住/退房日期（date/dateEnd）：
    * 城市级区间只作无记录时的兜底（末城退房=末日，见 cityStayRanges）。 */
@@ -787,47 +970,108 @@ export function DayHotelSection({
   /* 当晚已有「已确认」的酒店预订时，其他收藏酒店一律不列（2026-10-22 用户明确：
    * 都订好了还列别家能住哪个没意义）。收藏只在还没订的那晚才作为候选出现。 */
   const onlyFav = hotelBookings.some((b) => b.done) ? [] : favDeduped;
+  /* 2026-11-21 日卡改版：已订酒店只在「今日已定」出现一次，本区不重复；
+   * 收藏候选也没有时整个区不渲染（住宿行已在「今日已定」里）。 */
+  const hotelGroups = groupHotelBookings(hotelBookings, city);
+  if (hideBooked && !onlyFav.length) return null;
   return (
     <section className="mb-6 pt-6 border-t border-gray-100">
       <h4 className="text-lg font-bold mb-3 text-teal-800">🛏️ 今晚住哪</h4>
-      {stayLine}
+      {!hideBooked && stayLine}
       <div className="space-y-2">
-        {hotelBookings.map((b, i) => {
-          const bd = parseBookingBody(b.body);
-          const summary = bookingSummary(bd);
-          const clickable = b.done && onSelect;
-          const isSel = !!selectedKey && selectedKey === stickyItemKey("hotel", city, b.title);
-          return (
-            <div
-              key={`hb-${i}`}
-              onClick={clickable ? (e) => {
-                if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
-                onSelect!("hotel", b.title);
-              } : undefined}
-              className={`bg-teal-50 border border-teal-200 rounded-lg p-3${clickable ? " cursor-pointer" : ""}${isSel ? " ring-2 ring-teal-600" : ""}`}
-            >
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm font-semibold">{b.title}</span>
-                {b.done
-                  ? <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
-                  : <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>}
+        {!hideBooked &&
+          hotelGroups.map((g) => {
+            const allDone = g.rooms.every((r) => r.done);
+            const anyDone = g.rooms.some((r) => r.done);
+            const clickable = anyDone && onSelect;
+            const isSel = !!selectedKey && selectedKey === stickyItemKey("hotel", city, g.selName);
+            /* 各房间共用的文案（入住/退房、取消政策、note）只出现一次：逐值去重，
+             * 两间房写得不一样时两行都留，不丢信息。 */
+            const sharedCheckLines = [
+              ...new Set(
+                g.rooms
+                  .map((r) => {
+                    const bd = parseBookingBody(r.body);
+                    const a = bd.details?.["入住/退房"] ? `🕒 ${bd.details["入住/退房"]}` : "";
+                    const c = bd.details?.["取消政策"] ? `取消：${bd.details["取消政策"]}` : "";
+                    return [a, c].filter(Boolean).join(" · ");
+                  })
+                  .filter(Boolean),
+              ),
+            ];
+            const sharedNotes = [
+              ...new Set(
+                g.rooms
+                  .map((r) => {
+                    try {
+                      return parseBookingBody(r.body).note || "";
+                    } catch {
+                      return "";
+                    }
+                  })
+                  .filter(Boolean),
+              ),
+            ];
+            return (
+              <div
+                key={g.title}
+                onClick={clickable ? (e) => {
+                  if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
+                  onSelect!("hotel", g.selName);
+                } : undefined}
+                className={`bg-teal-50 border border-teal-200 rounded-lg p-3${clickable ? " cursor-pointer" : ""}${isSel ? " ring-2 ring-teal-600" : ""}`}
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-semibold">{g.title}</span>
+                  {g.rooms.length > 1 && (
+                    <span className="text-xs font-bold text-teal-700 bg-teal-100 rounded-full px-2 py-0.5">
+                      {g.rooms.length} 间房
+                    </span>
+                  )}
+                  {allDone ? (
+                    <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
+                  ) : anyDone ? (
+                    <span className="text-xs font-bold text-white bg-amber-500 rounded-full px-2 py-0.5">部分已确认</span>
+                  ) : (
+                    <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>
+                  )}
+                </div>
+                {g.rooms[0].stayNight != null && (
+                  <p className="text-xs text-teal-700 mt-1">{g.rooms[0].stayNight === 0 ? "📅 今天入住" : `🌙 住宿第 ${g.rooms[0].stayNight + 1} 晚`}</p>
+                )}
+                {/* 每间房一行：只列不同的那三项（人数 / 确认号 / 价格） */}
+                <div className="mt-2">
+                  {g.rooms.map((r, ri) => {
+                    const bd = parseBookingBody(r.body);
+                    const price = bd.details?.["总价"] ?? bd.details?.["押金"];
+                    const bits = [
+                      bd.guests,
+                      bd.code ? `确认号 ${bd.code}` : null,
+                      price ? `💰 ${price}` : null,
+                    ].filter(Boolean);
+                    return (
+                      <div key={ri} className="border-t border-teal-100 pt-2 mt-2 first:border-t-0 first:pt-0 first:mt-0">
+                        <p className="text-xs font-semibold text-gray-700">
+                          {g.rooms.length > 1 ? `房间 ${ri + 1} · ` : ""}
+                          {bits.length ? bits.join(" · ") : bookingSummary(bd)}
+                        </p>
+                        <BookingDetailsExpand
+                          bd={bd}
+                          summaryLabel={g.rooms.length > 1 ? `📋 房间 ${ri + 1} 预订详情 ▾` : undefined}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                {sharedCheckLines.map((line, i) => (
+                  <p key={i} className="text-xs text-gray-600 mt-1">{line}</p>
+                ))}
+                {sharedNotes.map((n, i) => (
+                  <p key={i} className="text-xs text-gray-500 mt-1">{n}</p>
+                ))}
               </div>
-              {b.stayNight != null && (
-                <p className="text-xs text-teal-700 mt-1">{b.stayNight === 0 ? "📅 今天入住" : `🌙 住宿第 ${b.stayNight + 1} 晚`}</p>
-              )}
-              {summary && <p className="text-xs text-gray-600 mt-1">{summary}</p>}
-              {(bd.details?.["入住/退房"] || bd.details?.["取消政策"]) && (
-                <p className="text-xs text-gray-600 mt-1">
-                  {bd.details["入住/退房"] ? `🕒 ${bd.details["入住/退房"]}` : ""}
-                  {bd.details["入住/退房"] && bd.details["取消政策"] ? " · " : ""}
-                  {bd.details["取消政策"] ? `取消：${bd.details["取消政策"]}` : ""}
-                </p>
-              )}
-              {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
-              <BookingDetailsExpand bd={bd} />
-            </div>
-          );
-        })}
+            );
+          })}
         {onlyFav.map((f) => (
           <div key={f.name} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
             <div className="flex items-center gap-2 flex-wrap">
@@ -915,6 +1159,159 @@ export function DayBookingsSection({
   );
 }
 
+/* ---------------- 今日已定（2026-11-21 日卡改版 P0 主线 1） ----------------
+ * 每张日卡头部下方、时间线之前：当天已预定的住宿/航班/餐厅一行一条，
+ * 点行展开看完整明细（复用 BookingDetailsExpand 的 bare 模式）。
+ * 三类全无则整个 session 不渲染。同一酒店多间房只出现一次；
+ * 已出票航班只出现在这里，跨城交通区与「本日预订」不再重复。 */
+function TodayBookedRow({
+  icon,
+  label,
+  badge,
+  children,
+}: {
+  icon: string;
+  label: string;
+  badge: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <details className="bg-teal-50/60 border border-teal-200 rounded-lg px-3 py-2">
+      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center gap-2 flex-wrap">
+        <span className="text-sm">{icon}</span>
+        <span className="text-sm font-semibold flex-1">{label}</span>
+        {badge}
+        <span className="text-xs text-gray-400 shrink-0">详情 ▾</span>
+      </summary>
+      <div className="mt-2">{children}</div>
+    </details>
+  );
+}
+
+export function TodayBookedSection({
+  hotelGroups,
+  flightLeg,
+  flightBooking,
+  bookedRests,
+}: {
+  hotelGroups: HotelGroup[];
+  flightLeg?: FlightLegInfo | null;
+  flightBooking?: DayBooking;
+  bookedRests: DayBooking[];
+}) {
+  if (!hotelGroups.length && !flightLeg && !bookedRests.length) return null;
+  const doneBadge = (done: boolean) =>
+    done ? (
+      <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">已确认</span>
+    ) : (
+      <span className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">待预订</span>
+    );
+  return (
+    <section className="mb-6">
+      <h4 className="text-lg font-bold mb-3 text-teal-800">✅ 今日已定</h4>
+      <div className="space-y-2">
+        {hotelGroups.map((g) => {
+          const first = g.rooms[0];
+          const bd = parseBookingBody(first.body);
+          const allDone = g.rooms.every((r) => r.done);
+          const anyDone = g.rooms.some((r) => r.done);
+          let stayRange = "";
+          if (bd.date && bd.dateEnd) {
+            const ci = toISODate(bd.date);
+            const co = toISODate(bd.dateEnd);
+            if (ci && co) {
+              const n = Math.max(0, Math.round((new Date(co).getTime() - new Date(ci).getTime()) / 86400000));
+              stayRange = `${isoShort(ci)} 入住 → ${isoShort(co)} 退房 · ${n} 晚`;
+            }
+          }
+          const nightLabel =
+            first.stayNight === 0
+              ? "今天入住"
+              : first.stayNight != null
+                ? `住宿第 ${first.stayNight + 1} 晚`
+                : "";
+          const label = [g.title, stayRange, g.rooms.length > 1 ? `${g.rooms.length} 间房` : "", nightLabel]
+            .filter(Boolean)
+            .join(" · ");
+          return (
+            <TodayBookedRow
+              key={g.title}
+              icon="🛏️"
+              label={label}
+              badge={
+                allDone ? (
+                  doneBadge(true)
+                ) : anyDone ? (
+                  <span className="text-xs font-bold text-white bg-amber-500 rounded-full px-2 py-0.5">部分已确认</span>
+                ) : (
+                  doneBadge(false)
+                )
+              }
+            >
+              {g.rooms.map((r, ri) => {
+                const rbd = parseBookingBody(r.body);
+                const price = rbd.details?.["总价"] ?? rbd.details?.["押金"];
+                const bits = [
+                  rbd.guests,
+                  rbd.code ? `确认号 ${rbd.code}` : null,
+                  price ? `💰 ${price}` : null,
+                ].filter(Boolean);
+                return (
+                  <div key={ri} className="border-t border-teal-100 pt-2 mt-2 first:border-t-0 first:pt-0 first:mt-0">
+                    {g.rooms.length > 1 && <p className="text-xs font-semibold text-gray-500">房间 {ri + 1}</p>}
+                    {bits.length > 0 && <p className="text-xs font-semibold text-gray-700">{bits.join(" · ")}</p>}
+                    <BookingDetailsExpand bd={rbd} bare />
+                  </div>
+                );
+              })}
+              {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
+            </TodayBookedRow>
+          );
+        })}
+        {flightLeg && (
+          <TodayBookedRow
+            icon="✈️"
+            label={`${flightLeg.route}${flightLeg.carrier ? ` · ${flightLeg.carrier}` : ""}${flightLeg.schedule ? ` ${flightLeg.schedule}` : ""}`}
+            badge={doneBadge(true)}
+          >
+            {flightLeg.note && <p className="text-xs text-gray-700">{flightLeg.note}</p>}
+            {flightBooking && <BookingDetailsExpand bd={parseBookingBody(flightBooking.body)} bare />}
+          </TodayBookedRow>
+        )}
+        {[...bookedRests]
+          .sort((a, b) => {
+            const ta = (() => {
+              try {
+                return parseBookingBody(a.body).time || "99:99";
+              } catch {
+                return "99:99";
+              }
+            })();
+            const tb = (() => {
+              try {
+                return parseBookingBody(b.body).time || "99:99";
+              } catch {
+                return "99:99";
+              }
+            })();
+            return ta.localeCompare(tb);
+          })
+          .map((b) => {
+            const bd = parseBookingBody(b.body);
+            const label = [b.title, bd.time, bd.guests].filter(Boolean).join(" · ");
+            return (
+              <TodayBookedRow key={b.title} icon="🍽️" label={label} badge={doneBadge(b.done)}>
+                {bd.note && <p className="text-xs text-gray-500">{bd.note}</p>}
+                <BookingDetailsExpand bd={bd} bare />
+              </TodayBookedRow>
+            );
+          })}
+      </div>
+      <p className="text-xs text-gray-400 mt-2">点一行展开看确认号、价格与取消政策；详情只在这里出现一次，时间线与下方不再重复。</p>
+    </section>
+  );
+}
+
 /* ---------------- 转场日实际航班（2026-10-03：不再只显示通用核对清单） ---------------- */
 function TransferFlightInfo({ route, date, favFlights }: { route: string; date: string; favFlights: ParsedFavorite[] }) {
   /* 2026-10-03 修：按转场实际日期从航班库重查，不读静态日期价格；
@@ -930,6 +1327,9 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
   const prices = opts.map((o) => o.price ?? Infinity).filter((p) => p !== Infinity);
   const min = prices.length ? Math.min(...prices) : null;
   if (!leg && !favFlights.length) return null;
+  /* 2026-11-21 日卡改版：已出票航段只在「今日已定」出现一次，
+   * 跨城交通区不再重复渲染（未出票时仍显示直飞信息与核对清单）。 */
+  if (leg?.ticketed && !favFlights.length) return null;
   return (
     <div className="mb-3 pb-3 border-b border-sky-200">
       <p className="text-sm font-semibold text-sky-900">✈️ {route}{date ? ` · ${isoShort(date)}` : ""}</p>
@@ -967,7 +1367,10 @@ function TransferFlightInfo({ route, date, favFlights }: { route: string; date: 
   );
 }
 
-/* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ---------------- */
+/* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
+ * 2026-11-21 日卡改版：瘦身为时间标记——只留时间徽章＋站名＋已确认徽章＋查看详情
+ * 链接＋地图点选；完整明细（确认号/价格/取消政策）只在上方「今日已定」出现一次，
+ * 这里不再重复 note 与 BookingDetailsExpand。 */
 function BookedRestBlock({
   entry,
   city,
@@ -1016,30 +1419,36 @@ function BookedRestBlock({
         )}
       </div>
       {summary && <p className="text-sm text-gray-700">{summary}</p>}
-      {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
-      <BookingDetailsExpand bd={bd} />
     </div>
   );
 }
 
-/* ---------------- 时间线上的单个站点 ---------------- */
+/* ---------------- 时间线上的单个站点 ----------------
+ * 2026-11-21 日卡改版：默认只露 detail 首句（≤60 字），点「展开详情」看全文；
+ * 站图只在每时段第一站露 64px 小缩略图（showThumb），其余站不放图。 */
 function StopBlock({
   stop,
   city,
   onSelect,
   selected,
+  showThumb = false,
 }: {
   stop: Stop;
   city: string;
   onSelect?: () => void;
   selected?: boolean;
+  /** 只在每时段第一站传 true：露 64px 小缩略图 */
+  showThumb?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
   const item = mA || mR;
   const kindZh = mA ? "景点" : mR ? "餐厅" : null;
   const photo =
     item && kindZh === "景点" ? getPlaceGallery("景点", item)[0] : undefined;
+  const oneLiner = firstSentence(stop.detail);
+  const hasMore = stop.detail.trim().length > oneLiner.length + 1;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1048,44 +1457,58 @@ function StopBlock({
       } : undefined}
       className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
     >
-      {photo && (
-        <div className="mb-3 overflow-hidden rounded-lg">
+      <div className="flex gap-3">
+        {showThumb && photo && (
           <img
             src={photo.src}
             alt={item!.name}
-            className="w-full h-44 md:h-52 object-cover rounded-lg"
+            className="w-16 h-16 rounded-lg object-cover shrink-0"
             loading="lazy"
           />
-        </div>
-      )}
-      <div className="flex items-center gap-2 mb-1 flex-wrap">
-        <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
-          {stop.time}
-        </span>
-        <h5 className="font-semibold text-base">{stop.name}</h5>
-        {item && kindZh === "餐厅" && (() => {
-          const b = bookingPolicyBadge(item.name);
-          return (
-            <span
-              title={b.title}
-              className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
-            >
-              {b.text}
-            </span>
-          );
-        })()}
-        {item && kindZh && (
-          <DetailLink
-            to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
-            pageKey="itinerary-day"
-            cardId={`stop-${stop.time}-${item.name}`}
-            className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
-          >
-            查看详情
-          </DetailLink>
         )}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
+              {stop.time}
+            </span>
+            <h5 className="font-semibold text-base">{stop.name}</h5>
+            {item && kindZh === "餐厅" && (() => {
+              const b = bookingPolicyBadge(item.name);
+              return (
+                <span
+                  title={b.title}
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}
+                >
+                  {b.text}
+                </span>
+              );
+            })()}
+            {item && kindZh && (
+              <DetailLink
+                to={placeDetailPath(kindFromZh(kindZh), city, item.name)}
+                pageKey="itinerary-day"
+                cardId={`stop-${stop.time}-${item.name}`}
+                className="text-xs font-medium text-white bg-teal-700 hover:bg-teal-600 rounded-full px-2.5 py-0.5"
+              >
+                查看详情
+              </DetailLink>
+            )}
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed">{open ? stop.detail : oneLiner}</p>
+          {hasMore && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(!open);
+              }}
+              className="text-xs font-medium text-teal-700 mt-1"
+            >
+              {open ? "收起 ▲" : "展开详情 ▾"}
+            </button>
+          )}
+        </div>
       </div>
-      <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
     </div>
   );
 }
@@ -1120,7 +1543,6 @@ export function ItineraryDayCard({
   detail,
   bookings,
   isCloud,
-  cityScheduledNames,
   favorites,
   assignedAttractions,
   stay,
@@ -1134,8 +1556,6 @@ export function ItineraryDayCard({
   bookings: DayBooking[];
   /** 云端行程：编号与静态对不上，转场/地图一律按当天实际城市计算 */
   isCloud?: boolean;
-  /** 该城市段所有天已排的站点名（算本城备选用） */
-  cityScheduledNames?: Set<string>;
   /** 用户收藏（酒店/餐厅/航班）：每天卡片里展示当天城市的收藏 */
   favorites?: ParsedFavorite[];
   /** 我排入这一天的必去景点名（收藏景点在行程页指定了 assignDate=当天） */
@@ -1204,16 +1624,6 @@ export function ItineraryDayCard({
 
   // 本城餐厅：有空位数据的优先
   const cityRests = restaurants.filter((r) => r.city === day.city_zh);
-  // 备选景点：每天2-3个本城没排进去的景点，默认折叠，有时间可展开挑选。
-  const altAttrs = attractions
-    .filter(
-      (a) =>
-        a.city === day.city_zh &&
-        ![...(cityScheduledNames || [])].some((stName) =>
-          matchItem(stName, day.city_zh, [a])
-        )
-    )
-    .slice(0, 3);
   const restPicks = [...cityRests]
     .sort((a, b) => {
       const prio = (n: string) => {
@@ -1243,6 +1653,30 @@ export function ItineraryDayCard({
       return false;
     }
   });
+  /* 2026-11-21 日卡改版：同一酒店多间房在「今日已定」与「今晚住哪」都只出现一次 */
+  const hotelGroups = groupHotelBookings(hotelBookings, day.city_zh);
+  /* 今日已定里的已出票航段：只认 ticketed 且日期与当天一致的腿；
+   * 未出票腿仍走跨城交通区的直飞信息，不进今日已定。 */
+  const shownFlightLeg = (() => {
+    if (!transferRoute) return null;
+    const leg = FLIGHT_LEGS.find((l) => l.route === transferRoute);
+    if (!leg || !leg.ticketed) return null;
+    if (leg.date && leg.date !== transferDate) return null;
+    return leg;
+  })();
+  /* 与该航段同一张票的交通预订记录（若有）：详情只在今日已定展开，「本日预订」区过滤掉。 */
+  const flightBooking = shownFlightLeg
+    ? bookings.find((b) => {
+        try {
+          const bd = parseBookingBody(b.body);
+          if (bd.bkind !== "transport") return false;
+          const no = shownFlightLeg.note.match(/[A-Z]{2}\d{2,4}/)?.[0];
+          return !!no && (b.title.includes(no) || b.body.includes(no));
+        } catch {
+          return false;
+        }
+      })
+    : undefined;
 
   /* 餐饮三层（2026-10-22 用户定版）：已预订置顶 → 必吃 highlight → 其余折叠。
    * 必吃判定只认 mustGo 数据集（研究结论），不凭卡片顺序；highlight 上限 3 家，
@@ -1307,15 +1741,36 @@ export function ItineraryDayCard({
     restPicks.forEach((r) => pushCard(r.name, r.city, false, r));
   }
   const mustEatCards = restCards.filter((c) => mustGoBadge(c.name)).slice(0, 3);
-  const mustEatNames = new Set(mustEatCards.map((c) => c.name));
-  const otherRestCards = restCards.filter((c) => !mustEatNames.has(c.name));
   /* food 长文拆段；已订信息段（✅ 开头）与上方已预订卡重复，剔除 */
   const foodSegs = splitFoodText(detail?.food ?? "").filter(
     (s) => !(bookedRests.length > 0 && s.startsWith("✅")),
   );
+  /* 2026-11-21 日卡改版：food 不再默认露 2 段，改三行式早/午/晚各一行店名；
+   * 晚餐有已订餐厅时直接用已订那家，不从段落里猜。 */
+  const mealLines = (() => {
+    const breakfast = mealLine(foodSegs, "早");
+    const lunch = mealLine(foodSegs, "午");
+    const dinner =
+      bookedRests.length > 0
+        ? bookedRests
+            .map((b) => {
+              const bd = parseBookingBody(b.body);
+              return `${b.title}${bd.time ? ` ${bd.time}` : ""} · 已订`;
+            })
+            .join("；")
+        : mealLine(foodSegs, "晚");
+    return [
+      ["早", breakfast],
+      ["午", lunch],
+      ["晚", dinner],
+    ]
+      .filter(([, v]) => v)
+      .map(([m, v]) => `${m}：${v}`);
+  })();
 
-  /* 研究依据：本日涉及的地点（时间线/餐厅卡/备选景点/已订酒店餐厅）里
-   * 有小红书实证的一个个收齐，卡内「研究依据」区展示结论+原帖链接。 */
+  /* 研究依据：本日涉及的地点（时间线/餐厅卡/已订酒店餐厅）里
+   * 有小红书实证的一个个收齐，卡内「研究依据」区展示结论+原帖链接。
+   * （2026-11-21：备选景点/餐厅已移出日卡，不再计入本日研究依据。） */
   const researchList: ResearchEntry[] = [];
   {
     const seen = new Set<string>();
@@ -1332,7 +1787,6 @@ export function ItineraryDayCard({
       add(matchItem(s.name, day.city_zh, restaurants));
     });
     restCards.forEach((c) => add(c.item, c.name));
-    altAttrs.forEach((a) => add(a));
     hotelBookings.forEach((b) =>
       add(hotels.find((h) => b.title.includes(h.name) || h.name.includes(b.title)), b.title),
     );
@@ -1487,6 +1941,14 @@ export function ItineraryDayCard({
       </header>
 
       <div className="px-5 py-5">
+        {/* 今日已定（2026-11-21 日卡改版 P0 主线 1）：头部下方、时间线之前 */}
+        <TodayBookedSection
+          hotelGroups={hotelGroups}
+          flightLeg={shownFlightLeg}
+          flightBooking={flightBooking}
+          bookedRests={bookedRests}
+        />
+
         {/* 跨城交通（默认折叠） */}
         {isTransfer && (
           <Collapsible
@@ -1573,7 +2035,8 @@ export function ItineraryDayCard({
           </Collapsible>
         )}
 
-        {/* 今晚住哪（2026-10-03 用户模型：每天都要能看到住哪，收藏的和已订的） */}
+        {/* 今晚住哪（2026-10-03 用户模型：每天都要能看到住哪，收藏的和已订的）；
+            2026-11-21：已订酒店只在「今日已定」出现一次，本区只留收藏候选 */}
         <DayHotelSection
           city={day.city_zh}
           stay={stay ?? null}
@@ -1581,6 +2044,7 @@ export function ItineraryDayCard({
           hotelBookings={hotelBookings}
           onSelect={onSelectStop ? (kind, name) => handleSelect(kind, name) : undefined}
           selectedKey={selectedKey}
+          hideBooked={hotelBookings.length > 0}
         />
 
         {/* 我排入这一天的必去景点（2026-10-16：收藏景点指定日期后落到当天卡片，不再只是警告没排入） */}
@@ -1616,6 +2080,7 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
+                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
@@ -1644,6 +2109,7 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
+                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
@@ -1672,6 +2138,7 @@ export function ItineraryDayCard({
                 <StopBlock
                   key={i}
                   stop={s}
+                  showThumb={i === 0}
                   city={day.city_zh}
                   onSelect={onSelectStop ? () => handleSelect("attraction", s.name) : undefined}
                   selected={isSel("attraction", s.name)}
@@ -1698,110 +2165,23 @@ export function ItineraryDayCard({
           </p>
         )}
 
-        {/* 备选景点（原版 AlternativeAttractions 逻辑） */}
-        {altAttrs.length > 0 && (
-          <details className="mb-6 bg-teal-50/40 border border-teal-100 rounded-xl">
-            <summary className="cursor-pointer list-none p-3 flex items-center justify-between">
-              <div>
-                <h4 className="text-base font-bold text-teal-800">
-                  🔀 备选景点（{altAttrs.length}个）
-                </h4>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  本城行程里没排进去的景点，时间有富余时可展开挑选替换 / 加塞。
-                </p>
-              </div>
-              <span className="text-teal-700 text-sm font-medium shrink-0 ml-2">展开 ▾</span>
-            </summary>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-3 pb-3">
-              {altAttrs.map((a) => {
-                const photo = getPlaceGallery("景点", a)[0];
-                return (
-                  <div
-                    key={a.name}
-                    className="flex gap-3 bg-teal-50/60 border border-teal-100 rounded-lg p-2"
-                  >
-                    {photo && (
-                      <img
-                        src={photo.src}
-                        alt={a.name}
-                        className="w-16 h-16 rounded-lg object-cover shrink-0"
-                        loading="lazy"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-sm font-semibold">{a.name}</span>
-                      </div>
-                      {a.meta && (
-                        <p className="text-xs text-gray-500 truncate">
-                          {a.meta}
-                        </p>
-                      )}
-                      <DetailLink
-                        to={placeDetailPath("attraction", a.city, a.name)}
-                        pageKey="itinerary-day"
-                        cardId={`day-${day.day}-attraction-${a.name}`}
-                        className="text-xs font-medium text-teal-700 underline"
-                      >
-                        查看详情 →
-                      </DetailLink>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </details>
-        )}
-
-        {/* 餐饮安排：三层结构（2026-10-22 用户定版）
-            ① 已预订置顶 ② 必吃 highlight（mustGo 判定，上限 3 家）
-            ③ food 长文只露前 2 条 + 其余餐厅卡全部折叠，吃不完不用硬塞 */}
-        {(bookedRests.length > 0 || mustEatCards.length > 0 || foodSegs.length > 0 || otherRestCards.length > 0) && (
+        {/* 餐饮安排（2026-11-21 日卡改版 P0 主线 2）：
+            ① 已预订餐厅只在「今日已定」与时间线出现，本区不再置顶大卡；
+            ② 必吃 highlight 改成摘要行，点开看卡片；
+            ③ food 不再默认露 2 段，改三行式早/午/晚各一行店名，全文进折叠区；
+            ④ 备选餐厅已移出日卡，统一见城市末尾「本城备选」清单。 */}
+        {(mustEatCards.length > 0 || foodSegs.length > 0) && (
           <section className="mb-6 pt-6 border-t border-gray-100">
             <h4 className="text-lg font-bold mb-3 text-orange-700">
               🍽️ 餐饮安排
             </h4>
 
-            {bookedRests.length > 0 && (
-              <div className="mb-3">
-                <p className="text-xs font-bold text-green-700 mb-1.5">✅ 已预订 · 先看这个</p>
-                <div className="space-y-2">
-                  {bookedRests.map((b, i) => {
-                    const bd = parseBookingBody(b.body);
-                    const summary = bookingSummary(bd);
-                    const target = bookedRestMapTarget(b.title);
-                    const bSel = isSel(target.kind, target.name);
-                    return (
-                      <div
-                        key={i}
-                        onClick={onSelectStop ? (e) => {
-                          if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
-                          handleSelect(target.kind, target.name);
-                        } : undefined}
-                        className={`bg-green-50 border-2 border-green-500 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${bSel ? " ring-2 ring-green-600" : ""}`}
-                      >
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-bold flex-1">{b.title}</span>
-                          {b.done && (
-                            <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
-                              已确认
-                            </span>
-                          )}
-                        </div>
-                        {summary && <p className="text-xs text-gray-700 mt-1">{summary}</p>}
-                        {bd.note && <p className="text-xs text-gray-500 mt-1">{bd.note}</p>}
-                        <BookingDetailsExpand bd={bd} />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
             {mustEatCards.length > 0 && (
-              <div className="mb-3">
-                <p className="text-xs font-bold text-red-700 mb-1.5">⭐ 必吃 · 当地特色，别错过</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <details className="mb-2">
+                <summary className="text-sm font-semibold text-red-700 cursor-pointer py-1">
+                  ⭐ 必吃 {mustEatCards.length} 家：{mustEatCards.map((c) => c.name).join("、")}（点开看）▾
+                </summary>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                   {mustEatCards.map((c) => {
                     const b = bookingPolicyBadge(c.name);
                     const cSel = isSel("restaurant", c.name);
@@ -1841,93 +2221,42 @@ export function ItineraryDayCard({
                     );
                   })}
                 </div>
-              </div>
+              </details>
+            )}
+
+            {mealLines.length > 0 && (
+              <ul className="space-y-1 mb-2">
+                {mealLines.map((l, i) => (
+                  <li key={i} className="text-sm text-gray-700 leading-relaxed">• {l}</li>
+                ))}
+              </ul>
             )}
 
             {foodSegs.length > 0 && (
-              <div className="mb-3">
-                <ul className="space-y-1.5">
-                  {foodSegs.slice(0, 2).map((s, i) => (
+              <details>
+                <summary className="text-xs font-medium text-orange-700 cursor-pointer py-1">
+                  全部吃法（{foodSegs.length} 条，点开看）▾
+                </summary>
+                <ul className="space-y-1.5 mt-1">
+                  {foodSegs.map((s, i) => (
                     <li key={i} className="text-sm text-gray-700 leading-relaxed">• {s}</li>
                   ))}
                 </ul>
-                {foodSegs.length > 2 && (
-                  <details>
-                    <summary className="text-xs font-medium text-orange-700 cursor-pointer py-1">
-                      更多吃法备选（{foodSegs.length - 2} 条，吃不完不用硬塞）▾
-                    </summary>
-                    <ul className="space-y-1.5 mt-1">
-                      {foodSegs.slice(2).map((s, i) => (
-                        <li key={i} className="text-sm text-gray-700 leading-relaxed">• {s}</li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-              </div>
-            )}
-
-            {otherRestCards.length > 0 && (
-              <details>
-                <summary className="text-xs font-medium text-orange-700 cursor-pointer py-1">
-                  备选餐厅还有 {otherRestCards.length} 家（点开看）▾
-                </summary>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                  {otherRestCards.map((c) => {
-                    const b = bookingPolicyBadge(c.name);
-                    const mg = mustGoBadge(c.name);
-                    const cSel = isSel("restaurant", c.name);
-                    const photo = c.item ? getPlaceGallery("餐厅", c.item)[0] : undefined;
-                    return (
-                      <div
-                        key={c.name}
-                        onClick={onSelectStop ? (e) => {
-                          if ((e.target as HTMLElement).closest("button, a")) return;
-                          handleSelect("restaurant", c.name);
-                        } : undefined}
-                        className={`bg-orange-50 border border-orange-200 rounded-lg p-3${onSelectStop ? " cursor-pointer" : ""}${cSel ? " ring-2 ring-orange-600" : ""}`}
-                      >
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {photo && (
-                            <img src={photo.src} alt={c.name} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" />
-                          )}
-                          <span className="text-sm font-semibold flex-1">{c.name}</span>
-                          {mg && (
-                            <span title={mg.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${mg.cls}`}>
-                              ⭐{mg.text}
-                            </span>
-                          )}
-                          {c.fav && <span className="text-xs text-gray-400">⭐ 已收藏</span>}
-                          <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
-                            {b.text}
-                          </span>
-                          <DetailLink
-                            to={placeDetailPath("restaurant", c.city, c.name)}
-                            pageKey="itinerary-day"
-                            cardId={`day-${day.day}-restaurant-${c.name}`}
-                            className="text-xs font-medium text-white bg-orange-600 hover:bg-orange-500 rounded-full px-2.5 py-0.5"
-                          >
-                            查看详情
-                          </DetailLink>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
               </details>
             )}
           </section>
         )}
 
-        {/* 购物建议（原版 ShoppingRecommendation 逻辑） */}
+        {/* 购物建议（2026-11-21 日卡改版：默认折叠成一行） */}
         {(shopping as Record<string, string>)[day.city_zh] && (
-          <section className="mb-6">
-            <h4 className="text-lg font-bold mb-2 text-amber-700">
-              🛍️ 购物建议
-            </h4>
-            <p className="text-sm text-gray-700 leading-relaxed bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <details className="mb-6">
+            <summary className="text-sm font-bold text-amber-700 cursor-pointer py-1">
+              🛍️ 购物建议（点开看）▾
+            </summary>
+            <p className="text-sm text-gray-700 leading-relaxed bg-amber-50 border border-amber-200 rounded-lg p-3 mt-1">
               {(shopping as Record<string, string>)[day.city_zh]}
             </p>
-          </section>
+          </details>
         )}
 
         {/* 安排提醒：结构化卡片（2026-10-22 用户要求，不再整段文字墙） */}
@@ -1962,8 +2291,12 @@ export function ItineraryDayCard({
         )}
 
         {/* 本日预订（共享组件：预订日期没填天号时已按日期自动挂天）；
-            餐厅预订已在餐饮安排置顶，酒店在今晚住哪，本区只剩机票/活动 */}
-        <DayBookingsSection bookings={bookings} excludeRestaurant />
+            餐厅预订已在餐饮安排置顶，酒店在今晚住哪，本区只剩机票/活动；
+            2026-11-21：与「今日已定」航班重复的交通记录已过滤，不再重复 */}
+        <DayBookingsSection
+          bookings={flightBooking ? bookings.filter((b) => b !== flightBooking) : bookings}
+          excludeRestaurant
+        />
 
         <DayResearchSection entries={researchList.slice(0, 8)} />
 
