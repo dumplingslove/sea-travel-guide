@@ -33,7 +33,7 @@ import { placeDetailPath } from "@/guide/placeDetail";
 import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
-import { FLIGHT_LEGS, type FlightLegInfo } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, carrierBaggageLabel, type FlightLegInfo } from "@/bookings/bookingTimeline";
 import { bareName } from "@/bookings/nameMatch";
 
 /* ============ 每日行程 enrichment：预订/收藏/酒店（2026-10-03 用户模型） ============
@@ -1196,7 +1196,7 @@ export function TodayBookedSection({
   if (unbookedLeg) {
     const opt = recommendOpt(unbookedLeg);
     const label = opt
-      ? `${unbookedLeg.route} 未订，推荐 ${opt.flight} ${opt.depart}→${opt.arrive} $${opt.price}`
+      ? `${unbookedLeg.route} 未订，推荐 ${opt.flight} ${opt.depart}→${opt.arrive} $${opt.price} · ${carrierBaggageLabel(opt.flight)}`
       : `${unbookedLeg.route} 未订`;
     rows.push({
       key: `unbooked-${unbookedLeg.route}`,

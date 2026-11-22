@@ -286,6 +286,49 @@ export interface FlightOption {
   recommendReason?: string;
 }
 
+/** 航司类型与行李对照表（2026-11-21 网页核查，按最低档经济舱标；额度按票价/航线会有出入，具体以所选票价为准）。
+ *  渲染层按航班号的航司代码（IATA，如 TR658→TR）查表出标注，绝不许把标注手写进每条 options 数据——
+ *  每晚航班刷价 cron 会重写 options，手写标注会被刷掉。
+ *  核查来源：SQ/TG/PG/TR/FD/VZ 为 2026-11-21 网页核查；DD（皇雀航空）与 SL（泰狮航）为本轮补查——
+ *  DD 最低档 Nok Lite：手提 7kg（2 件合计）、托运 0；SL 最低档 Lion Saver：手提 7kg、托运 0。 */
+export interface CarrierInfo {
+  /** 中文名 */
+  name: string;
+  /** 廉航 / 全服务 */
+  kind: "廉航" | "全服务";
+  /** 手提额度，如 "7kg" / "10kg" */
+  cabin: string;
+  /** 最低档托运额度："另买" 或 "25kg 起含" 这类含字样 */
+  checked: string;
+}
+export const CARRIER_INFO: Record<string, CarrierInfo> = {
+  SQ: { name: "新加坡航空", kind: "全服务", cabin: "7kg", checked: "25kg 起含" },
+  TG: { name: "泰国国际航空", kind: "全服务", cabin: "7kg", checked: "20–30kg 含" },
+  PG: { name: "曼谷航空", kind: "全服务", cabin: "7kg", checked: "20kg 含" },
+  TR: { name: "酷航", kind: "廉航", cabin: "10kg", checked: "另买" },
+  FD: { name: "泰亚航", kind: "廉航", cabin: "7kg", checked: "另买" },
+  VZ: { name: "越捷航空", kind: "廉航", cabin: "7kg", checked: "另买" },
+  DD: { name: "皇雀航空", kind: "廉航", cabin: "7kg", checked: "另买" },
+  SL: { name: "泰狮航", kind: "廉航", cabin: "7kg", checked: "另买" },
+};
+/** 按航班号取航司类型与行李标注，如 carrierBaggageLabel("TR658") → "廉航 · 手提 10kg · 托运另买"；
+ *  未知航司代码返回「航司类型与行李待核」，不留空白、不猜。 */
+export function carrierBaggageLabel(flight: string): string {
+  const code = (flight || "").match(/^[A-Z]{2}/)?.[0];
+  const info = code ? CARRIER_INFO[code] : undefined;
+  if (!info) return "航司类型与行李待核";
+  return `${info.kind} · 手提 ${info.cabin} · 托运${info.checked === "另买" ? "另买" : ` ${info.checked}`}`;
+}
+/** 托运部分单拎出来（用于价格行里替换 options.bags 那个"待定"占位）：如 "托运另买" / "托运 25kg 起含"；未知航司返回"托运待核"。 */
+export function carrierCheckedLabel(flight: string): string {
+  const code = (flight || "").match(/^[A-Z]{2}/)?.[0];
+  const info = code ? CARRIER_INFO[code] : undefined;
+  if (!info) return "托运待核";
+  return info.checked === "另买" ? "托运另买" : `托运 ${info.checked}`;
+}
+/** 标注口径说明：各处航班选项列表下方统一加这一句。 */
+export const CARRIER_BAGGAGE_NOTE = "航司类型与行李按最低档经济舱标注，具体以所选票价为准";
+
 /** 11 段：去程西雅图→北京（2026-11-28，已出票 HU496）1 段、亚洲段 8 段（北京→新加坡、西安→新加坡、新加坡→普吉/西安、普吉→清迈、清迈→曼谷、曼谷→西安、曼谷→北京）、回程 2 段（西安→首尔、首尔→西雅图已出票）。
  * 2026-10-02 回程定死经首尔后旧 9 段回程候选已移除；2026-10-04 起全量以本数组为准；
  * 2026-10-13 行程改版（曼谷后分开行动）新增曼谷→北京段（用户一人，flight-db 已有 BKK-PEK 实查）；

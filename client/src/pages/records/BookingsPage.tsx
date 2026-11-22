@@ -46,7 +46,7 @@ import {
   type BookingKind,
   type BookingPreset,
 } from "@/bookings/bookingTypes";
-import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, refreshLegFromDb, type FlightLegInfo, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
+import { FLIGHT_LEGS, liveFlightQuote, flightDbQueriedAt, hotelStaysFromPlan, flightDateFromPlan, applyPlanTimeline, refreshLegFromDb, carrierBaggageLabel, CARRIER_BAGGAGE_NOTE, type FlightLegInfo, type HotelStay, type PlanSegment } from "@/bookings/bookingTimeline";
 import { getLiveHotelPrice, liveDisplayRate, livePriceDatasetStatus, type LiveHotelPrice, type LiveRoomRate } from "@/guide/hotelLivePrices";
 import StickyMapBar, { SafeStickyMapBar, buildItemsFromFavorites, buildCandidateItems, stickyItemKey, type FlightRoute } from "@/components/StickyMapBar";
 import { airportForCity } from "@/data/airportCoords";
@@ -1376,6 +1376,7 @@ function FavoriteActionList({
                                     <div key={i} className={`flex items-center justify-between gap-2 px-2 py-1.5 rounded ${isFav ? "bg-amber-50 border border-amber-200" : "bg-gray-50"}`}>
                                       <span className="min-w-0">
                                         <span className="font-medium">{o.carrier} {o.flight}</span>
+                                        <span className="text-amber-800 ml-2">{carrierBaggageLabel(o.flight)}</span>
                                         <span className="text-gray-500 ml-2">{o.depart}→{o.arrive}{o.arrivePlusDay ? "+1" : ""}</span>
                                         {isFav && <span className="ml-2 text-amber-700 font-medium">← 你收藏的</span>}
                                       </span>
@@ -1392,7 +1393,7 @@ function FavoriteActionList({
                             <p className="text-gray-400">⏳ 航班待查询（航班库暂无该日期实查数据，不能据此推断无直飞）</p>
                           )}
                           {modalLeg.queriedAt && (
-                            <p className="text-gray-400 mt-1">Google Flights 实查 · {modalLeg.queriedAt}</p>
+                            <p className="text-gray-400 mt-1">Google Flights 实查 · {modalLeg.queriedAt} · {CARRIER_BAGGAGE_NOTE}</p>
                           )}
                         </div>); return null; })()}
                       {/* 酒店/餐厅/景点详情同样捕获进弹窗（ PlaceDetailSections 完整版，不是摘录） */}
@@ -1746,7 +1747,7 @@ function FavoritePriceLine({ name, type, city, flight, segs }: { name: string; t
     return (
       <div className="text-xs text-gray-600 mt-1">
         💰 <span className="font-semibold text-teal-700">${cheapest.price}</span>
-        <span className="text-gray-400"> 起 · {cheapest.carrier || ""} · Google Flights 实查</span>
+        <span className="text-gray-400"> 起 · {cheapest.carrier || ""} · {carrierBaggageLabel(cheapest.flight)} · Google Flights 实查</span>
         {leg.queriedAt && <span className="text-gray-400"> · {leg.queriedAt}</span>}
       </div>
     );

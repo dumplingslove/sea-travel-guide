@@ -21,6 +21,9 @@ import {
   flightDateFromPlan,
   hotelStaysFromPlan,
   refreshLegFromDb,
+  carrierBaggageLabel,
+  carrierCheckedLabel,
+  CARRIER_BAGGAGE_NOTE,
   type BookByGroup,
   type FlightLegInfo,
   type HotelStay,
@@ -540,7 +543,7 @@ export default function BookingTimeline({
                               o.arrivePlusDay ? "+1" : ""
                             } · $${o.price}${
                               f.priceBasis ? `（${f.priceBasis}）` : ""
-                            }${o.bags ? ` · 托运${o.bags}` : ""}`,
+                            } · ${carrierCheckedLabel(o.flight)}`,
                           },
                         ),
                       );
@@ -561,6 +564,7 @@ export default function BookingTimeline({
                                 </span>
                               )}
                               {o.carrier} {o.flight}
+                              <span className="ml-1.5 text-xs font-normal text-amber-800">{carrierBaggageLabel(o.flight)}</span>
                             </div>
                             <div className="text-xs text-gray-500 mt-0.5">
                               {o.depart} → {o.arrive}
@@ -575,7 +579,7 @@ export default function BookingTimeline({
                               ·{" "}
                               <b className="text-teal-700">${o.price}</b>
                               {f.priceBasis ? `（${f.priceBasis}）` : ""}
-                              {o.bags ? ` · 托运${o.bags}` : ""} ·{" "}
+                              · {carrierCheckedLabel(o.flight)} ·{" "}
                               {o.refundable === "yes"
                                 ? "可退"
                                 : o.refundable === "no"
@@ -598,6 +602,7 @@ export default function BookingTimeline({
                       {f.stale
                         ? "；本候选为旧方案已停更，价格不再刷新，仅供参考"
                         : "；价格动态，出票前重查退改"}
+                      {`；${CARRIER_BAGGAGE_NOTE}`}
                     </div>
                     {f.businessOptions && f.businessOptions.length > 0 && (
                       <div className="pt-2">
@@ -613,6 +618,7 @@ export default function BookingTimeline({
                                   商务
                                 </span>
                                 {o.carrier} {o.flight}
+                                <span className="ml-1.5 text-xs font-normal text-amber-800">{carrierBaggageLabel(o.flight)}</span>
                               </div>
                               <div className="text-xs text-gray-500 mt-0.5">
                                 {o.depart} → {o.arrive}
