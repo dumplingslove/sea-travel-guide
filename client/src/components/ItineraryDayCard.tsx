@@ -350,6 +350,18 @@ const STOP_ALIASES: [string, string][] = [
   ["擎天树", "滨海湾花园"],
   ["明洞逛街", "明洞 Myeongdong"],
   ["旧机场路", "Old Airport Road"],
+  // 酒店时间站 → 酒店条目（2026-11-22 Day 6 封面图：StopBlock 接入 hotels 匹配；
+  // 别名键是站名里的酒店名/动作词，目标是同城 H() 条目确切名；对景点/餐厅列表无害，
+  // 目标不在那些表里就落空、继续走通用比对。别名先于转场守卫判断，
+  // 含「退房/入住」的换酒店站也能链到酒店图。）
+  ["Banyan Tree", "Banyan Tree Phuket"],
+  ["回别墅歇脚", "Banyan Tree Phuket"],
+  ["Dinso", "Dinso Resort & Villas Phuket"],
+  ["137 Pillars", "137 Pillars House"],
+  ["酒店烹饪课", "137 Pillars House"],
+  ["Rosewood", "Rosewood Bangkok"],
+  ["Park Hyatt", "Park Hyatt Bangkok 曼谷柏悦酒店"],
+  ["金沙退房", "Marina Bay Sands"],
 ];
 
 export function matchItem(
@@ -1555,8 +1567,23 @@ export function TodayBookedSection({
  * 先取 placeMedia index，没有再回退到该条目 gallery 的首张图——回退复用的只是
  * 展开详情里已经在展示的同一批图，不新加图、不去网上找图；还没有才返回 undefined
  * （调用方留占位）。 */
-function coverThumb(kind: "景点" | "餐厅", item: Item): string | undefined {
+function coverThumb(kind: "景点" | "餐厅" | "酒店", item: Item): string | undefined {
   return getPlaceImage(kind, item) || getPlaceGallery(kind, item)[0]?.src;
+}
+
+/* 航班站机场图回退（2026-11-22 Day 6 封面图）：只有出发机场有现成机场图才配。
+ * 目前 placeMedia/placeGalleries 里唯一的机场图是「景点|新加坡|Jewel 星耀樟宜」
+ * （樟宜机场本身）；站名含航班号时按 FLIGHT_LEGS 的 schedule 找出发城市，
+ * 「抵达樟宜机场」站名含「樟宜」直接配。其他机场（普吉/清迈/素万那普/首都/
+ * 咸阳/仁川）站内无图，留占位、不拿错城市的机场图顶。
+ * 航班号正则用 [A-Z0-9]{2} 口径（9C 含数字，纯字母正则会漏，2026-11-21 绿标教训）。 */
+function airportThumb(stopName: string): string | undefined {
+  const m = stopName.match(/([A-Z0-9]{2}\d{1,4})/);
+  const leg = m ? FLIGHT_LEGS.find((l) => l.schedule?.includes(m[1])) : undefined;
+  const from = leg ? leg.route.split("→")[0].trim() : "";
+  if (from !== "新加坡" && !stopName.includes("樟宜")) return undefined;
+  const jewel = attractions.find((it) => it.city === "新加坡" && it.name === "Jewel 星耀樟宜");
+  return jewel ? coverThumb("景点", jewel) : undefined;
 }
 
 /* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
@@ -1682,8 +1709,11 @@ function StopBlock({
   const [open, setOpen] = useState(false);
   const mA = matchItem(stop.name, city, attractions);
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
-  const item = mA || mR;
-  const kindZh = mA ? "景点" : mR ? "餐厅" : null;
+  // 酒店时间站也参与匹配（2026-11-22 Day 6 封面图）：站名含酒店名时按 kind '酒店' 取图；
+  // 某家酒店确实没图时留占位，不拿别家酒店的图顶。
+  const mH = !mA && !mR ? matchItem(stop.name, city, hotels) : undefined;
+  const item = mA || mR || mH;
+  const kindZh = mA ? "景点" : mR ? "餐厅" : mH ? "酒店" : null;
   const oneLiner = firstSentence(stop.detail, 30);
   const guide = item && kindZh === "景点" ? attractionGuides[city]?.[item.name] : undefined;
   const duration = guide?.visit.duration;
@@ -1736,7 +1766,15 @@ function StopBlock({
   // 同款 56px 缩略图，coverThumb：先 placeMedia index，没有回退到该条目 gallery
   // 首张图；没有就占位，不编图）。
   // 匹配不到目录条目的站没有可查的条目，直接占位（📍 中性占位，不冒充景点/餐厅）。
-  const thumb = item && kindZh ? coverThumb(kindZh, item) : undefined;
+  // 回退链（2026-11-22 Day 6 封面图）：① 匹配到的条目本身；② 本条目无图、站名同时
+  // 对上酒店时用酒店图顶上（如 137 Pillars 烹饪课站：景点条目无图，酒店有图）；
+  // ③ 航班站走机场图回退（airportThumb：只有樟宜有现成机场图）。
+  let thumb = item && kindZh ? coverThumb(kindZh, item) : undefined;
+  if (!thumb && (mA || mR)) {
+    const hotelFallback = matchItem(stop.name, city, hotels);
+    if (hotelFallback) thumb = coverThumb("酒店", hotelFallback);
+  }
+  if (!thumb) thumb = airportThumb(stop.name);
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1760,7 +1798,7 @@ function StopBlock({
             className="w-14 h-14 rounded-lg bg-gray-100 grid place-items-center text-xl shrink-0"
             title="站上暂无这张配图"
           >
-            {kindZh === "餐厅" ? "🍽️" : kindZh ? "🏛️" : "📍"}
+            {kindZh === "餐厅" ? "🍽️" : kindZh === "酒店" ? "🏨" : kindZh ? "🏛️" : "📍"}
           </span>
         )}
         <div className="flex-1 min-w-0">
@@ -1841,7 +1879,7 @@ function StopBlock({
               {item && kindZh && (
                 // 匹配到目录条目：与备选清单同一套行内展开渲染（完整详情）
                 <PlaceDetailSections
-                  kind={mA ? "attraction" : "restaurant"}
+                  kind={mA ? "attraction" : mR ? "restaurant" : "hotel"}
                   item={item}
                   compact
                 />

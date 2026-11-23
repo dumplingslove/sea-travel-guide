@@ -190,6 +190,8 @@ import img189 from './assets/places/04ec64a4038f.jpg';
 import img190 from './assets/places/4ba6a9c3120e.jpg';
 import img191 from './assets/places/c34c890a5123.jpg';
 import img192 from './assets/places/415c8b042c90.jpg';
+import img193 from './assets/places/c7c456165252.jpg';
+import img194 from './assets/places/9a7a3c772256.jpg';
 import momTrisKitchen from './assets/places/mom-tris-kitchen.jpg';
 import hokkien888 from './assets/galleries/888-hokkien/2.png';
 import auntieGaikLean from './assets/places/auntie-gaik-lean.jpg';
@@ -341,6 +343,8 @@ const index:Record<string,string>={
   "景点|普吉|Phuket Elephant Sanctuary":img140,
   "景点|普吉|Siam Niramit":img141,
   "景点|普吉|卡塔诺伊海滩":img142,
+  "景点|普吉|卡塔海滩":img193,
+  "景点|普吉|卡伦海滩":img194,
   "景点|普吉|大佛":img143,
   "景点|普吉|攀牙湾":img144,
   "景点|普吉|普吉老镇":img145,
