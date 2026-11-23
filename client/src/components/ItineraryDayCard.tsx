@@ -887,7 +887,8 @@ export function DayCityBackup({
       </span>
     );
   };
-  // 单项行：缩略图 + 名字 + 菜系/政策徽章 + meta；点整行在行程页内原地展开详情（不跳转）
+  // 单项行：缩略图 + 名字 + 菜系/政策徽章 + 总结文字（meta 全文直显）；
+  // 点整行在行程页内原地展开完整详情（不跳转）
   const renderItem = (kind: "attraction" | "restaurant", item: Item) => {
     const key = `${kind}:${item.name}`;
     const isOpen = !!expanded[key];
@@ -949,9 +950,11 @@ export function DayCityBackup({
                   <span className="text-xs text-gray-400">⭐ 已收藏</span>
                 )}
             </span>
-            {item.meta && (
-              <span className="block text-xs text-gray-500 mt-0.5 leading-snug">
-                {item.meta.length > 64 ? `${item.meta.slice(0, 64)}…` : item.meta}
+            {/* 2026-11-22 用户纠正：收起行直接显示总结文字（meta 全文；没有 meta 时
+                用 detail 首句），不截 64 字；点开才看完整详情 */}
+            {(item.meta || item.detail) && (
+              <span className="block text-sm text-gray-600 mt-0.5 leading-relaxed">
+                {item.meta || firstSentence(item.detail, 80)}
               </span>
             )}
           </span>
@@ -1011,7 +1014,7 @@ export function DayCityBackup({
       {open && (
         <div className="mt-3 rounded-xl border border-teal-100 bg-teal-50/40 px-4 py-3">
           <p className="text-xs text-gray-500 mb-3">
-            本城没排进日程的景点与餐厅都在这里——点一行就地展开全部详情，选一天就能直接放进那天的行程。
+            本城没排进日程的景点与餐厅都在这里——每行直接显示一两句介绍，点一行就地展开全部详情，选一天就能直接放进那天的行程。
           </p>
           <h4 className="text-sm font-bold mb-1">📍 备选景点（{attrs.length}）</h4>
           {attrs.length === 0 ? (
@@ -1582,6 +1585,12 @@ function BookedRestBlock({
           {bd.time || "晚上"}
         </span>
         <h5 className="font-semibold text-base">🍽️ {b.title}</h5>
+        {/* 2026-11-22 用户纠正：餐厅行收起态直接亮菜系 */}
+        {entry.item && (
+          <span className="text-xs font-medium text-orange-800 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5 shrink-0">
+            🍽️ {restaurantCuisine(entry.item)}
+          </span>
+        )}
         {b.done ? (
           <span className="text-xs font-bold text-white bg-green-600 rounded-full px-2 py-0.5">
             已确认 · 已订
@@ -1617,13 +1626,11 @@ function BookedRestBlock({
 }
 
 /* ---------------- 时间线上的单个站点 ----------------
- * 2026-11-21 二次改版：折叠态只露时间＋站名＋一句话干什么（≤30 字）＋待多久，
- * 不放站图；没有新增内容时不显示展开入口。
- * 2026-11-22 追加 3：点行本身（或「展开详情」按钮）在原地展开完整详情——
- * 按站名 matchItem 匹配到目录条目的，展开与备选清单同一套行内渲染
+ * 2026-11-22 用户纠正（此前理解反了）：收起态直接显示该站的完整 detail 全文，
+ * 不截首句；「详情」按钮只在匹配到目录条目时出现，点开是该条目的完整内容
  * （PlaceDetailSections：图片、介绍全文、菜系、谷歌地图与官网链接全有），不跳转；
- * 匹配不到目录条目的（入住酒店/飞往××等非地点项），展开只显示该站自带的时间线
- * detail 文案，绝不凭空编一个地点详情。点行同时仍选地图（原行为不变）。 */
+ * 匹配不到目录条目的站（入住酒店/飞往××等非地点项）只显示自带 detail 文案，
+ * 不放详情按钮（没新东西就不放展开按钮）。点行同时仍选地图（原行为不变）。 */
 function StopBlock({
   stop,
   city,
@@ -1643,17 +1650,11 @@ function StopBlock({
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
   const item = mA || mR;
   const kindZh = mA ? "景点" : mR ? "餐厅" : null;
-  const oneLiner = firstSentence(stop.detail, 30);
   const guide = item && kindZh === "景点" ? attractionGuides[city]?.[item.name] : undefined;
   const duration = guide?.visit.duration;
-  /* 首句之外的正文余量：匹配不到目录条目时，余量就是展开的全部内容 */
-  const firstFull = firstSentence(stop.detail);
-  const restDetail = stop.detail
-    .trim()
-    .slice(firstFull.replace(/…$/, "").length)
-    .trim();
-  // 匹配到目录条目的一定有完整详情可展开；匹配不到的只有正文余量时才有展开入口
-  const hasMore = !!item || restDetail.length > 0;
+  // 2026-11-22 用户纠正：收起态直接显示该站的完整 detail 全文，不截首句；
+  // 「详情」按钮只在匹配到目录条目时出现；匹配不到的站不放详情按钮。
+  const hasMore = !!item;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1689,7 +1690,8 @@ function StopBlock({
           <span className="text-xs text-gray-500">⏱ {duration}</span>
         )}
       </div>
-      <p className="text-sm text-gray-600 leading-relaxed">{oneLiner}</p>
+      {/* 收起态直接显示完整 detail 全文（2026-11-22 用户纠正，不截首句） */}
+      <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
       {hasMore && (
         <>
           <button
@@ -1710,18 +1712,13 @@ function StopBlock({
                   {bookingSummary(booked)}
                 </p>
               )}
-              {item && kindZh ? (
+              {item && kindZh && (
                 // 匹配到目录条目：与备选清单同一套行内展开渲染（完整详情）
                 <PlaceDetailSections
                   kind={mA ? "attraction" : "restaurant"}
                   item={item}
                   compact
                 />
-              ) : (
-                // 匹配不到：只显示该站自带的时间线 detail，不编地点详情
-                restDetail && (
-                  <p className="text-xs text-gray-700 leading-relaxed">{restDetail}</p>
-                )
               )}
             </div>
           )}
