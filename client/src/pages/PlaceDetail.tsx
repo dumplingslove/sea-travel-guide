@@ -10,6 +10,9 @@ import { attractionGuides } from "@/guide/attractionGuides";
 import {
   findPlace,
   KIND_ZH,
+  placeMapsUrl,
+  placeOfficialUrl,
+  restaurantCuisine,
   type PlaceKind,
 } from "@/guide/placeDetail";
 import { placesForCity } from "@/data/placeCoords";
@@ -84,8 +87,39 @@ export function PlaceDetailSections({
   const coordList = kind === "hotel" ? hotels : kind === "restaurant" ? restaurants : [];
   const coord = coordList.find((p) => p.name === item.name || item.name.includes(p.name) || p.name.includes(item.name));
   const detailKind: DetailKind = kindZh;
+  // 餐厅详情第一行亮菜系（2026-11-22 用户要求）：推导自文案/证据，找不到标「菜系待核验」
+  const cuisine = kind === "restaurant" ? restaurantCuisine(item) : null;
+  // 链接（2026-11-22 追加 2）：谷歌地图按名+城生成人人有；官网只认已核实的
+  const officialUrl = placeOfficialUrl(item);
   return (
     <>
+        {/* 菜系（餐厅详情第一行） */}
+        {cuisine && (
+          <p className="text-base font-bold text-orange-800 mb-3">🍽️ 菜系：{cuisine}</p>
+        )}
+        {/* 地图与官网：地图人人有；官网没有已核实地址时如实标待核验，不猜 URL */}
+        <div className="flex items-center gap-3 flex-wrap mb-3">
+          <a
+            href={placeMapsUrl(item)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 underline"
+          >
+            🗺️ 谷歌地图 ↗
+          </a>
+          {officialUrl ? (
+            <a
+              href={officialUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 underline"
+            >
+              🌐 官网 ↗
+            </a>
+          ) : (
+            <span className="text-sm text-gray-400">🌐 官网待核验</span>
+          )}
+        </div>
         {/* 照片（置顶：先看图，再看文字） */}
         {photos.length > (compact ? 0 : 1) && (
           <Section title={`📸 照片（${photos.length}）`} compact={compact}>
@@ -269,11 +303,11 @@ export function PlaceDetailSections({
 
         {/* 小红书原帖与核验记录 */}
         <EvidenceLedgerPanel item={item} kind={kindZh} />
-        {/* 官方链接 */}
-        {item.officialUrl && (
+        {/* 官方链接（Item 自带或已核实映射；没有不显示，顶部链接行已标待核验） */}
+        {officialUrl && (
           <div className="mb-8">
             <a
-              href={item.officialUrl}
+              href={officialUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 underline"
@@ -357,6 +391,12 @@ export default function PlaceDetailPage({ kind }: { kind: PlaceKind }) {
             <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
               {item.name}
             </h1>
+            {/* 菜系（餐厅详情第一行，名字下方直接亮出） */}
+            {kind === "restaurant" && (
+              <p className="text-white text-base font-bold mt-2">
+                🍽️ {restaurantCuisine(item)}
+              </p>
+            )}
             {item.meta && (
               <p className="text-white/80 text-sm mt-2">{item.meta}</p>
             )}

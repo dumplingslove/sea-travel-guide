@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ItineraryDayCard,
-  CityBackupList,
   detailForPlanDay,
   buildDayByDate,
   buildBookingsByDay,
@@ -307,6 +306,17 @@ export function ItineraryTab({
     list.push(f.name);
     assignedByDay.set(dn, list);
   });
+  // 我排入的餐厅：与必去景点同口径（2026-11-22 备选清单「放入行程」新增）
+  const assignedRestsByDay = new Map<number, string[]>();
+  favRows.forEach((r) => {
+    const f = parseFavoriteRow({ title: r.title, body: r.body || "" });
+    if (f.type !== "restaurant" || !f.assignDate) return;
+    const dn = dayByDate.get(f.assignDate);
+    if (dn == null) return;
+    const list = assignedRestsByDay.get(dn) ?? [];
+    list.push(f.name);
+    assignedRestsByDay.set(dn, list);
+  });
   // 每天的静态内容（首日=抵达，末日=离境，中间=弹性池；云端13天再叠加逐日修正）
   const isCloud = plan.source === "cloud";
   const details = days.map((d) => {
@@ -462,6 +472,11 @@ export function ItineraryTab({
                 isCloud={isCloudPlan}
                 favorites={favorites}
                 assignedAttractions={assignedByDay.get(d.day)}
+                assignedRestaurants={assignedRestsByDay.get(d.day)}
+                scheduledNames={cityScheduled.get(d.city_zh)}
+                cityBookedRestNames={cityBookedRestNames.get(d.city_zh)}
+                favRestNames={cityFavRestNames.get(d.city_zh)}
+                dayOptions={dayOptions.filter((x) => x.city_zh === d.city_zh)}
                 stay={stays.get(d.city_zh) ?? null}
                 onSelectStop={handleCardSelect}
                 selectedKey={selectedKey}
@@ -470,15 +485,6 @@ export function ItineraryTab({
                 }}
               />
               {renderDayExtra?.(d, i)}
-              {/* 本城备选清单（2026-11-21 日卡改版 P0 主线 3）：每个城市最后一天卡片之后渲染一次 */}
-              {(i === days.length - 1 || days[i + 1].city_zh !== d.city_zh) && (
-                <CityBackupList
-                  city={d.city_zh}
-                  scheduledNames={cityScheduled.get(d.city_zh)}
-                  bookedRestNames={cityBookedRestNames.get(d.city_zh)}
-                  favRestNames={cityFavRestNames.get(d.city_zh)}
-                />
-              )}
             </Fragment>
           );
         })}

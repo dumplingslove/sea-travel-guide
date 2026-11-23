@@ -8,7 +8,7 @@ import {
   type Day,
   type Item,
 } from "@/guide/data";
-import { xhsEvidence, xhsAssessments, getGuideFacts } from "@/guide/research";
+import { xhsEvidence, xhsAssessments } from "@/guide/research";
 import { attractionGuides } from "@/guide/attractionGuides";
 import {
   BOOKING_KIND_LABEL,
@@ -29,8 +29,15 @@ import {
   mustGoBadge,
   MUST_GO,
 } from "@/bookings/restaurantBookingStatus";
-import { placeDetailPath } from "@/guide/placeDetail";
-import { DetailLink, useDetailReturn } from "@/components/DetailReturn";
+import {
+  placeMapsUrl,
+  placeOfficialUrl,
+  restaurantCuisine,
+} from "@/guide/placeDetail";
+import { PlaceDetailSections } from "@/pages/PlaceDetail";
+import { getPlaceImage } from "@/guide/placeMedia";
+import { useDetailReturn } from "@/components/DetailReturn";
+import { useRecordsData } from "@/pages/records/shared";
 import type { PlanDay } from "@/guide/plannerSchedule";
 import { CITY_ID_BY_ZH } from "@/data/cityCoords";
 import { FLIGHT_LEGS, carrierBaggageLabel, type FlightLegInfo } from "@/bookings/bookingTimeline";
@@ -675,25 +682,24 @@ export function DayResearchSection({ entries }: { entries: ResearchEntry[] }) {
   );
 }
 
-/* ---------------- 本城备选清单（2026-11-21 日卡改版 P0 主线 3） ----------------
- * 备选景点/备选餐厅彻底移出日卡，统一放在每个城市最后一天卡片之后，分两组、
- * 每家一行（名字 + 一句话理由 + 查看详情链接）。过滤按城算一次：全城景点去掉
- * 已排进日程的（全部列出，不再每天只取 3 家）；餐厅去掉已订与已排进日程的，
- * 收藏优先、再按订位政策排序，取前 10 家。 */
-export function CityBackupList({
-  city,
-  scheduledNames,
-  bookedRestNames,
-  favRestNames,
-}: {
-  city: string;
-  /** 该城市段所有天已排的站点名 */
-  scheduledNames?: Set<string>;
-  /** 该城市段已订餐厅名（小写归一化） */
-  bookedRestNames?: Set<string>;
-  /** 该城市段已收藏餐厅名（小写归一化） */
-  favRestNames?: Set<string>;
-}) {
+/* ---------------- 本城备选清单（2026-11-22 用户改版：挂到每张日卡上） ----------------
+ * 原 2026-11-21 版放在每个城市最后一天卡片之后单独占一块；现改为每张日卡顶部
+ * 一个可点击展开的入口（默认收起），点开在卡片内原地展开本城全部备选。
+ * 过滤口径不变：景点去掉已排进日程的（全部列出）；餐厅去掉已订与已排进日程的，
+ * 收藏优先、再按订位政策排序，取前 10 家。
+ * 2026-11-22 追加：① 详情一律行内原地展开（PlaceDetailSections 同款渲染，
+ * 照片/菜系/meta/detail/best/订位政策全有），不再跳 PlaceDetail 页；
+ * 每行收起时也有缩略图（站内 placeMedia 已有图才显示，没图留占位、不编图）；
+ * ② 每项都有谷歌地图链接（名+城生成）与官网链接（只认已核实地址，没有标待核验）。
+ * 每项可直接「放入行程」：选本城某天，走收藏记录的 assignDate 机制
+ * （与行程页顶部 FavoriteItineraryCheck 同源）；没收藏过的先建一条 favorite
+ * 记录再写 assignDate，不只改本地 state。 */
+export function backupListsForCity(
+  city: string,
+  scheduledNames?: Set<string>,
+  bookedRestNames?: Set<string>,
+  favRestNames?: Set<string>,
+): { attrs: Item[]; rests: Item[] } {
   const backupAttrs = attractions.filter(
     (a) =>
       a.city === city &&
@@ -704,7 +710,8 @@ export function CityBackupList({
       if (r.city !== city) return false;
       const n = r.name.trim().toLowerCase();
       if (bookedRestNames?.has(n)) return false;
-      if ([...(scheduledNames || [])].some((stName) => matchItem(stName, city, [r]))) return false;
+      if ([...(scheduledNames || [])].some((stName) => matchItem(stName, city, [r])))
+        return false;
       return true;
     })
     .sort((a, b) => {
@@ -718,79 +725,311 @@ export function CityBackupList({
       return prio(a.name) - prio(b.name);
     })
     .slice(0, 10);
-  if (!backupAttrs.length && !backupRests.length) return null;
-  return (
-    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden px-5 py-5">
-      <h3 className="text-lg font-bold text-teal-800 mb-1">📋 {city}备选清单</h3>
-      <p className="text-xs text-gray-500 mb-4">
-        本城没排进日程的景点与餐厅都在这里统一看——每天的日卡里不再重复列。
-      </p>
-      {backupAttrs.length > 0 && (
-        <div className="mb-4">
-          <h4 className="text-sm font-bold text-teal-700 mb-2">🔀 备选景点（{backupAttrs.length} 个）</h4>
-          <ul className="space-y-2">
-            {backupAttrs.map((a) => (
-              <li key={a.name} className="flex items-baseline gap-2 text-sm flex-wrap">
-                <span className="font-semibold shrink-0">{a.name}</span>
-                {a.meta && (
-                  <span className="text-gray-500 min-w-0">
-                    {a.meta.length > 48 ? `${a.meta.slice(0, 48)}…` : a.meta}
-                  </span>
-                )}
-                <DetailLink
-                  to={placeDetailPath("attraction", a.city, a.name)}
-                  pageKey="itinerary-day"
-                  cardId={`backup-attraction-${a.name}`}
-                  className="text-xs font-medium text-teal-700 underline shrink-0 ml-auto"
+  return { attrs: backupAttrs, rests: backupRests };
+}
+
+/** 每张日卡顶部的「{城市}备选」展开入口：默认收起，点开在卡片内原地展开。
+ * 每个城市的每一天都挂同样的本城备选；展开态不跨天同步。 */
+export function DayCityBackup({
+  city,
+  scheduledNames,
+  bookedRestNames,
+  favRestNames,
+  dayOptions,
+  open,
+  onToggle,
+}: {
+  city: string;
+  /** 该城市段所有天已排的站点名 */
+  scheduledNames?: Set<string>;
+  /** 该城市段已订餐厅名（小写归一化） */
+  bookedRestNames?: Set<string>;
+  /** 该城市段已收藏餐厅名（小写归一化） */
+  favRestNames?: Set<string>;
+  /** 本城可排入的天（只限本城，不许跨城） */
+  dayOptions: { day: number; iso: string; label: string }[];
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const { rows, save } = useRecordsData(["favorite"]);
+  const [pick, setPick] = useState<Record<string, string>>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const { attrs, rests } = useMemo(
+    () => backupListsForCity(city, scheduledNames, bookedRestNames, favRestNames),
+    [city, scheduledNames, bookedRestNames, favRestNames],
+  );
+  // 收藏记录按「类型+城市+归一化名」索引（同名可能有历史重复，全收进来一起改）
+  const favByKey = useMemo(() => {
+    const m = new Map<
+      string,
+      {
+        id: number;
+        day: number | null;
+        done: boolean;
+        body: Record<string, unknown>;
+        assignDate?: string;
+      }[]
+    >();
+    rows.forEach((r) => {
+      let body: Record<string, unknown> = {};
+      try {
+        body = JSON.parse(r.body || "{}") as Record<string, unknown>;
+      } catch {
+        body = {};
+      }
+      const type = typeof body.type === "string" ? body.type : "attraction";
+      const bodyCity = typeof body.city === "string" ? body.city : "";
+      const key = `${type}|${bodyCity}|${r.title.trim().toLowerCase()}`;
+      const list = m.get(key) ?? [];
+      list.push({
+        id: r.id,
+        day: r.day,
+        done: r.done,
+        body,
+        assignDate: typeof body.assignDate === "string" ? body.assignDate : undefined,
+      });
+      m.set(key, list);
+    });
+    return m;
+  }, [rows]);
+  const keyOf = (type: string, name: string) =>
+    `${type}|${city}|${name.trim().toLowerCase()}`;
+  const assignedDayOf = (type: string, name: string) => {
+    const list = favByKey.get(keyOf(type, name)) ?? [];
+    const withDate = list.find((f) => f.assignDate);
+    return withDate ? dayOptions.find((d) => d.iso === withDate.assignDate) : undefined;
+  };
+  const doAssign = (type: string, name: string, iso: string) => {
+    const list = favByKey.get(keyOf(type, name)) ?? [];
+    if (list.length) {
+      list.forEach((f) => {
+        save.mutate({
+          id: f.id,
+          kind: "favorite",
+          title: name,
+          body: JSON.stringify({ ...f.body, city, type, assignDate: iso }),
+          day: f.day,
+          done: f.done,
+        });
+      });
+    } else {
+      // 没收藏过：先建一条 favorite 记录再写 assignDate（与 FavoriteItineraryCheck 同口径）
+      save.mutate({
+        kind: "favorite",
+        title: name,
+        body: JSON.stringify({ city, type, assignDate: iso }),
+        day: null,
+        done: false,
+      });
+    }
+  };
+  const doUnassign = (type: string, name: string) => {
+    const list = favByKey.get(keyOf(type, name)) ?? [];
+    list.forEach((f) => {
+      if (!f.assignDate) return;
+      const body = { ...f.body };
+      delete body.assignDate;
+      save.mutate({
+        id: f.id,
+        kind: "favorite",
+        title: name,
+        body: JSON.stringify(body),
+        day: f.day,
+        done: f.done,
+      });
+    });
+  };
+  // 每项的「放入行程」控件：下拉选本城某天 + 按钮；已排入则标 D×·日期并可取消
+  const renderAssign = (type: "attraction" | "restaurant", name: string) => {
+    const ad = assignedDayOf(type, name);
+    const key = `${type}:${name}`;
+    const chosen = pick[key] ?? dayOptions[0]?.iso ?? "";
+    if (ad) {
+      return (
+        <span className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs text-violet-700 font-medium">
+            已排入 D{ad.day} · {isoShort(ad.iso)}
+          </span>
+          <button
+            type="button"
+            onClick={() => doUnassign(type, name)}
+            disabled={save.isPending}
+            className="text-xs px-2.5 py-2 rounded-lg bg-white border border-violet-200 text-gray-500 min-h-[40px]"
+          >
+            取消排入
+          </button>
+        </span>
+      );
+    }
+    if (!dayOptions.length) return null;
+    return (
+      <span className="flex items-center gap-2 flex-wrap">
+        <select
+          value={chosen}
+          onChange={(e) => setPick((p) => ({ ...p, [key]: e.target.value }))}
+          className="text-sm px-2 py-2 rounded-lg border border-violet-300 bg-white text-gray-700 min-h-[40px] max-w-[150px]"
+          aria-label={`给${name}选择排入哪一天`}
+        >
+          {dayOptions.map((d) => (
+            <option key={d.iso} value={d.iso}>
+              D{d.day} · {isoShort(d.iso)}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={!chosen || save.isPending}
+          onClick={() => chosen && doAssign(type, name, chosen)}
+          className="text-sm px-3 py-2 rounded-lg bg-violet-700 text-white font-medium disabled:opacity-50 min-h-[40px]"
+        >
+          放入行程
+        </button>
+      </span>
+    );
+  };
+  // 单项行：缩略图 + 名字 + 菜系/政策徽章 + meta；点整行在行程页内原地展开详情（不跳转）
+  const renderItem = (kind: "attraction" | "restaurant", item: Item) => {
+    const key = `${kind}:${item.name}`;
+    const isOpen = !!expanded[key];
+    const thumb = getPlaceImage(kind === "attraction" ? "景点" : "餐厅", item);
+    const officialUrl = placeOfficialUrl(item);
+    const cuisine = kind === "restaurant" ? restaurantCuisine(item) : null;
+    const policyBadge =
+      kind === "restaurant" ? bookingPolicyBadge(item.name) : null;
+    const mg = kind === "restaurant" ? mustGoBadge(item.name) : null;
+    return (
+      <li key={item.name} className="py-3 border-b border-gray-100 last:border-0">
+        <button
+          type="button"
+          onClick={() => setExpanded((e) => ({ ...e, [key]: !isOpen }))}
+          aria-expanded={isOpen}
+          className="w-full flex gap-3 items-start text-left"
+        >
+          {thumb ? (
+            <img
+              src={thumb}
+              alt={item.name}
+              className="w-14 h-14 rounded-lg object-cover shrink-0"
+              loading="lazy"
+            />
+          ) : (
+            <span
+              className="w-14 h-14 rounded-lg bg-gray-100 grid place-items-center text-xl shrink-0"
+              title="站上暂无这张配图"
+            >
+              {kind === "attraction" ? "🏛️" : "🍽️"}
+            </span>
+          )}
+          <span className="flex-1 min-w-0">
+            <span className="flex items-baseline gap-2 flex-wrap">
+              <span className="font-semibold text-sm text-gray-900">{item.name}</span>
+              {cuisine && (
+                <span className="text-xs font-medium text-orange-800 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5 shrink-0">
+                  🍽️ {cuisine}
+                </span>
+              )}
+              {mg && (
+                <span
+                  title={mg.title}
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${mg.cls}`}
                 >
-                  查看详情 →
-                </DetailLink>
-              </li>
-            ))}
-          </ul>
+                  ⭐{mg.text}
+                </span>
+              )}
+              {policyBadge && (
+                <span
+                  title={policyBadge.title}
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${policyBadge.cls}`}
+                >
+                  {policyBadge.text}
+                </span>
+              )}
+              {kind === "restaurant" &&
+                favRestNames?.has(item.name.trim().toLowerCase()) && (
+                  <span className="text-xs text-gray-400">⭐ 已收藏</span>
+                )}
+            </span>
+            {item.meta && (
+              <span className="block text-xs text-gray-500 mt-0.5 leading-snug">
+                {item.meta.length > 64 ? `${item.meta.slice(0, 64)}…` : item.meta}
+              </span>
+            )}
+          </span>
+          <span className="text-xs text-teal-700 font-medium shrink-0 mt-1">
+            {isOpen ? "收起 ▲" : "展开 ▾"}
+          </span>
+        </button>
+        {/* 链接行：谷歌地图人人有；官网只认已核实的，没有标待核验 */}
+        <div className="mt-2 ml-[68px] flex items-center gap-3 flex-wrap text-xs">
+          <a
+            href={placeMapsUrl(item)}
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-teal-700 underline"
+          >
+            🗺️ 谷歌地图 ↗
+          </a>
+          {officialUrl ? (
+            <a
+              href={officialUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-teal-700 underline"
+            >
+              🌐 官网 ↗
+            </a>
+          ) : (
+            <span className="text-gray-400">🌐 官网待核验</span>
+          )}
+        </div>
+        <div className="mt-2 ml-[68px]">{renderAssign(kind, item.name)}</div>
+        {isOpen && (
+          <div className="mt-3 rounded-xl border border-gray-200 bg-white px-3 py-3">
+            <PlaceDetailSections kind={kind} item={item} compact />
+          </div>
+        )}
+      </li>
+    );
+  };
+  const total = attrs.length + rests.length;
+  if (!total) return null;
+  return (
+    <div className="mb-6">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="w-full min-h-[44px] flex items-center justify-between gap-2 text-left bg-teal-50 border border-teal-200 rounded-xl px-4 py-2.5"
+      >
+        <span className="text-sm font-bold text-teal-800">
+          📋 {city}备选（{total} 个）
+        </span>
+        <span className="text-xs font-medium text-teal-700 shrink-0">
+          {open ? "收起 ▲" : "展开 ▾"}
+        </span>
+      </button>
+      {open && (
+        <div className="mt-3 rounded-xl border border-teal-100 bg-teal-50/40 px-4 py-3">
+          <p className="text-xs text-gray-500 mb-3">
+            本城没排进日程的景点与餐厅都在这里——点一行就地展开全部详情，选一天就能直接放进那天的行程。
+          </p>
+          <h4 className="text-sm font-bold mb-1">📍 备选景点（{attrs.length}）</h4>
+          {attrs.length === 0 ? (
+            <p className="text-sm text-gray-400 mb-3">本城景点已全部排进日程。</p>
+          ) : (
+            <ul className="mb-3">
+              {attrs.map((a) => renderItem("attraction", a))}
+            </ul>
+          )}
+          <h4 className="text-sm font-bold mb-1">🍽️ 备选餐厅（{rests.length}）</h4>
+          {rests.length === 0 ? (
+            <p className="text-sm text-gray-400">本城餐厅已全部排进日程或订好。</p>
+          ) : (
+            <ul>{rests.map((r) => renderItem("restaurant", r))}</ul>
+          )}
         </div>
       )}
-      {backupRests.length > 0 && (
-        <div>
-          <h4 className="text-sm font-bold text-orange-700 mb-2">🍽️ 备选餐厅（{backupRests.length} 家）</h4>
-          <ul className="space-y-2">
-            {backupRests.map((r) => {
-              const b = bookingPolicyBadge(r.name);
-              const mg = mustGoBadge(r.name);
-              return (
-                <li key={r.name} className="flex items-center gap-2 flex-wrap text-sm">
-                  <span className="font-semibold">{r.name}</span>
-                  {favRestNames?.has(r.name.trim().toLowerCase()) && (
-                    <span className="text-xs text-gray-400">⭐ 已收藏</span>
-                  )}
-                  {mg && (
-                    <span title={mg.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${mg.cls}`}>
-                      ⭐{mg.text}
-                    </span>
-                  )}
-                  <span title={b.title} className={`text-xs font-medium px-2 py-0.5 rounded-full border ${b.cls}`}>
-                    {b.text}
-                  </span>
-                  {MUST_GO[r.name] && (
-                    <span className="text-xs text-gray-500">
-                      {MUST_GO[r.name].length > 48 ? `${MUST_GO[r.name].slice(0, 48)}…` : MUST_GO[r.name]}
-                    </span>
-                  )}
-                  <DetailLink
-                    to={placeDetailPath("restaurant", r.city, r.name)}
-                    pageKey="itinerary-day"
-                    cardId={`backup-restaurant-${r.name}`}
-                    className="text-xs font-medium text-orange-700 underline shrink-0 ml-auto"
-                  >
-                    查看详情 →
-                  </DetailLink>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-    </section>
+    </div>
   );
 }
 
@@ -1326,10 +1565,14 @@ function BookedRestBlock({
 }) {
   const { b, bd } = entry;
   const summary = bookingSummary(bd);
+  // 2026-11-22 追加 3：已订餐厅块也能点开看完整详情（与时间线 stop 同一套行内展开）
+  const [open, setOpen] = useState(false);
+  const hasMore = !!entry.item;
   return (
     <div
       onClick={onSelect ? (e) => {
         if ((e.target as HTMLElement).closest("button, a, details, summary")) return;
+        if (hasMore) setOpen(true);
         onSelect();
       } : undefined}
       className={`border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg${onSelect ? " cursor-pointer" : ""}${selected ? " ring-2 ring-green-600" : ""}`}
@@ -1350,15 +1593,37 @@ function BookedRestBlock({
         )}
       </div>
       {summary && <p className="text-sm text-gray-700">{summary}</p>}
+      {hasMore && entry.item && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(!open);
+            }}
+            className="text-xs font-medium text-teal-700 mt-1"
+          >
+            {open ? "收起 ▲" : "展开详情 ▾"}
+          </button>
+          {open && (
+            <div className="mt-2 rounded-xl border border-gray-200 bg-white px-3 py-3">
+              <PlaceDetailSections kind="restaurant" item={entry.item} compact />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
 
 /* ---------------- 时间线上的单个站点 ----------------
  * 2026-11-21 二次改版：折叠态只露时间＋站名＋一句话干什么（≤30 字）＋待多久，
- * 不放站图；点站点在原地展开，展开只放旅途中要用的实用信息（地址/怎么去、
- * 开放时间、门票价格、待多久、干什么≤3 条、避坑一行，已订带确认信息），
- * 不放口碑计数、评分与研究数据；没有新增内容时不显示展开入口。 */
+ * 不放站图；没有新增内容时不显示展开入口。
+ * 2026-11-22 追加 3：点行本身（或「展开详情」按钮）在原地展开完整详情——
+ * 按站名 matchItem 匹配到目录条目的，展开与备选清单同一套行内渲染
+ * （PlaceDetailSections：图片、介绍全文、菜系、谷歌地图与官网链接全有），不跳转；
+ * 匹配不到目录条目的（入住酒店/飞往××等非地点项），展开只显示该站自带的时间线
+ * detail 文案，绝不凭空编一个地点详情。点行同时仍选地图（原行为不变）。 */
 function StopBlock({
   stop,
   city,
@@ -1381,47 +1646,20 @@ function StopBlock({
   const oneLiner = firstSentence(stop.detail, 30);
   const guide = item && kindZh === "景点" ? attractionGuides[city]?.[item.name] : undefined;
   const duration = guide?.visit.duration;
-  /* 实用信息行：只取已核验的具体值，通用模板句（未录入/地图入口/预留 1–2 小时）
-   * 一律不显示——展开必须是折叠态没有的新信息。 */
-  const practical: { label: string; text: string }[] = [];
-  if (item && kindZh) {
-    const facts = getGuideFacts(item, kindZh);
-    if (facts.address && !facts.address.includes("地图入口已带入地点全名")) {
-      const transit =
-        facts.transit && facts.transit !== "使用详情页地图入口规划最后一段交通"
-          ? ` · ${facts.transit}`
-          : "";
-      practical.push({ label: "📍 地址/怎么去", text: `${facts.address}${transit}` });
-    }
-    if (facts.hours && !facts.hours.startsWith("当前资料未录入")) {
-      practical.push({ label: "🕒 开放时间", text: facts.hours });
-    }
-    if (facts.price && !facts.price.startsWith("当前资料未录入")) {
-      practical.push({ label: "🎫 门票价格", text: facts.price });
-    }
-    if (duration) practical.push({ label: "⏱ 待多久", text: duration });
-    const dos = guide ? guide.highlights.slice(0, 3).map((h) => h.name).filter(Boolean) : [];
-    if (dos.length) practical.push({ label: "✅ 干什么", text: dos.join("；") });
-    else if (
-      facts.action &&
-      facts.action !== "把这一站放在同片区动线中；有预约或天气限制时先确认再出发"
-    ) {
-      practical.push({ label: "✅ 怎么做", text: facts.action });
-    }
-    const pitfall = xhsAssessments[item.name]?.avoidNote;
-    if (pitfall) practical.push({ label: "⚠️ 避什么坑", text: pitfall });
-  }
-  /* 首句之外的正文余量：有实用信息时不重复贴正文；没有时余量就是展开内容 */
+  /* 首句之外的正文余量：匹配不到目录条目时，余量就是展开的全部内容 */
   const firstFull = firstSentence(stop.detail);
   const restDetail = stop.detail
     .trim()
     .slice(firstFull.replace(/…$/, "").length)
     .trim();
-  const hasMore = practical.length > 0 || restDetail.length > 0;
+  // 匹配到目录条目的一定有完整详情可展开；匹配不到的只有正文余量时才有展开入口
+  const hasMore = !!item || restDetail.length > 0;
   return (
     <div
       onClick={onSelect ? (e) => {
         if ((e.target as HTMLElement).closest("button, a")) return;
+        // 点行本身：地图选点的同时就地展开详情（2026-11-22 追加 3）
+        if (hasMore) setOpen(true);
         onSelect();
       } : undefined}
       className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
@@ -1465,21 +1703,25 @@ function StopBlock({
             {open ? "收起 ▲" : "展开详情 ▾"}
           </button>
           {open && (
-            <div className="mt-2 space-y-1.5 bg-teal-50/50 border border-teal-100 rounded-lg px-3 py-2">
+            <div className="mt-2 rounded-xl border border-teal-100 bg-white px-3 py-3">
               {booked && (
-                <p className="text-xs text-gray-700 leading-relaxed">
+                <p className="text-xs text-gray-700 leading-relaxed mb-2">
                   <span className="font-bold">✅ 已订：</span>
                   {bookingSummary(booked)}
                 </p>
               )}
-              {practical.map((row, i) => (
-                <p key={i} className="text-xs text-gray-700 leading-relaxed">
-                  <span className="font-bold">{row.label}：</span>
-                  {row.text}
-                </p>
-              ))}
-              {!practical.length && restDetail && (
-                <p className="text-xs text-gray-700 leading-relaxed">{restDetail}</p>
+              {item && kindZh ? (
+                // 匹配到目录条目：与备选清单同一套行内展开渲染（完整详情）
+                <PlaceDetailSections
+                  kind={mA ? "attraction" : "restaurant"}
+                  item={item}
+                  compact
+                />
+              ) : (
+                // 匹配不到：只显示该站自带的时间线 detail，不编地点详情
+                restDetail && (
+                  <p className="text-xs text-gray-700 leading-relaxed">{restDetail}</p>
+                )
               )}
             </div>
           )}
@@ -1521,6 +1763,11 @@ export function ItineraryDayCard({
   isCloud,
   favorites,
   assignedAttractions,
+  assignedRestaurants,
+  scheduledNames,
+  cityBookedRestNames,
+  favRestNames,
+  dayOptions,
   stay,
   onSelectStop,
   selectedKey,
@@ -1536,6 +1783,16 @@ export function ItineraryDayCard({
   favorites?: ParsedFavorite[];
   /** 我排入这一天的必去景点名（收藏景点在行程页指定了 assignDate=当天） */
   assignedAttractions?: string[];
+  /** 我排入这一天的餐厅名（收藏餐厅在行程页指定了 assignDate=当天） */
+  assignedRestaurants?: string[];
+  /** 该城市段所有天已排的站点名（本城备选清单过滤用） */
+  scheduledNames?: Set<string>;
+  /** 该城市段已订餐厅名（小写归一化，本城备选清单过滤用；与卡片内当天已订数组重名故加 city 前缀） */
+  cityBookedRestNames?: Set<string>;
+  /** 该城市段已收藏餐厅名（小写归一化，本城备选清单排序用） */
+  favRestNames?: Set<string>;
+  /** 本城可排入的天（只限本城；本城备选清单的排入目标） */
+  dayOptions?: { day: number; iso: string; city_zh: string; label: string }[];
   /** 本城住宿区间（入住/退房），"今晚住哪"用 */
   stay?: { checkIn: string; checkOut: string } | null;
   /** 点选（2026-10-04 用户）：点卡片 → 顶栏固定地图显示这一天，被点的跳动 */
@@ -1546,6 +1803,8 @@ export function ItineraryDayCard({
   registerDayRoute?: (day: number, route: DayRoute) => void;
 }) {
   useDetailReturn("itinerary-day");
+  // 本城备选展开态（每张卡各自持有，不跨天同步）
+  const [backupOpen, setBackupOpen] = useState(false);
   const cityId = CITY_ID_BY_ZH[day.city_zh] || day.city_id;
   // 首尔首日的进城转场出发地（2026-10-13 修复）：云端 schedule 里没有分开行动
   // （北京/西安）的日子，prevDay 会是 12-19 曼谷，但全家实际从西安飞首尔
@@ -1742,6 +2001,7 @@ export function ItineraryDayCard({
    */
   // memo 签名：已订餐厅/酒店变化时重算当天地图数据
   const assignedSigCheck = (assignedAttractions ?? []).join("|");
+  const assignedRestsSigCheck = (assignedRestaurants ?? []).join("|");
   const bookedRestSigCheck = bookedRests.map((b) => `${b.title}:${b.done}`).join("|");
   const hotelSigCheck = hotelBookings.map((b) => `${b.title}:${b.done}`).join("|");
   const dayRoute: DayRoute = useMemo(() => {
@@ -1790,6 +2050,21 @@ export function ItineraryDayCard({
         continue;
       push(b.title, "restaurant", hit.lat, hit.lng);
     }
+    // 我排入这一天的餐厅：按名查核实坐标进当天路线（与必去景点同口径；
+    // 已在时间线里的不再另钉，避免同一地点双标记）
+    for (const n of assignedRestaurants ?? []) {
+      const hit = cityPlaces.restaurants.find(
+        (r) => r.name === n || r.name.includes(n) || n.includes(r.name),
+      );
+      if (!hit) continue;
+      const bn = bareName(hit.name);
+      if (
+        bn !== "" &&
+        tlBareNames.some((tbn) => tbn !== "" && (tbn.includes(bn) || bn.includes(tbn)))
+      )
+        continue;
+      push(n, "restaurant", hit.lat, hit.lng);
+    }
     const confirmed = hotelBookings.find((b) => b.done);
     if (confirmed) {
       const t = confirmed.title;
@@ -1800,7 +2075,7 @@ export function ItineraryDayCard({
     }
     return { day: day.day, city: day.city_zh, label: `D${day.day} · ${day.city_zh}`, stops };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day.day, day.city_zh, isCloud, cityId, bookedRestSigCheck, hotelSigCheck, transferRoute, assignedSigCheck]);
+  }, [day.day, day.city_zh, isCloud, cityId, bookedRestSigCheck, hotelSigCheck, transferRoute, assignedSigCheck, assignedRestsSigCheck]);
 
   // 2026-11-07：把当天的地图路线登记给父级，日期导航按钮点按时也能切地图（不用再点具体卡片）
   useEffect(() => {
@@ -1871,6 +2146,19 @@ export function ItineraryDayCard({
       </header>
 
       <div className="px-5 py-5">
+        {/* 本城备选（2026-11-22 用户改版：每张日卡顶部可展开，不再只在城市末尾单列） */}
+        {dayOptions && dayOptions.length > 0 && (
+          <DayCityBackup
+            city={day.city_zh}
+            scheduledNames={scheduledNames}
+            bookedRestNames={cityBookedRestNames}
+            favRestNames={favRestNames}
+            dayOptions={dayOptions.filter((d) => d.city_zh === day.city_zh)}
+            open={backupOpen}
+            onToggle={() => setBackupOpen((o) => !o)}
+          />
+        )}
+
         {/* 今日已定（2026-11-21 二次改版）：头部下方、时间线之前，一张统一列表 */}
         <TodayBookedSection
           hotelGroups={hotelGroups}
@@ -1913,6 +2201,30 @@ export function ItineraryDayCard({
               ))}
             </div>
             <p className="text-xs text-gray-400 mt-2">在行程页顶部的「我的必去景点」里指定日期；点景点名可在上方地图定位。</p>
+          </section>
+        )}
+
+        {/* 我排入这一天的餐厅（2026-11-22：备选清单里指定日期后落到当天卡片，与必去景点同口径） */}
+        {assignedRestaurants && assignedRestaurants.length > 0 && (
+          <section className="mb-6">
+            <h4 className="text-lg font-bold mb-3 text-violet-800">⭐ 我排入这一天的餐厅</h4>
+            <div className="flex flex-wrap gap-2">
+              {assignedRestaurants.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => handleSelect("restaurant", n)}
+                  className={`text-sm px-3 py-1.5 rounded-full border font-medium ${
+                    selectedKey === stickyItemKey("restaurant", day.city_zh, n)
+                      ? "bg-violet-700 text-white border-violet-700"
+                      : "bg-violet-50 text-violet-900 border-violet-200 hover:border-violet-500"
+                  }`}
+                >
+                  🍽️ {n}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-2">在每张日卡顶部的「{day.city_zh}备选」里选一天放入行程；点餐厅名可在上方地图定位。</p>
           </section>
         )}
 
@@ -2014,7 +2326,7 @@ export function ItineraryDayCard({
             ① 已预订餐厅只在「今日已定」与时间线出现，本区不再置顶大卡；
             ② 必吃 highlight 改成摘要行，点开看卡片；
             ③ food 不再默认露 2 段，改三行式早/午/晚各一行店名，全文进折叠区；
-            ④ 备选餐厅已移出日卡，统一见城市末尾「本城备选」清单。 */}
+            ④ 备选餐厅见每张日卡顶部的「{day.city_zh}备选」展开（2026-11-22 改版）。 */}
         {(mustEatCards.length > 0 || foodSegs.length > 0) && (
           <section className="mb-6 pt-6 border-t border-gray-100">
             <h4 className="text-lg font-bold mb-3 text-orange-700">
