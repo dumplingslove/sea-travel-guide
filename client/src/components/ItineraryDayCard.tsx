@@ -8,7 +8,7 @@ import {
   type Day,
   type Item,
 } from "@/guide/data";
-import { xhsEvidence, xhsAssessments } from "@/guide/research";
+import { getGuideFacts, xhsEvidence, xhsAssessments } from "@/guide/research";
 import { attractionGuides } from "@/guide/attractionGuides";
 import {
   BOOKING_KIND_LABEL,
@@ -30,6 +30,7 @@ import {
   MUST_GO,
 } from "@/bookings/restaurantBookingStatus";
 import {
+  mapsUrlForAddress,
   placeMapsUrl,
   placeOfficialUrl,
   restaurantCuisine,
@@ -1626,8 +1627,10 @@ function BookedRestBlock({
 }
 
 /* ---------------- 时间线上的单个站点 ----------------
- * 2026-11-22 用户纠正（此前理解反了）：收起态直接显示该站的完整 detail 全文，
- * 不截首句；「详情」按钮只在匹配到目录条目时出现，点开是该条目的完整内容
+ * 收起态直接显示旧版那套格式化总结（2026-11-22 用户纠正：点击详情里的
+ * 总结信息直接显示在页面上）：oneLiner（首句 ≤30 字）+ practical 各行
+ * （地址/开放时间/门票/待多久/干什么/避什么坑），一行一条、label 加粗；
+ * 「详情」按钮只在匹配到目录条目时出现，点开是该条目的完整内容
  * （PlaceDetailSections：图片、介绍全文、菜系、谷歌地图与官网链接全有），不跳转；
  * 匹配不到目录条目的站（入住酒店/飞往××等非地点项）只显示自带 detail 文案，
  * 不放详情按钮（没新东西就不放展开按钮）。点行同时仍选地图（原行为不变）。 */
@@ -1650,9 +1653,52 @@ function StopBlock({
   const mR = !mA ? matchItem(stop.name, city, restaurants) : undefined;
   const item = mA || mR;
   const kindZh = mA ? "景点" : mR ? "餐厅" : null;
+  const oneLiner = firstSentence(stop.detail, 30);
   const guide = item && kindZh === "景点" ? attractionGuides[city]?.[item.name] : undefined;
   const duration = guide?.visit.duration;
-  // 2026-11-22 用户纠正：收起态直接显示该站的完整 detail 全文，不截首句；
+  /* 实用信息行（旧版 259ea932 原样拿回）：只取已核验的具体值，通用模板句
+   * （未录入/地图入口/预留 1–2 小时）一律不显示——展开必须是折叠态没有的新信息。
+   * 2026-11-22 用户纠正：practical 各行不再藏进「展开详情」里，直接显示在收起态。 */
+  const practical: { label: string; text: string; addr?: { text: string; url: string } }[] = [];
+  if (item && kindZh) {
+    const facts = getGuideFacts(item, kindZh);
+    if (facts.address && !facts.address.includes("地图入口已带入地点全名")) {
+      const transit =
+        facts.transit && facts.transit !== "使用详情页地图入口规划最后一段交通"
+          ? ` · ${facts.transit}`
+          : "";
+      // 地址文字本身就是谷歌地图链接（2026-11-22 用户要求）：点地址直达谷歌地图
+      practical.push({
+        label: "📍 地址/怎么去",
+        text: transit,
+        addr: { text: facts.address, url: mapsUrlForAddress(facts.address) },
+      });
+    }
+    if (facts.hours && !facts.hours.startsWith("当前资料未录入")) {
+      practical.push({ label: "🕒 开放时间", text: facts.hours });
+    }
+    if (facts.price && !facts.price.startsWith("当前资料未录入")) {
+      practical.push({ label: "🎫 门票价格", text: facts.price });
+    }
+    if (duration) practical.push({ label: "⏱ 待多久", text: duration });
+    const dos = guide ? guide.highlights.slice(0, 3).map((h) => h.name).filter(Boolean) : [];
+    if (dos.length) practical.push({ label: "✅ 干什么", text: dos.join("；") });
+    else if (
+      facts.action &&
+      facts.action !== "把这一站放在同片区动线中；有预约或天气限制时先确认再出发"
+    ) {
+      practical.push({ label: "✅ 怎么做", text: facts.action });
+    }
+    const pitfall = xhsAssessments[item.name]?.avoidNote;
+    if (pitfall) practical.push({ label: "⚠️ 避什么坑", text: pitfall });
+  }
+  /* 首句之外的正文余量：有实用信息行时不重复贴正文；没有 practical 时余量
+   * 贴在收起态补行（旧版放展开里，新版展开是 PlaceDetailSections，不再贴正文）。 */
+  const firstFull = firstSentence(stop.detail);
+  const restDetail = stop.detail
+    .trim()
+    .slice(firstFull.replace(/…$/, "").length)
+    .trim();
   // 「详情」按钮只在匹配到目录条目时出现；匹配不到的站不放详情按钮。
   const hasMore = !!item;
   return (
@@ -1690,8 +1736,35 @@ function StopBlock({
           <span className="text-xs text-gray-500">⏱ {duration}</span>
         )}
       </div>
-      {/* 收起态直接显示完整 detail 全文（2026-11-22 用户纠正，不截首句） */}
-      <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
+      {/* 收起态：oneLiner + practical 各行直接显示，一行一条、label 加粗
+          （2026-11-22 用户纠正：点击详情里的总结信息直接显示在页面上）；
+          匹配不到目录条目的站只显示自带 detail 文案 */}
+      {item ? (
+        <>
+          <p className="text-sm text-gray-600 leading-relaxed">{oneLiner}</p>
+          {practical.map((row, i) => (
+            <p key={i} className="text-sm text-gray-600 leading-relaxed">
+              <span className="font-bold">{row.label}：</span>
+              {row.addr ? (
+                <a
+                  href={row.addr.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-teal-700 underline"
+                >
+                  {row.addr.text}
+                </a>
+              ) : null}
+              {row.text}
+            </p>
+          ))}
+          {!practical.length && restDetail ? (
+            <p className="text-sm text-gray-600 leading-relaxed">{restDetail}</p>
+          ) : null}
+        </>
+      ) : (
+        <p className="text-sm text-gray-600 leading-relaxed">{stop.detail}</p>
+      )}
       {hasMore && (
         <>
           <button

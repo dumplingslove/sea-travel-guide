@@ -164,6 +164,11 @@ export function placeMapsUrl(item: Item): string {
   )}`;
 }
 
+/** 地址本身拼谷歌地图搜索链接：地址文字就是链接，点一下直达谷歌地图。 */
+export function mapsUrlForAddress(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
+
 /* ---------------- 官网地址（2026-11-22 追加 2：只认已核实的，不猜） ----------------
  * 来源：① Item 自带的 officialUrl（目前只有酒店 H() 会填）；② 下面这张表——
  * 每一项都是 research_notes/sea-guide-2026 里写明的官方地址原文：
