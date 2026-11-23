@@ -361,6 +361,11 @@ const STOP_ALIASES: [string, string][] = [
   ["酒店烹饪课", "137 Pillars House"],
   ["Rosewood", "Rosewood Bangkok"],
   ["Park Hyatt", "Park Hyatt Bangkok 曼谷柏悦酒店"],
+  // 瑞吉须在「金沙退房」之前（2026-11-22 用户纠正：12-08 换酒店站名含两家酒店，
+  // 别名按序取首个命中；该站当晚住瑞吉，配瑞吉图。瑞吉与首尔 JW 万豪各有 15 张
+  // gallery 图在库，之前因缺别名没链上、不是没图。）
+  ["瑞吉", "The St. Regis Singapore 新加坡瑞吉酒店"],
+  ["JW Marriott", "首尔JW万豪酒店 JW Marriott Hotel Seoul"],
   ["金沙退房", "Marina Bay Sands"],
 ];
 
@@ -1770,6 +1775,11 @@ function StopBlock({
   // 对上酒店时用酒店图顶上（如 137 Pillars 烹饪课站：景点条目无图，酒店有图）；
   // ③ 航班站走机场图回退（airportThumb：只有樟宜有现成机场图）。
   let thumb = item && kindZh ? coverThumb(kindZh, item) : undefined;
+  if (!thumb && item && kindZh) {
+    // 同条目跨 kind 查图（2026-11-22 用户纠正：首尔 JW 万豪是 SA() 景点条目、图登在
+    // 「酒店」kind 下；只按本条目名查，不换条目、不拿别家图顶）。
+    thumb = coverThumb("酒店", item) || coverThumb("景点", item) || coverThumb("餐厅", item);
+  }
   if (!thumb && (mA || mR)) {
     const hotelFallback = matchItem(stop.name, city, hotels);
     if (hotelFallback) thumb = coverThumb("酒店", hotelFallback);
