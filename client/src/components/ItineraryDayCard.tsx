@@ -911,28 +911,41 @@ export function DayCityBackup({
       </span>
     );
   };
-  // 单项行：缩略图 + 名字 + 菜系/政策徽章 + 总结文字（meta 全文直显）；
+  // 单项紧凑行（2026-11-22 备选清单改版）：64px 小缩略图 + 名字 + 菜系/政策徽章 +
+  // 总结文字（meta 全文直显，视觉上 clamp 两行）；不再用日卡主站同款大横幅。
   // 点整行在行程页内原地展开完整详情（不跳转）
   const renderItem = (kind: "attraction" | "restaurant", item: Item) => {
     const key = `${kind}:${item.name}`;
     const isOpen = !!expanded[key];
-    const thumbs = coverThumbs(kind === "attraction" ? "景点" : "餐厅", item);
+    const thumb = coverThumb(kind === "attraction" ? "景点" : "餐厅", item);
     const officialUrl = placeOfficialUrl(item);
     const cuisine = kind === "restaurant" ? restaurantCuisine(item) : null;
     const policyBadge =
       kind === "restaurant" ? bookingPolicyBadge(item.name) : null;
     const mg = kind === "restaurant" ? mustGoBadge(item.name) : null;
     return (
-      <li key={item.name} className="py-3 border-b border-gray-100 last:border-0">
+      <li key={item.name} className="py-2 border-b border-gray-100 last:border-0">
         <button
           type="button"
           onClick={() => setExpanded((e) => ({ ...e, [key]: !isOpen }))}
           aria-expanded={isOpen}
           className="w-full block text-left"
         >
-          <BannerStrip thumbs={thumbs} alt={item.name} />
-          <span className="block mt-2">
-            <span className="flex items-baseline gap-2 flex-wrap">
+          <span className="flex gap-3 items-start">
+            {thumb ? (
+              <img
+                src={thumb}
+                alt={item.name}
+                loading="lazy"
+                className="w-16 h-16 shrink-0 rounded-lg object-cover"
+              />
+            ) : (
+              <span className="w-16 h-16 shrink-0 rounded-lg bg-gray-100 flex items-center justify-center text-lg">
+                📍
+              </span>
+            )}
+            <span className="flex-1 min-w-0">
+              <span className="flex items-baseline gap-2 flex-wrap">
               <span className="font-semibold text-sm text-gray-900">{item.name}</span>
               {cuisine && (
                 <span className="text-xs font-medium text-orange-800 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5 shrink-0">
@@ -963,17 +976,18 @@ export function DayCityBackup({
             {/* 2026-11-22 用户纠正：收起行直接显示总结文字（meta 全文；没有 meta 时
                 用 detail 首句），不截 64 字；点开才看完整详情 */}
             {(item.meta || item.detail) && (
-              <span className="block text-sm text-gray-600 mt-0.5 leading-relaxed">
+              <span className="block text-sm text-gray-600 mt-0.5 leading-relaxed line-clamp-2">
                 {item.meta || firstSentence(item.detail, 80)}
               </span>
             )}
-          </span>
-          <span className="block text-xs text-teal-700 font-medium mt-1.5">
-            {isOpen ? "收起 ▲" : "展开 ▾"}
+            <span className="block text-xs text-teal-700 font-medium mt-1">
+              {isOpen ? "收起 ▲" : "展开 ▾"}
+            </span>
+            </span>
           </span>
         </button>
         {/* 链接行：谷歌地图人人有；官网只认已核实的，没有标待核验 */}
-        <div className="mt-2 flex items-center gap-3 flex-wrap text-xs">
+        <div className="mt-1.5 flex items-center gap-3 flex-wrap text-xs">
           <a
             href={placeMapsUrl(item)}
             target="_blank"
@@ -995,7 +1009,7 @@ export function DayCityBackup({
             <span className="text-gray-400">🌐 官网待核验</span>
           )}
         </div>
-        <div className="mt-2">{renderAssign(kind, item.name)}</div>
+        <div className="mt-1.5">{renderAssign(kind, item.name)}</div>
         {isOpen && (
           <div className="mt-3 rounded-xl border border-gray-200 bg-white px-3 py-3">
             <PlaceDetailSections kind={kind} item={item} compact />
@@ -1026,19 +1040,20 @@ export function DayCityBackup({
           <p className="text-xs text-gray-500 mb-3">
             本城没排进日程的景点与餐厅都在这里——每行直接显示一两句介绍，点一行就地展开全部详情，选一天就能直接放进那天的行程。
           </p>
-          <h4 className="text-sm font-bold mb-1">📍 备选景点（{attrs.length}）</h4>
-          {attrs.length === 0 ? (
-            <p className="text-sm text-gray-400 mb-3">本城景点已全部排进日程。</p>
-          ) : (
-            <ul className="mb-3">
-              {attrs.map((a) => renderItem("attraction", a))}
-            </ul>
+          {/* 2026-11-22 备选分类改版：餐厅在前、景点在后；空组不显示标题 */}
+          {rests.length > 0 && (
+            <>
+              <h4 className="text-sm font-bold mb-1">🍽️ 餐厅 · {rests.length} 家</h4>
+              <ul className="mb-3">
+                {rests.map((r) => renderItem("restaurant", r))}
+              </ul>
+            </>
           )}
-          <h4 className="text-sm font-bold mb-1">🍽️ 备选餐厅（{rests.length}）</h4>
-          {rests.length === 0 ? (
-            <p className="text-sm text-gray-400">本城餐厅已全部排进日程或订好。</p>
-          ) : (
-            <ul>{rests.map((r) => renderItem("restaurant", r))}</ul>
+          {attrs.length > 0 && (
+            <>
+              <h4 className="text-sm font-bold mb-1">📍 景点 · {attrs.length} 个</h4>
+              <ul>{attrs.map((a) => renderItem("attraction", a))}</ul>
+            </>
           )}
         </div>
       )}
