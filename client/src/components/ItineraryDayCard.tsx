@@ -370,7 +370,7 @@ const STOP_ALIASES: [string, string][] = [
   // 机场站 → 机场条目（2026-11-22 机场图补齐：PEK/XIY/ICN 各 3 张实拍图入库）。
   // 「仁川机场」能直链（01-01 是首尔日、条目 city 首尔同城）；
   // 「咸阳机场」同城校验拦住（12-30 是首尔日、西安咸阳条目 city 为西安），
-  // 那站改由下方 airportThumb 的站名关键词路径兜底，别名留着当西安日备用。
+  // 那站改由下方 airportThumbs 的站名关键词路径兜底，别名留着当西安日备用。
   ["咸阳机场", "西安咸阳国际机场"],
   ["仁川机场", "仁川国际机场"],
 ];
@@ -916,7 +916,7 @@ export function DayCityBackup({
   const renderItem = (kind: "attraction" | "restaurant", item: Item) => {
     const key = `${kind}:${item.name}`;
     const isOpen = !!expanded[key];
-    const thumb = getPlaceImage(kind === "attraction" ? "景点" : "餐厅", item);
+    const thumbs = coverThumbs(kind === "attraction" ? "景点" : "餐厅", item);
     const officialUrl = placeOfficialUrl(item);
     const cuisine = kind === "restaurant" ? restaurantCuisine(item) : null;
     const policyBadge =
@@ -930,14 +930,7 @@ export function DayCityBackup({
           aria-expanded={isOpen}
           className="w-full block text-left"
         >
-          {thumb && (
-            <img
-              src={thumb}
-              alt={item.name}
-              className="w-full h-44 sm:h-56 object-cover rounded-xl"
-              loading="lazy"
-            />
-          )}
+          <BannerStrip thumbs={thumbs} alt={item.name} />
           <span className="block mt-2">
             <span className="flex items-baseline gap-2 flex-wrap">
               <span className="font-semibold text-sm text-gray-900">{item.name}</span>
@@ -1575,6 +1568,45 @@ function coverThumb(kind: "景点" | "餐厅" | "酒店", item: Item): string | 
   return getPlaceImage(kind, item) || getPlaceGallery(kind, item)[0]?.src;
 }
 
+/* 同 coverThumb 的取图口径，但取到 3 张为止（2026-11-22 桌面端横幅 3 张并排）：
+ * 首张 = placeMedia index，没有则 gallery 首张——与 coverThumb 返回值完全一致；
+ * 其余只从同一条目、同一 kind 的 gallery 里补，不换条目、不拿别家图顶。 */
+function coverThumbs(kind: "景点" | "餐厅" | "酒店", item: Item): string[] {
+  const out: string[] = [];
+  const first = getPlaceImage(kind, item);
+  if (first) out.push(first);
+  for (const g of getPlaceGallery(kind, item)) {
+    if (out.length >= 3) break;
+    if (!out.includes(g.src)) out.push(g.src);
+  }
+  return out;
+}
+
+/* 横幅图条（2026-11-22 桌面端优化：单张图在 ~1000px 宽的日卡上被拉得太长）：
+ * 手机（<sm）只显示首张通栏横幅，与旧版一致；sm 及以上 3 张并排（flex-1），
+ * 每张约 1/3 宽，裁切比接近 3:2，不再拉长。gallery 不足 3 张有多少放多少，
+ * 其余图 hidden 不展示；无图返回 null。 */
+function BannerStrip({ thumbs, alt }: { thumbs: string[]; alt: string }) {
+  if (!thumbs.length) return null;
+  return (
+    <div className="flex flex-col sm:flex-row gap-2">
+      {thumbs.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className={
+            i === 0
+              ? "w-full h-44 sm:h-56 sm:flex-1 object-cover rounded-xl"
+              : "hidden sm:block sm:flex-1 sm:h-56 object-cover rounded-xl"
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
 /* 航班站机场图回退（2026-11-22 Day 6 封面图；2026-11-22 机场图补齐 PEK/XIY/ICN 后扩口径）：
  * 1) 站名含航班号：按 FLIGHT_LEGS 的 schedule 找航线，先出发城市、再到达城市兜底
  *    （11-28 SEA→PEK 出发无图，靠到达北京兜底；MU2070 SIN→XIY 出发为新加坡，仍配 Jewel 不动）；
@@ -1595,33 +1627,30 @@ function airportItem(city: string): Item | undefined {
   if (!hit) return undefined;
   return attractions.find((it) => it.city === city && it.name === hit[1]);
 }
-function airportThumb(stopName: string): string | undefined {
+function airportItemForStop(stopName: string): Item | undefined {
   const m = stopName.match(/([A-Z0-9]{2}\d{1,4})/);
   const leg = m ? FLIGHT_LEGS.find((l) => l.schedule?.includes(m[1])) : undefined;
   const from = leg ? leg.route.split("→")[0].trim() : "";
   const to = leg ? leg.route.split("→")[1]?.trim() : "";
   if (from === "新加坡" || stopName.includes("樟宜")) {
-    const jewel = attractions.find((it) => it.city === "新加坡" && it.name === "Jewel 星耀樟宜");
-    return jewel ? coverThumb("景点", jewel) : undefined;
+    return attractions.find((it) => it.city === "新加坡" && it.name === "Jewel 星耀樟宜");
   }
   for (const city of [from, to]) {
     if (!city) continue;
     const item = airportItem(city);
-    if (item) {
-      const thumb = coverThumb("景点", item);
-      if (thumb) return thumb;
-    }
+    if (item && coverThumb("景点", item)) return item;
   }
   for (const [kw, city] of [["咸阳", "西安"], ["西安", "西安"], ["仁川", "首尔"], ["北京", "北京"], ["首尔", "首尔"]] as [string, string][]) {
     if (stopName.includes(kw)) {
       const item = airportItem(city);
-      if (item) {
-        const thumb = coverThumb("景点", item);
-        if (thumb) return thumb;
-      }
+      if (item && coverThumb("景点", item)) return item;
     }
   }
   return undefined;
+}
+function airportThumbs(stopName: string): string[] {
+  const item = airportItemForStop(stopName);
+  return item ? coverThumbs("景点", item) : [];
 }
 
 /* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
@@ -1648,7 +1677,8 @@ function BookedRestBlock({
   // 2026-11-22 用户要求：已订餐厅块收起态也显示封面图片（顶部通栏大图，
   // coverThumb：先 placeMedia index，没有回退到该条目 gallery 首张图；
   // 没有匹配条目就不放图、不占位，不编图）。
-  const thumb = entry.item ? coverThumb("餐厅", entry.item) : undefined;
+  // 2026-11-22 桌面端优化：同一条目取 3 张，手机单张、sm 及以上 3 张并排。
+  const thumbs = entry.item ? coverThumbs("餐厅", entry.item) : [];
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1658,14 +1688,7 @@ function BookedRestBlock({
       } : undefined}
       className={`border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg${onSelect ? " cursor-pointer" : ""}${selected ? " ring-2 ring-green-600" : ""}`}
     >
-      {thumb && (
-        <img
-          src={thumb}
-          alt={b.title}
-          className="w-full h-44 sm:h-56 object-cover rounded-xl"
-          loading="lazy"
-        />
-      )}
+      <BannerStrip thumbs={thumbs} alt={b.title} />
       <div className="mt-2">
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
@@ -1797,18 +1820,25 @@ function StopBlock({
   // 匹配不到目录条目的站没有可查的条目，不放图（📍 中性占位已随 2026-11-22 通栏改版取消）。
   // 回退链（2026-11-22 Day 6 封面图）：① 匹配到的条目本身；② 本条目无图、站名同时
   // 对上酒店时用酒店图顶上（如 137 Pillars 烹饪课站：景点条目无图，酒店有图）；
-  // ③ 航班站走机场图回退（airportThumb：只有樟宜有现成机场图）。
-  let thumb = item && kindZh ? coverThumb(kindZh, item) : undefined;
-  if (!thumb && item && kindZh) {
+  // ③ 航班站走机场图回退（airportThumbs：只有樟宜有现成机场图）。
+  // 横幅图条（2026-11-22 桌面端优化）：首张与旧 coverThumb 口径完全一致，
+  // 其余两张只从同一条目/同一 kind 的 gallery 里补；回退链（酒店跨 kind、
+  // 酒店条目顶上、机场图）只在前一环完全无图时才走，不混别家图。
+  let thumbs: string[] = [];
+  if (item && kindZh) thumbs = coverThumbs(kindZh, item);
+  if (!thumbs.length && item && kindZh) {
     // 同条目跨 kind 查图（2026-11-22 用户纠正：首尔 JW 万豪是 SA() 景点条目、图登在
     // 「酒店」kind 下；只按本条目名查，不换条目、不拿别家图顶）。
-    thumb = coverThumb("酒店", item) || coverThumb("景点", item) || coverThumb("餐厅", item);
+    for (const k of ["酒店", "景点", "餐厅"] as const) {
+      thumbs = coverThumbs(k, item);
+      if (thumbs.length) break;
+    }
   }
-  if (!thumb && (mA || mR)) {
+  if (!thumbs.length && (mA || mR)) {
     const hotelFallback = matchItem(stop.name, city, hotels);
-    if (hotelFallback) thumb = coverThumb("酒店", hotelFallback);
+    if (hotelFallback) thumbs = coverThumbs("酒店", hotelFallback);
   }
-  if (!thumb) thumb = airportThumb(stop.name);
+  if (!thumbs.length) thumbs = airportThumbs(stop.name);
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1819,14 +1849,7 @@ function StopBlock({
       } : undefined}
       className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
     >
-      {thumb && (
-        <img
-          src={thumb}
-          alt={stop.name}
-          className="w-full h-44 sm:h-56 object-cover rounded-xl"
-          loading="lazy"
-        />
-      )}
+      <BannerStrip thumbs={thumbs} alt={stop.name} />
       <div className="mt-2">
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
