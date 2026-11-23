@@ -1551,6 +1551,14 @@ export function TodayBookedSection({
   );
 }
 
+/* 封面缩略图（2026-11-22 用户要求：展开详情之前每个行程也要显示封面图片）：
+ * 先取 placeMedia index，没有再回退到该条目 gallery 的首张图——回退复用的只是
+ * 展开详情里已经在展示的同一批图，不新加图、不去网上找图；还没有才返回 undefined
+ * （调用方留占位）。 */
+function coverThumb(kind: "景点" | "餐厅", item: Item): string | undefined {
+  return getPlaceImage(kind, item) || getPlaceGallery(kind, item)[0]?.src;
+}
+
 /* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
  * 2026-11-21 二次改版：瘦身为时间标记——只留时间徽章＋站名＋已确认徽章＋
  * 摘要行（确认号/时间/人数）；完整明细只在上方「今日已定」出现一次，
@@ -1573,8 +1581,9 @@ function BookedRestBlock({
   const [open, setOpen] = useState(false);
   const hasMore = !!entry.item;
   // 2026-11-22 用户要求：已订餐厅块收起态也显示封面图片（与备选清单行同款 56px
-  // 缩略图，走 getPlaceImage 只用站上已有图；没有匹配条目就占位，不编图）。
-  const thumb = entry.item ? getPlaceImage("餐厅", entry.item) : undefined;
+  // 缩略图，coverThumb：先 placeMedia index，没有回退到该条目 gallery 首张图；
+  // 没有匹配条目就占位，不编图）。
+  const thumb = entry.item ? coverThumb("餐厅", entry.item) : undefined;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1724,9 +1733,10 @@ function StopBlock({
   // 「详情」按钮只在匹配到目录条目时出现；匹配不到的站不放详情按钮。
   const hasMore = !!item;
   // 2026-11-22 用户要求：每个 stop 在展开详情之前也要显示封面图片（与备选清单行
-  // 同款 56px 缩略图，走 getPlaceImage 只用站上已有图；没有就占位，不编图）。
+  // 同款 56px 缩略图，coverThumb：先 placeMedia index，没有回退到该条目 gallery
+  // 首张图；没有就占位，不编图）。
   // 匹配不到目录条目的站没有可查的条目，直接占位（📍 中性占位，不冒充景点/餐厅）。
-  const thumb = item && kindZh ? getPlaceImage(kindZh, item) : undefined;
+  const thumb = item && kindZh ? coverThumb(kindZh, item) : undefined;
   return (
     <div
       onClick={onSelect ? (e) => {
