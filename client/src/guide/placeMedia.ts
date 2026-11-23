@@ -192,6 +192,9 @@ import img191 from './assets/places/c34c890a5123.jpg';
 import img192 from './assets/places/415c8b042c90.jpg';
 import img193 from './assets/places/c7c456165252.jpg';
 import img194 from './assets/places/9a7a3c772256.jpg';
+import img195 from './assets/places/a6348081bafd.jpg';
+import img196 from './assets/places/8d38e77a70b0.jpg';
+import img197 from './assets/places/f7b3bc4c27ae.jpg';
 import momTrisKitchen from './assets/places/mom-tris-kitchen.jpg';
 import hokkien888 from './assets/galleries/888-hokkien/2.png';
 import auntieGaikLean from './assets/places/auntie-gaik-lean.jpg';
@@ -345,6 +348,9 @@ const index:Record<string,string>={
   "景点|普吉|卡塔诺伊海滩":img142,
   "景点|普吉|卡塔海滩":img193,
   "景点|普吉|卡伦海滩":img194,
+  "景点|北京|北京首都国际机场":img195,
+  "景点|西安|西安咸阳国际机场":img196,
+  "景点|首尔|仁川国际机场":img197,
   "景点|普吉|大佛":img143,
   "景点|普吉|攀牙湾":img144,
   "景点|普吉|普吉老镇":img145,

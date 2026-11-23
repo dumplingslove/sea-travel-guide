@@ -367,6 +367,12 @@ const STOP_ALIASES: [string, string][] = [
   ["瑞吉", "The St. Regis Singapore 新加坡瑞吉酒店"],
   ["JW Marriott", "首尔JW万豪酒店 JW Marriott Hotel Seoul"],
   ["金沙退房", "Marina Bay Sands"],
+  // 机场站 → 机场条目（2026-11-22 机场图补齐：PEK/XIY/ICN 各 3 张实拍图入库）。
+  // 「仁川机场」能直链（01-01 是首尔日、条目 city 首尔同城）；
+  // 「咸阳机场」同城校验拦住（12-30 是首尔日、西安咸阳条目 city 为西安），
+  // 那站改由下方 airportThumb 的站名关键词路径兜底，别名留着当西安日备用。
+  ["咸阳机场", "西安咸阳国际机场"],
+  ["仁川机场", "仁川国际机场"],
 ];
 
 export function matchItem(
@@ -1576,19 +1582,53 @@ function coverThumb(kind: "景点" | "餐厅" | "酒店", item: Item): string | 
   return getPlaceImage(kind, item) || getPlaceGallery(kind, item)[0]?.src;
 }
 
-/* 航班站机场图回退（2026-11-22 Day 6 封面图）：只有出发机场有现成机场图才配。
- * 目前 placeMedia/placeGalleries 里唯一的机场图是「景点|新加坡|Jewel 星耀樟宜」
- * （樟宜机场本身）；站名含航班号时按 FLIGHT_LEGS 的 schedule 找出发城市，
- * 「抵达樟宜机场」站名含「樟宜」直接配。其他机场（普吉/清迈/素万那普/首都/
- * 咸阳/仁川）站内无图，留占位、不拿错城市的机场图顶。
+/* 航班站机场图回退（2026-11-22 Day 6 封面图；2026-11-22 机场图补齐 PEK/XIY/ICN 后扩口径）：
+ * 1) 站名含航班号：按 FLIGHT_LEGS 的 schedule 找航线，先出发城市、再到达城市兜底
+ *    （11-28 SEA→PEK 出发无图，靠到达北京兜底；MU2070 SIN→XIY 出发为新加坡，仍配 Jewel 不动）；
+ * 2) 站名无航班号：按站名里的机场/城市关键词取图（「抵达咸阳机场 T5」「西安飞首尔」；
+ *    「北京」「首尔」兜底无航班号的飞往/抵达站，如 11-28 SEA→PEK 无论站名带不带 HU496 都能配上 PEK 图）——
+ *    这两站走不了别名：12-30 是首尔日，西安咸阳条目 city 为西安，matchItem 同城校验拦住；
+ *    故这里直接按条目本身查，不经过 day city。
+ * 城市→机场映射：北京→北京首都国际机场、西安→西安咸阳国际机场、首尔→仁川国际机场、
+ * 新加坡→Jewel 星耀樟宜（现有行为）。普吉/清迈/曼谷站内无机场图，留占位、不拿错机场顶。
  * 航班号正则用 [A-Z0-9]{2} 口径（9C 含数字，纯字母正则会漏，2026-11-21 绿标教训）。 */
+const CITY_AIRPORT: [string, string][] = [
+  ["北京", "北京首都国际机场"],
+  ["西安", "西安咸阳国际机场"],
+  ["首尔", "仁川国际机场"],
+];
+function airportItem(city: string): Item | undefined {
+  const hit = CITY_AIRPORT.find(([c]) => c === city);
+  if (!hit) return undefined;
+  return attractions.find((it) => it.city === city && it.name === hit[1]);
+}
 function airportThumb(stopName: string): string | undefined {
   const m = stopName.match(/([A-Z0-9]{2}\d{1,4})/);
   const leg = m ? FLIGHT_LEGS.find((l) => l.schedule?.includes(m[1])) : undefined;
   const from = leg ? leg.route.split("→")[0].trim() : "";
-  if (from !== "新加坡" && !stopName.includes("樟宜")) return undefined;
-  const jewel = attractions.find((it) => it.city === "新加坡" && it.name === "Jewel 星耀樟宜");
-  return jewel ? coverThumb("景点", jewel) : undefined;
+  const to = leg ? leg.route.split("→")[1]?.trim() : "";
+  if (from === "新加坡" || stopName.includes("樟宜")) {
+    const jewel = attractions.find((it) => it.city === "新加坡" && it.name === "Jewel 星耀樟宜");
+    return jewel ? coverThumb("景点", jewel) : undefined;
+  }
+  for (const city of [from, to]) {
+    if (!city) continue;
+    const item = airportItem(city);
+    if (item) {
+      const thumb = coverThumb("景点", item);
+      if (thumb) return thumb;
+    }
+  }
+  for (const [kw, city] of [["咸阳", "西安"], ["西安", "西安"], ["仁川", "首尔"], ["北京", "北京"], ["首尔", "首尔"]] as [string, string][]) {
+    if (stopName.includes(kw)) {
+      const item = airportItem(city);
+      if (item) {
+        const thumb = coverThumb("景点", item);
+        if (thumb) return thumb;
+      }
+    }
+  }
+  return undefined;
 }
 
 /* ---------------- 时间线上的已订餐厅站（2026-10-23：订了的餐厅要在行程时间线里） ----------------
