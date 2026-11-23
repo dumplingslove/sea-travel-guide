@@ -241,13 +241,13 @@ export function ItineraryTab({
   const [mapSel, setMapSel] = useState<DayStopSelection | null>(null);
   // 各天卡片登记的地图路线（2026-11-07：日期导航按钮点按时直接切地图，不用再点具体卡片）
   const dayRoutesRef = useRef(new Map<number, DayRoute>());
-  // 点卡片时自动展开地图的信号
-  const [mapExpandSig, setMapExpandSig] = useState(0);
   // 折叠态初始高度按标题行估算，ResizeObserver 会校准精确值
   const [mapBarH, setMapBarH] = useState(48);
   const handleCardSelect = (sel: DayStopSelection | null) => {
     setMapSel(sel);
-    if (sel) setMapExpandSig((x) => x + 1);
+    // 2026-11-22 真站实测：此前点卡片/站点会经 expandSignal 自动展开地图，
+    // 480px 吸顶地图占约 60% 视口、盖住行程卡导致刚点的项点不动——
+    // 改为不自动展开：地图只在用户点标题栏时展开，点卡片只切当日路线。
   };
   // 2026-11-07：只切到某天全景的选区（kind/name 为 null）没有单点 key，不高亮
   const selectedKey = mapSel?.kind && mapSel?.name ? stickyItemKey(mapSel.kind, mapSel.city, mapSel.name) : null;
@@ -405,8 +405,12 @@ export function ItineraryTab({
         activeItemKeys={selectedKey ? [selectedKey] : null}
         activeDayRoute={mapSel?.route ?? null}
         title="🗺️ 行程地图"
-        storageKey="sticky-map-itinerary"
-        expandSignal={mapExpandSig}
+        defaultCollapsed
+        // 2026-11-22 真站实测：旧 storageKey 下存量 localStorage="0"（已展开）
+        // 会让地图默认展开、480px 吸顶区占约 60% 视口盖住行程卡、点不动；
+        // 换 key 重置为默认收起（吸顶只剩 header＋日期 tab 的小高度）。
+        // 点卡片不再自动展开（见 handleCardSelect），地图只在用户点标题栏时展开。
+        storageKey="sticky-map-itinerary-v2"
         onHeightChange={setMapBarH}
       />
       {/* 悬浮日期导航（紧贴吸顶地图条底部，top 由 JS 动态测量 header 高度 + 地图条高设置） */}
