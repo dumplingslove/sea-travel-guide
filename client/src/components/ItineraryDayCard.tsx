@@ -1572,6 +1572,9 @@ function BookedRestBlock({
   // 2026-11-22 追加 3：已订餐厅块也能点开看完整详情（与时间线 stop 同一套行内展开）
   const [open, setOpen] = useState(false);
   const hasMore = !!entry.item;
+  // 2026-11-22 用户要求：已订餐厅块收起态也显示封面图片（与备选清单行同款 56px
+  // 缩略图，走 getPlaceImage 只用站上已有图；没有匹配条目就占位，不编图）。
+  const thumb = entry.item ? getPlaceImage("餐厅", entry.item) : undefined;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1581,6 +1584,23 @@ function BookedRestBlock({
       } : undefined}
       className={`border-l-2 border-green-600 pl-4 py-3 bg-green-50/70 rounded-lg${onSelect ? " cursor-pointer" : ""}${selected ? " ring-2 ring-green-600" : ""}`}
     >
+      <div className="flex gap-3 items-start">
+        {thumb ? (
+          <img
+            src={thumb}
+            alt={b.title}
+            className="w-14 h-14 rounded-lg object-cover shrink-0"
+            loading="lazy"
+          />
+        ) : (
+          <span
+            className="w-14 h-14 rounded-lg bg-gray-100 grid place-items-center text-xl shrink-0"
+            title="站上暂无这张配图"
+          >
+            🍽️
+          </span>
+        )}
+        <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold text-white bg-green-700 rounded-full px-2 py-0.5">
           {bd.time || "晚上"}
@@ -1622,6 +1642,8 @@ function BookedRestBlock({
           )}
         </>
       )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -1701,6 +1723,10 @@ function StopBlock({
     .trim();
   // 「详情」按钮只在匹配到目录条目时出现；匹配不到的站不放详情按钮。
   const hasMore = !!item;
+  // 2026-11-22 用户要求：每个 stop 在展开详情之前也要显示封面图片（与备选清单行
+  // 同款 56px 缩略图，走 getPlaceImage 只用站上已有图；没有就占位，不编图）。
+  // 匹配不到目录条目的站没有可查的条目，直接占位（📍 中性占位，不冒充景点/餐厅）。
+  const thumb = item && kindZh ? getPlaceImage(kindZh, item) : undefined;
   return (
     <div
       onClick={onSelect ? (e) => {
@@ -1711,6 +1737,23 @@ function StopBlock({
       } : undefined}
       className={`border-l-2 border-teal-600/30 pl-4 py-3${onSelect ? " cursor-pointer rounded-lg" : ""}${selected ? " ring-2 ring-teal-600 bg-teal-50/50" : ""}`}
     >
+      <div className="flex gap-3 items-start">
+        {thumb ? (
+          <img
+            src={thumb}
+            alt={stop.name}
+            className="w-14 h-14 rounded-lg object-cover shrink-0"
+            loading="lazy"
+          />
+        ) : (
+          <span
+            className="w-14 h-14 rounded-lg bg-gray-100 grid place-items-center text-xl shrink-0"
+            title="站上暂无这张配图"
+          >
+            {kindZh === "餐厅" ? "🍽️" : kindZh ? "🏛️" : "📍"}
+          </span>
+        )}
+        <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
           {stop.time}
@@ -1797,6 +1840,8 @@ function StopBlock({
           )}
         </>
       )}
+        </div>
+      </div>
     </div>
   );
 }
