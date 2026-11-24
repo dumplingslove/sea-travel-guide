@@ -539,6 +539,9 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
   // （Banyan Tree 在乐古浪／Bang Tao 北端、Layan 紧邻其北）。
   // ⑥ Jampa：Nominatim 命中 JAMPA restaurant amenity 本体（8.0394207,
   // 98.3173132，Thalang、Thep Krasattri），与 Jampa 位于 Tri Vananda 一带口径一致。
+  // 2026-11-24 site-audit-daily：用户 2026-11-22 定不订 Jampa（12-11 改走 Boat
+  // Avenue 夜市），本轮已移除上面「Jampa 晚餐（tentative）」坐标条目；餐厅本体
+  // 坐标仍保留在 placeCoords.ts（供详情页地图用）。
   // ⑦ 137 Pillars 酒店内两项（烹饪课／Spa）：与 Lennon's 同口径——具名活动在
   // 酒店内，取 placeCoords 既有 137 Pillars House exact 坐标（18.7918933,
   // 99.004047），note 明示图示酒店本体；泛指的「酒店时间／泳池／换房入住」仍不列。
@@ -552,7 +555,6 @@ export const STOP_COORDS: Record<number, StopCoord[]> = {
     { name: "曼谷艺术双年展 BAB 2026 · One Bangkok 展区（免费填充）", time: "白天", lat: 13.7270987, lng: 100.5467662, note: "图示 One Bangkok 本体（展区在综合体内，Nominatim 实查）" },
     { name: "曼谷艺术双年展 BAB 2026 · Siam 簇（免费填充）", time: "下午", lat: 13.74563, lng: 100.53463, note: "Siam 簇多展区，图示其一 Siam Paragon 本体（BACC／CentralWorld 同片区）" },
     { name: "睡到自然醒 · Layan Beach 散步（定版）", time: "上午", lat: 8.0346279, lng: 98.2843289, note: "图示 Layan Beach 本体（Nominatim 实查，乐古浪北端）" },
-    { name: "Jampa 晚餐（tentative · 待确认订金）", time: "19:30", lat: 8.0394207, lng: 98.3173132, note: "图示 Jampa 餐厅本体（Nominatim 实查，Thalang）" },
     { name: "酒店烹饪课 · Cook like a Thai Chef（137 Pillars）", time: "15:00", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（烹饪课在酒店内，placeCoords exact 坐标）" },
     { name: "酒店 Spa · 137 Pillars 放松", time: "傍晚", lat: 18.7918933, lng: 99.004047, note: "图示 137 Pillars House 本体（Spa 在酒店内，placeCoords exact 坐标）" },
   ],
