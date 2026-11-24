@@ -319,7 +319,7 @@ export function applyCloudDayOverride(
             name: "Cluny Court 圣诞市集 · 见圣诞老人",
             time: "14:00",
             detail:
-              "Dylan 圣诞老人合影改在这里拍（2026-11-24 Linjun 定，原来周五去 Nordstrom 那趟取消）：Cluny Court 的 Santa's Grotto，501 Bukit Timah Road，植物园边上；周四 11:00–18:00，免费、不用预约、先到先得。午睡后从瑞吉过去很近，拍完顺路去 Jewel（15:30），不用另占半天。",
+              "Dylan 圣诞老人合影改在这里拍（2026-11-24 Linjun 定，原来周五去 Nordstrom 那趟取消）：Cluny Court 圣诞集市的圣诞老人见面 Santa's Grotto，501 Bukit Timah Road，植物园边上、Botanic Gardens MRT 旁；周四 11:00–18:00，免费、不用预约、先到先得。午睡后从瑞吉过去很近，拍完可以在植物园逛逛，逛完顺路去 Jewel（15:30），不用另占半天。",
           },
         ];
       if (s.name === "Jewel 星耀樟宜")
