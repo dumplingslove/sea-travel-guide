@@ -169,6 +169,49 @@ function TipsList({ tips }: { tips: string[] }) {
   );
 }
 
+/* 2026-11-25 用户纠正：页面字太多、没重点，确定的预约才是重点。
+ * 玩乐列表与提醒同口径：只露前 2 条，其余折叠，字墙不再直接糊满屏。 */
+function FunList({ fun }: { fun: string[] }) {
+  const visible = fun.slice(0, 2);
+  const rest = fun.slice(2);
+  return (
+    <div className="text-sm text-gray-700 space-y-1 mb-2">
+      {visible.map((s, i) => (
+        <p key={i}>🎡 {s}</p>
+      ))}
+      {rest.length > 0 && (
+        <details>
+          <summary className="cursor-pointer py-0.5 text-xs font-medium text-teal-700">
+            更多安排（{rest.length} 条）▾
+          </summary>
+          <div className="space-y-1 mt-1">
+            {rest.map((s, i) => (
+              <p key={i}>🎡 {s}</p>
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
+/* 已定预约置顶块：一天的重点先露脸，一行一条（时间＋事项＋地点／订单号），
+ * 细节（带什么、怎么约）仍留在下方 fun/tips 里，不删。 */
+function FixedList({ fixed }: { fixed: string[] }) {
+  return (
+    <div className="bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 mb-2">
+      <p className="text-sm font-bold text-amber-800 mb-1">📌 已定预约</p>
+      <div className="space-y-0.5">
+        {fixed.map((s, i) => (
+          <p key={i} className="text-sm font-semibold text-gray-900">
+            {s}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DayCard({
   entry,
   content,
@@ -190,12 +233,11 @@ function DayCard({
       {content ? (
         <>
           <p className="text-sm font-semibold text-gray-800 mb-2">{content.title}</p>
+          {content.fixed && content.fixed.length > 0 && (
+            <FixedList fixed={content.fixed} />
+          )}
           {content.fun && content.fun.length > 0 && (
-            <div className="text-sm text-gray-700 space-y-1 mb-2">
-              {content.fun.map((s, i) => (
-                <p key={i}>🎡 {s}</p>
-              ))}
-            </div>
+            <FunList fun={content.fun} />
           )}
           {content.food && content.food.length > 0 && (
             <FoodList food={content.food} />
@@ -243,11 +285,7 @@ function StaticCard({
         <FoodList food={content.food} />
       )}
       {content.fun && content.fun.length > 0 && (
-        <div className="text-sm text-gray-700 space-y-1 mb-2">
-          {content.fun.map((s, i) => (
-            <p key={i}>🎡 {s}</p>
-          ))}
-        </div>
+        <FunList fun={content.fun} />
       )}
       {content.tips && content.tips.length > 0 && (
         <TipsList tips={content.tips} />
