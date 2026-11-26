@@ -195,6 +195,25 @@ import img194 from './assets/places/9a7a3c772256.jpg';
 import img195 from './assets/places/a6348081bafd.jpg';
 import img196 from './assets/places/8d38e77a70b0.jpg';
 import img197 from './assets/places/f7b3bc4c27ae.jpg';
+import img198 from './assets/places/beijing-ziguangyuan.jpg';
+import img199 from './assets/places/beijing-tiantan.jpg';
+import img200 from './assets/places/beijing-yinshan.jpg';
+import img201 from './assets/places/beijing-nature-museum.jpg';
+import img202 from './assets/places/beijing-jubaoyuan.jpg';
+import img203 from './assets/places/beijing-xiaochangchen.jpg';
+import img204 from './assets/places/beijing-gongwangfu.jpg';
+import img205 from './assets/places/beijing-art-museum.jpg';
+import img206 from './assets/places/beijing-sishitongtang.jpg';
+import img207 from './assets/places/beijing-tianxingju.jpg';
+import img208 from './assets/places/beijing-qianmen.jpg';
+import img209 from './assets/places/beijing-song-museum.jpg';
+import img210 from './assets/places/beijing-redbrick.jpg';
+import img211 from './assets/places/beijing-liyuan.jpg';
+import img212 from './assets/places/seoul-gyeongbokgung.jpg';
+import img213 from './assets/places/seoul-tosokchon.jpg';
+import img214 from './assets/places/seoul-gwanghwamun-market.jpg';
+import img215 from './assets/places/seoul-cheonggyecheon.jpg';
+import img216 from './assets/places/seoul-jdot.jpg';
 import momTrisKitchen from './assets/places/mom-tris-kitchen.jpg';
 import hokkien888 from './assets/galleries/888-hokkien/2.png';
 import auntieGaikLean from './assets/places/auntie-gaik-lean.jpg';
@@ -307,6 +326,13 @@ const index:Record<string,string>={
   "餐厅|胡志明市|Pot au Pho":img101,
   "餐厅|胡志明市|The Deck Saigon":img102,
   "餐厅|胡志明市|The Workshop Coffee":img103,
+  "餐厅|北京|紫光园（天通苑店）":img198,
+  "餐厅|北京|尹三豆汁（天坛店）":img200,
+  "餐厅|北京|聚宝源（牛街创始店）":img202,
+  "餐厅|北京|小肠陈（南横东街店）":img203,
+  "餐厅|北京|四世同堂（双井店）":img206,
+  "餐厅|北京|天兴居（鲜鱼口街店）":img207,
+  "餐厅|首尔|土俗村参鸡汤 Tosokchon":img213,
   "景点|吉隆坡|中央市场":img104,
   "景点|吉隆坡|伊斯兰艺术博物馆":img105,
   "景点|吉隆坡|双子塔":img106,
@@ -349,8 +375,20 @@ const index:Record<string,string>={
   "景点|普吉|卡塔海滩":img193,
   "景点|普吉|卡伦海滩":img194,
   "景点|北京|北京首都国际机场":img195,
+  "景点|北京|天坛公园":img199,
+  "景点|北京|国家自然博物馆":img201,
+  "景点|北京|恭王府":img204,
+  "景点|北京|中国美术馆 · 费欣绘画精品展":img205,
+  "景点|北京|前门大街":img208,
+  "景点|北京|松美术馆 · 周春芽展":img209,
+  "景点|北京|红砖美术馆 · 「冰逸·象罔无形」":img210,
+  "景点|北京|梨园剧场京剧":img211,
   "景点|西安|西安咸阳国际机场":img196,
   "景点|首尔|仁川国际机场":img197,
+  "景点|首尔|景福宫 Gyeongbokgung":img212,
+  "景点|首尔|光化门圣诞市集":img214,
+  "景点|首尔|清溪川 · 首尔灯节":img215,
+  "景点|首尔|Jdot Tree 圣诞树森林":img216,
   "景点|普吉|大佛":img143,
   "景点|普吉|攀牙湾":img144,
   "景点|普吉|普吉老镇":img145,

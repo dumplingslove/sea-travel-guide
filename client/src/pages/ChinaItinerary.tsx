@@ -44,7 +44,7 @@ import { parseBookingBody, type BookingData } from "@/bookings/bookingTypes";
  * （用户在北京陪父亲，妻子与 Dylan 同日在西安，页面只排用户这条线）；
  * 12-29 高铁转场日按全站「转场日=到达段第一天」口径归西安段；
  * 12-30 的 plan 天归首尔，西安清晨以静态卡补在本段末尾（与韩国页水原模块同例）。
- * 北京段定位：住立水家园、陪父亲为主——第一段一家三口慢节奏，
+ * 北京段定位：住丽水嘉园、陪父亲为主——第一段一家三口慢节奏，
  * 第二段一人陪父亲、全部机动可调；西安只有 12-29 下午至 12-30 上午一个窗口。
  */
 
@@ -53,7 +53,7 @@ type SegKey = "bj1" | "bj2" | "xa";
 const SEG_META: Record<SegKey, { title: string; sub: string }> = {
   bj1: {
     title: "北京 · 第一段",
-    sub: "一家三口住立水家园，陪父亲为主，节奏放轻；吃食以老字号小吃为主、看展挑离家近的；段末附「立水家园家门口」日常吃食块（两段通用）",
+    sub: "一家三口住丽水嘉园，陪父亲为主，节奏放轻；吃食以老字号小吃为主、看展挑离家近的；段末附「丽水嘉园家门口」日常吃食块（两段通用）",
   },
   bj2: {
     title: "北京 · 第二段",
@@ -609,7 +609,7 @@ export default function ChinaItinerary() {
               {k === "bj1" && (
                 <StaticCard
                   content={BEIJING_HOME_FOOD}
-                  badge="立水家园一带"
+                  badge="丽水嘉园一带"
                   label="住家补充"
                   city="北京"
                 />
@@ -617,7 +617,7 @@ export default function ChinaItinerary() {
               {k === "bj2" && (
                 <StaticCard
                   content={BEIJING_HOME_FOOD}
-                  badge="立水家园一带"
+                  badge="丽水嘉园一带"
                   label="住家补充"
                   city="北京"
                 />
