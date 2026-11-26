@@ -1202,3 +1202,142 @@ xhsEvidence['Singapore Oceanarium'] = [
   L('新加坡海洋馆太夯了','https://www.xiaohongshu.com/explore/69ca7c360000000021039ca3','2026-03-30 Z. · 亚洲最大海洋馆震撼')
 ];
 xhsAssessments['Singapore Oceanarium'] = {verdict:'推荐',recommend:3,caution:1,avoid:0,why:'亚洲最大海洋馆；全室内雨备亲子友好','avoidNote':'高峰可能分时入场需提前买票'};
+
+
+// 北京第一段 P0（2026-11-25）：31 个有小红书实查证据的地点；无 XHS 证据的 7 地（天坛公园、国家自然博物馆、北海公园、胡同四合院私家体验、友谊商店 PF3、前门大街、梨园剧场京剧）与小肠陈（round359 无可核帖）不进 xhsEvidence/xhsAssessments。
+xhsEvidence['紫光园（天通苑店）'] = [
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 评论区本地人认紫光园便宜'),
+  L('北京必吃榜美食从夯到拉亲测！','https://www.xiaohongshu.com/explore/6a2e68fe0000000035032f7b','2026-06-14 · 张一山山 · 457赞 · 夯档：紫光园平价点单清单（奶皮子酸奶＋牛肉包子＋酱牛肉＋酸菜牛肉饼）')
+];
+xhsAssessments['紫光园（天通苑店）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'两帖推：帖4夯档平价点单清单，帖2评论区称紫光园便宜。',avoidNote:'天通苑店地址与营业时间均未获网页复核，出门前用高德／美团当场核对是否仍在营业。'};
+xhsEvidence['尹三豆汁（天坛店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 黑榜：豆汁多数本地人也接受不了（要试去尹三）'),
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 尹三豆汁垫底（喝不惯）'),
+  L('北京必吃榜美食从夯到拉亲测！','https://www.xiaohongshu.com/explore/6a2e68fe0000000035032f7b','2026-06-14 · 张一山山 · 457赞 · 尹三豆汁垫底（喝不惯）')
+];
+xhsAssessments['尹三豆汁（天坛店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:2,why:'帖1称豆汁要试去尹三；米其林必比登。',avoidNote:'两帖都把尹三豆汁排垫底——「喝不惯」，是口味问题非品质；先小杯试，别整碗硬喝。'};
+xhsEvidence['聚宝源（牛街创始店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 已覆盖项：聚宝源排不到的备选——满恒记／南门涮肉')
+];
+xhsAssessments['聚宝源（牛街创始店）'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round359帖1仅提及聚宝源为已覆盖项；铜锅炭火涮羊肉、10:30-01:00。',avoidNote:'小红书专帖证据薄；排队与线上取号口径来自站内既有记录，去前核实当日排队情况。'};
+xhsEvidence['白记年糕（牛街北口店）'] = [
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 评论区本地人认牛街白记年糕为地道小吃'),
+  L('北京必吃榜美食从夯到拉亲测！','https://www.xiaohongshu.com/explore/6a2e68fe0000000035032f7b','2026-06-14 · 张一山山 · 457赞 · 顶级档：白记年糕驴打滚＋艾窝窝＋炸糕')
+];
+xhsAssessments['白记年糕（牛街北口店）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'两帖均推：帖4顶级档（驴打滚＋艾窝窝＋炸糕），帖2评论区本地人认「牛街白记年糕」为地道小吃。',avoidNote:'下午5-6点白米／紫米品种可能售罄；主街那家排队，输入胡同店免排队。'};
+xhsEvidence['洪记小吃（牛街店）'] = [
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 洪记包子2.5元／个，个头大汁多'),
+  L('北京必吃榜美食从夯到拉亲测！','https://www.xiaohongshu.com/explore/6a2e68fe0000000035032f7b','2026-06-14 · 张一山山 · 457赞 · 低档：洪记包子「排队巨多但不如紫光园」')
+];
+xhsAssessments['洪记小吃（牛街店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:1,why:'帖2称包子必吃、2.5元一个、个头大汁多。',avoidNote:'帖4称「排队巨多但不如紫光园」；周末早餐排50分钟不稀奇。'};
+xhsEvidence['红彩咯吱盒店（牛街店）'] = [
+  L('北京牛街，洪彩小吃，排队王！','https://www.xiaohongshu.com/explore/6afbec1a000000001b01de04','2026-11-16 · Max吃很多 · 2赞／3藏／0评 · 黄米面炸糕／牛肉烧饼；标题写「洪彩小吃」、正文写「红彩」，以正文为准')
+];
+xhsAssessments['红彩咯吱盒店（牛街店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round704，2赞／0评论）：黄米面炸糕／牛肉烧饼，平价亲民。',avoidNote:'单帖薄证据、无社区互证、价格未查到；只作同街顺路，不作必吃。'};
+xhsEvidence['宝记豆汁（输入胡同店）'] = [
+  L('牛街别挤主街！钻进本地人私藏胡同吃小吃','https://www.xiaohongshu.com/explore/6b004aba00000000260253a4','2026-11-20 · 🐬大椰子心的旅行日记🌽 · 6赞／4藏／0评论 · 豆汁5元／瓶、麻豆腐团购9元／罐')
+];
+xhsAssessments['宝记豆汁（输入胡同店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round760，6赞）：本地人私藏胡同线，豆汁5元／瓶、麻豆腐9元／罐。',avoidNote:'单帖薄证据（6赞、0评论）；小吃不能堂吃，买好带走；豆汁先小份试味。'};
+xhsEvidence['穆顺佳兴牛羊肉包子（输入胡同店）'] = [
+  L('牛街别挤主街！钻进本地人私藏胡同吃小吃','https://www.xiaohongshu.com/explore/6b004aba00000000260253a4','2026-11-20 · 🐬大椰子心的旅行日记🌽 · 6赞／4藏／0评论 · 现蒸牛羊肉包子3元／个，皮薄馅足、一口爆汁')
+];
+xhsAssessments['穆顺佳兴牛羊肉包子（输入胡同店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round760，6赞）：现蒸牛羊肉包子3元／个，皮薄馅足、一口爆汁。',avoidNote:'单帖薄证据；地址与营业时间均未查到，到店沿胡同找肉铺问包子。'};
+xhsEvidence['白记鸿美斋年糕（输入胡同店）'] = [
+  L('牛街别挤主街！钻进本地人私藏胡同吃小吃','https://www.xiaohongshu.com/explore/6b004aba00000000260253a4','2026-11-20 · 🐬大椰子心的旅行日记🌽 · 6赞／4藏／0评论 · 紫米年糕／驴打滚／豌豆黄18.8元／斤，可拼盒；主街那家排队、这里没人')
+];
+xhsAssessments['白记鸿美斋年糕（输入胡同店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round760，6赞）：紫米年糕／驴打滚／豌豆黄18.8元／斤，可拼盒。',avoidNote:'单帖薄证据；网页登记为「白记年糕」，门头是否挂「鸿美斋」须到店核对。'};
+xhsEvidence['满记牛肉烧饼（输入胡同店）'] = [
+  L('牛街别挤主街！钻进本地人私藏胡同吃小吃','https://www.xiaohongshu.com/explore/6b004aba00000000260253a4','2026-11-20 · 🐬大椰子心的旅行日记🌽 · 6赞／4藏／0评论 · 烧饼1元／个、牛肉烧饼5元／个（最推荐）；招牌麻酱／椒盐最先售罄')
+];
+xhsAssessments['满记牛肉烧饼（输入胡同店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round760，6赞）：牛肉烧饼5元／个（最推荐），招牌麻酱／椒盐最先售罄。',avoidNote:'单帖薄证据；50米内三家烧饼店，认准「输入胡同3号」门牌别走错。'};
+xhsEvidence['牛街清真满恒记（平安里西大街店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 聚宝源排不到的备选——牛街清真满恒记（同街、经济实惠）'),
+  L('北京人不说的6家小馆，便宜又解馋🥢','https://www.xiaohongshu.com/explore/6a9ff907000000002600ba16','编辑于2026-09-08 · S🌒H · 93赞／132藏／12评 · 满恒记涮羊肉排队王，11:00-24:00，平安里西大街与赵登禹路交叉口西南角')
+];
+xhsAssessments['牛街清真满恒记（平安里西大街店）'] = {verdict:'谨慎选择',recommend:1,caution:1,avoid:0,why:'round472六家小馆之一：涮羊肉排队王，11:00-24:00，平安里西大街店。',avoidNote:'不在牛街主街（离牛街约3公里），不是同街顺路；饭点等2小时，3点去不用排队。'};
+xhsEvidence['南门涮肉（天坛南门店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 聚宝源排不到的备选——南门涮肉')
+];
+xhsAssessments['南门涮肉（天坛南门店）'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round359帖1仅提及为聚宝源排不到的备选；天坛南门店人均¥101。',avoidNote:'牛街无分店；小红书专帖证据薄，排队口径来自携程点评。'};
+xhsEvidence['护国寺小吃总店'] = [
+  L('北京本地人会去的北京小吃','https://www.xiaohongshu.com/explore/6a49d1ee00000000110132b7','2026-07-04 · 两根倔犟的弱发 · 165赞／103藏／23评论 · 护国寺小吃总店：平安里B口步行3分钟、豆汁3元／碗、野菜包子／面茶／奶油炸糕；评论多人称「坑／一塌糊涂」'),
+  L('护国寺街才是被低估的老北京小吃街！我住附','https://www.xiaohongshu.com/explore/6aa1e6c1000000002902db6c','2026-09-09 · 住宣武门 · 102赞 · 护国寺小吃总店面茶／豌豆黄／奶油炸糕；评论区拥挤／同质化差评须同列')
+];
+xhsAssessments['护国寺小吃总店'] = {verdict:'谨慎选择',recommend:2,caution:0,avoid:1,why:'两帖推荐：round359单店深挖（豆汁3元／碗、野菜包子、面茶），round472护国寺街5店之一。',avoidNote:'评论区多踩：拥挤、同质化，「专程过去大可不必」；饭点排长队、找座难。'};
+xhsEvidence['富华斋饽饽铺（护国寺街店）'] = [
+  L('护国寺街才是被低估的老北京小吃街！我住附','https://www.xiaohongshu.com/explore/6aa1e6c1000000002902db6c','2026-09-09 · 住宣武门 · 102赞 · 富华斋芸豆卷／枣泥酥，宫廷点心伴手礼向')
+];
+xhsAssessments['富华斋饽饽铺（护国寺街店）'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'round472护国寺街帖推荐：芸豆卷、枣泥酥，宫廷点心伴手礼向。',avoidNote:'同帖评论区称护国寺街人挤、同质化；芸豆卷／枣泥酥单品现价未查到。'};
+xhsEvidence['老回回小吃（百万庄店）'] = [
+  L('北京本地人排队老店｜老回回小吃闭眼点清单','https://www.xiaohongshu.com/explore/6a447ac0000000001603ffa0','2026-06-30 · 京城小包子 · 百万庄店、人均15+、麻酱糖花卷／薄皮豆馅烧饼／驴打滚三款；热门点心下午易售罄、建议上午采购'),
+  L('老回回小吃百万庄店（round528首帖）','https://www.xiaohongshu.com/explore/6a049b9c00000000070229f7','round528首帖 · round718文件引为互证首帖，本轮未重读标题与作者')
+];
+xhsAssessments['老回回小吃（百万庄店）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'两帖互证（round718缺口(e)闭合）：百万庄店、人均15+、麻酱糖花卷／豆馅烧饼／驴打滚，本地人排队老店。',avoidNote:'热门点心下午易售罄，建议上午采购；营业时间未查到。'};
+xhsEvidence['四世同堂（双井店）'] = [
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 评论区榜首本地人：烤鸭首选四世同堂（老北平装修、包间多、安静不嘈杂、晚上有京剧、人均约150）')
+];
+xhsAssessments['四世同堂（双井店）'] = {verdict:'推荐',recommend:1,caution:0,avoid:0,why:'round359评论区榜首本地人原话：烤鸭首选四世同堂（老北平装修、包间多、安静不嘈杂、晚上有京剧、人均约150），「家庭聚餐还是招待外地朋友都特别合适」。',avoidNote:'营业时间未查到，订位时电话核实；想看18:00演出要坐戏台周边座位。'};
+xhsEvidence['四季民福烤鸭（前门店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 四季民福烤鸭人均¥150'),
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 评论区：四季民福次之偏打卡')
+];
+xhsAssessments['四季民福烤鸭（前门店）'] = {verdict:'谨慎选择',recommend:1,caution:1,avoid:0,why:'round359帖1：四季民福烤鸭人均¥150；评论区本地人称「四季民福次之偏打卡」。',avoidNote:'偏打卡向；故宫店排队最凶，角楼景观位提前线上取号。'};
+xhsEvidence['全聚德（和平门店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 全聚德要去和平门店，鸭皮蘸白糖')
+];
+xhsAssessments['全聚德（和平门店）'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round359帖1仅提及：全聚德要去和平门店，鸭皮蘸白糖。',avoidNote:'小红书专帖证据薄；午市11:00-14:00、晚市打烊时间两说，电话核实；14:00-16:30不营业。'};
+xhsEvidence['天兴居（鲜鱼口街店）'] = [
+  L('北京吃喝避坑指南｜老住户都偷偷存下的美食清单','https://www.xiaohongshu.com/explore/6a739737000000000e03c000','2026-08-05 · 若雪夜未央 · 2256赞 · 天兴居离5号线天坛东门站步行500米、人均¥30'),
+  L('北京必吃的1️⃣0️⃣件套！本地人强推！！','https://www.xiaohongshu.com/explore/6a4731c300000000060204b9','2026-07-02 · 行走的星星 · 1.4万赞 · 评论区本地人认「天兴居炒肝」为地道小吃')
+];
+xhsAssessments['天兴居（鲜鱼口街店）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'两帖推：帖1人均¥30、离5号线天坛东门站步行500米；帖2评论区本地人认「天兴居炒肝」为地道小吃。',avoidNote:'炒肝下水重口，不喜勿试；营业时间未查到，电话核实。'};
+xhsEvidence['迪士尼百年特展（朝阳大悦城）'] = [
+  L('终于等到你🏰迪士尼百年特展太好逛了‼️','https://www.xiaohongshu.com/explore/6ab49bb0000000000b0072a4','编辑于2026-09-24 · 多次元的小白老师 · 402赞 · 朝阳大悦城10层，6号线青年路站；2026.9.24-2027.3.31，10:00-22:00；🎟️188、240需预约入场')
+];
+xhsAssessments['迪士尼百年特展（朝阳大悦城）'] = {verdict:'推荐',recommend:1,caution:0,avoid:0,why:'单帖（round476，402赞）：展厅大、互动装置多、适合拍照，IP全（米老鼠／漫威／星战等），档期2026.9.24-2027.3.31。',avoidNote:'假期人多；北京站建议时长未查到，按同巡展他城1.5-2小时留；¥240档未核实。'};
+xhsEvidence['恭王府'] = [
+  L('恭王府｜南张北溥百年之会','https://www.xiaohongshu.com/explore/6ad8d26300000000330239a4','编辑于2026-10-21 · 好奇的长安 · 4赞 · 南张北溥展至2026-12-13、乐道堂；花园中西结合；「除了人多」'),
+  L('御器凝辉，盛世重光！北京景泰蓝宫廷艺术特展正在恭王府博物馆东二区展出…','https://www.xiaohongshu.com/explore/6abc61cb0000000002012dff','2026-09-29／30 · 恭王府博物馆（官方号） · 近58件／组元明清代表性景泰蓝器物复刻＋当代原创，展至12月6日')
+];
+xhsAssessments['恭王府'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'两帖：round377南张北溥展至12-13（乐道堂）、花园中西结合；round391官方帖景泰蓝展至12-06（东二区，58件／组复刻＋当代原创）。',avoidNote:'人多；仅线上实名预约、每场提前10天20:00放票；景泰蓝展品为复刻＋当代原创，非原作。'};
+xhsEvidence['梅兰芳故居'] = [
+  L('北京本地人会去的北京小吃','https://www.xiaohongshu.com/explore/6a49d1ee00000000110132b7','2026-07-04 · 两根倔犟的弱发 · 165赞 · 仅在护国寺周边慢逛中提及「恭王府、北海、梅兰芳故居」')
+];
+xhsAssessments['梅兰芳故居'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round359帖3仅在护国寺周边慢逛中提及「恭王府、北海、梅兰芳故居」。',avoidNote:'无专帖证据；开放时间三说冲突，行前以官方微信公众号为准。'};
+xhsEvidence['中国美术馆 · 费欣绘画精品展'] = [
+  L('🎨北京艺术展推荐｜2026年第四季度Pt.2','https://www.xiaohongshu.com/explore/6ad02fe30000000012038f79','2026-10-15 · 京版北美 · 6赞 · 费欣中国美术馆2026-09-28-2027-02-14（官方公告为9月29日开幕）')
+];
+xhsAssessments['中国美术馆 · 费欣绘画精品展'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round377京版北美清单仅确认档期2026-09-28至2027-02-14（官方公告为9月29日开幕）。',avoidNote:'小红书专帖证据薄；单看费欣展的建议时长与中文导览场次未查到。'};
+xhsEvidence['植物肖像摄影展「上山·出神」'] = [
+  L('北京新展｜植物肖像：上山·出神','https://www.xiaohongshu.com/explore/6ae7fcc500000000120090de','编辑于11-01 · 戳客戳客 · 12赞 · 展期2026-11-07-12-07；建国门外大街17号友谊商店PF3 klee klee & friends友谊花园店；活动免费')
+];
+xhsAssessments['植物肖像摄影展「上山·出神」'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round694，12赞）：展期11.07-12.07、免费，李剑鸿2015-2023年奉化植物摄影。',avoidNote:'单帖证据（12赞、0评论）；店内单独开放时间与停留时长未查到。'};
+xhsEvidence['松美术馆 · 周春芽展'] = [
+  L('🎨北京艺术展推荐｜2026年第四季度Pt.2','https://www.xiaohongshu.com/explore/6ad02fe30000000012038f79','2026-10-15 · 京版北美 · 6赞 · 周春芽松美术馆2026-09-12-12-06')
+];
+xhsAssessments['松美术馆 · 周春芽展'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round377京版北美清单仅确认周春芽展至2026-12-06。',avoidNote:'小红书专帖证据薄；票价与建议时长未查到，须提前预约购票。'};
+xhsEvidence['红砖美术馆 · 「冰逸·象罔无形」'] = [
+  L('🎨北京艺术展推荐｜2026年第四季度Pt.2','https://www.xiaohongshu.com/explore/6ad02fe30000000012038f79','2026-10-15 · 京版北美 · 6赞 · 冰逸红砖美术馆2026-10-01-2027-02-14')
+];
+xhsAssessments['红砖美术馆 · 「冰逸·象罔无形」'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round377京版北美清单仅确认冰逸展至2027-02-14。',avoidNote:'小红书专帖证据薄；冬季闭馆钟点两说（17:30 vs 18:00），去前核官网。'};
+xhsEvidence['常青画廊 · 阚萱《海边斜坡》'] = [
+  L('🎨北京艺术展推荐｜2026年第四季度Pt.2','https://www.xiaohongshu.com/explore/6ad02fe30000000012038f79','2026-10-15 · 京版北美 · 6赞 · 阚萱《海边斜坡》常青画廊2026-09-01-12-05')
+];
+xhsAssessments['常青画廊 · 阚萱《海边斜坡》'] = {verdict:'谨慎选择',recommend:0,caution:1,avoid:0,why:'round377京版北美清单仅确认阚萱展2026-09-01至12-05。',avoidNote:'小红书专帖证据薄；开放时间与票价未查到；地址按网页证据定在798（非草场地），「纸本装置」说法无网页证据。'};
+xhsEvidence['空白空间 · 刘诗园 × 西蒙·斯塔林首展'] = [
+  L('最近来798，这个新展建议直接加入必看清单','https://www.xiaohongshu.com/explore/6af82444000000002a0119e4','2026-11-14 · 798艺术区（官方号） · 26赞 · 1000+㎡新空间，2009年迁址到2026年回归；刘诗园×西蒙·斯塔林首展2026.10.30-12.12；《源泉（半色调）》俯瞰拼图黑球、《Spacing In》珠帘装置可走入')
+];
+xhsAssessments['空白空间 · 刘诗园 × 西蒙·斯塔林首展'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round680，798艺术区官方号，26赞）：新空间首展，黑球俯瞰拼图＋珠帘装置，档期10.30-12.12。',avoidNote:'单帖证据；开放时间与票价未查到，去前核官网／电话。'};
+xhsEvidence['UM Gallery · 汉娜·策考《Bon Voyage》'] = [
+  L('🇩🇪使馆邀你来🆓插画展10.24-12.13','https://www.xiaohongshu.com/explore/6ad6b348000000002601cb18','10-19 · Lucia美贞 · 61赞 · 汉娜·策考个展Bon Voyage，2026.10.24-12.13／11:00-19:00，周一闭馆；UM Gallery北京朝阳798艺术区中一街；无需预约报名，免费观展')
+];
+xhsAssessments['UM Gallery · 汉娜·策考《Bon Voyage》'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round680，61赞）：档期10.24-12.13、11:00-19:00、周一闭馆、免费、无需预约。',avoidNote:'单帖证据，无网页第二源；门牌号与待多久未查到。'};
+xhsEvidence['星空间 · 张晖「岭上多白云」'] = [
+  L('平常不过，尽是广阔！','https://www.xiaohongshu.com/explore/6afadef8000000002b0381f2','艺术圈张某某 · 8赞 · 张晖个展「岭上多白云」，策展人卢迎华；展期2026-11-05-12-12；星空间StarGallery（北京798）')
+];
+xhsAssessments['星空间 · 张晖「岭上多白云」'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round694，8赞）：张晖个展，策展人卢迎华，展期11.05-12.12，798。',avoidNote:'单帖薄证据（8赞、0评论）；票价与待多久未查到；开放时间采自另一展览档。'};
+xhsEvidence['法国圣诞小镇（北京福楼）'] = [
+  L('2026北京圣诞活动汇总🎄建议收藏！！！','https://www.xiaohongshu.com/explore/6af431940000000023013275','约11-12 · 周末去哪儿 · 1105赞 · 法国圣诞小镇11.21-12.20每周末 北京福楼 需门票'),
+  L('2026北京圣诞活动汇总🎄建议收藏！！！','https://www.xiaohongshu.com/explore/6ae9ceed000000000e034097','11-03 · 北京周末去哪 · 1244赞 · 法国圣诞小镇11.21-12.20每周末 北京福楼 需门票（双帖互证）')
+];
+xhsAssessments['法国圣诞小镇（北京福楼）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'双帖互证（round666）：法国圣诞小镇11.21-12.20（每周末），北京福楼，需门票。',avoidNote:'举办分店（前门店 vs 三里屯店）与票价均未查到，去前须查官方售票渠道。'};
