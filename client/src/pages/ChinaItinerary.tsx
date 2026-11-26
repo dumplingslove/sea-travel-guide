@@ -15,10 +15,23 @@ import {
 import { useRecordsData } from "@/pages/records/shared";
 import {
   DayBookingsSection,
+  DayCityBackup,
+  DayResearchSection,
+  STOP_ALIASES,
+  StopBlock,
+  TodayBookedSection,
+  cjk,
+  groupHotelBookings,
+  matchItem,
+  norm,
+  researchEntryFor,
   toISODate,
   type DayBooking,
+  type ResearchEntry,
 } from "@/components/ItineraryDayCard";
-import { parseBookingBody } from "@/bookings/bookingTypes";
+import { bareName } from "@/bookings/nameMatch";
+import { attractions, hotels, restaurants, type Item } from "@/guide/data";
+import { parseBookingBody, type BookingData } from "@/bookings/bookingTypes";
 
 /**
  * 中国行程页（/china）：北京（两段）+ 西安。
@@ -212,15 +225,173 @@ function FixedList({ fixed }: { fixed: string[] }) {
   );
 }
 
+/* 中国页站块派生（2026-11-25 第二轮：中国页接东南亚主页同一套渲染链）：
+ * chinaDays 的 fun/food/fixed 是自由文本串，站名嵌在句首/句中；
+ * matchItem 对整句做子串／三字前缀比对，命中目录条目的串成一站 StopBlock，
+ * 命中不了的只显示自带文案、不放详情按钮（StopBlock 自带该行为）。
+ * 时间 chip：句首 HH:MM 优先，其次上午/下午/晚上/中午词，末了按 fun→上午、
+ * food→午餐、fixed→全天回退；句中的营业时间（如 10:30–01:00）不作行程时间。 */
+function inferStopTime(text: string, fallback: string): string {
+  const m = /^(上午|下午|晚上|中午)?\s*(\d{1,2}:\d{2})/.exec(text.trim());
+  if (m) return m[2];
+  if (/上午|早上|早晨|早餐/.test(text)) return "上午";
+  if (/下午/.test(text)) return "下午";
+  if (/晚上|晚间|晚餐/.test(text)) return "晚上";
+  if (/中午|午餐/.test(text)) return "中午";
+  return fallback;
+}
+
+interface DerivedStop {
+  item: Item;
+  time: string;
+  detail: string;
+}
+
+/* 句子的主角判定（与 matchItem 的“最长命中”不同）：
+ * 一句 fun/food 往往只讲一个地方、顺带提别的店作比较（12-01 洪记句末
+ * “不如紫光园”）；matchItem 按最长命中会把这句算成紫光园、标题与正文
+ * 对不上。这里取句中最先出现的目录名——主角总在句首附近，比较对象在后。
+ * 别名先行、转场守卫随后，均与 matchItem 同口径。 */
+function earliestItem(text: string, city: string): Item | undefined {
+  const bare = bareName(text);
+  const nsAlias = norm(bare);
+  for (const [key, target] of STOP_ALIASES) {
+    if (nsAlias.includes(norm(key))) {
+      const hit = [...attractions, ...restaurants, ...hotels].find(
+        (it) => it.city === city && norm(it.name) === norm(target),
+      );
+      if (hit) return hit;
+    }
+  }
+  if (/机场|航班|飞往|抵达|离境|入住|退房|午睡|收行李|码头集合/.test(bare))
+    return undefined;
+  const ns = norm(bare);
+  let best: Item | undefined;
+  let bestIdx = Infinity;
+  let bestLen = 0;
+  for (const list of [attractions, restaurants, hotels]) {
+    for (const it of list) {
+      if (it.city !== city) continue;
+      const cand = norm(it.name);
+      if (cand.length >= 2) {
+        const idx = ns.indexOf(cand);
+        if (idx >= 0 && (idx < bestIdx || (idx === bestIdx && cand.length > bestLen))) {
+          best = it;
+          bestIdx = idx;
+          bestLen = cand.length;
+        }
+      }
+      const prefix = cjk(cand).slice(0, 3);
+      if (prefix.length >= 3) {
+        const pidx = ns.indexOf(prefix);
+        if (pidx >= 0 && (pidx < bestIdx || (pidx === bestIdx && 3 > bestLen))) {
+          best = it;
+          bestIdx = pidx;
+          bestLen = 3;
+        }
+      }
+    }
+  }
+  return best;
+}
+
+function deriveStops(
+  texts: { text: string; fallback: string }[],
+  city: string,
+): DerivedStop[] {
+  const seen = new Set<string>();
+  const out: DerivedStop[] = [];
+  for (const { text, fallback } of texts) {
+    const item = earliestItem(text, city);
+    if (!item || seen.has(item.name)) continue;
+    seen.add(item.name);
+    out.push({ item, time: inferStopTime(text, fallback), detail: text });
+  }
+  return out;
+}
+
+function bookingKind(b: DayBooking): string | null {
+  try {
+    return parseBookingBody(b.body).bkind;
+  } catch {
+    return null;
+  }
+}
+
 function DayCard({
   entry,
   content,
   bookings,
+  dayOptions,
+  scheduledNames,
+  bookedRestNames,
+  favRestNames,
 }: {
   entry: ChinaEntry;
   content?: ChinaDayContent;
   bookings?: DayBooking[];
+  /** 本段可排入的天（只限本城，不许跨城） */
+  dayOptions: { day: number; iso: string; label: string }[];
+  /** 本段所有天已排的站点原文（供备选清单排除已排项） */
+  scheduledNames: Set<string>;
+  /** 本段已订餐厅名（小写归一化） */
+  bookedRestNames: Set<string>;
+  /** 本城已收藏餐厅名（小写归一化） */
+  favRestNames: Set<string>;
 }) {
+  const [backupOpen, setBackupOpen] = useState(false);
+  const stops = useMemo(
+    () =>
+      deriveStops(
+        [
+          ...(content?.fun ?? []).map((text) => ({ text, fallback: "上午" })),
+          ...(content?.food ?? []).map((text) => ({ text, fallback: "午餐" })),
+          ...(content?.fixed ?? []).map((text) => ({ text, fallback: "全天" })),
+        ],
+        entry.cityZh,
+      ),
+    [content, entry.cityZh],
+  );
+  const dayBookings = bookings ?? [];
+  const hotelGroups = useMemo(
+    () =>
+      groupHotelBookings(
+        dayBookings.filter((b) => bookingKind(b) === "hotel"),
+        entry.cityZh,
+      ),
+    [dayBookings, entry.cityZh],
+  );
+  const transportBookings = useMemo(
+    () => dayBookings.filter((b) => bookingKind(b) === "transport"),
+    [dayBookings],
+  );
+  const bookedRests = useMemo(
+    () => dayBookings.filter((b) => bookingKind(b) === "restaurant"),
+    [dayBookings],
+  );
+  const researchEntries = useMemo(
+    () =>
+      stops
+        .map((st) => researchEntryFor(st.item))
+        .filter((e): e is ResearchEntry => e !== null),
+    [stops],
+  );
+  /* 时间线站点本身就是已订餐厅时：StopBlock 展开里带确认信息（与主卡同口径） */
+  const bookedForStop = (itemName: string): BookingData | undefined => {
+    const hit = bookedRests.find((b) => {
+      const item = restaurants.find(
+        (r) => b.title.includes(r.name) || r.name.includes(b.title),
+      );
+      if (!item) return false;
+      return matchItem(itemName, entry.cityZh, [item])?.name === item.name;
+    });
+    if (!hit) return undefined;
+    try {
+      return parseBookingBody(hit.body);
+    } catch {
+      return undefined;
+    }
+  };
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 mb-3">
       <div className="flex items-baseline gap-2 flex-wrap mb-1">
@@ -230,11 +401,42 @@ function DayCard({
         <span className="font-bold text-gray-900">{dateLabel(entry.iso)}</span>
         <span className="text-xs text-gray-500">{entry.cityZh}</span>
       </div>
+      {content && (
+        <p className="text-sm font-semibold text-gray-800 mb-2">{content.title}</p>
+      )}
+      <DayCityBackup
+        city={entry.cityZh}
+        scheduledNames={scheduledNames}
+        bookedRestNames={bookedRestNames}
+        favRestNames={favRestNames}
+        dayOptions={dayOptions}
+        open={backupOpen}
+        onToggle={() => setBackupOpen((v) => !v)}
+      />
+      <TodayBookedSection
+        hotelGroups={hotelGroups}
+        flightLeg={null}
+        transportBookings={transportBookings}
+        unbookedLeg={null}
+        bookedRests={bookedRests}
+      />
       {content ? (
         <>
-          <p className="text-sm font-semibold text-gray-800 mb-2">{content.title}</p>
           {content.fixed && content.fixed.length > 0 && (
             <FixedList fixed={content.fixed} />
+          )}
+          {stops.length > 0 && (
+            <div className="mb-2">
+              <p className="text-sm font-bold text-gray-800 mb-1">📍 本日地点</p>
+              {stops.map((st) => (
+                <StopBlock
+                  key={st.item.name}
+                  stop={{ time: st.time, name: st.item.name, detail: st.detail }}
+                  city={entry.cityZh}
+                  booked={bookedForStop(st.item.name)}
+                />
+              ))}
+            </div>
           )}
           {content.fun && content.fun.length > 0 && (
             <FunList fun={content.fun} />
@@ -244,6 +446,9 @@ function DayCard({
           )}
           {content.tips && content.tips.length > 0 && (
             <TipsList tips={content.tips} />
+          )}
+          {researchEntries.length > 0 && (
+            <DayResearchSection entries={researchEntries} />
           )}
         </>
       ) : (
@@ -297,6 +502,24 @@ function StaticCard({
 export default function ChinaItinerary() {
   const { entries, loading } = useChinaEntries();
   const { rows: bookingRows } = useRecordsData(["booking"]);
+  const { rows: favRows } = useRecordsData(["favorite"]);
+  // 本城已收藏餐厅名（小写归一化，供备选清单收藏优先排序，与主卡同口径）
+  const favRestNamesByCity = useMemo(() => {
+    const out = new Map<string, Set<string>>();
+    favRows.forEach((r) => {
+      let body: Record<string, unknown> = {};
+      try {
+        body = JSON.parse(r.body || "{}");
+      } catch {
+        return;
+      }
+      if (body.type !== "restaurant" || typeof body.city !== "string") return;
+      const set = out.get(body.city) ?? new Set<string>();
+      set.add(r.title.trim().toLowerCase());
+      out.set(body.city, set);
+    });
+    return out;
+  }, [favRows]);
   // 已订记录按日期同步到本页卡片（不写死）：日期在本页某天就挂那天；
   // 早于本页第一天的（去程航班 11-28 出发、11-29 落地北京）挂第一天，
   // 摘要里带真实日期。其余日期（东南亚/首尔段）不属于本页，不挂。
@@ -349,14 +572,40 @@ export default function ChinaItinerary() {
             <section key={k} className="mb-8">
               <h2 className="text-lg font-bold text-gray-900 mb-1">{SEG_META[k].title}</h2>
               <p className="text-xs text-gray-500 mb-3">{SEG_META[k].sub}</p>
-              {items.map((e) => (
-                <DayCard
-                  key={e.iso}
-                  entry={e}
-                  content={CHINA_DAY_CONTENT[e.iso]}
-                  bookings={bookingsByIso.get(e.iso) ?? []}
-                />
-              ))}
+              {(() => {
+                const segDayOptions = items.map((e) => ({
+                  day: e.dayNum,
+                  iso: e.iso,
+                  label: `D${e.dayNum} · ${dateLabel(e.iso)} ${e.cityZh}`,
+                }));
+                const segScheduledNames = new Set(
+                  items.flatMap((e) => {
+                    const c = CHINA_DAY_CONTENT[e.iso];
+                    return [...(c?.fun ?? []), ...(c?.food ?? []), ...(c?.fixed ?? [])];
+                  }),
+                );
+                const segBookedRestNames = new Set(
+                  items.flatMap((e) =>
+                    (bookingsByIso.get(e.iso) ?? [])
+                      .filter((b) => bookingKind(b) === "restaurant")
+                      .map((b) => b.title.trim().toLowerCase()),
+                  ),
+                );
+                const segFavRestNames =
+                  favRestNamesByCity.get(items[0]?.cityZh ?? "") ?? new Set<string>();
+                return items.map((e) => (
+                  <DayCard
+                    key={e.iso}
+                    entry={e}
+                    content={CHINA_DAY_CONTENT[e.iso]}
+                    bookings={bookingsByIso.get(e.iso) ?? []}
+                    dayOptions={segDayOptions}
+                    scheduledNames={segScheduledNames}
+                    bookedRestNames={segBookedRestNames}
+                    favRestNames={segFavRestNames}
+                  />
+                ));
+              })()}
               {k === "bj1" && (
                 <StaticCard
                   content={BEIJING_HOME_FOOD}

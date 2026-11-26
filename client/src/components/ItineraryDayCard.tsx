@@ -328,14 +328,14 @@ export function detailForPlanDay(
 }
 
 /* ---------------- 站点 → 景点/餐厅 模糊匹配 ---------------- */
-const norm = (s: string) =>
+export const norm = (s: string) =>
   s
     .toLowerCase()
     .replace(
       /[\s·・&,，、\/\(\)\[\]（）「」『』:：;；!！?？."“”‘’—\-–+＋]/g,
       "",
     );
-const cjk = (s: string) => (s.match(/[\u4e00-\u9fa5]+/g) || []).join("");
+export const cjk = (s: string) => (s.match(/[\u4e00-\u9fa5]+/g) || []).join("");
 
 /* 站名 → 目录条目名 别名（2026-11-07 site-improve-hourly 类别1/2）：
  * 站名写法与目录条目名对不上的 4 处真缺口（00:38 轮 stops→目录核查逐条裁决），
@@ -345,11 +345,14 @@ const cjk = (s: string) => (s.match(/[\u4e00-\u9fa5]+/g) || []).join("");
  * R 条目「Old Airport Road」中英名完全不一。别名先于转场守卫判断——
  * 「旧机场路」含「机场」二字，若先走守卫会被当成转场站拦掉。
  * 只认同城同名条目，别名键本身不参与通用比对、不扩散到别的站。 */
-const STOP_ALIASES: [string, string][] = [
+export const STOP_ALIASES: [string, string][] = [
   ["刨冰收尾", "Torry's Ice Cream 冰淇淋刨冰"],
   ["擎天树", "滨海湾花园"],
   ["明洞逛街", "明洞 Myeongdong"],
   ["旧机场路", "Old Airport Road"],
+  // 中国页 12-04 fun 文案写「天坛核心景点」，通用子串/三字前缀够不着条目「天坛公园」
+  // （2026-11-25 中国页渲染链第二轮追加）。
+  ["天坛核心景点", "天坛公园"],
   // 酒店时间站 → 酒店条目（2026-11-22 Day 6 封面图：StopBlock 接入 hotels 匹配；
   // 别名键是站名里的酒店名/动作词，目标是同城 H() 条目确切名；对景点/餐厅列表无害，
   // 目标不在那些表里就落空、继续走通用比对。别名先于转场守卫判断，
@@ -1759,7 +1762,7 @@ function BookedRestBlock({
  * （PlaceDetailSections：图片、介绍全文、菜系、谷歌地图与官网链接全有），不跳转；
  * 匹配不到目录条目的站（入住酒店/飞往××等非地点项）只显示自带 detail 文案，
  * 不放详情按钮（没新东西就不放展开按钮）。点行同时仍选地图（原行为不变）。 */
-function StopBlock({
+export function StopBlock({
   stop,
   city,
   onSelect,
