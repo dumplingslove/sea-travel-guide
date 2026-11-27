@@ -1012,6 +1012,7 @@ const overrides:Record<string,Partial<GuideFacts>>={
  '红砖美术馆 · 「冰逸·象罔无形」':{address:'朝阳区崔各庄乡何各庄村，顺白路马泉营西路口西100米路北'},
  '常青画廊 · 阚萱《海边斜坡》':{address:'酒仙桥路2号（798艺术区）'},
  '空白空间 · 刘诗园 × 西蒙·斯塔林首展':{address:'酒仙桥路4号798艺术区西街'},
+ '常沙娜珐琅艺术展「永远盛开的敦煌之花」':{address:'朝阳区金台北街甲2号楼（天工美术馆）'},
  '首尔JW万豪酒店 JW Marriott Hotel Seoul':{address:'瑞草区盘浦 · 高速巴士客运站楼上（直连新世界百货江南店）'},
  '景福宫 Gyeongbokgung':{address:'161 Sajik-ro, Jongno-gu'},
  '土俗村参鸡汤 Tosokchon':{address:'5, Jahamun-ro 5-gil, Jongno-gu'},
@@ -1390,3 +1391,8 @@ xhsEvidence['法国圣诞小镇（北京福楼）'] = [
   L('2026北京圣诞活动汇总🎄建议收藏！！！','https://www.xiaohongshu.com/explore/6ae9ceed000000000e034097','11-03 · 北京周末去哪 · 1244赞 · 法国圣诞小镇11.21-12.20每周末 北京福楼 需门票（双帖互证）')
 ];
 xhsAssessments['法国圣诞小镇（北京福楼）'] = {verdict:'推荐',recommend:2,caution:0,avoid:0,why:'双帖互证（round666）：法国圣诞小镇11.21-12.20（每周末），北京福楼，需门票。',avoidNote:'举办分店（前门店 vs 三里屯店）与票价均未查到，去前须查官方售票渠道。'};
+
+xhsEvidence['常沙娜珐琅艺术展「永远盛开的敦煌之花」'] = [
+  L('敦煌之花，延期可冲！','https://www.xiaohongshu.com/explore/6b095f13000000002a03a527','约2026-11-27 · 天工美术馆（官方号） · 5赞 · 常沙娜珐琅艺术展延至2026-12-06（周日），10:00-17:00周一闭馆；朝阳区金台北街甲2号楼；15:00免费讲解')
+];
+xhsAssessments['常沙娜珐琅艺术展「永远盛开的敦煌之花」'] = {verdict:'谨慎选择',recommend:1,caution:0,avoid:0,why:'单帖（round820，天工美术馆官方号，5赞）：档期延至12-06、10:00-17:00周一闭馆、15:00免费讲解、林徽因指导《和平鸽大盘》＋九色鹿壁画墙。',avoidNote:'单帖薄证据（官方号自推、5赞1评论）；票价未查到，须去前核官网；周一闭馆，12-06离京日别排。'};
